@@ -1,0 +1,89 @@
+---
+name: create-store
+description: Create a Zustand store — a global persisted store in the shared store folder or an ephemeral hand-off store in a feature — and wire it into sign-out cleanup. Use when asked to add global client state or to pass data between routes.
+---
+
+# Create store
+
+Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
+
+## First: does it need a store?
+
+- Server data → TanStack Query. Never copy it into Zustand.
+- Page-local UI state → `useState` in the page hook.
+- Form state → react-hook-form.
+- URL-shareable state (tab, filter, page, sort) → search params
+  (`validateSearch` + `Route.useSearch()`).
+
+Two kinds remain.
+
+## Global store — `<shared>/store/<name>-store.ts`
+
+Client state shared by features (session flags, UI preferences, a client-side
+cart or selection). Persist only what must survive a reload, with a
+`<projectName>-` key prefix, and never tokens.
+
+```ts
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import type { LanguageId } from '@/<shared>/lib/i18n/languages'
+
+interface SettingsState {
+  language: LanguageId
+  setLanguage: (language: LanguageId) => void
+}
+
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set) => ({
+      language: 'ar',
+      setLanguage: (language) => {
+        set({ language })
+      },
+    }),
+    { name: '<projectName>-settings' },
+  ),
+)
+```
+
+User data must be reset by the project's sign-out function (`CLAUDE.md`
+names it) — add the new store's reset there, and to the test helper that
+resets stores between tests.
+
+Website (TanStack Start): a persisted store hydrates on the client only —
+render the server-safe default first and don't read `localStorage` during
+render, or the HTML and the first client render disagree.
+
+## Hand-off store — `<feature>/store/<x>-store.ts`
+
+Passes an object between routes (a selected item, a receipt). No persist
+unless it must survive a full-page redirect (then `sessionStorage`).
+
+```ts
+interface SelectedItemState {
+  item: SelectedItem | null
+  setItem: (item: SelectedItem) => void
+  clear: () => void
+}
+
+export const useSelectedItemStore = create<SelectedItemState>((set) => ({
+  item: null,
+  setItem: (item) => {
+    set({ item })
+  },
+  clear: () => {
+    set({ item: null })
+  },
+}))
+```
+
+The receiving page redirects away when the store is empty and calls `clear()`
+when the flow ends.
+
+## Rules
+
+- `<name>-store.ts`, export `use<Name>Store`.
+- Subscribe with selectors (`useSettingsStore((state) => state.language)`);
+  outside React use `useXStore.getState()`.
+- Braced setter bodies (oxlint `curly`).
+- Unit-test the store's actions; reset between tests.
