@@ -37,18 +37,18 @@ npm run check:full       # check + e2e + build
 | Component | presentational components | `<name>.test.tsx` beside the source | the providers render helper |
 | Integration | every route component with the real API client, query cache and a memory router | `<name>.test.tsx` beside it | the router render helper + MSW |
 | End-to-end | each user flow | `e2e/<flow>.spec.ts` | Playwright + mocked API routes |
-| Accessibility | every page | the axe spec's page list | axe, WCAG 2.1 AA; serious/critical fail |
+| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`); serious/critical fail |
 
 Minimum per change: the logic you touched is unit-tested; each touched route
 component has loading / error / empty / success plus one interaction; a new
 page is added to the axe spec; a new or changed flow has an e2e spec.
 
-The flows `CLAUDE.md` marks as critical (its domain rules) stay covered, and
+The flows `project.md` marks as critical (its domain rules) stay covered, and
 sign-out clearing every piece of user data always does.
 
 ## Helpers
 
-The project's test helpers (`CLAUDE.md` names the folder) provide:
+The project's test helpers (`project.md` names the folder) provide:
 
 - a providers render helper → `{ user, queryClient, ...rtl }` with the query
   client and the `dir` wrapper, for components and hooks without the router;
@@ -60,7 +60,10 @@ The project's test helpers (`CLAUDE.md` names the folder) provide:
 - an MSW `server`, an `api(path)` URL builder and response builders that
   produce the backend's real envelope (success, failure — including failure
   with HTTP 200 if the backend does that — and paged lists). **Unhandled
-  requests fail the test.**
+  requests fail the test** (`server.listen({ onUnhandledFrame: 'error' })` on MSW 3;
+  `onUnhandledRequest` on MSW 2). With an absolute API URL, set
+  `test.environmentOptions.jsdom.url` to the API origin, or jsdom's CORS check
+  fails every request as a "Network Error".
 - auth fixtures (signed-in user, token response) and a store reset after
   every test.
 
@@ -91,3 +94,23 @@ The project's test helpers (`CLAUDE.md` names the folder) provide:
 - No real tokens, phone numbers, emails or card data in fixtures.
 - No assertions on Tailwind class strings.
 - No unresolved `act()` warnings or `console.error` noise from code under test.
+
+## Website specifics (TanStack Start)
+
+- `createIsomorphicFn().server().client()` always takes the server branch under
+  Vitest and `createServerFn` cannot run there. Alias those two boundaries to
+  small stubs in `vitest.config.ts` (a fake language getter, fake auth server
+  functions) and test the logic behind them directly.
+- A `renderRoute({ url, routeId })` helper that builds the route id chain, adds
+  the `stripSearchParams` defaults and the sibling routes covers most page tests.
+- E2E runs against the production build (`vite build && vite preview --port
+  <e2ePort> --strictPort`) **and a fake API server**: Playwright cannot
+  intercept the server-side fetches of SSR loaders.
+- SSR markup is clickable before it is hydrated and the click does nothing. The
+  root document sets `data-hydrated` on `<html>` after hydration; e2e helpers
+  `gotoHydrated()` wait for it. URL-bound controlled inputs flip only after the
+  loader finishes: click, then assert the URL.
+- `register(name, { valueAsNumber: true })` on radio inputs still yields a
+  string; use `setValue(name, number)` or `z.coerce` for ratings.
+- Offline benches: set the Playwright Chromium path in config instead of
+  running `e2e:install`.

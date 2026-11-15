@@ -1,6 +1,8 @@
 {
   "name": "frontend-kit",
-  "owner": { "name": "diyarfirasmusa" },
+  "owner": {
+    "name": "diyarfirasmusa"
+  },
   "metadata": {
     "description": "Claude Code setup for React + TypeScript frontend projects (websites and dashboards).",
     "version": "1.0.0"
@@ -10,14 +12,12 @@
       "name": "frontend-kit",
       "source": "./plugins/frontend-kit",
       "description": "Skills, agents, guards, quality gates and project templates for TanStack Start websites and Vite + TanStack Router dashboards.",
-      "version": "1.0.0",
       "category": "development"
     },
     {
       "name": "frontend-status",
       "source": "./plugins/frontend-status",
       "description": "Optional status band above the prompt for frontend-kit projects: branch, changes, sync, last gate, dev server.",
-      "version": "1.0.0",
       "category": "development"
     }
   ]

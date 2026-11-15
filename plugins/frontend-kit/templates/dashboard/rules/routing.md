@@ -4,6 +4,7 @@ paths:
   - "src/router.tsx"
   - "src/guards/**"
   - "src/features/**/validations/search.ts"
+  - "src/lib/list-search.ts"
   - "src/features/**/hooks/use-*-page.ts"
 ---
 
@@ -109,6 +110,28 @@ not fill the history.
 - Links use `<Link to="/users/$userId" params={{ userId }}>`; never build URL
   strings by hand.
 - Large objects never travel in the URL; use an ephemeral feature store.
+
+
+## Search params: what the router really hands you
+
+TanStack Router JSON-parses every search value before your schema sees it, so `?q=100553` arrives as the **number**
+100553 and `?featured=true` as a boolean; `.catch()` then silently resets them. Therefore:
+
+- Free text and ids go through a `looseText` preprocess (`src/lib/list-search.ts`) that turns numbers and booleans back into strings:
+
+```ts
+export const looseText = z.preprocess(
+  (value) => (typeof value === 'number' || typeof value === 'boolean' ? String(value) : value),
+  z.string().trim(),
+);
+// q: looseText.catch('').default('')
+```
+
+- Multi-select filters are arrays in the URL (`status=["pending","confirmed"]`). Either accept that encoding and
+  schema it with `z.array(...)`, or pick comma strings and a custom `parseSearch`/`stringifySearch` for the whole
+  router. Pick one per project (write it in `project.md`); never mix.
+- Every list schema has a test: a numeric `q`, an unknown enum value, a missing field and a shared link with the
+  default values all parse to a valid search.
 
 ## Don't
 

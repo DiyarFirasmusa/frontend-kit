@@ -45,15 +45,16 @@
       "Bash(git remote -v)",
       "Bash(git remote get-url *)",
       "Bash(lsof -nP -iTCP:{{DEV_PORT}} *)",
-      "Bash(git commit *)",
-      "Bash(git push *)",
       "Bash(git rebase *)",
       "Bash(git stash *)",
       "Bash(npm install *)",
       "Bash(npm i *)",
       "Bash(npm uninstall *)"
     ],
-    "ask": [],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.local)",

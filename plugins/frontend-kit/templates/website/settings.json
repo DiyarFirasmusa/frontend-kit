@@ -44,14 +44,15 @@
       "Bash(git remote get-url *)",
       "Bash(lsof -nP -iTCP:{{DEV_PORT}} *)",
       "Bash(lsof -nP -iTCP:{{E2E_PORT}} *)",
-      "Bash(git commit *)",
-      "Bash(git push *)",
       "Bash(git rebase *)",
       "Bash(npm install *)",
       "Bash(npm i *)",
       "Bash(npm uninstall *)"
     ],
-    "ask": [],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.local)",

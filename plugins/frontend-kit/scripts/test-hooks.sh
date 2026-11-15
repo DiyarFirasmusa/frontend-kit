@@ -58,7 +58,12 @@ make_repo() {
   [ "$branch" != main ] && git -C "$dir" checkout -q -b "$branch"
   ln -s "$REPO/node_modules" "$dir/node_modules"
   mkdir -p "$dir/scripts" "$dir/.claude"
-  [ -f "$REPO/scripts/validate-i18n.ts" ] && cp "$REPO/scripts/validate-i18n.ts" "$dir/scripts/validate-i18n.ts"
+  # The i18n validator: the project's own, else the one the kit ships (templates/shared/scripts).
+  if [ -f "$REPO/scripts/validate-i18n.ts" ]; then
+    cp "$REPO/scripts/validate-i18n.ts" "$dir/scripts/validate-i18n.ts"
+  else
+    cp "$PLUGIN/templates/shared/scripts/validate-i18n.ts" "$dir/scripts/validate-i18n.ts"
+  fi
   for config in oxlint.config.ts oxfmt.config.ts .oxlintrc.json .oxfmtrc.json; do
     [ -f "$REPO/$config" ] && cp "$REPO/$config" "$dir/"
   done
@@ -429,7 +434,11 @@ run_hook post-edit.sh "$(edit_input "$FEATURE/src/features/demo/locales/ar.json"
 if [ "$CODE" -eq 0 ]; then ok; else ko "post-edit accepts matching ar/en locales" "exit $CODE: $ERR"; fi
 printf '{ "demo": { "title": "عنوان", "subtitle": "فرعي" } }\n' >"$FEATURE/src/features/demo/locales/ar.json"
 run_hook post-edit.sh "$(edit_input "$FEATURE/src/features/demo/locales/ar.json")"
-if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'validate-i18n.ts fails'; then ok; else ko "post-edit flags a key missing from en.json" "exit $CODE: $ERR"; fi
+if [ "$CODE" -eq 0 ] && printf '%s' "$OUT" | grep -q 'ar and en differ right now'; then ok; else ko "post-edit only warns while ar and en differ midway" "exit $CODE: $ERR $OUT"; fi
+printf '{ "demo": { "title": "", "subtitle": "فرعي" } }\n' >"$FEATURE/src/features/demo/locales/ar.json"
+printf '{ "demo": { "title": "Title", "subtitle": "Sub" } }\n' >"$FEATURE/src/features/demo/locales/en.json"
+run_hook post-edit.sh "$(edit_input "$FEATURE/src/features/demo/locales/ar.json")"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'validate-i18n.ts fails'; then ok; else ko "post-edit blocks a real locale defect (empty value)" "exit $CODE: $ERR"; fi
 rm -rf "$FEATURE/src/features"
 
 run_hook post-edit.sh "$(edit_input "$FEATURE/README.md")"
@@ -614,6 +623,8 @@ printf '{ "name": "fixture", "scripts": { "typecheck": "tsc -p tsconfig.json" } 
 printf 'export const b: number = "text"\n' >"$FEATURE/src/b.ts"
 run_hook subagent-gate.sh '{"hook_event_name":"SubagentStop","agent_type":"frontend-dev","stop_hook_active":false}'
 if [ "$CODE" -eq 0 ] && [ "$(printf '%s' "$OUT" | jq -r '.decision')" = block ] && printf '%s' "$OUT" | jq -r '.reason' | grep -q 'b.ts'; then ok; else ko "subagent-gate sends frontend-dev back with the type errors" "exit $CODE: $OUT"; fi
+run_hook subagent-gate.sh '{"hook_event_name":"SubagentStop","agent_type":"frontend-kit:frontend-dev","stop_hook_active":false}'
+if [ "$CODE" -eq 0 ] && [ "$(printf '%s' "$OUT" | jq -r '.decision')" = block ]; then ok; else ko "subagent-gate also gates the plugin-qualified agent name" "exit $CODE: $OUT"; fi
 rm -f "$FEATURE/src/b.ts"
 run_hook subagent-gate.sh '{"hook_event_name":"SubagentStop","agent_type":"test-engineer","stop_hook_active":false}'
 [ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "subagent-gate passes clean work" "exit $CODE: $OUT"

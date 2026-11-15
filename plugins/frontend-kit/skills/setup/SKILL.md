@@ -40,10 +40,15 @@ Never read `.env` or `.env.local` to find a value; `.env.example` only.
 | `templates/shared/rules/*.md` + `templates/<profile>/rules/*.md` | `./.claude/rules/` |
 | `templates/<profile>/settings.json` | `./.claude/settings.json` (merge, below) |
 | `templates/<profile>/frontend-kit.json` | `./.claude/frontend-kit.json` |
+| `templates/shared/package.scripts.json` | `./package.json` `scripts` (add only the names that are missing) |
+| `templates/shared/scripts/validate-i18n.ts` | `./scripts/validate-i18n.ts` (only if the project has no i18n validator) |
+| `templates/shared/config/.oxlintrc.json`, `.oxfmtrc.json` | `./` (only when the project has no oxlint / oxfmt config yet) |
+| `templates/shared/style/theme.css` | the profile's theme path (website `src/shared/style/theme.css`, dashboard `src/styles/theme.css`), only when the project has no theme file; say which fonts it imports |
 
 In every copied file replace each `{{PLACEHOLDER}}` with the confirmed value. In `frontend-kit.json` also set
 `projectName`, `projectDescription`, `profile`, `liveHosts` (the live host, plus `api.`/`www.` variants the
-user names), `uatHost`, `githubRepo`, `defaultBranch`, `protectedBranches` (array), `devPort`, `e2ePort` and
+user names), `uatHost`, `githubRepo`, `defaultBranch`, `protectedBranches` (the array built from the one `{{PROTECTED_BRANCHES}}` answer — never leave the template's
+`["main","master"]` when the user chose others), `devPort`, `e2ePort` and
 `apiBaseEnv`. The plugin's skills and agents read these (written `<defaultBranch>`, `<devPort>`, … in their
 text), so every key must be present. An empty value stays an empty string or empty list — never invent a host.
 Drop empty hosts from `liveHosts` and from `sandbox.network.deniedDomains` in `settings.json` (an empty entry there
@@ -71,6 +76,14 @@ Merging:
 
 ## 4. Finish
 
+- `package.json` scripts: add the names from `package.scripts.json` that are missing, never overwrite an existing
+  script. `i18n:validate` runs the shipped `scripts/validate-i18n.ts` (Node >= 22.18); a project with its own
+  validator keeps it.
+- Fill `.claude/rules/project.md` with what is already known (the files setup just created, the script wrappers,
+  the stack choices the user named); leave the rest empty for the first task to fill.
+- Env file: if `.env.example` exists and `.env` does not, tell the user to run `cp .env.example .env` (the kit
+  denies Claude reading or editing `.env`, so the user creates it). Write `.env.example` from `{{API_BASE_ENV}}`
+  if neither file exists; `.env.example` stays editable.
 - Add to `.gitignore` if missing (ask once): `.claude/state/`, `.claude/settings.local.json`.
 - Check `jq` is installed (`command -v jq`): every hook needs it. If missing, say `brew install jq`.
 - Report in 3–6 lines: profile, files created / merged / skipped, values used, and the next steps:

@@ -1,0 +1,70 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "react",
+    "import",
+    "jsx-a11y",
+    "vitest"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "rules": {
+    "curly": "error",
+    "eqeqeq": "error",
+    "no-console": "error",
+    "no-debugger": "error",
+    "max-lines": [
+      "error",
+      {
+        "max": 500,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/consistent-type-imports": "error",
+    "react/jsx-no-target-blank": "error",
+    "react/no-danger": "error",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "react/react-in-jsx-scope": "off",
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/anchor-is-valid": "error",
+    "jsx-a11y/label-has-associated-control": "error",
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "react/refs": "off",
+    "jsx-a11y/control-has-associated-label": "off"
+  },
+  "ignorePatterns": [
+    "dist",
+    ".output",
+    "coverage",
+    "playwright-report",
+    "test-results",
+    "node_modules",
+    "src/routeTree.gen.ts"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "e2e/**",
+        "scripts/**",
+        "**/*.test.ts",
+        "**/*.test.tsx"
+      ],
+      "rules": {
+        "no-console": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    }
+  ]
+}

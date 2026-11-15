@@ -28,7 +28,9 @@ is. All of it lives in `src/lib/monitoring.ts`; nothing else imports `@sentry/re
 
 ## No PII
 
-- `sendDefaultPii: false`. Never call `setUser` with a name, email or phone;
+- No default PII: on `@sentry/react` 11 set
+  `dataCollection: { userInfo: false, cookies: false, httpHeaders: false, urlQueryParams: false, httpBodies: [] }`
+  (`sendDefaultPii: false` on 10 and older). Never call `setUser` with a name, email or phone;
   an opaque user id at most, and only if the project allows it.
 - `beforeSend` removes `Authorization` and `Cookie` headers, and strips query
   strings that can carry personal data (`?q=` search text, tokens).

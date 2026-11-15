@@ -8,6 +8,7 @@ paths:
   - "src/features/**/pages/edit/**"
   - "src/components/dialog/**"
   - "src/components/fields/**"
+  - "src/hooks/use-unsaved-changes-guard.ts"
 ---
 
 # Forms and CRUD
@@ -83,6 +84,33 @@ Skill: `dash-create-crud`.
   not colour only; errors are linked with `aria-describedby`.
 - Phone, email, codes and numbers are `dir="ltr"` inputs inside RTL forms.
 - Footer buttons use logical order: primary at the inline end in both directions.
+
+
+## Edit pages: conflicts and unsaved changes
+
+**Optimistic locking** (when the backend has `updatedAt` / a version and rejects stale writes):
+
+- Mount the form with `key={detail.updatedAt}` instead of resetting it from a refetch: a background refetch must not
+  clobber what the user is typing.
+- Send `expectedUpdatedAt` with the update; on success `setQueryData` the returned record.
+- On a 409 stale error open a conflict dialog with three outcomes: load the latest (discard my edits), overwrite
+  (resend with the newest timestamp), keep editing. The client treats that status as handled
+  (`silentErrorStatuses: [409]`), so no generic error toast fires.
+- Report a backend that offers no such check (scope.md); do not fake one.
+
+**Dirty-form guard** (pages; dialogs just confirm on close): block in-app navigation and tab close while the form is
+dirty (`useBlocker({ shouldBlockFn, enableBeforeUnload, withResolver: true })`), with a bypass for the navigation
+that follows a successful save or create. One shared hook (`use-unsaved-changes-guard`), not one per form.
+
+**Field arrays, uploads, cross-field rules:**
+
+- `useFieldArray` for repeating rows (variants, addresses); keep a stable id per row, never the index, as key.
+- Numbers are strings in the form and parsed once in `toXPayload`; the schema (`superRefine`) mirrors the server's
+  cross-field rules (end after start, unique SKUs) so the user sees them before the round trip.
+- Uploads: multipart through the same client, a preview from the response URL, progress only if the API gives it.
+- `applyApiFieldErrors(error, setError, translate)` maps **every** key of the backend's `errors` object, including
+  dotted array paths (`variants.1.sku`); backend values are codes or English text, so translate them per field. The
+  single `field as Path<T>` cast inside this one helper is the allowed exception to the no-cast rule.
 
 ## Don't
 

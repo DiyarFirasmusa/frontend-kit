@@ -108,7 +108,7 @@ features/<group>/<entity>/
 ## Task delivery
 
 - Implement directly: `task` for a new task, `dash-create-route` / `-table` /
-  `-crud` / `-filter-bar` for those shapes, `verify` before saying done,
+  `-crud` / `-filter-bar` / `-detail` / `-settings-form`, `verify` before saying done,
   `review` before asking to commit a non-trivial change.
 - Long runs: keep a todo list and keep going until done or truly blocked.
 

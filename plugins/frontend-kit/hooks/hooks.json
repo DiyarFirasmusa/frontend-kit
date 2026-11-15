@@ -82,7 +82,7 @@
     ],
     "SubagentStop": [
       {
-        "matcher": "frontend-dev|test-engineer",
+        "matcher": "(frontend-kit:)?(frontend-dev|test-engineer)",
         "hooks": [
           {
             "type": "command",

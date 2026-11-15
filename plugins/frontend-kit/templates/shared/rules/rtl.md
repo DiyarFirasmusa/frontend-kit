@@ -11,7 +11,7 @@ directions, so write direction-neutral code, not RTL code patched for LTR or
 the reverse.
 
 `<html dir lang>` is set from the language in one place (the root route /
-app shell; `CLAUDE.md` names it). Website (TanStack Start): it is rendered on
+app shell; `project.md` names it). Website (TanStack Start): it is rendered on
 the server, so the first HTML already has the right `dir`. Components inherit
 it — never hardcode `dir="rtl"` or `dir="ltr"` on a layout container.
 
@@ -76,7 +76,7 @@ URLs stay LTR inside Arabic text:
 <span dir="ltr" className="tabular-nums">+1 555 010 0199</span>
 ```
 
-Numbers stay Western digits in both languages unless `CLAUDE.md` says
+Numbers stay Western digits in both languages unless `project.md` says
 otherwise; use `tabular-nums` for prices and counters. Format money and dates
 through the project's formatters.
 
@@ -85,3 +85,11 @@ through the project's formatters.
 Walk every changed screen in Arabic and English, at phone width and desktop
 width. Playwright e2e runs both languages; assert `html[dir]` when layout
 direction matters.
+
+## Details that cost time
+
+- **Free text direction.** An input follows what the user types and the UI direction while empty: every input
+  renders `placeholder=" "` and the base styles apply `unicode-bidi: plaintext` to `input:not(:placeholder-shown)`
+  (see `theme.css`). Latin-only fields (email, URL, SKU) set `dir="ltr"`.
+- **One mirror utility** for directional icons and arrows: `rtl:-scale-x-100`. Not `rotate-180`.
+- **Charts and time axes** stay left-to-right (`dir="ltr"` on the chart) with Arabic labels; do not ask each time.

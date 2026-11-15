@@ -59,7 +59,7 @@ Never name a file after its folder (`detail/detail.tsx`) and never write an
 | Constant | SCREAMING_SNAKE_CASE | `PAGE_SIZE`, `MAX_OTP_LENGTH` |
 | Boolean | `is` / `has` / `can` / `should` | `isPending`, `hasAccess` |
 | Handler | `handle<Event>` inside, `on<Event>` as a prop | `handleSubmit`, `onRemove` |
-| Query keys | `<factory>.<domain>.<key>` | `queryKeys.orders.detail(id)` |
+| Query keys | `<factory>.<domain>.<key>` | `qk.orders.detail(id)` |
 | Translation keys | exactly two levels, camelCase | `orders.emptyTitle` |
 
 **Backend fields** stay exactly as the API sends them. Use the generated API

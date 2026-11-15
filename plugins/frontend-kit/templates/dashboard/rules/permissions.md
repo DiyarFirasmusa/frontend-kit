@@ -69,6 +69,17 @@ permissions; use the hook wherever the result gates JSX.
 - One integration test per guarded page: no permission → `/403`.
 - Test helpers set permissions explicitly; never rely on a persisted store.
 
+
+## Read-only mode
+
+"May open the page but not edit it" is a different state from "may not see it":
+
+- The form is wrapped in `<fieldset disabled>`; components that ignore fieldset (a base-ui `Switch`, custom
+  toggles) get `disabled` explicitly; inline table toggles become plain badges.
+- No save/submit button, and a visible read-only notice says why.
+- A 403 from the backend refreshes the permission data (`/me`) and calls `router.invalidate()` so guards re-run; the
+  `(errors)/403` page renders inside the signed-in shell, not bare.
+
 ## Don't
 
 - No role-name checks (`role === 'admin'`) in features; check a permission.

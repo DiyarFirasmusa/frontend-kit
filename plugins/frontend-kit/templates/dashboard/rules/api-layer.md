@@ -42,6 +42,7 @@ silentErrorStatuses?: readonly number[]   // no error toast for these statuses o
 successMessage?: string                   // i18n key when the backend sends no message
 skipAuthHandling?: boolean                // no refresh, no redirect, no toast (logout)
 keepSession?: boolean                     // a 401 is reported, never refreshed (wrong old password)
+isRetry?: boolean                         // set by the client on the one retry after a refresh; never set by callers
 ```
 
 ## Envelope
@@ -68,7 +69,7 @@ mirror `docs/api/openapi.json`.
 - `privateApi` attaches `Authorization: Bearer <token>` from memory (or the
   auth store), plus `Accept-Language`.
 - On 401: one module-level refresh promise shared by every request that failed
-  meanwhile (single-flight); each retries **once** (`_retry` flag). Refresh
+  meanwhile (single-flight); each retries **once** (`isRetry` flag). Refresh
   fails → clear session, query cache and stores, redirect to `/login?redirect=…`.
 - The refresh call goes through `publicApi` with `silent` + `silentError` and
   never triggers itself.
@@ -112,6 +113,18 @@ export const qk = {
 - `enabled: Boolean(id)` on every query that depends on an id or selection.
 - Mutations invalidate `qk.x.all` in `onSuccess` at the hook (`forms-crud.md`).
 - Sign-out clears the whole query cache.
+
+
+## Sessions, blobs and downloads
+
+- **Session restore.** The access token lives in memory only. The refresh token survives a reload in
+  `sessionStorage` (or an HttpOnly cookie when the backend sets one). `bootstrapSession()` runs before the first
+  render, restores permissions from `/me`, and the router mounts after it. A hook registry
+  (`registerSessionHooks({ onSessionExpired, onForbidden })`) lets the API layer call the session layer without a
+  circular import.
+- **Blob and CSV responses.** The envelope unwrap skips `responseType: 'blob'`; the file name comes from
+  `content-disposition` (the backend must `exposeHeaders` it cross-origin); one shared `downloadBlob` util saves it.
+  Errors on a blob request arrive as a blob too: parse it before showing a message.
 
 ## Don't
 

@@ -52,7 +52,12 @@ resets stores between tests.
 
 Website (TanStack Start): a persisted store hydrates on the client only —
 render the server-safe default first and don't read `localStorage` during
-render, or the HTML and the first client render disagree.
+render, or the HTML and the first client render disagree. The Zustand way:
+`persist(..., { skipHydration: true })`, then call `useXStore.persist.rehydrate()`
+in `beforeLoad` of client-only routes and in a layout effect for the rest.
+
+A store holds guest data only (ids, a cart of ids) when sign-out should not clear
+it: say which stores sign-out resets in `project.md`; a guest cart is not user data.
 
 ## Hand-off store — `<feature>/store/<x>-store.ts`
 

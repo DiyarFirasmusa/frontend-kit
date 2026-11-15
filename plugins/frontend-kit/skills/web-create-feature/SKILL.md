@@ -21,6 +21,12 @@ Follow the order; each step feeds the next. Read first:
 - Does any call need a secret, the session cookie or a non-CORS backend? →
   server function (`web-server-fn`).
 
+**Light path** (a near-static page with one request, e.g. a home page): skip the
+service layer (call the client in `queryOptions` directly), keep the head builder
+inline when it is under 15 lines, and write one locale pair. Everything else
+(loader, `head()`, query key from `qk`, tests) stays. When a second feature needs
+the call, promote its service **and** its queries to `src/shared/` together.
+
 ## 1. Constants
 
 - `src/shared/constants/api.ts` → `endpoints.<domain>` (`list`, `detail: (slug) => …`).

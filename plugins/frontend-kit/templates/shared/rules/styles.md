@@ -7,7 +7,7 @@ paths:
 
 Tailwind CSS v4 with design tokens (mirrored from the Figma file when there
 is one). The tokens, dark overrides and the few component classes live in the
-theme CSS file named in `CLAUDE.md`. Every visual change is checked in
+theme CSS file named in `project.md`. Every visual change is checked in
 **light and dark**, **Arabic and English**, **phone and desktop**.
 
 ## Colour: semantic tokens only
@@ -53,7 +53,7 @@ prefer the UI kit's variants (`cva`) over new CSS classes.
 
 ## Icons and images
 
-- One icon family (as `CLAUDE.md` names, e.g. `lucide-react`). Decorative
+- One icon family (as `project.md` names, e.g. `lucide-react`). Decorative
   icons get `aria-hidden="true"`; icon-only buttons get an `aria-label`.
   Directional icons mirror with `rtl:-scale-x-100`.
 - Images: `width` / `height` (or an `aspect-*` box) to avoid layout shift,
@@ -79,3 +79,18 @@ one scale (the same `gap-*` across a list, phone and desktop alike).
 - Blanket descendant overrides (`[&_*]:text-[15px]`).
 - `dark:` variants to patch a hardcoded colour — use the token.
 - Physical `left` / `right` utilities for layout.
+
+## Token names
+
+One vocabulary, defined in `theme.css` (light + dark): `background`, `surface`, `surface-dim`, `foreground`, `muted`,
+`border`, `input`, `ring`, `primary` / `primary-foreground` / `primary-soft`, and `success`, `warning`, `danger`,
+`info` each with a `-soft` variant, `neutral-soft`, `overlay`. Utilities: `bg-surface`, `text-muted`,
+`border-border`, `text-danger`… Components use these and need no `dark:` variant. A new colour is a new token, not a
+hex in a component.
+
+## Horizontal scrollers
+
+Every carousel, rail or nav strip with `overflow-x-auto` is also `relative`: an
+absolutely positioned child (a visually hidden label) escapes the clip of a
+non-positioned scroller and widens the whole page silently. Playwright asserts
+`document.documentElement.scrollWidth <= innerWidth` at 375px in both languages.

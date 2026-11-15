@@ -8,7 +8,7 @@
 
 if [ "${HOOK_KIND:-}" = guard ]; then
   # exit inside an EXIT trap replaces the exit status: anything but 0 or 2 becomes a block.
-  trap 'hook_status=$?; if [ "$hook_status" -ne 0 ] && [ "$hook_status" -ne 2 ]; then echo "Blocked: the ${0##*/} hook failed (exit $hook_status), so this call is refused. Run bash .claude/hooks/test-hooks.sh to find the cause." >&2; exit 2; fi' EXIT
+  trap 'hook_status=$?; if [ "$hook_status" -ne 0 ] && [ "$hook_status" -ne 2 ]; then echo "Blocked: the ${0##*/} hook failed (exit $hook_status), so this call is refused. Run bash ${CLAUDE_PLUGIN_ROOT:-<plugin>}/scripts/test-hooks.sh to find the cause." >&2; exit 2; fi' EXIT
 fi
 
 if ! command -v jq >/dev/null 2>&1; then

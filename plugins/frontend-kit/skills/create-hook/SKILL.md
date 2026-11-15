@@ -14,12 +14,12 @@ the folders. Pure helpers are not hooks — `hooks/<x>-actions.ts` or `utils/`.
 
 ```ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { queryKeys } from '@/<shared>/constants/query-keys'
+import { qk } from '@/<shared>/constants/query-keys'
 import { archiveOrder, fetchOrder } from '../services/orders.service'
 
 export function useOrder(orderId: string | undefined) {
   return useQuery({
-    queryKey: queryKeys.orders.detail(orderId ?? ''),
+    queryKey: qk.orders.detail(orderId ?? ''),
     queryFn: () => fetchOrder(orderId ?? ''),
     enabled: Boolean(orderId),
   })
@@ -30,7 +30,7 @@ export function useArchiveOrder() {
   return useMutation({
     mutationFn: archiveOrder,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.orders.all })
+      void queryClient.invalidateQueries({ queryKey: qk.orders.all })
     },
   })
 }

@@ -8,6 +8,7 @@ set -u
 hook_read_input
 
 AGENT="$(hook_field '.agent_type')"
+AGENT="${AGENT##*:}" # plugin agents may be reported as <plugin>:<name>
 case "$AGENT" in
   frontend-dev | test-engineer) ;;
   *) exit 0 ;;

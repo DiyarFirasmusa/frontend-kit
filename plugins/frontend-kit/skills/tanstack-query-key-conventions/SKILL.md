@@ -6,7 +6,7 @@ description: Query and mutation key conventions — every key comes from the pro
 # Query keys
 
 All keys come from one factory (its name and file are in `CLAUDE.md`, e.g.
-`queryKeys` in `constants/query-keys.ts`). No inline arrays (`['orders']`,
+`qk` in `constants/query-keys.ts`). No inline arrays (`['orders']`,
 `['getProducts']`) anywhere else.
 
 ## Shape
@@ -15,7 +15,7 @@ One entry per backend domain. `all` is the prefix of every key in the family,
 so one invalidation clears it:
 
 ```ts
-export const queryKeys = {
+export const qk = {
   orders: {
     all: ['orders'] as const,
     list: (params: OrderListParams) => ['orders', 'list', params] as const,
@@ -42,7 +42,7 @@ export const queryKeys = {
 ```ts
 export const orderQueryOptions = (orderId: string) =>
   queryOptions({
-    queryKey: queryKeys.orders.detail(orderId),
+    queryKey: qk.orders.detail(orderId),
     queryFn: () => fetchOrder(orderId),
   })
 
@@ -51,7 +51,7 @@ useQuery({ ...orderQueryOptions(orderId), enabled: Boolean(orderId) })
 useMutation({
   mutationFn: archiveOrder,
   onSuccess: () => {
-    void queryClient.invalidateQueries({ queryKey: queryKeys.orders.all })
+    void queryClient.invalidateQueries({ queryKey: qk.orders.all })
   },
 })
 ```
@@ -63,7 +63,7 @@ useMutation({
 - Session-scoped data is cleared on sign-out by the project's sign-out
   function — don't add per-feature cleanup.
 - `setQueryData` only with a key from the factory and the exact cached type.
-- `mutationKey` is optional; when needed use `[...queryKeys.<domain>.all, '<verb>']`.
+- `mutationKey` is optional; when needed use `[...qk.<domain>.all, '<verb>']`.
 - Website (TanStack Start): the query client is created per request on the
   server — never a module-level client shared between requests.
 

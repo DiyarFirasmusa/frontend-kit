@@ -14,10 +14,12 @@ Bundles:
 - The global `locales/{ar,en}.json` — shell, shared components, common words:
   every key used by shared code or by two or more features.
 - `<feature>/locales/{ar,en}.json` — keys used by that feature only, when the
-  project splits bundles per feature. A feature bundle is registered with
-  `i18n.addResourceBundle(lang, 'translation', bundle, true, true)` from the
-  feature's route component so the strings ship with the route chunk, and the
-  test setup imports every bundle. Same `translation` namespace everywhere,
+  project splits bundles per feature. Feature bundles are
+  loaded before the first render: merged at build time with
+  `import.meta.glob('/src/**/locales/{ar,en}.json', { eager: true })`, or
+  registered with `addResourceBundle` in the route **loader**, never from the
+  component (`head()` and the hydration render run first). The test setup
+  imports every bundle. Same `translation` namespace everywhere,
   so moving a key between bundles never changes a call site; a key lives in
   one bundle only.
 
@@ -31,7 +33,7 @@ language comes from the persisted setting on load.
 `group.key` — e.g. `orders.emptyTitle`, `common.save`. One level or three+
 levels are rejected. Both segments camelCase. i18next plural suffixes are
 allowed on the second segment (`orders.itemsCount_one`, `_other`; Arabic also
-`_zero`, `_two`, `_few`, `_many`).
+`_zero`, `_two`, `_few`, `_many` only where the sentence changes).
 
 Flatten deeper keys by joining the sub-group into the key:
 
@@ -96,7 +98,7 @@ between Arabic and English.
 - Backend messages are shown only when they are in the UI language (the API
   client's error resolver handles it) — don't translate them by hand.
 - `npm run i18n:validate` must pass: two levels, camelCase, ar/en parity,
-  plural forms (Arabic all six, English `_one` + `_other`), no key in two
+  plural forms (`_one` + `_other` in both; Arabic extras optional), no key in two
   bundles, and every static key the code names exists.
 - Prices, numbers, dates and times go through the project's formatters (UI
   language, Western digits, a dash for bad input). No language-dependent

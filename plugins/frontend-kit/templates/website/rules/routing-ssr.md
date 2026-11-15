@@ -67,6 +67,14 @@ words, the same in both languages.
 - Search params that change the data go in `loaderDeps` **and** the query key.
 - Filters, sort and page live in the URL (shareable, back-button safe), not
   in Zustand.
+- The recipe: every field `.default(x).catch(x)` (`.catch` alone makes the field
+  required in every `<Link search>`), plus `stripSearchParams(defaults)` so
+  defaults never leak into the URL (or into a `redirect` built from it).
+- The router JSON-parses values: `?q=100553` arrives as a number and an array
+  filter serialises as `brand=["Nova"]`, so an outside link `?brand=Nova` would be
+  dropped. Use a `looseText` preprocess for text and ids, and a `listParam()` that
+  accepts both JSON arrays and comma text. Test each list schema with a numeric
+  `q` and a comma list.
 
 ## Guards and redirects
 
@@ -95,9 +103,15 @@ words, the same in both languages.
 ## SSR mode per route
 
 - Default `ssr: true`: everything public stays server-rendered.
-- `ssr: 'data-only'` or `ssr: false` only for pages that are private, need
+- `ssr: 'data-only'` still runs the loader on the server, so it needs the server-side session
+  model; with a browser-held token use `ssr: false`. Both only for pages that are private, need
   browser-only APIs, and are `noindex` — the server then renders the route's
   `pendingComponent`, so give it the final layout size.
+- Under an `ssr: false` parent (the usual account guard) the server does not run
+  the child's `head()`: the guard's own `head()` is the only source of the
+  `<title>` and `<meta name="robots" content="noindex">` in the HTML. Set
+  `noindex` there (plus `private, no-store` and `X-Robots-Tag` in `headers()`) and
+  assert it in e2e.
 
 ## Hydration: server and client must render the same thing
 

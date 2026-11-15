@@ -100,12 +100,25 @@ Page past the end (rows empty, page > 1): navigate to the last valid page.
 
 - Logical properties only: `text-start`, `ps-*`, `pe-*`, `start-0` for sticky
   columns. Numbers stay `text-end` in both directions.
-- Pagination arrows flip in RTL (`rtl:rotate-180`); "next" still means the
+- Pagination arrows flip in RTL (`rtl:-scale-x-100`, the same utility as every other directional icon); "next" still means the
   next page.
 - Wide tables scroll inside their own container (`overflow-x-auto`) with the
   first column sticky at `start-0`; the page itself never scrolls sideways.
 - On phones, keep the key columns and hide the rest with column visibility, or
   render the same rows as cards. Touch targets ≥ 44px.
+
+
+## Selection, visibility and server pages
+
+- With `manualPagination`, `table.getIsAllPageRowsSelected()` is wrong (false while every visible row is selected).
+  Derive the header checkbox from `table.getRowModel().rows` (`rows.every((row) => row.getIsSelected())`).
+- Clear selection from the page/filter/sort **key** (a `useRowSelection(resetKey)` that derives "empty" when the key
+  changes), not from an effect that watches them.
+- Column visibility: a menu on the table toolbar, persisted per table (a small store keyed by table id), default
+  columns visible on desktop, the essential ones only on phones.
+- Non-delete bulk actions (status change) show a result dialog: how many updated, how many skipped and why.
+- Export covers the **filtered set**, not the page; the file comes from the blob path in `api-layer.md`.
+- Inline toggles update optimistically and roll back on error.
 
 ## Don't
 

@@ -1,13 +1,13 @@
 ---
 name: accessibility-auditor
-description: Audits a page or component of this project for WCAG 2.1 AA — keyboard, screen readers, semantics, contrast in light and dark, forms (phone, OTP, address, search, filters, tables), Arabic RTL and English LTR. Use when building or reviewing UI.
+description: Audits a page or component of this project for WCAG 2.2 AA — keyboard, screen readers, semantics, contrast in light and dark, forms (phone, OTP, address, search, filters, tables), Arabic RTL and English LTR. Use when building or reviewing UI.
 model: sonnet
 effort: medium
 color: pink
 tools: Read, Grep, Glob, Bash
 ---
 
-Audit the given page or component against WCAG 2.1 AA. Read `CLAUDE.md` and
+Audit the given page or component against WCAG 2.2 AA. Read `CLAUDE.md` and
 `.claude/rules/` first, then the code (and the project's axe e2e spec, if it
 has one); when useful run that spec with `npm run test:e2e -- <spec>`.
 

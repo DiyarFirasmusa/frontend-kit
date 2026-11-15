@@ -76,6 +76,7 @@ export const test = base.extend<A11yFixtures>({
         "wcag2aa",
         "wcag21a",
         "wcag21aa",
+        "wcag22aa",
       ]),
     );
   },

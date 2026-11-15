@@ -42,6 +42,9 @@ case "$REL" in
     if [ -x "$BIN/oxlint" ]; then
       LINT="$("$BIN/oxlint" --format=unix "$REL" 2>&1)"
       LINT_STATUS=$?
+      # An ancestor .gitignore that ignores the whole project (nested apps, playgrounds) makes oxlint find no
+      # file to lint: that is "nothing checked", not a failure.
+      printf '%s' "$LINT" | grep -q 'No files found to lint' && LINT_STATUS=0
       FINDINGS="$(printf '%s\n' "$LINT" | grep -E "^$REL:[0-9]+:[0-9]+:" | head -n 30)"
       if [ $LINT_STATUS -ne 0 ]; then
         PROBLEMS="oxlint errors in $REL (fix them; don't silence them):
@@ -61,10 +64,21 @@ case "$REL" in
     I18N_STATUS=0
     [ -n "$I18N_CMD" ] && { I18N="$(sh -c "$I18N_CMD" 2>&1)" || I18N_STATUS=$?; }
     if [ "$I18N_STATUS" -ne 0 ]; then
-      PROBLEMS="${PROBLEMS:+$PROBLEMS
+      I18N_TAIL="$(printf '%s\n' "$I18N" | grep -vE '^\s*$' | tail -n 30)"
+      # ar and en are edited one after the other, so a key that exists in only one of them is expected midway.
+      # The Stop gate still blocks if the pair is not whole at the end. Anything else is a real defect now.
+      I18N_REAL="$(printf '%s\n' "$I18N" | grep -E '^error ' | grep -vE 'is in (ar|en)\.json but missing from (ar|en)\.json|needs both ar\.json and en\.json')"
+      if [ -n "$I18N_REAL" ] || ! printf '%s\n' "$I18N" | grep -qE '^error '; then
+        PROBLEMS="${PROBLEMS:+$PROBLEMS
 
-}$I18N_CMD fails (if you are midway through adding a key, add it to the other language next — ar and en always change together):
-$(printf '%s\n' "$I18N" | grep -vE '^\s*$' | tail -n 30)"
+}$I18N_CMD fails:
+$I18N_TAIL"
+      else
+        WARNINGS="${WARNINGS:+$WARNINGS
+
+}$I18N_CMD: ar and en differ right now (expected until you edit the other language; the Stop gate blocks if they still differ):
+$I18N_TAIL"
+      fi
     fi
     ;;
 esac

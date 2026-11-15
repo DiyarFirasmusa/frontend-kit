@@ -81,13 +81,19 @@ The HTTP library (fetch or axios) is imported only inside `src/shared/api/`.
 
 - The session lives in an HttpOnly cookie. Tokens never go into
   `localStorage`, loader data, query keys or the HTML.
-- Pick one model per project and write it in CLAUDE.md:
+- Pick one model per project and write it in `.claude/rules/project.md`:
   - **Server-side session (preferred for SSR):** private reads/writes go
     through server functions that read the cookie and call the backend, so
     private pages can render on the server (with `private, no-store`).
   - **Browser-held token:** private pages run with `ssr: false` and
     `noindex`; the client refreshes once on 401 (single-flight) and retries
     once.
+- **Backend returns the refresh token in the JSON body** (common): the access
+  token stays in memory only; login, register, refresh and logout are server
+  functions that keep the refresh token in an HttpOnly cookie. A non-secret
+  hint cookie (`session=1`) tells the client whether a refresh is worth trying,
+  so guests never call it. A memory-only token with no cookie signs the user out
+  on every reload.
 - 401 handling lives in the client (or the server function base) only:
   refresh once, retry once, then the session-expired path. Never handle 401
   in a feature.
@@ -114,6 +120,24 @@ export async function fetchProduct(slug: string): Promise<ProductDto> {
 - MSW mocks the network for services, query options and containers; never
   mock the client, services or Query with `vi.mock`.
 - Envelope builders (`ok(data)`, `fail(message, { status })`) live in
-  `src/test/msw/`. Unhandled requests fail the test.
+  `src/test/msw/`. Unhandled requests fail the test
+  (`onUnhandledFrame: 'error'` on MSW 3, `onUnhandledRequest` on MSW 2).
 - Server functions are tested by calling the handler logic (`*.server.ts`)
   directly with fixtures, plus one e2e through the built server.
+
+## Server functions return results, not thrown errors
+
+An `Error` thrown in a server function reaches the browser as a plain `Error`:
+`status`, `code` and field `errors` are lost, so a form cannot show "wrong
+credentials" or map a 422 onto fields. Handlers return
+
+```ts
+type ServerResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; status: number; code: string; message: string; errors?: Record<string, string> };
+```
+
+and the client side (`mutationFn`) converts `ok: false` into the project's
+`ApiError`, so the one `MutationCache` handler and the field mapping work the
+same as for direct calls. Split cookie I/O from logic (`refreshOnServer(token, io)`)
+so the logic is testable.
