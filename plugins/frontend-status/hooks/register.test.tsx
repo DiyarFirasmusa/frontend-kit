@@ -4,7 +4,7 @@ import type { TestBody } from 'claude-code/testing'
 const BAND = {
   plugin: 'frontend-status',
   component: 'AbovePrompt',
-  props: { hasSurvey: false, isWorking: false, maxRows: 4, bodyColumns: 120, scroll: { offset: 0, bodyRows: 4 }, view: {} },
+  props: { hasSurvey: false, isCollapsed: false, isWorking: false, maxRows: 4, bodyColumns: 120, scroll: { offset: 0, bodyRows: 4 }, view: {} },
 } as const
 
 const NOW = Date.parse('2026-11-06T12:00:00Z')

@@ -9,7 +9,7 @@ The kit is developed **against real apps, not in the abstract**. Two throw-away 
 2. Friction (wrong rule, missing skill, hook false-positive, template gap) → one line in that app's `FINDINGS.md` with a file path and a suggested fix.
 3. Fix it **in `plugins/`**, never only in the playground copy. Re-run setup in the playground (or diff the templates) to pull it back.
 4. Prove it: `KIT_TEST_PROJECT=playground/website bash plugins/frontend-kit/scripts/test-hooks.sh` (and `dashboard`).
-5. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json` **only** (when set in both places `plugin.json` wins silently and `claude plugin validate` warns; users get an update only when the version changes). Run `bash scripts/validate-repo.sh`, commit only `plugins/`, `docs/`, `scripts/`, `.github/`, root files.
+5. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json` **only** (when set in both places `plugin.json` wins silently and `claude plugin validate` warns; users get an update only when the version changes). Run `bash scripts/validate-repo.sh` and `claude plugin validate . --strict` (root, then each `plugins/<name>`; the root run does not open the plugins' files) and `claude plugin test plugins/frontend-status`, commit only `plugins/`, `docs/`, `scripts/`, `.github/`, root files.
 
 ## What is pushed, what is not
 

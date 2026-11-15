@@ -22,6 +22,15 @@ An empty line is a decision still open: ask the user before inventing the answer
 - Critical flows that must stay covered by tests (the domain rules):
 - Paths Claude must not touch beyond the kit's defaults:
 
+## Minimum versions the rules were checked against (November 2026)
+
+Rules name APIs of these majors; when the project is older, check the API before copying a snippet.
+Node 22.12+, Vite 6.4+ (Vitest 5), TanStack Query 5.102+ (`queryClient.query()`), TanStack Table 9, zod 4,
+react-hook-form 7, i18next 27 (`fallbackLng` defaults to false; an empty string falls back; `createInstance()` does
+not inherit plugins, call `use()` on each per-request instance), MSW 3 (`onUnhandledFrame`; no cookie jar or fake-timer
+patching in Node), Vitest 5 (`clearMocks` on; un-awaited async assertions fail), Playwright 1.65, Sentry 11
+(`dataCollection`; never leave it unset), oxlint 1.x, oxfmt 0.x (still beta), Tailwind 4.3.
+
 ## Local quirks
 
 Tooling surprises specific to this repo (nested git folders, ignored directories, custom script wrappers):

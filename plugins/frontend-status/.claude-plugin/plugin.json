@@ -1,6 +1,10 @@
 {
   "name": "frontend-status",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A band above the prompt in frontend-kit projects: branch (red on protected branches), changed files, ahead/behind the default branch, the last quality gate and whether the dev server is up. Reads .claude/frontend-kit.json.",
+  "author": {
+    "name": "diyarfirasmusa"
+  },
+  "license": "MIT",
   "types": "./types/index.d.ts"
 }
