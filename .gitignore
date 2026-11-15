@@ -4,3 +4,6 @@ __pycache__/
 node_modules/
 .claude/state/
 .claude/settings.local.json
+
+# local test apps (not part of the marketplace)
+playground/

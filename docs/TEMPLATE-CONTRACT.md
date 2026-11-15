@@ -16,9 +16,15 @@ plugins/frontend-kit/
   agents/*.md                 shared agents
   hooks/hooks.json            hooks → ${CLAUDE_PLUGIN_ROOT}/scripts/*.sh
   scripts/                    hook scripts; they read .claude/frontend-kit.json
-  templates/shared/rules/     rules every profile gets (quality-bar, scope, git, naming, react, i18n, rtl, testing, styles)
+  templates/shared/rules/     rules every profile gets (quality-bar, scope, git, naming, react, i18n, rtl, testing, styles, project)
+  templates/shared/scripts/   validate-i18n.ts (no dependencies, Node type stripping)
+  templates/shared/config/    baseline .oxlintrc.json / .oxfmtrc.json (copied only when the project has none); `react/refs` and
+                              `jsx-a11y/control-has-associated-label` are off on purpose: they flag `ref={field.ref}` from react-hook-form
+                              and every `<td>`
+  templates/shared/style/     theme.css (semantic tokens, light + dark; copied only when the project has none)
   templates/<profile>/
-    CLAUDE.md                 project memory skeleton, ≤ 150 lines, placeholders below
+    CLAUDE.md                 project memory skeleton, ≤ 150 lines, placeholders below; project facts the rules
+                              refer to go in rules/project.md (shared), never into CLAUDE.md
     rules/*.md                profile-only rules (frontmatter `paths:` where it helps)
     settings.json             permissions (+ attribution, outputStyle) ONLY — no hooks (hooks live in the plugin)
     frontend-kit.json         the project config the hooks read (schema below)
@@ -53,6 +59,20 @@ Never write a real host, company, person or endpoint into a template. Hassa / in
   }
 }
 ```
+
+## package.json scripts (names are fixed; hooks, rules and CLAUDE.md use them)
+
+`templates/shared/package.scripts.json` is merged by setup (missing names only).
+
+| Script | Does |
+| ------ | ---- |
+| `typecheck` | `tsc --noEmit` (needs a flat `tsconfig.json`; a solution file with `references` checks nothing) |
+| `lint` / `lint:check` | oxlint with / without `--fix` |
+| `fmt` / `fmt:check` | oxfmt writes / `--check` |
+| `test`, `test:watch`, `test:coverage` | Vitest |
+| `test:e2e`, `test:e2e:ui`, `e2e:install` | Playwright |
+| `check` / `check:full` | typecheck + lint:check + test / + e2e + build |
+| `i18n:validate` | `node scripts/validate-i18n.ts` (the validator ships in `templates/shared/scripts/`; a project's own wins) |
 
 ## Writing style (all files)
 
