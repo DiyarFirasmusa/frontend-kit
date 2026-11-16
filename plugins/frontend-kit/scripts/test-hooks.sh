@@ -79,7 +79,8 @@ make_repo() {
   "protectedBranches": ["main", "master"],
   "devPort": "5173",
   "protectedPaths": [".github/**", "deploy/**", "server/**"],
-  "generatedPaths": ["src/shared/types/api.ts", "src/routeTree.gen.ts"]
+  "generatedPaths": ["src/shared/types/api.ts", "src/routeTree.gen.ts"],
+  "stopGate": { "review": false }
 }
 KITJSON
   printf '{\n  "name": "fixture",\n  "scripts": {\n    "build": "vite build",\n    "lint": "oxlint --fix"\n  }\n}\n' >"$dir/package.json"
@@ -712,13 +713,35 @@ SG="$WORK/stop-all"
 make_repo "$SG" feature/y
 export CLAUDE_PROJECT_DIR="$SG"
 printf 'export const d: number = 4\n' >"$SG/src/d.ts"
-printf '{"stopGate":{"tests":"all"},"commands":{"allTests":"echo boom-from-suite; exit 1"}}\n' >"$SG/.claude/frontend-kit.json"
+printf '{"stopGate":{"tests":"all","review":false},"commands":{"allTests":"echo boom-from-suite; exit 1"}}\n' >"$SG/.claude/frontend-kit.json"
 run_hook stop-gate.sh "$(stop_input s-all false)"
 if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'boom-from-suite'; then ok; else ko "stop-gate runs the whole suite when stopGate.tests is all" "exit $CODE: $ERR"; fi
-printf '{"stopGate":{"tests":"all"},"commands":{"allTests":"true"}}\n' >"$SG/.claude/frontend-kit.json"
+printf '{"stopGate":{"tests":"all","review":false},"commands":{"allTests":"true"}}\n' >"$SG/.claude/frontend-kit.json"
 printf 'export const d: number = 5\n' >"$SG/src/d.ts"
 run_hook stop-gate.sh "$(stop_input s-all true)"
 if [ "$CODE" -eq 0 ] && jq -r .summary "$SG/.claude/state/last-gate.json" | grep -q 'all tests'; then ok; else ko "stop-gate passes when the whole suite passes" "exit $CODE: $ERR"; fi
+
+# --- stop-gate.sh: the code review request -----------------------------------------------------------
+
+RG="$WORK/review-gate"
+make_repo "$RG" feature/z
+jq 'del(.stopGate)' "$RG/.claude/frontend-kit.json" >"$WORK/rg.json" && mv "$WORK/rg.json" "$RG/.claude/frontend-kit.json"
+export CLAUDE_PROJECT_DIR="$RG"
+printf 'export const e: number = 5\n' >"$RG/src/e.ts"
+run_hook stop-gate.sh "$(stop_input s-rev false)"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'frontend-reviewer'; then ok; else ko "stop-gate asks for a code review once the gate passes" "exit $CODE: $ERR"; fi
+run_hook stop-gate.sh "$(stop_input s-rev true)"
+if [ "$CODE" -eq 0 ]; then ok; else ko "stop-gate does not ask twice for the same state" "exit $CODE: $ERR"; fi
+printf 'export const e: number = 6\n' >"$RG/src/e.ts"
+run_hook stop-gate.sh "$(stop_input s-rev true)"
+if [ "$CODE" -eq 0 ]; then ok; else ko "stop-gate asks for one review per stop chain (fixes after the review are not reviewed again)" "exit $CODE: $ERR"; fi
+printf 'export const e: number = 7\n' >"$RG/src/e.ts"
+run_hook stop-gate.sh "$(stop_input s-rev false)"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'frontend-reviewer'; then ok; else ko "stop-gate asks again on the next prompt's changes" "exit $CODE: $ERR"; fi
+printf '{"stopGate":{"review":false}}\n' >"$RG/.claude/frontend-kit.json"
+printf 'export const e: number = 8\n' >"$RG/src/e.ts"
+run_hook stop-gate.sh "$(stop_input s-rev false)"
+if [ "$CODE" -eq 0 ]; then ok; else ko "stop-gate review is off with stopGate.review=false" "exit $CODE: $ERR"; fi
 
 # --- Every hook script is executable and valid bash -------------------------------------------
 

@@ -58,12 +58,13 @@ Never write a real host, company, person or endpoint into a template. Hassa / in
     "i18nValidate": "npm run i18n:validate",
     "allTests": "npx vitest run"
   },
-  "stopGate": { "tests": "related" },
+  "stopGate": { "tests": "related", "review": true },
   "hooks": { "skillSuggest": true }
 }
 ```
 
 `stopGate.tests`: `related` (default, only tests related to changed files) or `all` (runs `commands.allTests`).
+`stopGate.review: false` turns off the end-of-turn code review by the `frontend-reviewer` agent (Opus).
 `hooks.skillSuggest: false` turns off the per-prompt skill suggestions.
 
 ## package.json scripts (names are fixed; hooks, rules and CLAUDE.md use them)

@@ -54,6 +54,8 @@ against the Bazaar mock API — plus the research report (`playground/research/r
 
 - Auto-update: the settings templates declare the `frontend-kit` marketplace with `autoUpdate: true`, so a set-up project refreshes the marketplace and updates the plugin after a session starts (random delay up to 10 min; applies on the next session or `/reload-plugins`). **A release is a version bump in `plugin.json` pushed to `main`**: without a bump, projects get nothing.
 
+- Code review at the end of a turn (1.3.0): when the Stop gate passes on changed src/, it blocks once per stop chain and asks Claude to run the `frontend-reviewer` agent (`model: opus`) on the uncommitted changes. Off with `stopGate.review: false`. Plan mode adds a pointer to the personal `/spec` skill (`skill-suggest.sh`).
+
 **Next** (ranked in the research report; none started)
 
 1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.
