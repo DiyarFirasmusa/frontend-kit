@@ -4,6 +4,9 @@
 #   1. the kit's own skills, matched by the trigger regexes in skill-triggers.tsv (first 3 win), filtered
 #      to the project's profile (a dashboard never gets web-* skills, a website never gets dash-*);
 #   2. the project's own skills in .claude/skills/*, matched by description words (>= 3 distinct words).
+# In plan mode (permission_mode "plan") it also points Claude at the personal /spec workflow,
+# ~/.claude/skills/spec/SKILL.md, when that file exists. That skill is user-only (disable-model-invocation),
+# so Claude reads the file instead of invoking it.
 # Context only: it never blocks and never rewrites the prompt. Off with {"hooks": {"skillSuggest": false}}
 # in .claude/frontend-kit.json.
 set -u
@@ -55,8 +58,19 @@ for file in "$HOOK_ROOT"/.claude/skills/*/SKILL.md; do
   [ "$hits" -ge 3 ] && add "$name"
 done
 
-[ -z "$FOUND" ] && exit 0
-hook_context UserPromptSubmit "Skills that may fit this prompt (checked against the project's skills):
+SPEC_FILE="$HOME/.claude/skills/spec/SKILL.md"
+PLAN_NOTE=""
+if [ "$(hook_field '.permission_mode')" = plan ] && [ -f "$SPEC_FILE" ]; then
+  PLAN_NOTE="Plan mode is on. Read $SPEC_FILE and follow its spec workflow (questions, spec, wait for OK, then plan) before you write the plan."
+fi
+
+[ -z "$FOUND$PLAN_NOTE" ] && exit 0
+CONTEXT=""
+[ -n "$FOUND" ] && CONTEXT="Skills that may fit this prompt (checked against the project's skills):
 $FOUND
 Open the matching skill with the Skill tool before you start and follow it. If the prompt is only a question or none of them fits the actual task, ignore this list."
+[ -n "$PLAN_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
+
+}$PLAN_NOTE"
+hook_context UserPromptSubmit "$CONTEXT"
 exit 0

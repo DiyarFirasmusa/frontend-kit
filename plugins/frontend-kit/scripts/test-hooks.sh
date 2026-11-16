@@ -663,6 +663,22 @@ expect_skill "web-server-fn" "add a server function for the cart"
 expect_skill "-" "add a new table for the orders list"
 printf '{"hooks":{"skillSuggest":false}}\n' >"$SUGGEST/.claude/frontend-kit.json"
 expect_skill "-" "add a new table for the orders list"
+# Plan mode points at the personal /spec skill (only when that file exists).
+rm -f "$SUGGEST/.claude/frontend-kit.json"
+SPEC_HOME="$WORK/spec-home"
+mkdir -p "$SPEC_HOME/.claude/skills/spec" "$WORK/no-spec-home"
+printf -- '---\nname: spec\n---\n' >"$SPEC_HOME/.claude/skills/spec/SKILL.md"
+plan_input() { jq -n --arg p "$1" --arg m "$2" '{hook_event_name: "UserPromptSubmit", prompt: $p, permission_mode: $m}'; }
+OLD_HOME="$HOME"
+export HOME="$WORK/no-spec-home"
+run_hook skill-suggest.sh "$(plan_input "plan the new orders page" plan)"
+[ -z "$OUT" ] && ok || ko "skill-suggest: plan mode without the spec file adds nothing extra" "$OUT"
+export HOME="$SPEC_HOME"
+run_hook skill-suggest.sh "$(plan_input "plan the new orders page" plan)"
+printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -q 'Plan mode is on. Read .*/skills/spec/SKILL.md' && ok || ko "skill-suggest: plan mode points at the spec skill" "$OUT"
+run_hook skill-suggest.sh "$(plan_input "plan the new orders page" default)"
+[ -z "$OUT" ] && ok || ko "skill-suggest: no spec note outside plan mode" "$OUT"
+export HOME="$OLD_HOME"
 # Every skill named in the trigger file exists.
 while IFS="$(printf '\t')" read -r skill _; do
   case "$skill" in '' | '#'*) continue ;; esac
