@@ -25,6 +25,7 @@ vercel-react-best-practices	(re-?renders?|memoi[sz]|waterfall|bundle size|react 
 performance	(\bslow\b|speed up|load time|\blcp\b|layout shift|\bcls\b|lighthouse|faster|performance|بطيء)
 playwright-best-practices	(playwright|\be2e\b|end.to.end|flaky|page object|\baxe\b|test ?id)
 typescript-advanced-types	(generics?|conditional type|mapped type|utility type|type-?safe|template literal type)
+refactor-mode	(refactor mode|restructure|to (the )?standards|best practices|reorgani[sz]e|ريفاكتر)
 refactor	(refactor|split (the )?(file|component)|clean ?up|duplicat|move logic)
 review	(\breview\b|code review|check my (code|changes|branch)|راجع)
 verify	(\bverify\b|quality gate|run (all )?(the )?(tests|checks)|typecheck|\blint\b|check everything)

@@ -1,9 +1,13 @@
 #!/bin/bash
 # PostToolUse(Edit|Write|MultiEdit): formats and lints the file Claude just changed.
 #
-#   src/**/*.{ts,tsx,css,json}  → oxfmt writes the project's formatting (as lint-staged would on commit)
-#   src/**/*.{ts,tsx}           → oxlint; errors go back to Claude (exit 2), warnings as context
-#   src/**/locales/*.json       → npm run i18n:validate; violations go back to Claude (exit 2)
+#   <srcDir>/**/*.{ts,tsx,js,jsx,css,json} → the project's formatter writes its formatting
+#                                            (oxfmt, prettier or biome, whichever is installed)
+#   <srcDir>/**/*.{ts,tsx,js,jsx}          → the project's linter (oxlint, eslint or biome); errors go back to
+#                                            Claude (exit 2), oxlint warnings as context
+#   <srcDir>/**/locales/*.json             → the i18n validator; violations go back to Claude (exit 2)
+# <srcDir> is srcDirs / srcDir in .claude/frontend-kit.json (default src). {"commands": {"formatFile": "...",
+# "lintFile": "..."}} replaces the detection; the file path is appended to the command.
 #
 # PostToolUse can't undo the edit: exit 2 only puts stderr in front of Claude so it fixes the problem.
 set -u
@@ -15,8 +19,9 @@ FILE="$(hook_field '.tool_input.file_path')"
 REL="$(hook_rel_path "$FILE")"
 [ -f "$HOOK_ROOT/$REL" ] || exit 0
 
+kit_in_src "$REL" || exit 0
 case "$REL" in
-  src/*.ts | src/*.tsx | src/*.css | src/*.json) ;;
+  *.ts | *.tsx | *.js | *.jsx | *.mjs | *.css | *.json) ;;
   *) exit 0 ;;
 esac
 
@@ -32,14 +37,28 @@ fi
 BIN="$HOOK_ROOT/node_modules/.bin"
 cd "$HOOK_ROOT" || exit 0
 
-[ -x "$BIN/oxfmt" ] && "$BIN/oxfmt" --no-error-on-unmatched-pattern "$REL" >/dev/null 2>&1
+FORMAT_CMD="$(kit_get '.commands.formatFile' '')"
+if [ -n "$FORMAT_CMD" ]; then
+  sh -c "$FORMAT_CMD \"\$0\"" "$REL" >/dev/null 2>&1
+else
+  case "$(kit_tool oxfmt prettier biome)" in
+    oxfmt) "$BIN/oxfmt" --no-error-on-unmatched-pattern "$REL" >/dev/null 2>&1 ;;
+    prettier) "$BIN/prettier" --write --ignore-unknown "$REL" >/dev/null 2>&1 ;;
+    biome) "$BIN/biome" format --write --no-errors-on-unmatched "$REL" >/dev/null 2>&1 ;;
+  esac
+fi
 
 PROBLEMS=""
 WARNINGS=""
 
+LINT_CMD="$(kit_get '.commands.lintFile' '')"
+LINTER="$(kit_tool oxlint eslint biome)"
 case "$REL" in
-  *.ts | *.tsx)
-    if [ -x "$BIN/oxlint" ]; then
+  *.ts | *.tsx | *.js | *.jsx | *.mjs)
+    if [ -n "$LINT_CMD" ]; then
+      LINT="$(sh -c "$LINT_CMD \"\$0\"" "$REL" 2>&1)" || PROBLEMS="lint errors in $REL (fix them; don't silence them):
+$(printf '%s\n' "$LINT" | grep -vE '^\s*$' | tail -n 30)"
+    elif [ "$LINTER" = oxlint ]; then
       LINT="$("$BIN/oxlint" --format=unix "$REL" 2>&1)"
       LINT_STATUS=$?
       # An ancestor .gitignore that ignores the whole project (nested apps, playgrounds) makes oxlint find no
@@ -53,6 +72,13 @@ $FINDINGS"
         WARNINGS="oxlint warnings in $REL (fix the ones your change introduced):
 $FINDINGS"
       fi
+    elif [ -n "$LINTER" ]; then
+      # eslint / biome: the exit status is the verdict (non-zero = errors); the output tail is what Claude fixes.
+      case "$LINTER" in
+        eslint) LINT="$("$BIN/eslint" "$REL" 2>&1)" ;;
+        biome) LINT="$("$BIN/biome" lint "$REL" 2>&1)" ;;
+      esac || PROBLEMS="$LINTER errors in $REL (fix them; don't silence them):
+$(printf '%s\n' "$LINT" | grep -vE '^\s*$' | tail -n 30)"
     fi
     ;;
 esac

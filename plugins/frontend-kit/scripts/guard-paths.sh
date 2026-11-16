@@ -2,8 +2,8 @@
 # PreToolUse(Edit|Write|MultiEdit|NotebookEdit|Read): keeps Claude's file tools off files it must not touch.
 #
 #   read + write: .env and .env.* (secrets) — .env.example stays readable and editable
-#   write only:   .git/, package-lock.json (npm owns it), the package.json "build" script,
-#                 any .js/.jsx/.mjs/.cjs file under src/ (the codebase is TypeScript only),
+#   write only:   .git/, lockfiles (the package manager owns them), the package.json "build" script,
+#                 any .js/.jsx/.mjs/.cjs file under the source folders of a TypeScript project (allowJs lifts it),
 #                 and from .claude/frontend-kit.json: protectedPaths (deploy config, by default
 #                 .github/ deploy/ server/) and generatedPaths (generated files, e.g. the route tree)
 set -u
@@ -55,11 +55,17 @@ fi
 case "$REL" in
   .git/*)
     hook_deny "Blocked: never edit files inside .git/. Tell the user the exact change and let them make it." ;;
-  package-lock.json | */package-lock.json)
-    hook_deny "Blocked: package-lock.json is written by npm. Change package.json and ask the user to run npm install." ;;
-  src/*.js | src/*.jsx | src/*.mjs | src/*.cjs)
-    hook_deny "Blocked: every file under src/ is .ts or .tsx. Name it ${BASE%.*}.ts (or .tsx for JSX)." ;;
+  package-lock.json | */package-lock.json | pnpm-lock.yaml | */pnpm-lock.yaml | yarn.lock | */yarn.lock | bun.lock | */bun.lock | bun.lockb | */bun.lockb)
+    hook_deny "Blocked: $BASE is written by the package manager. Change package.json and ask the user to run the install." ;;
 esac
+# A TypeScript project keeps its source folders TypeScript only; "allowJs": true in .claude/frontend-kit.json
+# (or no tsconfig.json at all) lifts this for JavaScript projects.
+if [ -f "$HOOK_ROOT/tsconfig.json" ] && [ "$(kit_get '.allowJs' false)" != true ] && kit_in_src "$REL"; then
+  case "$REL" in
+    *.js | *.jsx | *.mjs | *.cjs)
+      hook_deny "Blocked: every source file is .ts or .tsx here. Name it ${BASE%.*}.ts (or .tsx for JSX)." ;;
+  esac
+fi
 
 # The package.json "build" script is what CI and the deploy run; it is never changed from here.
 if [ "$REL" = "package.json" ]; then

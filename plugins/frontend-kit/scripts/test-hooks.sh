@@ -743,6 +743,57 @@ printf 'export const e: number = 8\n' >"$RG/src/e.ts"
 run_hook stop-gate.sh "$(stop_input s-rev false)"
 if [ "$CODE" -eq 0 ]; then ok; else ko "stop-gate review is off with stopGate.review=false" "exit $CODE: $ERR"; fi
 
+# --- Any project layout: srcDirs and commands from the config ------------------------------------------
+
+AD="$WORK/Projects (y)/adaptive"
+make_repo "$AD" feature/w
+mkdir -p "$AD/app"
+printf 'export const f = 1\n' >"$AD/app/f.ts"
+git -C "$AD" add -A && git -C "$AD" commit -q -m app
+printf '{"srcDirs":["app"],"stopGate":{"review":false},"commands":{"typecheck":"echo custom-typecheck-failed >&2; exit 1","lintFile":"echo custom-lint-failed; exit 1"}}\n' >"$AD/.claude/frontend-kit.json"
+export CLAUDE_PROJECT_DIR="$AD"
+printf 'export const f = 2\n' >"$AD/app/f.ts"
+run_hook stop-gate.sh "$(stop_input s-adaptive false)"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'custom-typecheck-failed'; then ok; else ko "stop-gate watches srcDirs and runs commands.typecheck" "exit $CODE: $ERR"; fi
+run_hook post-edit.sh "$(jq -n --arg f "$AD/app/f.ts" '{hook_event_name: "PostToolUse", tool_name: "Edit", tool_input: {file_path: $f}}')"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'custom-lint-failed'; then ok; else ko "post-edit lints files under srcDirs with commands.lintFile" "exit $CODE: $ERR"; fi
+printf 'export const g = 1\n' >"$AD/src/g.ts"
+run_hook post-edit.sh "$(jq -n --arg f "$AD/src/g.ts" '{hook_event_name: "PostToolUse", tool_name: "Edit", tool_input: {file_path: $f}}')"
+[ "$CODE" -eq 0 ] && [ -z "$ERR" ] && ok || ko "post-edit ignores files outside srcDirs" "exit $CODE: $ERR"
+
+# --- mode: new | existing | refactor ------------------------------------------------------------------
+
+MD="$WORK/mode"
+make_repo "$MD" feature/m
+export CLAUDE_PROJECT_DIR="$MD"
+session_input='{"hook_event_name":"SessionStart","session_id":"s-mode","source":"startup"}'
+run_hook session-context.sh "$session_input"
+printf '%s' "$OUT" | grep -q 'REFACTOR MODE' && ko "session-context stays quiet about refactor mode when the mode is not refactor" || ok
+jq '.mode = "refactor"' "$MD/.claude/frontend-kit.json" >"$WORK/m.json" && mv "$WORK/m.json" "$MD/.claude/frontend-kit.json"
+run_hook session-context.sh "$session_input"
+printf '%s' "$OUT" | grep -q 'REFACTOR MODE IS ON' && ok || ko "session-context announces refactor mode" "$OUT"
+run_hook skill-suggest.sh "$(jq -n '{hook_event_name: "UserPromptSubmit", prompt: "fix the header spacing please"}')"
+printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -q 'Refactor mode is ON' && ok || ko "skill-suggest reminds Claude that refactor mode is on" "$OUT"
+jq '.mode = "new"' "$MD/.claude/frontend-kit.json" >"$WORK/m.json" && mv "$WORK/m.json" "$MD/.claude/frontend-kit.json"
+run_hook session-context.sh "$session_input"
+printf '%s' "$OUT" | grep -q 'NEW PROJECT' && ok || ko "session-context announces a new project" "$OUT"
+# The generic react profile never gets web-* or dash-* skills.
+jq '.mode = "existing" | .profile = "react"' "$MD/.claude/frontend-kit.json" >"$WORK/m.json" && mv "$WORK/m.json" "$MD/.claude/frontend-kit.json"
+run_hook skill-suggest.sh "$(jq -n '{hook_event_name: "UserPromptSubmit", prompt: "add a server function and a new table"}')"
+printf '%s' "$OUT" | grep -qE 'web-server-fn|dash-create-table' && ko "skill-suggest hides web-* and dash-* skills in the react profile" "$OUT" || ok
+# Lockfiles of every package manager are protected; JS is allowed when the project says so.
+run_hook guard-paths.sh "$(jq -n --arg f "$MD/pnpm-lock.yaml" '{hook_event_name: "PreToolUse", tool_name: "Write", tool_input: {file_path: $f, content: "x"}}')"
+[ "$(decision)" = deny ] && ok || ko "guard-paths protects pnpm-lock.yaml" "$OUT"
+run_hook guard-paths.sh "$(jq -n --arg f "$MD/src/old.js" '{hook_event_name: "PreToolUse", tool_name: "Write", tool_input: {file_path: $f, content: "x"}}')"
+[ "$(decision)" = deny ] && ok || ko "guard-paths keeps JS out of a TypeScript project" "$OUT"
+jq '.allowJs = true' "$MD/.claude/frontend-kit.json" >"$WORK/m.json" && mv "$WORK/m.json" "$MD/.claude/frontend-kit.json"
+run_hook guard-paths.sh "$(jq -n --arg f "$MD/src/old.js" '{hook_event_name: "PreToolUse", tool_name: "Write", tool_input: {file_path: $f, content: "x"}}')"
+[ "$(decision)" = allow ] && ok || ko "guard-paths allows JS with allowJs" "$OUT"
+# Every profile template parses and names a profile and a mode.
+for profile in website dashboard react; do
+  [ "$(jq -r .profile "$PLUGIN/templates/$profile/frontend-kit.json")" = "$profile" ] && ok || ko "templates/$profile/frontend-kit.json names its profile"
+done
+
 # --- Every hook script is executable and valid bash -------------------------------------------
 
 for script in "$HOOKS"/*.sh; do

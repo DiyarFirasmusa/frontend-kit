@@ -2,6 +2,7 @@
   "projectName": "{{PROJECT_NAME}}",
   "projectDescription": "{{PROJECT_DESCRIPTION}}",
   "profile": "dashboard",
+  "mode": "existing",
   "liveHosts": [
     "{{LIVE_HOST}}"
   ],
@@ -29,9 +30,7 @@
   "srcDir": "src",
   "commands": {
     "typecheck": "npm run typecheck",
-    "relatedTests": "npx vitest related --run",
-    "lintFile": "npx oxlint",
-    "formatFile": "npx oxfmt",
+    "relatedTests": "npx vitest related --run --passWithNoTests",
     "i18nValidate": "npm run i18n:validate"
   }
 }

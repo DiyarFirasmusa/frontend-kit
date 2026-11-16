@@ -7,12 +7,18 @@ A Claude Code marketplace with one plugin for React + TypeScript frontends, plus
 | `frontend-kit` | Skills, agents, hooks (git + live-site + secrets guards, format/lint on edit, quality gates), MCP servers (Chrome DevTools, Playwright, context7), and `/frontend-kit:setup`, which installs `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json` |
 | `frontend-status` | Optional band above the prompt: branch, changes, ahead/behind, last gate, dev server |
 
-Two profiles, chosen at setup:
+`/frontend-kit:setup` asks two things first, and you answer both:
 
-- **website** — TanStack Start (SSR, file routes, server functions), TanStack Query, Tailwind v4, i18next (Arabic RTL + English).
-- **dashboard** — Vite + React SPA, TanStack Router + Query + Table, Tailwind v4, i18next RTL, Sentry.
+1. **What are we doing?** A new project, an existing project, or a refactor (restructure it to the standards).
+2. **What kind of React project?** `website` (TanStack Start, SSR/SEO), `dashboard` (Vite SPA + TanStack Router/Table),
+   or **any other React app** (`react`: Next.js, Remix, React Router, CRA, Expo web, …).
 
-Both: TypeScript strict, react-hook-form + zod, Zustand, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm.
+It then detects the stack (package manager, framework, router, data layer, styling, tests, linter, formatter, i18n,
+source folders) and adapts the copied rules, permissions and hook commands to it. The hooks work with oxlint, eslint
+or biome, oxfmt, prettier or biome, vitest or jest, and any source folder layout.
+
+**Refactor mode** (`/frontend-kit:refactor-mode`): audit the project against the kit's standards, write a phased plan
+you approve, then restructure one phase at a time with behaviour frozen and the gate green between phases.
 
 ## Install in a project
 
@@ -33,8 +39,10 @@ Values come from the project's `.claude/frontend-kit.json` (written by setup):
 - No PR opened or merged by Claude; it prints the compare link instead.
 - No request, test or browser visit to the live hosts.
 - No reading `.env*` secrets (`.env.example` is fine); no edits to deploy config or generated files.
-- Format + lint every edited file; typecheck + related tests before Claude finishes a turn; typecheck before a
+- Format + lint every edited file (with the project's own tools); typecheck + related tests before Claude finishes a turn; typecheck before a
   coding agent reports back.
+- After a passing gate, one code review by the `frontend-reviewer` agent (Opus; `stopGate.review: false` turns it off).
+- Names the skills that fit each prompt (`skill-suggest`); warns before a `git commit` that has not passed the gate.
 - Desktop alert when Claude waits for you; a log of failed tools; session clean-up.
 
 Self-test: `KIT_TEST_PROJECT=/path/to/project bash scripts/test-hooks.sh`.

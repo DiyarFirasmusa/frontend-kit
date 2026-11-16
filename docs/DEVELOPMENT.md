@@ -58,6 +58,8 @@ against the Bazaar mock API — plus the research report (`playground/research/r
 
 - Skill evals (`plugins/frontend-kit/evals/`, native `claude plugin eval` format): 10 RTL cases (7 need a fix, 3 already clean) + 1 skill-generation case in `dev/`, 2 in `heldout/`. Run through `scripts/eval.sh` (dev, save, compare, heldout). Costs money; never run by CI. `validate-repo.sh` checks the case layout only.
 
+- Stack-neutral kit (1.4.0): setup asks "new / existing / refactor" and then the kind of React project; new `react` profile (`templates/react/`: CLAUDE.md + structure, data-and-state, forms, routing rules); stack detection written to `frontend-kit.json` (`stack`, `srcDirs`, `commands`); hooks use oxlint/eslint/biome, oxfmt/prettier/biome, vitest/jest, any lockfile and any `srcDirs`; setup adapts the copied rules to the stack. `refactor-mode` skill (audit, plan, phase by phase) and `mode` banner in the hooks. Not yet run against a real Next.js/CRA project: do that next.
+
 **Next** (ranked in the research report; none started)
 
 1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.

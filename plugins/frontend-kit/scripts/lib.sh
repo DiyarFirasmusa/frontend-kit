@@ -46,7 +46,32 @@ kit_alternation() {
   printf '%s' "${joined:-$2}"
 }
 
+# The source folders the gates watch: .srcDirs (list) or .srcDir (string) in frontend-kit.json, default src.
+# Any layout works (src, app, pages, packages/web/src): list the folders once and every hook follows.
+KIT_SRC_DIRS="$(kit_list '.srcDirs')"
+[ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="$(kit_get '.srcDir' 'src')"
+
+# The first of these tools installed in node_modules/.bin (name only), e.g. kit_tool oxlint eslint biome.
+kit_tool() {
+  local tool
+  for tool in "$@"; do
+    [ -x "$HOOK_ROOT/node_modules/.bin/$tool" ] && { printf '%s' "$tool"; return 0; }
+  done
+  return 1
+}
+
+# True when the project-relative path lies under one of the source folders.
+kit_in_src() {
+  local dir
+  while IFS= read -r dir; do
+    [ -n "$dir" ] && case "$1" in "${dir%/}"/*) return 0 ;; esac
+  done <<<"$KIT_SRC_DIRS"
+  return 1
+}
+
 KIT_PROJECT_NAME="$(kit_get '.projectName' 'this project')"
+# new | existing | refactor: how the project is being worked on (asked by /frontend-kit:setup).
+KIT_MODE="$(kit_get '.mode' 'existing')"
 KIT_DEFAULT_BRANCH="$(kit_get '.defaultBranch' 'main')"
 KIT_GITHUB_REPO="$(kit_get '.githubRepo' '')"
 KIT_UAT_HOST="$(kit_get '.uatHost' 'the test environment')"
@@ -126,9 +151,13 @@ hook_normalise_path() {
 # A fingerprint of every uncommitted change under src/ (tracked diff + untracked files).
 # Equal fingerprints mean nothing in src/ changed between two moments.
 hook_src_fingerprint() {
+  local dirs
+  dirs="$(printf '%s\n' "$KIT_SRC_DIRS" | tr '\n' ' ')"
   {
-    git -C "$HOOK_ROOT" diff HEAD -- src 2>/dev/null
-    git -C "$HOOK_ROOT" ls-files --others --exclude-standard -z -- src 2>/dev/null |
+    # shellcheck disable=SC2086
+    git -C "$HOOK_ROOT" diff HEAD -- $dirs 2>/dev/null
+    # shellcheck disable=SC2086
+    git -C "$HOOK_ROOT" ls-files --others --exclude-standard -z -- $dirs 2>/dev/null |
       while IFS= read -r -d '' file; do
         printf '%s\n' "$file"
         cat "$HOOK_ROOT/$file" 2>/dev/null
@@ -138,8 +167,12 @@ hook_src_fingerprint() {
 
 # Changed src/ files (tracked edits + untracked), one project-relative path per line.
 hook_changed_src_files() {
+  local dirs
+  dirs="$(printf '%s\n' "$KIT_SRC_DIRS" | tr '\n' ' ')"
   {
-    git -C "$HOOK_ROOT" diff --name-only --diff-filter=ACMR HEAD -- src 2>/dev/null
-    git -C "$HOOK_ROOT" ls-files --others --exclude-standard -- src 2>/dev/null
+    # shellcheck disable=SC2086
+    git -C "$HOOK_ROOT" diff --name-only --diff-filter=ACMR HEAD -- $dirs 2>/dev/null
+    # shellcheck disable=SC2086
+    git -C "$HOOK_ROOT" ls-files --others --exclude-standard -- $dirs 2>/dev/null
   } | sort -u
 }

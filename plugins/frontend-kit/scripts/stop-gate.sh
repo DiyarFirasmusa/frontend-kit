@@ -1,7 +1,7 @@
 #!/bin/bash
 # Stop: the quality gate Claude can't skip. When src/ changed during this session, it runs
-#   tsc --noEmit -p tsconfig.json
-#   vitest related --run <changed .ts/.tsx files>
+#   the typecheck: commands.typecheck, else tsc --noEmit -p tsconfig.json
+#   the related tests: commands.relatedTests (the changed files are appended), else vitest related or jest --findRelatedTests
 #   commands.i18nValidate from .claude/frontend-kit.json (only when a locale file changed)
 # and, on failure, blocks the stop (exit 2) with the errors so Claude fixes them first. When it passes,
 # it blocks once more per stop chain to ask for a code review by the frontend-reviewer agent (Opus).
@@ -46,7 +46,10 @@ REVIEW_DONE="$(read_session '.reviewDone')"
 SETTLE_SECONDS="${HOOK_SETTLE_SECONDS:-30}"
 MAIN_EDITS="$HOOK_STATE_DIR/sessions/${SESSION_ID:-unknown}.main-edits"
 if [ "$SETTLE_SECONDS" -gt 0 ] && [ ! -s "$MAIN_EDITS" ] && command -v perl >/dev/null 2>&1; then
-  NEWEST_AGE="$(perl -MFile::Find -e 'my $newest = 0; find(sub { return unless -f $_; my $mtime = (stat _)[9]; $newest = $mtime if $mtime > $newest }, $ARGV[0]); print time() - $newest' "$HOOK_ROOT/src" 2>/dev/null)"
+  SRC_PATHS=()
+  while IFS= read -r src_dir; do [ -d "$HOOK_ROOT/$src_dir" ] && SRC_PATHS+=("$HOOK_ROOT/$src_dir"); done <<<"$KIT_SRC_DIRS"
+  NEWEST_AGE=""
+  [ ${#SRC_PATHS[@]} -gt 0 ] && NEWEST_AGE="$(perl -MFile::Find -e 'my $newest = 0; find(sub { return unless -f $_; my $mtime = (stat _)[9]; $newest = $mtime if $mtime > $newest }, @ARGV); print time() - $newest' "${SRC_PATHS[@]}" 2>/dev/null)"
   if [ -n "$NEWEST_AGE" ] && [ "$NEWEST_AGE" -lt "$SETTLE_SECONDS" ]; then
     exit 0
   fi
@@ -54,29 +57,42 @@ fi
 
 cd "$HOOK_ROOT" || exit 0
 BIN="$HOOK_ROOT/node_modules/.bin"
+# Commands below are run through sh -c: bare tool names + PATH survive spaces and parentheses in the project path.
+PATH="$BIN:$PATH"
 FAILURES=""
 PASSED=""
 
 # A tool that isn't installed (no npm install yet, a fresh worktree) is skipped, not reported as a
 # failure: the gate can only judge what it can run.
-if [ -x "$BIN/tsc" ]; then
-  TSC_OUT="$("$BIN/tsc" --noEmit -p tsconfig.json 2>&1)"
+TYPECHECK_CMD="$(kit_get '.commands.typecheck' '')"
+[ -n "$TYPECHECK_CMD" ] || { [ -x "$BIN/tsc" ] && TYPECHECK_CMD="tsc --noEmit -p tsconfig.json"; }
+if [ -n "$TYPECHECK_CMD" ]; then
+  TSC_OUT="$(sh -c "$TYPECHECK_CMD" 2>&1)"
   if [ $? -eq 0 ]; then
     PASSED="typecheck"
   else
-    FAILURES="## tsc --noEmit -p tsconfig.json
+    FAILURES="## typecheck: $TYPECHECK_CMD
 $(printf '%s\n' "$TSC_OUT" | head -n "$OUTPUT_LINES")"
   fi
 fi
 
 TEST_FILES=()
 while IFS= read -r file; do
-  case "$file" in *.ts | *.tsx) [ -f "$file" ] && TEST_FILES+=("$file") ;; esac
+  case "$file" in *.ts | *.tsx | *.js | *.jsx) [ -f "$file" ] && TEST_FILES+=("$file") ;; esac
 done <<<"$CHANGED"
 # {"stopGate": {"tests": "all"}} runs the whole unit suite (commands.allTests, default `vitest run`)
 # instead of only the tests related to the changed files.
-if [ "$(kit_get '.stopGate.tests' 'related')" = all ] && [ -x "$BIN/vitest" ]; then
-  ALL_CMD="$(kit_get '.commands.allTests' "$BIN/vitest run --passWithNoTests --reporter=dot")"
+ALL_CMD=""
+if [ "$(kit_get '.stopGate.tests' 'related')" = all ]; then
+  ALL_CMD="$(kit_get '.commands.allTests' '')"
+  if [ -z "$ALL_CMD" ]; then
+    case "$(kit_tool vitest jest)" in
+      vitest) ALL_CMD="vitest run --passWithNoTests --reporter=dot" ;;
+      jest) ALL_CMD="jest --passWithNoTests" ;;
+    esac
+  fi
+fi
+if [ -n "$ALL_CMD" ]; then
   TEST_OUT="$(sh -c "$ALL_CMD" 2>&1)"
   if [ $? -eq 0 ]; then
     PASSED="$PASSED, all tests"
@@ -86,15 +102,24 @@ if [ "$(kit_get '.stopGate.tests' 'related')" = all ] && [ -x "$BIN/vitest" ]; t
 }## $ALL_CMD
 $(printf '%s\n' "$TEST_OUT" | grep -vE '^\s*$' | grep -vE '^ *(✓|·)' | tail -n "$OUTPUT_LINES")"
   fi
-elif [ ${#TEST_FILES[@]} -gt 0 ] && [ -x "$BIN/vitest" ]; then
-  TEST_OUT="$("$BIN/vitest" related --run --passWithNoTests --reporter=dot "${TEST_FILES[@]}" 2>&1)"
-  if [ $? -eq 0 ]; then
-    PASSED="$PASSED, related tests"
-  else
-    FAILURES="${FAILURES:+$FAILURES
+elif [ ${#TEST_FILES[@]} -gt 0 ]; then
+  RELATED_CMD="$(kit_get '.commands.relatedTests' '')"
+  if [ -z "$RELATED_CMD" ]; then
+    case "$(kit_tool vitest jest)" in
+      vitest) RELATED_CMD="vitest related --run --passWithNoTests --reporter=dot" ;;
+      jest) RELATED_CMD="jest --findRelatedTests --passWithNoTests" ;;
+    esac
+  fi
+  if [ -n "$RELATED_CMD" ]; then
+    TEST_OUT="$(sh -c "$RELATED_CMD \"\$@\"" related "${TEST_FILES[@]}" 2>&1)"
+    if [ $? -eq 0 ]; then
+      PASSED="$PASSED, related tests"
+    else
+      FAILURES="${FAILURES:+$FAILURES
 
-}## vitest related --run ${TEST_FILES[*]}
+}## $RELATED_CMD ${TEST_FILES[*]}
 $(printf '%s\n' "$TEST_OUT" | grep -vE '^\s*$' | grep -vE '^ *(✓|·)' | tail -n "$OUTPUT_LINES")"
+    fi
   fi
 fi
 

@@ -40,7 +40,7 @@ if [ -f "$TRIGGERS" ]; then
     [ "$COUNT" -ge "$MAX_SUGGESTIONS" ] && break
     case "$skill" in '' | '#'*) continue ;; esac
     case "$PROFILE:$skill" in
-      dashboard:web-* | website:dash-*) continue ;;
+      dashboard:web-* | website:dash-* | react:web-* | react:dash-*) continue ;;
     esac
     printf '%s' "$PROMPT" | grep -Eq "$regex" && add "frontend-kit:$skill"
   done <"$TRIGGERS"
@@ -60,11 +60,13 @@ done
 
 SPEC_FILE="$HOME/.claude/skills/spec/SKILL.md"
 PLAN_NOTE=""
+MODE_NOTE=""
+[ "$KIT_MODE" = refactor ] && MODE_NOTE="Refactor mode is ON: only the approved phase of docs/refactor-plan.md may restructure code; behaviour stays frozen (/frontend-kit:refactor-mode)."
 if [ "$(hook_field '.permission_mode')" = plan ] && [ -f "$SPEC_FILE" ]; then
   PLAN_NOTE="Plan mode is on. Read $SPEC_FILE and follow its spec workflow (questions, spec, wait for OK, then plan) before you write the plan."
 fi
 
-[ -z "$FOUND$PLAN_NOTE" ] && exit 0
+[ -z "$FOUND$PLAN_NOTE$MODE_NOTE" ] && exit 0
 CONTEXT=""
 [ -n "$FOUND" ] && CONTEXT="Skills that may fit this prompt (checked against the project's skills):
 $FOUND
@@ -72,5 +74,8 @@ Open the matching skill with the Skill tool before you start and follow it. If t
 [ -n "$PLAN_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
 
 }$PLAN_NOTE"
+[ -n "$MODE_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
+
+}$MODE_NOTE"
 hook_context UserPromptSubmit "$CONTEXT"
 exit 0

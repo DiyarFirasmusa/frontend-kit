@@ -57,6 +57,14 @@ WARNING: you are on the protected branch $BRANCH. Never edit or commit here — 
 fi
 LIVE="${KIT_LIVE_HOSTS:-the live site}"
 
+MODE_BLOCK=""
+case "$KIT_MODE" in
+  refactor) MODE_BLOCK="
+REFACTOR MODE IS ON: restructure the project to the standards in .claude/rules/ through /frontend-kit:refactor-mode (audit, plan the user approves, one phase at a time, behaviour frozen, gate green between phases). Drive-by refactors outside the plan stay off." ;;
+  new) MODE_BLOCK="
+NEW PROJECT: build to the standards from the first file (feature folders, strict types, tests, i18n); no shortcuts to refactor later." ;;
+esac
+
 cat <<EOF
 $KIT_PROJECT_NAME — session context
 branch: $BRANCH · $BASE_LINE · $UPSTREAM_LINE
@@ -69,5 +77,5 @@ Hard rules (hooks and deny rules enforce them):
 3. Never open or merge a PR. After a push, print $(kit_compare_link)
 4. Never test against $LIVE — local (:$KIT_DEV_PORT) or $KIT_UAT_HOST only.
 5. Never touch deploy config, the build script, .env* or generated files (protectedPaths / generatedPaths in .claude/frontend-kit.json).
-6. Every change ships with tests, Arabic + English strings, and passes typecheck, lint and tests.
+6. Every change ships with tests, Arabic + English strings, and passes typecheck, lint and tests.$MODE_BLOCK
 EOF
