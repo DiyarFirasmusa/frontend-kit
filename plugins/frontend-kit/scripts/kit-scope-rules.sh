@@ -1,0 +1,52 @@
+#!/bin/bash
+# Copies one kit rule file and rewrites the `paths:` globs in its frontmatter so the rule only loads for one app of a
+# project that has several (a website and an admin dashboard in one tree). Used by /frontend-kit:setup for the
+# "fullstack" profile.
+#
+#   kit-scope-rules.sh admin <rule.md> <out.md> [--admin-dir src/admin] [--admin-routes src/routes/admin]
+#       dashboard rule → only under the admin folders:  "src/api/**" → "src/admin/api/**",
+#       "src/routes/**" → "src/routes/admin/**", "src/routes/_app/**" → "src/routes/admin/_app/**"
+#   kit-scope-rules.sh site <rule.md> <out.md> [--site-routes src/routes/_site]
+#       website rule → only the site's folders:  "src/**/services/**" → "src/features/**/services/**" + "src/shared/**/services/**",
+#       "src/routes/**" → "src/routes/_site/**"
+#
+# Root files (src/router.tsx, src/routes/__root.tsx, src/main.tsx, src/start.ts) stay as they are: both apps share them.
+set -u
+SCOPE="${1:-}"
+IN="${2:-}"
+OUT="${3:-}"
+case "$SCOPE" in admin | site) ;; *) echo "usage: kit-scope-rules.sh <admin|site> <rule.md> <out.md> [options]" >&2; exit 64 ;; esac
+[ -f "$IN" ] && [ -n "$OUT" ] || { echo "usage: kit-scope-rules.sh <admin|site> <rule.md> <out.md> [options]" >&2; exit 64; }
+shift 3
+ADMIN_DIR="src/admin"
+ADMIN_ROUTES="src/routes/admin"
+SITE_ROUTES="src/routes/_site"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --admin-dir) ADMIN_DIR="${2%/}"; shift 2 ;;
+    --admin-routes) ADMIN_ROUTES="${2%/}"; shift 2 ;;
+    --site-routes) SITE_ROUTES="${2%/}"; shift 2 ;;
+    *) echo "unknown option $1" >&2; exit 64 ;;
+  esac
+done
+
+awk -v scope="$SCOPE" -v admin_dir="$ADMIN_DIR" -v admin_routes="$ADMIN_ROUTES" -v site_routes="$SITE_ROUTES" '
+  function emit(glob) { print "  - \"" glob "\"" }
+  BEGIN { fm = 0 }
+  /^---[[:space:]]*$/ { fm++; print; next }
+  fm == 1 && /^  - "src\// {
+    glob = $0
+    sub(/^  - "/, "", glob); sub(/"[[:space:]]*$/, "", glob)
+    if (glob == "src/router.tsx" || glob == "src/main.tsx" || glob == "src/start.ts" || glob == "src/routes/__root.tsx") { emit(glob); next }
+    if (scope == "admin") {
+      if (glob ~ /^src\/routes\//) { rest = substr(glob, length("src/routes/") + 1); emit(admin_routes "/" rest); next }
+      rest = substr(glob, length("src/") + 1); emit(admin_dir "/" rest); next
+    }
+    # site
+    if (glob ~ /^src\/routes\//) { rest = substr(glob, length("src/routes/") + 1); emit(site_routes "/" rest); next }
+    if (glob ~ /^src\/\*\*\//) { rest = substr(glob, length("src/**/") + 1); emit("src/features/**/" rest); emit("src/shared/**/" rest); next }
+    if (glob == "src/**") { emit("src/features/**"); emit("src/shared/**"); emit(site_routes "/**"); next }
+    emit(glob); next
+  }
+  { print }
+' "$IN" >"$OUT"

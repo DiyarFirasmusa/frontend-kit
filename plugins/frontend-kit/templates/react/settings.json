@@ -112,7 +112,17 @@
       "Bash(git clean -xf*)",
       "Bash(git clean -xdf*)",
       "Bash(npm publish)",
-      "Bash(npm publish *)"
+      "Bash(npm publish *)",
+      "Skill(frontend-kit:web-create-feature)",
+      "Skill(frontend-kit:web-create-route)",
+      "Skill(frontend-kit:web-seo-page)",
+      "Skill(frontend-kit:web-server-fn)",
+      "Skill(frontend-kit:dash-create-crud)",
+      "Skill(frontend-kit:dash-create-detail)",
+      "Skill(frontend-kit:dash-create-filter-bar)",
+      "Skill(frontend-kit:dash-create-route)",
+      "Skill(frontend-kit:dash-create-settings-form)",
+      "Skill(frontend-kit:dash-create-table)"
     ]
   },
   "sandbox": {

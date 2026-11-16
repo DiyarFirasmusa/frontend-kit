@@ -85,7 +85,7 @@ esac
 
 case "$REL" in
   */locales/*.json | locales/*.json)
-    I18N_CMD="$(kit_get '.commands.i18nValidate' '')"
+    I18N_CMD="$(kit_app_cmd "$(kit_app_of "$REL")" i18nValidate)"
     [ -n "$I18N_CMD" ] || I18N_CMD="$([ -f scripts/validate-i18n.ts ] && echo 'node scripts/validate-i18n.ts')"
     I18N_STATUS=0
     [ -n "$I18N_CMD" ] && { I18N="$(sh -c "$I18N_CMD" 2>&1)" || I18N_STATUS=$?; }

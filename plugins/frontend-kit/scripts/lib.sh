@@ -60,6 +60,23 @@ kit_tool() {
   return 1
 }
 
+# Projects with several apps in one tree (a website and an admin under src/admin) list them in
+# frontend-kit.json: "apps": [{"name": "site", "path": "src", "commands": {...}}, {"name": "admin", "path": "src/admin", ...}]
+# The app of a file is the one with the longest "path" prefix; empty when the project has no apps.
+kit_app_of() {
+  [ -f "$KIT_CONFIG" ] || return 0
+  jq -r --arg f "$1" '[.apps[]? | select(.path as $p | $f | startswith($p + "/"))] | sort_by(.path | length) | last | .name // empty' "$KIT_CONFIG" 2>/dev/null
+}
+
+# kit_app_cmd <app> <key> → commands.<key> of that app, else the project's own, else empty.
+kit_app_cmd() {
+  local value=""
+  if [ -n "$1" ] && [ -f "$KIT_CONFIG" ]; then
+    value="$(jq -r --arg a "$1" --arg k "$2" '.apps[]? | select(.name == $a) | .commands[$k] // empty' "$KIT_CONFIG" 2>/dev/null)"
+  fi
+  printf '%s' "${value:-$(kit_get ".commands.$2" '')}"
+}
+
 # True when the project-relative path lies under one of the source folders.
 kit_in_src() {
   local dir

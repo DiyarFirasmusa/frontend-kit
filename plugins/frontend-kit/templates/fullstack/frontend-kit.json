@@ -1,0 +1,62 @@
+{
+  "projectName": "{{PROJECT_NAME}}",
+  "projectDescription": "{{PROJECT_DESCRIPTION}}",
+  "profile": "fullstack",
+  "mode": "existing",
+  "liveHosts": [
+    "{{LIVE_HOST}}"
+  ],
+  "uatHost": "{{UAT_HOST}}",
+  "githubRepo": "{{GITHUB_REPO}}",
+  "defaultBranch": "{{DEFAULT_BRANCH}}",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "{{DEV_PORT}}",
+  "e2ePort": "{{E2E_PORT}}",
+  "apiBaseEnv": "{{API_BASE_ENV}}",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "generatedPaths": [
+    "src/routeTree.gen.ts"
+  ],
+  "srcDir": "src",
+  "commands": {
+    "typecheck": "npm run typecheck",
+    "relatedTests": "npx vitest related --run --passWithNoTests",
+    "i18nValidate": "npm run i18n:validate"
+  },
+  "srcDirs": [
+    "src"
+  ],
+  "apps": [
+    {
+      "name": "site",
+      "profile": "website",
+      "path": "src",
+      "routes": "{{SITE_ROUTES}}",
+      "commands": {
+        "i18nValidate": "{{SITE_I18N_VALIDATE}}",
+        "relatedTests": "{{SITE_RELATED_TESTS}}"
+      }
+    },
+    {
+      "name": "admin",
+      "profile": "dashboard",
+      "path": "{{ADMIN_DIR}}",
+      "routes": "{{ADMIN_ROUTES}}",
+      "apiBaseEnv": "{{ADMIN_API_BASE_ENV}}",
+      "commands": {
+        "i18nValidate": "{{ADMIN_I18N_VALIDATE}}",
+        "relatedTests": "{{ADMIN_RELATED_TESTS}}"
+      }
+    }
+  ]
+}

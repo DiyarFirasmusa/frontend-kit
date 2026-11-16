@@ -41,12 +41,13 @@ Create a task branch from `origin/<defaultBranch>` if you are on a protected one
   states, inconsistent query keys.
 - **Forms and UI:** duplicated components, inline strings that should be i18n, physical CSS direction classes where the
   project supports RTL, missing labels, divs used as buttons.
+- **Kit leftovers:** `kit-prune.sh <profile>` (dry run) lists rules from another profile; they go into phase 2.
 - **Quality:** test coverage of the logic, flaky or skipped tests, `console.log`, TODOs, secrets in the repo.
 
 Write `docs/refactor-plan.md`: findings with counts and example `file:line`, then **phases** ordered by risk:
 
 1. Green baseline (fix the red gate; no restructuring).
-2. Mechanical (format, lint autofix, import order, file renames, dead code removal).
+2. Mechanical (format, lint autofix, import order, file renames, dead code removal, kit leftovers moved to `.claude/kit-backup/`).
 3. Types (strict, remove `any`, type the API layer).
 4. Structure (move to feature folders, split big files, extract hooks; move first, change nothing else).
 5. Patterns (data layer, forms, state: one library, one way).

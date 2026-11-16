@@ -67,7 +67,7 @@ Never write a real host, company, person or endpoint into a template. Hassa / in
 }
 ```
 
-`profile`: `website`, `dashboard` or `react` (stack-neutral; written by setup after the user answers). `mode`: `new`, `existing`
+`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`) (stack-neutral; written by setup after the user answers). `mode`: `new`, `existing`
 or `refactor`. `srcDirs`: the source folders every gate watches (default `["src"]`). `allowJs`: lifts the TypeScript-only guard.
 `stack`: what setup detected; rules and `commands` adapt to it. `commands.formatFile` / `commands.lintFile` (the file is
 appended) replace the detected formatter/linter; `commands.typecheck` / `commands.relatedTests` / `commands.allTests` replace the detected ones.

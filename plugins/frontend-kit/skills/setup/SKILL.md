@@ -11,9 +11,11 @@ Skills, agents, hooks and MCP servers already come from the plugin; nothing of t
 
 Templates live in `${CLAUDE_PLUGIN_ROOT}/templates/`:
 `shared/rules/` (every profile) and `<profile>/` (`CLAUDE.md`, `rules/`, `settings.json`, `frontend-kit.json`),
-where `<profile>` is `website`, `dashboard` or `react` (stack-neutral).
+where `<profile>` is `website`, `dashboard`, `react` (stack-neutral) or `fullstack` (site + admin in one tree).
 
 ## 1. Ask
+
+The flow is: ask (1) → detect (2) → **proposal the user approves (3)** → copy and adapt (4–5) → clean up (6) → finish (7).
 
 Ask in this order. The first two are the user's own answers: detection only pre-selects an option, never decides.
 
@@ -35,10 +37,17 @@ For *Refactor*: after setup, tell the user to run `/frontend-kit:refactor-mode a
 | ------ | ------- | ---- |
 | Website (SSR, SEO, public pages) | `website` | TanStack Start rules and skills (`web-*`) |
 | Dashboard / admin app (SPA) | `dashboard` | Vite + TanStack Router/Table rules and skills (`dash-*`) |
+| Website **and** dashboard in one project | `fullstack` | Two apps in one tree (for example a TanStack Start site with an admin under `src/admin`); each app gets its own rules, skills and checks |
 | Any other React app | `react` | Stack-neutral rules; the kit adapts to the stack it detects |
 
 Detection only suggests: `@tanstack/react-start` suggests website; `vite` + `@tanstack/react-router` suggests
 dashboard; everything else (Next.js, CRA, Remix, React Router, Expo web, …) suggests `react`.
+
+For `fullstack` also ask, in the same message as the values: the admin's code folder (`{{ADMIN_DIR}}`, default `src/admin`),
+its route folder (`{{ADMIN_ROUTES}}`, default `src/routes/admin`) and URL prefix (`{{ADMIN_PATH}}`, default `/admin`),
+the site's route folder (`{{SITE_ROUTES}}`, default `src/routes/_site`), and the API base env name of each app
+(`{{API_BASE_ENV}}` for the site, `{{ADMIN_API_BASE_ENV}}`). Per-app commands (`i18nValidate`, `relatedTests`) are
+filled only when the app has its own; otherwise leave them empty and the project's command is used.
 
 **Then one message for the project values**, defaults filled in, the user confirms or edits:
 
@@ -77,10 +86,36 @@ same confirmation message, and let the user correct it. These values are what th
 | `commands.relatedTests` | `npx vitest related --run --passWithNoTests` or `npx jest --findRelatedTests --passWithNoTests` |
 | `commands.i18nValidate` | only when the project has an i18n validator script; otherwise leave it out |
 
+Also note, for the proposal: **no test runner found** (suggest adding Vitest, never install it unasked), **no type
+checker**, **no linter/formatter**; an `AGENTS.md` (Next.js 16 writes one) is imported from `CLAUDE.md` with a line
+`@AGENTS.md`, never copied or replaced.
+
 Leave a field out (never invent a value) when nothing was found. `commands.lintFile` and `commands.formatFile` are
 left unset: the hooks find oxlint, eslint, biome, oxfmt or prettier by themselves.
 
-## 3. Plan the copy
+## 3. Proposal: the list the user approves
+
+Before any file is written, send **one message** with everything setup is about to do, and wait for the user's yes
+(or edits). Nothing is copied, merged or moved until they answer.
+
+1. **What it is:** mode (new / existing / refactor), profile, and the detected stack, as the user confirmed them.
+2. **Files it will create or merge**, one line each (`CLAUDE.md`, each rule, `settings.json`, `frontend-kit.json`,
+   script additions to `package.json`, config files only when the project has none).
+3. **Adaptations to the stack**: each sentence it will rewrite or drop in the copied rules and settings (section 4).
+4. **What it will clean up** (the user's Claude config, trimmed to this project):
+   - run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-prune.sh" <profile>` (a dry run, it changes nothing) and list its
+     `REMOVE`, `EDITED` and `YOURS` lines: rules left over from another profile (website rules in a dashboard, …);
+   - the skills that do not fit the profile get a `Skill(frontend-kit:<name>)` deny rule in `settings.json` (the
+     template already lists them), so a dashboard never offers `web-*` skills and a website never offers `dash-*`;
+   - permission rules for tools the project does not use, and duplicate kit hooks copied by an older setup.
+5. **What it will not touch:** the user's own rules and files (`YOURS`), edited kit rules (unless the user adds them),
+   source code, git history.
+6. **Refactor mode:** nothing is restructured by setup. The list ends with "next: `/frontend-kit:refactor-mode audit`".
+
+Removal never deletes: `kit-prune.sh --apply` moves files to `.claude/kit-backup/<timestamp>/`, and the message
+says how to restore them. For each `EDITED` file ask separately (keep or move).
+
+## 4. Plan the copy
 
 | Source | Target |
 | ------ | ------ |
@@ -88,10 +123,16 @@ left unset: the hooks find oxlint, eslint, biome, oxfmt or prettier by themselve
 | `templates/shared/rules/*.md` + `templates/<profile>/rules/*.md` | `./.claude/rules/` |
 | `templates/<profile>/settings.json` | `./.claude/settings.json` (merge, below) |
 | `templates/<profile>/frontend-kit.json` | `./.claude/frontend-kit.json` |
-| `templates/shared/package.scripts.json` | `./package.json` `scripts` (add only the names that are missing) |
+| `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh"` (JSON on stdout) | `./package.json` `scripts`: only the names the project lacks, only for tools it really uses (eslint, not oxlint, in a Next.js app); never a script whose tool is missing. `templates/shared/package.scripts.json` is the reference list, not what gets copied |
 | `templates/shared/scripts/validate-i18n.ts` | `./scripts/validate-i18n.ts` (only if the project uses the two-level i18next layout and has no i18n validator) |
 | `templates/shared/config/.oxlintrc.json`, `.oxfmtrc.json` | `./` (only when the project has **no** linter/formatter at all; never next to eslint, prettier or biome) |
 | `templates/shared/style/theme.css` | the profile's theme path, only for a Tailwind project without a theme file; say which fonts it imports |
+
+**`fullstack` rules**: copy `shared/rules/*` and `website/rules/*` as site rules, then run
+`"${CLAUDE_PLUGIN_ROOT}/scripts/kit-scope-rules.sh" site <rule> <target> --site-routes {{SITE_ROUTES}}` for each website rule,
+and `kit-scope-rules.sh admin <rule> .claude/rules/admin-<name>.md --admin-dir {{ADMIN_DIR}} --admin-routes {{ADMIN_ROUTES}}` for each
+dashboard rule. The script rewrites the `paths:` globs so a rule loads only for its own app. Both apps' skills stay
+enabled (no `Skill(...)` deny rules): `skill-suggest` tells Claude which app is which.
 
 In every copied file replace each `{{PLACEHOLDER}}` with the confirmed value; a placeholder with no value becomes
 an empty string or empty list (drop empty hosts from `liveHosts` and from `sandbox.network.deniedDomains`; with no
@@ -111,7 +152,7 @@ live host remove `deniedDomains`). In `frontend-kit.json` set every key the prof
 - Never invent a convention the project does not follow; when the stack is unclear, keep the neutral wording.
 Show the list of adaptations with the diffs and wait for the user's answer.
 
-## 4. Existing files: show, then ask
+## 5. Existing files: show, then ask
 
 For each target that already exists:
 
@@ -135,10 +176,17 @@ Merging:
   - Show the merged result's diff before writing it.
 - `frontend-kit.json` — keep existing values, add missing keys. The user's answer to question 1 always wins for `mode`.
 
-## 5. Finish
+## 6. Clean up
 
-- `package.json` scripts: add the names from `package.scripts.json` that are missing, never overwrite an existing
-  script. `i18n:validate` runs the shipped `scripts/validate-i18n.ts` (Node >= 22.18); a project with its own
+Only what the user approved in the proposal:
+- `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-prune.sh" <profile> --apply` (add `--include-edited` only when they said so).
+  Report the backup folder it printed.
+- Keep the deny rules for the other profiles' skills; remove permission rules and duplicate hooks the proposal named.
+- Offer to add `.claude/kit-backup/` to `.gitignore`.
+
+## 7. Finish
+
+- `package.json` scripts: add what `kit-package-scripts.sh` printed, never overwrite an existing script. `i18n:validate` runs the shipped `scripts/validate-i18n.ts` (Node >= 22.18); a project with its own
   validator keeps it.
 - Fill `.claude/rules/project.md` with what is already known (the files setup just created, the script wrappers,
   the stack choices the user named); leave the rest empty for the first task to fill.

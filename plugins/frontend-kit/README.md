@@ -11,6 +11,7 @@ A Claude Code marketplace with one plugin for React + TypeScript frontends, plus
 
 1. **What are we doing?** A new project, an existing project, or a refactor (restructure it to the standards).
 2. **What kind of React project?** `website` (TanStack Start, SSR/SEO), `dashboard` (Vite SPA + TanStack Router/Table),
+   **both in one project** (`fullstack`: a site and an admin in one tree, each app with its own rules, skills and checks),
    or **any other React app** (`react`: Next.js, Remix, React Router, CRA, Expo web, …).
 
 It then detects the stack (package manager, framework, router, data layer, styling, tests, linter, formatter, i18n,

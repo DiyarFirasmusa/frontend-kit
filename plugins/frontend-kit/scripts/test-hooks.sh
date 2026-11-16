@@ -794,6 +794,83 @@ for profile in website dashboard react; do
   [ "$(jq -r .profile "$PLUGIN/templates/$profile/frontend-kit.json")" = "$profile" ] && ok || ko "templates/$profile/frontend-kit.json names its profile"
 done
 
+# --- kit-prune.sh ------------------------------------------------------------------------------------
+
+PR="$WORK/prune"
+mkdir -p "$PR/.claude/rules"
+cp "$PLUGIN/templates/shared/rules/git.md" "$PR/.claude/rules/git.md"
+cp "$PLUGIN/templates/dashboard/rules/routing.md" "$PR/.claude/rules/routing.md"
+cp "$PLUGIN/templates/website/rules/seo-share.md" "$PR/.claude/rules/seo-share.md"
+cp "$PLUGIN/templates/website/rules/performance.md" "$PR/.claude/rules/performance.md"
+printf '\nedited by me\n' >>"$PR/.claude/rules/performance.md"
+printf '# mine\n' >"$PR/.claude/rules/my-own.md"
+OUT="$("$HOOKS/kit-prune.sh" dashboard "$PR")"
+printf '%s' "$OUT" | grep -q '^REMOVE .claude/rules/seo-share.md' && ok || ko "kit-prune lists an unchanged website rule in a dashboard project" "$OUT"
+printf '%s' "$OUT" | grep -q '^EDITED .claude/rules/performance.md' && ok || ko "kit-prune keeps a website rule the user edited" "$OUT"
+printf '%s' "$OUT" | grep -q '^YOURS .claude/rules/my-own.md' && ok || ko "kit-prune never touches the user's own rules" "$OUT"
+printf '%s' "$OUT" | grep -qE 'git.md|routing.md' && ko "kit-prune keeps shared and own-profile rules" "$OUT" || ok
+[ -f "$PR/.claude/rules/seo-share.md" ] && ok || ko "kit-prune without --apply changes nothing"
+"$HOOKS/kit-prune.sh" dashboard "$PR" --apply >/dev/null
+if [ ! -f "$PR/.claude/rules/seo-share.md" ] && [ -f "$PR/.claude/rules/performance.md" ] && [ -f "$PR/.claude/rules/my-own.md" ] && ls "$PR"/.claude/kit-backup/*/rules/seo-share.md >/dev/null 2>&1; then ok; else ko "kit-prune --apply moves the unchanged file to kit-backup and leaves the rest"; fi
+# The profile's own skills stay available; the other profile's are denied in its settings template.
+jq -e '.permissions.deny | index("Skill(frontend-kit:web-server-fn)") != null and index("Skill(frontend-kit:dash-create-table)") == null' "$PLUGIN/templates/dashboard/settings.json" >/dev/null && ok || ko "dashboard settings deny the web-* skills only"
+jq -e '.permissions.deny | index("Skill(frontend-kit:dash-create-table)") != null and index("Skill(frontend-kit:web-server-fn)") == null' "$PLUGIN/templates/website/settings.json" >/dev/null && ok || ko "website settings deny the dash-* skills only"
+
+# --- Several apps in one project (fullstack) -----------------------------------------------------------
+
+FS="$WORK/fullstack"
+make_repo "$FS" feature/fs
+mkdir -p "$FS/src/admin/locales" "$FS/src/features/x/locales"
+printf '{"a":{"b":"x"}}\n' >"$FS/src/admin/locales/en.json"
+printf '{"a":{"b":"x"}}\n' >"$FS/src/features/x/locales/en.json"
+git -C "$FS" add -A && git -C "$FS" commit -q -m locales
+printf '{"profile":"fullstack","stopGate":{"review":false},"apps":[{"name":"site","profile":"website","path":"src","commands":{"i18nValidate":"echo SITE-VALIDATOR"}},{"name":"admin","profile":"dashboard","path":"src/admin","commands":{"i18nValidate":"echo ADMIN-VALIDATOR; exit 1"}}]}\n' >"$FS/.claude/frontend-kit.json"
+export CLAUDE_PROJECT_DIR="$FS"
+printf '{"a":{"b":"y"}}\n' >"$FS/src/features/x/locales/en.json"
+run_hook stop-gate.sh "$(stop_input s-fs1 false)"
+if [ "$CODE" -eq 0 ] && jq -r .summary "$FS/.claude/state/last-gate.json" | grep -q i18n; then ok; else ko "a site locale change runs only the site validator" "exit $CODE: $ERR"; fi
+printf '{"a":{"b":"z"}}\n' >"$FS/src/admin/locales/en.json"
+run_hook stop-gate.sh "$(stop_input s-fs2 false)"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'ADMIN-VALIDATOR'; then ok; else ko "an admin locale change runs the admin validator (the longest app path wins)" "exit $CODE: $ERR"; fi
+run_hook skill-suggest.sh "$(jq -n '{hook_event_name: "UserPromptSubmit", prompt: "add a server function and a new table"}')"
+CTX="$(printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext')"
+if printf '%s' "$CTX" | grep -q 'web-server-fn' && printf '%s' "$CTX" | grep -q 'several apps'; then ok; else ko "skill-suggest keeps both apps' skills and names the apps" "$CTX"; fi
+run_hook session-context.sh '{"hook_event_name":"SessionStart","session_id":"s-fs","source":"startup"}'
+printf '%s' "$OUT" | grep -q 'Apps in this project: site (website) under src, admin (dashboard) under src/admin' && ok || ko "session-context lists the apps" "$OUT"
+# Rule globs are scoped per app.
+SCOPED="$WORK/scoped"
+mkdir -p "$SCOPED"
+"$HOOKS/kit-scope-rules.sh" admin "$PLUGIN/templates/dashboard/rules/api-layer.md" "$SCOPED/admin-api-layer.md"
+grep -q '"src/admin/api/\*\*"' "$SCOPED/admin-api-layer.md" && ! grep -q '"src/api/\*\*"' "$SCOPED/admin-api-layer.md" && ok || ko "kit-scope-rules moves dashboard globs under the admin folder"
+"$HOOKS/kit-scope-rules.sh" site "$PLUGIN/templates/website/rules/api-layer.md" "$SCOPED/api-layer.md"
+grep -q '"src/features/\*\*/services/\*\*"' "$SCOPED/api-layer.md" && ! grep -q '"src/\*\*/services/\*\*"' "$SCOPED/api-layer.md" && ok || ko "kit-scope-rules keeps website globs out of the admin folder"
+# kit-prune in a fullstack project: scoped admin rules stay, an unscoped dashboard copy and react rules go.
+FP="$WORK/fs-prune"
+mkdir -p "$FP/.claude/rules"
+cp "$SCOPED/admin-api-layer.md" "$FP/.claude/rules/admin-api-layer.md"
+cp "$PLUGIN/templates/dashboard/rules/routing.md" "$FP/.claude/rules/routing.md"
+cp "$PLUGIN/templates/react/rules/structure.md" "$FP/.claude/rules/structure.md"
+cp "$PLUGIN/templates/website/rules/seo-share.md" "$FP/.claude/rules/seo-share.md"
+OUT="$("$HOOKS/kit-prune.sh" fullstack "$FP")"
+if printf '%s' "$OUT" | grep -q '^REMOVE .claude/rules/routing.md' && printf '%s' "$OUT" | grep -q '^REMOVE .claude/rules/structure.md' && ! printf '%s' "$OUT" | grep -qE 'admin-api-layer|seo-share'; then ok; else ko "kit-prune (fullstack) keeps scoped and website rules, removes unscoped dashboard and react rules" "$OUT"; fi
+for f in fullstack; do jq -e '.apps | length == 2' "$PLUGIN/templates/$f/frontend-kit.json" >/dev/null && ok || ko "templates/$f/frontend-kit.json lists two apps"; done
+jq -e '[.permissions.deny[] | select(startswith("Skill("))] | length == 0' "$PLUGIN/templates/fullstack/settings.json" >/dev/null && ok || ko "fullstack settings deny no skills"
+
+# --- kit-package-scripts.sh ----------------------------------------------------------------------------
+
+PS="$WORK/pkg-scripts"
+mkdir -p "$PS"
+printf '{"name":"x","scripts":{"lint":"eslint","build":"next build"},"dependencies":{"next":"16.0.0"},"devDependencies":{"typescript":"5","eslint":"9"}}\n' >"$PS/package.json"
+OUT="$("$HOOKS/kit-package-scripts.sh" "$PS")"
+[ "$(printf '%s' "$OUT" | jq -r '.["lint:check"]')" = "eslint ." ] && ok || ko "kit-package-scripts maps lint:check to eslint" "$OUT"
+printf '%s' "$OUT" | jq -e 'has("lint") | not' >/dev/null && ok || ko "kit-package-scripts keeps the project's own lint script" "$OUT"
+printf '%s' "$OUT" | jq -e '[keys[] | select(test("test|fmt|e2e|routes|i18n"))] | length == 0' >/dev/null && ok || ko "kit-package-scripts adds nothing for tools the project lacks" "$OUT"
+[ "$(printf '%s' "$OUT" | jq -r .check)" = "npm run typecheck && npm run lint:check" ] && ok || ko "kit-package-scripts chains only what exists" "$OUT"
+touch "$PS/pnpm-lock.yaml"
+jq '.devDependencies.vitest = "5"' "$PS/package.json" >"$PS/p.json" && mv "$PS/p.json" "$PS/package.json"
+OUT="$("$HOOKS/kit-package-scripts.sh" "$PS")"
+[ "$(printf '%s' "$OUT" | jq -r .check)" = "pnpm run typecheck && pnpm run lint:check && pnpm run test" ] && ok || ko "kit-package-scripts uses the project's package manager" "$OUT"
+
 # --- Every hook script is executable and valid bash -------------------------------------------
 
 for script in "$HOOKS"/*.sh; do

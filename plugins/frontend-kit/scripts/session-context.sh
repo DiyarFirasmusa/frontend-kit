@@ -57,6 +57,10 @@ WARNING: you are on the protected branch $BRANCH. Never edit or commit here — 
 fi
 LIVE="${KIT_LIVE_HOSTS:-the live site}"
 
+APPS_BLOCK=""
+APPS_LINE="$([ -f "$KIT_CONFIG" ] && jq -r '[.apps[]? | "\(.name) (\(.profile // "react")) under \(.path)"] | join(", ")' "$KIT_CONFIG" 2>/dev/null)"
+[ -n "$APPS_LINE" ] && APPS_BLOCK="
+Apps in this project: $APPS_LINE. Rules and checks follow the app a file belongs to."
 MODE_BLOCK=""
 case "$KIT_MODE" in
   refactor) MODE_BLOCK="
@@ -77,5 +81,5 @@ Hard rules (hooks and deny rules enforce them):
 3. Never open or merge a PR. After a push, print $(kit_compare_link)
 4. Never test against $LIVE — local (:$KIT_DEV_PORT) or $KIT_UAT_HOST only.
 5. Never touch deploy config, the build script, .env* or generated files (protectedPaths / generatedPaths in .claude/frontend-kit.json).
-6. Every change ships with tests, Arabic + English strings, and passes typecheck, lint and tests.$MODE_BLOCK
+6. Every change ships with tests, Arabic + English strings, and passes typecheck, lint and tests.$APPS_BLOCK$MODE_BLOCK
 EOF

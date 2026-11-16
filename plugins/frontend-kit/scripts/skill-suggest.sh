@@ -25,6 +25,10 @@ case "$PROMPT" in
 esac
 
 PROFILE="$(kit_get '.profile' '')"
+# Several apps in one project: every app's skills stay available, and Claude is told which app is which.
+APPS_LINE=""
+[ -f "$KIT_CONFIG" ] && APPS_LINE="$(jq -r '[.apps[]? | "\(.name) = \(.profile // "react") app under \(.path)"] | join("; ")' "$KIT_CONFIG" 2>/dev/null)"
+[ -n "$APPS_LINE" ] && PROFILE=""
 TRIGGERS="$(dirname "$0")/skill-triggers.tsv"
 FOUND=""
 COUNT=0
@@ -40,7 +44,9 @@ if [ -f "$TRIGGERS" ]; then
     [ "$COUNT" -ge "$MAX_SUGGESTIONS" ] && break
     case "$skill" in '' | '#'*) continue ;; esac
     case "$PROFILE:$skill" in
-      dashboard:web-* | website:dash-* | react:web-* | react:dash-*) continue ;;
+      dashboard:web-create-* | dashboard:web-server-fn | dashboard:web-seo-page) continue ;;
+      website:dash-*) continue ;;
+      react:web-create-* | react:web-server-fn | react:web-seo-page | react:dash-*) continue ;;
     esac
     printf '%s' "$PROMPT" | grep -Eq "$regex" && add "frontend-kit:$skill"
   done <"$TRIGGERS"
@@ -61,6 +67,10 @@ done
 SPEC_FILE="$HOME/.claude/skills/spec/SKILL.md"
 PLAN_NOTE=""
 MODE_NOTE=""
+APPS_NOTE=""
+if [ -n "$APPS_LINE" ] && [ -n "$FOUND" ]; then
+  APPS_NOTE="This project has several apps: $APPS_LINE. Use the skill of the app the files belong to (web-* for a website app, dash-* for a dashboard app) and the rules scoped to that app."
+fi
 [ "$KIT_MODE" = refactor ] && MODE_NOTE="Refactor mode is ON: only the approved phase of docs/refactor-plan.md may restructure code; behaviour stays frozen (/frontend-kit:refactor-mode)."
 if [ "$(hook_field '.permission_mode')" = plan ] && [ -f "$SPEC_FILE" ]; then
   PLAN_NOTE="Plan mode is on. Read $SPEC_FILE and follow its spec workflow (questions, spec, wait for OK, then plan) before you write the plan."
@@ -77,5 +87,8 @@ Open the matching skill with the Skill tool before you start and follow it. If t
 [ -n "$MODE_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
 
 }$MODE_NOTE"
+[ -n "$APPS_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
+
+}$APPS_NOTE"
 hook_context UserPromptSubmit "$CONTEXT"
 exit 0

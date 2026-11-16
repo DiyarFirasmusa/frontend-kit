@@ -103,39 +103,57 @@ if [ -n "$ALL_CMD" ]; then
 $(printf '%s\n' "$TEST_OUT" | grep -vE '^\s*$' | grep -vE '^ *(✓|·)' | tail -n "$OUTPUT_LINES")"
   fi
 elif [ ${#TEST_FILES[@]} -gt 0 ]; then
-  RELATED_CMD="$(kit_get '.commands.relatedTests' '')"
-  if [ -z "$RELATED_CMD" ]; then
-    case "$(kit_tool vitest jest)" in
-      vitest) RELATED_CMD="vitest related --run --passWithNoTests --reporter=dot" ;;
-      jest) RELATED_CMD="jest --findRelatedTests --passWithNoTests" ;;
-    esac
-  fi
-  if [ -n "$RELATED_CMD" ]; then
-    TEST_OUT="$(sh -c "$RELATED_CMD \"\$@\"" related "${TEST_FILES[@]}" 2>&1)"
+  # With "apps" in frontend-kit.json each app runs its own related-tests command on its own files.
+  APP_NAMES="$(for file in "${TEST_FILES[@]}"; do kit_app_of "$file"; echo; done | sort -u)"
+  while IFS= read -r app; do
+    APP_FILES=()
+    for file in "${TEST_FILES[@]}"; do
+      [ "$(kit_app_of "$file")" = "$app" ] && APP_FILES+=("$file")
+    done
+    [ ${#APP_FILES[@]} -gt 0 ] || continue
+    RELATED_CMD="$(kit_app_cmd "$app" relatedTests)"
+    if [ -z "$RELATED_CMD" ]; then
+      case "$(kit_tool vitest jest)" in
+        vitest) RELATED_CMD="vitest related --run --passWithNoTests --reporter=dot" ;;
+        jest) RELATED_CMD="jest --findRelatedTests --passWithNoTests" ;;
+      esac
+    fi
+    [ -n "$RELATED_CMD" ] || continue
+    TEST_OUT="$(sh -c "$RELATED_CMD \"\$@\"" related "${APP_FILES[@]}" 2>&1)"
     if [ $? -eq 0 ]; then
-      PASSED="$PASSED, related tests"
+      PASSED="$PASSED, related tests${app:+ ($app)}"
     else
       FAILURES="${FAILURES:+$FAILURES
 
-}## $RELATED_CMD ${TEST_FILES[*]}
+}## $RELATED_CMD ${APP_FILES[*]}
 $(printf '%s\n' "$TEST_OUT" | grep -vE '^\s*$' | grep -vE '^ *(✓|·)' | tail -n "$OUTPUT_LINES")"
     fi
-  fi
+  done <<<"$APP_NAMES"
 fi
 
-I18N_CMD="$(kit_get '.commands.i18nValidate' '')"
-[ -n "$I18N_CMD" ] || I18N_CMD="$([ -f scripts/validate-i18n.ts ] && echo 'node scripts/validate-i18n.ts')"
-if [ -n "$I18N_CMD" ] && printf '%s\n' "$CHANGED" | grep -Eq '/locales/[^/]+\.json$'; then
-  I18N_STATUS=0
-  I18N_OUT="$(sh -c "$I18N_CMD" 2>&1)" || I18N_STATUS=$?
-  if [ "$I18N_STATUS" -eq 0 ]; then
-    PASSED="$PASSED, i18n"
-  else
-    FAILURES="${FAILURES:+$FAILURES
+# The i18n validator runs once per distinct command: each app can have its own (commands.i18nValidate under "apps").
+LOCALE_FILES="$(printf '%s\n' "$CHANGED" | grep -E '/locales/[^/]+\.json$')"
+if [ -n "$LOCALE_FILES" ]; then
+  I18N_CMDS=""
+  while IFS= read -r locale; do
+    cmd="$(kit_app_cmd "$(kit_app_of "$locale")" i18nValidate)"
+    [ -n "$cmd" ] || cmd="$([ -f scripts/validate-i18n.ts ] && echo 'node scripts/validate-i18n.ts')"
+    [ -n "$cmd" ] && I18N_CMDS="$I18N_CMDS
+$cmd"
+  done <<<"$LOCALE_FILES"
+  while IFS= read -r I18N_CMD; do
+    [ -n "$I18N_CMD" ] || continue
+    I18N_STATUS=0
+    I18N_OUT="$(sh -c "$I18N_CMD" 2>&1)" || I18N_STATUS=$?
+    if [ "$I18N_STATUS" -eq 0 ]; then
+      PASSED="$PASSED, i18n"
+    else
+      FAILURES="${FAILURES:+$FAILURES
 
 }## $I18N_CMD
 $(printf '%s\n' "$I18N_OUT" | grep -vE '^\s*$' | tail -n "$OUTPUT_LINES")"
-  fi
+    fi
+  done <<<"$(printf '%s\n' "$I18N_CMDS" | sort -u)"
 fi
 
 # Nothing could run: no verdict to record.

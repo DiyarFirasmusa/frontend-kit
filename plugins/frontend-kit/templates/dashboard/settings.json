@@ -113,7 +113,11 @@
       "Bash(git clean -xf*)",
       "Bash(git clean -xdf*)",
       "Bash(npm publish)",
-      "Bash(npm publish *)"
+      "Bash(npm publish *)",
+      "Skill(frontend-kit:web-create-feature)",
+      "Skill(frontend-kit:web-create-route)",
+      "Skill(frontend-kit:web-seo-page)",
+      "Skill(frontend-kit:web-server-fn)"
     ]
   },
   "sandbox": {
