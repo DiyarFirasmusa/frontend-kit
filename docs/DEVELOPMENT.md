@@ -56,13 +56,15 @@ against the Bazaar mock API — plus the research report (`playground/research/r
 
 - Code review at the end of a turn (1.3.0): when the Stop gate passes on changed src/, it blocks once per stop chain and asks Claude to run the `frontend-reviewer` agent (`model: opus`) on the uncommitted changes. Off with `stopGate.review: false`. Plan mode adds a pointer to the personal `/spec` skill (`skill-suggest.sh`).
 
+- Skill evals (`plugins/frontend-kit/evals/`, native `claude plugin eval` format): 10 RTL cases (7 need a fix, 3 already clean) + 1 skill-generation case in `dev/`, 2 in `heldout/`. Run through `scripts/eval.sh` (dev, save, compare, heldout). Costs money; never run by CI. `validate-repo.sh` checks the case layout only.
+
 **Next** (ranked in the research report; none started)
 
 1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.
 2. A small committed fixture app so `test-hooks.sh` does not need a playground (CI installs one inline today).
 3. Cut skill-listing cost: shorter descriptions, `disable-model-invocation` on side-effect skills (needs a decision: the CLAUDE.md "commit" mapping relies on auto-invocation), gate `web-*` / `dash-*` by profile.
 4. Arabic-correctness block (digits, currency decimals, typography, bidi) and an RTL lint in `post-edit`; a shadcn RTL step in setup.
-5. `claude plugin eval` cases for the ~10 core skills (3 positive, 2 negative trigger prompts each).
+5. More `claude plugin eval` cases: RTL is done; add the ~10 other core skills (3 positive, 2 negative trigger prompts each).
 6. Install manifest + `/frontend-kit:doctor` + upgrade path for already-set-up projects.
 7. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
 

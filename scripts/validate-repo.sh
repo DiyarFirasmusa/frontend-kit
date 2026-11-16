@@ -53,4 +53,14 @@ if grep -rniE 'hassa|inventory-storage|bazaar' plugins/*/templates plugins/*/ski
   bad "domain-specific names in templates or skills:"; grep -rniE 'hassa|inventory-storage|bazaar' plugins/*/templates plugins/*/skills | head
 fi
 
+# 7. eval cases: a prompt, at least one grader, dev-/heldout- name matching the folder they sit in
+for prompt in plugins/*/evals/*/*/prompt.md; do
+  [ -f "$prompt" ] || continue
+  dir="$(dirname "$prompt")"
+  group="$(basename "$(dirname "$dir")")"
+  name="$(sed -n 's/^name: *//p' "$prompt" | head -n1)"
+  ls "$dir"/graders/*.md >/dev/null 2>&1 || bad "$dir: eval case without graders"
+  case "$name" in "$group"-*) ;; *) bad "$prompt: case name '$name' must start with '$group-'" ;; esac
+done
+
 [ "$FAIL" -eq 0 ] && echo "repo checks passed" || { echo "$FAIL problem(s)"; exit 1; }

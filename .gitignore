@@ -7,3 +7,6 @@ node_modules/
 
 # local test apps (not part of the marketplace)
 playground/
+
+# eval results (local)
+plugins/*/evals/results/
