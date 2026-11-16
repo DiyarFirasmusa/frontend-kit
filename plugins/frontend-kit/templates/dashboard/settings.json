@@ -122,5 +122,17 @@
         "{{LIVE_HOST}}"
       ]
     }
+  },
+  "extraKnownMarketplaces": {
+    "frontend-kit": {
+      "source": {
+        "source": "github",
+        "repo": "DiyarFirasmusa/frontend-kit"
+      },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "frontend-kit@frontend-kit": true
   }
 }

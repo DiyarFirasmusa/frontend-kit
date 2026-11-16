@@ -71,6 +71,10 @@ Merging:
   - Keys only the template has (`attribution`, `$schema`, …) are added.
   - The template never adds `hooks`: the plugin provides them. If the user's settings already define the
     same guard hooks (an older copy of this setup), say so and offer to remove the duplicates.
+  - `extraKnownMarketplaces.frontend-kit` (with `autoUpdate: true`) and `enabledPlugins["frontend-kit@frontend-kit"]` are
+    added when missing; they make Claude Code refresh the kit's marketplace and update the plugin on its own after a
+    session starts. Keep the user's value if they already set `autoUpdate` to `false`. A teammate's clone still runs
+    `claude plugin install frontend-kit@frontend-kit --scope project` once.
   - Show the merged result's diff before writing it.
 - `frontend-kit.json` — keep existing values, add missing keys.
 

@@ -26,7 +26,7 @@ plugins/frontend-kit/
     CLAUDE.md                 project memory skeleton, ≤ 150 lines, placeholders below; project facts the rules
                               refer to go in rules/project.md (shared), never into CLAUDE.md
     rules/*.md                profile-only rules (frontmatter `paths:` where it helps)
-    settings.json             permissions (+ attribution, outputStyle) ONLY — no hooks (hooks live in the plugin)
+    settings.json             permissions (+ attribution, outputStyle, the kit marketplace with autoUpdate) — no hooks (hooks live in the plugin)
     frontend-kit.json         the project config the hooks read (schema below)
 ```
 

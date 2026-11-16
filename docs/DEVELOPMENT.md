@@ -52,6 +52,8 @@ against the Bazaar mock API — plus the research report (`playground/research/r
 - `stop-gate.sh`: `stopGate.tests: "all"` runs the whole unit suite (`commands.allTests`, default `vitest run`) instead of only the related tests. It still skips when src/ did not change.
 - `commit-gate.sh` (PreToolUse Bash): before `git commit`, warns when src/ has not passed the quality gate (never blocks).
 
+- Auto-update: the settings templates declare the `frontend-kit` marketplace with `autoUpdate: true`, so a set-up project refreshes the marketplace and updates the plugin after a session starts (random delay up to 10 min; applies on the next session or `/reload-plugins`). **A release is a version bump in `plugin.json` pushed to `main`**: without a bump, projects get nothing.
+
 **Next** (ranked in the research report; none started)
 
 1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.
