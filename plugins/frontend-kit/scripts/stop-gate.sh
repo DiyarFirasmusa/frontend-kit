@@ -69,7 +69,20 @@ TEST_FILES=()
 while IFS= read -r file; do
   case "$file" in *.ts | *.tsx) [ -f "$file" ] && TEST_FILES+=("$file") ;; esac
 done <<<"$CHANGED"
-if [ ${#TEST_FILES[@]} -gt 0 ] && [ -x "$BIN/vitest" ]; then
+# {"stopGate": {"tests": "all"}} runs the whole unit suite (commands.allTests, default `vitest run`)
+# instead of only the tests related to the changed files.
+if [ "$(kit_get '.stopGate.tests' 'related')" = all ] && [ -x "$BIN/vitest" ]; then
+  ALL_CMD="$(kit_get '.commands.allTests' "$BIN/vitest run --passWithNoTests --reporter=dot")"
+  TEST_OUT="$(sh -c "$ALL_CMD" 2>&1)"
+  if [ $? -eq 0 ]; then
+    PASSED="$PASSED, all tests"
+  else
+    FAILURES="${FAILURES:+$FAILURES
+
+}## $ALL_CMD
+$(printf '%s\n' "$TEST_OUT" | grep -vE '^\s*$' | grep -vE '^ *(✓|·)' | tail -n "$OUTPUT_LINES")"
+  fi
+elif [ ${#TEST_FILES[@]} -gt 0 ] && [ -x "$BIN/vitest" ]; then
   TEST_OUT="$("$BIN/vitest" related --run --passWithNoTests --reporter=dot "${TEST_FILES[@]}" 2>&1)"
   if [ $? -eq 0 ]; then
     PASSED="$PASSED, related tests"

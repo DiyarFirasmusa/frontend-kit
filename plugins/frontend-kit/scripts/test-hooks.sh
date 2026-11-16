@@ -630,6 +630,80 @@ run_hook subagent-gate.sh '{"hook_event_name":"SubagentStop","agent_type":"test-
 [ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "subagent-gate passes clean work" "exit $CODE: $OUT"
 rm -f "$FEATURE/package.json"
 
+# --- skill-suggest.sh ----------------------------------------------------------------------------
+
+SUGGEST="$WORK/suggest"
+mkdir -p "$SUGGEST/.claude/skills/invoice-export"
+printf -- '---\nname: invoice-export\ndescription: Export invoices to a spreadsheet with totals per customer\n---\n' >"$SUGGEST/.claude/skills/invoice-export/SKILL.md"
+expect_skill() { # <expected skill or "-" for none> <prompt>
+  run_hook skill-suggest.sh "$(jq -n --arg p "$2" '{hook_event_name: "UserPromptSubmit", prompt: $p}')"
+  local context
+  context="$(printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext // ""' 2>/dev/null)"
+  if [ "$CODE" -ne 0 ]; then ko "skill-suggest: $2" "exit $CODE"; return; fi
+  if [ "$1" = "-" ]; then
+    if [ -z "$OUT" ]; then ok; else ko "skill-suggest none: $2" "$context"; fi
+  elif printf '%s' "$context" | grep -qF "$1"; then ok; else ko "skill-suggest '$1': $2" "${context:-no output}"; fi
+}
+export CLAUDE_PROJECT_DIR="$SUGGEST"
+expect_skill "dash-create-table" "add a new table for the orders list"
+expect_skill "dash-create-settings-form" "اضافة صفحة اعدادات"
+expect_skill "i18n-conventions" "add the arabic text for this label"
+expect_skill "invoice-export" "export all invoices with totals per customer to a spreadsheet"
+expect_skill "-" "hello there my friend"
+expect_skill "-" "/dev restart"
+expect_skill "-" "<task-notification>the table build finished</task-notification>"
+# At most three suggestions, kit skills first.
+run_hook skill-suggest.sh "$(jq -n --arg p "add a table with a filter bar and a form, then commit and refactor it" '{prompt: $p}')"
+[ "$(printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -c '^- ')" -le 3 ] && ok || ko "skill-suggest caps the list at 3"
+# A dashboard project never gets website skills (and the other way round).
+printf '{"profile":"dashboard"}\n' >"$SUGGEST/.claude/frontend-kit.json"
+expect_skill "-" "add a server function for the cart"
+printf '{"profile":"website"}\n' >"$SUGGEST/.claude/frontend-kit.json"
+expect_skill "web-server-fn" "add a server function for the cart"
+expect_skill "-" "add a new table for the orders list"
+printf '{"hooks":{"skillSuggest":false}}\n' >"$SUGGEST/.claude/frontend-kit.json"
+expect_skill "-" "add a new table for the orders list"
+# Every skill named in the trigger file exists.
+while IFS="$(printf '\t')" read -r skill _; do
+  case "$skill" in '' | '#'*) continue ;; esac
+  [ -f "$PLUGIN/skills/$skill/SKILL.md" ] && ok || ko "skill-triggers.tsv names a missing skill: $skill"
+done <"$HOOKS/skill-triggers.tsv"
+
+# --- commit-gate.sh ------------------------------------------------------------------------------
+
+CG="$WORK/commit-gate"
+make_repo "$CG" feature/x
+export CLAUDE_PROJECT_DIR="$CG"
+git_commit_input() { jq -n --arg c "$1" '{hook_event_name: "PreToolUse", tool_name: "Bash", tool_input: {command: $c}}'; }
+printf 'export const c: number = 3\n' >"$CG/src/c.ts"
+run_hook commit-gate.sh "$(git_commit_input 'git commit -m "feat: c"')"
+if [ "$CODE" -eq 0 ] && printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -q 'no quality gate has run'; then ok; else ko "commit-gate warns when no gate ran" "exit $CODE: $OUT"; fi
+run_hook commit-gate.sh "$(git_commit_input 'git status')"
+[ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "commit-gate ignores other commands" "exit $CODE: $OUT"
+"$HOOKS/record-gate.sh" fail verify "typecheck failed"
+run_hook commit-gate.sh "$(git_commit_input 'git add -A && git commit -m x')"
+printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -q 'last quality gate failed' && ok || ko "commit-gate warns after a failed gate" "$OUT"
+"$HOOKS/record-gate.sh" pass verify "all green"
+run_hook commit-gate.sh "$(git_commit_input 'git commit -m x')"
+[ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "commit-gate is quiet after a passing gate on the same changes" "exit $CODE: $OUT"
+printf 'export const c: number = 4\n' >"$CG/src/c.ts"
+run_hook commit-gate.sh "$(git_commit_input 'git commit -m x')"
+printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -q 'changed since the last passing' && ok || ko "commit-gate warns when src/ changed after the gate" "$OUT"
+
+# --- stop-gate.sh: stopGate.tests = all ---------------------------------------------------------------
+
+SG="$WORK/stop-all"
+make_repo "$SG" feature/y
+export CLAUDE_PROJECT_DIR="$SG"
+printf 'export const d: number = 4\n' >"$SG/src/d.ts"
+printf '{"stopGate":{"tests":"all"},"commands":{"allTests":"echo boom-from-suite; exit 1"}}\n' >"$SG/.claude/frontend-kit.json"
+run_hook stop-gate.sh "$(stop_input s-all false)"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'boom-from-suite'; then ok; else ko "stop-gate runs the whole suite when stopGate.tests is all" "exit $CODE: $ERR"; fi
+printf '{"stopGate":{"tests":"all"},"commands":{"allTests":"true"}}\n' >"$SG/.claude/frontend-kit.json"
+printf 'export const d: number = 5\n' >"$SG/src/d.ts"
+run_hook stop-gate.sh "$(stop_input s-all true)"
+if [ "$CODE" -eq 0 ] && jq -r .summary "$SG/.claude/state/last-gate.json" | grep -q 'all tests'; then ok; else ko "stop-gate passes when the whole suite passes" "exit $CODE: $ERR"; fi
+
 # --- Every hook script is executable and valid bash -------------------------------------------
 
 for script in "$HOOKS"/*.sh; do

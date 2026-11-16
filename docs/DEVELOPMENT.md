@@ -46,6 +46,12 @@ against the Bazaar mock API — plus the research report (`playground/research/r
 - Phase 4 guidance: search params, optimistic locking + dirty guard + arrays/uploads, read-only mode, session restore, blob/CSV, table selection, i18n key-in-data/plurals/bundles, RTL details, token names, `ServerResult<T>`, token-in-body auth, `ssr:false` noindex, Start under Vitest, hydration marker; new skills `dash-create-detail`, `dash-create-settings-form`; light path in `web-create-feature`.
 - Phase 5 CI files: `scripts/validate-repo.sh`, `.github/workflows/ci.yml` (not run on GitHub yet; nothing pushed).
 
+**Done in 1.2.0**
+
+- `skill-suggest.sh` (UserPromptSubmit): matches the prompt against `scripts/skill-triggers.tsv` (kit skills, profile-filtered, max 3) and against the project's own `.claude/skills/*` descriptions, and tells Claude which skill to open. Off with `hooks.skillSuggest: false`. One line per skill in the tsv; the hook tests fail when a line names a missing skill.
+- `stop-gate.sh`: `stopGate.tests: "all"` runs the whole unit suite (`commands.allTests`, default `vitest run`) instead of only the related tests. It still skips when src/ did not change.
+- `commit-gate.sh` (PreToolUse Bash): before `git commit`, warns when src/ has not passed the quality gate (never blocks).
+
 **Next** (ranked in the research report; none started)
 
 1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.

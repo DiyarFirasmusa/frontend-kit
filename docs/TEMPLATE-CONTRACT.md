@@ -55,10 +55,16 @@ Never write a real host, company, person or endpoint into a template. Hassa / in
     "relatedTests": "npx vitest related --run",
     "lintFile": "npx oxlint",
     "formatFile": "npx oxfmt",
-    "i18nValidate": "npm run i18n:validate"
-  }
+    "i18nValidate": "npm run i18n:validate",
+    "allTests": "npx vitest run"
+  },
+  "stopGate": { "tests": "related" },
+  "hooks": { "skillSuggest": true }
 }
 ```
+
+`stopGate.tests`: `related` (default, only tests related to changed files) or `all` (runs `commands.allTests`).
+`hooks.skillSuggest: false` turns off the per-prompt skill suggestions.
 
 ## package.json scripts (names are fixed; hooks, rules and CLAUDE.md use them)
 
