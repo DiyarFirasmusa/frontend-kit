@@ -224,4 +224,6 @@ Only what the user approved in the proposal:
   - Restart Claude Code so the new CLAUDE.md, rules and settings load.
   - Refactor mode chosen: run `/frontend-kit:refactor-mode audit`. New project: start with the `task` skill.
   - Hook self-test: `KIT_TEST_PROJECT="$PWD" bash "${CLAUDE_PLUGIN_ROOT}/scripts/test-hooks.sh"`.
-- Do not commit. The user commits when they say so.
+- Do not commit. The user commits when they say so. Tell them the kit files (`CLAUDE.md`, `.claude/`, new
+  dependencies) are uncommitted work: the kit's git rule makes the first task stop and ask what to do with them, so the
+  quickest start is a separate commit of the setup (`chore: add frontend-kit`) before the first task.

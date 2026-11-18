@@ -3,6 +3,14 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.11.1
+- The Next.js dashboard variant was built end to end (login, shell, orders list with URL state, order detail with a
+  permission-guarded action, `/403`, Arabic/English) by a real kit session: typecheck, lint, 101 tests and `next build` pass,
+  and the sign-in, redirect, viewer-vs-admin action and `/403` were checked in a browser. It used `dash-create-route`,
+  `-table`, `-filter-bar`, `-detail`, `verify` and the reviewer agent.
+- `routing.md` (Next) gained a testing section (memory App Router, no `vi.mock('next/navigation')`).
+- Setup tells the user to commit the kit files before the first task (the first task otherwise stops to ask).
+
 ## 1.11.0
 - The `dashboard` profile now runs on three frameworks, chosen in `/frontend-kit:setup` (question 2b): Vite + TanStack Router
   (as before), TanStack Start in SPA mode, or Next.js (App Router). The variants live in

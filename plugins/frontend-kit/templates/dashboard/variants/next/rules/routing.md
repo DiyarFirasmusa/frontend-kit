@@ -92,6 +92,14 @@ Page, page size, sort, search text and every filter live in the URL: shareable, 
   version supports it, and prefer it over a hand-written helper.
 - `useRouter().push` for actions, `replace` for search-param writes; never `window.location` for in-app moves.
 
+## Testing a container
+
+Render containers inside a memory App Router so the real `next/navigation` hooks run (do not `vi.mock('next/navigation')`:
+the mock hides the search-param and redirect behaviour this rule is about). The verified pattern is a `renderWithRouter`
+helper in `src/test/` that provides `AppRouterContext`, `PathnameContext`, `SearchParamsContext` and `PathParamsContext`
+(from `next/dist/shared/lib/*`: internal paths, so recheck them on a Next upgrade) and records `push` / `replace` calls
+so a test asserts the URL it navigated to. Test the zod search schema separately, as in every dashboard.
+
 ## Don't
 
 - No logic, fetching or JSX beyond the container in a `page.tsx`.
