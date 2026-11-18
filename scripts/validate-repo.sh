@@ -54,6 +54,7 @@ for v in plugins/*/templates/dashboard/variants/*/; do
     [ -f "$rule" ] && { head -1 "$rule" | grep -qx -- '---' || bad "$rule: no frontmatter"; }
   done
   grep -q "| \`$name\` |" plugins/*/skills/setup/SKILL.md || bad "setup skill does not mention the $name variant"
+  [ "$name" != "tanstack-start" ] || [ -f "$v/e2e/serve-spa.ts" ] || bad "$v: e2e/serve-spa.ts missing"
 done
 for sh in plugins/*/scripts/*.sh scripts/*.sh; do
   bash -n "$sh" 2>/dev/null || bad "shell syntax error: $sh"

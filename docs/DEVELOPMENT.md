@@ -51,8 +51,9 @@ Version history: [`CHANGELOG.md`](../CHANGELOG.md). How to test: [`TESTING.md`](
 4. Install manifest + `/frontend-kit:doctor` + an upgrade path for projects that were already set up.
 5. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
 6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase.
-   The dashboard's Next.js (1.11.1) and TanStack Start (1.11.2) variants are verified end to end by real sessions. Playwright e2e
-   and a demo account without `orders.view` (to test the `/403` redirect live) are missing on both.
+   The dashboard's Next.js (1.11.1) and TanStack Start (1.11.2) variants are verified end to end by real sessions, and
+   all three dashboards have Playwright e2e with a live-checked `/403` (1.12.0). Not covered yet: Sentry setup on the new
+   variants, WebKit/Firefox, the real host's `_shell.html` fallback, and a dark project on Start.
 7. Agents are rarely chosen unprompted when the code is in the prompt (`evals/info`); decide whether the descriptions should push harder.
 
 Each phase = one branch, version bump, re-run setup in both playground apps and re-run their gates to prove nothing regressed.

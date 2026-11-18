@@ -7,8 +7,10 @@ paths:
 
 React 19, strict TypeScript, TanStack Router (file routes), TanStack Query.
 Website (TanStack Start): pages render on the server, then hydrate. Dashboard
-(Vite + TanStack Router): a client-only SPA. No React Server Components, no
-`'use client'`, no Next.js imports in either.
+(Vite + TanStack Router, or TanStack Start in SPA mode): a client-only SPA. No React
+Server Components, no `'use client'`, no Next.js imports in either. The dashboard's
+Next.js variant is the exception: a client-rendered App Router where containers carry
+`'use client'` and the variant's `routing.md` says where Next imports are allowed.
 
 ## TypeScript
 

@@ -1,6 +1,7 @@
 ---
 paths:
   - "vite.config.ts"
+  - "e2e/serve-spa.ts"
   - "src/router.tsx"
   - "src/start.ts"
   - "src/routes/__root.tsx"
@@ -47,6 +48,11 @@ dashboard (`routing.md`, `permissions.md`), plus a prerendered shell and optiona
 - Set `<html lang dir>` from the stored language with a small inline script in the root route's `head` (it runs before
   paint), and render language-dependent text from state that is already restored when hydration starts; never read
   `localStorage` during the first render to pick text. Measure on the production build: the dev server is slower.
+
+## E2E
+
+- Serve the client build with `e2e/serve-spa.ts` (shipped with the variant) and mock the API in the browser; not
+  `vite preview`, not `--outDir`. `testing.md` ("Dashboard specifics") has the reasons and the config.
 
 ## Env
 

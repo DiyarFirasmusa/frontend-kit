@@ -22,6 +22,11 @@
 
 ### Configuration with webServer
 
+> **Kit note.** The config below runs `npm run dev` locally and reuses a running server. When the app reads
+> `NEXT_PUBLIC_*` in the browser (every dashboard), those values are inlined at build time, so a reused or dev-mode
+> server quietly tests against the wrong API. Use `next build && next start --port <e2ePort>` with the fake API URL in
+> `webServer.env`, and `reuseExistingServer: false` (see the project's `testing.md`, "Dashboard specifics").
+
 ```typescript
 // playwright.config.ts
 import { defineConfig, devices } from '@playwright/test';

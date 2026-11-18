@@ -3,6 +3,19 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.12.0
+- Playwright e2e on all three dashboard frameworks, written by real kit sessions against fake-API route mocks:
+  Vite (32 tests, incl. a role without `orders.view` sent to `/403`), Next.js (18 tests, 90/90 over a 5x repeat) and
+  TanStack Start (22 tests, 110/110). Each covers sign-in with the redirect param, the areas, URL state surviving
+  reload and back, viewer vs admin action, the `/403` redirect (also after signing in through the form) and axe in
+  Arabic and English. `npm run check:full` passes on both new ones.
+- `testing.md` gained "Dashboard specifics": the API URL is baked at build time so the fake URL goes into the build;
+  Next runs `next build && next start` into its own `distDir`; Start serves `dist/client` with a `_shell.html` fallback
+  (not `vite preview`, not `--outDir`); name the fixture callback `provide`; check the e2e port before touching code when
+  every test fails (a foreign dev server on the port made a whole suite red, silently, through `reuseExistingServer`).
+- The Start variant ships `e2e/serve-spa.ts`; setup copies a variant's `e2e/` files. `react.md` no longer says "no
+  Next.js" without naming the variant; the Playwright Next.js reference warns about the baked `NEXT_PUBLIC_*` values.
+
 ## 1.11.2
 - The TanStack Start dashboard variant was built end to end by a real kit session (login, shell, orders list with URL
   state, detail with a permission-guarded status change, `/403`, Arabic/English): typecheck, lint, 72 tests and `vite build`

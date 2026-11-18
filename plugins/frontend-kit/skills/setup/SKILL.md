@@ -139,7 +139,7 @@ says how to restore them. For each `EDITED` file ask separately (keep or move).
 | ------ | ------ |
 | `templates/<profile>/CLAUDE.md` | `./CLAUDE.md` |
 | `templates/shared/rules/*.md` + `templates/<profile>/rules/*.md` | `./.claude/rules/` |
-| **dashboard variant** `templates/dashboard/variants/<variant>/` | on top of the two rows above: its `CLAUDE.md` replaces the base one, its `rules/*.md` replace a rule of the same name (`routing.md`, `error-monitoring.md`) or are added (`framework.md`), and its `frontend-kit.json` keys (`stack`, `generatedPaths`) are merged into the base config |
+| **dashboard variant** `templates/dashboard/variants/<variant>/` | on top of the two rows above: its `CLAUDE.md` replaces the base one, its `rules/*.md` replace a rule of the same name (`routing.md`, `error-monitoring.md`) or are added (`framework.md`), its `frontend-kit.json` keys (`stack`, `generatedPaths`) are merged into the base config, and its `e2e/` files (Start: `serve-spa.ts`) are copied to `e2e/` |
 | `templates/<profile>/settings.json` | `./.claude/settings.json` (merge, below) |
 | `templates/<profile>/frontend-kit.json` | `./.claude/frontend-kit.json` |
 | `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh"` (JSON on stdout) | `./package.json` `scripts`: only the names the project lacks, only for tools it really uses (eslint, not oxlint, in a Next.js app); never a script whose tool is missing. `templates/shared/package.scripts.json` is the reference list, not what gets copied |

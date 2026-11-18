@@ -3,7 +3,7 @@ paths:
   - "**/*.test.{ts,tsx}"
   - "e2e/**"
   - "src/test/**"
-  - "vitest.config.ts"
+  - "vitest.config.*"
   - "playwright.config.ts"
 ---
 
@@ -80,6 +80,10 @@ The project's test helpers (`project.md` names the folder) provide:
 - E2E: projects cover Arabic and English, desktop and mobile, and dark. Mock
   the backend with route handlers that return the real envelope. Match text
   in both languages with a regex. Assert `html[dir]` when direction matters.
+- E2E server: `reuseExistingServer` silently tests whatever already listens on
+  the port (another project's dev server turned a whole suite red). Use this
+  project's own e2e port from `.claude/frontend-kit.json`, and if the run fails
+  at once on every test, check `lsof -nP -iTCP:<e2ePort>` before touching code.
 - Website (TanStack Start): e2e also asserts the server-rendered HTML (title,
   `lang`, `dir`) before hydration where SEO matters.
 - Keep a test file under ~200 lines; split by behaviour. No whole-page snapshots.
@@ -95,7 +99,29 @@ The project's test helpers (`project.md` names the folder) provide:
 - No assertions on Tailwind class strings.
 - No unresolved `act()` warnings or `console.error` noise from code under test.
 
-## Website specifics (TanStack Start)
+## Dashboard specifics (all frameworks)
+
+- Every API call is made by the browser (no SSR loaders), so Playwright route mocks on a fake host are enough; the host
+  never has to exist. The mock table fails the test on an endpoint it does not know and on any other host, answers with
+  the real envelope, error codes and permission checks, and offers three users: an admin, a viewer without the write
+  permission, and one without the list's read permission (opening the list must end on `/403`, also after signing in
+  through the form).
+- The API base URL is baked into the bundle at build time (`VITE_*`, `NEXT_PUBLIC_*`): set the fake URL in
+  `webServer.env` for the build itself, and keep `reuseExistingServer: false` (a reused server may hold a build made
+  with another URL). `check:full` ends with `npm run build`, which needs the real variable (an env file or an export).
+- Name the fixture callback `provide`, not `use`: the react-hooks lint rule flags `use(...)` as a hook.
+- **Vite + TanStack Router:** the dev server on the e2e port is enough.
+- **Next.js:** `next build && next start --port <e2ePort>`, not `next dev` (no first-hit compiles, no dev overlay for
+  axe). Build into its own folder (`distDir: process.env.NEXT_DIST_DIR || '.next'`, `NEXT_DIST_DIR=.next-e2e`) so the
+  real `.next` never holds the fake URL; add it to `.gitignore`, `tsconfig` excludes and the lint ignores.
+- **TanStack Start (SPA mode):** `vite build`, then serve `dist/client` with `e2e/serve-spa.ts` (the variant ships it:
+  real files as they are, every other path gets `/_shell.html`, like the production host). Not `vite preview`: on Start
+  it runs the SSR bundle, whose guards see no session and 307 every signed-in deep link to `/login`. Not
+  `vite build --outDir <other>`: the prerender still renders `_shell.html` from `dist/server`, so the shell points at
+  files the other folder lacks. No `data-hydrated` wait: the shell has no page content to click early. Rebuild with the
+  real API URL after an e2e build (it left the fake one in `dist/`).
+
+## Website specifics (TanStack Start; the website profile only)
 
 - `createIsomorphicFn().server().client()` always takes the server branch under
   Vitest and `createServerFn` cannot run there. Alias those two boundaries to
