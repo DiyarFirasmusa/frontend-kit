@@ -1,6 +1,6 @@
 ---
 name: create-store
-description: Create a Zustand store — a global persisted store in the shared store folder or an ephemeral hand-off store in a feature — and wire it into sign-out cleanup. Use when asked to add global client state or to pass data between routes.
+description: Create a global client-side store (Zustand) for state that outlives a component — a user preference such as theme, language or sidebar, session or auth state, a cart, drafts, or data handed between routes — persisted across reloads when needed, with sign-out cleanup. Use whenever the user asks to add global, shared or persisted client state, or a store.
 ---
 
 # Create store

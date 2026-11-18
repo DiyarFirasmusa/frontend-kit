@@ -1,6 +1,6 @@
 ---
 name: task
-description: Start a new task on its own branch from origin/<defaultBranch>, implement it to the quality bar, verify it, then ask before commit/push. Use when the user says "task", "this is the task", "new task", gives a ticket link (Jira, GitHub issue, Trello card, …), or runs /task. Never opens a PR, never merges.
+description: Start a new task on its own branch from origin/<defaultBranch>, implement it to the quality bar, verify it, then ask before commit/push. Use only when the user says "task", "this is the task", "new task", gives a ticket link (Jira, GitHub issue, Trello card, …), or runs /task. Not for a plain request to add a component, form, store, hook, page or route: those have their own skills (create-*, dash-*, web-*), use them directly. Never opens a PR, never merges.
 argument-hint: "[ticket-url or task description]"
 ---
 

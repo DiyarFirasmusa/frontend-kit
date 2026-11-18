@@ -18,7 +18,9 @@ esac
 
 cd "$HOOK_ROOT" || exit 0
 [ -d node_modules ] || exit 0
-TYPECHECK="$(kit_get '.commands.typecheck' 'npm run --silent typecheck')"
+PATH="$HOOK_ROOT/node_modules/.bin:$PATH"
+TYPECHECK="$(kit_typecheck_cmd)"
+[ -n "$TYPECHECK" ] || exit 0
 STATUS=0
 OUTPUT="$(sh -c "$TYPECHECK" 2>&1)" || STATUS=$?
 # tsc -b leaves a build-info file at the root; it is not part of any change.

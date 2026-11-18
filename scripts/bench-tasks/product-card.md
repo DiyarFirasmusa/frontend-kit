@@ -1,0 +1,1 @@
+Add a `ProductCard` component in `src/components/product-card.tsx`: it shows a product name, a price, an "Add to cart" button and an "Out of stock" badge (the button is disabled when out of stock). Export it by name. Write unit tests for it. The app ships in Arabic (RTL) and English (LTR), phone first. Do not change anything else.

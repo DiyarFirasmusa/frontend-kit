@@ -871,6 +871,31 @@ jq '.devDependencies.vitest = "5"' "$PS/package.json" >"$PS/p.json" && mv "$PS/p
 OUT="$("$HOOKS/kit-package-scripts.sh" "$PS")"
 [ "$(printf '%s' "$OUT" | jq -r .check)" = "pnpm run typecheck && pnpm run lint:check && pnpm run test" ] && ok || ko "kit-package-scripts uses the project's package manager" "$OUT"
 
+# --- Projects that are not shaped like the kit's own: solution tsconfig, app/ instead of src/, stack detection ------------
+
+SOL="$WORK/solution"
+mkdir -p "$SOL/app" "$SOL/.claude"
+git -C "$SOL" init -q -b main && git -C "$SOL" config user.email t@t && git -C "$SOL" config user.name t
+printf '{"files":[],"references":[{"path":"./tsconfig.app.json"}]}\n' >"$SOL/tsconfig.json"
+printf '{"compilerOptions":{"strict":true,"noEmit":true,"skipLibCheck":true,"types":[]},"include":["app"]}\n' >"$SOL/tsconfig.app.json"
+printf 'export const ok: number = 1\n' >"$SOL/app/ok.ts"
+printf '{"name":"sol","scripts":{},"devDependencies":{"typescript":"5","vitest":"5"}}\n' >"$SOL/package.json"
+printf '{"stopGate":{"review":false}}\n' >"$SOL/.claude/frontend-kit.json"
+ln -s "$REPO/node_modules" "$SOL/node_modules"
+git -C "$SOL" add -A && git -C "$SOL" commit -q -m init
+export CLAUDE_PROJECT_DIR="$SOL"
+printf 'export const bad: number = "text"\n' >"$SOL/app/bad.ts"
+run_hook stop-gate.sh "$(stop_input s-sol false)"
+if [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'TS2322' && printf '%s' "$ERR" | grep -q 'tsc -b'; then ok; else ko "stop-gate checks a solution-style tsconfig with tsc -b and watches app/ without any srcDirs" "exit $CODE: $ERR"; fi
+OUT="$("$HOOKS/kit-detect-stack.sh" "$SOL")"
+[ "$(printf '%s' "$OUT" | jq -r '.commands.typecheck')" = "npx tsc -b" ] && [ "$(printf '%s' "$OUT" | jq -r '.srcDirs[0]')" = app ] && [ "$(printf '%s' "$OUT" | jq -r '.stack.tests')" = vitest ] && ok || ko "kit-detect-stack finds app/, vitest and tsc -b" "$OUT"
+printf '{"name":"n","dependencies":{"next":"16","react":"19"},"devDependencies":{"eslint":"9","typescript":"5","tailwindcss":"4"}}\n' >"$SOL/package.json"
+touch "$SOL/pnpm-lock.yaml"
+OUT="$("$HOOKS/kit-detect-stack.sh" "$SOL")"
+if [ "$(printf '%s' "$OUT" | jq -r '.stack.framework')" = "Next.js" ] && [ "$(printf '%s' "$OUT" | jq -r '.stack.packageManager')" = pnpm ] && [ "$(printf '%s' "$OUT" | jq -r '.stack.lint')" = eslint ] && printf '%s' "$OUT" | jq -e '.missing | index("test runner") != null' >/dev/null; then ok; else ko "kit-detect-stack reads framework, package manager, linter and reports what is missing" "$OUT"; fi
+OUT="$("$HOOKS/kit-package-scripts.sh" "$SOL")"
+[ "$(printf '%s' "$OUT" | jq -r .typecheck)" = "tsc -b" ] && ok || ko "kit-package-scripts uses tsc -b for a solution tsconfig" "$OUT"
+
 # --- Every hook script is executable and valid bash -------------------------------------------
 
 for script in "$HOOKS"/*.sh; do

@@ -49,7 +49,15 @@ kit_alternation() {
 # The source folders the gates watch: .srcDirs (list) or .srcDir (string) in frontend-kit.json, default src.
 # Any layout works (src, app, pages, packages/web/src): list the folders once and every hook follows.
 KIT_SRC_DIRS="$(kit_list '.srcDirs')"
-[ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="$(kit_get '.srcDir' 'src')"
+[ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="$(kit_get '.srcDir' '')"
+if [ -z "$KIT_SRC_DIRS" ]; then
+  # Nothing configured: watch the folders that exist (Next.js and React Router keep code in app/, not src/).
+  for dir in src app pages components lib; do
+    [ -d "$HOOK_ROOT/$dir" ] && KIT_SRC_DIRS="${KIT_SRC_DIRS:+$KIT_SRC_DIRS
+}$dir"
+  done
+  [ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="src"
+fi
 
 # The first of these tools installed in node_modules/.bin (name only), e.g. kit_tool oxlint eslint biome.
 kit_tool() {
@@ -75,6 +83,25 @@ kit_app_cmd() {
     value="$(jq -r --arg a "$1" --arg k "$2" '.apps[]? | select(.name == $a) | .commands[$k] // empty' "$KIT_CONFIG" 2>/dev/null)"
   fi
   printf '%s' "${value:-$(kit_get ".commands.$2" '')}"
+}
+
+# The typecheck command: commands.typecheck, else the project's own `typecheck` script, else tsc. A solution-style
+# tsconfig.json ("references", no files) is checked with `tsc -b`: `tsc --noEmit` on it checks nothing and passes.
+# Tool names are bare: callers put node_modules/.bin on PATH.
+kit_typecheck_cmd() {
+  local configured
+  configured="$(kit_get '.commands.typecheck' '')"
+  [ -n "$configured" ] && { printf '%s' "$configured"; return 0; }
+  if [ -f "$HOOK_ROOT/package.json" ] && jq -e '.scripts.typecheck' "$HOOK_ROOT/package.json" >/dev/null 2>&1; then
+    printf '%s' 'npm run --silent typecheck'
+    return 0
+  fi
+  [ -x "$HOOK_ROOT/node_modules/.bin/tsc" ] || return 0
+  if grep -q '"references"' "$HOOK_ROOT/tsconfig.json" 2>/dev/null; then
+    printf '%s' 'tsc -b'
+  else
+    printf '%s' 'tsc --noEmit -p tsconfig.json'
+  fi
 }
 
 # True when the project-relative path lies under one of the source folders.

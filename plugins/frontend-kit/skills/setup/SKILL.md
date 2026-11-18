@@ -68,8 +68,10 @@ Never read `.env` or `.env.local` to find a value; `.env.example` only.
 
 ## 2. Detect the stack (every profile)
 
-Read `package.json`, the lockfile and the config files; never run installs. Record what you find, show it in the
-same confirmation message, and let the user correct it. These values are what the hooks and the rules adapt to:
+Run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-detect-stack.sh"` in the project: it prints the stack, `srcDirs`, the dev port, the
+typecheck and related-tests commands and what is missing, as JSON, from `package.json`, the lockfile and the config
+files (no installs, no `.env`). Read what it prints, show it in the same confirmation message, and let the user correct it.
+The table below is what it looks at. These values are what the hooks and the rules adapt to:
 
 | Field in `frontend-kit.json` | Detected from |
 | ---------------------------- | ------------- |

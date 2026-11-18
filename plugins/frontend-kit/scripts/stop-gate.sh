@@ -64,8 +64,7 @@ PASSED=""
 
 # A tool that isn't installed (no npm install yet, a fresh worktree) is skipped, not reported as a
 # failure: the gate can only judge what it can run.
-TYPECHECK_CMD="$(kit_get '.commands.typecheck' '')"
-[ -n "$TYPECHECK_CMD" ] || { [ -x "$BIN/tsc" ] && TYPECHECK_CMD="tsc --noEmit -p tsconfig.json"; }
+TYPECHECK_CMD="$(kit_typecheck_cmd)"
 if [ -n "$TYPECHECK_CMD" ]; then
   TSC_OUT="$(sh -c "$TYPECHECK_CMD" 2>&1)"
   if [ $? -eq 0 ]; then

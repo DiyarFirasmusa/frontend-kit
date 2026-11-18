@@ -1,6 +1,6 @@
 ---
 name: create-component
-description: The default for building UI in this repo — create or extract a React component following project conventions (location by ownership, named export, design tokens, logical properties, mobile first, translated strings, accessible markup). Use when asked to build, create or extract a component or section. With a Figma link, run figma-match alongside.
+description: Create or extract a React component — any new component, card, button, dialog, badge, section or other UI piece, even a small one. Use whenever the user asks to build, create, write, add or extract a component. Follows project conventions (location by ownership, named export, design tokens, logical properties, mobile first, translated strings, accessible markup). With a Figma link, run figma-match alongside.
 ---
 
 # Create component

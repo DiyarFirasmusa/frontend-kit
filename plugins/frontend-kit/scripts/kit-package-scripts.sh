@@ -21,7 +21,10 @@ else RUN="npm run"; fi
 OUT="{}"
 add() { OUT="$(printf '%s' "$OUT" | jq --arg k "$1" --arg v "$2" '. + {($k): $v}')"; }
 
-has typescript && add typecheck "tsc --noEmit"
+if has typescript; then
+  # A solution-style tsconfig (create-vite's default) is checked with tsc -b; tsc --noEmit on it checks nothing.
+  if grep -q '"references"' "$PROJECT/tsconfig.json" 2>/dev/null; then add typecheck "tsc -b"; else add typecheck "tsc --noEmit"; fi
+fi
 if has oxlint; then add lint "oxlint --fix"; add lint:check "oxlint"
 elif has eslint; then add lint "eslint --fix ."; add lint:check "eslint ."
 elif has @biomejs/biome; then add lint "biome check --write"; add lint:check "biome check"; fi

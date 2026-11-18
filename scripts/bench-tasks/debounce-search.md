@@ -1,0 +1,1 @@
+Add a `useDebouncedValue` hook in `src/hooks/use-debounced-value.ts` and a `SearchBox` component in `src/components/search-box.tsx` that uses it (a text input with an accessible label, a clear button, and an `onSearch` callback fired after the user stops typing for 300 ms). Write unit tests for both. The app ships in Arabic (RTL) and English (LTR). Do not change anything else.

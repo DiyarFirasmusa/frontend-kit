@@ -5,9 +5,11 @@
 #   bash scripts/eval.sh dev       run the dev cases (3 runs each, no no-plugin arm)
 #   bash scripts/eval.sh save      keep the last dev result as the baseline
 #   bash scripts/eval.sh compare   baseline vs the last dev result, per case
+#   bash scripts/eval.sh info      run the informational cases (implicit agent delegation)
 #   bash scripts/eval.sh heldout   run the heldout cases (ONLY at the end, asks first)
 #
-# Optional: EVAL_MODEL=<model id> to pin the model, EVAL_MAX_COST_USD=<n> for a hard cost ceiling.
+# Optional: EVAL_MODEL=<model id> to pin the model, EVAL_MAX_COST_USD=<n> for a hard cost ceiling,
+# EVAL_JOBS=<1-8> to run cases in parallel, EVAL_TRUST=1 to skip the "trust this plugin directory" prompt (CI, your own plugin).
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PLUGIN="$ROOT/plugins/frontend-kit"
@@ -22,11 +24,14 @@ run() { # <dev|heldout>
   local args=(plugin eval "$PLUGIN" --case "$group-*" --ablation none --threshold "$THRESHOLD" --no-publish --json "$RESULTS/$group-current.json")
   [ -n "${EVAL_MODEL:-}" ] && args+=(--model "$EVAL_MODEL")
   [ -n "${EVAL_MAX_COST_USD:-}" ] && args+=(--max-cost-usd "$EVAL_MAX_COST_USD")
+  [ -n "${EVAL_JOBS:-}" ] && args+=(--concurrency "$EVAL_JOBS")
+  [ "${EVAL_TRUST:-}" = 1 ] && args+=(--trust-plugin)
   claude "${args[@]}"
 }
 
 case "${1:-}" in
   dev) run dev ;;
+  info) run info ;;
   heldout)
     echo "Heldout cases are for the very end. If you change a skill after this, they stop being heldout."
     printf 'Run them now? [y/N] '

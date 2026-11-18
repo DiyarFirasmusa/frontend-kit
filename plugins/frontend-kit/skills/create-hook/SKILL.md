@@ -1,6 +1,6 @@
 ---
 name: create-hook
-description: Create a React hook — a TanStack Query/mutation hook over a service, a page orchestration hook (use-<page>-page.ts) or a small utility hook — with correct location, keys, guards and tests. Use when asked to create or extract a hook, or when a route component / container is accumulating logic.
+description: Create a React hook — a custom hook, a data-fetching hook (TanStack Query useQuery/useMutation over a service), a page orchestration hook (use-<page>-page.ts) or a small utility hook — with correct location, keys, guards and tests. Use whenever the user asks to create, write, add or extract a hook, or when a route component or container is accumulating logic.
 ---
 
 # Create hook
