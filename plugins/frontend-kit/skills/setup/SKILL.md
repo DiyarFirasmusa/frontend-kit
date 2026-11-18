@@ -29,6 +29,8 @@ Ask in this order. The first two are the user's own answers: detection only pre-
 
 For *New project* with no `package.json`: ask which framework (Vite, Next.js, TanStack Start, React Router, other)
 and offer to run that framework's official create command; run it only after the user says yes. Then continue.
+For Next.js answer *yes* to the `src/` directory prompt: the kit's layout is all under `src/`. When the user already said
+they want a dashboard, the framework question here is question 2b, asked once.
 For *Refactor*: after setup, tell the user to run `/frontend-kit:refactor-mode audit` (setup does not restructure anything).
 
 **Question 2: what kind of React project?** (the user answers; show what you detected as the first option)
@@ -36,12 +38,25 @@ For *Refactor*: after setup, tell the user to run `/frontend-kit:refactor-mode a
 | Answer | Profile | Fits |
 | ------ | ------- | ---- |
 | Website (SSR, SEO, public pages) | `website` | TanStack Start rules and skills (`web-*`) |
-| Dashboard / admin app (SPA) | `dashboard` | Vite + TanStack Router/Table rules and skills (`dash-*`) |
+| Dashboard / admin app | `dashboard` | TanStack Table, Query and permission rules and skills (`dash-*`); the router part depends on question 2b |
 | Website **and** dashboard in one project | `fullstack` | Two apps in one tree (for example a TanStack Start site with an admin under `src/admin`); each app gets its own rules, skills and checks |
 | Any other React app | `react` | Stack-neutral rules; the kit adapts to the stack it detects |
 
 Detection only suggests: `@tanstack/react-start` suggests website; `vite` + `@tanstack/react-router` suggests
-dashboard; everything else (Next.js, CRA, Remix, React Router, Expo web, …) suggests `react`.
+dashboard; everything else (Next.js, CRA, Remix, React Router, Expo web, …) suggests `react`. A Next.js or
+TanStack Start project can be a dashboard too: the user's answer decides, then question 2b.
+
+**Question 2b (only for `dashboard`): which framework?** Pre-select what was detected; a new project with nothing
+detected defaults to the first row.
+
+| Answer | `dashboard` variant | `stack.framework` | What changes |
+| ------ | ------------------- | ----------------- | ------------ |
+| Vite SPA (TanStack Router) | none (the base template) | `Vite` | file routes, `beforeLoad` guards, loaders, generated `routeTree.gen.ts` |
+| TanStack Start (SPA mode) | `tanstack-start` | `TanStack Start` | same router and guards; adds the Start shell, `getRouter()`, `spa.enabled`, SSR-safe module code (`rules/framework.md`) |
+| Next.js (App Router) | `next` | `Next.js` | `app/` pages, `proxy.ts` + layout guards, zod over `useSearchParams`, no loaders, `@sentry/nextjs` |
+
+The variant only replaces the router-bound parts; every other dashboard rule and skill (tables, forms, permissions,
+API layer, filters) is the same. The variant's files live in `templates/dashboard/variants/<variant>/`.
 
 For `fullstack` also ask, in the same message as the values: the admin's code folder (`{{ADMIN_DIR}}`, default `src/admin`),
 its route folder (`{{ADMIN_ROUTES}}`, default `src/routes/admin`) and URL prefix (`{{ADMIN_PATH}}`, default `/admin`),
@@ -124,6 +139,7 @@ says how to restore them. For each `EDITED` file ask separately (keep or move).
 | ------ | ------ |
 | `templates/<profile>/CLAUDE.md` | `./CLAUDE.md` |
 | `templates/shared/rules/*.md` + `templates/<profile>/rules/*.md` | `./.claude/rules/` |
+| **dashboard variant** `templates/dashboard/variants/<variant>/` | on top of the two rows above: its `CLAUDE.md` replaces the base one, its `rules/*.md` replace a rule of the same name (`routing.md`, `error-monitoring.md`) or are added (`framework.md`), and its `frontend-kit.json` keys (`stack`, `generatedPaths`) are merged into the base config |
 | `templates/<profile>/settings.json` | `./.claude/settings.json` (merge, below) |
 | `templates/<profile>/frontend-kit.json` | `./.claude/frontend-kit.json` |
 | `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh"` (JSON on stdout) | `./package.json` `scripts`: only the names the project lacks, only for tools it really uses (eslint, not oxlint, in a Next.js app); never a script whose tool is missing. `templates/shared/package.scripts.json` is the reference list, not what gets copied |
@@ -147,7 +163,8 @@ live host remove `deniedDomains`). In `frontend-kit.json` set every key the prof
 
 **Adapt to the stack** (after the copy, before showing the diffs). The rules are principles first, tool names second:
 - In `settings.json`: replace `npm`/`npx` in the allow list with the detected package manager; drop allow rules for
-  tools the project does not use; the deny rule for the lockfile names the real lockfile.
+  tools the project does not use; the deny rule for the lockfile names the real lockfile; the `Edit(...)` deny rules
+  for generated files match `generatedPaths` (`src/routeTree.gen.ts` for Vite and Start, `next-env.d.ts` for Next.js).
 - In every copied rule and in `CLAUDE.md`: where the text names a library the project does not use (TanStack Query,
   Tailwind v4, i18next, oxlint, Vitest, …), rewrite that sentence for the detected one or remove it. Keep the principle.
 - Delete a copied rule file that cannot apply (for example SSR routing rules in a client-only app, RTL rules in a

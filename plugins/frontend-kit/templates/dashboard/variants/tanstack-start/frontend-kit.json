@@ -1,0 +1,40 @@
+{
+  "projectName": "{{PROJECT_NAME}}",
+  "projectDescription": "{{PROJECT_DESCRIPTION}}",
+  "profile": "dashboard",
+  "mode": "existing",
+  "liveHosts": [
+    "{{LIVE_HOST}}"
+  ],
+  "uatHost": "{{UAT_HOST}}",
+  "githubRepo": "{{GITHUB_REPO}}",
+  "defaultBranch": "{{DEFAULT_BRANCH}}",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "{{DEV_PORT}}",
+  "e2ePort": "{{E2E_PORT}}",
+  "apiBaseEnv": "{{API_BASE_ENV}}",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "generatedPaths": [
+    "src/routeTree.gen.ts"
+  ],
+  "srcDir": "src",
+  "commands": {
+    "typecheck": "npm run typecheck",
+    "relatedTests": "npx vitest related --run --passWithNoTests",
+    "i18nValidate": "npm run i18n:validate"
+  },
+  "stack": {
+    "framework": "TanStack Start",
+    "router": "TanStack Router"
+  }
+}

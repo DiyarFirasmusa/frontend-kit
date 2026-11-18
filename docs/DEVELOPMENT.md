@@ -51,6 +51,8 @@ Version history: [`CHANGELOG.md`](../CHANGELOG.md). How to test: [`TESTING.md`](
 4. Install manifest + `/frontend-kit:doctor` + an upgrade path for projects that were already set up.
 5. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
 6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase.
+   The dashboard's Next.js and TanStack Start variants (1.11) are verified by a real setup run and the repo checks only; build a
+   real dashboard on each (login, a list, a detail, a permission redirect) and run the gate and e2e on it.
 7. Agents are rarely chosen unprompted when the code is in the prompt (`evals/info`); decide whether the descriptions should push harder.
 
 Each phase = one branch, version bump, re-run setup in both playground apps and re-run their gates to prove nothing regressed.

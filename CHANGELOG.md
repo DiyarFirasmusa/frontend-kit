@@ -3,6 +3,16 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.11.0
+- The `dashboard` profile now runs on three frameworks, chosen in `/frontend-kit:setup` (question 2b): Vite + TanStack Router
+  (as before), TanStack Start in SPA mode, or Next.js (App Router). The variants live in
+  `templates/dashboard/variants/<variant>/` and replace only the router-bound parts (`CLAUDE.md`, `routing.md`,
+  `error-monitoring.md`, a `framework.md` for Start, and the `stack` / `generatedPaths` config). Tables, forms, permissions, the API
+  layer and the `dash-*` skills are shared.
+- `dash-create-route` has a Next.js reference (`references/next-routes.md`): thin pages, `proxy.ts` + layout guards,
+  zod over `useSearchParams` with a `useListSearch` helper, no loaders.
+- `validate-repo.sh` checks every variant (150-line cap, config, rule frontmatter, mentioned in the setup skill).
+
 ## 1.10.0
 - `examples/`: seven reference projects (three from real runs of the skills, four generated with the detection script).
 - The package manager is read from `package.json` (`packageManager`) when there is no lockfile.

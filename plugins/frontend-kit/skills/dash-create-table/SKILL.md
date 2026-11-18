@@ -42,7 +42,7 @@ All under `src/features/<group>/<entity>/`:
 6. `hooks/<entity>-actions.ts` — pure `getXRowActions(row, { can, … })`.
 7. `components/<entity>-columns.tsx` — `getXColumns({ t, locale, getActions })`
    with `createColumnHelper<DataTableFeatures, XRow>()`.
-8. `hooks/use-list-page.ts` — reads search via `getRouteApi`, derives
+8. `hooks/use-list-page.ts` — reads search via `getRouteApi` (Next.js: `useListSearch`, see `dash-create-route/references/next-routes.md`), derives
    `pagination` / `sorting`, builds columns, writes the URL on change.
 9. `index.tsx` — default export `XListContainer`: header, filter bar, bulk bar,
    `<DataTable>`. JSX plus one `useXListPage()` call.

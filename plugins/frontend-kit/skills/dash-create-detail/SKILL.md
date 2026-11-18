@@ -32,7 +32,7 @@ features/<group>/<entity>/pages/detail/
 
 1. **Route**: `$<entity>Id/index.tsx`, loader `ensureQueryData(detailQueryOptions(id))`, a 404 from the API becomes
    `notFound()`. `validateSearch` owns `tab` (`z.enum([...]).catch('summary').default('summary')`, stripped).
-2. **Page hook**: reads params with `getRouteApi`, `useSuspenseQuery(detailQueryOptions(id))`, derives `actions` with
+2. **Page hook**: reads params with `getRouteApi` (Next.js: `useParams` + zod), `useSuspenseQuery(detailQueryOptions(id))`, derives `actions` with
    `getDetailActions(detail, perms)`. The container never calls `can()`.
 3. **Header**: title, status badge (one `StatusBadge` with a static `Record<Status, string>` of `t()` keys), and the
    actions as buttons. A role that may view but not act sees the page without buttons plus no notice noise.

@@ -4,6 +4,8 @@ paths:
   - "src/store/permission-store.ts"
   - "src/guards/**"
   - "src/routes/_app/**"
+  - "src/app/(app)/**"
+  - "src/proxy.ts"
   - "src/layout/app/**"
   - "src/features/**/hooks/*-actions.ts"
 ---
@@ -42,7 +44,7 @@ export type Permission = Leaves<typeof PERMS>;
 
 | Where                         | How                                                      |
 | ----------------------------- | -------------------------------------------------------- |
-| Route `beforeLoad`            | `requirePermission(PERMS.x.view)` → redirect to `/403`   |
+| Route `beforeLoad` (Next.js: the `(app)` layout gate and each page's `<RequirePermission>`) | `requirePermission(PERMS.x.view)` → redirect to `/403`   |
 | Render (buttons, columns, nav)| `useHasPermission(PERMS.x.create)` — reactive selector   |
 | Pure helpers (`*-actions.ts`) | take a `can: (p: Permission) => boolean` argument, from `useCan()` (a reactive, memoised checker) |
 | Event handlers                | `hasPermission()` (reads `getState()` once)              |
@@ -77,7 +79,7 @@ permissions; use the hook wherever the result gates JSX.
 - The form is wrapped in `<fieldset disabled>`; components that ignore fieldset (a base-ui `Switch`, custom
   toggles) get `disabled` explicitly; inline table toggles become plain badges.
 - No save/submit button, and a visible read-only notice says why.
-- A 403 from the backend refreshes the permission data (`/me`) and calls `router.invalidate()` so guards re-run; the
+- A 403 from the backend refreshes the permission data (`/me`) and calls `router.invalidate()` (Next.js: `router.refresh()`) so guards re-run; the
   `(errors)/403` page renders inside the signed-in shell, not bare.
 
 ## Don't

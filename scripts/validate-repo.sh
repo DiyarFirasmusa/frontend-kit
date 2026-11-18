@@ -43,6 +43,18 @@ done
 for t in plugins/*/templates/*/CLAUDE.md; do
   [ "$(wc -l <"$t")" -le 150 ] || bad "$t is over 150 lines"
 done
+# 5b. dashboard variants (templates/dashboard/variants/<name>): CLAUDE.md within the cap, config JSON with the framework
+#     the setup skill names, every rule has frontmatter paths, and the variant is described in the setup skill
+for v in plugins/*/templates/dashboard/variants/*/; do
+  name="$(basename "$v")"
+  [ -f "$v/CLAUDE.md" ] || bad "$v: CLAUDE.md missing"
+  [ "$(wc -l <"$v/CLAUDE.md")" -le 150 ] || bad "$v/CLAUDE.md is over 150 lines"
+  jq -e '.stack.framework and .profile == "dashboard"' "$v/frontend-kit.json" >/dev/null 2>&1 || bad "$v/frontend-kit.json: needs profile dashboard and stack.framework"
+  for rule in "$v"/rules/*.md; do
+    [ -f "$rule" ] && { head -1 "$rule" | grep -qx -- '---' || bad "$rule: no frontmatter"; }
+  done
+  grep -q "| \`$name\` |" plugins/*/skills/setup/SKILL.md || bad "setup skill does not mention the $name variant"
+done
 for sh in plugins/*/scripts/*.sh scripts/*.sh; do
   bash -n "$sh" 2>/dev/null || bad "shell syntax error: $sh"
 done

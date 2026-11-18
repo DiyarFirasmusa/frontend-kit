@@ -6,7 +6,7 @@ profile and copies `templates/shared/` + `templates/<profile>/` into the project
 | Profile   | Stack (reference project)                                                                 |
 | --------- | ----------------------------------------------------------------------------------------- |
 | website   | TanStack Start (React 19, TanStack Router file routes + SSR, server functions), TanStack Query, Zustand, Tailwind v4, i18next (Arabic RTL default + English), react-hook-form + zod, Vitest + Testing Library + MSW, Playwright + axe, oxlint + oxfmt, npm |
-| dashboard | Vite + React 19 SPA, TanStack Router (file routes, typed search params), TanStack Query, TanStack Table, Zustand, base-ui / shadcn-style primitives, Tailwind v4, i18next RTL + English, react-hook-form + zod, Sentry, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm (reference: inventory-storage) |
+| dashboard | Vite + React 19 SPA (or TanStack Start in SPA mode, or Next.js App Router: `variants/`), TanStack Router (file routes, typed search params), TanStack Query, TanStack Table, Zustand, base-ui / shadcn-style primitives, Tailwind v4, i18next RTL + English, react-hook-form + zod, Sentry, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm (reference: inventory-storage) |
 
 ## Layout
 
@@ -28,6 +28,11 @@ plugins/frontend-kit/
     rules/*.md                profile-only rules (frontmatter `paths:` where it helps)
     settings.json             permissions (+ attribution, outputStyle, the kit marketplace with autoUpdate) — no hooks (hooks live in the plugin)
     frontend-kit.json         the project config the hooks read (schema below)
+  templates/dashboard/variants/<variant>/   only the router-bound parts of the dashboard for another framework
+                              (`tanstack-start`, `next`): `CLAUDE.md` (replaces the base one, same 150-line cap),
+                              `rules/*.md` (replace a rule of the same name or add one), `frontend-kit.json` (`stack`,
+                              `generatedPaths`, merged into the base). Vite + TanStack Router is the base template.
+                              Everything not router-bound (tables, forms, permissions, API layer) is shared.
 ```
 
 ## Placeholders (setup asks for them and replaces them in every copied file)

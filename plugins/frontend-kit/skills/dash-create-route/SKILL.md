@@ -8,6 +8,13 @@ description: "Dashboard profile: add a TanStack Router file route — a list, de
 Rules this follows: `.claude/rules/routing.md`, `.claude/rules/permissions.md`.
 Full examples: `references/route-examples.md`.
 
+**Which framework?** Read `stack.framework` in `.claude/frontend-kit.json`.
+- `TanStack Start` or `Vite` (or empty): this file as written. Start in SPA mode uses the same route files, guards and
+  loaders; only the root route and `getRouter()` differ (`.claude/rules/framework.md`).
+- `Next.js`: the router is the App Router. Follow `references/next-routes.md` instead of steps 1-4 (there is no
+  `createFileRoute`, `beforeLoad`, `loader` or `routeTree.gen.ts`); steps 0, 5 and the checklist still apply with the
+  Next equivalents named there.
+
 ## 0. Decide
 
 - Which group: `_app/` (signed in, the normal case), `_auth/` (guest only) or

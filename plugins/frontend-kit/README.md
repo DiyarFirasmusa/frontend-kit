@@ -9,7 +9,7 @@ A Claude Code marketplace with one plugin for React + TypeScript frontends.
 `/frontend-kit:setup` asks two things first, and you answer both:
 
 1. **What are we doing?** A new project, an existing project, or a refactor (restructure it to the standards).
-2. **What kind of React project?** `website` (TanStack Start, SSR/SEO), `dashboard` (Vite SPA + TanStack Router/Table),
+2. **What kind of React project?** `website` (TanStack Start, SSR/SEO), `dashboard` (TanStack Table/Query + permissions, on Vite + TanStack Router, TanStack Start (SPA mode) or Next.js: you pick the framework),
    **both in one project** (`fullstack`: a site and an admin in one tree, each app with its own rules, skills and checks),
    or **any other React app** (`react`: Next.js, Remix, React Router, CRA, Expo web, …).
 
