@@ -3,6 +3,13 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.11.2
+- The TanStack Start dashboard variant was built end to end by a real kit session (login, shell, orders list with URL
+  state, detail with a permission-guarded status change, `/403`, Arabic/English): typecheck, lint, 72 tests and `vite build`
+  (SPA shell `_shell.html`) pass; sign-in redirect, viewer vs admin action and `/403` were checked in a browser. The session
+  found a hydration mismatch for English users on reload; `framework.md` now describes the custom client entry that
+  restores the session and language before hydrating.
+
 ## 1.11.1
 - The Next.js dashboard variant was built end to end (login, shell, orders list with URL state, order detail with a
   permission-guarded action, `/403`, Arabic/English) by a real kit session: typecheck, lint, 101 tests and `next build` pass,

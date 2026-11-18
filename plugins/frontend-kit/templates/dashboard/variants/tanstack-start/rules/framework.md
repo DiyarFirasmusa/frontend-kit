@@ -37,6 +37,17 @@ dashboard (`routing.md`, `permissions.md`), plus a prerendered shell and optiona
   Server functions are same-origin RPC: once the project defines `src/start.ts`, add `createCsrfMiddleware()` there
   itself (without a `start.ts` Start installs it).
 
+## Session and language before hydration
+
+- The shell is prerendered once, with the default language (`<html lang="ar" dir="rtl">`) and no session. A user whose
+  language is English, or who is signed in, must not see that default flash or trigger a hydration mismatch.
+- Add a custom client entry `src/client.tsx` (`hydrateRoot(document, <StartClient />)`) that awaits
+  `bootstrapSession()` (the session restore in `api-layer.md`) **before** hydrating, so the first guard run already
+  knows the user and the permissions.
+- Set `<html lang dir>` from the stored language with a small inline script in the root route's `head` (it runs before
+  paint), and render language-dependent text from state that is already restored when hydration starts; never read
+  `localStorage` during the first render to pick text. Measure on the production build: the dev server is slower.
+
 ## Env
 
 - Browser-visible values are `VITE_*` and are read through `src/env.ts` (zod), never `import.meta.env` in a feature.
