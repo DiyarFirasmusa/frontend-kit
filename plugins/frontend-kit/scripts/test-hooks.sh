@@ -896,6 +896,21 @@ if [ "$(printf '%s' "$OUT" | jq -r '.stack.framework')" = "Next.js" ] && [ "$(pr
 OUT="$("$HOOKS/kit-package-scripts.sh" "$SOL")"
 [ "$(printf '%s' "$OUT" | jq -r .typecheck)" = "tsc -b" ] && ok || ko "kit-package-scripts uses tsc -b for a solution tsconfig" "$OUT"
 
+# --- post-edit: the no-any hard rule is checked without a linter -----------------------------------------------------
+
+AN="$WORK/any-check"
+mkdir -p "$AN/src" "$AN/.claude"
+git -C "$AN" init -q -b main
+printf '{"stopGate":{"review":false}}\n' >"$AN/.claude/frontend-kit.json"
+export CLAUDE_PROJECT_DIR="$AN"
+printf 'export const a = (x: any) => x\nexport const b = 1 as unknown as string\n// a comment mentioning : any is fine\n' >"$AN/src/a.ts"
+run_hook post-edit.sh "$(jq -n --arg f "$AN/src/a.ts" '{hook_event_name: "PostToolUse", tool_name: "Write", tool_input: {file_path: $f}}')"
+CTX="$(printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext // ""')"
+if [ "$CODE" -eq 0 ] && printf '%s' "$CTX" | grep -q 'x: any' && printf '%s' "$CTX" | grep -q 'as unknown as' && ! printf '%s' "$CTX" | grep -q 'comment mentioning'; then ok; else ko "post-edit warns about any and unsafe casts (not comments)" "exit $CODE: $CTX"; fi
+printf 'export const a = (x: unknown) => x\n' >"$AN/src/a.ts"
+run_hook post-edit.sh "$(jq -n --arg f "$AN/src/a.ts" '{hook_event_name: "PostToolUse", tool_name: "Write", tool_input: {file_path: $f}}')"
+[ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "post-edit is quiet on clean TypeScript" "exit $CODE: $OUT"
+
 # --- Every hook script is executable and valid bash -------------------------------------------
 
 for script in "$HOOKS"/*.sh; do

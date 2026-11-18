@@ -109,6 +109,19 @@ $I18N_TAIL"
     ;;
 esac
 
+# The kit's hard rule "no any, no casts, no ts-ignore" does not depend on the project's linter: say so right away.
+case "$REL" in
+  *.ts | *.tsx)
+    ANY_HITS="$(grep -nE '(:[[:space:]]*any\b|<any>|\bas any\b|\bas unknown as\b|@ts-ignore|@ts-expect-error)' "$REL" 2>/dev/null | grep -vE '^[0-9]+:[[:space:]]*(//|\*)' | head -n 8)"
+    if [ -n "$ANY_HITS" ]; then
+      WARNINGS="${WARNINGS:+$WARNINGS
+
+}Hard rule: no any, no casts to silence the compiler, no @ts-ignore. Fix these in $REL (use unknown and narrow, or fix the type):
+$ANY_HITS"
+    fi
+    ;;
+esac
+
 if [ -n "$PROBLEMS" ]; then
   printf '%s\n' "$PROBLEMS" >&2
   exit 2

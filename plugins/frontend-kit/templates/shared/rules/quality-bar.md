@@ -42,3 +42,14 @@ finished. The Stop hook runs typecheck and related tests on every change.
   is unit-tested, a touched route component covers its states plus one interaction.
 - Before saying "done", the gates ran and passed (`verify` skill), and you say
   exactly what was and wasn't checked. Never claim a check you didn't run.
+
+## Before you say "done" — check these five against your own diff
+
+1. **Touch targets:** every button, link, input, checkbox and icon button is at least 44×44 px (`min-h-11 min-w-11`, or
+   `min-height: 44px; min-width: 44px`). A 24px icon button gets padding, not a smaller hit area.
+2. **No `any`, no casts:** grep your diff for `: any`, `as any`, `as unknown as`, `@ts-ignore`, `@ts-expect-error`. Use
+   `unknown` and narrow, or fix the type.
+3. **Logical direction only:** no `left`/`right`/`margin-left`/`padding-right`/`ml-`/`pr-`/`text-left`. Use `start`/`end`,
+   `margin-inline-*`, `padding-inline-*`, `ms-`/`pe-`/`text-start`.
+4. **Names and text:** every control has a visible label or `aria-label`; no user-facing string is hardcoded in one language.
+5. **Tests assert behaviour:** each new component or hook has a test of what it does (clicks, states, edge cases), not only that it renders.
