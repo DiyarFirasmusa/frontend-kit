@@ -199,7 +199,6 @@ Only what the user approved in the proposal:
 - Check `jq` is installed (`command -v jq`): every hook needs it. If missing, say `brew install jq`.
 - Report in 3–6 lines: profile, files created / merged / skipped, values used, and the next steps:
   - Restart Claude Code so the new CLAUDE.md, rules and settings load.
-  - Optional status band: `/plugin install frontend-status@frontend-kit`.
   - Refactor mode chosen: run `/frontend-kit:refactor-mode audit`. New project: start with the `task` skill.
   - Hook self-test: `KIT_TEST_PROJECT="$PWD" bash "${CLAUDE_PLUGIN_ROOT}/scripts/test-hooks.sh"`.
 - Do not commit. The user commits when they say so.

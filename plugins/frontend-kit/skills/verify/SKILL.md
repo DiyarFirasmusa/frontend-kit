@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Run the full quality gate — typecheck, lint, format, unit tests, i18n validation, e2e and build — and report the real numbers, then record the result for the status band. Use before asking to commit, or when the user says check, test, verify, "is it working", "run all checks".
+description: Run the full quality gate — typecheck, lint, format, unit tests, i18n validation, e2e and build — and report the real numbers, then record the result for the session banner. Use before asking to commit, or when the user says check, test, verify, "is it working", "run all checks".
 argument-hint: "[quick]"
 ---
 
@@ -52,7 +52,7 @@ Not checked: <manual browser check, UAT, …>
 
 ## Record
 
-After the run, record the overall result for the session banner and the status band:
+After the run, record the overall result for the session banner and the commit gate:
 
 ```sh
 "${CLAUDE_PLUGIN_ROOT}/scripts/record-gate.sh" pass verify "types, lint, format, 812 tests, i18n, e2e, build"

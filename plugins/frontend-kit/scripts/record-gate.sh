@@ -1,6 +1,6 @@
 #!/bin/bash
 # Records the result of the last quality gate in .claude/state/last-gate.json (gitignored), which
-# the session banner and the status band read.
+# the session banner and the commit gate read.
 #
 #   "${CLAUDE_PLUGIN_ROOT}"/scripts/record-gate.sh <pass|fail> <source> "<one-line summary>"
 #   e.g. "${CLAUDE_PLUGIN_ROOT}"/scripts/record-gate.sh pass verify "typecheck, lint, 812 tests, i18n, build"

@@ -1,11 +1,10 @@
 # frontend-kit
 
-A Claude Code marketplace with one plugin for React + TypeScript frontends, plus an optional status band.
+A Claude Code marketplace with one plugin for React + TypeScript frontends.
 
 | Plugin | What it gives a project |
 | ------ | ----------------------- |
 | `frontend-kit` | Skills, agents, hooks (git + live-site + secrets guards, format/lint on edit, quality gates), MCP servers (Chrome DevTools, Playwright, context7), and `/frontend-kit:setup`, which installs `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json` |
-| `frontend-status` | Optional band above the prompt: branch, changes, ahead/behind, last gate, dev server |
 
 `/frontend-kit:setup` asks two things first, and you answer both:
 
@@ -27,7 +26,6 @@ you approve, then restructure one phase at a time with behaviour frozen and the 
 /plugin marketplace add /path/to/frontend-kit        # or owner/repo once it is on GitHub
 /plugin install frontend-kit@frontend-kit
 /frontend-kit:setup                               # asks the profile and the project values
-/plugin install frontend-status@frontend-kit         # optional
 ```
 
 Restart Claude Code after setup. Requirements: `jq` (`brew install jq`), Node 20+, git.
