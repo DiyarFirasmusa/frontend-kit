@@ -1,0 +1,44 @@
+{
+  "projectName": "refactor-legacy",
+  "projectDescription": "A deliberately messy app used to show refactor mode.",
+  "profile": "react",
+  "mode": "refactor",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "your-org/refactor-legacy",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "5173",
+  "e2ePort": "",
+  "apiBaseEnv": "",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "srcDirs": [
+    "src"
+  ],
+  "stack": {
+    "packageManager": "npm",
+    "framework": "Vite",
+    "router": "",
+    "data": "",
+    "state": "",
+    "styling": "",
+    "tests": "",
+    "lint": "eslint",
+    "format": "",
+    "e2e": "",
+    "i18n": ""
+  },
+  "commands": {
+    "typecheck": "npm run --silent typecheck"
+  }
+}

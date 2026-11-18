@@ -63,4 +63,20 @@ for prompt in plugins/*/evals/*/*/prompt.md; do
   case "$name" in "$group"-*) ;; *) bad "$prompt: case name '$name' must start with '$group-'" ;; esac
 done
 
+# 8. examples: a README, valid JSON, no placeholders or absolute paths left, and the config's srcDirs match what detection finds
+for dir in examples/*/; do
+  dir="${dir%/}"
+  [ -f "$dir/README.md" ] || bad "$dir: no README.md"
+  if [ -f "$dir/.claude/frontend-kit.json" ]; then
+    jq empty "$dir/.claude/frontend-kit.json" 2>/dev/null || bad "$dir: invalid .claude/frontend-kit.json"
+    if [ -f "$dir/package.json" ]; then
+      want="$(jq -c '.srcDirs // []' "$dir/.claude/frontend-kit.json")"
+      got="$(bash plugins/frontend-kit/scripts/kit-detect-stack.sh "$dir" 2>/dev/null | jq -c '.srcDirs' 2>/dev/null)"
+      [ "$want" = "$got" ] || bad "$dir: srcDirs $want in the config, detection finds $got"
+    fi
+  fi
+done
+if grep -rIlE '\{\{[A-Z_]+\}\}' examples 2>/dev/null | grep -q .; then bad "examples: unreplaced {{PLACEHOLDER}}:"; grep -rIlE '\{\{[A-Z_]+\}\}' examples | head -3; fi
+if grep -rIlE '/Users/|/private/tmp|/var/folders' examples 2>/dev/null | grep -q .; then bad "examples: absolute paths:"; grep -rIlE '/Users/|/private/tmp|/var/folders' examples | head -3; fi
+
 [ "$FAIL" -eq 0 ] && echo "repo checks passed" || { echo "$FAIL problem(s)"; exit 1; }

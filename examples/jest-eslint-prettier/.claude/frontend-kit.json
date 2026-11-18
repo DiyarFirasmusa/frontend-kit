@@ -1,0 +1,45 @@
+{
+  "projectName": "jest-eslint-prettier",
+  "projectDescription": "A Vite + React app with Jest, ESLint, Prettier, Redux Toolkit, MUI and styled-components.",
+  "profile": "react",
+  "mode": "existing",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "your-org/jest-eslint-prettier",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "4100",
+  "e2ePort": "",
+  "apiBaseEnv": "",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "srcDirs": [
+    "src"
+  ],
+  "stack": {
+    "packageManager": "npm",
+    "framework": "Vite",
+    "router": "",
+    "data": "Redux Toolkit",
+    "state": "Redux",
+    "styling": "styled-components",
+    "tests": "jest",
+    "lint": "eslint",
+    "format": "prettier",
+    "e2e": "",
+    "i18n": ""
+  },
+  "commands": {
+    "typecheck": "npx tsc --noEmit",
+    "relatedTests": "npx jest --findRelatedTests --passWithNoTests"
+  }
+}

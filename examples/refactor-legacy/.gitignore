@@ -1,0 +1,6 @@
+node_modules
+dist
+.claude/state
+.claude/state/
+.claude/settings.local.json
+.claude/kit-backup/

@@ -16,7 +16,11 @@ script_exists() { jq -e --arg n "$1" '(.scripts // {}) | has($n)' "$PKG" >/dev/n
 if [ -f "$PROJECT/pnpm-lock.yaml" ]; then RUN="pnpm run"
 elif [ -f "$PROJECT/yarn.lock" ]; then RUN="yarn"
 elif [ -f "$PROJECT/bun.lock" ] || [ -f "$PROJECT/bun.lockb" ]; then RUN="bun run"
-else RUN="npm run"; fi
+else
+  case "$(jq -r '.packageManager // ""' "$PKG")" in
+    pnpm@*) RUN="pnpm run" ;; yarn@*) RUN="yarn" ;; bun@*) RUN="bun run" ;; *) RUN="npm run" ;;
+  esac
+fi
 
 OUT="{}"
 add() { OUT="$(printf '%s' "$OUT" | jq --arg k "$1" --arg v "$2" '. + {($k): $v}')"; }

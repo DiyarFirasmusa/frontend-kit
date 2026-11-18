@@ -1,0 +1,50 @@
+{
+  "projectName": "fresh-vite-ts",
+  "projectDescription": "A Vite React TypeScript app",
+  "profile": "react",
+  "mode": "existing",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "acme/fresh-vite-ts",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "5173",
+  "e2ePort": "",
+  "apiBaseEnv": "",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "generatedPaths": [],
+  "srcDirs": [
+    "src"
+  ],
+  "stack": {
+    "packageManager": "pnpm",
+    "framework": "Vite + React 19",
+    "router": "none",
+    "data": "none",
+    "state": "React state",
+    "styling": "plain CSS",
+    "tests": "vitest",
+    "e2e": "none",
+    "lint": "oxlint",
+    "format": "prettier",
+    "i18n": "none yet"
+  },
+  "commands": {
+    "typecheck": "pnpm exec tsc -b",
+    "relatedTests": "pnpm exec vitest related --run --passWithNoTests",
+    "i18nValidate": ""
+  },
+  "stopGate": {
+    "review": false
+  }
+}

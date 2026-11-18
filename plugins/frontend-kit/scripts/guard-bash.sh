@@ -14,6 +14,7 @@
 #
 #   - reading .env secrets through the shell (cat .env, source .env.local, cp .env /tmp); .env.example is fine
 set -uf
+# shellcheck disable=SC2034 # read by lib.sh
 HOOK_KIND=guard # fail closed: see lib.sh
 . "$(dirname "$0")/lib.sh"
 
@@ -93,6 +94,7 @@ fi
 # Lexically resolves a path against a base: no symlinks, handles . and .. and ~.
 resolve_path() {
   local base="$1" path="$2" out="" part
+  # shellcheck disable=SC2088 # "~" here is the literal text of the command, expanded by hand below
   case "$path" in
     "$ROOT_TOKEN"*) path="$HOOK_ROOT${path#"$ROOT_TOKEN"}" ;;
     "~") path="$HOME" ;;

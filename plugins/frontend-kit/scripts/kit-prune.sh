@@ -29,10 +29,11 @@ RULES="$PROJECT/.claude/rules"
 
 # Rule names this profile keeps: shared + its own.
 # fullstack = the site (website rules) + the admin (dashboard rules copied as admin-<name>.md with scoped paths).
+rule_names() { local dir file; for dir in "$@"; do for file in "$dir"/*.md; do [ -f "$file" ] && basename "$file"; done; done; }
 if [ "$PROFILE" = fullstack ]; then
-  KEEP="$(ls "$TEMPLATES/shared/rules" "$TEMPLATES/website/rules" 2>/dev/null | grep '\.md$'; ls "$TEMPLATES/dashboard/rules" | sed 's/^/admin-/')"
+  KEEP="$(rule_names "$TEMPLATES/shared/rules" "$TEMPLATES/website/rules"; rule_names "$TEMPLATES/dashboard/rules" | sed 's/^/admin-/')"
 else
-  KEEP="$(ls "$TEMPLATES/shared/rules" "$TEMPLATES/$PROFILE/rules" 2>/dev/null | grep '\.md$' | sort -u)"
+  KEEP="$(rule_names "$TEMPLATES/shared/rules" "$TEMPLATES/$PROFILE/rules" | sort -u)"
 fi
 BACKUP="$PROJECT/.claude/kit-backup/$(date +%Y%m%d-%H%M%S)"
 

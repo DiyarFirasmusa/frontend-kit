@@ -1,3 +1,5 @@
+# shellcheck shell=bash disable=SC2034,SC2154
+# (the KIT_* and HOOK_* variables are read by the scripts that source this file)
 # Shared helpers for the project's Claude Code hooks. Sourced, never run.
 # Bash 3.2 compatible (macOS /bin/bash): no associative arrays, no ${var,,}, no mapfile.
 #

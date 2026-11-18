@@ -3,6 +3,7 @@
 # locally or on the test environment, never on the hosts in liveHosts (.claude/frontend-kit.json), where a
 # test order or login touches real customers' data.
 set -u
+# shellcheck disable=SC2034 # read by lib.sh
 HOOK_KIND=guard # fail closed: see lib.sh
 . "$(dirname "$0")/lib.sh"
 

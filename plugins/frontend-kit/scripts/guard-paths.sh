@@ -7,6 +7,7 @@
 #                 and from .claude/frontend-kit.json: protectedPaths (deploy config, by default
 #                 .github/ deploy/ server/) and generatedPaths (generated files, e.g. the route tree)
 set -u
+# shellcheck disable=SC2034 # read by lib.sh
 HOOK_KIND=guard # fail closed: see lib.sh
 . "$(dirname "$0")/lib.sh"
 

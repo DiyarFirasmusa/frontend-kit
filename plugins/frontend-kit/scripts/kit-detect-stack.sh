@@ -32,7 +32,15 @@ first() { # first <label:package>... → label of the first installed package
 if [ -f "$PROJECT/pnpm-lock.yaml" ]; then PM=pnpm; RUN="pnpm run"; EXEC="pnpm exec"
 elif [ -f "$PROJECT/yarn.lock" ]; then PM=yarn; RUN="yarn"; EXEC="yarn"
 elif [ -f "$PROJECT/bun.lock" ] || [ -f "$PROJECT/bun.lockb" ]; then PM=bun; RUN="bun run"; EXEC="bunx"
-else PM=npm; RUN="npm run"; EXEC="npx"; fi
+else
+  # No lockfile (a fresh clone, an example): the "packageManager" field of package.json (Corepack) says which one.
+  case "$(jq -r '.packageManager // ""' "$PKG")" in
+    pnpm@*) PM=pnpm; RUN="pnpm run"; EXEC="pnpm exec" ;;
+    yarn@*) PM=yarn; RUN="yarn"; EXEC="yarn" ;;
+    bun@*) PM=bun; RUN="bun run"; EXEC="bunx" ;;
+    *) PM=npm; RUN="npm run"; EXEC="npx" ;;
+  esac
+fi
 
 FRAMEWORK="$(first "Next.js:next" "TanStack Start:@tanstack/react-start" "React Router framework:@react-router/dev" "Remix:@remix-run/react" "Expo:expo" "Gatsby:gatsby" "Create React App:react-scripts" "Vite:vite")"
 case "$FRAMEWORK" in

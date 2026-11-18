@@ -351,7 +351,9 @@ while IFS= read -r rule; do
   pattern="${rule#*(./}"
   pattern="${pattern%)}"
   # shellcheck disable=SC2254 # the pattern is the glob under test
+  # shellcheck disable=SC2194
   case .env.example in $pattern) EXAMPLE_HIT="$EXAMPLE_HIT $rule" ;; esac
+  # shellcheck disable=SC2194,SC2254
   case .env in $pattern) ENV_HIT=1 ;; esac
 done <<<"$ENV_RULES"
 [ -z "$EXAMPLE_HIT" ] && ok || ko "no deny rule matches .env.example" "$EXAMPLE_HIT"
@@ -855,6 +857,7 @@ cp "$PLUGIN/templates/react/rules/structure.md" "$FP/.claude/rules/structure.md"
 cp "$PLUGIN/templates/website/rules/seo-share.md" "$FP/.claude/rules/seo-share.md"
 OUT="$("$HOOKS/kit-prune.sh" fullstack "$FP")"
 if printf '%s' "$OUT" | grep -q '^REMOVE .claude/rules/routing.md' && printf '%s' "$OUT" | grep -q '^REMOVE .claude/rules/structure.md' && ! printf '%s' "$OUT" | grep -qE 'admin-api-layer|seo-share'; then ok; else ko "kit-prune (fullstack) keeps scoped and website rules, removes unscoped dashboard and react rules" "$OUT"; fi
+# shellcheck disable=SC2043 # one profile today; a loop keeps the shape for the next
 for f in fullstack; do jq -e '.apps | length == 2' "$PLUGIN/templates/$f/frontend-kit.json" >/dev/null && ok || ko "templates/$f/frontend-kit.json lists two apps"; done
 jq -e '[.permissions.deny[] | select(startswith("Skill("))] | length == 0' "$PLUGIN/templates/fullstack/settings.json" >/dev/null && ok || ko "fullstack settings deny no skills"
 
@@ -912,6 +915,11 @@ if [ "$CODE" -eq 0 ] && printf '%s' "$CTX" | grep -q 'x: any' && printf '%s' "$C
 printf 'export const a = (x: unknown) => x\n' >"$AN/src/a.ts"
 run_hook post-edit.sh "$(jq -n --arg f "$AN/src/a.ts" '{hook_event_name: "PostToolUse", tool_name: "Write", tool_input: {file_path: $f}}')"
 [ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "post-edit is quiet on clean TypeScript" "exit $CODE: $OUT"
+
+# The packageManager field decides when there is no lockfile.
+NL="$WORK/no-lock"; mkdir -p "$NL"
+printf '{"name":"n","packageManager":"pnpm@11.0.0","devDependencies":{"typescript":"5"}}\n' >"$NL/package.json"
+[ "$("$HOOKS/kit-detect-stack.sh" "$NL" | jq -r .stack.packageManager)" = pnpm ] && [ "$("$HOOKS/kit-package-scripts.sh" "$NL" | jq -r .check)" = "pnpm run typecheck" ] && ok || ko "package manager comes from the packageManager field when there is no lockfile"
 
 # --- Monorepo: workspace packages are the apps, their src folders are the watched folders ------------------------------
 

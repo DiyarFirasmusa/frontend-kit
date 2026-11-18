@@ -154,8 +154,11 @@ live host remove `deniedDomains`). In `frontend-kit.json` set every key the prof
   project with one left-to-right language, i18n rules in a project with no i18n) and list what you removed.
 - Never invent a convention the project does not follow; when the stack is unclear, keep the neutral wording.
 Show the list of adaptations with the diffs and wait for the user's answer.
-If Claude Code refuses a write inside `.claude/` (it can ask for permission there), stop and tell the user which file
-needs approval; never route around the refusal through another tool.
+Order of writes: `.claude/frontend-kit.json` **first**. If Claude Code refuses a write inside `.claude/` (it asks for
+permission there), stop right away and tell the user which file needs approval; never route around the refusal through
+another tool, and never copy the other templates into `.claude/rules/` first (unadapted files with `{{PLACEHOLDER}}`s must
+not be left behind). Setup is safe to run again: files that already match are skipped, so after the user approves the
+permission, re-running it finishes the job.
 
 ## 5. Existing files: show, then ask
 

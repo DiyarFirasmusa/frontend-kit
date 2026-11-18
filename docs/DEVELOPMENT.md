@@ -16,7 +16,8 @@ The kit is developed **against real apps, not in the abstract**. Two throw-away 
 | Path | Pushed |
 | ---- | ------ |
 | `plugins/**`, `.claude-plugin/**`, `docs/**`, `README.md` | yes — this is the product |
-| `playground/**` (mock API, website, dashboard, FINDINGS) | **no** — local test bench, ignored by `.gitignore` |
+| `examples/**`, `CHANGELOG.md`, `scripts/**`, `.github/**` | yes |
+| `playground/**` (mock API, website, dashboard, combined, fresh-*, FINDINGS) | **no** — local test bench, ignored by `.gitignore` |
 
 Never copy playground domain code (Bazaar products, orders, …) into templates; extract the *pattern* and drop the domain
 (`docs/TEMPLATE-CONTRACT.md`).
@@ -30,58 +31,26 @@ Never copy playground domain code (Bazaar products, orders, …) into templates;
 | Add a workflow Claude can run | `skills/<name>/SKILL.md` (`web-*` / `dash-*` prefix if profile-only) |
 | Add a specialist reviewer / worker | `agents/<name>.md` |
 | Block or automate something | `scripts/*.sh` + `hooks/hooks.json`, plus a case in `scripts/test-hooks.sh` |
-| Add a new stack profile | `templates/<profile>/` + setup skill + contract doc |
+| Add a new stack profile | `templates/<profile>/` + setup skill + contract doc + an `examples/` project |
+| Change when a skill or agent is chosen | its `description`, then measure with `scripts/eval.sh` (5+ runs, before and after) |
+| Show what setup does on another stack | a folder in `examples/` with a README (`validate-repo.sh` checks it) |
 
 ## Roadmap
 
-Source: `playground/website/FINDINGS.md` (42 items) and `playground/dashboard/FINDINGS.md` (33 items) — both built end to end
-against the Bazaar mock API — plus the research report (`playground/research/reports/`).
+Sources: the findings files of the local playground apps (website, dashboard, combined), the research report, and the end-to-end runs
+recorded in the changelog.
 
-**Done in 1.1.0** (uncommitted until reviewed)
+Version history: [`CHANGELOG.md`](../CHANGELOG.md). How to test: [`TESTING.md`](TESTING.md).
 
-- Phase 0 bench: mock API, website (5 pages), dashboard (5 pages).
-- Phase 1 wrong facts: `qk`, `isRetry`, git commit/push on `ask`, MSW 3 / Sentry 11 facts, scripts table + `package.scripts.json`, `protectedBranches` from one answer, `.env` bootstrap, `lib.sh` path.
-- Phase 2 hooks: oxlint "No files found" is a skip; ar/en parity mid-edit only warns (Stop gate still blocks); shipped `validate-i18n.ts`; SubagentStop also matches `frontend-kit:<agent>`.
-- Phase 3 shipped files: `shared/scripts/validate-i18n.ts`, `shared/style/theme.css`, `shared/config/.oxlintrc.json|.oxfmtrc.json`, `shared/rules/project.md`.
-- Phase 4 guidance: search params, optimistic locking + dirty guard + arrays/uploads, read-only mode, session restore, blob/CSV, table selection, i18n key-in-data/plurals/bundles, RTL details, token names, `ServerResult<T>`, token-in-body auth, `ssr:false` noindex, Start under Vitest, hydration marker; new skills `dash-create-detail`, `dash-create-settings-form`; light path in `web-create-feature`.
-- Phase 5 CI files: `scripts/validate-repo.sh`, `.github/workflows/ci.yml` (not run on GitHub yet; nothing pushed).
+**Next**
 
-**Done in 1.2.0**
-
-- `skill-suggest.sh` (UserPromptSubmit): matches the prompt against `scripts/skill-triggers.tsv` (kit skills, profile-filtered, max 3) and against the project's own `.claude/skills/*` descriptions, and tells Claude which skill to open. Off with `hooks.skillSuggest: false`. One line per skill in the tsv; the hook tests fail when a line names a missing skill.
-- `stop-gate.sh`: `stopGate.tests: "all"` runs the whole unit suite (`commands.allTests`, default `vitest run`) instead of only the related tests. It still skips when src/ did not change.
-- `commit-gate.sh` (PreToolUse Bash): before `git commit`, warns when src/ has not passed the quality gate (never blocks).
-
-- Auto-update: the settings templates declare the `frontend-kit` marketplace with `autoUpdate: true`, so a set-up project refreshes the marketplace and updates the plugin after a session starts (random delay up to 10 min; applies on the next session or `/reload-plugins`). **A release is a version bump in `plugin.json` pushed to `main`**: without a bump, projects get nothing.
-
-- Code review at the end of a turn (1.3.0): when the Stop gate passes on changed src/, it blocks once per stop chain and asks Claude to run the `frontend-reviewer` agent (`model: opus`) on the uncommitted changes. Off with `stopGate.review: false`. Plan mode adds a pointer to the personal `/spec` skill (`skill-suggest.sh`).
-
-- Skill evals (`plugins/frontend-kit/evals/`, native `claude plugin eval` format): 10 RTL cases (7 need a fix, 3 already clean) + 1 skill-generation case in `dev/`, 2 in `heldout/`. Run through `scripts/eval.sh` (dev, save, compare, heldout). Costs money; never run by CI. `validate-repo.sh` checks the case layout only.
-
-- Stack-neutral kit (1.4.0): setup asks "new / existing / refactor" and then the kind of React project; new `react` profile (`templates/react/`: CLAUDE.md + structure, data-and-state, forms, routing rules); stack detection written to `frontend-kit.json` (`stack`, `srcDirs`, `commands`); hooks use oxlint/eslint/biome, oxfmt/prettier/biome, vitest/jest, any lockfile and any `srcDirs`; setup adapts the copied rules to the stack. `refactor-mode` skill (audit, plan, phase by phase) and `mode` banner in the hooks. Not yet run against a real Next.js/CRA project: do that next.
-
-- Approval + clean-up (1.5.0): setup sends one proposal (files, adaptations, clean-up, what it will not touch) and waits for the user's yes before writing. `scripts/kit-prune.sh <profile>` moves kit rules of another profile to `.claude/kit-backup/<timestamp>/` (dry run by default; edited files and the user's own rules are kept). The settings templates deny the other profile's skills with `Skill(frontend-kit:<name>)` rules. Unverified: the exact name form for plugin skills in `Skill(...)` rules, and whether a deny rule also hides the skill from Claude's skill listing (the docs only say it blocks invocation). Check on a real project.
-
-- Several apps in one project (1.6.0), from the combined bench (`playground/combined`, site + admin in one TanStack Start tree): `fullstack` profile (`templates/fullstack/`); `apps` in `frontend-kit.json` (`name`, `profile`, `path`, `routes`, per-app `commands.i18nValidate` / `relatedTests`, `apiBaseEnv`); the app of a file is the longest `path` prefix (`kit_app_of` in `lib.sh`); the Stop gate and `post-edit` run each app's own commands; `skill-suggest` keeps both apps' skills and says which app is which; the banner lists the apps; `scripts/kit-scope-rules.sh` rewrites a rule's `paths:` globs to one app (`admin-<rule>.md` for the dashboard rules, `src/features|shared` for the site's); `kit-prune.sh fullstack` removes unscoped dashboard copies. Run on the real combined app: banner, `skill-suggest`, `post-edit` and the Stop gate behave; Claude loading the scoped rules was not observed.
-
-- Fresh Next.js 16 app (1.6.1, `playground/fresh-next`, made with `create-next-app`, eslint 9, Tailwind 4, no test runner): the react profile applied by hand per the setup instructions. Verified: banner, `skill-suggest`, `post-edit` (eslint error comes back as exit 2), `guard-paths` on `next-env.d.ts`, Stop gate (type error blocks, clean change passes with typecheck only). Found and fixed: the shared `package.scripts.json` would have added `oxlint`/`oxfmt`/`vitest` scripts to a project that has none of them, so setup now runs `scripts/kit-package-scripts.sh` (only missing names, only for installed tools); an `AGENTS.md` is imported with `@AGENTS.md`, never copied; "no test runner" is reported in the proposal. Not done: running the real `/frontend-kit:setup` skill end to end, and adapting the copied rule texts (testing.md still names Vitest/Playwright).
-
-- Evals and benchmark (1.7.0): `evals/dev` has a trigger case for every skill, quiet and no-autofire cases, explicit agent-quality cases and RTL/form/i18n cases (62 cases, 98.2% over 3 runs, one full run about 12 minutes). `evals/info` holds implicit agent-delegation cases (informational: Claude answers inline when the code is in the prompt). `evals/heldout` is run once at the end (not run yet for this release). Description changes measured before/after: `create-component` 6/8 to 8/8, `create-store` 1/6 to 6/6, `create-hook` 7/8 to 8/8, `task` narrowed so it stops taking plain create requests (8 dash/web/vercel cases from 0-67% to 5/5). `scripts/e2e-bench.sh` + `scripts/bench-judge.sh`: one task in a copy of a project, kit vs bare, scored by the project's checks and a rubric judge. First result (10 runs per arm, Vite + pnpm): gates 10/10 both, rubric 84/90 with the kit vs 79/90 without, about 1.5x the cost. Small sample: a direction, not proof.
-
-- 1.7.1: `quality-bar.md` ends with a five-point "before you say done" checklist (44px targets, no any/casts, logical direction, names and text, behavioural tests) and `post-edit.sh` warns on `: any`, `as any`, `as unknown as`, `@ts-ignore`, `@ts-expect-error` without needing a linter. Benchmark after the change (10 runs per arm, 2 tasks, Vite + pnpm): gates 10/10 both arms; rubric **90/90 with the kit vs 81/90 without** (touch targets 10/10 vs 5/10, no any 10/10 vs 7/10); cost 0.675 vs 0.436 per run (about 1.55x). Before the change the kit scored 84/90 vs 79/90. Heldout (10 cases, 5 runs): 98%, 10/10 pass (i18n trigger 4/5). Still small samples on one project; not yet run on Next.js or a large app.
-
-- 1.8.0: the `frontend-status` plugin (status band) was removed from the marketplace: it is not a target of the kit. The marketplace now has one plugin. Projects that installed it keep it until they uninstall it (`claude plugin uninstall frontend-status@frontend-kit`); it no longer updates.
-
-- 1.9.0, end-to-end run with real Claude sessions (headless, `--plugin-dir`): the real `/frontend-kit:setup` through the approval gate on Next.js (existing/react), the combined app (fullstack), a dashboard with leftovers (refactor, prune + merge) and an empty folder (new); scoped rules loaded per file (`InstructionsLoaded` log: admin file loads `admin-api-layer.md` only, site file `api-layer.md` only); `Skill(frontend-kit:<name>)` deny rules block use but do NOT hide the skill from Claude's list, and `frontend-kit:web-*` wildcards do not work; hooks live: `skill-suggest` -> skill fired, Stop gate -> review request -> `frontend-reviewer` found two real issues, guards blocked `.env`, `--no-verify` and lockfile edits, `any` warning reached Claude. Fixed from it: admin rule text paths, the overclaim about hidden skills, monorepo support (`kit-detect-stack` lists workspace packages as apps with `cwd`; the gate runs an app's related tests inside its folder). New playground projects: `legacy-messy`, `classic-jest`, `mono`. Not covered: a full `new` path with a real scaffold, an interactive setup with open questions, live `git push --force` (the model refused it itself), yarn/bun/Biome/Expo.
-
-**Next** (ranked in the research report; none started)
-
-1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.
-2. A small committed fixture app so `test-hooks.sh` does not need a playground (CI installs one inline today).
-3. Cut skill-listing cost: shorter descriptions, `disable-model-invocation` on side-effect skills (needs a decision: the CLAUDE.md "commit" mapping relies on auto-invocation), gate `web-*` / `dash-*` by profile.
-4. Arabic-correctness block (digits, currency decimals, typography, bidi) and an RTL lint in `post-edit`; a shadcn RTL step in setup.
-5. More `claude plugin eval` cases: RTL is done; add the ~10 other core skills (3 positive, 2 negative trigger prompts each).
-6. Install manifest + `/frontend-kit:doctor` + upgrade path for already-set-up projects.
-7. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
+1. CI matrix over `examples/` (install each, run detection and the gate) so a change is tried on every stack shape before it ships.
+2. Cut skill-listing cost: shorter descriptions or `disable-model-invocation` on side-effect skills. A `Skill(...)` deny rule blocks use but does not
+   hide the entry, so the profile-based clean-up does not save listing tokens (the `commit` mapping in `CLAUDE.md` relies on auto-invocation: needs a decision).
+3. Arabic-correctness block (digits, currency decimals, typography, bidi) and an RTL lint in `post-edit`; a shadcn RTL step in setup.
+4. Install manifest + `/frontend-kit:doctor` + an upgrade path for projects that were already set up.
+5. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
+6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase.
+7. Agents are rarely chosen unprompted when the code is in the prompt (`evals/info`); decide whether the descriptions should push harder.
 
 Each phase = one branch, version bump, re-run setup in both playground apps and re-run their gates to prove nothing regressed.

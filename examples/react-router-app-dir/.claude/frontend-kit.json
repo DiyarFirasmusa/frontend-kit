@@ -1,0 +1,44 @@
+{
+  "projectName": "react-router-app-dir",
+  "projectDescription": "A React Router v7 app (framework mode): the code lives in app/, not src/.",
+  "profile": "react",
+  "mode": "existing",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "your-org/react-router-app-dir",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "3000",
+  "e2ePort": "",
+  "apiBaseEnv": "",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "srcDirs": [
+    "app"
+  ],
+  "stack": {
+    "packageManager": "npm",
+    "framework": "React Router framework",
+    "router": "React Router",
+    "data": "",
+    "state": "",
+    "styling": "Tailwind",
+    "tests": "",
+    "lint": "",
+    "format": "",
+    "e2e": "",
+    "i18n": ""
+  },
+  "commands": {
+    "typecheck": "npm run --silent typecheck"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "projectName": "pnpm-monorepo",
+  "projectDescription": "A pnpm workspace: apps/web and packages/ui.",
+  "profile": "react",
+  "mode": "existing",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "your-org/pnpm-monorepo",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "3000",
+  "e2ePort": "",
+  "apiBaseEnv": "",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "srcDirs": [
+    "apps/web/src",
+    "packages/ui/src"
+  ],
+  "stack": {
+    "packageManager": "pnpm",
+    "framework": "",
+    "router": "",
+    "data": "",
+    "state": "",
+    "styling": "",
+    "tests": "vitest",
+    "lint": "",
+    "format": "",
+    "e2e": "",
+    "i18n": ""
+  },
+  "commands": {
+    "typecheck": "pnpm run --silent typecheck"
+  },
+  "apps": [
+    {
+      "name": "web",
+      "path": "apps/web",
+      "cwd": "apps/web",
+      "commands": {
+        "relatedTests": "npx vitest related --run --passWithNoTests"
+      }
+    },
+    {
+      "name": "ui",
+      "path": "packages/ui",
+      "cwd": "packages/ui",
+      "commands": {
+        "relatedTests": "npx vitest related --run --passWithNoTests"
+      }
+    }
+  ]
+}

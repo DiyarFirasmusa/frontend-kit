@@ -1,0 +1,47 @@
+{
+  "projectName": "fresh-next",
+  "projectDescription": "",
+  "profile": "react",
+  "mode": "existing",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "3000",
+  "e2ePort": "",
+  "apiBaseEnv": "",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "generatedPaths": [],
+  "srcDirs": [
+    "src"
+  ],
+  "stack": {
+    "packageManager": "npm",
+    "framework": "Next.js",
+    "router": "Next.js router",
+    "data": "fetch hooks",
+    "state": "React state",
+    "styling": "Tailwind",
+    "tests": "",
+    "e2e": "",
+    "lint": "eslint",
+    "format": "",
+    "i18n": ""
+  },
+  "commands": {
+    "typecheck": "npm run --silent typecheck",
+    "relatedTests": "",
+    "i18nValidate": ""
+  }
+}

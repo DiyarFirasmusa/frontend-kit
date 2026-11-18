@@ -41,7 +41,6 @@ claude "${ARGS[@]}" >"$WORK/run.json" 2>"$WORK/run.err"
 SECS=$(($(date +%s) - START))
 
 # Score with the project's own tools (exit codes), on what the run left behind.
-PM=npm; [ -f pnpm-lock.yaml ] && PM=pnpm
 check() { "$@" >"$WORK/check.out" 2>&1 && echo true || echo false; }
 TYPECHECK=null; LINT=null; TESTS=null
 if [ -x node_modules/.bin/tsc ]; then
