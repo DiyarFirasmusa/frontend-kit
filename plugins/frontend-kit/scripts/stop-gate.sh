@@ -118,7 +118,14 @@ elif [ ${#TEST_FILES[@]} -gt 0 ]; then
       esac
     fi
     [ -n "$RELATED_CMD" ] || continue
-    TEST_OUT="$(sh -c "$RELATED_CMD \"\$@\"" related "${APP_FILES[@]}" 2>&1)"
+    APP_CWD="$(kit_app_cwd "$app")"
+    if [ -n "$APP_CWD" ] && [ -d "$HOOK_ROOT/$APP_CWD" ]; then
+      REL_FILES=()
+      for file in "${APP_FILES[@]}"; do REL_FILES+=("${file#"$APP_CWD"/}"); done
+      TEST_OUT="$(cd "$HOOK_ROOT/$APP_CWD" && PATH="$HOOK_ROOT/$APP_CWD/node_modules/.bin:$PATH" sh -c "$RELATED_CMD \"\$@\"" related "${REL_FILES[@]}" 2>&1)"
+    else
+      TEST_OUT="$(sh -c "$RELATED_CMD \"\$@\"" related "${APP_FILES[@]}" 2>&1)"
+    fi
     if [ $? -eq 0 ]; then
       PASSED="$PASSED, related tests${app:+ ($app)}"
     else

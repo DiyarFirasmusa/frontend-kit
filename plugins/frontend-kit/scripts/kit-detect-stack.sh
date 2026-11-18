@@ -1,7 +1,8 @@
 #!/bin/bash
 # Detects a project's stack from package.json, the lockfile and the config files, and prints it as JSON for
 # /frontend-kit:setup (the "stack", "srcDirs" and "commands" of .claude/frontend-kit.json). Reads files only: no installs,
-# never .env. A field it cannot find is an empty string, never a guess.
+# never .env. A field it cannot find is an empty string, never a guess. In a monorepo (pnpm/npm/yarn workspaces) it lists
+# the packages as "apps" (path = cwd = the package folder) and their src folders as srcDirs.
 #
 #   kit-detect-stack.sh [project-dir]
 set -u
@@ -10,7 +11,17 @@ PKG="$PROJECT/package.json"
 [ -f "$PKG" ] || { echo "no package.json in $PROJECT" >&2; exit 1; }
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
 
-has() { jq -e --arg n "$1" '((.dependencies // {}) + (.devDependencies // {})) | has($n)' "$PKG" >/dev/null 2>&1; }
+# Monorepo: the workspace packages (pnpm-workspace.yaml "packages:" or package.json "workspaces") count as part of the project.
+WS_GLOBS="$({ [ -f "$PROJECT/pnpm-workspace.yaml" ] && sed -n "s/^[[:space:]]*-[[:space:]]*['\"]\{0,1\}\([^'\"#]*\)['\"]\{0,1\}[[:space:]]*\$/\1/p" "$PROJECT/pnpm-workspace.yaml"; jq -r '(.workspaces // []) | (if type == "object" then .packages else . end)[]?' "$PKG" 2>/dev/null; } | sed 's#/$##')"
+WS_DIRS=()
+while IFS= read -r glob; do
+  [ -n "$glob" ] || continue
+  for dir in $PROJECT/$glob; do [ -f "$dir/package.json" ] && WS_DIRS+=("${dir#"$PROJECT"/}"); done
+done <<<"$WS_GLOBS"
+ALL_PKGS=("$PKG")
+for dir in "${WS_DIRS[@]:-}"; do [ -n "$dir" ] && ALL_PKGS+=("$PROJECT/$dir/package.json"); done
+
+has() { jq -s -e --arg n "$1" 'map((.dependencies // {}) + (.devDependencies // {})) | add | has($n)' "${ALL_PKGS[@]}" >/dev/null 2>&1; }
 script_of() { jq -r --arg n "$1" '.scripts[$n] // empty' "$PKG"; }
 first() { # first <label:package>... → label of the first installed package
   local pair
@@ -31,7 +42,7 @@ case "$FRAMEWORK" in
   Remix) ROUTER="Remix" ;;
   *) ROUTER="$(first "TanStack Router:@tanstack/react-router" "React Router:react-router-dom" "React Router:react-router" "Wouter:wouter")" ;;
 esac
-DATA="$(first "TanStack Query:@tanstack/react-query" "SWR:swr" "RTK Query:@reduxjs/toolkit" "Apollo:@apollo/client" "urql:urql")"
+DATA="$(first "TanStack Query:@tanstack/react-query" "SWR:swr" "Redux Toolkit:@reduxjs/toolkit" "Apollo:@apollo/client" "urql:urql")"
 STATE="$(first "Zustand:zustand" "Redux:@reduxjs/toolkit" "Redux:redux" "Jotai:jotai" "Recoil:recoil" "MobX:mobx")"
 STYLING="$(first "Tailwind:tailwindcss" "styled-components:styled-components" "Emotion:@emotion/react" "MUI:@mui/material" "Sass:sass")"
 TESTS="$(first "vitest:vitest" "jest:jest")"
@@ -49,6 +60,23 @@ SOLUTION=false
 
 SRC=()
 for dir in src app pages components lib; do [ -d "$PROJECT/$dir" ] && SRC+=("$dir"); done
+# Workspace packages keep their code in <package>/src (or app/, pages/): list those instead of guessing the root.
+APPS_JSON="[]"
+for dir in "${WS_DIRS[@]:-}"; do
+  [ -n "$dir" ] || continue
+  for sub in src app pages; do [ -d "$PROJECT/$dir/$sub" ] && SRC+=("$dir/$sub"); done
+  pkg_name="$(jq -r '.name // empty' "$PROJECT/$dir/package.json")"
+  pkg_tests=""
+  jq -e '((.dependencies // {}) + (.devDependencies // {})) | has("vitest")' "$PROJECT/$dir/package.json" >/dev/null 2>&1 && pkg_tests=vitest
+  jq -e '((.dependencies // {}) + (.devDependencies // {})) | has("jest")' "$PROJECT/$dir/package.json" >/dev/null 2>&1 && pkg_tests=jest
+  related=""
+  case "$pkg_tests" in
+    vitest) related="$EXEC vitest related --run --passWithNoTests" ;;
+    jest) related="$EXEC jest --findRelatedTests --passWithNoTests" ;;
+  esac
+  APPS_JSON="$(printf '%s' "$APPS_JSON" | jq --arg name "${pkg_name:-$(basename "$dir")}" --arg path "$dir" --arg related "$related" \
+    '. + [{name: $name, path: $path, cwd: $path, commands: (if $related == "" then {} else {relatedTests: $related} end)}]')"
+done
 SRC_JSON="$(printf '%s\n' "${SRC[@]:-}" | jq -R . | jq -s 'map(select(. != ""))')"
 
 TYPECHECK=""
@@ -69,10 +97,10 @@ fi
 jq -n \
   --arg pm "$PM" --arg run "$RUN" --arg fw "$FRAMEWORK" --arg router "$ROUTER" --arg data "$DATA" --arg state "$STATE" \
   --arg styling "$STYLING" --arg tests "$TESTS" --arg e2e "$E2E" --arg lint "$LINT" --arg fmt "$FORMAT" --arg i18n "$I18N" \
-  --arg forms "$FORMS" --argjson ts "$TS" --argjson solution "$SOLUTION" --argjson src "$SRC_JSON" \
+  --arg forms "$FORMS" --argjson apps "$APPS_JSON" --argjson ts "$TS" --argjson solution "$SOLUTION" --argjson src "$SRC_JSON" \
   --arg typecheck "$TYPECHECK" --arg related "$RELATED" --arg port "$DEV_PORT" \
   '{stack: {packageManager: $pm, run: $run, framework: $fw, router: $router, data: $data, state: $state, styling: $styling,
             tests: $tests, e2e: $e2e, lint: $lint, format: $fmt, i18n: $i18n, forms: $forms, typescript: $ts, solutionTsconfig: $solution},
-    srcDirs: $src, devPort: $port, commands: {typecheck: $typecheck, relatedTests: $related},
+    srcDirs: $src, apps: $apps, devPort: $port, commands: {typecheck: $typecheck, relatedTests: $related},
     missing: ([if $tests == "" then "test runner" else empty end, if $lint == "" then "linter" else empty end,
                if $fmt == "" then "formatter" else empty end, if $ts == false then "TypeScript" else empty end])}'

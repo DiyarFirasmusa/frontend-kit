@@ -104,6 +104,12 @@ kit_typecheck_cmd() {
   fi
 }
 
+# kit_app_cwd <app> → the folder an app's commands run in (apps[].cwd, project-relative), empty = the project root.
+kit_app_cwd() {
+  [ -n "$1" ] && [ -f "$KIT_CONFIG" ] && jq -r --arg a "$1" '.apps[]? | select(.name == $a) | .cwd // empty' "$KIT_CONFIG" 2>/dev/null
+  return 0
+}
+
 # True when the project-relative path lies under one of the source folders.
 kit_in_src() {
   local dir

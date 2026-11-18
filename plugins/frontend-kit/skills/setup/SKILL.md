@@ -108,7 +108,8 @@ Before any file is written, send **one message** with everything setup is about 
    - run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-prune.sh" <profile>` (a dry run, it changes nothing) and list its
      `REMOVE`, `EDITED` and `YOURS` lines: rules left over from another profile (website rules in a dashboard, …);
    - the skills that do not fit the profile get a `Skill(frontend-kit:<name>)` deny rule in `settings.json` (the
-     template already lists them), so a dashboard never offers `web-*` skills and a website never offers `dash-*`;
+     template already lists them): Claude can no longer run them, and `skill-suggest` stops proposing them. They still
+     appear in Claude's skill list (a deny rule blocks use, it does not hide the entry; verified);
    - permission rules for tools the project does not use, and duplicate kit hooks copied by an older setup.
 5. **What it will not touch:** the user's own rules and files (`YOURS`), edited kit rules (unless the user adds them),
    source code, git history.
@@ -153,6 +154,8 @@ live host remove `deniedDomains`). In `frontend-kit.json` set every key the prof
   project with one left-to-right language, i18n rules in a project with no i18n) and list what you removed.
 - Never invent a convention the project does not follow; when the stack is unclear, keep the neutral wording.
 Show the list of adaptations with the diffs and wait for the user's answer.
+If Claude Code refuses a write inside `.claude/` (it can ask for permission there), stop and tell the user which file
+needs approval; never route around the refusal through another tool.
 
 ## 5. Existing files: show, then ask
 

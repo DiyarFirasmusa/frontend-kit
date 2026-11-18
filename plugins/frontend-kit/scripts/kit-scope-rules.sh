@@ -48,5 +48,22 @@ awk -v scope="$SCOPE" -v admin_dir="$ADMIN_DIR" -v admin_routes="$ADMIN_ROUTES" 
     if (glob == "src/**") { emit("src/features/**"); emit("src/shared/**"); emit(site_routes "/**"); next }
     emit(glob); next
   }
+  # The rule text: in an admin rule every `src/...` it mentions is admin code (the dashboard rules are written for the
+  # dashboard layout), so those paths move under the admin folders too. Root files stay.
+  fm >= 2 && scope == "admin" {
+    line = $0
+    gsub(/src\/routes\/__root\.tsx/, "@@ROOT@@", line)
+    gsub(/src\/router\.tsx/, "@@ROUTER@@", line)
+    gsub(/src\/main\.tsx/, "@@MAIN@@", line)
+    gsub(/src\/routeTree\.gen\.ts/, "@@TREE@@", line)
+    gsub(/src\/routes\//, admin_routes "/", line)
+    gsub(/src\/(api|components|constants|features|guards|hooks|layout|lib|locales|services|store|styles|test|types|utils|validations)\//, admin_dir "/&", line)
+    gsub(admin_dir "/src\/", admin_dir "/", line)
+    gsub(/@@ROOT@@/, "src/routes/__root.tsx", line)
+    gsub(/@@ROUTER@@/, "src/router.tsx", line)
+    gsub(/@@MAIN@@/, "src/main.tsx", line)
+    gsub(/@@TREE@@/, "src/routeTree.gen.ts", line)
+    print line; next
+  }
   { print }
 ' "$IN" >"$OUT"

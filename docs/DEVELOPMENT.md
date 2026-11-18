@@ -72,6 +72,8 @@ against the Bazaar mock API — plus the research report (`playground/research/r
 
 - 1.8.0: the `frontend-status` plugin (status band) was removed from the marketplace: it is not a target of the kit. The marketplace now has one plugin. Projects that installed it keep it until they uninstall it (`claude plugin uninstall frontend-status@frontend-kit`); it no longer updates.
 
+- 1.9.0, end-to-end run with real Claude sessions (headless, `--plugin-dir`): the real `/frontend-kit:setup` through the approval gate on Next.js (existing/react), the combined app (fullstack), a dashboard with leftovers (refactor, prune + merge) and an empty folder (new); scoped rules loaded per file (`InstructionsLoaded` log: admin file loads `admin-api-layer.md` only, site file `api-layer.md` only); `Skill(frontend-kit:<name>)` deny rules block use but do NOT hide the skill from Claude's list, and `frontend-kit:web-*` wildcards do not work; hooks live: `skill-suggest` -> skill fired, Stop gate -> review request -> `frontend-reviewer` found two real issues, guards blocked `.env`, `--no-verify` and lockfile edits, `any` warning reached Claude. Fixed from it: admin rule text paths, the overclaim about hidden skills, monorepo support (`kit-detect-stack` lists workspace packages as apps with `cwd`; the gate runs an app's related tests inside its folder). New playground projects: `legacy-messy`, `classic-jest`, `mono`. Not covered: a full `new` path with a real scaffold, an interactive setup with open questions, live `git push --force` (the model refused it itself), yarn/bun/Biome/Expo.
+
 **Next** (ranked in the research report; none started)
 
 1. Run `claude plugin validate --strict` on the marketplace and on each plugin folder; fix its warnings.

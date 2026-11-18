@@ -842,6 +842,8 @@ SCOPED="$WORK/scoped"
 mkdir -p "$SCOPED"
 "$HOOKS/kit-scope-rules.sh" admin "$PLUGIN/templates/dashboard/rules/api-layer.md" "$SCOPED/admin-api-layer.md"
 grep -q '"src/admin/api/\*\*"' "$SCOPED/admin-api-layer.md" && ! grep -q '"src/api/\*\*"' "$SCOPED/admin-api-layer.md" && ok || ko "kit-scope-rules moves dashboard globs under the admin folder"
+"$HOOKS/kit-scope-rules.sh" admin "$PLUGIN/templates/dashboard/rules/error-monitoring.md" "$SCOPED/admin-error-monitoring.md"
+if grep -q 'src/admin/lib/monitoring.ts' "$SCOPED/admin-error-monitoring.md" && ! grep -q '`src/lib/monitoring.ts`' "$SCOPED/admin-error-monitoring.md" && grep -q '"src/main.tsx"' "$SCOPED/admin-error-monitoring.md"; then ok; else ko "kit-scope-rules moves admin paths in the rule text too and keeps the shared root files"; fi
 "$HOOKS/kit-scope-rules.sh" site "$PLUGIN/templates/website/rules/api-layer.md" "$SCOPED/api-layer.md"
 grep -q '"src/features/\*\*/services/\*\*"' "$SCOPED/api-layer.md" && ! grep -q '"src/\*\*/services/\*\*"' "$SCOPED/api-layer.md" && ok || ko "kit-scope-rules keeps website globs out of the admin folder"
 # kit-prune in a fullstack project: scoped admin rules stay, an unscoped dashboard copy and react rules go.
@@ -910,6 +912,35 @@ if [ "$CODE" -eq 0 ] && printf '%s' "$CTX" | grep -q 'x: any' && printf '%s' "$C
 printf 'export const a = (x: unknown) => x\n' >"$AN/src/a.ts"
 run_hook post-edit.sh "$(jq -n --arg f "$AN/src/a.ts" '{hook_event_name: "PostToolUse", tool_name: "Write", tool_input: {file_path: $f}}')"
 [ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "post-edit is quiet on clean TypeScript" "exit $CODE: $OUT"
+
+# --- Monorepo: workspace packages are the apps, their src folders are the watched folders ------------------------------
+
+MR="$WORK/monorepo"
+mkdir -p "$MR/apps/web/src" "$MR/packages/ui/src" "$MR/.claude"
+git -C "$MR" init -q -b main && git -C "$MR" config user.email t@t && git -C "$MR" config user.name t
+printf "packages:\n  - 'apps/*'\n  - 'packages/*'\n" >"$MR/pnpm-workspace.yaml"
+printf '{"name":"mono","private":true,"scripts":{"typecheck":"tsc --noEmit"},"devDependencies":{"typescript":"5"}}\n' >"$MR/package.json"
+printf '{"name":"web","dependencies":{"react":"19","next":"16"},"devDependencies":{"vitest":"5"}}\n' >"$MR/apps/web/package.json"
+printf '{"name":"ui","dependencies":{"react":"19"}}\n' >"$MR/packages/ui/package.json"
+touch "$MR/pnpm-lock.yaml"
+OUT="$("$HOOKS/kit-detect-stack.sh" "$MR")"
+if [ "$(printf '%s' "$OUT" | jq -r '.stack.framework')" = "Next.js" ] \
+  && [ "$(printf '%s' "$OUT" | jq -r '.srcDirs | join(",")')" = "apps/web/src,packages/ui/src" ] \
+  && [ "$(printf '%s' "$OUT" | jq -r '.apps | map(.name) | join(",")')" = "web,ui" ] \
+  && [ "$(printf '%s' "$OUT" | jq -r '.apps[0].cwd')" = "apps/web" ] \
+  && [ "$(printf '%s' "$OUT" | jq -r '.apps[0].commands.relatedTests')" = "pnpm exec vitest related --run --passWithNoTests" ] \
+  && printf '%s' "$OUT" | jq -e '.apps[1].commands | has("relatedTests") | not' >/dev/null; then ok; else ko "kit-detect-stack reads a pnpm workspace: framework from a package, srcDirs and apps per package" "$OUT"; fi
+# The gate runs an app's related tests inside its folder, with paths relative to it (a fake vitest records its arguments).
+mkdir -p "$MR/apps/web/node_modules/.bin"
+printf '#!/bin/sh\necho "cwd=$(basename "$PWD") args=$*" >"%s/vitest-call.txt"\nexit 1\n' "$WORK" >"$MR/apps/web/node_modules/.bin/vitest"
+chmod +x "$MR/apps/web/node_modules/.bin/vitest"
+printf '{"stopGate":{"review":false},"srcDirs":["apps/web/src","packages/ui/src"],"apps":[{"name":"web","path":"apps/web","cwd":"apps/web","commands":{"relatedTests":"vitest related --run"}},{"name":"ui","path":"packages/ui","cwd":"packages/ui"}],"commands":{"typecheck":"true"}}\n' >"$MR/.claude/frontend-kit.json"
+printf 'node_modules\n' >"$MR/.gitignore"
+git -C "$MR" add -A && git -C "$MR" commit -q -m base
+printf 'export const a = 1\n' >"$MR/apps/web/src/a.ts"
+export CLAUDE_PROJECT_DIR="$MR"
+run_hook stop-gate.sh "$(stop_input s-mono false)"
+if [ "$CODE" -eq 2 ] && grep -q 'cwd=web args=related --run src/a.ts' "$WORK/vitest-call.txt" 2>/dev/null; then ok; else ko "stop-gate runs an app's related tests in its cwd with relative paths" "exit $CODE: $ERR | $(cat "$WORK/vitest-call.txt" 2>/dev/null)"; fi
 
 # --- Every hook script is executable and valid bash -------------------------------------------
 
