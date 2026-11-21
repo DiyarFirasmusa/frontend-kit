@@ -5,9 +5,14 @@ paths:
   - "src/features/**/hooks/use-list-page.ts"
   - "src/features/**/hooks/*-actions.ts"
   - "src/utils/table-*.ts"
+  - "src/shared/components/table/**"
+  - "src/shared/utils/table-*.ts"
 ---
 
 # Data tables (TanStack Table, server-driven)
+
+> Paths below are the default layout. A project with `.claude/rules/structure.md` (the Next.js and TanStack Start variants)
+> reads them through that file's path map (`src/shared/…`, `layouts/`, `api/client/`, …).
 
 Every list is the shared `<DataTable>` from `src/components/table/`, built on
 TanStack Table v9 (`useTable` + `tableFeatures`). A feature never calls

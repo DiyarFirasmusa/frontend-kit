@@ -5,6 +5,10 @@ description: "Dashboard profile: build a list page or data table for an entity o
 
 # Dashboard: create a table
 
+**Where do global folders live?** If `.claude/rules/structure.md` exists (the Next.js and TanStack Start variants), its path map
+renames the global folders and the feature's `services/` (Start: `src/shared/…`, `api/<entity>.api.ts`; Next: `layouts/`,
+`modals/`, `wrappers/`). Use its names wherever this skill says `src/components/…`, `src/api/…` or `services/`.
+
 Rules this follows: `.claude/rules/data-tables.md`, `.claude/rules/routing.md`,
 `.claude/rules/api-layer.md`, `.claude/rules/permissions.md`.
 Shared table component: `references/data-table.md`. Feature files, end to end:
@@ -53,7 +57,7 @@ All under `src/features/<group>/<entity>/`:
 ## 3. The container shape
 
 ```tsx
-export default function UsersListContainer() {
+export function UsersListContainer() {
   const page = useUsersListPage();
   return (
     <section className="space-y-4">

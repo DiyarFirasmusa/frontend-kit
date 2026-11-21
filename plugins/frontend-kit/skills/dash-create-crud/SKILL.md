@@ -5,6 +5,10 @@ description: "Dashboard profile: add create, edit and delete for an entity — a
 
 # Dashboard: create / edit / delete
 
+**Where do global folders live?** If `.claude/rules/structure.md` exists (the Next.js and TanStack Start variants), its path map
+renames the global folders and the feature's `services/` (Start: `src/shared/…`, `api/<entity>.api.ts`; Next: `layouts/`,
+`modals/`, `wrappers/`). Use its names wherever this skill says `src/components/…`, `src/api/…` or `services/`.
+
 Rules this follows: `.claude/rules/forms-crud.md`, `.claude/rules/api-layer.md`,
 `.claude/rules/permissions.md`. Field-level form mechanics: the shared
 `create-form` skill. Full code: `references/crud-examples.md`.

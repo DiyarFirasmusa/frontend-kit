@@ -7,9 +7,17 @@ paths:
   - "src/constants/query-keys.ts"
   - "src/hooks/use-refresh-token.ts"
   - "src/test/msw/**"
+  - "src/shared/api/**"
+  - "src/**/api/*.api.ts"
+  - "src/shared/constants/api.ts"
+  - "src/shared/constants/query-keys.ts"
+  - "src/shared/hooks/use-refresh-token.ts"
 ---
 
 # API layer
+
+> Paths below are the default layout. A project with `.claude/rules/structure.md` (the Next.js and TanStack Start variants)
+> reads them through that file's path map (`src/shared/…`, `layouts/`, `api/client/`, …).
 
 Services call the axios clients; query hooks wrap the services; page hooks use
 the query hooks. Toasts, envelope unwrapping and 401 handling belong to the

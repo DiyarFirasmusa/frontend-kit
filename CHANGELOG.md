@@ -3,6 +3,20 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.13.0
+- The Next.js and TanStack Start dashboard variants now follow a merged folder structure: the kit's feature-first ownership
+  rules plus the layout of two production projects. Next takes a production Next.js site's shape (`layouts/`, `components/{modals,wrappers,cards}`,
+  `contexts/`, `config/`, `i18n/`, `api/{client,errors,services}`, `loading.tsx` per route group); Start takes a production
+  TanStack Start portal's shape (one `src/shared/` root for everything global, `layout/<shell>/`, flat `features/`,
+  `tabs/` and `steps/`). Each variant has a `rules/structure.md` with the tree, a path map from the names the shared rules
+  and skills use, and the rules that decide. Folder structure only: no locale in the URL, no barrels.
+- Both variants were then migrated and grown by real kit sessions to six areas each (Overview, Orders, Products, Customers,
+  Staff, Settings) with detail pages: Next 290 unit + 40 e2e, Start 138 unit + 70 e2e, `check:full` green, reviewer findings
+  fixed. Their reports fed fixes: the path map covers `api/core`, app-wide services, `layouts/errors` and the shell shape;
+  structure files load for more folders; the shared dashboard rules point to the path map.
+- Skills: examples use named container exports (`naming.md`), `dash-create-*` read the path map, route regeneration and
+  `loadFeatureLocale` are marked conditional, setup copies and describes the new rule.
+
 ## 1.12.0
 - Playwright e2e on all three dashboard frameworks, written by real kit sessions against fake-API route mocks:
   Vite (32 tests, incl. a role without `orders.view` sent to `/403`), Next.js (18 tests, 90/90 over a 5x repeat) and

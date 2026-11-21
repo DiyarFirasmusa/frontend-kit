@@ -8,9 +8,17 @@ paths:
   - "src/proxy.ts"
   - "src/layout/app/**"
   - "src/features/**/hooks/*-actions.ts"
+  - "src/shared/constants/permissions.ts"
+  - "src/shared/store/permission-store.ts"
+  - "src/shared/guards/**"
+  - "src/layout/**"
+  - "src/layouts/dashboard/**"
 ---
 
 # Permissions
+
+> Paths below are the default layout. A project with `.claude/rules/structure.md` (the Next.js and TanStack Start variants)
+> reads them through that file's path map (`src/shared/…`, `layouts/`, `api/client/`, …).
 
 The backend enforces access. The frontend mirrors it so people only see what
 they can use and get a clear 403 instead of a broken page.

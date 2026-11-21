@@ -5,6 +5,10 @@ description: "Dashboard profile: add a settings or profile page — one form of 
 
 # Dashboard: settings form
 
+**Where do global folders live?** If `.claude/rules/structure.md` exists (the Next.js and TanStack Start variants), its path map
+renames the global folders and the feature's `services/` (Start: `src/shared/…`, `api/<entity>.api.ts`; Next: `layouts/`,
+`modals/`, `wrappers/`). Use its names wherever this skill says `src/components/…`, `src/api/…` or `services/`.
+
 Rules this follows: `.claude/rules/forms-crud.md` (conflicts, dirty guard, arrays),
 `.claude/rules/permissions.md` (read-only mode), `.claude/rules/api-layer.md`.
 Field mechanics: the shared `create-form` skill. Route: `dash-create-route`.

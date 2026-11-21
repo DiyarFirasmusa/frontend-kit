@@ -52,59 +52,45 @@ npm run check             # typecheck + lint:check + test
 
 ## Folder layout
 
+Full tree, path map and ownership rules: `.claude/rules/structure.md`.
+
 ```text
 src/
 ├── routes/               → file routes, thin: guard + validateSearch + loader + container
 │   ├── __root.tsx        → document shell (html lang/dir, HeadContent, Scripts), { queryClient } context, errorComponent
 │   ├── _auth/            → guest-only (login, forgot password)
-│   ├── _app/             → signed-in shell; every child route checks a permission
+│   ├── _app/             → signed-in shell; a pathless child per shell (`_main/`, `_focused/`, `_wizard/`)
 │   └── (errors)/         → 401 / 403 / 404 / 500
-├── features/<group>/<entity>/   → one folder per backend resource (see below)
-├── components/
-│   ├── ui/               → primitives (button, dialog, select, checkbox…)
-│   ├── table/            → DataTable on TanStack Table + pagination + row actions + bulk bar
-│   ├── filters/          → FilterBar, SearchField, FilterSelect, DateRangeFilter
-│   ├── fields/           → form field wrappers bound to react-hook-form
-│   ├── wrapper/          → <Wrapper> for loading / error / empty / success
-│   └── dialog/           → ConfirmDialog, FormDialog
-├── layout/               → shells: app (sidebar + top bar), auth
-├── api/                  → axios clients, interceptors, error resolution
-├── constants/            → api.ts (endpoints), query-keys.ts (qk), permissions.ts (PERMS)
-├── guards/               → requireAuth / requireGuest / requirePermission
-├── hooks/  services/  store/  lib/  types/  utils/  locales/  styles/  test/
+├── layout/<shell>/       → one folder per shell: index.tsx + components/ (main = sidebar + top bar, auth, focused…)
+├── features/<entity>/    → one folder per backend resource, flat (route groups are guards and shells, not areas)
+├── shared/               → everything global, used by 2+ features and owned by none
+│   ├── components/       → ui/ table/ filters/ fields/ form/ wrapper/ dialog/ composed/
+│   ├── api/              → clients/ (privateApi, publicApi, interceptors) + shared endpoints, error resolution
+│   ├── constants/        → api.ts (endpoints), query-keys.ts (qk), permissions.ts (PERMS)
+│   ├── guards/           → requireAuth / requireGuest / requirePermission
+│   ├── hooks/ (query/)  context/  lib/ (i18n)  locales/  store/  style/  types/  utils/  validations/
+├── test/                 → MSW server, render helpers, fixtures
 ├── env.ts  router.tsx    → zod-validated env; getRouter() (createRouter + Register)
 └── routeTree.gen.ts      → generated, never edited
 ```
 
-A feature (one entity):
-
-```text
-features/<group>/<entity>/
-├── index.tsx                    → list container: JSX + one useListPage() call
-├── hooks/use-list-page.ts       → reads search, builds params, wires table + actions
-├── hooks/query/                 → <entity>QueryOptions, useXList, useXDetail, mutations
-├── hooks/<entity>-actions.ts    → pure canX(row, perms) / getRowActions(...)
-├── components/<entity>-columns.tsx    → getXColumns({ t, …handlers }) column factory
-├── components/dialog/           → create/edit form dialog
-├── services/<entity>.service.ts → fetchX / createX / updateX / deleteX
-├── types/  validations/         → row/detail/params types; form + search schemas
-├── locales/{ar,en}.json
-└── pages/<page>/index.tsx       → detail, create, edit: each owns its own hooks/, components/…
-```
+A feature folder: `index.tsx` (list container, one `useListPage()`), `components/`, `hooks/` (`query/`, `filter/`,
+`form/`), `api/<entity>.api.ts`, `types/types.ts`, `validations/`, `data/`, `locales/{ar,en}.json`,
+`pages/<page>/` (detail, create, edit: each owns its own hooks, components, api…), `tabs/<tab>/`, `steps/<step>/`.
 
 - **Containers render, hooks think.** `index.tsx` is JSX plus one page hook.
 - **A file lives in the deepest folder that contains every importer.** Promote
-  to `src/` on the second feature, never before. A page never imports a sibling page.
+  to `src/shared/` on the second feature, never before. A page never imports a sibling page.
 - **Imports go up, never sideways.** Relative inside a feature, `@/…` across.
 - kebab-case files, `index.tsx` for every container, no barrels.
 
 ## API layer (full rules: `api-layer.md`)
 
 - `privateApi` (Bearer, single-flight refresh on 401 + one retry) and
-  `publicApi` (no token) in `src/api/`. Base URL from `{{API_BASE_ENV}}`.
+  `publicApi` (no token) in `src/shared/api/clients/`. Base URL from `{{API_BASE_ENV}}`.
 - The interceptors unwrap the response envelope (when the backend has one) and
   toast every mutation success and every error, in one place.
-- Endpoints in `constants/api.ts`, keys from `qk` in `constants/query-keys.ts`.
+- Endpoints in `shared/constants/api.ts`, keys from `qk` in `shared/constants/query-keys.ts`.
 - Mirror the backend's OpenAPI exactly: field names, paging shape, enums,
   nullables. Missing or wrong backend behaviour gets reported, not faked.
 

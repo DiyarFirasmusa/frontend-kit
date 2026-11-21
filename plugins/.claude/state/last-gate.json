@@ -1,9 +1,9 @@
 {
   "result": "pass",
   "source": "verify",
-  "summary": "types, lint (0 problems), 101 tests, build; fmt/i18n:validate/e2e not set up",
+  "summary": "types, lint (fixture warning only), 122 tests, build; fmt/i18n/e2e not set up",
   "branch": "claude/repo-folder-development-a0e591",
-  "head": "776140e",
+  "head": "304da67",
   "fingerprint": "da39a3ee5e6b4b0d",
-  "at": "2026-11-18T18:45:37Z"
+  "at": "2026-11-21T17:57:48Z"
 }

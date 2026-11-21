@@ -9,9 +9,16 @@ paths:
   - "src/components/dialog/**"
   - "src/components/fields/**"
   - "src/hooks/use-unsaved-changes-guard.ts"
+  - "src/shared/components/dialog/**"
+  - "src/shared/components/fields/**"
+  - "src/components/modals/**"
+  - "src/shared/hooks/use-unsaved-changes-guard.ts"
 ---
 
 # Forms and CRUD
+
+> Paths below are the default layout. A project with `.claude/rules/structure.md` (the Next.js and TanStack Start variants)
+> reads them through that file's path map (`src/shared/…`, `layouts/`, `api/client/`, …).
 
 Create, edit and delete follow one shape in every feature. Form mechanics
 (react-hook-form + zod 4, field wrappers, inline errors) are in the shared

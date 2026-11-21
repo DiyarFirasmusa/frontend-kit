@@ -131,7 +131,7 @@ export const Route = createFileRoute('/_app')({
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { getErrorStatus } from '@/api/error/api-error';
 import { PERMS } from '@/constants/permissions';
-import UserDetailContainer from '@/features/app/users/pages/detail';
+import { UserDetailContainer } from '@/features/app/users/pages/detail';
 import { userDetailQueryOptions } from '@/features/app/users/pages/detail/hooks/query/use-user-detail';
 import { requirePermission } from '@/guards/route-guards';
 import { loadFeatureLocale } from '@/lib/i18n/i18n';

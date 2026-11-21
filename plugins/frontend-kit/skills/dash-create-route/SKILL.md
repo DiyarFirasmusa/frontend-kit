@@ -5,6 +5,10 @@ description: "Dashboard profile: add a TanStack Router file route — a list, de
 
 # Dashboard: create a route
 
+**Where do global folders live?** If `.claude/rules/structure.md` exists (the Next.js and TanStack Start variants), its path map
+renames the global folders and the feature's `services/` (Start: `src/shared/…`, `api/<entity>.api.ts`; Next: `layouts/`,
+`modals/`, `wrappers/`). Use its names wherever this skill says `src/components/…`, `src/api/…` or `services/`.
+
 Rules this follows: `.claude/rules/routing.md`, `.claude/rules/permissions.md`.
 Full examples: `references/route-examples.md`.
 
@@ -30,14 +34,15 @@ Full examples: `references/route-examples.md`.
 
 ## 1. Order: route stub, generate, container
 
-The route imports a default-exported container from
+The route imports a named-exported container from
 `@/features/<group>/<entity>` (list) or `.../pages/<page>` (other pages), and the
 container calls `getRouteApi('/_app/<entity>/')`, which only typechecks once the
 route exists in `src/routeTree.gen.ts`. So:
 
 1. Create the route file with a placeholder component (or the search schema and
    guard only).
-2. `npm run routes:generate` (or `npm run dev` once) so the tree knows the route.
+2. Regenerate the route tree so it knows the route: `npm run routes:generate` where the project has that script (Vite +
+   TanStack Router), otherwise `npm run dev` or `build` once (TanStack Start's plugin regenerates it).
 3. Build the container with `dash-create-table` (lists), `dash-create-crud`
    (create/edit), `dash-create-detail` (detail) or `dash-create-settings-form`,
    then replace the placeholder.
@@ -69,7 +74,7 @@ back to a string). Filter fields come from `dash-create-filter-bar`.
 // src/routes/_app/users/index.tsx
 import { createFileRoute, stripSearchParams } from '@tanstack/react-router';
 import { PERMS } from '@/constants/permissions';
-import UsersListContainer from '@/features/app/users';
+import { UsersListContainer } from '@/features/app/users';
 import { usersListQueryOptions } from '@/features/app/users/hooks/query/use-users-list';
 import { toUserListParams } from '@/features/app/users/utils/list-params';
 import { defaultUserSearch, userSearchSchema } from '@/features/app/users/validations/search';
@@ -87,7 +92,7 @@ export const Route = createFileRoute('/_app/users/')({
     // Start the list fetch without blocking: the table keeps the previous page
     // on screen instead of the route going pending on every filter change.
     void context.queryClient.prefetchQuery(usersListQueryOptions(deps));
-    await loadFeatureLocale('app/users');
+    await loadFeatureLocale('app/users'); // only when the project lazy-loads feature locales (`lib/i18n`); else drop the line
   },
   component: UsersListContainer,
 });

@@ -5,6 +5,10 @@ description: "Dashboard profile: add a filter bar / toolbar above a list — deb
 
 # Dashboard: create a filter bar
 
+**Where do global folders live?** If `.claude/rules/structure.md` exists (the Next.js and TanStack Start variants), its path map
+renames the global folders and the feature's `services/` (Start: `src/shared/…`, `api/<entity>.api.ts`; Next: `layouts/`,
+`modals/`, `wrappers/`). Use its names wherever this skill says `src/components/…`, `src/api/…` or `services/`.
+
 Rules this follows: `.claude/rules/routing.md` (search params are the state),
 `.claude/rules/data-tables.md` (empty vs no-results states). Component and
 hook code: `references/filter-bar.md`.

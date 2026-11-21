@@ -6,9 +6,14 @@ paths:
   - "src/features/**/validations/search.ts"
   - "src/lib/list-search.ts"
   - "src/features/**/hooks/use-*-page.ts"
+  - "src/shared/guards/**"
+  - "src/shared/lib/list-search.ts"
 ---
 
 # Routing (TanStack Router, file routes)
+
+> Paths below are the default layout. A project with `.claude/rules/structure.md` (the Next.js and TanStack Start variants)
+> reads them through that file's path map (`src/shared/…`, `layouts/`, `api/client/`, …).
 
 Routes are thin. A route file holds the guard, the search schema, the loader
 and the component wiring. Page logic lives in the feature's page hook.

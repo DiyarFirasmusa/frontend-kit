@@ -51,46 +51,31 @@ npm run check             # typecheck + lint:check + test
 
 ## Folder layout
 
+Full tree, path map and ownership rules: `.claude/rules/structure.md`.
+
 ```text
 src/
 ├── app/                  → App Router, thin: page.tsx = default export rendering one container
-│   ├── layout.tsx        → html lang/dir, <Providers> (QueryClient, i18n, Toaster); no auth here
+│   ├── layout.tsx        → html lang/dir, <Providers>; no auth here
 │   ├── (auth)/           → guest-only (login, forgot password); layout redirects a signed-in user
-│   ├── (app)/            → signed-in shell; layout is the session gate, every page checks a permission
+│   ├── (app)/            → signed-in shell (session gate) + loading.tsx; every page checks a permission
 │   ├── (errors)/         → 401 / 403 / 500; not-found.tsx, error.tsx, global-error.tsx at the root
-│   └── robots.ts         → Disallow: /
+│   └── api/              → route handlers, only for same-origin glue (rare); robots.ts → Disallow: /
 ├── proxy.ts              → optimistic cookie check + redirect to /login (not the permission check)
-├── features/<group>/<entity>/   → one folder per backend resource (see below)
-├── components/
-│   ├── ui/               → primitives (button, dialog, select, checkbox…)
-│   ├── table/            → DataTable on TanStack Table + pagination + row actions + bulk bar
-│   ├── filters/          → FilterBar, SearchField, FilterSelect, DateRangeFilter
-│   ├── fields/           → form field wrappers bound to react-hook-form
-│   ├── wrapper/          → <Wrapper> for loading / error / empty / success
-│   └── dialog/           → ConfirmDialog, FormDialog
-├── layout/               → shells: app (sidebar + top bar), auth
-├── api/                  → axios clients, interceptors, error resolution
+├── features/<group>/<entity>/   → one folder per backend resource; <group> = the route group or product area
+├── layouts/              → one shell per route group: dashboard/{header,sidebar,components}, auth/
+├── components/           → ui/ table/ filters/ fields/ wrappers/ (loading·error·empty) modals/ cards/
+├── api/                  → client/ (privateApi, publicApi, interceptors), errors/ (error resolution)
+├── contexts/  config/  i18n/   → providers (query…); static policy (nav → permission); i18n setup + switcher
 ├── constants/            → api.ts (endpoints), query-keys.ts (qk), permissions.ts (PERMS)
 ├── guards/               → <RequireAuth> / <RequireGuest> / <RequirePermission> and the pure checks
-├── hooks/  services/  store/  lib/  types/  utils/  locales/  styles/  test/
+├── hooks/  store/  lib/  types/  utils/  locales/  styles/  test/
 └── env.ts                → zod-validated env (NEXT_PUBLIC_* for the browser)
 ```
 
-A feature (one entity):
-
-```text
-features/<group>/<entity>/
-├── index.tsx                    → list container: JSX + one useListPage() call
-├── hooks/use-list-page.ts       → reads search, builds params, wires table + actions
-├── hooks/query/                 → <entity>QueryOptions, useXList, useXDetail, mutations
-├── hooks/<entity>-actions.ts    → pure canX(row, perms) / getRowActions(...)
-├── components/<entity>-columns.tsx    → getXColumns({ t, …handlers }) column factory
-├── components/dialog/           → create/edit form dialog
-├── services/<entity>.service.ts → fetchX / createX / updateX / deleteX
-├── types/  validations/         → row/detail/params types; form + search schemas
-├── locales/{ar,en}.json
-└── pages/<page>/index.tsx       → detail, create, edit: each owns its own hooks/, components/…
-```
+A feature folder: `index.tsx` (list container, one `useListPage()`), `components/`, `hooks/` (`query/`, `filter/`,
+`form/`), `services/<entity>.service.ts`, `types/`, `validations/`, `locales/{ar,en}.json`, `pages/<page>/` (detail,
+create, edit: each owns its own hooks, components, services…), `tabs/<tab>/`, `steps/<step>/`.
 
 - **Containers render, hooks think.** `index.tsx` is JSX plus one page hook.
 - **A file lives in the deepest folder that contains every importer.** Promote
@@ -101,7 +86,7 @@ features/<group>/<entity>/
 ## API layer (full rules: `api-layer.md`)
 
 - `privateApi` (Bearer, single-flight refresh on 401 + one retry) and
-  `publicApi` (no token) in `src/api/`. Base URL from `{{API_BASE_ENV}}`.
+  `publicApi` (no token) in `src/api/client/`. Base URL from `{{API_BASE_ENV}}`.
 - The interceptors unwrap the response envelope (when the backend has one) and
   toast every mutation success and every error, in one place.
 - Endpoints in `constants/api.ts`, keys from `qk` in `constants/query-keys.ts`.

@@ -52,8 +52,8 @@ detected defaults to the first row.
 | Answer | `dashboard` variant | `stack.framework` | What changes |
 | ------ | ------------------- | ----------------- | ------------ |
 | Vite SPA (TanStack Router) | none (the base template) | `Vite` | file routes, `beforeLoad` guards, loaders, generated `routeTree.gen.ts` |
-| TanStack Start (SPA mode) | `tanstack-start` | `TanStack Start` | same router and guards; adds the Start shell, `getRouter()`, `spa.enabled`, SSR-safe module code (`rules/framework.md`) |
-| Next.js (App Router) | `next` | `Next.js` | `app/` pages, `proxy.ts` + layout guards, zod over `useSearchParams`, no loaders, `@sentry/nextjs` |
+| TanStack Start (SPA mode) | `tanstack-start` | `TanStack Start` | same router and guards; adds the Start shell, `getRouter()`, `spa.enabled`, SSR-safe module code (`rules/framework.md`) and the MOJ-style folder structure: `src/shared/`, `layout/<shell>/`, flat features, `tabs/` and `steps/` (`rules/structure.md`) |
+| Next.js (App Router) | `next` | `Next.js` | `app/` pages, `proxy.ts` + layout guards, zod over `useSearchParams`, no loaders, `@sentry/nextjs`, and the production-site folder structure: `layouts/`, `modals/`, `wrappers/`, `contexts/`, `config/`, `i18n/`, `api/{client,errors}` (`rules/structure.md`) |
 
 The variant only replaces the router-bound parts; every other dashboard rule and skill (tables, forms, permissions,
 API layer, filters) is the same. The variant's files live in `templates/dashboard/variants/<variant>/`.
@@ -139,7 +139,7 @@ says how to restore them. For each `EDITED` file ask separately (keep or move).
 | ------ | ------ |
 | `templates/<profile>/CLAUDE.md` | `./CLAUDE.md` |
 | `templates/shared/rules/*.md` + `templates/<profile>/rules/*.md` | `./.claude/rules/` |
-| **dashboard variant** `templates/dashboard/variants/<variant>/` | on top of the two rows above: its `CLAUDE.md` replaces the base one, its `rules/*.md` replace a rule of the same name (`routing.md`, `error-monitoring.md`) or are added (`framework.md`), its `frontend-kit.json` keys (`stack`, `generatedPaths`) are merged into the base config, and its `e2e/` files (Start: `serve-spa.ts`) are copied to `e2e/` |
+| **dashboard variant** `templates/dashboard/variants/<variant>/` | on top of the two rows above: its `CLAUDE.md` replaces the base one, its `rules/*.md` replace a rule of the same name (`routing.md`, `error-monitoring.md`) or are added (`framework.md`, `structure.md`), its `frontend-kit.json` keys (`stack`, `generatedPaths`) are merged into the base config, and its `e2e/` files (Start: `serve-spa.ts`) are copied to `e2e/` |
 | `templates/<profile>/settings.json` | `./.claude/settings.json` (merge, below) |
 | `templates/<profile>/frontend-kit.json` | `./.claude/frontend-kit.json` |
 | `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh"` (JSON on stdout) | `./package.json` `scripts`: only the names the project lacks, only for tools it really uses (eslint, not oxlint, in a Next.js app); never a script whose tool is missing. `templates/shared/package.scripts.json` is the reference list, not what gets copied |

@@ -8,9 +8,15 @@ paths:
   - "src/features/fallback/**"
   - "src/api/core/interceptors.ts"
   - "vite.config.ts"
+  - "src/shared/lib/monitoring.ts"
+  - "src/shared/api/clients/**"
+  - "src/api/client/**"
 ---
 
 # Error monitoring (Sentry)
+
+> Paths below are the default layout. A project with `.claude/rules/structure.md` (the Next.js and TanStack Start variants)
+> reads them through that file's path map (`src/shared/…`, `layouts/`, `api/client/`, …).
 
 Sentry tells us what broke in production without telling anyone who the user
 is. All of it lives in `src/lib/monitoring.ts`; nothing else imports `@sentry/react`.

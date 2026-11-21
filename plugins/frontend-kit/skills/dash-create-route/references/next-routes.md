@@ -10,7 +10,7 @@ when the project's `app/` is at the root. Check the snippets against the install
 // src/app/(app)/users/page.tsx
 import { Suspense } from 'react';
 import { ListSkeleton } from '@/components/wrapper/list-skeleton';
-import UsersListContainer from '@/features/app/users';
+import { UsersListContainer } from '@/features/app/users';
 
 export default function UsersPage() {
   return (
@@ -48,7 +48,7 @@ import { RequirePermission } from '@/guards/require-permission';
 import { PERMS } from '@/constants/permissions';
 import { useUsersListPage } from './hooks/use-list-page';
 
-export default function UsersListContainer() {
+export function UsersListContainer() {
   return (
     <RequirePermission permission={PERMS.users.view}>
       <UsersList />
