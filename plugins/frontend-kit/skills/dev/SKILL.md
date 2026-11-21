@@ -47,6 +47,9 @@ Run in the background (both profiles run on Vite):
 npx vite dev --port <devPort> --strictPort
 ```
 
+Use `commands.dev` from `.claude/frontend-kit.json` when it is set. For other frameworks the same idea: Next.js
+`next dev -p <devPort>`, React Router framework mode `react-router dev --port <devPort>`; clear that framework's cache, not `.vite`.
+
 Then wait until it answers, at most ~30 s:
 
 ```sh

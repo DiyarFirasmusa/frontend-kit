@@ -68,17 +68,19 @@ if [ -f "$HOOK_ROOT/tsconfig.json" ] && [ "$(kit_get '.allowJs' false)" != true 
   esac
 fi
 
-# The package.json "build" script is what CI and the deploy run; it is never changed from here.
+# The package.json "build" script is what CI and the deploy run; an existing one is never changed from here.
+# A project that has none yet may get one (a new app needs a build script to exist at all).
 if [ "$REL" = "package.json" ]; then
   build_lines() { grep -E '"build"[[:space:]]*:' | sed -E 's/[[:space:]]+//g; s/,$//'; }
   case "$TOOL" in
     Write)
       CURRENT="$(jq -r '.scripts.build // ""' "$FILE" 2>/dev/null)"
       NEXT="$(hook_field '.tool_input.content' | jq -r '.scripts.build // ""' 2>/dev/null)"
-      [ "$CURRENT" != "$NEXT" ] &&
+      [ -n "$CURRENT" ] && [ "$CURRENT" != "$NEXT" ] &&
         hook_deny "Blocked: the package.json \"build\" script is deploy config. Keep it exactly as it is: $CURRENT"
       ;;
     Edit | MultiEdit)
+      [ -z "$(jq -r '.scripts.build // ""' "$FILE" 2>/dev/null)" ] && exit 0
       EDITS="$(printf '%s' "$HOOK_INPUT" | jq -c '(.tool_input.edits // [.tool_input]) | .[] | {old: (.old_string // ""), new: (.new_string // "")}')"
       while IFS= read -r edit; do
         [ -z "$edit" ] && continue

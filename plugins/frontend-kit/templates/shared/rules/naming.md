@@ -1,10 +1,15 @@
 ---
 paths:
-  - "src/**"
+  - "**/src/**"
+  - "app/**"
   - "e2e/**"
 ---
 
 # Naming
+
+> **Router.** The router-specific lines below (`createFileRoute`, `beforeLoad`, `Route`, `src/routes/`, `routeTree.gen.ts`) are
+> TanStack Router's. When `stack.router` is something else (React Router, Next.js App Router), keep the intent (thin routes,
+> guards in the route layer, params and search validated once at the boundary) and use `routing.md` for the equivalents.
 
 The full layout lives in `CLAUDE.md` (and any structure doc it points to).
 This is the short form.

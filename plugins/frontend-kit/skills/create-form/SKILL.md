@@ -6,7 +6,8 @@ description: Create a form with react-hook-form + zod 4 + @hookform/resolvers â€
 # Create form
 
 Stack: `react-hook-form`, `zod` (v4), `zodResolver` from
-`@hookform/resolvers/zod`. Reuse the project's field components when they
+`@hookform/resolvers/zod` (dashboard, website, or a project that has them). A project with no form library gets a native
+`<form>` with a zod schema or one validate function and the same accessibility and error rules; add no library without asking. Reuse the project's field components when they
 exist (dashboard: the UI kit's `Field` / `Input` / `Select`); when a second
 feature needs a hand-built field, promote it to the shared `ui/` folder with
 the direction rule from `.claude/rules/rtl.md` built in.

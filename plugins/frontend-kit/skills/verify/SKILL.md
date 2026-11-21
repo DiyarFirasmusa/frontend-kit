@@ -12,6 +12,10 @@ Run each gate, read its output, report what it said. Never call a gate
 passed without its output in front of you. Stop at the first failure, fix the
 cause (no `any`, casts, skips or `--no-verify`), and run the gates again.
 
+The commands are the defaults. Use the project's own: `commands` in `.claude/frontend-kit.json` first, else the scripts in
+`package.json` (`lint` where there is no `lint:check`, `pnpm`/`yarn` for `npm run`). A gate whose script does not exist is
+reported as "not configured", never skipped silently and never invented (suggest adding it).
+
 | # | Gate | Command | When |
 |---|------|---------|------|
 | 1 | Types | `npm run typecheck` | always |

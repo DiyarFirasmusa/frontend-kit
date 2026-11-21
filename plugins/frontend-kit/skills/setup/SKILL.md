@@ -167,6 +167,14 @@ live host remove `deniedDomains`). In `frontend-kit.json` set every key the prof
   for generated files match `generatedPaths` (`src/routeTree.gen.ts` for Vite and Start, `next-env.d.ts` for Next.js).
 - In every copied rule and in `CLAUDE.md`: where the text names a library the project does not use (TanStack Query,
   Tailwind v4, i18next, oxlint, Vitest, …), rewrite that sentence for the detected one or remove it. Keep the principle.
+- Rule `paths:` globs: rewrite them to the detected `srcDirs` (a monorepo's `apps/web/src`, Next's or React Router's `app/`) and
+  to the file extensions the project uses (`.jsx`/`.js` for a JavaScript project); a glob that matches nothing never loads its rule.
+- `commands` in `frontend-kit.json`: write the real script names for `typecheck`, `lint`, `test`, `build` and `dev`. When a
+  `typecheck` script is missing add one (`tsc --noEmit`, `next typegen && tsc --noEmit` for Next.js) or leave it empty; a gate
+  that points at a script that does not exist can never pass. With no i18n library set `stack.i18n` to `none`; the i18n and RTL
+  rules then keep their "no i18n library yet" note. Read framework versions from `package.json`.
+- Replacing placeholders: names can contain digits (`{{E2E_RUNNER}}`, `{{E2E_PORT}}`); after the copy search the project for any
+  leftover `{{` and resolve every one.
 - Delete a copied rule file that cannot apply (for example SSR routing rules in a client-only app, RTL rules in a
   project with one left-to-right language, i18n rules in a project with no i18n) and list what you removed.
 - Never invent a convention the project does not follow; when the stack is unclear, keep the neutral wording.

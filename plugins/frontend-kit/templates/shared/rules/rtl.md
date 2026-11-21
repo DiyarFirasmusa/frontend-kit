@@ -1,9 +1,18 @@
 ---
 paths:
-  - "src/**/*.{tsx,css}"
+  - "**/src/**/*.{jsx,tsx,css}"
+  - "app/**/*.{jsx,tsx,css}"
 ---
 
 # RTL and LTR
+
+> **Plain CSS** (`stack.styling` is not Tailwind): the same principles with custom-property tokens, logical properties
+> (`margin-inline-start`, `padding-inline`), `[dir='rtl']` for the few mirrored things and a `prefers-color-scheme` dark token
+> set. The Tailwind utilities below are examples of the intent, not required syntax.
+
+> **No i18n library yet** (`stack.i18n` is `none` in `.claude/frontend-kit.json`): keep every user-visible string in one catalogue
+> module grouped like future keys (`group.key`), no text in JSX, no second language or library without asking. The rules below
+> then apply to that catalogue.
 
 Arabic is the default language and renders right-to-left; English renders
 left-to-right. Both are first-class: every screen must be correct in both

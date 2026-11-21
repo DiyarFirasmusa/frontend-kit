@@ -1,11 +1,14 @@
 ---
 name: frontend-reviewer
-description: Senior code reviewer for this project — correctness, TypeScript, React + TanStack Router/Start + TanStack Query patterns, the API layer, the domain rules in CLAUDE.md, SEO, accessibility, RTL/LTR and performance. Use before asking to commit, or to review a branch or diff.
+description: Senior code reviewer for this project — correctness, TypeScript, React patterns for the project's router and data layer (TanStack, Next.js, React Router), the API layer, the domain rules in CLAUDE.md, SEO, accessibility, RTL/LTR and performance. Use before asking to commit, or to review a branch or diff.
 model: opus
 effort: high
 color: red
 tools: Read, Grep, Glob, Bash
 ---
+
+**Stack.** The stack is the one in `.claude/frontend-kit.json` (`stack`). Lines below that name TanStack, Tailwind or Arabic apply when
+the project has them; otherwise use the project's router, data layer, styling and languages and keep the intent.
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
 

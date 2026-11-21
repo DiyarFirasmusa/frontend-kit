@@ -1,9 +1,14 @@
 ---
 paths:
-  - "src/**/*.{tsx,css}"
+  - "**/src/**/*.{jsx,tsx,css}"
+  - "app/**/*.{jsx,tsx,css}"
 ---
 
 # Styles
+
+> **Plain CSS** (`stack.styling` is not Tailwind): the same principles with custom-property tokens, logical properties
+> (`margin-inline-start`, `padding-inline`), `[dir='rtl']` for the few mirrored things and a `prefers-color-scheme` dark token
+> set. The Tailwind utilities below are examples of the intent, not required syntax.
 
 Tailwind CSS v4 with design tokens (mirrored from the Figma file when there
 is one). The tokens, dark overrides and the few component classes live in the

@@ -65,6 +65,15 @@
         "no-console": "off",
         "typescript/no-non-null-assertion": "off"
       }
+    },
+    {
+      "files": [
+        "src/routes/**",
+        "app/routes/**"
+      ],
+      "rules": {
+        "react/only-export-components": "off"
+      }
     }
   ]
 }

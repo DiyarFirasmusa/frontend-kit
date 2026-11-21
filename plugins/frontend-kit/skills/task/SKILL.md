@@ -28,7 +28,9 @@ attribution. Git details: `.claude/rules/git.md`. The bar:
 1. `git status --short`. Changes from another task: stop and ask what to do
    with them; never carry them into the new branch.
 2. `git fetch origin`
-3. `git checkout -b <type>/<ticket>-<short-kebab-name> origin/<defaultBranch>`
+3. `git checkout -b <type>/<ticket>-<short-kebab-name> origin/<defaultBranch>`. Exception: when the current branch is a feature
+   branch that already carries the project's setup commit and no other task's work (a branch prepared for this task), stay on it
+   and say so; cutting from origin would drop the setup.
    - type: `fix`, `feat`, `ui`, `refactor`, `perf` (the commit type matches)
    - ticket: the ticket number when there is one, e.g. `fix/449-profile-pill`;
      otherwise just `<type>/<short-kebab-name>`

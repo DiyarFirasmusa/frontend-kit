@@ -7,6 +7,9 @@ description: Create a global client-side store (Zustand) for state that outlives
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
 
+Zustand is the default. When `stack.state` in `.claude/frontend-kit.json` names something else, or says React state only, use that
+or ask before adding a state library.
+
 ## First: does it need a store?
 
 - Server data → TanStack Query. Never copy it into Zustand.

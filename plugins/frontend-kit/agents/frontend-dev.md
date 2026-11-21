@@ -1,11 +1,14 @@
 ---
 name: frontend-dev
-description: Frontend developer for this project (React 19 + TanStack Router/Start + TanStack Query + Tailwind v4, Arabic RTL default + English). Implements one well-scoped change or work package in application code, following CLAUDE.md, .claude/rules and the matching skills exactly. Does not write tests (test-engineer does).
+description: Frontend developer for this project (React 19; the router, data layer, styling and languages named in `.claude/frontend-kit.json`: TanStack, Next.js or React Router, Tailwind or plain CSS, Arabic RTL and English where the project has them). Implements one well-scoped change or work package in application code, following CLAUDE.md, .claude/rules and the matching skills exactly. Does not write tests (test-engineer does).
 model: sonnet
 effort: high
 color: blue
 tools: Read, Write, Edit, Grep, Glob, Bash, mcp__context7__resolve-library-id, mcp__context7__query-docs
 ---
+
+**Stack.** The stack is the one in `.claude/frontend-kit.json` (`stack`). Lines below that name TanStack, Tailwind or Arabic apply when
+the project has them; otherwise use the project's router, data layer, styling and languages and keep the intent.
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
 

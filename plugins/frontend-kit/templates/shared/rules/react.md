@@ -1,9 +1,14 @@
 ---
 paths:
-  - "src/**/*.{ts,tsx}"
+  - "**/src/**/*.{js,jsx,ts,tsx}"
+  - "app/**/*.{js,jsx,ts,tsx}"
 ---
 
 # React + TypeScript
+
+> **Router.** The router-specific lines below (`createFileRoute`, `beforeLoad`, `Route`, `src/routes/`, `routeTree.gen.ts`) are
+> TanStack Router's. When `stack.router` is something else (React Router, Next.js App Router), keep the intent (thin routes,
+> guards in the route layer, params and search validated once at the boundary) and use `routing.md` for the equivalents.
 
 React 19, strict TypeScript, TanStack Router (file routes), TanStack Query.
 Website (TanStack Start): pages render on the server, then hydrate. Dashboard

@@ -3,6 +3,28 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.14.0
+- Every playground is now a complete app with at least five routes, built by real kit sessions (cost no object): the Next.js and
+  TanStack Start dashboards have six areas each; `fresh-next`, `fresh-rr`, `fresh-vite-ts`, `fresh-vite-js`, `classic-jest` and
+  `mono` are Bazaar storefronts (home, products with URL state, product detail, login with a safe `redirect`, account, order
+  detail, 404; 75-122 tests each, build green); `legacy-messy` grew in its legacy style without the kit. Their reports drove this release.
+- The generic `react` profile stopped assuming TanStack: `routing.md` has React Router (data and framework mode) and Next.js
+  App Router sections (Cache Components, `next typegen`, 404 status, title templates, pre-hydration forms); `react.md` and
+  `naming.md` say their router lines are TanStack's; `testing.md` covers Jest, `createMemoryRouter`, the one allowed
+  `next/navigation` stub, `navigator.locks` and the route-file test ignore pattern.
+- New `react/rules/auth.md` for apps that hold their own tokens, from the bugs the reviewer found in every build: single-flight
+  and cross-tab refresh with `navigator.locks` and a timeout, rotation is not a new user (key tab sync on a session id), only a
+  real rejection ends a session, a session epoch so a late refresh cannot undo sign-out, cache reset, no redirect ping-pong,
+  an internal-only `redirect` parameter (`/.//evil.com`), pre-hydration forms.
+- Rules load where the code is: globs match a monorepo's `apps/*/src`, Next's and React Router's `app/` and `.jsx`/`.js` files.
+  Rules for no-i18n-library and plain-CSS projects, so they stop demanding Arabic strings and Tailwind utilities.
+- Setup: rewrite rule globs to `srcDirs`, write the real `commands` (typecheck, lint, test, build, dev), search for leftover
+  `{{`; the `task` skill stays on a branch that already carries the setup; `verify` and `dev` read the project's commands;
+  `create-form` and `create-store` allow a project without react-hook-form or Zustand; `frontend-dev` and `frontend-reviewer` read
+  the stack from `frontend-kit.json`.
+- Hooks: a project with no `build` script may get one (an existing one stays protected); oxlint no longer warns about route files.
+- Mock API: orders carry `currency`, order items carry the product `slug`; an `analyst` demo account has no `orders.view`.
+
 ## 1.13.0
 - The Next.js and TanStack Start dashboard variants now follow a merged folder structure: the kit's feature-first ownership
   rules plus the layout of two production projects. Next takes a production Next.js site's shape (`layouts/`, `components/{modals,wrappers,cards}`,

@@ -1,13 +1,19 @@
 ---
 paths:
-  - "**/*.test.{ts,tsx}"
+  - "**/*.test.{js,jsx,ts,tsx}"
   - "e2e/**"
-  - "src/test/**"
+  - "**/src/test/**"
+  - "app/test/**"
   - "vitest.config.*"
+  - "jest.config.*"
   - "playwright.config.ts"
 ---
 
 # Testing
+
+> **Other runners.** When `stack.tests` is Jest (or another runner), keep it and apply these rules with its equivalents:
+> Jest needs a custom jsdom environment that provides Node's `fetch`, `Request`, `Response` and `AbortController` (but keeps
+> jsdom's own `FormData`), a stub module for `import.meta.env`, and the DOM `RouterProvider` so `flushSync` behaves as in the app.
 
 Every task ships with tests. The stack: **Vitest** (jsdom) + **Testing
 Library** + **user-event** + **MSW** for unit, component and integration
@@ -90,6 +96,17 @@ The project's test helpers (`project.md` names the folder) provide:
 - Never `it.skip` to get green — fix it or report the bug.
 - A flaky or hard e2e case (auth, clock, network, mobile): load the
   `playwright-best-practices` skill for the pattern, then keep this file's rules.
+
+## Router and browser APIs in tests
+
+- **React Router:** build the table with a `createRoutes()` factory and render `createMemoryRouter(createRoutes(), { initialEntries })`
+  (a fresh table per test: resolved `lazy` modules are cached on the route objects). Framework mode: `createRoutesStub`.
+- **Next.js:** `next/navigation` has no public test provider. One shared stub (`src/test/next-navigation.ts`) is the single allowed
+  module mock; everything else is the real thing.
+- **TanStack Router:** a `*.test.tsx` beside route files is read as a route unless `routeFileIgnorePattern` excludes it.
+- jsdom has no `navigator.locks`: test the lock-less fallback, and the lock itself with a small fake. Do not hit a real timer
+  for the lock timeout.
+- MSW: import helpers (`delay`, `HttpResponse`) from the paths of the installed major version; check its docs, not memory.
 
 ## Never
 

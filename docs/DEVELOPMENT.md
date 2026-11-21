@@ -50,7 +50,7 @@ Version history: [`CHANGELOG.md`](../CHANGELOG.md). How to test: [`TESTING.md`](
 3. Arabic-correctness block (digits, currency decimals, typography, bidi) and an RTL lint in `post-edit`; a shadcn RTL step in setup.
 4. Install manifest + `/frontend-kit:doctor` + an upgrade path for projects that were already set up.
 5. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
-6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase.
+6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase. Every playground app now has 5+ routes (1.14.0).
    The dashboard's Next.js (1.11.1) and TanStack Start (1.11.2) variants are verified end to end by real sessions, and
    all three dashboards have Playwright e2e with a live-checked `/403` (1.12.0). Not covered yet: Sentry setup on the new
    variants, WebKit/Firefox, the real host's `_shell.html` fallback, and a dark project on Start.

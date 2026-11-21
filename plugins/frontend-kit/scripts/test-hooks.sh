@@ -333,6 +333,14 @@ expect_path allow Read "$REPO/src/../.env.example"
 expect_path allow Write "$REPO/package.json" "$(jq -n --arg c "$(printf '%s' "$PKG" | jq '.description = "x"')" '{content: $c}')"
 expect_path deny Write "$REPO/package.json" "$(jq -n --arg c "$(printf '%s' "$PKG" | jq '.scripts.build = "vite build --mode uat"')" '{content: $c}')"
 
+
+# A project without a build script may get one; an existing one stays protected.
+NOBUILD="$WORK/Projects (x)/nobuild"
+make_repo "$NOBUILD" "fix/123-thing"
+printf '{\n  "name": "fixture",\n  "scripts": {\n    "lint": "oxlint --fix"\n  }\n}\n' >"$NOBUILD/package.json"
+expect_path allow Edit "$NOBUILD/package.json" '{"old_string": "\"lint\": \"oxlint --fix\"", "new_string": "\"build\": \"vite build\",\n    \"lint\": \"oxlint --fix\""}'
+expect_path allow Write "$NOBUILD/package.json" "$(jq -n --arg c "$(jq '.scripts.build = "vite build"' "$NOBUILD/package.json")" '{content: $c}')"
+
 REPO="$PROJECT_REPO"
 
 # --- hooks.json and the settings templates ---------------------------------------------------
