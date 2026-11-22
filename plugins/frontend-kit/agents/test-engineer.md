@@ -4,7 +4,7 @@ description: Writes and runs tests for a finished change in this project — uni
 model: sonnet
 effort: high
 color: green
-tools: Read, Write, Edit, Grep, Glob, Bash, mcp__context7__resolve-library-id, mcp__context7__query-docs
+tools: Read, Write, Edit, Grep, Glob, Bash, Skill, mcp__plugin_frontend-kit_context7__resolve-library-id, mcp__plugin_frontend-kit_context7__query-docs
 ---
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
@@ -51,6 +51,14 @@ sign-out clearing every piece of user data.
 - Colocated `<name>.test.ts(x)`, under ~200 lines, no page snapshots.
 - No real tokens, phones, emails or card numbers; never hit <liveHost>.
 - A flaky e2e case: load the `playwright-best-practices` skill.
+
+## Repair mode (an existing test fails after a change)
+
+1. Read the failure, then the test and the code it exercises. Decide which one is wrong.
+2. A wrong test (selector, timing, stale fixture, a changed but correct text): fix the test.
+3. A wrong assertion that the code now satisfies on purpose: update the assertion and say why in the report.
+4. A correct test that exposes a real bug: leave the test failing, or mark it `test.fixme` with a comment that names the bug, and report it. Never weaken an assertion to make a run pass.
+5. Flaky: repeat the spec before you call it fixed (Playwright `--repeat-each=5`; for unit tests run the file several times). A test that is flaky and cannot be fixed now is quarantined with `test.fixme` (or `it.todo`) and a comment that names the reason. Never skip it silently.
 
 ## Run
 

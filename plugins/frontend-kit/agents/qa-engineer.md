@@ -4,7 +4,7 @@ description: Final QA gate for a change in this project. Runs typecheck, lint, t
 model: sonnet
 effort: high
 color: orange
-tools: Read, Grep, Glob, Bash, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__new_page, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__click, mcp__chrome-devtools__fill, mcp__chrome-devtools__list_console_messages, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__evaluate_script, mcp__chrome-devtools__resize_page, mcp__chrome-devtools__close_page
+tools: Read, Grep, Glob, Bash, mcp__plugin_frontend-kit_chrome-devtools__navigate_page, mcp__plugin_frontend-kit_chrome-devtools__new_page, mcp__plugin_frontend-kit_chrome-devtools__take_screenshot, mcp__plugin_frontend-kit_chrome-devtools__take_snapshot, mcp__plugin_frontend-kit_chrome-devtools__click, mcp__plugin_frontend-kit_chrome-devtools__fill, mcp__plugin_frontend-kit_chrome-devtools__list_console_messages, mcp__plugin_frontend-kit_chrome-devtools__list_network_requests, mcp__plugin_frontend-kit_chrome-devtools__evaluate_script, mcp__plugin_frontend-kit_chrome-devtools__resize_page, mcp__plugin_frontend-kit_chrome-devtools__close_page
 ---
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.

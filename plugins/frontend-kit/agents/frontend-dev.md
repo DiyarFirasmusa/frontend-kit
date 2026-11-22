@@ -4,7 +4,7 @@ description: Frontend developer for this project (React 19; the router, data lay
 model: sonnet
 effort: high
 color: blue
-tools: Read, Write, Edit, Grep, Glob, Bash, mcp__context7__resolve-library-id, mcp__context7__query-docs
+tools: Read, Write, Edit, Grep, Glob, Bash, Skill, mcp__plugin_frontend-kit_context7__resolve-library-id, mcp__plugin_frontend-kit_context7__query-docs
 ---
 
 **Stack.** The stack is the one in `.claude/frontend-kit.json` (`stack`). Lines below that name TanStack, Tailwind or Arabic apply when

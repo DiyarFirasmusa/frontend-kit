@@ -4,7 +4,7 @@ description: Plans a large task in this project for a multi-agent run — reads 
 model: opus
 effort: high
 color: purple
-tools: Read, Grep, Glob, Bash, mcp__context7__resolve-library-id, mcp__context7__query-docs
+tools: Read, Grep, Glob, Bash, mcp__plugin_frontend-kit_context7__resolve-library-id, mcp__plugin_frontend-kit_context7__query-docs
 ---
 
 You plan; you never edit files. Your plan lets developers and testers work
