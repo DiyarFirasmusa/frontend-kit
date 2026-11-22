@@ -1,6 +1,9 @@
 # frontend-kit
 
-A Claude Code marketplace with one plugin for frontends in any stack (React + TypeScript first-class).
+**A plugin that makes your coding assistant work like a frontend team.**
+
+A Claude Code plugin for frontend projects in any stack, React and TypeScript first-class: written know-how, standards,
+reviewers and automatic guards. [Website](https://frontend-kit-tan.vercel.app) · [العربية](https://frontend-kit-tan.vercel.app/ar/) · [Documentation](https://frontend-kit-tan.vercel.app/docs/)
 
 The rule is how code is written and separated (one job, view / state / data / logic apart, one direction). Folder trees,
 file names and libraries are examples: what you say comes first, then the project's own pattern, then the framework's

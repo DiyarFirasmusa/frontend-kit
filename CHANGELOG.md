@@ -3,6 +3,37 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.16.0
+Run `/frontend-kit:setup` again to get the new rules: copied rules don't update by themselves.
+
+- **Any stack.** How code is split is the rule: one job per unit, view / state / data / pure logic apart, one direction,
+  one owner. Folder trees, file names, languages and libraries in the rules and skills are examples. Who decides: what
+  the user said, then the project's own pattern, then the framework's convention, then the kit's example.
+- **The project map.** `project.md` gets a table: for each role, where it lives and one real example file. Setup fills it
+  from the code and the user approves it; an example layout is offered only to an empty project. Outside React, setup no
+  longer copies React rules or offers TanStack, Zustand or react-hook-form.
+- **create-store, create-component, create-form and create-hook** start from the project's nearest example, with a short
+  reference per stack (React, Vue, Svelte, Angular, plain). The TanStack, Zustand and react-hook-form detail moved into
+  their `references/`, read whenever that library is installed, also beside existing code, so website and dashboard
+  projects keep it. The query example passes the abort `signal`, and the persisted store example has a `version` and
+  keeps only stored values that are still valid. Measured in real sessions on five
+  stacks, a project with no shared state yet (10 runs each): no new or uninstalled dependency in 10 (8 before), the
+  project's own storage helper reused in 10 (4 before), the state in the cart's feature folder in 4 (0 before; the rest
+  used an existing shared folder, as before, once a new one). Component, hook and form: imports only of installed
+  packages in 15 of 15 (10 before). A real dashboard: `tsc` passes in 6 of 6, as before.
+- **Skills read their own files.** A skill's `references/` lie outside the project, so Claude Code asked for each one
+  (and refused them in non-interactive runs): the dashboard and website skills' full examples never loaded there. The
+  file guard now allows a Read of the plugin's own skill files, and nothing else: a path with a `.` or `..` step or a
+  `//` gets no approval, links are followed, and a dot name below `skills/` is refused. Checked in a real session with the
+  plugin installed under `~/.claude/plugins/`.
+- Setup runs its own scripts and reads the templates without a prompt for each.
+- The profile `react` keeps its name for compatibility: it is any other frontend, in any stack. JSX is written only
+  where the framework uses it (React, Preact, Solid).
+- `structure.md`: the project decides places, names and libraries; the principles decide how new code is written and
+  split, also where existing code breaks one (the report says so). No barrel files, a page's view gets its data from
+  one place, and size limits are a reason to look. An empty row of the project map means: follow the nearest code.
+- Setup's detection table lists what `kit-detect-stack.sh` really detects (Nuxt, SvelteKit, Angular, Pinia, vue-i18n…).
+
 ## 1.15.4
 - Updates are described as they work. `/plugin marketplace update` alone never updated the installed plugin, and
   `autoUpdate` does nothing outside interactive sessions or where updates are disabled, as in the Claude desktop app.

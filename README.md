@@ -1,7 +1,20 @@
 # frontend-kit
 
-A Claude Code marketplace with one plugin, `frontend-kit`, for frontends in any stack (React + TypeScript first-class). It gives a project the
-conventions, workflows and guard rails a good frontend team would write down, and enforces the ones that can be enforced.
+**A plugin that makes your coding assistant work like a frontend team.**
+
+[Website](https://frontend-kit-tan.vercel.app) · [العربية](https://frontend-kit-tan.vercel.app/ar/) · [Documentation](https://frontend-kit-tan.vercel.app/docs/)
+
+- **What is it?** A Claude Code plugin for frontend projects in any stack, React and TypeScript first-class: written
+  know-how, standards, reviewers and automatic guards.
+- **What does it do?** Your assistant builds pages, tables and forms the way your project already does them. Known
+  dangerous commands are refused. Its code is typechecked, tested and sent for review.
+- **How does it work?**
+  1. Install it once. Setup adapts it to your project.
+  2. Ask in your own words. The assistant follows the matching guide.
+  3. Checks run by themselves, and you approve the commit.
+
+The marketplace has one plugin, `frontend-kit`. It gives a project the conventions, workflows and guard rails a good
+frontend team would write down, and enforces the ones that can be enforced.
 
 | What | Count |
 | ---- | ----- |
