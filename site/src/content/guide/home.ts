@@ -8,8 +8,8 @@ export const home = {
     is: {
       name: t('What is it?', 'ما هي؟'),
       text: t(
-        'A plugin for React and TypeScript projects: written know-how, standards, reviewers and automatic guards.',
-        'إضافة لمشاريع React وTypeScript، فيها أدلة عمل ومعايير ووكلاء مراجعة وحرّاس تلقائيون.',
+        'A Claude Code plugin for React and TypeScript projects: written know-how, standards, reviewers and automatic guards.',
+        'إضافة تعمل داخل \u2066Claude Code\u2069 لمشاريع React وTypeScript، فيها أدلة عمل ومعايير ووكلاء مراجعة وحرّاس تلقائيون.',
       ),
     },
     does: {
