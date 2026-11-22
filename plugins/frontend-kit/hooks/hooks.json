@@ -31,7 +31,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|Monitor",
         "hooks": [
           {
             "type": "command",
@@ -56,7 +56,7 @@
         ]
       },
       {
-        "matcher": "WebFetch|mcp__chrome-devtools__navigate_page|mcp__chrome-devtools__new_page|mcp__playwright__browser_navigate|mcp__claude-in-chrome__navigate|mcp__claude-in-chrome__tabs_create_mcp",
+        "matcher": "^(WebFetch|mcp__(plugin_[^_]+(-[^_]+)*_)?chrome-devtools__(navigate_page|new_page)|mcp__(plugin_[^_]+(-[^_]+)*_)?playwright__(browser_navigate|browser_tabs)|mcp__claude-in-chrome__(navigate|tabs_create_mcp))$",
         "hooks": [
           {
             "type": "command",
