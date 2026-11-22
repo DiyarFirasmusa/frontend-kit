@@ -91,7 +91,7 @@ mode_enforced() {
     refactor) printf '%s' "$integrity" ;;
     upgrade) printf '%s; installs with --force or --legacy-peer-deps' "$integrity" ;;
     maintenance) printf '%s; new dependencies' "$integrity" ;;
-    freeze) printf '%s; any dependency or tool-config change; new source files other than tests' "$integrity" ;;
+    freeze) printf '%s; any dependency or tool-config change' "$integrity" ;;
     hotfix) printf '%s; any dependency or tool-config change; editing more than %s source files' "$integrity" "$(mode_file_budget)" ;;
     read-only) printf 'every edit outside %s/, every shell command that is not a plain read, MCP tools that act' "$MODE_REPORT_DIR" ;;
     prototype) printf 'every edit outside %s/, installs, git commit and push' "$MODE_PROTOTYPE_DIR" ;;
@@ -186,7 +186,7 @@ mode_block() {
   if mode_guard_wired; then
     printf -- '- Enforced by the mode guard (best effort, not a sandbox): blocks %s. The rest is instruction. Only the user switches: /frontend-kit:mode off.\n' "$blocked"
   else
-    printf -- '- NOT enforced (this plugin copy does not register the mode guard), so hold it yourself: never do %s. Only the user switches: /frontend-kit:mode off.\n' "$blocked"
+    printf -- '- NOT enforced (this plugin copy does not register the mode guard), so hold it yourself, never: %s. Only the user switches: /frontend-kit:mode off.\n' "$blocked"
   fi
 }
 

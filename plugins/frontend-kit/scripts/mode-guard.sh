@@ -201,7 +201,7 @@ edit_config_check() {
         deny "$MODE_PROJECT" "a change of \"mode\" or \"modeState\" in .claude/frontend-kit.json." "The user switches modes with /frontend-kit:mode. " ;;
     Edit | MultiEdit)
       case "$OLD_TEXT$NEW_TEXT" in
-        *'"mode"'* | *'"modeState"'*)
+        *'"mode"'* | *'"modeState"'* | *'"new"'* | *'"existing"'* | *'"maintenance"'* | *'"refactor"'* | *'"upgrade"'* | *'"freeze"'*)
           deny "$MODE_PROJECT" "an edit of \"mode\" or \"modeState\" in .claude/frontend-kit.json." "The user switches modes with /frontend-kit:mode. " ;;
       esac ;;
   esac
@@ -357,7 +357,7 @@ check_segment() {
 
   # redirections: a write
   for target in ${SEG_TARGETS[@]+"${SEG_TARGETS[@]}"}; do
-    case "$target" in /dev/null | /dev/stderr | /dev/stdout | '&'*) continue ;; esac
+    case "$target" in /dev/null | /dev/stderr | /dev/stdout | '&'* | [0-9]) continue ;; esac
     if has_mode read-only; then
       deny read-only "a shell redirection into $target: nothing is written." "Use the Write tool for the report in $MODE_REPORT_DIR/ if you need to save something. "
     fi

@@ -62,13 +62,12 @@ APPS_BLOCK=""
 APPS_LINE="$([ -f "$KIT_CONFIG" ] && jq -r '[.apps[]? | "\(.name) (\(.profile // "react")) under \(.path)"] | join(", ")' "$KIT_CONFIG" 2>/dev/null)"
 [ -n "$APPS_LINE" ] && APPS_BLOCK="
 Apps in this project: $APPS_LINE. Rules and checks follow the app a file belongs to."
-MODE_BLOCK=""
-case "$KIT_MODE" in
-  refactor) MODE_BLOCK="
-REFACTOR MODE IS ON: restructure the project to the standards in .claude/rules/ through /frontend-kit:refactor-mode (audit, plan the user approves, one phase at a time, behaviour frozen, gate green between phases). Drive-by refactors outside the plan stay off." ;;
-  new) MODE_BLOCK="
-NEW PROJECT: build to the standards from the first file (feature folders, strict types, tests, i18n); no shortcuts to refactor later." ;;
-esac
+# The working mode (mode-lib.sh): its rules, what the mode guard enforces, how to leave it.
+. "$(dirname "$0")/mode-lib.sh"
+MODE_BLOCK="$(mode_blocks)"
+[ -n "$MODE_BLOCK" ] && MODE_BLOCK="
+$MODE_BLOCK
+Mode: $(mode_label) · status: /frontend-kit:mode status · modes: /frontend-kit:mode list"
 
 cat <<EOF
 $KIT_PROJECT_NAME — session context
