@@ -70,7 +70,7 @@ head: ({ loaderData }) =>
 - `noindex, nofollow` through `seo({ noindex: true })` on: auth, cart,
   checkout, account and fallback (not found, error) pages.
 - Also send `X-Robots-Tag: noindex` from the route's `headers()` on those
-  paths, and keep them `Disallow`ed in `robots.txt`.
+  paths. Do not `Disallow` them in `robots.txt`: a crawler blocked there never reads the `noindex`.
 - Private pages get no JSON-LD and no share image.
 
 ## Structured data (JSON-LD)
@@ -81,13 +81,13 @@ head: ({ loaderData }) =>
   `brand`, `offers` (`price`, `priceCurrency`, `availability`, `url`).
   Only facts visible on the page; never invent ratings or reviews.
 - Every page below home: `BreadcrumbList` matching the visible breadcrumb.
-- FAQ content: `FAQPage` only when the questions are visible on the page.
-- Serialise with `JSON.stringify` of typed builder output; never interpolate
-  raw strings into the script.
+- No `FAQPage` for search: Google stopped showing FAQ rich results in 2026. Visible FAQs can stay without the markup.
+- Serialise with `JSON.stringify`, then replace `<` with `\u003c` and U+2028 / U+2029 with their escapes, so a string
+  can never close the `<script>` tag. Build the objects from typed builders; never interpolate raw strings.
 
 ## Share previews
 
-- `og:image` is an absolute URL, 1200×630 (≥ 600×315), < 5 MB, JPEG/PNG/WebP,
+- `og:image` is an absolute URL, 1200×630 (≥ 600×315), under 300 KB (WhatsApp drops images over 600 KB), JPEG/PNG/WebP,
   served without auth. Product pages use the product image or a generated
   card; others fall back to `DEFAULT_OG_IMAGE`.
 - `og:url` equals the canonical. `og:locale` follows the page language
@@ -107,7 +107,7 @@ head: ({ loaderData }) =>
 ## Languages
 
 - Default: one URL per page; the language is a cookie preference and the
-  canonical points to that one URL with `hreflang="x-default"`. Crawlers get
+  canonical is that URL. Do not add `hreflang` alternates to it: alternates must link to each other, so one URL has none. Crawlers get
   the default language. Because the HTML varies by cookie, it is never
   cached publicly without `Vary: Cookie`.
 - Both languages indexed is a product decision: then each language gets its
@@ -117,10 +117,10 @@ head: ({ loaderData }) =>
 
 ## Crawl files
 
-- `robots.txt`: allow public, `Disallow` private paths, `Sitemap:` line with
+- `robots.txt`: allow public paths, `Sitemap:` line with
   the absolute sitemap URL. Static in `public/`, or a server route
   (`src/routes/robots[.]txt.ts`) when rules differ per environment — UAT and
-  previews answer `Disallow: /`.
+  previews are protected by a login or an IP allow-list; `Disallow: /` does not keep a URL out of the index.
 - Sitemap: a server route (`src/routes/sitemap[.]xml.ts`) that lists
   canonical, indexable URLs only (static pages + catalogue from the API),
   with `Content-Type: application/xml` and a cache header. A private path

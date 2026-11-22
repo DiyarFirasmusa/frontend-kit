@@ -112,6 +112,9 @@ export async function fetchProduct(slug: string): Promise<ProductDto> {
   feature's `services/`; 2+ features in `src/shared/services/`.
 - No URL literals: every path comes from `endpoints`.
 - No error parsing, toasts or navigation in services; return data or throw.
+- Cancellation: pass TanStack Query's `signal` into the service (`queryFn: ({ signal }) => fetchProduct(slug, { signal })`)
+  and forward it to the HTTP client, so a route change aborts the request. A timeout is not a cancel: show it as a network
+  error with a retry.
 - Language goes in one header from the client (from the request's i18n on
   the server, the current language in the browser), never per call.
 

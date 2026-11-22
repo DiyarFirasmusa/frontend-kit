@@ -43,7 +43,7 @@ npm run check:full       # check + e2e + build
 | Component | presentational components | `<name>.test.tsx` beside the source | the providers render helper |
 | Integration | every route component with the real API client, query cache and a memory router | `<name>.test.tsx` beside it | the router render helper + MSW |
 | End-to-end | each user flow | `e2e/<flow>.spec.ts` | Playwright + mocked API routes |
-| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`); serious/critical fail |
+| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`); serious/critical fail |
 
 Minimum per change: the logic you touched is unit-tested; each touched route
 component has loading / error / empty / success plus one interaction; a new
@@ -81,7 +81,14 @@ The project's test helpers (`project.md` names the folder) provide:
 - Mock the **network** (MSW), never modules: no `vi.mock` of services, hooks,
   the API client or TanStack Query. The interceptors, toasts and cache are
   part of what is tested.
-- Async UI: `findBy*` / `waitFor`. Timers: `vi.useFakeTimers()`. No sleeps.
+- Async UI: `findBy*` / `waitFor`. Timers: `vi.useFakeTimers()`, which in Vitest 5 also fakes `Temporal` when it exists
+  (opt out with `toNotFake: ['Temporal']`). No sleeps.
+- `vi.mock`, `vi.unmock` and `vi.hoisted` sit at the top level of the file. In Vitest 5 a call inside a function or block
+  throws; it was a warning before.
+- Date-dependent UI in e2e (token expiry, "5 minutes ago"): fix the browser clock with Playwright's `page.clock` instead of
+  waiting for real time.
+- Set the time zone for the unit run (`TZ=UTC` in the global setup, or `test.env`), so formatting tests do not depend on the
+  machine that runs them.
 - Text in both languages where it matters: one English assertion, one Arabic.
 - E2E: projects cover Arabic and English, desktop and mobile, and dark. Mock
   the backend with route handlers that return the real envelope. Match text
@@ -106,7 +113,8 @@ The project's test helpers (`project.md` names the folder) provide:
 - **TanStack Router:** a `*.test.tsx` beside route files is read as a route unless `routeFileIgnorePattern` excludes it.
 - jsdom has no `navigator.locks`: test the lock-less fallback, and the lock itself with a small fake. Do not hit a real timer
   for the lock timeout.
-- MSW: import helpers (`delay`, `HttpResponse`) from the paths of the installed major version; check its docs, not memory.
+- MSW 3: `http` and `HttpResponse` from `msw/http`, `delay` from `msw/utils/delay`, the server from `msw/node`. MSW 2 imports
+  all of them from `msw`. Check the installed package's `exports` before you import.
 
 ## Never
 

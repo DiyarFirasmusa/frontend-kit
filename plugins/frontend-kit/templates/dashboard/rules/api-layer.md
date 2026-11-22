@@ -99,6 +99,9 @@ export async function fetchUsers(params: UserListParams): Promise<UserListRespon
 - The service maps UI params to the backend's names (1-based page → `page=0`,
   `name.asc` → `sort=name,asc`) in one `toXQuery(params)` helper.
 - No error parsing, no toasts, no navigation in services.
+- Cancellation: pass TanStack Query's `signal` into the service (`queryFn: ({ signal }) => fetchUsers(params, { signal })`)
+  and forward it to the client, so leaving the page aborts the request. A timeout is not a cancel: show it as a network
+  error with a retry.
 
 ## Query keys and options
 

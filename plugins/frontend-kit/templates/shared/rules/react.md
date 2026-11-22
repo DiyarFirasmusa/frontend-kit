@@ -13,7 +13,8 @@ paths:
 React 19, strict TypeScript, TanStack Router (file routes), TanStack Query.
 Website (TanStack Start): pages render on the server, then hydrate. Dashboard
 (Vite + TanStack Router, or TanStack Start in SPA mode): a client-only SPA. No React
-Server Components, no `'use client'`, no Next.js imports in either. The dashboard's
+Server Components, no `'use client'`, no Next.js imports in those two profiles. A `react` project follows the framework it
+detects (`react/nextjs.md`, `react/react-router.md`). The dashboard's
 Next.js variant is the exception: a client-rendered App Router where containers carry
 `'use client'` and the variant's `routing.md` says where Next imports are allowed.
 
@@ -21,6 +22,8 @@ Next.js variant is the exception: a client-rendered App Router where containers 
 
 - Strict. Never `any` — use `unknown` and narrow. Never `@ts-ignore` /
   `@ts-expect-error`; fix the type.
+- Data from outside the type system (`JSON.parse`, `response.json()`, storage, URL params, env) is `unknown` until a zod
+  schema parses it. A cast after a parse is not a parse.
 - Type-only imports use `import type`.
 - `interface` for object shapes, `type` for unions and aliases.
 - Backend shapes come from the generated API types (never hand-edit).
@@ -44,7 +47,7 @@ Next.js variant is the exception: a client-rendered App Router where containers 
 
 ```tsx
 export const Route = createFileRoute('/orders/$orderId')({
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(orderQueryOptions(params.orderId)),
+  loader: ({ context, params }) => context.queryClient.query(orderQueryOptions(params.orderId)),
   component: OrderDetailPage,
 })
 
@@ -54,6 +57,9 @@ function OrderDetailPage() {
   return <>{/* JSX only */}</>
 }
 ```
+
+`queryClient.query()` (TanStack Query 5.102+) replaces the deprecated `ensureQueryData`. It refetches when the cache is older
+than `staleTime`; set `staleTime: 'static'` on options that should reuse whatever is cached.
 
 The page hook (`use-<page>-page.ts`) owns router state (`Route.useParams()`,
 `Route.useSearch()`, `useNavigate`), queries and mutations, local UI state,
@@ -67,10 +73,13 @@ search validation, `beforeLoad` guards, the `loader` and (website) `head()`.
   pure `*-actions.ts` helpers stay at the `hooks/` root.
 - No `useEffect` for fetching — TanStack Query (and route loaders) only. No
   server data in Zustand.
-- Zustand: always subscribe with a selector (`useSettingsStore((state) => state.language)`).
+- Zustand: always subscribe with a selector (`useSettingsStore((state) => state.language)`). A selector that returns a new
+  object or array needs `useShallow`, or the component re-renders forever.
 - `useMemo` / `useCallback` only when it is measurably needed or the value is
-  a dependency of another hook / a memoised child.
+  a dependency of another hook / a memoised child. With the React Compiler on, do not add memo calls for speed; keep the
+  ones another hook depends on.
 - Floating promises get `void`: `onClick={() => { void navigate({ to: '/orders' }) }}`.
+- `useEffectEvent` (React 19.2+) only inside an effect: never in a dependency array, never passed down as a prop.
 - Single-flight actions (submit, OTP send, pay) guard on `isPending` **and**
   a ref, so a second tap during the request does nothing.
 
@@ -106,7 +115,8 @@ The HTTP library is imported only inside the API client.
 
 ## Never
 
-- Class components, default exports (except where a tool requires one).
+- Class components, except one reusable error boundary (React has no hook for that). Default exports, except where a tool
+  requires one.
 - `console.log`, `debugger`, commented-out code.
 - Inline `style={{}}` except for truly dynamic values (a computed width,
   a CSS variable); never `!important`.

@@ -89,10 +89,10 @@ not fill the history.
 - `loaderDeps` picks only the search fields the fetch uses; the loader reruns
   when they change.
 - List routes **start** the fetch and do not wait for it:
-  `void context.queryClient.prefetchQuery(xListQueryOptions(params))`. The table
+  `void context.queryClient.query(xListQueryOptions(params)).catch(() => undefined)`. The table
   keeps the previous page on screen (`placeholderData: keepPreviousData`)
   instead of the route going pending on every filter change.
-- Detail and edit routes **wait**: `await context.queryClient.ensureQueryData(...)`,
+- Detail and edit routes **wait**: `await context.queryClient.query(...)`,
   then the page reads the same `queryOptions` with `useQuery` / `useSuspenseQuery`.
 - Loaders also load the feature's locale bundle so the page never flashes keys.
 - `queryOptions` objects live in the feature's `hooks/query/` and are shared by

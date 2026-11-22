@@ -29,7 +29,8 @@ Node 22.12+, Vite 6.4+ (Vitest 5), TanStack Query 5.102+ (`queryClient.query()`)
 react-hook-form 7, i18next 27 (`fallbackLng` defaults to false; an empty string falls back; `createInstance()` does
 not inherit plugins, call `use()` on each per-request instance), MSW 3 (`onUnhandledFrame`; no cookie jar or fake-timer
 patching in Node), Vitest 5 (`clearMocks` on; un-awaited async assertions fail), Playwright 1.65, Sentry 11
-(`dataCollection`; never leave it unset), oxlint 1.x, oxfmt 0.x (still beta), Tailwind 4.3.
+(`dataCollection`; never leave it unset), oxlint 1.x, oxfmt 0.x (still beta), Tailwind 4.3 (v4 names, see `styles.md`), React 19.2+ (`useEffectEvent`, `<Activity>`), TypeScript 5.9+
+(6 and 7 change defaults, see `typescript.md`).
 
 ## Local quirks
 
