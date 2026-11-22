@@ -53,4 +53,7 @@ or a docs query: send the library, the versions and the API name only.
 ### Unverified, or needs the user
 ```
 
+When `docs/upgrade-plan.md` is the target (upgrade-mode asked), that skill writes the file: return the table and the phases
+in the guide's order.
+
 Read-only throughout: no install, no codemod run, no edit. Keep the prose under 800 words; the tables are not capped.

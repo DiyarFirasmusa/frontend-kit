@@ -23,10 +23,12 @@ Measure before and after, and change only what the measurement points at.
 ## Measure
 
 ```sh
-npm run build              # chunk sizes in the output
+npm run build              # chunk sizes where the tool prints them (Next.js 16 does not)
 npm run build:analyze      # treemap, when the project has the script
 npm run preview            # then Lighthouse, mobile preset
 ```
+
+Run the same command before and after and take the median of several runs; say "lab only" when there is no field data.
 
 Chrome devtools Performance panel with CPU 4× slowdown + "Fast 4G" for
 interactions. Use UAT (<uatHost>) or local builds, never load-test

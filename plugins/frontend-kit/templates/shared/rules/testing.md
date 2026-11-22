@@ -105,6 +105,8 @@ The project's test helpers (`project.md` names the folder) provide:
 - Keep a test file under ~200 lines; split by behaviour. No whole-page snapshots: check structure with
   `toMatchAriaSnapshot` (regenerate those after upgrading to Playwright 1.65).
 - Never `it.skip` to get green — fix it or report the bug.
+- **A bug fix starts with a test that fails for that bug.** See it fail, fix, see it pass. "Already fixed" or "could not
+  reproduce", with the evidence, is a finished task; don't patch on a guess.
 - A flaky or hard e2e case (auth, clock, network, mobile): load the
   `playwright-best-practices` skill for the pattern, then keep this file's rules.
 

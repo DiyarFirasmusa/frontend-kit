@@ -73,12 +73,33 @@ for the names you must not publish, list them one per line in `.private-names` (
     "allTests": "npx vitest run"
   },
   "stopGate": { "tests": "related", "review": true },
-  "hooks": { "skillSuggest": true }
+  "hooks": { "skillSuggest": true },
+  "guards": {}
 }
 ```
 
+`guards`: each key set to `false` switches one guard off (Claude's own change of one is put to the user).
+
+| `guards` key | false switches off |
+| --- | --- |
+| `integrity` | the refusal of writes into the gate state and the git hooks |
+| `gitExtras` | git work-loss and tag rules, programs git is told to run (never the branch, push and PR rules) |
+| `pipedCode` | the refusal of code piped or downloaded into a shell or interpreter |
+| `packageManager` | the refusal of another package manager's install |
+| `remoteWrites` | the refusal of publish, deploy, database reset and gh writes |
+| `secretsInCode` | the credential scan on writes |
+| `promptSecrets` | the warning about a pasted key |
+| `codeChecks` | the notes after an edit |
+| `subagentContext` | the rules handed to a subagent |
+
+`protectedPaths` may be a list or one string; any other type makes the Bash and URL guards refuse. `server/**` stays in it
+only where that folder is deploy config, not application code (Nuxt, Nitro, SolidStart, Analog).
+
 `profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`); written by setup after the user answers. `mode` (project modes and task modes: `/frontend-kit:mode list`; setup writes `new`, `existing`,
 `maintenance` or `refactor`). `srcDirs`: the source folders every gate watches (unset, or none of them exists: code in any folder). `allowJs`: lifts the TypeScript-only guard.
+`modeState` (since, until, note, previous) is written only by `/frontend-kit:mode`; task modes live in
+`.claude/state/task-mode.json`, per checkout. `modes.reportDir` and `modes.prototypeDir` (defaults `docs/audits` and
+`prototypes`) are the folders read-only and prototype may write.
 `apps[].cwd`: the folder an app's commands run in (a monorepo package); the changed files are passed relative to it. `stack`: what setup detected; rules and `commands` adapt to it. `commands.formatFile` / `commands.lintFile` (the file is
 appended) replace the detected formatter/linter; `commands.typecheck` / `commands.relatedTests` / `commands.allTests` replace the detected ones.
 The Stop gate looks at the uncommitted changes and at what was committed since the session started (or the gate last

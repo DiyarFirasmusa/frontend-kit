@@ -18,9 +18,10 @@ conventions, workflows and guard rails a good frontend team would write down, an
 /frontend-kit:setup
 ```
 
-Restart Claude Code after setup. Requirements: `jq`, Node 20+, git.
+Restart Claude Code after setup. Requirements: `jq`, Node 20+, git. The guards need Claude Code 2.1.295 or later: earlier
+versions let a call through when a guard times out or cannot start.
 
-`/frontend-kit:setup` asks what you are doing (new project, existing project, refactor) and what kind of React project it is,
+`/frontend-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of React project it is,
 detects the stack (package manager, framework, router, tests, linter, formatter, i18n, source folders), shows **one proposal**
 and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json`,
 adapted to what it found. Projects set up this way update the plugin on their own (`autoUpdate`).
@@ -36,6 +37,13 @@ adapted to what it found. Projects set up this way update the plugin on their ow
 
 The guards are a guard rail, not a sandbox: they read shell commands the way the shell does, but not what a script file, a
 package script or a program in another language does. Keep branch protection on.
+
+## Working modes
+
+`/frontend-kit:mode <name>` turns one on: `maintenance`, `refactor`, `upgrade`, `freeze` for the project, `hotfix`,
+`read-only`, `prototype` for this checkout. `status` shows what is on and what is enforced, `off` leaves it. A project in
+the default mode (`existing`) or without a config gets no extra rule or refusal. The mode guard holds the edit tools; in
+the shell it catches common forms only.
 
 ## Refactor mode
 
