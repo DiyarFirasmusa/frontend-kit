@@ -1,6 +1,7 @@
 # Zustand, only when it is installed
 
-The paths and names below are the kit's example. An existing store's folder, file name and shape win.
+The paths and names below are the kit's example. An existing store's folder, file name and shape win. `<shared>` is the
+project's shared folder and `<projectName>` its name (`.claude/frontend-kit.json`, else `CLAUDE.md`).
 
 - Server data → TanStack Query. Never copy it into Zustand.
 - Page-local UI state → `useState` in the page hook.
@@ -19,7 +20,7 @@ cart or selection). Persist only what must survive a reload, with a
 ```ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { LanguageId } from '@/<shared>/lib/i18n/languages'
+import { isLanguageId, type LanguageId } from '@/<shared>/lib/i18n/languages'
 
 interface SettingsState {
   language: LanguageId
@@ -34,7 +35,15 @@ export const useSettingsStore = create<SettingsState>()(
         set({ language })
       },
     }),
-    { name: '<projectName>-settings' },
+    {
+      name: '<projectName>-settings',
+      version: 1,
+      // What storage holds may be old or edited by hand: keep only values that are still valid.
+      merge: (stored, current) => {
+        const language = (stored as Partial<SettingsState> | undefined)?.language
+        return isLanguageId(language) ? { ...current, language } : current
+      },
+    },
   ),
 )
 ```
@@ -84,4 +93,5 @@ when the flow ends.
 - Subscribe with selectors (`useSettingsStore((state) => state.language)`);
   outside React use `useXStore.getState()`.
 - Braced setter bodies (oxlint `curly`).
+- A persisted store has a `version`. When the stored shape changes, raise it and add `migrate`.
 - Unit-test the store's actions; reset between tests.

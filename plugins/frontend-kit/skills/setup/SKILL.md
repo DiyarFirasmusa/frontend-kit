@@ -107,13 +107,13 @@ The table below is what it looks at. These values are what the hooks and the rul
 | Field in `frontend-kit.json` | Detected from |
 | ---------------------------- | ------------- |
 | `stack.packageManager` (`{{PACKAGE_MANAGER}}`, `{{PM_RUN}}`) | `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lock(b)` → bun, else npm (`npm run`, `pnpm`, `yarn`, `bun run`) |
-| `stack.framework`, `stack.router` | `next`, `@tanstack/react-start`, `@remix-run/*`/`react-router`, `vite`, `react-scripts`, `expo` |
-| `stack.data` | `@tanstack/react-query`, `swr`, `@reduxjs/toolkit`, `@apollo/client`, `urql`, else "fetch hooks" |
-| `stack.state` | `zustand`, `redux`/`@reduxjs/toolkit`, `jotai`, `recoil`, `mobx`, else "React state" |
+| `stack.framework`, `stack.router` | `next`, `@tanstack/react-start`, `@react-router/dev`, `@remix-run/react`, `expo`, `gatsby`, `react-scripts`, `nuxt`, `@sveltejs/kit`, `@angular/core`, `astro`, then `vue`, `svelte`, `solid-js`, then `vite`; the router is the framework's own, else `vue-router`, `@tanstack/react-router`, `react-router(-dom)`, `wouter` |
+| `stack.data` | `@tanstack/{react,vue,svelte}-query`, `@tanstack/angular-query-experimental`, `swr`, `@reduxjs/toolkit`, `@apollo/client`, `urql`, else none (the framework's own fetching) |
+| `stack.state` | `zustand`, `redux`/`@reduxjs/toolkit`, `jotai`, `recoil`, `mobx`, `pinia`, `vuex`, `@ngrx/signals`/`@ngrx/store`, `@ngxs/store`, else none (the framework's built-in state) |
 | `stack.styling` | `tailwindcss`, `styled-components`, `@emotion/*`, `@mui/*`, CSS modules (`*.module.css`), `sass` |
 | `stack.tests`, `stack.e2e` | `vitest`, `jest`; `@playwright/test`, `cypress` |
 | `stack.lint`, `stack.format` | `oxlint`, `eslint`, `@biomejs/biome`; `oxfmt`, `prettier`, `@biomejs/biome` |
-| `stack.i18n` | `i18next`/`react-i18next`, `next-intl`, `react-intl`/`@formatjs/*`, else none |
+| `stack.i18n` | `i18next`/`react-i18next`, `next-intl`, `react-intl`/`@formatjs/intl`, `vue-i18n`, `@jsverse/transloco`, `svelte-i18n`, else none |
 | `srcDirs` (`{{SRC_DIR}}`) | where the code really is: `src`, `app`, `pages`, `components`, `lib`, any other top folder with UI files (with any code when none of those exists), each workspace package's `src`, `app`, `pages` |
 | `commands.typecheck` | the `typecheck` script if any, else with `typescript`: `next typegen && tsc --noEmit` (Next 15.5+), `react-router typegen && tsc --noEmit` (`@react-router/dev`), `tsc -b` (a solution tsconfig), `tsc --noEmit` |
 | `commands.relatedTests` | `npx vitest related --run --passWithNoTests` or `npx jest --findRelatedTests --passWithNoTests` |

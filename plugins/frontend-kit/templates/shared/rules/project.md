@@ -7,7 +7,8 @@ An empty line is a decision still open: ask the user before inventing the answer
 ## Where things are
 
 The project map. It wins over every layout, file name and library the rules and skills use as an example. One real file
-per role: new code of that role looks like it. Leave out a role the project doesn't have.
+per role: new code of that role looks like it. Leave out a role the project doesn't have. An empty map row is not an
+open question: take the nearest code of that role, then the framework's convention, and fill the row once it is decided.
 
 | Role | Folder and file naming here | Example file |
 | ---- | --------------------------- | ------------ |

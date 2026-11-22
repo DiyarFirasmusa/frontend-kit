@@ -1,6 +1,6 @@
 ---
 name: create-form
-description: Create a form in any frontend stack with the project's own form and validation tools (react-hook-form + zod where installed) — schema, accessible labelled fields, inline errors, single-flight submit. Use for any input UI — login, phone, OTP, registration, address, profile, settings, filters, create/edit dialogs.
+description: Create a form in any frontend stack with the project's own form and validation tools (react-hook-form + zod 4 where installed) — schema, accessible labelled fields, inline errors, single-flight submit. Use for any input UI — login, phone, OTP, registration, address, profile, settings, filters, create/edit dialogs.
 ---
 
 # Create form
@@ -8,8 +8,14 @@ description: Create a form in any frontend stack with the project's own form and
 The principles are fixed. The library, folder, file name, language and syntax are the project's: what the user said,
 then the project's own pattern, then the framework's convention, then this kit's example.
 
-The stack is what `package.json` and the code use. The profile name `react` doesn't mean React: never write JSX or a
-hook in a project without React. The references are in `${CLAUDE_SKILL_DIR}/references/`.
+The stack is what `package.json` and the code use. The profile name `react` doesn't mean React. Write JSX only where
+the project's framework uses it (React, Preact, Solid); Vue, Svelte and Angular have their own forms (composable, rune
+module, service). The references are in `${CLAUDE_SKILL_DIR}/references/`.
+
+When the project uses a library that has a reference below, read that reference, also when there is code to follow:
+it holds that library's must-nots. Code to follow decides folders and names, the reference decides how the library is
+used safely. The profile's `CLAUDE.md` stack (website, dashboard, fullstack) is the project's choice: when it names a
+library that isn't installed yet, offer to install it before writing around it.
 
 ## 1. Learn how this project does it, before writing
 
@@ -22,7 +28,7 @@ pure validate function. Add no library without asking.
 
 | Installed | Reference |
 | --------- | --------- |
-| react-hook-form + zod (website and dashboard profiles) | `references/react-hook-form.md`, also beside an existing form |
+| `react-hook-form` + `zod` installed | `references/react-hook-form.md`, also beside an existing form |
 
 ## 2. Split it
 

@@ -1,7 +1,8 @@
 # react-hook-form + zod, only when they are installed
 
 `zodResolver` comes from `@hookform/resolvers/zod`. Paths and names below are the kit's example: an existing form's
-pattern wins. A field built by hand for a second feature moves to the shared UI folder, direction-safe.
+pattern wins. Dashboard: the UI kit's `Field`, `Input` and `Select` come first. A field built by hand for a second feature
+moves to the shared UI folder, direction-safe (`.claude/rules/rtl.md`).
 
 ## 1. Schema — `validations/validations.ts`
 

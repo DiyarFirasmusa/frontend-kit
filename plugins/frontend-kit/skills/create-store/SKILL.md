@@ -1,6 +1,6 @@
 ---
 name: create-store
-description: Create shared client state in any frontend stack (a store, slice, service, rune, signal or plain module) for a value that outlives a component, such as a preference, session, cart or draft, persisted when needed. Use whenever the user asks to add global, shared or persisted client state, or a store.
+description: Create shared client state in any frontend stack (a store, slice, service, rune, signal or plain module) for a value that outlives a component, such as a preference (theme, language, sidebar), session, cart, draft or data handed between routes, persisted when needed, with sign-out cleanup. Use whenever the user asks to add global, shared or persisted client state, or a store.
 ---
 
 # Create shared state
@@ -8,8 +8,14 @@ description: Create shared client state in any frontend stack (a store, slice, s
 The principles are fixed. The library, folder, file name, language and syntax are the project's: what the user said,
 then the project's own pattern, then the framework's convention, then this kit's example.
 
-The stack is what `package.json` and the code use. The profile name `react` doesn't mean React: never write JSX or a
-hook in a project without React. The references are in `${CLAUDE_SKILL_DIR}/references/`.
+The stack is what `package.json` and the code use. The profile name `react` doesn't mean React. Write JSX only where
+the project's framework uses it (React, Preact, Solid); Vue, Svelte and Angular have their own forms (composable, rune
+module, service). The references are in `${CLAUDE_SKILL_DIR}/references/`.
+
+When the project uses a library that has a reference below, read that reference, also when there is code to follow:
+it holds that library's must-nots. Code to follow decides folders and names, the reference decides how the library is
+used safely. The profile's `CLAUDE.md` stack (website, dashboard, fullstack) is the project's choice: when it names a
+library that isn't installed yet, offer to install it before writing around it.
 
 ## 1. Does it need shared state?
 
@@ -29,13 +35,14 @@ From those, take the library, language, folder, file name, export shape and regi
 other, take the one nearest to the feature and say so.
 
 When the project has no shared state yet, it lives with the feature that owns it, in the folders and file style the
-features already have. Use what is built in or already installed, with the one reference below. With no reference,
-use the framework's own convention. Ask before adding a dependency.
+features already have. App-wide preferences (theme, language, sidebar) go in the shared place. Use what is built in or
+already installed, with the one reference below. With no reference, use the framework's own convention. Ask before
+adding a dependency.
 
 | Framework | Reference |
 | --------- | --------- |
-| React with Zustand installed (website and dashboard profiles) | `references/zustand.md`, also beside an existing store |
-| React without it | `references/react.md` |
+| `zustand` installed | `references/zustand.md`, also beside an existing store |
+| React without a state library | `references/react.md` |
 | Vue | `references/vue.md` |
 | Svelte | `references/svelte.md` |
 | Angular | `references/angular.md` |

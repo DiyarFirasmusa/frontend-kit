@@ -2,6 +2,9 @@
 
 The router examples apply with TanStack Router. Paths and names are the kit's example: an existing hook's pattern wins.
 Pure helpers are not hooks: `hooks/<x>-actions.ts` or `utils/` in that layout. File `use-<thing>.ts`, named export `useX`.
+In that layout query and mutation hooks live in `hooks/query/`, utility hooks in `hooks/`; shared ones in the same folders
+under the shared place. The service takes the `signal` and passes it to the request, so a query that is no longer wanted
+is cancelled.
 
 ## 1. Query / mutation hooks (`hooks/query/`)
 
@@ -13,7 +16,7 @@ import { archiveOrder, fetchOrder } from '../services/orders.service'
 export function useOrder(orderId: string | undefined) {
   return useQuery({
     queryKey: qk.orders.detail(orderId ?? ''),
-    queryFn: () => fetchOrder(orderId ?? ''),
+    queryFn: ({ signal }) => fetchOrder(orderId ?? '', { signal }),
     enabled: Boolean(orderId),
   })
 }

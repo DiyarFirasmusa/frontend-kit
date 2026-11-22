@@ -1,7 +1,7 @@
 # React + TanStack Router, only when the project uses them
 
 The names and libraries below are the kit's example for that stack. An existing component's pattern wins.
-Website and dashboard profiles: the UI kit primitives (base-ui / shadcn-style) come first.
+Dashboard profile: the UI kit primitives (base-ui / shadcn-style) come first. Website: the project's own components first.
 
 ## Example
 

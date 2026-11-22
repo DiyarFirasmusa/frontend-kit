@@ -8,23 +8,29 @@ description: Create or extract a UI component in any frontend stack (React, Vue,
 The principles are fixed. The library, folder, file name, language and syntax are the project's: what the user said,
 then the project's own pattern, then the framework's convention, then this kit's example.
 
-The stack is what `package.json` and the code use. The profile name `react` doesn't mean React: never write JSX or a
-hook in a project without React. The references are in `${CLAUDE_SKILL_DIR}/references/`.
+The stack is what `package.json` and the code use. The profile name `react` doesn't mean React. Write JSX only where
+the project's framework uses it (React, Preact, Solid); Vue, Svelte and Angular have their own forms (composable, rune
+module, service). The references are in `${CLAUDE_SKILL_DIR}/references/`.
+
+When the project uses a library that has a reference below, read that reference, also when there is code to follow:
+it holds that library's must-nots. Code to follow decides folders and names, the reference decides how the library is
+used safely. The profile's `CLAUDE.md` stack (website, dashboard, fullstack) is the project's choice: when it names a
+library that isn't installed yet, offer to install it before writing around it.
 
 ## 1. Learn how this project does it, before writing
 
 1. Read "Where things are" in `.claude/rules/project.md` and the layout in `CLAUDE.md`, if they exist.
 2. **Does it exist?** Look in the shared components and in the feature. The UI kit's primitives come before your own.
 3. Open the nearest component of the same kind. Take its folder, file name, export, props, styling and text handling.
-4. **Where?** Used once: inline, or beside the page that uses it. Used by one feature: with that feature. By two: where
-   the project keeps shared components.
+4. **Where?** Used once: a local function in the file that uses it, its own file only when it is reused or that file
+   gets too long. Used by one feature: with that feature. By two: where the project keeps shared components.
 
 With no component to follow, read the one reference for the stack. With none, use the framework's own convention.
 
 | Stack | Reference |
 | ----- | --------- |
-| React with TanStack Router (website and dashboard profiles) | `references/react-tanstack.md`, also beside an existing component |
-| Any other | `references/other-stacks.md` |
+| `@tanstack/react-router` installed | `references/react-tanstack.md`, also beside an existing component |
+| Any other, Next.js included | `references/other-stacks.md` |
 
 ## 2. Rules in every stack
 

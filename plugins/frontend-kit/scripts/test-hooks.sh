@@ -1826,6 +1826,9 @@ printf 'x\n' >"$OWN/plugin-evil/skills/x.md"
 printf 'x\n' >"$OWN/outside.md"
 ln -s "$OWN/outside.md" "$OWN/plugin/skills/create-store/references/link.md"
 printf 'x\n' >"$OWN/plugin/skills/create-store/references/.env"
+printf 'x\n' >"$OWN/plugin/skills/create-store/references/.notes.md"
+mkdir -p "$OWN/trick/deep/er"
+ln -s "$OWN/trick/deep/er" "$OWN/trick/L"
 own_read() { # <allow | none | deny> <tool> <path>
   local got
   OUT="$(jq -n --arg t "$2" --arg f "$3" '{hook_event_name: "PreToolUse", tool_name: $t, tool_input: {file_path: $f, old_string: "a", new_string: "b"}}' \
@@ -1835,7 +1838,11 @@ own_read() { # <allow | none | deny> <tool> <path>
   [ "$got" = "$1" ] && ok || ko "own skill files: $2 ${3#"$OWN"/} should be $1" "got $got"
 }
 own_read allow Read "$OWN/plugin/skills/create-store/references/zustand.md"
-own_read allow Read "$OWN/plugin/skills/create-store/../create-hook/references/other-stacks.md"
+own_read none Read "$OWN/plugin/skills/create-store/../create-hook/references/other-stacks.md"
+own_read none Read "$OWN/plugin/skills/create-store/./references/zustand.md"
+own_read none Read "$OWN/plugin/skills/create-store//references/zustand.md"
+own_read none Read "$OWN/plugin/skills/create-store/references/.notes.md"
+own_read none Read "$OWN/trick/L/../../plugin/skills/create-store/references/zustand.md"
 own_read none Read "$OWN/plugin/skills/create-store/references/link.md"
 own_read none Read "$OWN/plugin/skills/../scripts/lib.sh"
 own_read none Read "$OWN/plugin/skills/create-store/references/../../../../outside.md"
@@ -1845,6 +1852,13 @@ own_read none Read "$OWN/plugin-evil/skills/x.md"
 own_read none Read "$OWN/outside.md"
 own_read none Read "skills/create-store/references/zustand.md"
 own_read deny Read "$OWN/plugin/skills/create-store/references/.env"
+# Installed: the plugin lives under ~/.claude/plugins/, a dot folder, and its files must still open.
+INSTALLED="$OWN/home/.claude/plugins/cache/frontend-kit/frontend-kit/9.9.9"
+mkdir -p "$(dirname "$INSTALLED")"
+cp -R "$PLUGIN" "$INSTALLED"
+OUT="$(jq -n --arg f "$INSTALLED/skills/create-store/references/zustand.md" '{hook_event_name: "PreToolUse", tool_name: "Read", tool_input: {file_path: $f}}' \
+  | CLAUDE_PROJECT_DIR="$OWN/project" "$INSTALLED/scripts/guard-paths.sh" 2>/dev/null)"
+printf '%s' "$OUT" | grep -q '"allow"' && ok || ko "own skill files: an installed plugin (under a dot folder) reads its own references" "$OUT"
 OUT="$(jq -n --arg f "$OWN/plugin/skills/create-store/SKILL.md" '{hook_event_name: "PreToolUse", tool_name: "Edit", tool_input: {file_path: $f, old_string: "a", new_string: "b"}}' \
   | CLAUDE_PROJECT_DIR="$OWN/project" "$OWN/plugin/scripts/guard-paths.sh" 2>/dev/null)"
 printf '%s' "$OUT" | grep -q '"allow"' && ko "own skill files: an edit is never pre-approved" "$OUT" || ok

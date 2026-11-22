@@ -84,17 +84,21 @@ if [ "$TOOL" = Grep ]; then
   esac
 fi
 
-# A skill's supporting file: the path must really lie below this plugin's skills/ once links and .. are resolved.
+# A skill's supporting file: the path must really lie below this plugin's skills/ once links are resolved.
 # (`allowed-tools` can grant the same, but then every use of the skill needs the user's approval first.)
+# A path with a . or .. step or a // gets no approval: ${CLAUDE_SKILL_DIR} paths never need one, and `link/..`
+# means the parent of the link's target on disk, which no text clean-up can tell.
+# Dot names are refused only below skills/: the plugin itself is installed under ~/.claude/plugins/.
 allow_own_skill_file() {
   local given skills real
   given="$(hook_field '.tool_input.file_path')"
   case "$given" in /*) ;; *) return 0 ;; esac
+  case "$given/" in */../* | */./* | *//*) return 0 ;; esac
   skills="$(cd "$(dirname "$0")/../skills" 2>/dev/null && pwd -P)" || return 0
   case "$skills" in /?*/skills) ;; *) return 0 ;; esac
-  real="$(hook_physical_path "$(hook_normalise_path "$given")")"
-  case "$real" in "$skills"/*) ;; *) return 0 ;; esac
-  case "$real" in */../* | */.. | */.*) return 0 ;; esac
+  real="$(hook_physical_path "$given")"
+  case "$real" in "$skills"/?*) ;; *) return 0 ;; esac
+  case "/${real#"$skills"/}/" in */.*) return 0 ;; esac
   [ -f "$real" ] || return 0
   jq -n '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "allow", permissionDecisionReason: "frontend-kit: a supporting file of the plugin\u0027s own skill"}}' 2>/dev/null
   return 0
