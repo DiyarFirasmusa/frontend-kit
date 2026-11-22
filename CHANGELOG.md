@@ -3,6 +3,35 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.15.0
+Needs Claude Code 2.1.295 or later. Run `/frontend-kit:setup` again: rules and settings already copied into a project do
+not update by themselves.
+
+- **The gate works in any folder.** Without `srcDirs` (or when none of its folders exists) the Stop gate and post-edit see
+  code wherever it is: before, code outside src, app, pages, components and lib passed a failing typecheck unseen. Vue,
+  Svelte, Astro, HTML and SCSS files are formatted and linted. Vue and Svelte are typechecked with `vue-tsc` and
+  `svelte-check` when installed (a sound project was blocked by tsc before). Detection knows Vue, Nuxt, SvelteKit,
+  Angular, Astro and Solid. An ESLint without a config is a note, not an error.
+- **Working modes** (`/frontend-kit:mode`): maintenance, upgrade, freeze, and per checkout hotfix, read-only and prototype,
+  beside new, existing and refactor. The default adds nothing. A guard rail, not a sandbox. New skill `upgrade-mode`, new
+  output style "Audit report".
+- **Agents:** four new read-only ones (frontend-security-reviewer, i18n-rtl-reviewer, seo-auditor, upgrade-analyst). Every
+  agent's tools match its prompt, the plugin's own MCP tool names work, and the prompts follow the project's stack and
+  languages. `planner` no longer has Bash.
+- **Rules:** five new shared ones (accessibility, security, formatting, dependencies, typescript) and two for the react
+  profile that setup copies only for their stack (nextjs, react-router). Corrected: stale library APIs, `noindex` without
+  a robots `Disallow`, Tailwind logical names, Arabic plurals, WCAG 2.2 target size.
+- **Guards:** live hosts are seen behind `npx` and the like and in the plugin's own browser tools. A recursive delete
+  through a variable is refused (`$CLAUDE_PROJECT_DIR` is empty in the Bash tool). Shell writes follow the file rules, a
+  recursive search over a `.env` is refused, and so are code piped into a shell, publish and deploy, another package
+  manager's install, `git stash drop`, `gh release create` and `gh workflow run`. Nine switches under `guards` in
+  `frontend-kit.json`. A change that loosens the kit's protections is put to the user, and refused where nobody can be
+  asked. Fewer false refusals: `ENV=…`, a worktree from main, read-only registry commands, Monitor WebSockets.
+- **Settings templates:** installs are asked for, the `git fetch` and `git stash` pre-approvals are narrow, more secret
+  files are denied, and `Edit(./server/**)` left the deny list (`protectedPaths` still holds it).
+- Not yet covered: `.astro` files without the project's own typecheck, lint of files changed through Bash, guards on
+  Windows. The four new agents' evals have not been run.
+
 ## 1.14.3
 - The skill hint understands Arabic: standard, Iraqi, English words in Arabic letters, and English inside Arabic. One
   spelling for hamza forms, ة/ه, ى/ي and diacritics; attached prefixes and endings come off (`skill-triggers-ar.txt`,
