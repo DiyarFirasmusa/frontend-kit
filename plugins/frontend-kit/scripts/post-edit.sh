@@ -1,12 +1,12 @@
 #!/bin/bash
 # PostToolUse(Edit|Write|MultiEdit): formats and lints the file Claude just changed.
 #
-#   <srcDir>/**/*.{ts,tsx,js,jsx,css,json} → the project's formatter writes its formatting
+#   source and style files, locale JSON    → the project's formatter writes its formatting
 #                                            (oxfmt, prettier or biome, whichever is installed)
-#   <srcDir>/**/*.{ts,tsx,js,jsx}          → the project's linter (oxlint, eslint or biome); errors go back to
+#   ts, js, vue, svelte, astro             → the project's linter (oxlint, eslint or biome); errors go back to
 #                                            Claude (exit 2), oxlint warnings as context
 #   <srcDir>/**/locales/*.json             → the i18n validator; violations go back to Claude (exit 2)
-# <srcDir> is srcDirs / srcDir in .claude/frontend-kit.json (default src). {"commands": {"formatFile": "...",
+# Which files: srcDirs / srcDir in .claude/frontend-kit.json, else the code wherever it is (kit_watched). {"commands": {"formatFile": "...",
 # "lintFile": "..."}} replaces the detection; the file path is appended to the command.
 #
 # PostToolUse can't undo the edit: exit 2 only puts stderr in front of Claude so it fixes the problem.
@@ -19,9 +19,9 @@ FILE="$(hook_field '.tool_input.file_path')"
 REL="$(hook_rel_path "$FILE")"
 [ -f "$HOOK_ROOT/$REL" ] || exit 0
 
-kit_in_src "$REL" || exit 0
+kit_watched "$REL" || exit 0
 case "$REL" in
-  *.ts | *.tsx | *.js | *.jsx | *.mjs | *.css | *.json) ;;
+  *.ts | *.tsx | *.js | *.jsx | *.mjs | *.cjs | *.mts | *.cts | *.vue | *.svelte | *.astro | *.html | *.css | *.scss | *.sass | *.less | *.json) ;;
   *) exit 0 ;;
 esac
 
@@ -54,7 +54,13 @@ WARNINGS=""
 LINT_CMD="$(kit_get '.commands.lintFile' '')"
 LINTER="$(kit_tool oxlint eslint biome)"
 case "$REL" in
-  *.ts | *.tsx | *.js | *.jsx | *.mjs)
+  *.vue | *.svelte | *.astro)
+    # biome fails on a file type it is not set up for: only a configured command lints these then.
+    [ "$LINTER" = biome ] && LINTER=""
+    ;;
+esac
+case "$REL" in
+  *.ts | *.tsx | *.js | *.jsx | *.mjs | *.cjs | *.mts | *.cts | *.vue | *.svelte | *.astro)
     if [ -n "$LINT_CMD" ]; then
       LINT="$(sh -c "$LINT_CMD \"\$0\"" "$REL" 2>&1)" || PROBLEMS="lint errors in $REL (fix them; don't silence them):
 $(printf '%s\n' "$LINT" | grep -vE '^\s*$' | tail -n 30)"
@@ -112,7 +118,7 @@ esac
 
 # The kit's hard rule "no any, no casts, no ts-ignore" does not depend on the project's linter: say so right away.
 case "$REL" in
-  *.ts | *.tsx)
+  *.ts | *.tsx | *.mts | *.cts | *.vue | *.svelte | *.astro)
     ANY_HITS="$(grep -nE '(:[[:space:]]*any\b|<any>|\bas any\b|\bas unknown as\b|@ts-ignore|@ts-expect-error)' "$REL" 2>/dev/null | grep -vE '^[0-9]+:[[:space:]]*(//|\*)' | head -n 8)"
     if [ -n "$ANY_HITS" ]; then
       WARNINGS="${WARNINGS:+$WARNINGS

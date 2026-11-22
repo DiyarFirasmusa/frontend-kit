@@ -42,22 +42,31 @@ else
   esac
 fi
 
-FRAMEWORK="$(first "Next.js:next" "TanStack Start:@tanstack/react-start" "React Router framework:@react-router/dev" "Remix:@remix-run/react" "Expo:expo" "Gatsby:gatsby" "Create React App:react-scripts" "Vite:vite")"
+FRAMEWORK="$(first "Next.js:next" "TanStack Start:@tanstack/react-start" "React Router framework:@react-router/dev" "Remix:@remix-run/react" "Expo:expo" "Gatsby:gatsby" "Create React App:react-scripts" \
+  "Nuxt:nuxt" "SvelteKit:@sveltejs/kit" "Angular:@angular/core" "Astro:astro")"
+# A UI library names the app only when it isn't a React one that merely has a tool built on that library.
+[ -n "$FRAMEWORK" ] || has react || FRAMEWORK="$(first "Vue:vue" "Svelte:svelte" "Solid:solid-js")"
+[ -n "$FRAMEWORK" ] || FRAMEWORK="$(first "Vite:vite")"
 case "$FRAMEWORK" in
   "Next.js") ROUTER="Next.js router" ;;
   "TanStack Start") ROUTER="TanStack Router" ;;
   "React Router framework") ROUTER="React Router" ;;
   Remix) ROUTER="Remix" ;;
+  Nuxt) ROUTER="Nuxt pages" ;;
+  SvelteKit) ROUTER="SvelteKit" ;;
+  Astro) ROUTER="Astro pages" ;;
+  Angular) ROUTER="$(first "Angular Router:@angular/router")" ;;
+  Vue) ROUTER="$(first "Vue Router:vue-router")" ;;
   *) ROUTER="$(first "TanStack Router:@tanstack/react-router" "React Router:react-router-dom" "React Router:react-router" "Wouter:wouter")" ;;
 esac
-DATA="$(first "TanStack Query:@tanstack/react-query" "SWR:swr" "Redux Toolkit:@reduxjs/toolkit" "Apollo:@apollo/client" "urql:urql")"
-STATE="$(first "Zustand:zustand" "Redux:@reduxjs/toolkit" "Redux:redux" "Jotai:jotai" "Recoil:recoil" "MobX:mobx")"
+DATA="$(first "TanStack Query:@tanstack/react-query" "SWR:swr" "Redux Toolkit:@reduxjs/toolkit" "Apollo:@apollo/client" "urql:urql" "TanStack Query:@tanstack/vue-query" "TanStack Query:@tanstack/svelte-query" "TanStack Query:@tanstack/angular-query-experimental")"
+STATE="$(first "Zustand:zustand" "Redux:@reduxjs/toolkit" "Redux:redux" "Jotai:jotai" "Recoil:recoil" "MobX:mobx" "Pinia:pinia" "Vuex:vuex" "NgRx:@ngrx/signals" "NgRx:@ngrx/store" "NGXS:@ngxs/store")"
 STYLING="$(first "Tailwind:tailwindcss" "styled-components:styled-components" "Emotion:@emotion/react" "MUI:@mui/material" "Sass:sass")"
 TESTS="$(first "vitest:vitest" "jest:jest")"
 E2E="$(first "playwright:@playwright/test" "cypress:cypress")"
 LINT="$(first "oxlint:oxlint" "eslint:eslint" "biome:@biomejs/biome")"
 FORMAT="$(first "oxfmt:oxfmt" "prettier:prettier" "biome:@biomejs/biome")"
-I18N="$(first "i18next:react-i18next" "i18next:i18next" "next-intl:next-intl" "react-intl:react-intl" "formatjs:@formatjs/intl")"
+I18N="$(first "i18next:react-i18next" "i18next:i18next" "next-intl:next-intl" "react-intl:react-intl" "formatjs:@formatjs/intl" "vue-i18n:vue-i18n" "Transloco:@jsverse/transloco" "svelte-i18n:svelte-i18n")"
 FORMS="$(first "react-hook-form:react-hook-form" "formik:formik" "tanstack-form:@tanstack/react-form")"
 
 TS=false
@@ -68,6 +77,25 @@ SOLUTION=false
 
 SRC=()
 for dir in src app pages components lib; do [ -d "$PROJECT/$dir" ] && SRC+=("$dir"); done
+# And the project's own layout: a top folder with UI files, or with any code when none of the usual folders exists.
+KNOWN=${#SRC[@]}
+for path in "$PROJECT"/*/; do
+  [ -d "$path" ] || continue
+  dir="$(basename "$path")"
+  case "$dir" in
+    src | app | pages | components | lib | node_modules | dist | build | out | coverage | vendor | public | static | docs) continue ;;
+    e2e | test | tests | __tests__ | cypress | scripts | examples | evals | playwright-report | test-results | storybook-static) continue ;;
+  esac
+  workspace=""
+  for ws in "${WS_DIRS[@]:-}"; do case "$ws/" in "$dir"/*) workspace=1 ;; esac; done
+  [ -z "$workspace" ] || continue
+  if [ "$KNOWN" -eq 0 ]; then
+    found="$(find "$path" \( -name node_modules -o -name dist -o -name '.?*' \) -prune -o -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.vue' -o -name '*.svelte' -o -name '*.astro' \) -print 2>/dev/null | head -n 1)"
+  else
+    found="$(find "$path" \( -name node_modules -o -name dist -o -name '.?*' \) -prune -o -type f \( -name '*.tsx' -o -name '*.jsx' -o -name '*.vue' -o -name '*.svelte' -o -name '*.astro' \) -print 2>/dev/null | head -n 1)"
+  fi
+  [ -n "$found" ] && SRC+=("$dir")
+done
 # Workspace packages keep their code in <package>/src (or app/, pages/): list those instead of guessing the root.
 APPS_JSON="[]"
 for dir in "${WS_DIRS[@]:-}"; do
@@ -89,6 +117,10 @@ SRC_JSON="$(printf '%s\n' "${SRC[@]:-}" | jq -R . | jq -s 'map(select(. != ""))'
 
 TYPECHECK=""
 if [ -n "$(script_of typecheck)" ]; then TYPECHECK="$RUN --silent typecheck"
+elif [ "$TS" = true ] && has vue-tsc; then
+  if [ "$SOLUTION" = true ]; then TYPECHECK="$EXEC vue-tsc -b"; else TYPECHECK="$EXEC vue-tsc --noEmit"; fi
+elif [ "$TS" = true ] && has svelte-check; then
+  TYPECHECK="$EXEC svelte-check --tsconfig ./tsconfig.json"
 elif [ "$TS" = true ]; then
   if [ "$SOLUTION" = true ]; then TYPECHECK="$EXEC tsc -b"; else TYPECHECK="$EXEC tsc --noEmit"; fi
 fi
@@ -99,7 +131,8 @@ case "$TESTS" in
 esac
 DEV_PORT="$(script_of dev | grep -oE -- '--port[ =][0-9]+|-p [0-9]+' | grep -oE '[0-9]+' | head -n1)"
 if [ -z "$DEV_PORT" ]; then
-  case "$FRAMEWORK" in "Next.js" | "TanStack Start" | "Create React App" | Remix | "React Router framework") DEV_PORT=3000 ;; Vite) DEV_PORT=5173 ;; Gatsby) DEV_PORT=8000 ;; *) DEV_PORT="" ;; esac
+  case "$FRAMEWORK" in "Next.js" | "TanStack Start" | "Create React App" | Remix | "React Router framework" | Nuxt) DEV_PORT=3000 ;; Vite | SvelteKit) DEV_PORT=5173 ;; Angular) DEV_PORT=4200 ;; Astro) DEV_PORT=4321 ;;
+    Vue | Svelte | Solid) if has vite; then DEV_PORT=5173; fi ;; Gatsby) DEV_PORT=8000 ;; *) DEV_PORT="" ;; esac
 fi
 
 jq -n \

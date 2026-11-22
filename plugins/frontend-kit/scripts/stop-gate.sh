@@ -1,5 +1,5 @@
 #!/bin/bash
-# Stop: the quality gate Claude can't skip. When src/ changed during this session (uncommitted, or committed
+# Stop: the quality gate Claude can't skip. When the source changed during this session (uncommitted, or committed
 # since the session started or the gate last passed), it runs
 #   the typecheck: commands.typecheck, else tsc --noEmit -p tsconfig.json
 #   the related tests: commands.relatedTests (the changed files are appended), else vitest related or jest --findRelatedTests
@@ -51,10 +51,8 @@ REVIEW_DONE="$(read_session '.reviewDone')"
 SETTLE_SECONDS="${HOOK_SETTLE_SECONDS:-30}"
 MAIN_EDITS="$HOOK_STATE_DIR/sessions/${SESSION_ID:-unknown}.main-edits"
 if [ "$SETTLE_SECONDS" -gt 0 ] && [ ! -s "$MAIN_EDITS" ] && command -v perl >/dev/null 2>&1; then
-  SRC_PATHS=()
-  while IFS= read -r src_dir; do [ -d "$HOOK_ROOT/$src_dir" ] && SRC_PATHS+=("$HOOK_ROOT/$src_dir"); done <<<"$KIT_SRC_DIRS"
-  NEWEST_AGE=""
-  [ ${#SRC_PATHS[@]} -gt 0 ] && NEWEST_AGE="$(perl -MFile::Find -e 'my $newest = 0; find(sub { return unless -f $_; my $mtime = (stat _)[9]; $newest = $mtime if $mtime > $newest }, @ARGV); print time() - $newest' "${SRC_PATHS[@]}" 2>/dev/null)"
+  # The age of the newest changed file, wherever it is.
+  NEWEST_AGE="$(printf '%s\n' "$CHANGED" | ROOT="$HOOK_ROOT" perl -ne 'chomp; my $path = "$ENV{ROOT}/$_"; next unless -f $path; my $mtime = (stat _)[9]; $newest = $mtime if $mtime > ($newest // 0); END { print time() - $newest if $newest }' 2>/dev/null)"
   if [ -n "$NEWEST_AGE" ] && [ "$NEWEST_AGE" -lt "$SETTLE_SECONDS" ]; then
     exit 0
   fi
@@ -82,7 +80,7 @@ fi
 
 TEST_FILES=()
 while IFS= read -r file; do
-  case "$file" in *.ts | *.tsx | *.js | *.jsx) [ -f "$file" ] && TEST_FILES+=("$file") ;; esac
+  case "$file" in *.ts | *.tsx | *.js | *.jsx | *.mjs | *.cjs | *.mts | *.cts | *.vue | *.svelte | *.astro) [ -f "$file" ] && TEST_FILES+=("$file") ;; esac
 done <<<"$CHANGED"
 # {"stopGate": {"tests": "all"}} runs the whole unit suite (commands.allTests, default `vitest run`)
 # instead of only the tests related to the changed files.
@@ -208,7 +206,7 @@ fi
 
 "$(dirname "$0")/record-gate.sh" fail stop-hook "stop gate failed on $FILE_COUNT changed src files"
 {
-  echo "Quality gate failed on the src/ changes from this session. Fix the cause (no any, casts or skipped tests), then finish:"
+  echo "Quality gate failed on the source changes from this session. Fix the cause (no any, casts or skipped tests), then finish:"
   echo
   printf '%s\n' "$FAILURES"
 } >&2

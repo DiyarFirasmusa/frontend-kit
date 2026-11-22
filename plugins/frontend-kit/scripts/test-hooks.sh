@@ -1507,6 +1507,7 @@ grep -qx 'src/n.ts' "$NP/web/related.txt" 2>/dev/null && ok || ko "stop-gate wor
 
 CW="$WORK/committed"
 make_repo "$CW" feature/committed
+rm -rf "$CW/scripts" # code outside src is watched too: these tests are about what git brings in
 export CLAUDE_PROJECT_DIR="$CW"
 cw_config() { printf '{"stopGate":{"review":%s},"commands":{"typecheck":"%s","relatedTests":"true"}}\n' "$1" "$2" >"$CW/.claude/frontend-kit.json"; }
 cw_start() { run_hook session-context.sh "{\"hook_event_name\":\"SessionStart\",\"session_id\":\"$1\",\"source\":\"startup\"}"; }
@@ -1560,6 +1561,195 @@ git -C "$CW" update-ref refs/remotes/origin/main HEAD
 jq '.lastGated = "" | .baseline = "none"' "$CW/.claude/state/sessions/c-pull.json" >"$WORK/cw.json" && mv "$WORK/cw.json" "$CW/.claude/state/sessions/c-pull.json"
 run_hook stop-gate.sh "$(stop_input c-pull false)"
 [ "$CODE" -eq 0 ] && ok || ko "commits that are already on the default branch are not gated" "exit $CODE: $ERR"
+
+# --- any layout, any stack: the gate sees the code wherever it is --------------------------------------
+
+LAY="$WORK/layouts"
+mkdir -p "$LAY"
+# layout_repo <name> [config json] → an empty project with one commit and a typecheck that always fails
+layout_repo() {
+  LR="$LAY/$1"
+  mkdir -p "$LR/.claude"
+  git -C "$LR" init -q -b task
+  git -C "$LR" config user.email test@example.com
+  git -C "$LR" config user.name test
+  printf '{"name":"x"}\n' >"$LR/package.json"
+  printf '.claude/state/\n' >"$LR/.gitignore"
+  printf '%s\n' "${2:-"{}"}" | jq '.stopGate = {review: false} | .commands = ((.commands // {}) + {typecheck: "echo layout-typecheck-failed; exit 1"})' >"$LR/.claude/frontend-kit.json"
+  git -C "$LR" add package.json .gitignore
+  git -C "$LR" commit -q -m init
+  export CLAUDE_PROJECT_DIR="$LR"
+}
+layout_write() { mkdir -p "$(dirname "$LR/$1")" && printf '%s\n' "${2:-export const x = 1}" >"$LR/$1"; }
+layout_gated() { # <yes|no> <what>
+  run_hook stop-gate.sh "$(stop_input "layout-$RANDOM" false)"
+  if [ "$1" = yes ]; then
+    [ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'layout-typecheck-failed' && ok || ko "gated: $2" "exit $CODE: $ERR"
+  else
+    [ "$CODE" -eq 0 ] && ok || ko "not gated: $2" "exit $CODE: $ERR"
+  fi
+}
+
+N=0
+for file in client/ui/cart.tsx frontend/app/cart.ts web/contexts/cart/cart.facade.ts ui/areas/cart/cart.svelte \
+  ui/areas/cart/cart.svelte.ts modules/cart/Cart.vue browser/topics/cart_state.js main.js site/pages/index.astro \
+  packages/web/client/a.jsx web/shell/top-bar.component.html theme/tokens.scss 'الواجهة/سلة.tsx' 'client/my cart/$id.tsx' \
+  client/build/steps.ts client/out/print.ts server/handler.mts tools/run.cjs; do
+  N=$((N + 1))
+  layout_repo "seen-$N"
+  layout_write "$file"
+  layout_gated yes "$file"
+done
+
+for file in node_modules/pkg/index.js packages/web/node_modules/pkg/a.ts dist/app.js packages/web/dist/app.js build/main.js out/a.js \
+  coverage/report.js .next/server/a.js .svelte-kit/generated/a.ts .nuxt/a.ts .output/a.mjs .angular/cache/a.js .claude/state/a.ts \
+  README.md docs/notes.txt client/vendor.min.js playwright-report/index.html; do
+  N=$((N + 1))
+  layout_repo "unseen-$N"
+  layout_write "$file"
+  layout_gated no "$file"
+done
+
+layout_repo ignored
+printf 'secret-out/\n' >>"$LR/.gitignore"
+git -C "$LR" commit -q -am ignore
+layout_write secret-out/a.ts
+layout_gated no "an ignored file"
+
+# A folder the kit knows keeps every kind of file it had, and no longer hides the code beside it.
+layout_repo known-data
+layout_write src/data.json '{}'
+layout_gated yes "any file under src"
+layout_repo known-beside
+layout_write lib/util.ts
+git -C "$LR" add lib && git -C "$LR" commit -q -m lib
+layout_write client/ui/cart.tsx
+layout_gated yes "code beside a known folder"
+
+# Configured folders are the user's word, until none of them exists.
+layout_repo configured '{"srcDirs":["app"]}'
+layout_write app/a.ts
+git -C "$LR" add app && git -C "$LR" commit -q -m app
+layout_write scripts/release.ts
+layout_gated no "outside configured folders that exist"
+layout_repo configured-gone '{"srcDirs":["src"]}'
+layout_write client/ui/cart.tsx
+layout_gated yes "configured folders that don't exist"
+layout_repo configured-empty '{"srcDirs":[]}'
+layout_write client/ui/cart.tsx
+layout_gated yes "an empty srcDirs"
+
+layout_repo committed
+run_hook session-context.sh '{"hook_event_name":"SessionStart","session_id":"layout-committed"}'
+layout_write client/ui/cart.tsx
+git -C "$LR" add client && git -C "$LR" commit -q -m cart
+run_hook stop-gate.sh "$(stop_input layout-committed false)"
+[ "$CODE" -eq 2 ] && ok || ko "gated: committed work outside src" "exit $CODE: $ERR"
+
+layout_repo deleted
+layout_write client/ui/old.ts
+git -C "$LR" add client && git -C "$LR" commit -q -m old
+rm "$LR/client/ui/old.ts"
+layout_gated yes "a deletion outside src"
+
+layout_repo before-session
+layout_write client/ui/cart.tsx
+run_hook session-context.sh '{"hook_event_name":"SessionStart","session_id":"layout-before"}'
+run_hook stop-gate.sh "$(stop_input layout-before false)"
+[ "$CODE" -eq 0 ] && ok || ko "not gated: work outside src from before the session" "exit $CODE: $ERR"
+
+layout_repo no-commit
+rm -rf "$LR/.git"
+git -C "$LR" init -q -b task
+layout_write client/ui/cart.tsx
+layout_gated yes "no commit yet"
+
+layout_repo in-subfolder
+rm -rf "$LR/.git"
+mkdir "$LAY/repo-above"
+mv "$LR" "$LAY/repo-above/app"
+git -C "$LAY/repo-above" init -q -b task
+LR="$LAY/repo-above/app"
+export CLAUDE_PROJECT_DIR="$LR"
+layout_write client/ui/cart.tsx
+layout_gated yes "a project inside a bigger repository"
+
+# The pause for a background agent works outside src, and ends for the main session's own edit, whatever its type.
+for file in client/ui/cart.tsx modules/cart/Cart.vue ui/cart.svelte; do
+  N=$((N + 1))
+  layout_repo "settle-$N"
+  layout_write "$file"
+  HOOK_SETTLE_SECONDS=30 run_hook stop-gate.sh "$(stop_input layout-settle false)"
+  [ "$CODE" -eq 0 ] && ok || ko "gate waits for an agent mid-edit: $file" "exit $CODE"
+  run_hook post-edit.sh "$(jq -n --arg f "$LR/$file" '{tool_name: "Write", session_id: "layout-settle", tool_input: {file_path: $f}}')"
+  HOOK_SETTLE_SECONDS=30 run_hook stop-gate.sh "$(stop_input layout-settle false)"
+  [ "$CODE" -eq 2 ] && ok || ko "gate takes the main session's own edit at once: $file" "exit $CODE"
+done
+
+# post-edit: the project's formatter and linter get the files of every stack.
+for file in client/ui/a.tsx modules/Cart.vue ui/Cart.svelte site/index.astro web/a.component.html theme/a.scss tools/a.cjs; do
+  N=$((N + 1))
+  layout_repo "edit-$N" '{"commands":{"formatFile":"echo formatted >>.claude/format.log; :"}}'
+  layout_write "$file"
+  run_hook post-edit.sh "$(edit_input "$LR/$file")"
+  [ -s "$LR/.claude/format.log" ] && ok || ko "post-edit formats $file" "exit $CODE"
+done
+for file in modules/Cart.vue ui/Cart.svelte site/index.astro tools/a.cjs server/a.mts; do
+  N=$((N + 1))
+  layout_repo "lint-$N" '{"commands":{"formatFile":":","lintFile":"echo layout-lint-failed; exit 1; :"}}'
+  layout_write "$file"
+  run_hook post-edit.sh "$(edit_input "$LR/$file")"
+  [ "$CODE" -eq 2 ] && ok || ko "post-edit lints $file" "exit $CODE"
+done
+layout_repo biome-vue
+mkdir -p "$LR/node_modules/.bin"
+printf '#!/bin/sh\n[ "$1" = format ] && exit 0\necho "No files were processed"; exit 1\n' >"$LR/node_modules/.bin/biome"
+chmod +x "$LR/node_modules/.bin/biome"
+layout_write modules/Cart.vue
+run_hook post-edit.sh "$(edit_input "$LR/modules/Cart.vue")"
+[ "$CODE" -eq 0 ] && ok || ko "post-edit does not fail a file type biome skips" "exit $CODE: $ERR"
+
+# The TypeScript-only guard still means the source folders, not every config file.
+layout_repo ts-guard
+printf '{}\n' >"$LR/tsconfig.json"
+run_hook guard-paths.sh "$(jq -n --arg f "$LR/vite.config.js" '{tool_name: "Write", tool_input: {file_path: $f}}')"
+[ "$(decision)" = allow ] && ok || ko "a root config file may be JavaScript" "$OUT"
+
+# The typecheck that can read the files of the stack.
+for pair in 'vue-tsc:vue-tsc --noEmit' 'svelte-check:svelte-check' 'tsc:tsc --noEmit -p tsconfig.json'; do
+  tool="${pair%%:*}"
+  N=$((N + 1))
+  layout_repo "check-$N"
+  printf '{}\n' >"$LR/.claude/frontend-kit.json"
+  printf '{}\n' >"$LR/tsconfig.json"
+  mkdir -p "$LR/node_modules/.bin"
+  for bin in "$tool" tsc; do printf '#!/bin/sh\nexit 0\n' >"$LR/node_modules/.bin/$bin"; chmod +x "$LR/node_modules/.bin/$bin"; done
+  got="$(bash -c '. "$1/lib.sh"; kit_typecheck_cmd' _ "$HOOKS")"
+  case "$got" in "${pair#*:}"*) ok ;; *) ko "typecheck with $tool" "$got" ;; esac
+done
+
+# detect_case <name> <dependency> <file> <framework> <state> <srcDirs json>
+detect_case() {
+  mkdir -p "$LAY/detect-$1/$(dirname "$3")"
+  jq -n --arg d "$2" '{dependencies: ($d | split(",") | map({(.): "1"}) | add)}' >"$LAY/detect-$1/package.json"
+  printf 'x\n' >"$LAY/detect-$1/$3"
+  got="$(bash "$HOOKS/kit-detect-stack.sh" "$LAY/detect-$1" | jq -c '[.stack.framework, .stack.state, .srcDirs]')"
+  want="$(jq -nc --arg f "$4" --arg s "$5" --argjson d "$6" '[$f, $s, $d]')"
+  [ "$got" = "$want" ] && ok || ko "detect $1" "got $got, want $want"
+}
+detect_case vue 'vue,pinia,vite' frontend/modules/Cart.vue Vue Pinia '["frontend"]'
+detect_case nuxt 'nuxt,vue' app/pages/index.vue Nuxt '' '["app"]'
+detect_case sveltekit '@sveltejs/kit,svelte,vite' src/routes/+page.svelte SvelteKit '' '["src"]'
+detect_case svelte 'svelte,vite' ui/App.svelte Svelte '' '["ui"]'
+detect_case angular '@angular/core,@ngrx/store' web/app.component.ts Angular NgRx '["web"]'
+detect_case astro 'astro' site/index.astro Astro '' '["site"]'
+detect_case solid 'solid-js,vite' client/App.tsx Solid '' '["client"]'
+detect_case react-own 'react,vite' client/ui/cart.tsx Vite '' '["client"]'
+detect_case react-beside 'react,vite,zustand' 'client/ui/cart.tsx' Vite Zustand '["client"]'
+mkdir -p "$LAY/detect-beside/src"
+detect_case beside 'react,vite' client/ui/cart.tsx Vite '' '["src","client"]'
+detect_case vue-tool 'react,vue,vite' src/App.tsx Vite '' '["src"]'
+detect_case plain 'left-pad' browser/main.js '' '' '["browser"]'
 
 # --- settings templates: no pre-approved command that can run any other --------------------------------
 

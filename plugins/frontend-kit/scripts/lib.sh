@@ -38,6 +38,8 @@ kit_get() {
   printf '%s' "${value:-$2}"
 }
 
+KIT_SRC_UNSET="" # 1 when no source folder is configured (set below)
+
 # kit_list '.liveHosts' → one value per line (empty when unset).
 kit_list() {
   [ -f "$KIT_CONFIG" ] && jq -r "($1 // [])[]" "$KIT_CONFIG" 2>/dev/null
@@ -65,6 +67,7 @@ IFS=$'\036' read -r RAW_SRC_DIRS RAW_SRC_DIR RAW_NAME RAW_MODE RAW_BRANCH RAW_RE
 KIT_SRC_DIRS="$(printf '%s' "$RAW_SRC_DIRS" | tr '\037' '\n')"
 [ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="$RAW_SRC_DIR"
 if [ -z "$KIT_SRC_DIRS" ]; then
+  KIT_SRC_UNSET=1
   # Nothing configured: watch the folders that exist (Next.js and React Router keep code in app/, not src/).
   for dir in src app pages components lib; do
     [ -d "$HOOK_ROOT/$dir" ] && KIT_SRC_DIRS="${KIT_SRC_DIRS:+$KIT_SRC_DIRS
@@ -109,6 +112,16 @@ kit_typecheck_cmd() {
   if [ -f "$HOOK_ROOT/package.json" ] && jq -e '.scripts.typecheck' "$HOOK_ROOT/package.json" >/dev/null 2>&1; then
     printf '%s' 'npm run --silent typecheck'
     return 0
+  fi
+  # tsc can't read .vue or .svelte files: the stack's own checker does.
+  if [ -f "$HOOK_ROOT/tsconfig.json" ]; then
+    case "$(kit_tool vue-tsc svelte-check)" in
+      vue-tsc)
+        if grep -q '"references"' "$HOOK_ROOT/tsconfig.json"; then printf '%s' 'vue-tsc -b'; else printf '%s' 'vue-tsc --noEmit'; fi
+        return 0
+        ;;
+      svelte-check) printf '%s' 'svelte-check --tsconfig ./tsconfig.json'; return 0 ;;
+    esac
   fi
   [ -x "$HOOK_ROOT/node_modules/.bin/tsc" ] || return 0
   if grep -q '"references"' "$HOOK_ROOT/tsconfig.json" 2>/dev/null; then
@@ -261,10 +274,44 @@ hook_normalise_path() {
 # Names come NUL-separated from git: otherwise Arabic and other non-ASCII names arrive quoted and escaped.
 # They are relative to the project, which can be a folder inside its repository.
 
+# Code is watched wherever it is, beside those folders, when srcDirs isn't set or none of its folders exists
+# (a template's "src" in a project whose code is in client/). Folders that exist are the project's word.
+KIT_ANYWHERE="$KIT_SRC_UNSET"
+if [ -z "$KIT_ANYWHERE" ]; then
+  KIT_ANYWHERE=1
+  while IFS= read -r dir; do
+    [ -n "$dir" ] && [ -d "$HOOK_ROOT/$dir" ] && KIT_ANYWHERE=""
+  done <<<"$KIT_SRC_DIRS"
+fi
+KIT_CODE_TYPES="ts tsx js jsx mjs cjs mts cts vue svelte astro html css scss sass less"
+# Never source: installed, built or tool-owned. The first list at any depth, the second at the project root only
+# (a feature may well be called build or out).
+KIT_NOT_SOURCE="node_modules dist"
+KIT_NOT_SOURCE_ROOT="build out coverage playwright-report test-results storybook-static"
+
+# True when the gate and post-edit watch this project-relative file (guard-paths keeps to kit_in_src).
+kit_watched() {
+  local name
+  if [ -z "$KIT_ANYWHERE" ]; then kit_in_src "$1"; return; fi
+  case "/$1" in */.*/* | *.min.js | *.min.css) return 1 ;; esac
+  for name in $KIT_NOT_SOURCE; do case "/$1" in */"$name"/*) return 1 ;; esac; done
+  for name in $KIT_NOT_SOURCE_ROOT; do case "$1" in "$name"/*) return 1 ;; esac; done
+  kit_in_src "$1" && return 0
+  for name in $KIT_CODE_TYPES; do case "$1" in *."$name") return 0 ;; esac; done
+  return 1
+}
+
 KIT_SRC_PATHS=()
 while IFS= read -r dir; do
   [ -n "$dir" ] && KIT_SRC_PATHS+=("$dir")
 done <<<"$KIT_SRC_DIRS"
+if [ -n "$KIT_ANYWHERE" ]; then
+  # The same files as kit_watched, as git pathspecs.
+  for name in $KIT_CODE_TYPES; do KIT_SRC_PATHS+=(":(glob)**/*.$name"); done
+  for name in $KIT_NOT_SOURCE; do KIT_SRC_PATHS+=(":(exclude,glob)**/$name/**"); done
+  for name in $KIT_NOT_SOURCE_ROOT; do KIT_SRC_PATHS+=(":(exclude,glob)$name/**"); done
+  KIT_SRC_PATHS+=(':(exclude,glob)**/.*/**' ':(exclude,glob)**/*.min.js' ':(exclude,glob)**/*.min.css')
+fi
 
 # Uncommitted changes (tracked edits and deletions + untracked), one project-relative path per line.
 hook_changed_src_files() {
