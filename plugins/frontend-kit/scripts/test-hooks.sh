@@ -1709,6 +1709,14 @@ layout_write modules/Cart.vue
 run_hook post-edit.sh "$(edit_input "$LR/modules/Cart.vue")"
 [ "$CODE" -eq 0 ] && ok || ko "post-edit does not fail a file type biome skips" "exit $CODE: $ERR"
 
+layout_repo eslint-no-config
+mkdir -p "$LR/node_modules/.bin"
+printf '#!/bin/sh\necho "ESLint couldn'"'"'t find an eslint.config.(js|mjs|cjs) file."; exit 2\n' >"$LR/node_modules/.bin/eslint"
+chmod +x "$LR/node_modules/.bin/eslint"
+layout_write client/a.js
+run_hook post-edit.sh "$(edit_input "$LR/client/a.js")"
+[ "$CODE" -eq 0 ] && printf '%s' "$OUT" | grep -q 'was not linted' && ok || ko "eslint without a config is not a lint error" "exit $CODE: $ERR"
+
 # The TypeScript-only guard still means the source folders, not every config file.
 layout_repo ts-guard
 printf '{}\n' >"$LR/tsconfig.json"
@@ -1726,6 +1734,22 @@ for pair in 'vue-tsc:vue-tsc --noEmit' 'svelte-check:svelte-check' 'tsc:tsc --no
   for bin in "$tool" tsc; do printf '#!/bin/sh\nexit 0\n' >"$LR/node_modules/.bin/$bin"; chmod +x "$LR/node_modules/.bin/$bin"; done
   got="$(bash -c '. "$1/lib.sh"; kit_typecheck_cmd' _ "$HOOKS")"
   case "$got" in "${pair#*:}"*) ok ;; *) ko "typecheck with $tool" "$got" ;; esac
+done
+
+# svelte-check can't follow "references".
+for shape in app:'--tsconfig ./tsconfig.app.json' other:'--no-tsconfig'; do
+  layout_repo "svelte-refs-${shape%%:*}"
+  printf '{}\n' >"$LR/.claude/frontend-kit.json"
+  printf '{"files":[],"references":[{"path":"./tsconfig.x.json"}]}\n' >"$LR/tsconfig.json"
+  [ "${shape%%:*}" = app ] && printf '{}\n' >"$LR/tsconfig.app.json"
+  mkdir -p "$LR/node_modules/.bin"
+  printf '#!/bin/sh\nexit 0\n' >"$LR/node_modules/.bin/svelte-check"
+  chmod +x "$LR/node_modules/.bin/svelte-check"
+  got="$(bash -c '. "$1/lib.sh"; kit_typecheck_cmd' _ "$HOOKS")"
+  [ "$got" = "svelte-check ${shape#*:}" ] && ok || ko "typecheck of a Svelte references config (${shape%%:*})" "$got"
+  printf '{"devDependencies":{"svelte-check":"4","typescript":"6"}}\n' >"$LR/package.json"
+  got="$(bash "$HOOKS/kit-detect-stack.sh" "$LR" | jq -r .commands.typecheck)"
+  case "$got" in *"svelte-check ${shape#*:}") ok ;; *) ko "detected typecheck of a Svelte references config (${shape%%:*})" "$got" ;; esac
 done
 
 # detect_case <name> <dependency> <file> <framework> <state> <srcDirs json>
@@ -1850,7 +1874,7 @@ expect_path allow Write "$FEATURE/src/keys.test.ts" "$SECRET_SRC"
 # post-edit: a focused or skipped test is reported back to Claude (context, not a block)
 printf "import { it } from 'vitest'\nit.only('x', () => {})\n" >"$FEATURE/src/focus.test.ts"
 run_hook post-edit.sh "$(edit_input "$FEATURE/src/focus.test.ts")"
-if [ "$CODE" -eq 0 ] && printf '%s' "$OUT" | grep -q 'focused tests'; then ok; else ko "post-edit reports a .only test" "exit $CODE: $OUT $ERR"; fi
+if printf '%s' "$OUT$ERR" | grep -q 'focused tests'; then ok; else ko "post-edit reports a .only test" "exit $CODE: $OUT $ERR"; fi
 rm -f "$FEATURE/src/focus.test.ts"
 
 # bash-edit-track: a source file changed by sed -i is recorded for the Stop gate; a read-only command is not

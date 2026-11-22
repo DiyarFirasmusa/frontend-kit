@@ -84,8 +84,18 @@ $FINDINGS"
       case "$LINTER" in
         eslint) LINT="$("$BIN/eslint" "$REL" 2>&1)" ;;
         biome) LINT="$("$BIN/biome" lint "$REL" 2>&1)" ;;
-      esac || PROBLEMS="$LINTER errors in $REL (fix them; don't silence them):
+      esac || {
+        # ESLint installed but never configured checked nothing: that is the project's setup, not this edit's error.
+        case "$LINT" in
+          *"couldn't find an eslint.config"* | *"couldn't find a configuration file"*)
+            WARNINGS="eslint has no config in this project, so $REL was not linted. Don't add one unless the user asks."
+            ;;
+          *)
+            PROBLEMS="$LINTER errors in $REL (fix them; don't silence them):
 $(printf '%s\n' "$LINT" | grep -vE '^\s*$' | tail -n 30)"
+            ;;
+        esac
+      }
     fi
     ;;
 esac
@@ -177,6 +187,8 @@ fi
 
 if [ -n "$PROBLEMS" ]; then
   printf '%s\n' "$PROBLEMS" >&2
+  # Exit 2 shows stderr alone: the notes would be lost with a lint error beside them.
+  [ -n "$WARNINGS" ] && printf '\n%s\n' "$WARNINGS" >&2
   exit 2
 fi
 [ -n "$WARNINGS" ] && hook_context PostToolUse "$WARNINGS"

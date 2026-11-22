@@ -102,6 +102,14 @@ kit_app_cmd() {
   printf '%s' "${value:-$(kit_get ".commands.$2" '')}"
 }
 
+# kit_svelte_config <dir> → svelte-check's config option. It can't follow "references": a config that only lists
+# them makes it fail on the packages' own types, so it gets the app's config, or checks the Svelte files alone.
+kit_svelte_config() {
+  if ! grep -q '"references"' "$1/tsconfig.json" 2>/dev/null; then printf '%s' '--tsconfig ./tsconfig.json'
+  elif [ -f "$1/tsconfig.app.json" ]; then printf '%s' '--tsconfig ./tsconfig.app.json'
+  else printf '%s' '--no-tsconfig'; fi
+}
+
 # The typecheck command: commands.typecheck, else the project's own `typecheck` script, else tsc. A solution-style
 # tsconfig.json ("references", no files) is checked with `tsc -b`: `tsc --noEmit` on it checks nothing and passes.
 # Tool names are bare: callers put node_modules/.bin on PATH.
@@ -120,7 +128,7 @@ kit_typecheck_cmd() {
         if grep -q '"references"' "$HOOK_ROOT/tsconfig.json"; then printf '%s' 'vue-tsc -b'; else printf '%s' 'vue-tsc --noEmit'; fi
         return 0
         ;;
-      svelte-check) printf '%s' 'svelte-check --tsconfig ./tsconfig.json'; return 0 ;;
+      svelte-check) printf '%s' "svelte-check $(kit_svelte_config "$HOOK_ROOT")"; return 0 ;;
     esac
   fi
   [ -x "$HOOK_ROOT/node_modules/.bin/tsc" ] || return 0

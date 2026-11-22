@@ -120,7 +120,9 @@ if [ -n "$(script_of typecheck)" ]; then TYPECHECK="$RUN --silent typecheck"
 elif [ "$TS" = true ] && has vue-tsc; then
   if [ "$SOLUTION" = true ]; then TYPECHECK="$EXEC vue-tsc -b"; else TYPECHECK="$EXEC vue-tsc --noEmit"; fi
 elif [ "$TS" = true ] && has svelte-check; then
-  TYPECHECK="$EXEC svelte-check --tsconfig ./tsconfig.json"
+  if [ "$SOLUTION" = false ]; then TYPECHECK="$EXEC svelte-check --tsconfig ./tsconfig.json"
+  elif [ -f "$PROJECT/tsconfig.app.json" ]; then TYPECHECK="$EXEC svelte-check --tsconfig ./tsconfig.app.json"
+  else TYPECHECK="$EXEC svelte-check --no-tsconfig"; fi
 elif [ "$TS" = true ]; then
   if [ "$SOLUTION" = true ]; then TYPECHECK="$EXEC tsc -b"; else TYPECHECK="$EXEC tsc --noEmit"; fi
 fi
