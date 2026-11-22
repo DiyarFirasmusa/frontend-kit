@@ -94,7 +94,7 @@ export const enDetails: Details = {
         title: 'It fits a team',
         items: [
           ['Lives in the repo', 'CLAUDE.md, rules, settings and config are plain files your team reviews and commits.'],
-          ['Updates itself', 'Projects set up with the kit follow new plugin versions automatically.'],
+          ['Easy to update', 'Setup turns automatic updates on. Where the updater is switched off, you update by hand from the terminal.'],
           ['Cleans up safely', 'Files of another profile are moved to a dated backup, never deleted.'],
           ['Worked examples', 'Reference projects for Next.js, React Router, Jest, monorepos, site plus admin and refactors.'],
         ],

@@ -38,7 +38,7 @@ export const questions = [
 export const written = [
   { path: 'CLAUDE.md', text: t('What the assistant reads first: hard rules, commands and layout. Your own file is merged, not replaced.', 'أول ما يقرؤه المساعد: القواعد الصارمة والأوامر والهيكل. ملفك يُدمج ولا يُستبدل.') },
   { path: '.claude/rules/', text: t('The standards for your project type, rewritten for the libraries you really use.', 'معايير نوع مشروعك، معدّلة لمكتباتك الفعلية.') },
-  { path: '.claude/settings.json', text: t('Permissions: what runs freely, what asks and what is denied. Also automatic updates.', 'الصلاحيات: ما يعمل مباشرة وما يسأل وما يُمنع، والتحديث التلقائي.') },
+  { path: '.claude/settings.json', text: t('Permissions: what runs freely, what asks and what is denied. Also the switch for automatic updates.', 'الصلاحيات: ما يعمل مباشرة وما يسأل وما يُمنع، ومفتاح التحديث التلقائي.') },
   { path: '.claude/frontend-kit.json', text: t('The values every skill and hook reads: ports, branches, hosts, stack and commands.', 'القيم التي تقرؤها كل مهارة وحارس: المنافذ والفروع والنطاقات والتقنيات والأوامر.') },
   { path: 'package.json', text: t('Only missing scripts for tools you already have.', 'الأوامر الناقصة فقط، لأدوات موجودة عندك.') },
 ]
@@ -52,8 +52,9 @@ export const after = [
 export const maintenance = [
   {
     title: t('Update', 'التحديث'),
-    text: t('Projects set up with the kit update the plugin automatically. Copied rules do not change by themselves: run setup again to see a diff of what is new.', 'المشاريع المُعدّة بها تحدّث الإضافة تلقائياً، أما القواعد المنسوخة فلا تتغير وحدها: أعد الإعداد لترى فروق الجديد.'),
-    command: '/plugin marketplace update frontend-kit',
+    text: t('Setup turns automatic updates on, but they do not run where the updater is switched off, as it can be in the desktop app. To update by hand, run this in a terminal in your project, then restart. Copied rules do not change by themselves: run setup again to see a diff of what is new.', 'الإعداد يفعّل التحديث التلقائي، لكنه لا يعمل حيث يكون المحدّث موقفاً، كما قد يكون في تطبيق سطح المكتب. للتحديث يدوياً نفّذ هذا في الطرفية داخل مشروعك ثم أعد التشغيل. أما القواعد المنسوخة فلا تتغير وحدها: أعد الإعداد لترى فروق الجديد.'),
+    // The first command only refreshes the listing. The installed version moves with the second.
+    command: 'claude plugin marketplace update frontend-kit && claude plugin update frontend-kit@frontend-kit',
   },
   {
     title: t('Teammates', 'الزملاء'),
