@@ -1,5 +1,6 @@
 ---
 import { sample, settings } from '../../content/guide/configuration.ts'
+import { modeGroups } from '../../content/guide/modes.ts'
 import { t } from '../../content/guide/text.ts'
 import type { Locale } from '../../content/types.ts'
 import Block from '../guide/Block.astro'
@@ -25,6 +26,22 @@ const words = {
         {keys.map(([key, text]) => (
           <div>
             <dt><code dir="ltr">{key}</code></dt>
+            <dd>{text[locale]}</dd>
+          </div>
+        ))}
+      </dl>
+    </Block>
+  ))
+}
+{
+  modeGroups.map(({ title, lead, modes }) => (
+    <Block title={title[locale]} lead={lead[locale]}>
+      <dl class="rows">
+        {modes.map(([name, text]) => (
+          <div>
+            <dt>
+              <code dir="ltr">{name}</code>
+            </dt>
             <dd>{text[locale]}</dd>
           </div>
         ))}

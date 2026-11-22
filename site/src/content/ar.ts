@@ -117,7 +117,7 @@ export const ar: Copy = {
     title: 'ثبّتها بثلاثة أوامر.',
     lead: 'نفّذها داخل Claude Code في مشروعك، وأعد تشغيله بعد الإعداد.',
     steps: ['أضف المتجر', 'ثبّت الإضافة', 'أعدّ المشروع'],
-    needs: 'تحتاج jq وNode 20 أو أحدث وgit.',
+    needs: 'تحتاج Claude Code 2.1.295 أو أحدث وjq وNode 20 أو أحدث وgit.',
     copy: 'انسخ',
     copied: 'نُسخ',
     failed: 'انسخ يدوياً',

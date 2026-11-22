@@ -5,9 +5,9 @@ export const settings = [
     title: t('Project', 'المشروع'),
     keys: [
       ['profile', t('website, dashboard, react or fullstack.', 'website أو dashboard أو react أو fullstack.')],
-      ['mode', t('new, existing or refactor.', 'new أو existing أو refactor.')],
+      ['mode', t('new, existing, maintenance, refactor, upgrade or freeze. Switch it with /frontend-kit:mode.', 'new أو existing أو maintenance أو refactor أو upgrade أو freeze. بدّله بـ \u2066/frontend-kit:mode\u2069.')],
       ['stack', t('What setup found: package manager, framework, router, data, state, styling, tests, lint, format and i18n.', 'ما وجده الإعداد: مدير الحزم وإطار العمل والموجّه والبيانات والحالة والتنسيق والاختبارات والمدقّق والترجمة.')],
-      ['srcDirs', t('The folders that count as your source.', 'المجلدات التي تُعدّ شيفرتك.')],
+      ['srcDirs', t('The folders that count as your source. Without them, code in any folder is watched.', 'المجلدات التي تُعدّ شيفرتك، ومن دونها تُراقب الشيفرة في أي مجلد.')],
       ['apps', t('The apps of a monorepo or a site plus admin, with their own folders.', 'تطبيقات الـ monorepo أو الموقع مع الإدارة بمجلداتها.')],
       ['githubRepo', t('owner/name, for the compare link.', 'owner/name لرابط المقارنة.')],
     ],
@@ -41,6 +41,9 @@ export const settings = [
   {
     title: t('Switches', 'المفاتيح'),
     keys: [
+      ['guards', t('A switch for each of the newer guards. Loosening one is put to you first.', 'مفتاح لكل حارس من الحرّاس الجدد، وتخفيف أي منها يُعرض عليك أولاً.')],
+      ['modes.reportDir', t('Where read-only mode may write. Default: docs/audits.', 'أين يكتب نمط القراءة فقط، وافتراضياً docs/audits.')],
+      ['modes.prototypeDir', t('Where prototype mode may write. Default: prototypes.', 'أين يكتب نمط النموذج الأولي، وافتراضياً prototypes.')],
       ['stopGate.review', t('false turns off the automatic review.', 'false توقف المراجعة التلقائية.')],
       ['stopGate.tests', t('all runs every unit test instead of the related ones.', 'all تشغّل كل الاختبارات بدل المرتبطة.')],
       ['hooks.skillSuggest', t('false turns off skill hints.', 'false توقف اقتراح المهارات.')],

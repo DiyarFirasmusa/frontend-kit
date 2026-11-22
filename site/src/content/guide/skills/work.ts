@@ -9,7 +9,7 @@ export const work: Record<string, SkillGuide> = {
     ),
     ask: [t('/frontend-kit:setup', '/frontend-kit:setup')],
     steps: [
-      t('Asks: new, existing or refactor, and which kind of project.', 'يسأل: جديد أم قائم أم إعادة هيكلة، وأي نوع من المشاريع.'),
+      t('Asks: new, existing, maintenance or refactor, and which kind of project.', 'يسأل: جديد أم قائم أم صيانة أم إعادة هيكلة، وأي نوع من المشاريع.'),
       t('Detects your stack from package.json and the config files.', 'يكتشف تقنياتك من package.json وملفات الإعداد.'),
       t('Shows one proposal: files, adaptations and clean-up.', 'يعرض مقترحاً واحداً: الملفات والتكييفات والتنظيف.'),
       t('After your yes, writes the files and shows a diff for any that exist.', 'بعد موافقتك يكتب الملفات ويعرض فروق الموجود منها.'),
@@ -24,7 +24,7 @@ export const work: Record<string, SkillGuide> = {
       t('Does not commit, install packages unasked or restructure code.', 'لا يحفظ في git ولا يثبّت حزماً دون طلب ولا يعيد هيكلة الشيفرة.'),
     ],
     related: ['task', 'refactor-mode'],
-    needs: t('jq, Node 20 or newer, and git.', 'jq وNode 20 أو أحدث وgit.'),
+    needs: t('Claude Code 2.1.295 or newer, jq, Node 20 or newer, and git.', 'Claude Code 2.1.295 أو أحدث وjq وNode 20 أو أحدث وgit.'),
   },
   task: {
     plain: t('One ticket from start to finish: branch, code, checks, report, and then your decision.', 'مهمة واحدة من البداية إلى النهاية: فرع وشيفرة وفحوص وتقرير، ثم قرارك.'),
@@ -87,8 +87,52 @@ export const work: Record<string, SkillGuide> = {
       t('status and off: show progress, or return to normal.', 'status وoff: عرض التقدم أو العودة إلى الوضع العادي.'),
     ],
     result: [t('docs/refactor-plan.md', 'docs/refactor-plan.md'), t('One commit per phase, after your yes', 'حفظ واحد لكل مرحلة بعد موافقتك')],
-    limits: [t('Never skips a test or loosens a rule to pass.', 'لا يتخطى اختباراً ولا يخفف قاعدة لينجح.')],
+    limits: [
+      t('Keeps your own folder layout unless you pick another.', 'يبقي ترتيب مجلداتك ما لم تختر غيره.'),
+      t('No skipped tests or new suppressions. The guard catches the common forms, the rest is instruction.', 'لا اختبارات متخطاة ولا إسكات للأخطاء. الحارس يلتقط الصيغ الشائعة والباقي تعليمات.'),
+    ],
     related: ['refactor', 'verify'],
+  },
+  mode: {
+    plain: t(
+      'A switch for how careful the work must be: a freeze before a release, a hotfix, a read-only review. Only you turn it.',
+      'مفتاح يحدد مقدار الحذر في العمل: تجميد قبل الإصدار أو إصلاح عاجل أو مراجعة بالقراءة فقط. ولا يحرّكه إلا أنت.',
+    ),
+    ask: [t('/frontend-kit:mode freeze --days 3', '/frontend-kit:mode freeze --days 3'), t('/frontend-kit:mode off', '/frontend-kit:mode off')],
+    steps: [
+      t('list: names every mode and what it enforces.', 'list: يعرض كل نمط وما يفرضه.'),
+      t('A mode’s name turns it on, for the project or for this checkout.', 'اسم النمط يشغّله، للمشروع أو لهذه النسخة.'),
+      t('status shows what is on, and off leaves it.', 'status يعرض المفعّل، وoff يخرج منه.'),
+    ],
+    result: [
+      t('The mode’s rules, repeated to Claude while it is on', 'قواعد النمط تُكرَّر على Claude ما دام مفعّلاً'),
+      t('A guard on what a hook can see', 'حارس على ما يستطيع الـ hook رؤيته'),
+    ],
+    limits: [
+      t('A guard rail, not a sandbox: in the shell it catches common forms only.', 'حاجز أمان لا بيئة معزولة: لا يلتقط في الطرفية إلا الصيغ الشائعة.'),
+      t('A mode adds restrictions. It never lifts a guard.', 'النمط يضيف قيوداً ولا يرفع حارساً.'),
+    ],
+    related: ['refactor-mode', 'upgrade-mode'],
+    needs: t('jq', 'jq'),
+  },
+  'upgrade-mode': {
+    plain: t(
+      'A major upgrade done as its own job: one family of packages, in phases you approve, proven by the whole test suite.',
+      'ترقية كبيرة كمهمة مستقلة: عائلة حزم واحدة، على مراحل توافق عليها، تثبتها كل الاختبارات.',
+    ),
+    ask: [t('/frontend-kit:upgrade-mode on', '/frontend-kit:upgrade-mode on'), t('/frontend-kit:upgrade-mode plan', '/frontend-kit:upgrade-mode plan')],
+    steps: [
+      t('on: switches the project into upgrade mode.', 'on: ينقل المشروع إلى نمط الترقية.'),
+      t('plan: records a baseline, reads the official guides and waits for your yes.', 'plan: يسجّل خط الأساس ويقرأ الأدلة الرسمية وينتظر موافقتك.'),
+      t('next: runs the first pending phase, then compares the real numbers with the baseline.', 'next: ينفّذ أول مرحلة متبقية ثم يقارن الأرقام الحقيقية بخط الأساس.'),
+      t('off: returns to normal work. The plan stays.', 'off: يعود إلى العمل العادي، وتبقى الخطة.'),
+    ],
+    result: [t('docs/upgrade-plan.md', 'docs/upgrade-plan.md'), t('One commit per phase, after your yes', 'حفظ واحد لكل مرحلة بعد موافقتك')],
+    limits: [
+      t('No forced peer versions, skipped tests or refreshed snapshots. The guard catches the common forms.', 'لا إصدارات مفروضة ولا اختبارات متخطاة ولا لقطات مجدّدة، والحارس يلتقط الصيغ الشائعة.'),
+      t('No new features or clean-up inside an upgrade.', 'لا ميزات جديدة ولا تنظيف داخل الترقية.'),
+    ],
+    related: ['mode', 'verify'],
   },
   'fix-everywhere': {
     plain: t('For “fix all of them”. It proves that none is left.', 'لطلب «أصلحها كلها»، ويثبت أنه لم يبقَ شيء.'),
