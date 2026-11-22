@@ -6,6 +6,20 @@ An empty line is a decision still open: ask the user before inventing the answer
 
 ## Where things are
 
+The project map. It wins over every layout, file name and library the rules and skills use as an example. One real file
+per role: new code of that role looks like it. Leave out a role the project doesn't have.
+
+| Role | Folder and file naming here | Example file |
+| ---- | --------------------------- | ------------ |
+| Page or route | `src/app/`, Next.js App Router files (`page.tsx`, `layout.tsx`, one folder per segment) | `src/app/page.tsx` |
+| View (component) | | |
+| State (store, composable, service, signal) | | |
+| Data access (client, service, query) | | |
+| Pure logic | | |
+| Validation | | |
+| Shared code (two or more features) | | |
+| Test | | |
+
 - i18n: none (single English LTR app, `lang="en"`); decide a library before adding a second language.
 - Theme tokens file and the semantic utilities in use: `src/app/globals.css` (`@theme inline`: `background`, `foreground`; fonts Geist sans/mono)
 - Formatters (numbers, dates, currency, missing value) and the digit system:

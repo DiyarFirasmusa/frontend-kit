@@ -5,6 +5,7 @@ paths:
 
 # React + TypeScript
 
+The project's own pattern wins over the file, export and folder examples here (`project.md`, the nearest code).
 React 19, strict TypeScript, Next.js 16 App Router (`src/app`). Components are
 Server Components by default; add `'use client'` only on the smallest component
 that needs state, effects or browser APIs. This Next.js version has breaking

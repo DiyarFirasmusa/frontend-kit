@@ -6,6 +6,10 @@ paths:
 
 # Naming
 
+> **Examples, not law.** The project's own names win: "Where things are" in `project.md`, then the nearest file of the same
+> role, then the framework's convention. The folders, suffixes and case below are the kit's example (React + TanStack), for
+> a project with no pattern. What holds everywhere: a name says what the thing is, and one role is named one way.
+
 > **Router.** The project has no router yet (`stack.router` is `none`). The router-specific lines below (`createFileRoute`,
 > `Route`, `src/routes/`, `routeTree.gen.ts`) are TanStack Router's: keep the intent (thin routes, guards in the route layer,
 > params and search validated once at the boundary) and use `routing.md` for the equivalents.
@@ -13,7 +17,7 @@ paths:
 The full layout lives in `CLAUDE.md` (and any structure doc it points to).
 This is the short form.
 
-**kebab-case for every file and folder under `src/`**, with one exception:
+**The example: kebab-case for every file and folder under `src/`**, with one exception:
 route files under `src/routes/` follow TanStack Router's file conventions
 (`__root.tsx`, `index.tsx`, `$param.tsx`, `_layout.tsx`, `(group)/`,
 `-components/` for colocated non-route files). PascalCase only for component
@@ -35,7 +39,7 @@ and type names in code. `src/routeTree.gen.ts` is generated — never edit it.
 | Schemas | `validations/validations.ts` or `validations/<topic>.ts` | |
 | Pure helpers | `utils/<topic>.ts` — never `utils.ts`, `helpers.ts`, `misc.ts` | `price-math.ts` |
 | Constants | kebab-case | `query-keys.ts`, `api.ts` |
-| Locales | `locales/{ar,en}.json` | |
+| Locales | `locales/<language>.json` | `locales/{ar,en}.json` |
 | Unit / component test | `<source>.test.ts(x)` beside the source | `price-math.test.ts` |
 | E2E spec | `e2e/<flow>.spec.ts` | `e2e/sign-in.spec.ts` |
 

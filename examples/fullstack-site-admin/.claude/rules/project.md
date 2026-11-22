@@ -6,6 +6,20 @@ An empty line is a decision still open: ask the user before inventing the answer
 
 ## Where things are
 
+The project map. It wins over every layout, file name and library the rules and skills use as an example. One real file
+per role: new code of that role looks like it. Leave out a role the project doesn't have.
+
+| Role | Folder and file naming here | Example file |
+| ---- | --------------------------- | ------------ |
+| Page or route | site `src/routes/_site/`, admin `src/routes/admin/` (URL `/admin`) | |
+| View (component) | site feature folders under `src/features/`; admin `src/admin/components/`, `src/admin/features/<resource>/` | |
+| State (store, composable, service, signal) | admin `src/admin/store/` | |
+| Data access (client, service, query) | admin `src/admin/api/`, `src/admin/services/` | |
+| Pure logic | | |
+| Validation | | |
+| Shared code (two or more features) | site `src/shared/`; code both apps need `src/common/` (pure functions and types only) | |
+| Test | helpers: site `src/test/`, admin `src/admin/test/` | |
+
 - i18n setup file and how bundles load (global bundle, per-feature bundles, loader or build-time glob): site `src/shared/lib/i18n/` (create-i18n.ts, resources.ts); admin `src/admin/lib/i18n/`; per-feature `locales/{ar,en}.json`
 - The one helper that translates a key held in data (zod message, `successMessage`, a map of keys):
 - Theme tokens file (`src/…/theme.css`) and the semantic utilities in use: `src/shared/style/theme.css`

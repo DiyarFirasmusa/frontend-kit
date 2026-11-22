@@ -6,6 +6,20 @@ An empty line is a decision still open: ask the user before inventing the answer
 
 ## Where things are
 
+The project map. It wins over every layout, file name and library the rules and skills use as an example. One real file
+per role: new code of that role looks like it. Leave out a role the project doesn't have.
+
+| Role | Folder and file naming here | Example file |
+| ---- | --------------------------- | ------------ |
+| Page or route | no router yet: the app is one page, `src/App.tsx` | `src/App.tsx` |
+| View (component) | PascalCase `.tsx` in `src/` until a feature folder exists | `src/App.tsx` |
+| State (store, composable, service, signal) | | |
+| Data access (client, service, query) | | |
+| Pure logic | | |
+| Validation | | |
+| Shared code (two or more features) | not split yet; global styles in `src/index.css` | `src/index.css` |
+| Test | | |
+
 - i18n setup file and how bundles load (global bundle, per-feature bundles, loader or build-time glob):
 - The one helper that translates a key held in data (zod message, `successMessage`, a map of keys):
 - Theme tokens file (`src/…/theme.css`) and the semantic utilities in use:

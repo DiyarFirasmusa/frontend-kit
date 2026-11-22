@@ -5,10 +5,10 @@ paths:
 
 # Styles
 
-Tailwind CSS v4 with design tokens (mirrored from the Figma file when there
+The project's own styling system wins. The kit's example: Tailwind CSS v4 with design tokens (mirrored from the Figma file when there
 is one). The tokens, dark overrides and the few component classes live in the
 theme CSS file named in `project.md`. Every visual change is checked in
-**light and dark**, **Arabic and English**, **phone and desktop**.
+**each theme** and **each language** the project has, on **phone and desktop**.
 
 ## Colour: semantic tokens only
 

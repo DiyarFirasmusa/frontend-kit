@@ -5,6 +5,7 @@ paths:
 
 # React + TypeScript
 
+The project's own pattern wins over the file, export and folder examples here (`project.md`, the nearest code).
 React 19, strict TypeScript, Vite: a client-only app with no router and no data library yet. The router lines below
 (`createFileRoute`, `beforeLoad`, `Route`, `src/routes/`) and the Query names are TanStack's, as examples: keep the intent
 (thin routes, guards in the route layer, params validated once); `routing.md` and `data-and-state.md` win.

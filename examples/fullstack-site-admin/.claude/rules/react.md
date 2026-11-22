@@ -5,6 +5,7 @@ paths:
 
 # React + TypeScript
 
+The project's own pattern wins over the file, export and folder examples here (`project.md`, the nearest code).
 React 19, strict TypeScript, TanStack Start with TanStack Router (file routes) and TanStack Query.
 Website (TanStack Start): pages render on the server, then hydrate. Dashboard
 (`src/admin`, `ssr: false`): client-rendered. No React Server Components, no

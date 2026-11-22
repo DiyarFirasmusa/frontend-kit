@@ -6,10 +6,14 @@ paths:
 
 # Naming
 
+> **Examples, not law.** The project's own names win: "Where things are" in `project.md`, then the nearest file of the same
+> role, then the framework's convention. The folders, suffixes and case below are the kit's example (React + TanStack), for
+> a project with no pattern. What holds everywhere: a name says what the thing is, and one role is named one way.
+
 The full layout lives in `CLAUDE.md` (and any structure doc it points to).
 This is the short form.
 
-**kebab-case for every file and folder under `src/`**, with one exception:
+**The example: kebab-case for every file and folder under `src/`**, with one exception:
 route files under `src/app/` follow the Next.js App Router conventions
 (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`,
 `route.ts`, `[param]/`, `(group)/`, `_private/` for colocated non-route
