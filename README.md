@@ -24,7 +24,17 @@ versions let a call through when a guard times out or cannot start.
 `/frontend-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of React project it is,
 detects the stack (package manager, framework, router, tests, linter, formatter, i18n, source folders), shows **one proposal**
 and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json`,
-adapted to what it found. Projects set up this way update the plugin on their own (`autoUpdate`).
+adapted to what it found.
+
+**Updates don't always arrive by themselves.** Setup turns on `autoUpdate` for the kit's marketplace, but Claude Code
+updates plugins only in interactive sessions, and not at all where `DISABLE_AUTOUPDATER`, `DISABLE_UPDATES` or
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is set (the Claude desktop app sets the first), unless
+`FORCE_AUTOUPDATE_PLUGINS=1` is too. To update by hand, in the project's folder (both commands: the first alone refreshes
+only the list), then restart Claude Code and run `/frontend-kit:setup` again for template changes:
+
+```bash
+claude plugin marketplace update frontend-kit && claude plugin update frontend-kit@frontend-kit
+```
 
 ## What it enforces
 

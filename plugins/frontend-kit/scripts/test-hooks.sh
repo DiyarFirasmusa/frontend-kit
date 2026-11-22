@@ -1782,6 +1782,40 @@ detect_case beside 'react,vite' client/ui/cart.tsx Vite '' '["src","client"]'
 detect_case vue-tool 'react,vue,vite' src/App.tsx Vite '' '["src"]'
 detect_case plain 'left-pad' browser/main.js '' '' '["browser"]'
 
+# --- kit-update-check.sh: never promises an update that will not come -----------------------------------
+
+UC="$WORK/update-check"
+mkdir -p "$UC/project/.claude" "$UC/config/plugins"
+update_check() { # <expected word> <what> [NAME=value...]
+  local want="$1" what="$2"
+  shift 2
+  OUT="$(env -u DISABLE_AUTOUPDATER -u DISABLE_UPDATES -u CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC -u FORCE_AUTOUPDATE_PLUGINS \
+    CLAUDE_CONFIG_DIR="$UC/config" "$@" "$HOOKS/kit-update-check.sh" "$UC/project" 2>&1)"
+  case "$OUT" in
+    "auto-update: $want "*"claude plugin marketplace update frontend-kit && claude plugin update frontend-kit@frontend-kit"*) ok ;;
+    *) ko "update check says $want: $what" "$OUT" ;;
+  esac
+}
+update_check off "nothing configured"
+printf '{"frontend-kit":{"autoUpdate":true}}' >"$UC/config/plugins/known_marketplaces.json"
+update_check on "switched on in the marketplaces record"
+printf '{"extraKnownMarketplaces":{"frontend-kit":{"autoUpdate":false}}}' >"$UC/config/settings.json"
+update_check off "false in the user's settings wins over the record"
+printf '{"extraKnownMarketplaces":{"frontend-kit":{"autoUpdate":true}}}' >"$UC/project/.claude/settings.json"
+update_check on "true in the project's settings"
+update_check off "the desktop app" DISABLE_AUTOUPDATER=1
+update_check off "updates disabled" DISABLE_UPDATES=1
+update_check off "no non-essential traffic" CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+update_check on "disabled, and forced for plugins" DISABLE_AUTOUPDATER=1 FORCE_AUTOUPDATE_PLUGINS=1
+update_check on "a switch set to 0" DISABLE_AUTOUPDATER=0
+printf '{"extraKnownMarketplaces":{"frontend-kit":{"autoUpdate":false}}}' >"$UC/project/.claude/settings.local.json"
+update_check off "false in the local settings"
+printf '[' >"$UC/project/.claude/settings.local.json"
+update_check on "an unreadable file says nothing"
+for doc in "$PLUGIN/README.md" "$PLUGIN/skills/setup/SKILL.md"; do
+  if grep -qE 'update the plugin on (its|their) own' "$doc"; then ko "a promise of automatic updates is back: $doc"; else ok; fi
+done
+
 # --- settings templates: no pre-approved command that can run any other --------------------------------
 
 for SETTINGS in "$PLUGIN"/templates/*/settings.json; do

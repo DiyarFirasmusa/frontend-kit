@@ -225,8 +225,9 @@ Merging:
   - The template never adds `hooks`: the plugin provides them. If the user's settings already define the
     same guard hooks (an older copy of this setup), say so and offer to remove the duplicates.
   - `extraKnownMarketplaces.frontend-kit` (with `autoUpdate: true`) and `enabledPlugins["frontend-kit@frontend-kit"]` are
-    added when missing; they make Claude Code refresh the kit's marketplace and update the plugin on its own after a
-    session starts. Keep the user's value if they already set `autoUpdate` to `false`. A teammate's clone still runs
+    added when missing. They let Claude Code update the plugin, in interactive sessions and only where updates aren't
+    disabled: never promise automatic updates (step 7 checks). Keep the user's value if they already set `autoUpdate` to
+    `false`. A teammate's clone still runs
     `claude plugin install frontend-kit@frontend-kit --scope project` once.
   - Show the merged result's diff before writing it.
 - `frontend-kit.json` — keep existing values, add missing keys. The user's answer to question 1 wins for `mode` when the
@@ -252,8 +253,12 @@ Only what the user approved in the proposal:
   if neither file exists; `.env.example` stays editable.
 - Add to `.gitignore` if missing (ask once): `.claude/state/`, `.claude/settings.local.json`, and `.vitest/` with Vitest 5.
 - Check `jq` is installed (`command -v jq`): every hook needs it. If missing, say `brew install jq`.
+- Updates: run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-update-check.sh"` and pass on what it prints. When it says `off`,
+  say plainly that new kit releases won't arrive here by themselves and give the command to update by hand. Don't change
+  the user's environment or settings to turn updates on.
 - Report in 3–6 lines: profile, files created / merged / skipped, values used, and the next steps:
   - Restart Claude Code so the new CLAUDE.md, rules and settings load.
+  - Updates: automatic or by hand, as the check said.
   - Modes: `/frontend-kit:mode status` shows the mode, `/frontend-kit:mode list` all of them. A project mode is in a
     committed file: the team gets it through git, and a branch without that commit doesn't have it.
   - Refactor mode chosen: run `/frontend-kit:refactor-mode audit` (it keeps the project's own layout unless the user picks another). New project: start with the `task` skill.
