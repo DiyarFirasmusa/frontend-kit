@@ -1,0 +1,352 @@
+/* Motion is the rule here, never the exception. All of it waits for the visitor's own setting. */
+.rise {
+  display: inline-block;
+}
+
+/* The words and the blocks are one gesture: both follow `--shown`, which the scroll writes. */
+.live [data-score] [data-stage-shape] {
+  --in: var(--shown, 1);
+}
+
+.live [data-score] [data-stage-shape] .rise {
+  --word: clamp(0, var(--in) * 1.7 - var(--w) * 0.7, 1);
+  opacity: var(--word);
+  transform: translateY(calc((1 - var(--word)) * 0.85em)) rotate(calc((1 - var(--word)) * 5deg));
+  filter: blur(calc((1 - var(--word)) * 6px));
+}
+
+.live .hero .column > :not(h1),
+.live .example-ask > :not(h2),
+.live .run > li > :not(h3) {
+  --line: clamp(0, var(--in) * 1.8 - 0.8, 1);
+  opacity: var(--line);
+  transform: translateY(calc((1 - var(--line)) * 2.5rem));
+}
+
+.live .run > li > pre {
+  --line: clamp(0, var(--in) * 2.6 - 1.6, 1);
+  clip-path: inset(0 calc((1 - var(--line)) * 100%) 0 0);
+}
+
+.live .run > li::before {
+  scale: calc(0.4 + var(--in) * 1.2);
+}
+
+/* What has focus is always readable. */
+.live .run > li:focus-within,
+.live .example-ask:focus-within,
+.live .hero:focus-within {
+  --in: 1;
+}
+
+.live .run > li,
+.live .run > li.is-cued {
+  opacity: 1;
+}
+
+/* Room for the slow scroll to be watched. */
+.live .hero {
+  min-height: 115svh;
+}
+
+.live .example-ask {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 90svh;
+}
+
+.live .run > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 105svh;
+}
+
+.live .run > li::before {
+  inset-block-start: calc(50% - 5px);
+}
+
+.live .inside,
+.live .get-it {
+  padding-block-start: 22svh;
+}
+
+.arrives {
+  opacity: 0;
+  translate: 0 2rem;
+}
+
+.arrives.has-arrived {
+  opacity: 1;
+  translate: none;
+  transition:
+    opacity 0.6s ease-out var(--arrive-after, 0s),
+    translate 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--arrive-after, 0s);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    interpolate-size: allow-keywords;
+    --spring: cubic-bezier(0.3, 1.5, 0.5, 1);
+    --glide: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .live .doc-head .rise {
+    animation: rise 0.9s var(--glide) both;
+    animation-delay: calc(0.15s + var(--w) * 0.35s);
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 0.85em;
+      rotate: 5deg;
+      filter: blur(6px);
+    }
+  }
+
+  /* Every control answers a hand. */
+  .top a,
+  .choices a,
+  .kinds button,
+  .command button,
+  .tree a,
+  .tree summary,
+  .pager a,
+  .tags li,
+  .index a,
+  .detail-open,
+  .hero-ways a {
+    transition:
+      color 0.3s,
+      background-color 0.3s,
+      border-color 0.3s,
+      translate 0.45s var(--spring),
+      scale 0.3s var(--spring),
+      text-underline-offset 0.35s var(--glide);
+  }
+
+  .choices a:hover,
+  .kinds button:hover,
+  .tags li:hover,
+  .top-docs:hover,
+  .top-install:hover {
+    translate: 0 -4px;
+  }
+
+  .choices a:active,
+  .kinds button:active,
+  .command button:active,
+  .top a:active,
+  .tree a:active {
+    scale: 0.93;
+  }
+
+  .tree a:hover {
+    translate: 6px 0;
+  }
+
+  [dir='rtl'] .tree a:hover {
+    translate: -6px 0;
+  }
+
+  .hero-ways a:hover,
+  .detail-open:hover,
+  .index a:hover {
+    text-underline-offset: 10px;
+  }
+
+  .rows > div,
+  .index li,
+  .changes li,
+  .works-for li {
+    background: linear-gradient(var(--ivory), var(--ivory)) no-repeat 0 0 / 0 1px;
+    transition: background-size 0.55s var(--glide);
+  }
+
+  .rows > div:hover,
+  .index li:hover,
+  .changes li:hover,
+  .works-for li:hover {
+    background-size: 100% 1px;
+  }
+
+  /* A pick: its explanation is dealt out line by line. */
+  .detail article:not([hidden]) > *,
+  .detail article:not([hidden]) dl > div {
+    animation: dealt 0.7s var(--glide) both;
+  }
+
+  .detail article:not([hidden]) > :nth-child(2),
+  .detail article:not([hidden]) dl > :nth-child(1) {
+    animation-delay: 0.08s;
+  }
+
+  .detail article:not([hidden]) dl > :nth-child(2) {
+    animation-delay: 0.16s;
+  }
+
+  .detail article:not([hidden]) dl > :nth-child(3) {
+    animation-delay: 0.24s;
+  }
+
+  .detail article:not([hidden]) dl > :nth-child(4),
+  .detail article:not([hidden]) > .detail-open {
+    animation-delay: 0.32s;
+  }
+
+  .detail article:not([hidden]) .detail-say q {
+    display: inline-block;
+    animation: typed 1s steps(26) 0.45s both;
+  }
+
+  @keyframes dealt {
+    from {
+      opacity: 0;
+      translate: 0 1.25rem;
+      filter: blur(5px);
+    }
+  }
+
+  @keyframes typed {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+  }
+
+  [dir='rtl'] .detail article:not([hidden]) .detail-say q {
+    animation-name: typed-rtl;
+  }
+
+  @keyframes typed-rtl {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+  }
+
+  /* Whatever opens, opens. */
+  details::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 0.55s var(--glide),
+      content-visibility 0.55s allow-discrete;
+  }
+
+  details[open]::details-content {
+    height: auto;
+  }
+
+  .menu[open] nav a {
+    animation: dealt 0.5s var(--glide) both;
+  }
+
+  .tree a[aria-current] {
+    animation: lit 0.7s var(--glide);
+  }
+
+  @keyframes lit {
+    from {
+      background-size: 0 100%;
+      opacity: 0.4;
+    }
+  }
+
+  .tree li:not([hidden]) {
+    animation: listed 0.45s var(--glide) both;
+  }
+
+  @keyframes listed {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .refusal {
+    animation: refused 3.4s ease-in-out infinite;
+  }
+
+  @keyframes refused {
+    50% {
+      border-color: rgb(224 119 107 / 0.4);
+    }
+  }
+
+  .live .brand {
+    display: flex;
+    gap: 0.6rem;
+  }
+}
+
+@media (max-width: 820px) {
+  .live .run > li,
+  .live .example-ask {
+    justify-content: flex-end;
+    min-height: 100svh;
+    padding-block-end: 14svh;
+  }
+
+  .live .run > li {
+    background: linear-gradient(transparent 38svh, rgb(5 6 7 / 0.88) 56svh);
+  }
+
+  .live .example-ask {
+    background: linear-gradient(transparent 34svh, rgb(5 6 7 / 0.88) 56svh);
+  }
+
+  .live .hero {
+    min-height: 100svh;
+  }
+
+  .live .inside {
+    padding-block-start: 34svh;
+  }
+
+  .live .get-it {
+    padding-block-start: 36svh;
+  }
+}
+
+/* A step is said as large as it is shown. */
+.run h3 {
+  font-size: clamp(1.875rem, 1.1rem + 2vw, 3.25rem);
+  line-height: 1.2;
+}
+
+.run > li > p {
+  color: var(--ivory);
+  font-size: var(--lead);
+}
+
+@media (max-width: 820px) {
+  /* The stage has its own shade: one that scrolled would sweep across it. */
+  .live .run > li,
+  .live .example-ask {
+    background: none;
+  }
+
+  .run h3 {
+    font-size: 1.625rem;
+  }
+
+  .run > li > p {
+    font-size: 1rem;
+  }
+
+  .live .inside .choices {
+    min-height: 54px;
+    overflow-y: hidden;
+  }
+
+  .live .inside .choices .arrives {
+    translate: none;
+  }
+}
+
+@media (min-width: 901px) {
+  /* The shape keeps its whole room: the words end before it begins. */
+  .live .doc {
+    grid-template-columns: 14rem minmax(0, min(34rem, 39vw)) minmax(0, 1fr);
+  }
+}

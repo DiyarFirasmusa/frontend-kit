@@ -50,29 +50,33 @@ in full, read at build time (`src/content.config.ts`, `src/lib/reference.ts`). S
 A new topic page is an entry in `PAGES`, a place in `SECTIONS` and a component in `BODIES`. Only the home page loads
 Three.js.
 
-## How the home page works
+## The one stage
 
-The page is complete as plain HTML: each scene is copy beside a still frame, then its explanation as a list of
-moments (`src/lib/moments.ts`), each linking to its documentation. When the device can play it, the same markup becomes
-a film pinned to the scroll (`html.film`): the moments take each other's place inside the scene, a name flies out of the
-object the stage lit (`src/client/film-moments.ts`), and the bar at the foot counts the chapters
-(`src/content/guide/tour.ts`).
+Every page stands on the same WebGL stage (`src/components/stage/Stage.astro`). Astro's client router keeps it between
+pages, so the blocks fly from one page's shape to the next. Switching language reloads: the stage is built for one
+direction.
 
-It stays on the still page without JavaScript or WebGL 2, under reduced motion, with data saver, at 2 GB of memory or
-less, and when WebGL runs in software. While it plays, a governor lowers the resolution and then the effects; if the
-film is still unusable it returns to the still page. The pause button switches between the two.
+Without JavaScript or WebGL 2, under reduced motion, with data saver, at 2 GB of memory or less, or when WebGL runs in
+software, every page is complete plain HTML with a still frame. While it plays, a governor lowers the resolution and
+then the effects. The pause button switches between the two.
+
+On the home page each `[data-stage-shape]` under `[data-score]` is a cue. The scroll between two cues is the change
+itself: shape and words are played from one eased position (`src/client/stage/score.ts`), in both directions.
+
+Dragging turns the shape. Pressing it blows it apart, and pressing an object on an overview opens what it names.
 
 | Path | What |
 | ---- | ---- |
-| `src/content/scenes.ts` | the edit: order, shape, and how long each scene holds and travels, in screens of scroll |
-| `src/content/` | all copy, one file per language |
-| `src/film/shapes/` | each scene as a list of blocks: plain functions, covered by `npm test` |
+| `src/content/emblems.ts` | which sign each skill, agent, rule file, hook and page has |
+| `src/film/shapes/emblems/signs.ts` | the signs, drawn with a few pencils (`draw.ts`) and built out of blocks (`build.ts`) |
+| `src/film/shapes/` | the other shapes: plain functions, covered by `npm test` |
 | `src/film/direction.ts` | camera shots, light and how blocks fly |
 | `src/film/render/` | the instanced mesh, set, camera and lens |
-| `src/client/player.ts` | maps scroll to the film; `film-copy.ts` and `film-labels.ts` move the words |
-| `src/client/measure.ts` | reads where each explanation and stop sits, so the timeline follows the content |
-| `src/film/focus.ts` | where the camera looks for each stop |
-| `src/components/film/`, `src/components/tour/` | the scenes, the guide bar and the explanations inside the scroll |
+| `src/client/stage/` | the stage, its score, flights and what can be pressed |
+| `src/components/home/`, `src/components/docs/` | the home page and the tree of the documentation |
+| `src/styles/motion.css`, `src/client/reveal.ts` | how everything else moves; none of it under reduced motion |
 
-`public/stills/<shape>.jpg` (1000 x 620) and `public/og.jpg` (1200 x 630) are screenshots of the film. Take them again
-after changing a shape, shot or grade.
+A new skill, agent, rule file or hook event also needs a sign in `src/content/emblems.ts`: the build says which is
+missing.
+
+`public/stills/<shape>.jpg` (1000 x 620) and `public/og.jpg` (1200 x 630) are screenshots of the stage.

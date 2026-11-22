@@ -1,0 +1,103 @@
+---
+import { agents, skillGroups } from '../../content/catalogue.ts'
+import { PAGES, SECTIONS } from '../../content/guide/pages.ts'
+import { hookPurpose } from '../../content/guide/purpose.ts'
+import { ruleGuides } from '../../content/guide/rules.ts'
+import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
+import { content } from '../../content/index.ts'
+import type { Bilingual } from '../../content/catalogue.ts'
+import type { Locale } from '../../content/types.ts'
+import { hookOrder } from '../../lib/kit-map.ts'
+import { agentUrl, hookUrl, pageUrl, routeUrl, ruleUrl, skillUrl } from '../../lib/links.ts'
+import { ruleGroups } from '../../lib/plugin.ts'
+import type { Route } from '../../lib/routes.ts'
+
+interface Props {
+  locale: Locale
+  route: Exclude<Route, { kind: 'home' }>
+}
+
+interface Leaf {
+  name: string
+  href: string
+  about: Bilingual
+  under?: string | undefined
+}
+
+const { locale, route } = Astro.props
+const copy = content[locale]
+const here = routeUrl(locale, route)
+const words = {
+  guides: t('Guides', 'الأدلة'),
+  hooks: t('Hooks', 'الحرّاس'),
+  search: t('Search: table, RTL, push…', 'ابحث: جدول، RTL، رفع…'),
+  none: t('Nothing matches.', 'لا شيء يطابق.'),
+}
+const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
+  {
+    name: words.guides[locale],
+    kind: 'page',
+    leaves: SECTIONS.flatMap(({ pages }) => pages).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
+  },
+  {
+    name: PAGES.skills.name[locale],
+    kind: 'skill',
+    leaves: skillGroups.flatMap(({ title, skills }) =>
+      Object.entries(skills).map(([name, about], i) => ({ name, href: skillUrl(locale, name), about, under: i === 0 ? title[locale] : undefined })),
+    ),
+  },
+  {
+    name: PAGES.agents.name[locale],
+    kind: 'agent',
+    leaves: Object.entries(agents).map(([name, about]) => ({ name, href: agentUrl(locale, name), about })),
+  },
+  {
+    name: PAGES.rules.name[locale],
+    kind: 'rule',
+    leaves: ruleGroups.flatMap(({ group, names }) =>
+      names.map((name, i) => ({
+        name,
+        href: ruleUrl(locale, group, name),
+        about: ruleGuides[`${group}/${name}`]!,
+        under: i === 0 ? copy.rules.groups[group] : undefined,
+      })),
+    ),
+  },
+  {
+    name: words.hooks[locale],
+    kind: 'hook',
+    leaves: hookOrder.map((event) => ({ name: event, href: hookUrl(locale, event), about: hookPurpose[event] })),
+  },
+]
+---
+
+<details class="tree" open data-tree>
+  <summary>{ui.allPages[locale]}</summary>
+  <label class="tree-search">
+    <span class="sr-only">{words.search[locale]}</span>
+    <input type="search" placeholder={words.search[locale]} autocomplete="off" data-tree-input />
+  </label>
+  <p class="tree-none" role="status" data-tree-empty hidden>{words.none[locale]}</p>
+  <nav aria-label={PAGES.docs.name[locale]} data-tree-list>
+    {
+      groups.map(({ name, kind, leaves }) => (
+        <details open={kind === route.kind || (kind === 'skill' && route.kind === 'page' && route.id === 'docs')} data-tree-group>
+          <summary>
+            {name} <span>{leaves.length}</span>
+          </summary>
+          <ul>
+            {leaves.map((leaf) => (
+              <li data-tree-item data-search={[leaf.name, leaf.about.en, leaf.about.ar].join(' ').toLowerCase()}>
+                {leaf.under && <small>{leaf.under}</small>}
+                <a href={leaf.href} class:list={{ 'is-name': kind !== 'page' }} aria-current={leaf.href === here ? 'page' : undefined}>
+                  <bdi>{leaf.name}</bdi>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))
+    }
+  </nav>
+</details>

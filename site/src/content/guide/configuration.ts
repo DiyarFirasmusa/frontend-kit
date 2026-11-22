@@ -17,9 +17,9 @@ export const settings = [
     keys: [
       ['defaultBranch', t('Where task branches start.', 'من أين تبدأ فروع المهام.')],
       ['protectedBranches', t('Branches the guard defends. Default: main and master.', 'الفروع التي يحميها الحارس، وافتراضياً main وmaster.')],
-      ['liveHosts', t('Production hosts. Claude may not request or open them.', 'نطاقات الإنتاج، لا يطلبها Claude ولا يفتحها.')],
-      ['uatHost', t('The test environment Claude may use.', 'البيئة التجريبية المسموحة لـ Claude.')],
-      ['protectedPaths', t('Files Claude may not edit, such as deploy config.', 'ملفات لا يعدّلها Claude، مثل إعداد النشر.')],
+      ['liveHosts', t('Production hosts. The assistant may not request or open them.', 'نطاقات الإنتاج، لا يطلبها المساعد ولا يفتحها.')],
+      ['uatHost', t('The test environment the assistant may use.', 'البيئة التجريبية المسموحة للمساعد.')],
+      ['protectedPaths', t('Files the assistant may not edit, such as deploy config.', 'ملفات لا يعدّلها المساعد، مثل إعداد النشر.')],
       ['generatedPaths', t('Generated files that are changed through their generator.', 'ملفات مولّدة تُغيَّر عبر مولّدها.')],
       ['allowJs', t('true allows new JavaScript files in a TypeScript project.', 'true تسمح بملفات JavaScript في مشروع TypeScript.')],
     ],

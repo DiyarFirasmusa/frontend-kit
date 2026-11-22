@@ -1,0 +1,28 @@
+---
+import { content } from '../../content/index.ts'
+import type { Locale } from '../../content/types.ts'
+import { objectsOf } from '../../lib/kit-map.ts'
+import { census } from '../../lib/plugin.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const objects = objectsOf(locale, content[locale].rules.groups)
+---
+
+<div class="stage" aria-hidden="true" transition:persist="stage">
+  <canvas id="stage" data-stage></canvas>
+  <div class="stage-shade"></div>
+  <div class="stage-labels">
+    {
+      objects.map(({ shape, stop, name, href }) => (
+        <span class={`stage-label stage-label-${shape}`} dir="auto" data-object={`${shape}-${stop}`} data-href={href} hidden>
+          {name}
+        </span>
+      ))
+    }
+  </div>
+  <script type="application/json" data-census set:html={JSON.stringify(census)} />
+</div>

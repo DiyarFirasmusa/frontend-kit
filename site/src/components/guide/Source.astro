@@ -1,5 +1,6 @@
 ---
 import { getEntry } from 'astro:content'
+import { t } from '../../content/guide/text.ts'
 
 interface Props {
   /** A path in the repository. */
@@ -7,8 +8,12 @@ interface Props {
 }
 
 const { file } = Astro.props
+const open = t('Show the whole file', 'اعرض الملف كاملاً')
 const entry = await getEntry('reference', file)
 if (!entry?.rendered) throw new Error(`The documentation has no text for ${file}`)
 ---
 
-<div class="source-doc" lang="en" dir="ltr" set:html={entry.rendered.html} />
+<details class="file">
+  <summary>{(Astro.url.pathname.startsWith(`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}ar`) ? open.ar : open.en)}</summary>
+  <div class="source-doc" lang="en" dir="ltr" set:html={entry.rendered.html} />
+</details>

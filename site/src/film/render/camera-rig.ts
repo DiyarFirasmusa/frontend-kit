@@ -2,10 +2,10 @@ import { PerspectiveCamera, Vector2, Vector3 } from 'three'
 import { SHOTS } from '../direction.ts'
 import type { Focus } from '../focus.ts'
 import type { Vec3 } from '../shapes/blocks.ts'
-import type { ShapeName } from '../shapes/index.ts'
+import { setOf, type ShapeName } from '../shapes/index.ts'
 import { clamp, mix } from '../timeline.ts'
 
-export type Layout = 'side' | 'high' | 'centre'
+export type Layout = 'side' | 'far' | 'high' | 'centre'
 
 export interface Framing {
   from: ShapeName
@@ -18,6 +18,8 @@ export interface Framing {
   aside: number
   read: number
   focus?: Focus | undefined
+  /** How far the visitor has turned it by hand, in radians. */
+  turned?: [yaw: number, pitch: number] | undefined
 }
 
 export interface Screen {
@@ -58,7 +60,7 @@ export class CameraRig {
   }
 
   private aim(shape: ShapeName, t: number, eye: Vector3, target: Vector3): void {
-    const { from, to, look, lookTo } = SHOTS[shape]
+    const { from, to, look, lookTo } = SHOTS[setOf(shape)]
     eye.fromArray(from).lerp(this.end.fromArray(to), t)
     target.fromArray(look).lerp(this.end.fromArray(lookTo), t)
   }
@@ -71,20 +73,21 @@ export class CameraRig {
 
   private lean(layout: Layout): [number, number] {
     if (this.screen.width < NARROW) return [0, layout === 'centre' ? 0 : 0.17]
+    if (layout === 'far') return [this.rtl ? -0.29 : 0.29, 0]
     if (layout === 'side') return [this.rtl ? -0.21 : 0.21, 0]
     if (layout === 'high') return [0, -0.12]
     return [0, 0]
   }
 
   update(framing: Framing, screen: Screen, live: { time: number; delta: number; speed: number; hit: number; aim: Vector2 }): Vector3 {
-    const { from, to, hold, t, layouts, aside, read, focus } = framing
+    const { from, to, hold, t, layouts, aside, read, focus, turned } = framing
     const { time, delta, speed, hit, aim } = live
     this.screen = screen
     const { width, height } = screen
     const { eye, target, camera } = this
 
     this.aim(from, hold, eye, target)
-    let fov = SHOTS[from].fov
+    let fov = SHOTS[setOf(from)].fov
     if (aside > 0) {
       if (focus) {
         eye.lerp(this.end.fromArray(focus.eye), aside)
@@ -97,7 +100,11 @@ export class CameraRig {
       this.aim(to, 0, this.nextEye, this.nextTarget)
       eye.lerp(this.nextEye, t)
       target.lerp(this.nextTarget, t)
-      fov = mix(fov, SHOTS[to].fov, t)
+      fov = mix(fov, SHOTS[setOf(to)].fov, t)
+    }
+    if (turned) {
+      eye.sub(target).applyAxisAngle(this.vertical, turned[0])
+      eye.applyAxisAngle(this.end.crossVectors(this.vertical, eye).normalize(), turned[1]).add(target)
     }
 
     this.pointer.lerp(aim, 1 - Math.exp(-delta * 4))
@@ -107,7 +114,7 @@ export class CameraRig {
 
     const aspect = width / height
     let widen = 1
-    if (aspect < 1) widen = Math.max(1, mix(SHOTS[from].phone, SHOTS[to].phone, t) * Math.min(1, PORTRAIT_REFERENCE / aspect))
+    if (aspect < 1) widen = Math.max(1, mix(SHOTS[setOf(from)].phone, SHOTS[setOf(to)].phone, t) * Math.min(1, PORTRAIT_REFERENCE / aspect))
     if (width < NARROW) widen *= mix(mix(1, PHONE_READING.widen, aside), 1, t)
     camera.fov = (Math.atan(Math.tan((fov * Math.PI) / 360) * widen) * 360) / Math.PI
     camera.aspect = aspect

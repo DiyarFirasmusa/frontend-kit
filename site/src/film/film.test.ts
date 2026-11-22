@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { STRIDE } from './shapes/blocks.ts'
-import { FULL, LITE, SHAPES, type Census, type ShapeName } from './shapes/index.ts'
+import { FULL, LITE, SHAPES, type Census, type FixedShape } from './shapes/index.ts'
+import { emblem, type EmblemName } from './shapes/emblems/build.ts'
+import { FRAMES, SIGNS } from './shapes/emblems/signs.ts'
 import { pack } from './shapes/pack.ts'
 import { toClip } from './pointer.ts'
 import { focusAt } from './focus.ts'
@@ -10,7 +12,7 @@ import { createTimeline, stopAt } from './timeline.ts'
 const census: Census = { skills: 39, agents: 10, events: 9, ruleGroups: [10, 5, 6, 3, 2, 5] }
 
 for (const [tier, budget] of [['full', FULL], ['lite', LITE]] as const) {
-  for (const name of Object.keys(SHAPES) as ShapeName[]) {
+  for (const name of Object.keys(SHAPES) as FixedShape[]) {
     test(`${name} (${tier}) keeps all its meaning and packs into valid numbers`, () => {
       const shape = SHAPES[name](census, budget)
       const kept = shape.blocks.filter((b) => b.keep).length
@@ -25,6 +27,17 @@ for (const [tier, budget] of [['full', FULL], ['lite', LITE]] as const) {
   }
 }
 
+test('every emblem is something to see and fits both budgets', () => {
+  for (const frame of Object.keys(FRAMES)) {
+    for (const sign of Object.keys(SIGNS)) {
+      for (const budget of [FULL, LITE]) {
+        const kept = emblem(`emblem:${frame}/${sign}` as EmblemName, budget.tileScale).blocks.filter((b) => b.keep).length
+        assert.ok(kept >= 60 && kept <= budget.blocks, `${frame}/${sign} keeps ${kept} of ${budget.blocks}`)
+      }
+    }
+  }
+})
+
 test('labelled shapes have one anchor per label, also when the plugin grows', () => {
   for (const grown of [census, { skills: 46, agents: 12, events: 11, ruleGroups: [12, 6, 6, 3, 2, 5, 4] }]) {
     assert.equal(SHAPES.skills(grown, FULL).anchors?.length, grown.skills)
@@ -34,7 +47,7 @@ test('labelled shapes have one anchor per label, also when the plugin grows', ()
 })
 
 test('the broken screen has the same pieces as the mended one', () => {
-  const orders = (name: ShapeName) => SHAPES[name](census, FULL).blocks.map((b) => b.order)
+  const orders = (name: FixedShape) => SHAPES[name](census, FULL).blocks.map((b) => b.order)
   assert.deepEqual(orders('broken'), orders('screen'))
 })
 
@@ -56,7 +69,7 @@ test('reading rests on every stop, in order', () => {
 
 test('every explained object can be focused', () => {
   const counts = { skills: census.skills, agents: census.agents, rules: census.ruleGroups.length, checks: census.events }
-  for (const [name, amount] of Object.entries(counts) as [ShapeName, number][]) {
+  for (const [name, amount] of Object.entries(counts) as [FixedShape, number][]) {
     const { anchors } = SHAPES[name](census, FULL)
     assert.equal(anchors?.length, amount)
     for (let stop = 0; stop < amount; stop += 0.5) {

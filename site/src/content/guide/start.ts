@@ -35,7 +35,7 @@ export const questions = [
 ]
 
 export const written = [
-  { path: 'CLAUDE.md', text: t('What Claude reads first: hard rules, commands and layout. Your own file is merged, not replaced.', 'أول ما يقرؤه Claude: القواعد الصارمة والأوامر والهيكل. ملفك يُدمج ولا يُستبدل.') },
+  { path: 'CLAUDE.md', text: t('What the assistant reads first: hard rules, commands and layout. Your own file is merged, not replaced.', 'أول ما يقرؤه المساعد: القواعد الصارمة والأوامر والهيكل. ملفك يُدمج ولا يُستبدل.') },
   { path: '.claude/rules/', text: t('The standards for your project type, rewritten for the libraries you really use.', 'معايير نوع مشروعك، معدّلة لمكتباتك الفعلية.') },
   { path: '.claude/settings.json', text: t('Permissions: what runs freely, what asks and what is denied. Also automatic updates.', 'الصلاحيات: ما يعمل مباشرة وما يسأل وما يُمنع، والتحديث التلقائي.') },
   { path: '.claude/frontend-kit.json', text: t('The values every skill and hook reads: ports, branches, hosts, stack and commands.', 'القيم التي تقرؤها كل مهارة وحارس: المنافذ والفروع والنطاقات والتقنيات والأوامر.') },

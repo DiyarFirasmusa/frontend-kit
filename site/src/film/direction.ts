@@ -1,5 +1,5 @@
 import type { Vec3 } from './shapes/blocks.ts'
-import type { ShapeName } from './shapes/index.ts'
+import type { SetName } from './shapes/index.ts'
 
 interface Shot {
   from: Vec3
@@ -23,7 +23,8 @@ const shot = (from: Vec3, to: Vec3, look: Vec3, options: Partial<Pick<Shot, 'loo
 
 const CENTRED: Vec3 = [0, 10, 0]
 
-export const SHOTS: Record<ShapeName, Shot> = {
+export const SHOTS: Record<SetName, Shot> = {
+  emblem: shot([-9, 12, 38], [7, 10.5, 38], CENTRED, { fov: 42, phone: 1.6 }),
   storm: shot([0, 11, 22], [0, 11, 22], CENTRED),
   mark: shot([-13, 7, 35], [-4, 12, 35], CENTRED),
   broken: shot([11, 14, 42], [3, 8, 38], CENTRED),
@@ -59,7 +60,8 @@ const grade = (metal: string, over: Partial<Grade> = {}): Grade => ({
   ...over,
 })
 
-export const GRADES: Record<ShapeName, Grade> = {
+export const GRADES: Record<SetName, Grade> = {
+  emblem: grade('#a4a6a8', { base: '#070708', sun: 0.28, key: 2.2, rim: 2.6 }),
   storm: grade('#6d7075', { sun: 0.02, key: 0.5 }),
   mark: grade('#999691', { base: '#090807', sun: 0.34, key: 2.1, rim: 2.2 }),
   broken: grade('#605d5c', { base: '#080505', light: '#93362e', key: 1, rim: 2.2 }),
@@ -86,7 +88,8 @@ const move = (over: Partial<Move> = {}): Move => ({ swirl: 0, blast: 0, tumble: 
 const UPRIGHT = move({ tumble: 0 })
 
 /** How blocks fly, by the shape they fly to. */
-export const MOVES: Record<ShapeName, Move> = {
+export const MOVES: Record<SetName, Move> = {
+  emblem: move({ swirl: 0.45, blast: 0.3 }),
   storm: move(),
   mark: move({ swirl: 0.8 }),
   broken: move({ blast: 0.8 }),

@@ -4,8 +4,8 @@ import type { SkillGuide } from './types.ts'
 export const build: Record<string, SkillGuide> = {
   'create-component': {
     plain: t(
-      'The playbook Claude follows whenever it makes a piece of interface: a button, card, dialog, badge or section. It stops the third copy of the same button from being written.',
-      'الدليل الذي يتبعه Claude كلما صنع قطعة واجهة: زراً أو بطاقة أو نافذة أو شارة أو قسماً. وهو ما يمنع كتابة نسخة ثالثة من الزر نفسه.',
+      'The playbook the assistant follows whenever it makes a piece of interface: a button, card, dialog, badge or section. It stops the third copy of the same button from being written.',
+      'الدليل الذي يتبعه المساعد كلما صنع قطعة واجهة: زراً أو بطاقة أو نافذة أو شارة أو قسماً. وهو ما يمنع كتابة نسخة ثالثة من الزر نفسه.',
     ),
     ask: [t('create a product card with image, price and an add button', 'أنشئ بطاقة منتج بصورة وسعر وزر إضافة'), t('extract this header into a component', 'استخرج هذا الرأس في مكوّن مستقل')],
     steps: [
@@ -24,8 +24,8 @@ export const build: Record<string, SkillGuide> = {
   },
   'create-form': {
     plain: t(
-      'How Claude builds anything a person types into: login, address, checkout, profile. Forms are where most small bugs hide, so this playbook is strict.',
-      'كيف يبني Claude كل ما يكتب فيه المستخدم: الدخول والعنوان والدفع والملف الشخصي. في النماذج تختبئ أغلب الأخطاء الصغيرة، لذلك هذا الدليل صارم.',
+      'How the assistant builds anything a person types into: login, address, checkout, profile. Forms are where most small bugs hide, so this playbook is strict.',
+      'كيف يبني المساعد كل ما يكتب فيه المستخدم: الدخول والعنوان والدفع والملف الشخصي. في النماذج تختبئ أغلب الأخطاء الصغيرة، لذلك هذا الدليل صارم.',
     ),
     ask: [t('create a login form with phone and OTP', 'أنشئ نموذج دخول بالهاتف ورمز التحقق'), t('add an address form with validation', 'أضف نموذج عنوان مع التحقق')],
     steps: [
@@ -75,8 +75,8 @@ export const build: Record<string, SkillGuide> = {
   },
   'figma-match': {
     plain: t(
-      'Turns a Figma link into code that looks like the frame. The design is the specification, so Claude does not improve it.',
-      'يحوّل رابط Figma إلى شيفرة تطابق الإطار. التصميم هو المواصفة، فلا يحسّنه Claude من عنده.',
+      'Turns a Figma link into code that looks like the frame. The design is the specification, so the assistant does not improve it.',
+      'يحوّل رابط Figma إلى شيفرة تطابق الإطار. التصميم هو المواصفة، فلا يحسّنه المساعد من عنده.',
     ),
     ask: [t('build this like Figma: <link>', 'ابنِ هذا مثل Figma: <الرابط>'), t('the spacing is not the same as the design', 'المسافات لا تطابق التصميم')],
     steps: [
@@ -88,7 +88,7 @@ export const build: Record<string, SkillGuide> = {
     result: [t('Interface that matches the frame', 'واجهة تطابق الإطار'), t('A list of any deliberate difference', 'قائمة بأي فرق مقصود')],
     limits: [t('Asks when a state is missing instead of inventing a design.', 'يسأل عند غياب حالة بدلاً من اختراع تصميم.')],
     related: ['create-component', 'live-check'],
-    needs: t('Claude needs access to Figma (the Figma plugin).', 'يحتاج Claude صلاحية الوصول إلى Figma (إضافة Figma).'),
+    needs: t('The assistant needs access to Figma (the Figma plugin).', 'يحتاج المساعد صلاحية الوصول إلى Figma (إضافة Figma).'),
   },
   'frontend-design': {
     plain: t(
@@ -107,8 +107,8 @@ export const build: Record<string, SkillGuide> = {
   },
   'ui-ux-pro-max': {
     plain: t(
-      'A searchable library of design ideas: styles, palettes, font pairs and UX guidelines. Claude opens it when you ask for ideas.',
-      'مكتبة أفكار تصميم قابلة للبحث: أساليب ولوحات ألوان وأزواج خطوط وإرشادات تجربة. يفتحها Claude عندما تطلب أفكاراً.',
+      'A searchable library of design ideas: styles, palettes, font pairs and UX guidelines. The assistant opens it when you ask for ideas.',
+      'مكتبة أفكار تصميم قابلة للبحث: أساليب ولوحات ألوان وأزواج خطوط وإرشادات تجربة. يفتحها المساعد عندما تطلب أفكاراً.',
     ),
     ask: [t('any better idea for this empty page?', 'هل من فكرة أفضل لهذه الصفحة الفارغة؟'), t('how should this checkout look for better UX', 'كيف يكون شكل الدفع بتجربة أفضل')],
     steps: [

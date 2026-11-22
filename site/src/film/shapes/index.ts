@@ -1,4 +1,5 @@
 import type { Shape, Vec3 } from './blocks.ts'
+import { emblem, isEmblem, type EmblemName } from './emblems/build.ts'
 import { mark, passage, storm, vault } from './monuments.ts'
 import { pack } from './pack.ts'
 import { both, broken, dashboard, layers, website } from './screens.ts'
@@ -18,7 +19,8 @@ export interface Budget {
   tileScale: number
 }
 
-export type ShapeName =
+/** The shapes built before the first frame. */
+export type FixedShape =
   | 'storm'
   | 'mark'
   | 'broken'
@@ -33,9 +35,16 @@ export type ShapeName =
   | 'checks'
   | 'gate'
 
+/** Any shape: an emblem is built when it is first asked for. */
+export type ShapeName = FixedShape | EmblemName
+/** What light, camera and flight are directed by. */
+export type SetName = FixedShape | 'emblem'
+
+export const setOf = (name: ShapeName): SetName => (isEmblem(name) ? 'emblem' : (name as FixedShape))
+
 type Build = (census: Census, budget: Budget) => Shape
 
-export const SHAPES: Record<ShapeName, Build> = {
+export const SHAPES: Record<FixedShape, Build> = {
   storm: (_, { blocks }) => storm(blocks),
   mark: (_, { tileScale }) => mark(tileScale),
   broken: (_, { tileScale }) => broken(tileScale),
@@ -52,14 +61,14 @@ export const SHAPES: Record<ShapeName, Build> = {
 }
 
 export function isShape(name: string | undefined): name is ShapeName {
-  return name !== undefined && Object.hasOwn(SHAPES, name)
+  return name !== undefined && (Object.hasOwn(SHAPES, name) || isEmblem(name))
 }
 
 export const FULL: Budget = { blocks: 9000, tileScale: 1 }
 export const LITE: Budget = { blocks: 4600, tileScale: 1.45 }
 
 export interface BuiltShapes {
-  data: Record<ShapeName, Float32Array>
+  blocksOf(name: ShapeName): Float32Array
   anchors: Partial<Record<ShapeName, Vec3[]>>
 }
 
@@ -67,13 +76,21 @@ const nextTask = (): Promise<void> => new Promise((resolve) => setTimeout(resolv
 
 /** Builds every shape, giving the main thread back between them. */
 export async function buildShapes(census: Census, budget: Budget): Promise<BuiltShapes> {
-  const data = {} as Record<ShapeName, Float32Array>
+  const data = new Map<ShapeName, Float32Array>()
   const anchors: Partial<Record<ShapeName, Vec3[]>> = {}
-  for (const name of Object.keys(SHAPES) as ShapeName[]) {
+  for (const name of Object.keys(SHAPES) as FixedShape[]) {
     const shape = SHAPES[name](census, budget)
-    data[name] = pack(shape, budget.blocks)
+    data.set(name, pack(shape, budget.blocks))
     if (shape.anchors) anchors[name] = shape.anchors
     await nextTask()
   }
-  return { data, anchors }
+  const blocksOf = (name: ShapeName): Float32Array => {
+    let built = data.get(name)
+    if (!built) {
+      built = pack(emblem(name as EmblemName, budget.tileScale), budget.blocks)
+      data.set(name, built)
+    }
+    return built
+  }
+  return { blocksOf, anchors }
 }

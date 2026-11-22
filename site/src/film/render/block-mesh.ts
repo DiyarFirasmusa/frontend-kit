@@ -19,11 +19,11 @@ export class BlockMesh {
   readonly reflection: Mesh
   private readonly from: InstancedInterleavedBuffer
   private readonly to: InstancedInterleavedBuffer
-  private readonly shapes: BuiltShapes['data']
+  private readonly blocksOf: BuiltShapes['blocksOf']
   private loaded = ''
 
-  constructor(count: number, shapes: BuiltShapes['data'], uniforms: FilmUniforms) {
-    this.shapes = shapes
+  constructor(count: number, blocksOf: BuiltShapes['blocksOf'], uniforms: FilmUniforms) {
+    this.blocksOf = blocksOf
     this.from = new InstancedInterleavedBuffer(new Float32Array(count * STRIDE), STRIDE)
     this.to = new InstancedInterleavedBuffer(new Float32Array(count * STRIDE), STRIDE)
 
@@ -54,8 +54,8 @@ export class BlockMesh {
   load(from: ShapeName, to: ShapeName): void {
     if (this.loaded === from + to) return
     this.loaded = from + to
-    this.from.array.set(this.shapes[from])
-    this.to.array.set(this.shapes[to])
+    this.from.array.set(this.blocksOf(from))
+    this.to.array.set(this.blocksOf(to))
     this.from.needsUpdate = true
     this.to.needsUpdate = true
   }

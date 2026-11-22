@@ -54,7 +54,7 @@ export const gate = [
   t('The typecheck runs.', 'يعمل فحص الأنواع.'),
   t('The related tests run, or the whole suite if you configure it.', 'تعمل الاختبارات المرتبطة، أو كلها إن ضبطت ذلك.'),
   t('The translation validator runs when locale files changed.', 'يعمل مدقّق الترجمة إن تغيّرت ملفاتها.'),
-  t('A failure sends the errors to Claude and keeps it working, up to three times in a row.', 'الفشل يرسل الأخطاء إلى Claude ويبقيه يعمل، حتى ثلاث مرات متتالية.'),
+  t('A failure sends the errors to the assistant and keeps it working, up to three times in a row.', 'الفشل يرسل الأخطاء إلى المساعد ويبقيه يعمل، حتى ثلاث مرات متتالية.'),
   t('A pass asks for one review by frontend-reviewer.', 'والنجاح يطلب مراجعة واحدة من frontend-reviewer.'),
 ]
 

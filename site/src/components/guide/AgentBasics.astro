@@ -10,8 +10,8 @@ interface Props {
 const { locale } = Astro.props
 const words = {
   difference: t('How is an agent different from a skill?', 'ما الفرق بين الوكيل والمهارة؟'),
-  skill: t('A skill is knowledge. The same Claude reads the steps and does the job itself.', 'المهارة معرفة: Claude نفسه يقرأ الخطوات وينفّذ.'),
-  agent: t('An agent is a worker. A separate Claude does the job without seeing the conversation, which is why its review is honest.', 'الوكيل عامل: Claude منفصل ينفّذ دون أن يرى المحادثة، ولذلك تكون مراجعته نزيهة.'),
+  skill: t('A skill is knowledge. The same assistant reads the steps and does the job itself.', 'المهارة معرفة: المساعد نفسه يقرأ الخطوات وينفّذ.'),
+  agent: t('An agent is a worker. A separate assistant does the job without seeing the conversation, which is why its review is honest.', 'الوكيل عامل: مساعد منفصل ينفّذ دون أن يرى المحادثة، ولذلك تكون مراجعته نزيهة.'),
   start: t('How an agent starts', 'كيف يبدأ الوكيل'),
   ways: [
     t('By itself: frontend-reviewer runs after the quality gate passes.', 'تلقائياً: يعمل frontend-reviewer بعد نجاح بوابة الجودة.'),

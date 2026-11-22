@@ -3,8 +3,11 @@ import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
 import Layout from '../layouts/Layout.astro'
 import type { Route } from '../lib/routes.ts'
-import FilmTrack from './film/FilmTrack.astro'
 import Header from './Header.astro'
+import Example from './home/Example.astro'
+import Explorer from './home/Explorer.astro'
+import GetIt from './home/GetIt.astro'
+import Hero from './home/Hero.astro'
 import SiteFooter from './SiteFooter.astro'
 
 interface Props {
@@ -12,17 +15,17 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const copy = content[locale]
+const { meta } = content[locale]
 const route: Route = { kind: 'home' }
 ---
 
-<Layout locale={locale} route={route} title={copy.meta.title} description={copy.meta.description}>
+<Layout locale={locale} route={route} title={meta.title} description={meta.description}>
   <Header locale={locale} route={route} />
-  <main id="content" tabindex="-1">
-    <FilmTrack copy={copy} locale={locale} />
-    <div class="details" data-details><SiteFooter locale={locale} /></div>
+  <main id="content" class="home" tabindex="-1" data-score>
+    <Hero locale={locale} />
+    <Example locale={locale} />
+    <Explorer locale={locale} />
+    <GetIt locale={locale} />
   </main>
-  <script>
-    import '../client/home.ts'
-  </script>
+  <SiteFooter locale={locale} />
 </Layout>

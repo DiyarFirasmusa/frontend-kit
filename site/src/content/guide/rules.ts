@@ -3,7 +3,7 @@ import { t } from './text.ts'
 
 /** What each rule file says, keyed by its group and file name. */
 export const ruleGuides: Record<string, Bilingual> = {
-  'shared/git.md': t('A branch per task, your yes before commit and push, and never a PR opened by Claude.', 'فرع لكل مهمة، وموافقتك قبل الحفظ والرفع، ولا طلب دمج يفتحه Claude.'),
+  'shared/git.md': t('A branch per task, your yes before commit and push, and never a PR opened by the assistant.', 'فرع لكل مهمة، وموافقتك قبل الحفظ والرفع، ولا طلب دمج يفتحه المساعد.'),
   'shared/i18n.md': t('How text is translated: keys, bundles, plurals, every language in the same change.', 'كيف يُترجم النص: المفاتيح والحزم والجمع، وكل اللغات في التغيير نفسه.'),
   'shared/naming.md': t('How files, components, functions and variables are named.', 'كيف تُسمّى الملفات والمكوّنات والدوال والمتغيرات.'),
   'shared/project.md': t('Your project’s own facts: where things are, decisions, versions and local quirks.', 'حقائق مشروعك: الأماكن والقرارات والإصدارات والخصوصيات.'),

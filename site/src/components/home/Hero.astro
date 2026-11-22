@@ -1,0 +1,29 @@
+---
+import { home } from '../../content/guide/home.ts'
+import { content } from '../../content/index.ts'
+import type { Locale } from '../../content/types.ts'
+import { asset, pageUrl } from '../../lib/links.ts'
+import Commands from '../Commands.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<section id="intro" class="hero" data-stage-shape="mark">
+  <div class="column">
+    <h1 data-rise>{home.title[locale]}</h1>
+    <p class="hero-what">{home.what[locale]}</p>
+    <ul class="changes">
+      {home.changes.map(({ name, text }) => <li><strong>{name[locale]}</strong><span>{text[locale]}</span></li>)}
+    </ul>
+    <Commands install={content[locale].install} first />
+    <p class="hero-ways">
+      <a href="#example">{home.see[locale]}</a>
+      <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
+    </p>
+  </div>
+  <img class="still" src={asset('stills/mark.jpg')} width="1000" height="620" alt="" />
+</section>

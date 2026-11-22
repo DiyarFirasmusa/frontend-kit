@@ -47,8 +47,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'modes',
     still: 'layers',
     name: t('Modes', 'الأنماط'),
-    title: t('Modes: how Claude approaches the project.', 'الأنماط: كيف يتعامل Claude مع المشروع.'),
-    lead: t('One key in the config tells Claude whether to build, to fit in or to restructure.', 'مفتاح واحد في الإعدادات يخبر Claude هل يبني أم ينسجم أم يعيد الهيكلة.'),
+    title: t('Modes: how the assistant approaches the project.', 'الأنماط: كيف يتعامل المساعد مع المشروع.'),
+    lead: t('One key in the config tells the assistant whether to build, to fit in or to restructure.', 'مفتاح واحد في الإعدادات يخبر المساعد هل يبني أم ينسجم أم يعيد الهيكلة.'),
   },
   changelog: {
     id: 'changelog',
@@ -63,8 +63,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     name: t('What is it?', 'ما هي؟'),
     title: t('What is frontend-kit?', 'ما هي frontend-kit؟'),
     lead: t(
-      'An add-on for Claude Code. It teaches Claude how a good frontend team builds, and puts checks around it so the work is proven before you see it.',
-      'إضافة لـ Claude Code تعلّم Claude كيف يبني فريق واجهات جيد، وتحيطه بفحوص حتى يُثبَت العمل قبل أن يصلك.',
+      'A kit that teaches your coding assistant how a good frontend team builds, and puts checks around it so the work is proven before you see it.',
+      'عدّة تعلّم مساعدك البرمجي كيف يبني فريق واجهات جيد، وتحيطه بفحوص حتى يُثبَت العمل قبل أن يصلك.',
     ),
   },
   'get-started': {
@@ -78,20 +78,20 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'skills',
     still: 'skills',
     name: t('Skills', 'المهارات'),
-    title: t('Skills: how Claude knows the job.', 'المهارات: كيف يعرف Claude العمل.'),
+    title: t('Skills: how the assistant knows the job.', 'المهارات: كيف يعرف المساعد العمل.'),
     lead: t(
-      'A skill is a written playbook for one job, such as building a table. When your request matches, Claude reads the playbook and follows its steps.',
-      'المهارة دليل مكتوب لعمل واحد، مثل بناء جدول. عندما يطابقها طلبك يقرأ Claude الدليل ويتبع خطواته.',
+      'A skill is a written playbook for one job, such as building a table. When your request matches, the assistant reads the playbook and follows its steps.',
+      'المهارة دليل مكتوب لعمل واحد، مثل بناء جدول. عندما يطابقها طلبك يقرأ المساعد الدليل ويتبع خطواته.',
     ),
   },
   agents: {
     id: 'agents',
     still: 'agents',
     name: t('Agents', 'الوكلاء'),
-    title: t('Agents: a team behind Claude.', 'الوكلاء: فريق خلف Claude.'),
+    title: t('Agents: a team behind the assistant.', 'الوكلاء: فريق خلف المساعد.'),
     lead: t(
-      'An agent is a separate Claude with one role, its own tools and a clean memory. The main Claude hands it a job and gets a report back.',
-      'الوكيل Claude منفصل بدور واحد وأدوات خاصة وذاكرة نظيفة. يسلّمه Claude الرئيسي عملاً ويستلم منه تقريراً.',
+      'An agent is a separate assistant with one role, its own tools and a clean memory. The main assistant hands it a job and gets a report back.',
+      'الوكيل مساعد منفصل بدور واحد وأدوات خاصة وذاكرة نظيفة. يسلّمه المساعد الرئيسي عملاً ويستلم منه تقريراً.',
     ),
   },
   features: {
@@ -114,8 +114,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     name: t('Rules', 'القواعد'),
     title: t('Rules: what good means here.', 'القواعد: معنى الجودة هنا.'),
     lead: t(
-      'A rule is a short file of standards in your repo. Most load only when Claude works on files they apply to.',
-      'القاعدة ملف معايير قصير في مستودعك، وأغلبها لا يُحمَّل إلا عندما يعمل Claude على ملفات تخصّه.',
+      'A rule is a short file of standards in your repo. Most load only when the assistant works on files they apply to.',
+      'القاعدة ملف معايير قصير في مستودعك، وأغلبها لا يُحمَّل إلا عندما يعمل المساعد على ملفات تخصّه.',
     ),
   },
   checks: {
@@ -124,8 +124,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     name: t('Checks and guards', 'الفحوص والحرّاس'),
     title: t('Checks and guards.', 'الفحوص والحرّاس.'),
     lead: t(
-      'Hooks are scripts that Claude Code runs at fixed moments. Claude does not have to remember them and cannot choose to forget them.',
-      'الـ hooks سكربتات يشغّلها Claude Code في لحظات ثابتة، فلا تعتمد على ذاكرة Claude ولا على اختياره.',
+      'Hooks are scripts that run at fixed moments. The assistant does not have to remember them and cannot choose to forget them.',
+      'الـ hooks سكربتات تعمل في لحظات ثابتة، فلا تعتمد على ذاكرة المساعد ولا على اختياره.',
     ),
   },
   configuration: {
@@ -147,7 +147,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     still: 'mark',
     name: t('Examples', 'أمثلة'),
     title: t('What do I type?', 'ماذا أكتب؟'),
-    lead: t('Find what you want to do, copy the sentence and say it to Claude in your own words.', 'جد ما تريد فعله، وانسخ الجملة أو قلها لـ Claude بكلماتك.'),
+    lead: t('Find what you want to do, copy the sentence and say it to the assistant in your own words.', 'جد ما تريد فعله، وانسخ الجملة أو قلها للمساعد بكلماتك.'),
   },
   questions: {
     id: 'questions',

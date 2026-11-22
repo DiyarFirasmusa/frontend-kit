@@ -6,10 +6,11 @@ import { ruleGuides } from '../content/guide/rules.ts'
 import { content } from '../content/index.ts'
 import type { HookEvent, Locale } from '../content/types.ts'
 import Layout from '../layouts/Layout.astro'
-import { CHAPTER_OF, onHome } from '../lib/here.ts'
-import { agentUrl, asset, hookUrl, pageUrl, routeUrl, ruleUrl, skillUrl } from '../lib/links.ts'
+import { viewOfRoute } from '../lib/kit-map.ts'
+import { agentUrl, asset, hookUrl, pageUrl, ruleUrl, skillUrl } from '../lib/links.ts'
 import { hookEvents, ruleGroups } from '../lib/plugin.ts'
 import type { Route } from '../lib/routes.ts'
+import DocsTree from './docs/DocsTree.astro'
 import Header from './Header.astro'
 import SiteFooter from './SiteFooter.astro'
 
@@ -71,55 +72,23 @@ const detail = route.kind !== 'page'
 const summary = here.about
 const heading = detail ? here.name : info.title[locale]
 const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${here.among})` : ''}` : info.name[locale]
-const inTour = route.kind === 'skill' ? `skill-${route.name}` : route.kind === 'agent' ? `agent-${route.name}` : CHAPTER_OF[parent]
+const { shape, stop } = viewOfRoute(route)
 ---
 
 <Layout locale={locale} route={route} title={`${label} | frontend-kit`} description={summary ?? ''}>
   <Header locale={locale} route={route} />
-  <main id="content" class="doc" tabindex="-1">
-    <header class:list={['banner', { 'banner-small': parent !== 'docs' }]}>
-      <img src={asset(`stills/${info.still}.jpg`)} width="1000" height="620" alt="" fetchpriority="high" />
-      <div class="banner-copy">
+  <main id="content" class="doc" tabindex="-1" data-stage-shape={shape} data-stage-stop={stop} data-stage-layout="far">
+    <DocsTree locale={locale} route={route} />
+    <div class="column">
+      <header class="doc-head">
         <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
-          <a href={routeUrl(locale, { kind: 'home' })}>{ui.home[locale]}</a>
           {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
           {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
         </nav>
-        <h1 class:list={{ 'is-name': detail }}>{detail ? <bdi>{heading}</bdi> : heading}</h1>
-        <p>{summary}</p>
-        {inTour && <a class="in-tour" href={onHome(locale, inTour)}>{ui.seeInTour[locale]}</a>}
-      </div>
-    </header>
-    <div class="doc-body">
-      <nav class="side" aria-label={ui.allPages[locale]}>
-        {
-          SECTIONS.map(({ title, pages }) => (
-            <div>
-              <p>{title[locale]}</p>
-              <ul>
-                {pages.map((id) => (
-                  <li>
-                    <a href={pageUrl(locale, id)} aria-current={id === parent ? (detail ? 'true' : 'page') : undefined}>
-                      {PAGES[id].name[locale]}
-                    </a>
-                    {detail && id === parent && (
-                      <ul class="side-names">
-                        {siblings.map((sibling) => (
-                          <li>
-                            <a href={sibling.href} aria-current={sibling === here ? 'page' : undefined}>
-                              <bdi>{sibling.name}</bdi>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </nav>
+        <h1 class:list={{ 'is-name': detail }} data-rise={detail ? undefined : ''}>{detail ? <bdi>{heading}</bdi> : heading}</h1>
+        <p class="doc-summary">{summary}</p>
+        <img class="still" src={asset(`stills/${info.still}.jpg`)} width="1000" height="620" alt="" />
+      </header>
       <article class="doc-article">
         <slot />
         <nav class="pager" aria-label={`${ui.previous[locale]} / ${ui.next[locale]}`}>

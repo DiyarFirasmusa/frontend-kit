@@ -10,7 +10,7 @@ export const problems = [
     t('Restart Claude Code after setup. If your source lives in an unusual folder, check srcDirs and the paths at the top of each rule.', 'أعد تشغيل Claude Code بعد الإعداد. وإن كانت شيفرتك في مجلد غير معتاد فراجع srcDirs والمسارات أعلى كل قاعدة.'),
   ],
   [
-    t('Claude does not use the skill I expected.', 'لا يستعمل Claude المهارة التي توقعتها.'),
+    t('The assistant does not use the skill I expected.', 'لا يستعمل المساعد المهارة التي توقعتها.'),
     t('Call it by name: /frontend-kit: followed by the skill’s name. Skills of another project type are switched off on purpose.', 'استدعها باسمها: ‎/frontend-kit: ثم اسم المهارة. ومهارات أنواع المشاريع الأخرى معطّلة عمداً.'),
   ],
   [

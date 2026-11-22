@@ -11,6 +11,7 @@ export function createUniforms() {
     uTumble: { value: 1 },
     uShock: { value: 0 },
     uTouch: { value: 0 },
+    uBurst: { value: 0 },
     uFocus: { value: new Vector3() },
     uReach: { value: new Vector3(1, 1, 1) },
     uFocusOn: { value: 0 },

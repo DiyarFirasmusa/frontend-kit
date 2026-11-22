@@ -3,9 +3,9 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'frontend-kit, a Claude Code plugin for React frontends',
+    title: 'frontend-kit, the kit for production React frontends',
     description:
-      'A Claude Code plugin that makes Claude build React and TypeScript like a careful frontend team: skills, agents, rules, guards and quality checks, in English and Arabic.',
+      'A kit that makes your coding assistant build React and TypeScript like a careful frontend team: skills, agents, rules, guards and quality checks, in English and Arabic.',
   },
   chrome: {
     skip: 'Skip to content',
@@ -18,11 +18,11 @@ export const en: Copy = {
   },
   scenes: {
     intro: {
-      title: 'Claude, building like your best frontend team.',
-      text: 'frontend-kit is a Claude Code plugin for React and TypeScript. It gives Claude skills, rules, a review crew and guards, then checks the work.',
+      title: 'The assistant, building like your best frontend team.',
+      text: 'frontend-kit is a Claude Code plugin for React and TypeScript. It gives the assistant skills, rules, a review crew and guards, then checks the work.',
     },
     without: {
-      title: 'Without the kit, Claude guesses.',
+      title: 'Without the kit, the assistant guesses.',
       text: 'Fast code that falls apart in review.',
       points: ['A new folder structure every session', 'A third copy of the same button', '“Done”, with a failing build', 'A layout that breaks in Arabic'],
     },
@@ -58,11 +58,11 @@ export const en: Copy = {
     },
     skills: {
       title: ({ skills }) => `${skills} skills, a playbook for each job.`,
-      text: 'A skill is a set of written steps for one job. Say “add a table”, and Claude follows the table skill.',
+      text: 'A skill is a set of written steps for one job. Say “add a table”, and the assistant follows the table skill.',
     },
     agents: {
       title: ({ agents }) => `${agents} agents behind every change.`,
-      text: 'An agent is a second Claude with one role and fresh eyes: it plans, builds, tests, reviews or audits.',
+      text: 'An agent is a second assistant with one role and fresh eyes: it plans, builds, tests, reviews or audits.',
     },
     rules: {
       title: ({ rules }) => `${rules} rules, loaded where they matter.`,
@@ -90,7 +90,7 @@ export const en: Copy = {
       text: 'Cost, safety, limits, and what to do when something does not work.',
     },
     install: {
-      title: 'Give Claude your standard.',
+      title: 'Give the assistant your standard.',
       text: 'Run these three inside Claude Code, in your project.',
     },
   },
@@ -111,7 +111,7 @@ export const en: Copy = {
   },
   gate: {
     title: 'Try the guard yourself.',
-    lead: 'Pick a command and send it as Claude. Each answer is the real output of the hook in the plugin. It catches known patterns and is not a sandbox.',
+    lead: 'Pick a command and send it as the assistant. Each answer is the real output of the hook in the plugin. It catches known patterns and is not a sandbox.',
     commands: 'Commands to try',
     waiting: 'Waiting for a command.',
     denied: 'Blocked',
@@ -126,7 +126,7 @@ export const en: Copy = {
       live: 'This would touch real customers. The live hosts come from your config.',
       typecheck: 'Ordinary work goes straight through.',
     },
-    after: 'When Claude stops after changing source, committed or not, typecheck and related tests run. Then a reviewer agent reads the change.',
+    after: 'When the assistant stops after changing source, committed or not, typecheck and related tests run. Then a reviewer agent reads the change.',
   },
   install: {
     title: 'Install it in three commands.',

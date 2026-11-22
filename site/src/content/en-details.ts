@@ -7,17 +7,17 @@ export const enDetails: Details = {
     pairs: [
       ['A new folder structure every session', 'One folder map and naming rule, loaded for the files being edited'],
       ['A third copy of the same button', 'Skills that look for what exists before they write'],
-      ['“Done”, and the build is red', 'Typecheck and related tests before Claude can finish'],
+      ['“Done”, and the build is red', 'Typecheck and related tests before the assistant can finish'],
       ['Only the happy path', 'Loading, error, empty and success are part of done'],
       ['A push to main, a peek at .env', 'A hook that catches the common forms before they run'],
       ['Arabic pages that break', 'Logical CSS rules and a translation validator'],
       ['Context lost after /clear', 'Branch, gate result and hard rules put back every time'],
-      ['The same long prompt, again', 'A short request, and the fitting skill is named for Claude'],
+      ['The same long prompt, again', 'A short request, and the fitting skill is named for the assistant'],
     ],
     fit: {
       title: 'Use it when',
       items: [
-        'You build React and TypeScript products with Claude Code.',
+        'You build React and TypeScript products with a coding assistant.',
         'The code has to pass review and live for years.',
         'Several people or sessions share one codebase.',
         'You ship in Arabic, English or both.',
@@ -28,7 +28,7 @@ export const enDetails: Details = {
       items: [
         'The project is not React.',
         'It is a throwaway prototype and checks would only slow you down.',
-        'You want Claude to open pull requests or push to main by itself.',
+        'You want the assistant to open pull requests or push to main by itself.',
       ],
     },
   },
@@ -64,10 +64,10 @@ export const enDetails: Details = {
       {
         title: 'It checks itself',
         items: [
-          ['After each edit', 'Your own formatter and linter run on the file, and errors go straight back to Claude.'],
+          ['After each edit', 'Your own formatter and linter run on the file, and errors go straight back to the assistant.'],
           ['Before finishing', 'On source changed in the session, committed or not: typecheck, related tests and, when locale files changed, the translation validator.'],
           ['A second reader', 'Once the gate passes, the reviewer agent reads the change. You can turn this off.'],
-          ['Before a commit', 'Claude is warned when the change has not passed the gate.'],
+          ['Before a commit', 'The assistant is warned when the change has not passed the gate.'],
         ],
       },
       {
@@ -101,9 +101,9 @@ export const enDetails: Details = {
         title: 'It respects your hands',
         items: [
           ['You commit', 'Commit and push wait for your explicit yes.'],
-          ['You open the PR', 'Claude prints the compare link and the description. The click is yours.'],
+          ['You open the PR', 'The assistant prints the compare link and the description. The click is yours.'],
           ['You choose', 'Skill hints and the automatic review each have a switch.'],
-          ['You hear back', 'On macOS a desktop alert tells you when Claude is waiting.'],
+          ['You hear back', 'On macOS a desktop alert tells you when the assistant is waiting.'],
         ],
       },
     ],
@@ -120,14 +120,14 @@ export const enDetails: Details = {
   },
   session: {
     events: {
-      SessionStart: ['A session starts', 'Branch state, the last gate result and the hard rules are handed to Claude, also after clear and compact.', 'Session starts: rules and branch state are handed over'],
+      SessionStart: ['A session starts', 'Branch state, the last gate result and the hard rules are handed to the assistant, also after clear and compact.', 'Session starts: rules and branch state are handed over'],
       UserPromptSubmit: ['You send a prompt', 'Short phrases are understood and the skills that fit are named.', 'You ask: the fitting skills are named'],
-      PreToolUse: ['Claude reaches for a tool', 'Known dangerous commands, files and addresses are refused before they run.', 'A tool runs: known dangerous actions are refused'],
+      PreToolUse: ['The assistant reaches for a tool', 'Known dangerous commands, files and addresses are refused before they run.', 'A tool runs: known dangerous actions are refused'],
       PostToolUse: ['A file is edited', 'It is formatted and linted with your project’s tools.', 'A file changes: it is formatted and linted'],
       PostToolUseFailure: ['A tool fails', 'The failure is logged, so repeats become visible.', 'A tool fails: the failure is logged'],
       SubagentStop: ['A coding agent reports back', 'The typecheck must pass first, or the agent gets one more turn to fix it.', 'An agent returns: the typecheck runs'],
-      Notification: ['Claude needs you', 'A desktop alert appears on macOS.', 'Claude needs you: a desktop alert appears'],
-      Stop: ['Claude wants to finish', 'The quality gate runs on source changed in the session, committed or not, then asks for a review. It gives up after three blocks in a row, so it cannot loop.', 'Claude stops: tests, then a code review'],
+      Notification: ['The assistant needs you', 'A desktop alert appears on macOS.', 'The assistant needs you: a desktop alert appears'],
+      Stop: ['The assistant wants to finish', 'The quality gate runs on source changed in the session, committed or not, then asks for a review. It gives up after three blocks in a row, so it cannot loop.', 'The assistant stops: tests, then a code review'],
       SessionEnd: ['The session ends', 'Its working files are cleaned up.', 'Session ends: working files are cleaned up'],
     },
   },

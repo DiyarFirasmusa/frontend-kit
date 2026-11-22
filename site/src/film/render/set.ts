@@ -19,7 +19,7 @@ import {
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GRADES } from '../direction.ts'
 import type { Quality } from '../quality.ts'
-import type { ShapeName } from '../shapes/index.ts'
+import { setOf, type SetName, type ShapeName } from '../shapes/index.ts'
 import { mix } from '../timeline.ts'
 import { dust, sky } from './atmosphere-shaders.ts'
 import type { BlockMesh } from './block-mesh.ts'
@@ -27,7 +27,7 @@ import type { FilmUniforms } from './uniforms.ts'
 
 const COLOURS = Object.fromEntries(
   Object.entries(GRADES).map(([name, g]) => [name, { base: new Color(g.base), metal: new Color(g.metal), light: new Color(g.light) }]),
-) as Record<ShapeName, { base: Color; metal: Color; light: Color }>
+) as Record<SetName, { base: Color; metal: Color; light: Color }>
 
 /** Everything around the blocks: void, floor, dust and light. */
 export class FilmSet {
@@ -88,7 +88,9 @@ export class FilmSet {
   }
 
   /** The light and colour between two scenes. */
-  light(from: ShapeName, to: ShapeName, t: number): void {
+  light(fromShape: ShapeName, toShape: ShapeName, t: number): void {
+    const from = setOf(fromShape)
+    const to = setOf(toShape)
     const a = COLOURS[from]
     const b = COLOURS[to]
     const { uBase, uLight, uSun } = this.uniforms

@@ -17,8 +17,8 @@ const modes = [
     why: t('An empty folder has no conventions to follow, so shortcuts taken on the first day become the structure.', 'المجلد الفارغ لا أعراف فيه، فاختصارات اليوم الأول تصير هي البنية.'),
     when: t('Nothing, or almost nothing, exists yet.', 'لا شيء موجود بعد، أو شبه لا شيء.'),
     changes: t(
-      'At each session start Claude is told to build to the standards from the first file: feature folders, strict types, tests, translations, and no shortcuts to fix later.',
-      'في بداية كل جلسة يُطلب من Claude البناء على المعايير من أول ملف: مجلدات ميزات وأنواع صارمة واختبارات وترجمة، ولا اختصارات تُصلح لاحقاً.',
+      'At each session start the assistant is told to build to the standards from the first file: feature folders, strict types, tests, translations, and no shortcuts to fix later.',
+      'في بداية كل جلسة يُطلب من المساعد البناء على المعايير من أول ملف: مجلدات ميزات وأنواع صارمة واختبارات وترجمة، ولا اختصارات تُصلح لاحقاً.',
     ),
     on: t('Choose it in setup, or set "mode": "new" in the config.', 'اختره في الإعداد، أو اضبط \u2066"mode": "new"\u2069 في ملف الإعدادات.'),
     off: t('Set "mode" to "existing" once the base is built.', 'اضبط \u2066"mode"\u2069 على \u2066"existing"\u2069 عندما يكتمل الأساس.'),
@@ -28,7 +28,7 @@ const modes = [
     name: t('Existing project', 'مشروع قائم'),
     why: t('A working project already has a shape. Imposing another one would turn every small change into a rewrite.', 'المشروع العامل له شكله، وفرض شكل آخر يحوّل كل تغيير صغير إلى إعادة كتابة.'),
     when: t('The app works and you want the kit inside it. This is the default.', 'التطبيق يعمل وتريد العدّة داخله. هذا هو الافتراضي.'),
-    changes: t('Setup keeps your structure and follows your stack. Claude gets no extra instruction at session start.', 'يُبقي الإعداد بنيتك ويتبع تقنياتك، ولا يصل Claude توجيه إضافي في بداية الجلسة.'),
+    changes: t('Setup keeps your structure and follows your stack. The assistant gets no extra instruction at session start.', 'يُبقي الإعداد بنيتك ويتبع تقنياتك، ولا يصل المساعد توجيه إضافي في بداية الجلسة.'),
     on: t('Choose it in setup, or set "mode": "existing".', 'اختره في الإعداد، أو اضبط \u2066"mode": "existing"\u2069.'),
     off: t('Switch to one of the other two.', 'انتقل إلى أحد النمطين الآخرين.'),
   },
@@ -38,8 +38,8 @@ const modes = [
     why: t('Cleaning a whole project while adding features breaks both. This keeps restructuring planned, approved and separate.', 'تنظيف مشروع كامل أثناء إضافة الميزات يفسد الاثنين. هذا يبقي إعادة البناء مخططة وموافقاً عليها ومنفصلة.'),
     when: t('An existing project far from the standards that you decided to restructure.', 'مشروع قائم بعيد عن المعايير قررت إعادة بنائه.'),
     changes: t(
-      'At each session start Claude is told that refactor mode is on: audit, a plan you approve, one phase at a time, behaviour frozen, and nothing outside the plan.',
-      'في بداية كل جلسة يُبلَّغ Claude أن نمط إعادة الهيكلة يعمل: تدقيق ثم خطة توافق عليها، مرحلة واحدة كل مرة، وسلوك ثابت، ولا شيء خارج الخطة.',
+      'At each session start the assistant is told that refactor mode is on: audit, a plan you approve, one phase at a time, behaviour frozen, and nothing outside the plan.',
+      'في بداية كل جلسة يُبلَّغ المساعد أن نمط إعادة الهيكلة يعمل: تدقيق ثم خطة توافق عليها، مرحلة واحدة كل مرة، وسلوك ثابت، ولا شيء خارج الخطة.',
     ),
     on: t('/frontend-kit:refactor-mode on', '⁦/frontend-kit:refactor-mode on⁩'),
     off: t('/frontend-kit:refactor-mode off', '⁦/frontend-kit:refactor-mode off⁩'),
@@ -48,8 +48,8 @@ const modes = [
 const words = {
   key: t('One key', 'مفتاح واحد'),
   keyText: t(
-    'The mode lives in .claude/frontend-kit.json as "mode". The guards and the quality gate are the same in all three: a mode changes what Claude is told, not what is enforced.',
-    'النمط مكتوب في \u2066.claude/frontend-kit.json\u2069 باسم \u2066"mode"\u2069. الحرّاس وبوابة الجودة نفسها في الثلاثة: النمط يغيّر ما يُقال لـ Claude، لا ما يُفرض عليه.',
+    'The mode lives in .claude/frontend-kit.json as "mode". The guards and the quality gate are the same in all three: a mode changes what the assistant is told, not what is enforced.',
+    'النمط مكتوب في \u2066.claude/frontend-kit.json\u2069 باسم \u2066"mode"\u2069. الحرّاس وبوابة الجودة نفسها في الثلاثة: النمط يغيّر ما يُقال للمساعد، لا ما يُفرض عليه.',
   ),
   why: t('Why', 'لماذا'),
   when: t('When', 'متى'),
@@ -62,8 +62,8 @@ const words = {
   skill: t('The refactor mode skill', 'مهارة نمط إعادة الهيكلة'),
   style: t('The report style', 'أسلوب التقرير'),
   styleLead: t(
-    'A separate switch: an output style called Frontend report, which you pick in Claude Code. It changes how Claude reports, not how it works. Its full text, in English:',
-    'مفتاح منفصل: أسلوب إخراج اسمه Frontend report تختاره في Claude Code، يغيّر طريقة تقرير Claude لا طريقة عمله. نصه الكامل بالإنجليزية:',
+    'A separate switch: an output style called Frontend report, which you pick in Claude Code. It changes how the assistant reports, not how it works. Its full text, in English:',
+    'مفتاح منفصل: أسلوب إخراج اسمه Frontend report تختاره في Claude Code، يغيّر طريقة تقرير المساعد لا طريقة عمله. نصه الكامل بالإنجليزية:',
   ),
 }
 ---

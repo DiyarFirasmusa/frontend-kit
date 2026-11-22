@@ -1,0 +1,50 @@
+---
+import type { Bilingual } from '../../content/catalogue.ts'
+import type { ShapeName } from '../../film/shapes/index.ts'
+import { emblemOf } from '../../content/emblems.ts'
+import { home } from '../../content/guide/home.ts'
+import type { Locale } from '../../content/types.ts'
+import { verdicts, type Verdict } from '../../lib/verdicts.ts'
+import Prompt from '../guide/Prompt.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const refused = verdicts.find(({ id }) => id === 'force')!
+const { skills, rules, guard, gate, review, done } = home.steps
+const steps: { name: Bilingual; text: Bilingual; shape: ShapeName; stop: number; output?: Verdict | undefined }[] = [
+  { ...skills, shape: emblemOf.skill('dash-create-table'), stop: -1 },
+  { ...rules, shape: emblemOf.rule('permissions.md'), stop: -1 },
+  { ...guard, shape: emblemOf.hook('PreToolUse'), stop: -1, output: refused },
+  { ...gate, shape: emblemOf.hook('Stop'), stop: -1 },
+  { ...review, shape: emblemOf.agent('frontend-reviewer'), stop: -1 },
+  { ...done, shape: 'dashboard', stop: -1 },
+]
+---
+
+<section id="example" class="example">
+  <div class="column">
+    <div class="example-ask" data-stage-shape="screen">
+      <h2 data-rise>{home.example[locale]}</h2>
+      <Prompt text={home.prompt[locale]} />
+    </div>
+    <ol class="run">
+      {
+        steps.map(({ name, text, shape, stop, output }) => (
+          <li data-stage-shape={shape} data-stage-stop={stop}>
+            <h3 data-rise>{name[locale]}</h3>
+            <p>{text[locale]}</p>
+            {output && (
+              <pre class="refusal" lang="en" dir="ltr">
+                <code>$ {output.command}</code>
+                <span>{output.reason}</span>
+              </pre>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

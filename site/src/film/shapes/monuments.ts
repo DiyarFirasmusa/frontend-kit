@@ -1,4 +1,6 @@
 import { block, CENTRE, rotation, seeded, TAU, type Block, type Shape, type Vec3 } from './blocks.ts'
+import { tiles } from './emblems/build.ts'
+import { kitMarks } from './emblems/signs.ts'
 
 const ring = (angle: number, radius: number, z: number): Vec3 => [Math.cos(angle) * radius, CENTRE + Math.sin(angle) * radius, z]
 
@@ -18,39 +20,12 @@ export function storm(count: number): Shape {
   return { blocks, sort: (b) => Math.atan2(b.at[2], b.at[0]) }
 }
 
-/** The mark, "|<", over the city it builds. */
+/** The identity: an interface still on its kit frame, over the city it builds. */
 export function mark(tileScale: number): Shape {
-  const blocks: Block[] = []
-  const tile = 0.36 * tileScale
-  const beam = (from: [number, number], to: [number, number], inside: (y: number) => boolean = () => true): void => {
-    const dx = to[0] - from[0]
-    const dy = to[1] - from[1]
-    const angle = Math.atan2(dy, dx)
-    const turn = rotation(0, 0, angle)
-    const along = Math.round(Math.hypot(dx, dy) / tile)
-    const across = Math.round(2.52 / tile)
-    for (let i = 0; i < along; i++) {
-      for (let j = 0; j < across; j++) {
-        for (let k = 0; k < across; k++) {
-          const onSurface = i === 0 || i === along - 1 || j === 0 || j === across - 1 || k === 0 || k === across - 1
-          if (!onSurface) continue
-          const u = (i + 0.5) * tile
-          const v = (j + 0.5 - across / 2) * tile
-          const y = from[1] + Math.sin(angle) * u + Math.cos(angle) * v
-          if (!inside(y)) continue
-          const at: Vec3 = [from[0] + Math.cos(angle) * u - Math.sin(angle) * v, CENTRE + y, ((across - 1) / 2 - k) * tile]
-          blocks.push(block(at, [tile * 0.95, tile * 0.95, tile * 0.95], { rotation: turn, keep: true }))
-        }
-      }
-    }
-  }
-  beam([-4.6, -6.7], [-4.6, 6.7])
-  beam([-1.9, -0.2], [4.9, 6.6], (y) => y > 0.02)
-  beam([-1.9, 0.2], [4.9, -6.6], (y) => y < -0.02)
-
+  const blocks: Block[] = tiles(kitMarks(), tileScale, 0.84)
   for (let i = 0; i < 260; i++) {
     const angle = (i / 260) * TAU
-    blocks.push(block(ring(angle, 10.6, -2), [0.05, 0.3, 0.05], { glow: 1.5, rotation: rotation(0, 0, angle), spin: 0.03, keep: true }))
+    blocks.push(block(ring(angle, 11.3, -2), [0.05, 0.3, 0.05], { glow: 1.5, rotation: rotation(0, 0, angle), spin: 0.03, keep: true }))
   }
 
   const random = seeded(31)

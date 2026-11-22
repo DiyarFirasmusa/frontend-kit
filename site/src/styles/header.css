@@ -222,3 +222,20 @@
     display: none;
   }
 }
+
+.brand {
+  gap: 0.625rem;
+}
+
+.brand-mark {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+}
+
+@media (max-width: 359px) {
+  .brand-mark {
+    display: none;
+  }
+}

@@ -10,7 +10,7 @@ export interface Purpose {
 
 export const skillPurpose: Record<string, Purpose> = {
   'create-component': {
-    why: t('Without a procedure Claude writes a new button each time, in a new place and style. This makes it look for the existing one first, then build to your conventions.', 'من دون طريقة محددة يكتب Claude زراً جديداً كل مرة بمكان وشكل مختلفين. هذه تجعله يبحث عن الموجود أولاً ثم يبني وفق أعرافك.'),
+    why: t('Without a procedure the assistant writes a new button each time, in a new place and style. This makes it look for the existing one first, then build to your conventions.', 'من دون طريقة محددة يكتب المساعد زراً جديداً كل مرة بمكان وشكل مختلفين. هذه تجعله يبحث عن الموجود أولاً ثم يبني وفق أعرافك.'),
     when: t('Any new or extracted piece of interface, even a small one. With a Figma link, figma-match runs beside it.', 'أي قطعة واجهة جديدة أو مستخرجة ولو صغيرة. ومع رابط Figma تعمل figma-match إلى جانبها.'),
   },
   'create-form': {
@@ -30,7 +30,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('You give a Figma link, or say the screen must look like the design.', 'تعطي رابط Figma أو تقول إن الشاشة يجب أن تطابق التصميم.'),
   },
   'frontend-design': {
-    why: t('Left alone, Claude produces the same generic page. This makes it commit to a deliberate visual direction before any code.', 'إذا تُرك Claude وحده أنتج الصفحة العامة نفسها. هذه تلزمه باتجاه بصري مقصود قبل أي شيفرة.'),
+    why: t('Left alone, the assistant produces the same generic page. This makes it commit to a deliberate visual direction before any code.', 'إذا تُرك المساعد وحده أنتج الصفحة العامة نفسها. هذه تلزمه باتجاه بصري مقصود قبل أي شيفرة.'),
     when: t('A brand-new page or section with no Figma frame, when you ask for a new look. Not for routine product screens.', 'صفحة أو قسم جديد كلياً بلا Figma وأنت تطلب شكلاً جديداً، وليس لشاشات المنتج المعتادة.'),
   },
   'ui-ux-pro-max': {
@@ -110,7 +110,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('An existing project far from the standards. Only you can start it, by name.', 'مشروع قائم بعيد عن المعايير. أنت وحدك من يشغّلها، باسمها.'),
   },
   'fix-everywhere': {
-    why: t('Claude fixes the one case you showed and leaves the rest. This finds them all and proves with a search that none are left.', 'يصلح Claude الحالة التي أريتها ويترك الباقي. هذه تجدها كلها وتثبت ببحث أنه لم يبق منها شيء.'),
+    why: t('The assistant fixes the one case you showed and leaves the rest. This finds them all and proves with a search that none are left.', 'يصلح المساعد الحالة التي أريتها ويترك الباقي. هذه تجدها كلها وتثبت ببحث أنه لم يبق منها شيء.'),
     when: t('You say all, every or other pages, or a bug turns out to be a pattern.', 'تقول الكل أو كل الصفحات، أو يتبيّن أن الخلل نمط متكرر.'),
   },
   performance: {
@@ -218,7 +218,7 @@ export const rulePurpose: Record<string, Bilingual> = {
   'shared/quality-bar.md': t('So “done” means the same thing every time, with proof.', 'ليعني «انتهى» الشيء نفسه كل مرة، مع الإثبات.'),
   'shared/react.md': t('So components stay thin, hooks stay correct and any session writes the same React.', 'لتبقى المكوّنات خفيفة والـ hooks صحيحة وتُكتب React بالطريقة نفسها في كل جلسة.'),
   'shared/rtl.md': t('So Arabic and English are both right by construction, not patched afterwards.', 'لتصح العربية والإنجليزية من البناء لا بالترقيع لاحقاً.'),
-  'shared/scope.md': t('So Claude neither stops halfway nor changes what you never asked for.', 'حتى لا يتوقف Claude في المنتصف ولا يغيّر ما لم تطلبه.'),
+  'shared/scope.md': t('So the assistant neither stops halfway nor changes what you never asked for.', 'حتى لا يتوقف المساعد في المنتصف ولا يغيّر ما لم تطلبه.'),
   'shared/styles.md': t('So colour, type and spacing come from your system and layouts do not jump.', 'ليأتي اللون والخط والمسافة من نظامك ولا يقفز التخطيط.'),
   'shared/testing.md': t('So tests catch real breakage without becoming slow or flaky.', 'لتلتقط الاختبارات الكسر الحقيقي دون أن تبطؤ أو تتذبذب.'),
 
@@ -244,18 +244,18 @@ export const rulePurpose: Record<string, Bilingual> = {
   'react/auth.md': t('So tokens, guards and sign-out are handled one way in any stack.', 'لتُدار الرموز والحراسة والخروج بطريقة واحدة في أي تقنية.'),
   'react/data-and-state.md': t('So server data and interface state are never mixed up.', 'حتى لا تختلط بيانات الخادم بحالة الواجهة.'),
   'react/forms.md': t('So forms are labelled and validated whatever library you use.', 'لتكون النماذج مسمّاة ومتحققاً منها أياً كانت مكتبتك.'),
-  'react/routing.md': t('So pages follow the router you really have, not the one Claude assumes.', 'لتتبع الصفحات الموجّه الموجود فعلاً لا الذي يفترضه Claude.'),
+  'react/routing.md': t('So pages follow the router you really have, not the one the assistant assumes.', 'لتتبع الصفحات الموجّه الموجود فعلاً لا الذي يفترضه المساعد.'),
   'react/structure.md': t('So new code lands in a known shape, and a refactor has a target.', 'لتقع الشيفرة الجديدة في شكل معروف ويكون لإعادة الهيكلة هدف.'),
 }
 
 export const hookPurpose: Record<HookEvent, Bilingual> = {
-  SessionStart: t('Claude starts each session knowing nothing, and forgets after clear or compact. This hands the essentials back.', 'يبدأ Claude كل جلسة لا يعرف شيئاً، وينسى بعد التفريغ أو الضغط. هذا يعيد إليه الأساسيات.'),
-  UserPromptSubmit: t('Short requests are ambiguous, and Claude does not always notice the skill that fits. This names it before work starts.', 'الطلبات القصيرة ملتبسة، وClaude لا ينتبه دائماً للمهارة المناسبة. هذا يسمّيها قبل بدء العمل.'),
+  SessionStart: t('The assistant starts each session knowing nothing, and forgets after clear or compact. This hands the essentials back.', 'يبدأ المساعد كل جلسة لا يعرف شيئاً، وينسى بعد التفريغ أو الضغط. هذا يعيد إليه الأساسيات.'),
+  UserPromptSubmit: t('Short requests are ambiguous, and the assistant does not always notice the skill that fits. This names it before work starts.', 'الطلبات القصيرة ملتبسة، والمساعد لا ينتبه دائماً للمهارة المناسبة. هذا يسمّيها قبل بدء العمل.'),
   PreToolUse: t('An instruction can be forgotten. A refusal before the tool runs cannot, so the known dangerous actions are stopped here.', 'التعليمة قد تُنسى، أما الرفض قبل تشغيل الأداة فلا. لذلك تُوقَف الأفعال الخطرة المعروفة هنا.'),
-  PostToolUse: t('An error is cheapest to fix in the second it is written. This returns it to Claude at once.', 'أرخص وقت لإصلاح الخطأ ثانية كتابته. هذا يعيده إلى Claude فوراً.'),
+  PostToolUse: t('An error is cheapest to fix in the second it is written. This returns it to the assistant at once.', 'أرخص وقت لإصلاح الخطأ ثانية كتابته. هذا يعيده إلى المساعد فوراً.'),
   PostToolUseFailure: t('One failure is noise and five are a pattern. This keeps the record that shows the difference.', 'فشل واحد ضجيج وخمسة نمط. هذا يحفظ السجل الذي يُظهر الفرق.'),
   SubagentStop: t('Broken code from an agent would spread into the main session. The agent has to face the typecheck first.', 'الشيفرة المعطلة من وكيل تنتشر في الجلسة الرئيسية. على الوكيل أن يواجه فحص الأنواع أولاً.'),
   Notification: t('A long run waiting for your answer looks like one still working. An alert tells you which.', 'التشغيل الطويل المنتظر جوابك يشبه الذي ما زال يعمل. التنبيه يخبرك أيهما.'),
-  Stop: t('Claude says done before it is. This makes it prove that with your own checks, then be read by another agent.', 'يقول Claude انتهيت قبل أن ينتهي. هذا يلزمه بالإثبات بفحوصك، ثم يقرؤه وكيل آخر.'),
+  Stop: t('The assistant says done before it is. This makes it prove that with your own checks, then be read by another agent.', 'يقول المساعد انتهيت قبل أن ينتهي. هذا يلزمه بالإثبات بفحوصك، ثم يقرؤه وكيل آخر.'),
   SessionEnd: t('Working files of old sessions would pile up in your project. This clears them.', 'ملفات عمل الجلسات القديمة تتراكم في مشروعك. هذا ينظفها.'),
 }

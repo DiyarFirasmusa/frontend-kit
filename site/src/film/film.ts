@@ -9,7 +9,7 @@ import { CameraRig, type Layout, type Projected, type Screen } from './render/ca
 import { Picture } from './render/picture.ts'
 import { FilmSet } from './render/set.ts'
 import { createUniforms, SUN } from './render/uniforms.ts'
-import { buildShapes, type BuiltShapes, type Census, type ShapeName } from './shapes/index.ts'
+import { buildShapes, setOf, type BuiltShapes, type Census, type ShapeName } from './shapes/index.ts'
 import type { Vec3 } from './shapes/blocks.ts'
 import { smoother } from './timeline.ts'
 
@@ -23,6 +23,11 @@ export interface Shot {
   read: number
   /** The stop being explained, fractional; -1 for none. */
   stop: number
+  /** A focus already worked out, in place of the one `stop` would give. */
+  focus?: Focus | undefined
+  turned?: [yaw: number, pitch: number] | undefined
+  /** 0 is whole, 1 is blown apart. */
+  burst?: number
   time: number
   delta: number
   speed: number
@@ -68,7 +73,7 @@ export class Film {
     renderer.toneMapping = ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.05
 
-    this.blocks = new BlockMesh(quality.budget.blocks, shapes.data, this.uniforms)
+    this.blocks = new BlockMesh(quality.budget.blocks, shapes.blocksOf, this.uniforms)
     this.blocks.load('storm', 'mark')
     this.set = new FilmSet(renderer, this.blocks, this.uniforms, quality)
     this.rig = new CameraRig(rtl)
@@ -126,14 +131,14 @@ export class Film {
     this.uniforms.uPixels.value = clientHeight * this.pixelRatio
   }
 
-  render({ from, to, hold, move, layouts, aside, read, stop, time, delta, speed, open }: Shot): void {
+  render({ from, to, hold, move, layouts, aside, read, stop, focus: given, turned, burst = 0, time, delta, speed, open }: Shot): void {
     if (!this.canvas.clientWidth || !this.canvas.clientHeight) return
     this.fitCanvas()
     this.blocks.load(from, to)
 
     const { uniforms, pointer, rig } = this
     const t = smoother(move)
-    const flight = MOVES[to]
+    const flight = MOVES[setOf(to)]
     const { shock, hit, flash } = impactAt(from, to, hold, move)
     const flying = move > 0
 
@@ -144,15 +149,16 @@ export class Film {
     uniforms.uTumble.value = flight.tumble
     uniforms.uShock.value = shock
     uniforms.uTouch.value = this.touched
+    uniforms.uBurst.value = burst
 
-    const focus: Focus | undefined = aside > 0 ? focusAt(from, this.anchors[from], stop) : undefined
+    const focus: Focus | undefined = aside > 0 ? (given ?? focusAt(from, this.anchors[from], stop)) : undefined
     uniforms.uFocusOn.value = focus ? aside * Math.max(0, 1 - move * 3) : 0
     if (focus) {
       uniforms.uFocus.value.fromArray(focus.at)
       uniforms.uReach.value.fromArray(focus.reach)
     }
 
-    const eye = rig.update({ from, to, hold, t, layouts, aside, read, focus }, this.screen, { time, delta, speed, hit, aim: pointer })
+    const eye = rig.update({ from, to, hold, t, layouts, aside, read, focus, turned }, this.screen, { time, delta, speed, hit, aim: pointer })
     uniforms.uEye.value.copy(eye)
     uniforms.uRay.value.set(pointer.x, pointer.y, 0.5).unproject(rig.camera).sub(eye).normalize()
     this.set.light(from, to, t)

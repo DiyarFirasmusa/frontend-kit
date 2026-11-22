@@ -29,7 +29,7 @@ export const inspect: Record<string, SkillGuide> = {
     related: ['verify', 'vercel-react-best-practices'],
   },
   'live-check': {
-    plain: t('Claude uses your app in a real browser, like a person, on local or test servers.', 'يستعمل Claude تطبيقك في متصفح حقيقي كإنسان، على خادم محلي أو تجريبي.'),
+    plain: t('The assistant uses your app in a real browser, like a person, on local or test servers.', 'يستعمل المساعد تطبيقك في متصفح حقيقي كإنسان، على خادم محلي أو تجريبي.'),
     ask: [t('check it in Chrome as a real user', 'افحصه في Chrome كمستخدم حقيقي'), t('live check the OTP flow', 'افحص مسار رمز التحقق في المتصفح')],
     steps: [
       t('Opens the local or test app.', 'يفتح التطبيق المحلي أو التجريبي.'),
@@ -40,7 +40,7 @@ export const inspect: Record<string, SkillGuide> = {
     result: [t('Pass or fail per step, with screenshots', 'نجاح أو فشل لكل خطوة مع لقطات')],
     limits: [t('Never types your password or tests on the live site.', 'لا يكتب كلمة مرورك ولا يختبر على الموقع الحي.')],
     related: ['dev', 'figma-match'],
-    needs: t('A browser tool: Claude in Chrome or the bundled Chrome DevTools server.', 'أداة متصفح: Claude in Chrome أو خادم Chrome DevTools المرفق.'),
+    needs: t('A browser tool: The assistant in Chrome or the bundled Chrome DevTools server.', 'أداة متصفح: المساعد in Chrome أو خادم Chrome DevTools المرفق.'),
   },
   performance: {
     plain: t('Makes the app faster on mid-range phones and slow networks, by measuring first.', 'يسرّع التطبيق على الهواتف المتوسطة والشبكات البطيئة، بالقياس أولاً.'),

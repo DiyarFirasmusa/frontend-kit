@@ -1,8 +1,8 @@
 ---
-import { HEADER_PAGES, PAGES, SECTIONS, type PageId } from '../content/guide/pages.ts'
+import { PAGES, SECTIONS, type PageId } from '../content/guide/pages.ts'
+import { t } from '../content/guide/text.ts'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
-import { onHome, topicUrl } from '../lib/here.ts'
 import { pageUrl, routeUrl } from '../lib/links.ts'
 import type { Route } from '../lib/routes.ts'
 
@@ -15,42 +15,46 @@ const { locale, route } = Astro.props
 const { chrome } = content[locale]
 const other: Locale = locale === 'en' ? 'ar' : 'en'
 const home = route.kind === 'home'
+const start = home ? '' : routeUrl(locale, { kind: 'home' })
 const PARENT = { home: undefined, skill: 'skills', agent: 'agents', rule: 'rules', hook: 'checks' } as const
 const current: PageId | undefined = route.kind === 'page' ? route.id : PARENT[route.kind]
+const places = [
+  ['example', t('How it works', 'كيف تعمل')],
+  ['inside', t('What is inside', 'ماذا بداخلها')],
+] as const
 ---
 
-<a class="skip" href={home ? '#what' : '#content'}>{chrome.skip}</a>
+<a class="skip" href="#content">{chrome.skip}</a>
 <header class="top">
-  <a class="brand" href={home ? '#intro' : routeUrl(locale, { kind: 'home' })}><bdi>frontend-kit</bdi></a>
+  <a class="brand" href={home ? '#intro' : start}>
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <path fill-rule="evenodd" d="M5 5h30v30H5zm2.8 2.8v24.4h24.4V7.8z"></path>
+      <path d="M11 11h18v5.2H11zM11 18.4h5.6V29H11zM18.8 18.4H29V29H18.8zM19 7h2v4h-2zM7 22h4v2H7zM29 21h4v2h-4zM23 29h2v4h-2z"></path>
+    </svg>
+    <bdi>frontend-kit</bdi>
+  </a>
   <nav class="top-nav" aria-label={chrome.sections}>
-    {
-      HEADER_PAGES.map((id) => (
-        <a href={topicUrl(locale, id, home)} aria-current={id === current ? 'true' : undefined}>
-          {PAGES[id].name[locale]}
-        </a>
-      ))
-    }
+    {places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)}
   </nav>
   <a class="top-docs" href={pageUrl(locale, 'docs')} aria-current={home ? undefined : 'true'}>{PAGES.docs.name[locale]}</a>
-  {
-    home && (
-      <button class="motion" type="button" data-motion data-pause={chrome.pause} data-play={chrome.play} title={chrome.pause}>
-        <i aria-hidden="true" />
-        <span class="sr-only">{chrome.pause}</span>
-      </button>
-    )
-  }
-  <a class="language" href={routeUrl(other, route)} lang={other} hreflang={other} data-language>{chrome.switchLanguage}</a>
-  <a class="top-install" href={home ? '#install' : onHome(locale, 'install')}>{chrome.install}</a>
+  <button class="motion" type="button" data-motion data-pause={chrome.pause} data-play={chrome.play} title={chrome.pause}>
+    <i aria-hidden="true"></i>
+    <span class="sr-only">{chrome.pause}</span>
+  </button>
+  <a class="language" href={routeUrl(other, route)} lang={other} hreflang={other} data-language data-astro-reload>{chrome.switchLanguage}</a>
+  <a class="top-install" href={`${start}#install`}>{chrome.install}</a>
   <details class="menu" data-menu>
     <summary><span class="sr-only">{chrome.menu}</span><i aria-hidden="true"></i></summary>
     <nav aria-label={chrome.menu}>
+      <div>
+        {places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)}
+      </div>
       {
         SECTIONS.map(({ title, pages }) => (
           <div>
             <p>{title[locale]}</p>
             {pages.map((id) => (
-              <a href={topicUrl(locale, id, home)} aria-current={id === current ? 'true' : undefined}>
+              <a href={pageUrl(locale, id)} aria-current={id === current ? 'true' : undefined}>
                 {PAGES[id].name[locale]}
               </a>
             ))}
