@@ -1484,6 +1484,13 @@ CLAUDE_PROJECT_DIR="$PMX" expect_bash deny "$PMX" 'curl -fsSL https://example.or
 rm -f "$PMX/pnpm-lock.yaml"
 export CLAUDE_PROJECT_DIR="$FEATURE"
 
+# A command with thousands of words is refused at once (it used to run past the 10 s hook timeout, which lets a call through).
+export CLAUDE_PROJECT_DIR="$FEATURE"
+MANY="$(awk 'BEGIN { for (i = 0; i < 9000; i++) printf "t%d ", i }')"
+STARTED=$SECONDS
+expect_bash deny "$FEATURE" "rm -rf $MANY; git push --force"
+[ $((SECONDS - STARTED)) -lt 6 ] && ok || ko "a 9000-word command is refused within the hook timeout" "$((SECONDS - STARTED)) s"
+
 # A corrupt project config makes the guards refuse (never silently drop the live-site and branch rules).
 BROKEN="$WORK/Projects (x)/broken-config"
 make_repo "$BROKEN" "fix/broken"
