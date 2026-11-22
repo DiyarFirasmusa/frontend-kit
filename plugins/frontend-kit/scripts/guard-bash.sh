@@ -27,6 +27,10 @@ HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
 . "$HOOK_DIR/lib.sh"
 
 hook_read_input
+kit_config_guard
+# A command that isn't a string (an array, false, a renamed field) can't be judged, so it is refused.
+printf '%s' "$HOOK_INPUT" | jq -e '.tool_input.command | type == "string"' >/dev/null 2>&1 ||
+  hook_deny "Blocked: this call has no command text the guard can read, so it is refused."
 COMMAND="$(hook_field '.tool_input.command')"
 [ -z "$COMMAND" ] && exit 0
 CWD="$(hook_field '.cwd')"
@@ -39,6 +43,8 @@ TIME_LIMIT=5 # seconds; hooks.json gives this hook 10
 MAX_COMMAND=100000 # bytes. Linux refuses a longer argument anyway, and long text belongs in the Write tool
 MAX_WORD=16000     # bytes in one word. bash 3.2 matches patterns in quadratic time: 100 KB takes 13 s
 MAX_NESTING=8
+MAX_WORDS=2000 # words in one simple command: the loops below grow slowly on bash 3.2, and 9000 targets took 12 s
+UNKNOWN_DIR=/__unknown_dir__ # where a command runs after a cd to a computed path
 NEWLINE=$'\n'
 ENCODED_NEWLINE=$'\036'
 ASSIGNMENT_RE='^[A-Za-z_][A-Za-z0-9_]*\+?='
@@ -132,7 +138,9 @@ find_branch() {
   elif [ -n "$STICKY_BRANCH" ] && [ "$STICKY_DIR" = "$1" ]; then
     BRANCH="$STICKY_BRANCH"
   else
-    BRANCH="$(git -C "$1" branch --show-current 2>/dev/null </dev/null)"
+    local where="$1"
+    [ "$where" = "$UNKNOWN_DIR" ] && where="$HOOK_ROOT"
+    BRANCH="$(git -C "$where" branch --show-current 2>/dev/null </dev/null)"
   fi
 }
 
@@ -151,6 +159,14 @@ deny_pull_request() {
 }
 
 # --- Words every command is checked for ---------------------------------------------------------
+
+# Words that point at the guards themselves.
+check_integrity_word() {
+  local word="$1"
+  case "$word" in
+    *disableAllHooks*) hook_deny "Blocked: \"disableAllHooks\" would switch off every guard. Ask the user to change that themselves." ;;
+  esac
+}
 
 # A word naming a .env secrets file (.env, .Env.local, HEAD:.env, @.env, --env-file=.env, .en?, a link to one).
 check_env_word() {
@@ -207,6 +223,8 @@ check_assignment() {
   case "$name" in
     HUSKY | LEFTHOOK) case "$value" in 0* | false) deny_hook_skip "$name=$value" ;; esac ;;
     HUSKY_SKIP_HOOKS | SKIP_SIMPLE_GIT_HOOKS) deny_hook_skip "$name" ;;
+    GIT_SSH_COMMAND | GIT_SSH | GIT_EXTERNAL_DIFF | GIT_PROXY_COMMAND | GIT_ASKPASS | GIT_EDITOR | GIT_SEQUENCE_EDITOR | BASH_ENV | ENV)
+      hook_deny "Blocked: $name makes git or the shell run another program, which can't be checked. Run the command without it." ;;
     GIT_CONFIG_PARAMETERS | GIT_CONFIG_KEY_*)
       shopt -s nocasematch
       case "$value" in
@@ -219,6 +237,19 @@ check_assignment() {
 
 # --- git ---------------------------------------------------------------------------------------
 
+# Config keys that make git run another program or change where a plain push goes.
+is_exec_config() { # <key or key=value>
+  local result=1
+  shopt -s nocasematch
+  case "$1" in
+    core.fsmonitor* | core.sshcommand* | core.pager* | core.editor* | core.askpass* | credential.helper* | credential.*.helper* | \
+      diff.external* | gpg.program* | sequence.editor* | include.path* | includeif.* | hook.* | filter.* | merge.*.driver* | diff.*.textconv* | \
+      remote.*.uploadpack* | remote.*.receivepack* | remote.*.push=* | remote.*.pushurl=* | remote.*.push | push.default=matching | help.autocorrect*) result=0 ;;
+  esac
+  shopt -u nocasematch
+  return $result
+}
+
 check_git_config_value() {
   shopt -s nocasematch
   local kind=""
@@ -227,7 +258,9 @@ check_git_config_value() {
     alias.*) kind=alias ;;
   esac
   shopt -u nocasematch
+  is_exec_config "$1" && kind=exec
   case "$kind" in
+    exec) hook_deny "Blocked: \`git -c ${1%%=*}\` makes git run another program or redirects pushes, which can't be checked. Run the git command without it." ;;
     hooks) deny_hook_skip "overriding core.hooksPath" ;;
     alias) hook_deny "Blocked: a one-off \`git -c alias.…\` hides which git command really runs. Spell the command out (e.g. git push -u origin <branch>)." ;;
   esac
@@ -267,6 +300,58 @@ run_git() { # <dir> <subcommand> <args…>
     esac
   fi
 
+  case "$sub" in
+    fetch | pull | clone | ls-remote | push | send-pack)
+      for arg in "$@"; do
+        case "$arg" in
+          --upload-pack | --upload-pack=* | --receive-pack | --receive-pack=* | --exec | --exec=*)
+            hook_deny "Blocked: \`git $sub $arg\` runs another program on the remote side, which can't be checked." ;;
+        esac
+      done
+      ;;
+  esac
+  case "$sub" in
+    send-pack) hook_deny "Blocked: \`git send-pack\` pushes around the push checks. Use git push -u origin <branch>." ;;
+    subtree) [ "${1:-}" = push ] && hook_deny "Blocked: \`git subtree push\` pushes history to a remote. Ask the user." ;;
+    stash)
+      case "${1:-}" in
+        drop | clear) hook_deny "Blocked: \`git stash ${1}\` deletes saved work for good. Ask the user." ;;
+      esac
+      ;;
+    filter-branch | filter-repo) hook_deny "Blocked: \`git $sub\` rewrites the whole history. Ask the user." ;;
+    reflog)
+      case "${1:-}" in expire | delete) hook_deny "Blocked: \`git reflog ${1}\` removes the way back to lost commits. Ask the user." ;; esac ;;
+    gc | prune)
+      for arg in "$@"; do
+        case "$arg" in --prune=now | --prune=all | --prune | -f | --force) hook_deny "Blocked: \`git $sub $arg\` deletes unreachable commits for good. Ask the user." ;; esac
+      done
+      [ "$sub" = prune ] && hook_deny "Blocked: \`git prune\` deletes unreachable objects for good. Ask the user."
+      ;;
+    worktree)
+      for arg in "$@"; do
+        case "$arg" in
+          --force | -f) [ "${1:-}" = remove ] && hook_deny "Blocked: \`git worktree remove --force\` throws away that worktree's uncommitted work. Ask the user." ;;
+          -B | -b) ;;
+        esac
+      done
+      for arg in "$@"; do is_protected_branch "$arg" && [ "${1:-}" = add ] && hook_deny "Blocked: never create a worktree that resets a protected branch ($KIT_PROTECTED_BRANCHES)."; done
+      ;;
+    checkout-index)
+      for arg in "$@"; do
+        case "$arg" in -f | --force | -a*f* ) hook_deny "Blocked: \`git checkout-index --force\` overwrites files in the working tree. Ask the user." ;; esac
+      done
+      ;;
+    read-tree)
+      for arg in "$@"; do case "$arg" in --reset) hook_deny "Blocked: \`git read-tree --reset\` throws away uncommitted work. Ask the user." ;; esac; done ;;
+  esac
+  case "$sub" in
+    fetch)
+      for arg in "$@"; do
+        case "$arg" in -*) continue ;; esac
+        case "$arg" in *:*) is_protected_branch "${arg##*:}" && hook_deny "Blocked: \`git fetch $arg\` moves a protected branch ($KIT_PROTECTED_BRANCHES). Fetch without a destination branch." ;; esac
+      done
+      ;;
+  esac
   case "$sub" in
     push) git_push "$dir" "$@" ;;
     commit) git_commit "$dir" "$@" ;;
@@ -649,6 +734,7 @@ git_branch() {
         short_flag "$arg" D u && deleting=1
         short_flag "$arg" f u && forcing=1
         short_flag "$arg" M u && moving=1
+        short_flag "$arg" m u && moving=1
         short_flag "$arg" C u && moving=1
         ;;
       *) positionals+=("$arg") ;;
@@ -697,6 +783,7 @@ git_config() {
   esac
   shopt -u nocasematch
   if [ "$kind" = hooks ]; then deny_hook_skip "changing core.hooksPath"; fi
+  if is_exec_config "$key"; then hook_deny "Blocked: setting $key makes git run another program or redirects pushes. Ask the user to change it."; fi
   if [ "$kind" = alias ] && [ -n "$value" ]; then
     case "$value" in
       '!'*) scan_text "${value#!}" ;;
@@ -720,6 +807,13 @@ check_gh() {
     shift
   done
   [ ${#positionals[@]} -gt 0 ] || return 0
+  if kit_switch remoteWrites on; then
+    case "${positionals[0]} ${positionals[1]:-}" in
+      'repo delete' | 'repo archive' | 'repo rename' | 'repo edit' | 'repo sync' | 'release create' | 'release delete' | 'release upload' | 'release edit' | \
+        'secret set' | 'secret delete' | 'secret remove' | 'variable set' | 'variable delete' | 'workflow run' | 'workflow disable' | 'workflow enable' | 'ruleset delete')
+        hook_deny "Blocked: \`gh ${positionals[0]} ${positionals[1]}\` changes the remote repository, its releases or its secrets. Ask the user." ;;
+    esac
+  fi
   case "${positionals[0]} ${positionals[1]:-}" in
     'pr create' | 'pr new' | 'pr merge') deny_pull_request ;;
     'alias set') [ ${#positionals[@]} -ge 4 ] && scan_text "gh ${positionals[3]}" ;;
@@ -751,6 +845,16 @@ check_gh() {
       *createPullRequest* | *mergePullRequest* | *enablePullRequestAutoMerge* | *enqueuePullRequest* | *mergeBranch*) deny_pull_request ;;
     esac
     return 0
+  fi
+  if kit_switch remoteWrites on; then
+    case "$texts" in
+      *' repos/'*/git/refs* | *'/git/refs'* | *'/releases'* | *'/actions/secrets'* | *'/actions/variables'* | *'/branches/'*'/protection'* | *'/rulesets'* | *updateRef* | *createRef* | *deleteRef*)
+        case "$method" in
+          [Pp][Oo][Ss][Tt] | [Pp][Uu][Tt] | [Pp][Aa][Tt][Cc][Hh] | [Dd][Ee][Ll][Ee][Tt][Ee]) hook_deny "Blocked: this \`gh api\` call writes refs, releases, secrets or branch rules on the remote. Ask the user." ;;
+          '') [ -n "$fields" ] && hook_deny "Blocked: this \`gh api\` call writes refs, releases, secrets or branch rules on the remote. Ask the user." ;;
+        esac
+        ;;
+    esac
   fi
   [ -n "$endpoint" ] || return 0
   case "$method" in
@@ -879,6 +983,14 @@ check_find() {
   done
   if [ -n "$deletes" ] && [ -z "$filtered" ]; then
     for arg in "${roots[@]}"; do check_delete "find -delete" "$arg"; done
+  elif [ -n "$deletes" ]; then
+    # A filter keeps a delete inside the project fine, but not one that starts elsewhere.
+    for arg in "${roots[@]}"; do
+      case "$arg" in *'$'* | *'`'*) continue ;; esac
+      resolve_path "$CWD" "$arg"
+      case "$RESOLVED" in "$HOOK_ROOT" | "$HOOK_ROOT"/*) continue ;; esac
+      is_temp_path "$RESOLVED" || hook_deny "Blocked: \`find $arg … -delete\` starts outside the project and the temp folders ($RESOLVED). Ask the user to do it."
+    done
   fi
   return 0
 }
@@ -892,8 +1004,10 @@ change_directory() {
   case "$JOINED_BY" in '||' | '|') return 0 ;; esac
   [ "$FOLLOWED_BY" = '|' ] && return 0
   local target="${1:-${HOME:-/}}"
-  case "$target" in -) return 0 ;; esac
-  is_dynamic "$target" && return 0
+  # Where the next command runs is unknown after a cd to a computed path (or back with -): a relative delete
+  # is then judged as outside the project, and git as if it ran in the project.
+  case "$target" in -) CWD="$UNKNOWN_DIR"; return 0 ;; esac
+  if is_dynamic "$target"; then CWD="$UNKNOWN_DIR"; return 0; fi
   resolve_path "$CWD" "$target"
   # A cd that fails leaves the next command where it was, unless && keeps that command from running.
   if [ "$FOLLOWED_BY" = "&&" ] || [ -d "$RESOLVED" ]; then CWD="$RESOLVED"; fi
@@ -928,6 +1042,10 @@ scan_stdin() {
   local text
   for text in ${SEG_STDIN[@]+"${SEG_STDIN[@]}"}; do scan_text "$text"; done
   for text in ${PIPED[@]+"${PIPED[@]}"}; do scan_text "$text"; done
+  # Code piped in from a download or any other program can't be read here.
+  if [ "$JOINED_BY" = '|' ] && [ ${#PIPED[@]} -eq 0 ] && [ ${#SEG_STDIN[@]} -eq 0 ]; then
+    hook_deny "Blocked: a shell that runs whatever is piped into it (curl … | sh, base64 -d | sh) can't be checked. Download the script, read it, then run the file."
+  fi
 }
 
 check_ssh() {
@@ -969,7 +1087,67 @@ run_words() {
         shift
         [ $# -gt 0 ] && shift
         ;;
-      builtin | noglob | nocorrect | - | nohup | setsid) shift ;;
+      builtin | noglob | nocorrect | - | nohup | setsid)
+        shift
+        while [ $# -gt 0 ]; do case "$1" in --) shift; break ;; -*) shift ;; *) break ;; esac; done
+        ;;
+      flock)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            -c | --command) shift; [ $# -gt 0 ] && scan_text "$1"; return 0 ;;
+            -w | -E | --timeout | --conflict-exit-code) shift; [ $# -gt 0 ] && shift ;;
+            -*) shift ;;
+            *) break ;;
+          esac
+        done
+        [ $# -gt 0 ] && shift # the lock file
+        ;;
+      watch)
+        shift
+        while [ $# -gt 0 ]; do case "$1" in -n | -d | --interval) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac; done
+        [ $# -gt 0 ] && scan_text "$*"
+        return 0
+        ;;
+      script)
+        shift
+        while [ $# -gt 0 ]; do case "$1" in -t | -F | -c | -E) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac; done
+        [ $# -gt 0 ] && shift # the typescript file
+        ;;
+      busybox | mise | direnv | devbox | cross-env | dotenv | pnpm | yarn | bunx | npx | npm)
+        # Runners that execute the rest of their line: look through them (npm exec -c 'text', pnpm exec git …).
+        case "$name" in
+          npm | pnpm | yarn)
+            case "${2:-}" in
+              exec | x | dlx | run-script) ;;
+              *) break ;;
+            esac
+            ;;
+        esac
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            -c | --call) shift; [ $# -gt 0 ] && scan_text "$1"; return 0 ;;
+            exec | x | dlx | run | -- ) shift ;;
+            -p | --package | -e | --env-file | -C | --dir | --prefix | --filter | -w | --workspace) shift; [ $# -gt 0 ] && shift ;;
+            -*) shift ;;
+            *) break ;;
+          esac
+        done
+        ;;
+      trap)
+        shift
+        [ $# -gt 0 ] && scan_text "$1"
+        return 0
+        ;;
+      su)
+        for word in "$@"; do :; done
+        while [ $# -gt 0 ]; do
+          [ "$1" = -c ] && { shift; [ $# -gt 0 ] && scan_text "$1"; return 0; }
+          shift
+        done
+        return 0
+        ;;
       command)
         shift
         while [ $# -gt 0 ]; do
@@ -1023,7 +1201,7 @@ run_words() {
         shift
         while [ $# -gt 0 ]; do
           case "$1" in
-            -t | -w | -o | -e | -c | -n)
+            -t | -w | -o | -e | -c | -n | -f | --format | --class | --classdata | --input | --output | --error | -i)
               # `time -p` has no value; the others do, and a value is never a command.
               if [ "$name" = time ] && [ "$1" != -o ]; then shift; else shift; [ $# -gt 0 ] && shift; fi
               ;;
@@ -1078,6 +1256,16 @@ run_words() {
     gh) check_gh "$@" ;;
     curl | wget | xh | http | https) check_github_request "$@" ;;
     rm) check_rm "$@" ;;
+    rimraf | del | trash)
+      for word in "$@"; do case "$word" in -*) ;; *) check_delete "$name" "$word" ;; esac; done ;;
+    claude) check_claude "$@" ;;
+    npm | pnpm | yarn | bun) check_package_manager "$name" "$@"; check_publish "$name" "$@" ;;
+    vercel | netlify | wrangler | firebase | surge | gh-pages) check_publish "$name" "$@" ;;
+    node | python | python3 | perl | ruby | php | deno | tsx)
+      if [ "$JOINED_BY" = '|' ] && { [ $# -eq 0 ] || [ "${1:-}" = - ]; }; then
+        hook_deny "Blocked: \`$name\` would run code piped into it, which can't be checked. Write the code to a file and read it first."
+      fi
+      ;;
     find | gfind) check_find "$@" ;;
     cd | pushd | chdir) change_directory "$@" ;;
     eval) [ $# -gt 0 ] && scan_text "$*" ;;
@@ -1090,6 +1278,71 @@ run_words() {
       done
       ;;
   esac
+  return 0
+}
+
+# --- Integrity, package manager, publishing -----------------------------------------------------
+
+check_claude() {
+  kit_switch integrity on || return 0
+  local positionals=() arg
+  for arg in "$@"; do case "$arg" in -*) ;; *) positionals+=("$arg") ;; esac; done
+  case "${positionals[0]:-} ${positionals[1]:-}" in
+    'plugin disable' | 'plugin uninstall' | 'plugin remove' | 'plugin marketplace')
+      hook_deny "Blocked: changing which plugins are installed (this kit's guards are plugin hooks) is the user's job." ;;
+  esac
+}
+
+# The project's package manager from its lockfile (one kind only), else the packageManager field. Sets PM.
+detect_package_manager() {
+  PM=""
+  local kinds="" count=0
+  [ -f "$HOOK_ROOT/pnpm-lock.yaml" ] && { kinds="$kinds pnpm"; count=$((count + 1)); }
+  [ -f "$HOOK_ROOT/yarn.lock" ] && { kinds="$kinds yarn"; count=$((count + 1)); }
+  { [ -f "$HOOK_ROOT/bun.lock" ] || [ -f "$HOOK_ROOT/bun.lockb" ]; } && { kinds="$kinds bun"; count=$((count + 1)); }
+  [ -f "$HOOK_ROOT/package-lock.json" ] && { kinds="$kinds npm"; count=$((count + 1)); }
+  if [ "$count" -eq 1 ]; then PM="${kinds# }"; return 0; fi
+  if [ "$count" -eq 0 ] && [ -f "$HOOK_ROOT/package.json" ]; then
+    PM="$(jq -r '.packageManager // "" | split("@")[0]' "$HOOK_ROOT/package.json" 2>/dev/null)"
+    case "$PM" in npm | pnpm | yarn | bun) ;; *) PM="" ;; esac
+  fi
+}
+
+# \`npm install\` in a pnpm project writes a second lockfile and a different node_modules. Only the project root is judged.
+check_package_manager() {
+  local tool="$1" verb="" arg
+  shift
+  [ "$CWD" = "$HOOK_ROOT" ] || return 0
+  kit_switch packageManager on || return 0
+  for arg in "$@"; do
+    case "$arg" in -g | --global | --location=global) return 0 ;; -*) ;; *) [ -n "$verb" ] || verb="$arg" ;; esac
+  done
+  case "$tool:$verb" in
+    npm:install | npm:i | npm:add | npm:ci | npm:uninstall | npm:remove | npm:rm | npm:update | npm:up | npm:dedupe |\
+      pnpm:install | pnpm:i | pnpm:add | pnpm:remove | pnpm:rm | pnpm:update | pnpm:up | pnpm:import |\
+      yarn: | yarn:install | yarn:add | yarn:remove | yarn:upgrade | \
+      bun:install | bun:i | bun:add | bun:remove | bun:update) ;;
+    *) return 0 ;;
+  esac
+  detect_package_manager
+  [ -n "$PM" ] && [ "$PM" != "$tool" ] &&
+    hook_deny "Blocked: this project uses $PM (its lockfile or packageManager field says so); \`$tool $verb\` would write a second lockfile. Use \`$PM\` for the same command."
+  return 0
+}
+
+# Publishing and deploying are the release process's job, not a coding session's. {"guards": {"remoteWrites": false}} lifts it.
+check_publish() {
+  local tool="$1" verb="" arg
+  shift
+  kit_switch remoteWrites on || return 0
+  for arg in "$@"; do case "$arg" in -*) ;; *) [ -n "$verb" ] || verb="$arg" ;; esac; done
+  case "$tool:$verb" in
+    npm:publish | pnpm:publish | yarn:publish | yarn:npm | bun:publish | npm:deprecate | npm:unpublish | npm:dist-tag | npm:access | npm:owner)
+      hook_deny "Blocked: \`$tool $verb\` publishes or changes a registry package. Releases are the user's job." ;;
+    netlify:deploy | wrangler:deploy | wrangler:publish | wrangler:delete | firebase:deploy | surge:* | gh-pages:* | vercel:deploy | vercel:promote | vercel:rollback | vercel:)
+      hook_deny "Blocked: \`$tool ${verb:-}\` deploys the site. Deploys are the user's job; preview locally." ;;
+  esac
+  case "$tool" in vercel) for arg in "$@"; do [ "$arg" = --prod ] && hook_deny "Blocked: \`vercel --prod\` deploys the live site."; done ;; esac
   return 0
 }
 
@@ -1165,13 +1418,22 @@ read_commands() { # <text> <command | body | old-bash>
       X*) SEG_STDIN+=("$value"); SEG_EXPAND+=("$value") ;;
       E*)
         FOLLOWED_BY="$value"
+        [ $((${#SEG_WORDS[@]} + ${#SEG_TARGETS[@]})) -le "$MAX_WORDS" ] || deny_too_long
         for arg in ${SEG_WORDS[@]+"${SEG_WORDS[@]}"} ${SEG_TARGETS[@]+"${SEG_TARGETS[@]}"}; do
           [ "$SECONDS" -lt "$TIME_LIMIT" ] || deny_too_long
           check_env_word "$arg"
+          kit_switch integrity on && check_integrity_word "$arg"
+        done
+        for arg in ${SEG_TARGETS[@]+"${SEG_TARGETS[@]}"}; do
+          case "$arg" in
+            *.claude/state/* | .claude/state | *.husky/* | .husky | *lefthook.y*ml)
+              kit_switch integrity on && hook_deny "Blocked: $arg is guard state or a git hook; a shell redirect must not write there." ;;
+          esac
         done
         for arg in ${SEG_EXPAND[@]+"${SEG_EXPAND[@]}"}; do
           case "$arg" in *'$('* | *'`'*) scan_text "$arg" body ;; esac
         done
+        [ $((${#SEG_WORDS[@]} + ${#SEG_TARGETS[@]})) -le "$MAX_WORDS" ] || deny_too_long
         [ ${#SEG_WORDS[@]} -gt 0 ] && run_words "${SEG_WORDS[@]}"
         PIPED=()
         if [ "$value" = '|' ]; then

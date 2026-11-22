@@ -7,6 +7,11 @@ set -u
 hook_read_input
 PROMPT="$(hook_field '.prompt' | tr '[:upper:]' '[:lower:]')"
 [ -z "$PROMPT" ] && exit 0
+# A credential pasted into a prompt is stored in the transcript and sent to the model. Say so to the user (never
+# blocks, never echoes the value). {"guards": {"promptSecrets": false}} turns it off.
+if kit_switch promptSecrets on && printf '%s' "$HOOK_INPUT" | jq -r '.prompt // ""' | LC_ALL=C grep -Eq 'ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{50,}|AKIA[0-9A-Z]{16}|(sk|rk)_live_[A-Za-z0-9]{24,}|xox[baprs]-[A-Za-z0-9-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|sk-ant-(api|admin)[0-9]{2}-[A-Za-z0-9_-]{40,}|glpat-[A-Za-z0-9_-]{20}'; then
+  jq -n '{systemMessage: "frontend-kit: your prompt looks like it contains a real API key or private key. It is now in this session and its transcript: revoke it at the provider and use a new one, and keep secrets in .env (which Claude never reads)."}'
+fi
 # Hints are for short commands the user types ("commit", "link pr", "check all"). Long text — pasted
 # documents, agent reports, task descriptions — mentions these words in passing and must not trigger them.
 case "$PROMPT" in

@@ -123,6 +123,52 @@ $ANY_HITS"
     ;;
 esac
 
+# What a coding agent does to get a green check without fixing the cause. Context only, never a block;
+# {"guards": {"codeChecks": false}} in .claude/frontend-kit.json turns these notes off.
+if kit_switch codeChecks on; then
+  case "$REL" in
+    *.test.* | *.spec.* | */__tests__/*)
+      TEST_HITS="$(grep -nE '(\b(describe|it|test)\.(only|skip)\b|\b(fdescribe|fit|xit|xdescribe|xtest)\(|\bit\.todo\b)' "$REL" 2>/dev/null | head -n 5)"
+      if [ -n "$TEST_HITS" ]; then
+        WARNINGS="${WARNINGS:+$WARNINGS
+
+}Hard rule: no skipped or focused tests (.only, .skip, xit). A .only makes the gate pass on one test; a .skip hides a failure. Fix the cause in $REL:
+$TEST_HITS"
+      fi
+      ;;
+  esac
+  case "$REL" in
+    *.ts | *.tsx | *.js | *.jsx | *.mjs)
+      SUPPRESS_HITS="$(grep -nE '(@ts-nocheck|eslint-disable|oxlint-disable|biome-ignore)' "$REL" 2>/dev/null | head -n 5)"
+      if [ -n "$SUPPRESS_HITS" ]; then
+        WARNINGS="${WARNINGS:+$WARNINGS
+
+}Lint or type suppressions in $REL hide the finding instead of fixing it. Fix the cause, or keep the comment only with a reason the reviewer can accept:
+$SUPPRESS_HITS"
+      fi
+      SINK_HITS="$(grep -nE '(dangerouslySetInnerHTML|\.innerHTML[[:space:]]*=|\beval\(|new Function\(|document\.write\()' "$REL" 2>/dev/null | grep -vE '^[0-9]+:[[:space:]]*(//|\*)' | head -n 5)"
+      if [ -n "$SINK_HITS" ]; then
+        WARNINGS="${WARNINGS:+$WARNINGS
+
+}Unsafe sink in $REL: never feed it user, URL or API text unsanitised (XSS). Prefer plain JSX text, or sanitise with a vetted library first:
+$SINK_HITS"
+      fi
+      PUBLIC_HITS="$(grep -nE '(VITE_|NEXT_PUBLIC_|PUBLIC_|EXPO_PUBLIC_|GATSBY_|NUXT_PUBLIC_)[A-Z0-9_]*(SECRET|PRIVATE|PASSWORD|TOKEN|API_KEY|SERVICE_ROLE)' "$REL" 2>/dev/null | head -n 3)"
+      if [ -n "$PUBLIC_HITS" ]; then
+        WARNINGS="${WARNINGS:+$WARNINGS
+
+}Variables with these prefixes are copied into the browser bundle, so a secret named this way is public. Keep it server-side without the prefix:
+$PUBLIC_HITS"
+      fi
+      ;;
+  esac
+  CONFLICT_HITS="$(grep -nE '^(<<<<<<< |>>>>>>> )' "$REL" 2>/dev/null | head -n 3)"
+  [ -n "$CONFLICT_HITS" ] && WARNINGS="${WARNINGS:+$WARNINGS
+
+}Merge conflict markers are left in $REL. Resolve them:
+$CONFLICT_HITS"
+fi
+
 if [ -n "$PROBLEMS" ]; then
   printf '%s\n' "$PROBLEMS" >&2
   exit 2

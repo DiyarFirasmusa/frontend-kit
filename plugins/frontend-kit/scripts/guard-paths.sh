@@ -52,12 +52,20 @@ rel_under() {
   case "$path" in "$root"/*) printf '%s' "${path:${#root}+1}" ;; esac
 }
 
+# A name is compared without invisible characters (zero-width space, joiner, BOM) and without trailing dots or
+# blanks: all of them name the same file to the operating system.
+clean_name() {
+  local name
+  name="$(printf '%s' "$1" | LC_ALL=C sed $'s/\xe2\x80[\x8b-\x8d]//g; s/\xe2\x81\xa0//g; s/\xef\xbb\xbf//g; s/[. ]*$//')"
+  lower "$name"
+}
+
 REAL="$(physical_path "$FILE")"
 for path in "$FILE" "$REAL"; do
   base="${path##*/}"
-  case "$(lower "$base")" in
-    .env.example) ;;
-    .env | .env.*)
+  case "$(clean_name "$base")" in
+    .env.example | .env.sample | .env.template | .env.dist | .env.*.example | .env.*.sample | .env.*.template) ;;
+    .env | .env.* | .envrc | .dev.vars | .netrc | .git-credentials)
       hook_deny "Blocked: $base holds secrets and stays out of Claude's context. Use .env.example for names and defaults, and ask the user for any value you need." ;;
   esac
 done
@@ -118,6 +126,34 @@ check_write() {
 }
 check_write "$REL"
 [ "$REAL_REL" = "$REL" ] || check_write "$REAL_REL"
+
+# --- Guard integrity and secrets in code (each has a switch in .claude/frontend-kit.json "guards") ----------------
+# The gate state, the git-hook folders and the settings that switch hooks off are not Claude's to write.
+if kit_switch integrity on; then
+  case "$REL" in
+    .claude/state/* | .husky/* | lefthook.yml | lefthook.yaml | .lefthook/*)
+      hook_deny "Blocked: $REL is guard state or a git hook. Tell the user the change instead of making it." ;;
+  esac
+fi
+CONTENT="$(printf '%s\n%s\n%s' "$(hook_field '.tool_input.content')" "$(hook_field '.tool_input.new_string')" "$(hook_field '.tool_input.new_source')")"
+if kit_switch integrity on; then
+  case "${REL##*/}" in
+    settings.json | settings.local.json)
+      printf '%s' "$CONTENT" | grep -Eq '"disableAllHooks"[[:space:]]*:[[:space:]]*true' &&
+        hook_deny "Blocked: \"disableAllHooks\" would switch off every guard. Ask the user to change that themselves." ;;
+  esac
+fi
+# Real-looking credentials are never written into source files. Documentation, tests and templates may carry fakes.
+if kit_switch secretsInCode on; then
+  case "${REL##*/}" in
+    *.md | *.mdx | *.example | *.sample | *.template | *.test.* | *.spec.*) ;;
+    *)
+      HIT="$(printf '%s' "$CONTENT" | LC_ALL=C grep -Eo 'ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{50,}|gh[ousr]_[A-Za-z0-9]{36}|AKIA[0-9A-Z]{16}|(sk|rk)_live_[A-Za-z0-9]{24,}|xox[baprs]-[A-Za-z0-9-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|AIza[0-9A-Za-z_-]{35}|sk-ant-(api|admin)[0-9]{2}-[A-Za-z0-9_-]{40,}|glpat-[A-Za-z0-9_-]{20}|npm_[A-Za-z0-9]{36}' | grep -vi 'example' | head -n 1)"
+      [ -z "$HIT" ] ||
+        hook_deny "Blocked: this content holds what looks like a real credential (${HIT:0:8}…). Secrets never go into source files: read them from the environment (a server-side variable, never VITE_ or NEXT_PUBLIC_), and ask the user for the value."
+      ;;
+  esac
+fi
 
 # The package.json "build" script is what CI and the deploy run; an existing one is never changed from here.
 # A project that has none yet may get one (a new app needs a build script to exist at all).

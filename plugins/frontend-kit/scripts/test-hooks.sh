@@ -347,7 +347,7 @@ REPO="$PROJECT_REPO"
 
 jq -e . "$PLUGIN/hooks/hooks.json" >/dev/null && ok || ko "hooks.json is valid JSON"
 # /clear starts a new session: the Stop gate needs its baseline then too.
-[ "$(jq -r '.hooks.SessionStart[0].matcher' "$PLUGIN/hooks/hooks.json")" = "startup|resume|clear|compact" ] && ok || ko "SessionStart matches startup|resume|clear|compact"
+[ "$(jq -r '.hooks.SessionStart[0].matcher' "$PLUGIN/hooks/hooks.json")" = "startup|resume|clear|compact|fork" ] && ok || ko "SessionStart matches startup|resume|clear|compact|fork"
 for SETTINGS in "$PLUGIN"/templates/*/settings.json; do
 [ -f "$SETTINGS" ] || continue
 jq -e . "$SETTINGS" >/dev/null && ok || ko "$SETTINGS is valid JSON"
