@@ -11,7 +11,8 @@ The kit is developed **against real apps, not in the abstract**. Throw-away apps
 4. Prove it: `KIT_TEST_PROJECT=$PWD/playground/website-start bash plugins/frontend-kit/scripts/test-hooks.sh` (and `dashboard-vite`; the path must be absolute).
 5. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json` **only** (when set in both places `plugin.json` wins silently and `claude plugin validate` warns; users get an update only when the version changes). Run `bash scripts/validate-repo.sh` and `claude plugin validate . --strict` (root, then each `plugins/<name>`; the root run does not open the plugins' files), commit only `plugins/`, `docs/`, `scripts/`, `.github/`, root files.
 6. A push to `main` publishes the website, which is built from `plugins/` and `examples/`: run `cd site && npm ci && npm run build`
-   first. It fails when a skill, agent, hook event or rule group has no copy there, or a demo verdict of the guard changes.
+   first. It fails when a skill, agent, hook event, rule file or `examples/` project has no copy there, or a demo verdict of the
+   guard changes. What the pages say in prose (guards, gate, hints, config, setup) is not checked: tell whoever owns `site/`.
 
 ## What is pushed, what is not
 
@@ -34,6 +35,7 @@ Never copy playground domain code (Bazaar products, orders, …) into templates;
 | Add a specialist reviewer / worker | `agents/<name>.md` |
 | Block or automate something | `scripts/*.sh` + `hooks/hooks.json`, plus a case in `scripts/test-hooks.sh` |
 | Add a new stack profile | `templates/<profile>/` + setup skill + contract doc + an `examples/` project |
+| Change which skills the prompt hint names | `scripts/skill-triggers.tsv` (English, and the priority) and `scripts/skill-triggers-ar.txt` (Arabic; the format is in its header); check unrelated prompts stay silent |
 | Change when a skill or agent is chosen | its `description`, then measure with `scripts/eval.sh` (5+ runs, before and after) |
 | Show what setup does on another stack | a folder in `examples/` with a README (`validate-repo.sh` checks it) |
 

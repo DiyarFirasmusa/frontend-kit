@@ -43,7 +43,10 @@ Values come from the project's `.claude/frontend-kit.json` (written by setup):
 - Format + lint every edited file (with the project's own tools); typecheck + related tests before Claude finishes a turn (committed work included); typecheck before a
   coding agent reports back.
 - After a passing gate, one code review by the `frontend-reviewer` agent (Opus; `stopGate.review: false` turns it off).
-- Names the skills that fit each prompt (`skill-suggest`); warns before a `git commit` that has not passed the gate.
+- Names up to three skills that fit each prompt (`skill-suggest`), in English or Arabic: standard, Iraqi and English
+  words in Arabic letters, however they are spelled or joined. It matches words, so it can miss a phrasing; a hint never
+  blocks (`hooks.skillSuggest: false` turns it off).
+- Warns before a `git commit` that has not passed the gate.
 - Desktop alert when Claude waits for you; a log of failed tools; session clean-up.
 
 Self-test, from a clone of the repository: `KIT_TEST_PROJECT=/path/to/project bash plugins/frontend-kit/scripts/test-hooks.sh`.

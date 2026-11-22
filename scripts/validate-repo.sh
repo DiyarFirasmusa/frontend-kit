@@ -60,6 +60,30 @@ for awk_file in plugins/*/scripts/*.awk; do
   [ -f "$awk_file" ] || continue
   awk -f "$awk_file" </dev/null >/dev/null 2>&1 || bad "awk syntax error: $awk_file"
 done
+# The hint triggers: English in the .tsv, Arabic in the -ar.txt. A skill missing from one of them, or a misspelled
+# @group, fails silently in the hook.
+for tsv in plugins/*/scripts/skill-triggers.tsv; do
+  [ -f "$tsv" ] || continue
+  ar="${tsv%.tsv}-ar.txt"
+  [ -f "$ar" ] || { bad "$ar missing"; continue; }
+  grep -v '^#' "$tsv" | LC_ALL=C grep -q $'[\330\331]' && bad "$tsv: Arabic triggers belong in ${ar##*/}"
+  trigger_problems="$(LC_ALL=C awk '
+    FILENAME == ARGV[1] { if ($0 !~ /^(#|$)/) english[$1] = 1; next }
+    /^[ \t]*(#|$)/ { next }
+    {
+      if ($0 ~ /^@/) group[$1] = 1
+      else if ($0 !~ /^[ \t]/) arabic[$1] = 1
+      for (i = 1; i <= NF; i++) { word = $i; sub(/^!/, "", word); if (word ~ /^@/) used[word] = 1 }
+    }
+    END {
+      n = split("@personal @everyday @software @building @artefact", needed, " ")
+      for (i = 1; i <= n; i++) used[needed[i]] = 1
+      for (s in english) if (!(s in arabic)) print "no Arabic trigger for " s
+      for (s in arabic) if (!(s in english)) print "no English trigger for " s
+      for (g in used) if (!(g in group)) print "undefined group " g
+    }' "$tsv" "$ar")"
+  [ -z "$trigger_problems" ] || bad "$ar: $(printf '%s' "$trigger_problems" | paste -sd';' -)"
+done
 for sh in plugins/*/scripts/*.sh scripts/*.sh; do
   bash -n "$sh" 2>/dev/null || bad "shell syntax error: $sh"
 done

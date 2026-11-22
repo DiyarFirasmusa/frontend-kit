@@ -36,6 +36,7 @@ function normalise(s,    i) {
 # Words separated by one space; Arabic glued to English ("الـpush") comes apart.
 function words_of(s) {
   gsub(/،|؛|؟|«|»|“|”|‘|’|—|–|…|•|٪/, " ", s)
+  gsub(NBSP, " ", s)
   gsub(/[[:punct:][:space:]]/, " ", s)
   gsub(/[a-z0-9]+/, " & ", s)
   gsub(/  */, " ", s)
@@ -143,7 +144,7 @@ function define(term,    list, n, i, part, verb) {
   for (i = 1; i <= n; i++) {
     part = list[i]
     verb = sub(/~$/, "", part)
-    part = normalise(part)
+    part = normalise(tolower(part))
     PART[term, i] = verb ? "~" part : part
   }
   PART_COUNT[term] = n
@@ -298,6 +299,7 @@ function description_hits(text,    list, counted, n, i, j, hits, best) {
 
 BEGIN {
   UNIT = length("ب")
+  NBSP = "\302\240"
   MAX_WORDS = 2000
   MAX_SENTENCE = 400
   MAX_CLAUSES = 200
@@ -312,7 +314,7 @@ BEGIN {
   ARTICLES = split("بهال عهال لهال هال بال كال عال فال مال لل ال ب ل ك ع", ARTICLE, " ")
   TAILS = split("هالي هالنا ياها ياه يلي تها لها لهم لنا لي لك له هما هم ها هن كم نا ني وها وه وا ات ين ون ان ه ي ك ت و ا ز س", TAIL, " ")
   PERSONS = split("ا ي ت ن سا سي ست سن دا دي دت", PERSON, " ")
-  n = split("هذا هذه هاي ذلك التي الذي الي على الى علي الا عند عندما حين مع من في عن بين بعد قبل كل جميع غير بدون ثم لكن اذا حتى مثل ايضا يتم استخدم استخدمها تستخدم يستخدم طلب يطلب المستخدم مستخدم مهاره اريد يريد لما اما او ان", common, " ")
+  n = split("هذا هذه هاي ذلك التي الذي الي على الى علي الا عند عندما حين مع من في عن بين بعد قبل كل جميع غير بدون ثم لكن اذا حتى مثل ايضا يتم استخدم استخدمها تستخدم يستخدم طلب يطلب المستخدم مستخدم مهاره اريد يريد لما اما او ان جديد جديده", common, " ")
   for (i = 1; i <= n; i++) COMMON[common[i]] = 1
   load_rules()
 }

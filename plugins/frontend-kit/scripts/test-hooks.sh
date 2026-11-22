@@ -690,6 +690,214 @@ printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | grep -q 'Pl
 run_hook skill-suggest.sh "$(plan_input "plan the new orders page" default)"
 [ -z "$OUT" ] && ok || ko "skill-suggest: no spec note outside plan mode" "$OUT"
 export HOME="$OLD_HOME"
+# Arabic prompts (skill-triggers-ar.txt, arabic-hints.awk), in a project with Arabic skills of its own.
+SUGGEST_AR="$WORK/suggest-arabic"
+mkdir -p "$SUGGEST_AR/.claude/skills/invoice-export" "$SUGGEST_AR/.claude/skills/shipping-labels"
+printf -- '---\nname: invoice-export\ndescription: تصدير الفواتير إلى ملف إكسل مع مجموع كل زبون\n---\n' >"$SUGGEST_AR/.claude/skills/invoice-export/SKILL.md"
+printf -- '---\nname: shipping-labels\ndescription: "Print shipping labels طباعة ملصقات الشحن"\n---\n' >"$SUGGEST_AR/.claude/skills/shipping-labels/SKILL.md"
+export CLAUDE_PROJECT_DIR="$SUGGEST_AR"
+# hinted <prompt> → the hinted skills on one line, "none" without a hint, "exit <code>" after a failure.
+hinted() {
+  run_hook skill-suggest.sh "$(jq -n --arg p "$1" '{prompt: $p}')"
+  if [ "$CODE" -ne 0 ] || [ -n "$ERR" ]; then echo "exit $CODE $ERR"; return; fi
+  if [ -z "$OUT" ]; then echo none; return; fi
+  printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' | sed -n 's/^- //p' | sed 's/^frontend-kit://' | paste -sd' ' -
+}
+# One "expected<bar>prompt" a line: a skill that must be among the hints, or "-" for none.
+expect_arabic() {
+  local want prompt got
+  while IFS='|' read -r want prompt; do
+    [ -n "$want" ] || continue
+    got="$(hinted "$prompt")"
+    if [ "$want" = - ]; then
+      [ "$got" = none ] && ok || ko "skill-suggest none: $prompt" "$got"
+    else
+      case " $got " in *" $want "*) ok ;; *) ko "skill-suggest '$want': $prompt" "$got" ;; esac
+    fi
+  done
+}
+
+# MSA
+expect_arabic <<'CASES'
+dash-create-table|أنشئ قائمة بالفواتير مع تقسيم الصفحات وفرز الأعمدة
+dash-create-filter-bar|أضف مربع بحث ومرشحات فوق القائمة
+dash-create-crud|أضف نافذة تأكيد قبل حذف المنتج
+dash-create-detail|أنشئ صفحة عرض بيانات العميل مع تبويبات
+dash-create-route|أضف مسارًا جديدًا محميًا بالصلاحيات
+web-create-route|حوّل الرابط القديم للجديد بـ 301
+web-create-feature|أنشئ خاصية السلة كاملة من واجهة الخدمة البرمجية
+web-server-fn|أنشئ دالة على الخادم تخفي مفتاح الخدمة
+web-seo-page|حسّن ظهور الصفحة في نتائج محركات البحث
+create-store|أنشئ مخزنًا للحالة العامة لسلة الشراء
+tanstack-query-key-conventions|وحّد مفاتيح الاستعلامات وإبطال الكاش
+frontend-design|صمّم صفحة هبوط مميزة للحملة
+web-design-guidelines|راجع واجهة المستخدم وفق إرشادات الويب
+vercel-react-best-practices|قلّل حجم الحزمة وإعادة التصيير
+performance|اجعل الصفحة أسرع
+typescript-advanced-types|اجعل الدالة آمنة الأنواع باستخدام الأنواع الشرطية
+refactor-mode|فعّل وضع إعادة الهيكلة
+refactor|أزل التكرار ونظّف الشيفرة
+fix-everywhere|طبّق الإصلاح في جميع المواضع
+explain|اشرح لي كيف يعمل تسجيل الدخول
+backend-request|نحتاج نقطة نهاية جديدة من فريق الخادم
+branch-status|ما الذي لم يُرفع بعد؟
+sync-main|هل الفرع متأخر عن الفرع الرئيسي؟
+live-check|تحقق من التغيير في المتصفح
+task|ابدأ مهمة جديدة من هذه التذكرة
+CASES
+
+# Iraqi
+expect_arabic <<'CASES'
+dash-create-table|ضيف عمود الرصيد ويا تحديد أكثر من صف
+dash-create-filter-bar|أريد أدوّر بالطلبات حسب الحالة والتاريخ
+dash-create-crud|سوي اضافة وتعديل ومسح للموردين
+dash-create-route|ضيف قسم التقارير بالسايدبار وبس المدير يشوفه
+create-form|سويلي استمارة تسجيل
+create-component|ضيف دكمة مشاركة على الكارت
+create-store|احفظ اختيار الثيم حتى لو سوى ريلود
+i18n-conventions|الكلمات بعدها انكليزي، ترجمها
+ui-ux-pro-max|عندك فكرة أحلى لهالصفحة؟
+performance|الموقع ثكيل عالموبايل
+refactor|هالملف طويل كسمه
+review|شوفلي الكود قبل لا أرفعه
+verify|شغل كل التستات
+fix-everywhere|صلحها بكل الصفحات
+explain|ليش هالزر يدز ريكويستين؟
+explain|شلون يشتغل الكاش؟
+commit-push|ارفع الشغل عالبرانج
+branch-status|اني على يا برانج؟
+dev|شغلي الموقع
+dev|البورت مشغول اطفيه
+CASES
+
+# English written in Arabic letters, and English inside Arabic
+expect_arabic <<'CASES'
+dash-create-table|سويلي تيبل للزبائن بي ترتيب وباجنيشن
+dash-create-filter-bar|خلي الفلاتر تبقى من أسوي ريفرش
+dash-create-detail|سوي ديتيلز للفاتورة بيها تغيير الحالة
+dash-create-settings-form|ضيف سيتنكز للإشعارات
+web-create-feature|سويلي فيتشر التقييمات من الالف للياء
+web-server-fn|سوي سيرفر فنكشن يجيب الأسعار
+create-hook|سوي هوك يجيب المنتجات
+create-hook|سوي useQuery للطلبات
+figma-match|خليها نفس فكما بالضبط
+playwright-best-practices|اكتب تستات بلايرايت للدفع
+typescript-advanced-types|سوي تايب جنرك يطلع الحقول من السكيما
+review|سوي ريفيو
+commit-push|كومت وبوش
+pr-link|انطيني لنك البي ار
+commit-push|سوي commit هسه
+create-form|سوي الـform مال التسجيل
+CASES
+
+# One word, however it is spelled, vowelled or joined
+expect_arabic <<'CASES'
+dash-create-filter-bar|اضف مرشّح للجدول
+dash-create-filter-bar|اضف مرشح للجدول
+dash-create-settings-form|أضف صفحة إعدادات
+dash-create-settings-form|اضف صفحه اعدادات
+dash-create-settings-form|أَضِفْ صَفْحَةَ الإِعْدَادَاتِ
+dash-create-settings-form|وبصفحه الاعدادات ضيف اللغه
+dash-create-settings-form|صلح صفحتها مال الاعدادات
+create-form|سويلي فـــورم تسجيل
+create-form|سويلنا فورمات التسجيل
+create-form|وسويلي استماره للتسجيل
+performance|التطبيق بطئ
+performance|التطبيق بطيء
+performance|وبالموبايل التطبيق بطيءٌ جداً
+CASES
+
+# Talk that is no task: no hint
+expect_arabic <<'CASES'
+-|هلا حبيبي شلونك
+-|شكرا جزيلا عاشت ايدك
+-|اتركها فيما بعد
+-|لا اقصد غير شي
+-|شنو الخطوة الجاية؟
+-|ليش تأخرت؟
+-|شلون أسوي دولمة
+-|كيف يعمل القلب؟
+-|لماذا السماء زرقاء؟
+-|راجع الطبيب باجر
+-|ارفع صوتك ما اسمعك
+-|صلح الحنفية
+-|الشركة فتحت فرعًا جديدًا في البصرة
+-|الفلتر مال الماي توسخ
+-|جدولي مزدحم هذا الاسبوع
+-|رتبلي جدول دراسه قبل امتحان الرياضيات
+-|مستوى اللاعب نازل، الفورم ماله مو زين
+-|الأداء المالي للشركة هذا الربع ضعيف
+-|انرفع سعر الدولار
+-|ترجمة الفيلم مو زينة
+-|نزلت بغرفة 404 بالفندق
+-|أودع المبلغ في الحساب
+CASES
+
+# The same everyday words are what apps are about
+expect_arabic <<'CASES'
+dash-create-table|سويلي تيبل لطلبات المطعم
+dash-create-table|أنشئ جدول المباريات مع فرز الأعمدة
+dash-create-settings-form|سوي صفحة اعدادات الحساب البنكي
+dash-create-filter-bar|أضف فلاتر المدرسة والصف
+create-component|ضيف زر دفع بالبنك
+create-form|أضف حقل رقم جواز السفر مع التحقق
+performance|صفحة الحساب البنكي بطيئة
+CASES
+
+# The project's own skills: three different words of an Arabic description, in any spelling.
+expect_arabic <<'CASES'
+invoice-export|صدّر فواتير الزبون لملف اكسل
+invoice-export|اريد تصدير الفواتير للاكسل ويا مجموع الزبائن
+shipping-labels|اطبع ملصقات الشحن shipping
+-|صلح الفواتير
+-|ابعث الملف للزبون
+-|الفواتير والفواتير وفواتيرها
+CASES
+
+got="$(hinted "سويلي تيبل وفلاتر وفورم وكومت وترجمها")"
+[ "$got" = "dash-create-table dash-create-filter-bar create-form" ] && ok || ko "skill-suggest: an Arabic prompt gets the first three" "$got"
+got="$(hinted "add a table with a filter bar and a form, then commit and refactor it")"
+[ "$got" = "dash-create-table dash-create-filter-bar create-form" ] && ok || ko "skill-suggest: English hints are unchanged" "$got"
+got="$(hinted "commit and push please")"
+[ "$got" = "commit-push" ] && ok || ko "skill-suggest: no Arabic, no Arabic rule" "$got"
+got="$(hinted "سوي commit، then add a data table")"
+[ "$got" = "dash-create-table commit-push" ] && ok || ko "skill-suggest: a mixed prompt gets both languages' hints" "$got"
+expect_skill "-" "/dev شغلي الموقع"
+
+# The profile filters Arabic hints like English ones.
+printf '{"profile":"dashboard"}\n' >"$SUGGEST_AR/.claude/frontend-kit.json"
+expect_skill "-" "سوي سيرفر فنكشن"
+expect_skill "dash-create-table" "سويلي تيبل للطلبات"
+printf '{"profile":"website"}\n' >"$SUGGEST_AR/.claude/frontend-kit.json"
+expect_skill "web-server-fn" "سوي سيرفر فنكشن"
+expect_skill "-" "سويلي تيبل للطلبات"
+printf '{"profile":"react"}\n' >"$SUGGEST_AR/.claude/frontend-kit.json"
+expect_skill "-" "سوي سيرفر فنكشن"
+expect_skill "create-form" "سويلي فورم تسجيل"
+printf '{"hooks":{"skillSuggest":false}}\n' >"$SUGGEST_AR/.claude/frontend-kit.json"
+expect_skill "-" "سويلي فورم تسجيل"
+rm -f "$SUGGEST_AR/.claude/frontend-kit.json"
+
+# The same answer in every locale, broken UTF-8 in a paste included.
+OLD_LOCALE="${LC_ALL-__unset__}"
+for locale_name in C en_US.UTF-8; do
+  export LC_ALL="$locale_name"
+  got="$(hinted "أَضِفْ صَفْحَةَ الإِعْدَادَاتِ")"
+  case " $got " in *" dash-create-settings-form "*) ok ;; *) ko "skill-suggest reads Arabic under $locale_name" "$got" ;; esac
+  run_hook skill-suggest.sh "$(printf '{"prompt":"سويلي فورم تسجيل \377\376\330 x"}')"
+  if [ "$CODE" -eq 0 ] && [ -z "$ERR" ] && printf '%s' "$OUT" | grep -q 'create-form'; then ok; else ko "skill-suggest survives broken UTF-8 under $locale_name" "exit $CODE $ERR"; fi
+done
+if [ "$OLD_LOCALE" = __unset__ ]; then unset LC_ALL; else export LC_ALL="$OLD_LOCALE"; fi
+
+# A long paste stays inside the hook's 5 s (a hook that times out gives no hint), and the request at its end is found.
+awk 'BEGIN { for (i = 1; i <= 3600; i++) print "سطر رقم " i " من السجل الطويل"; print "سويلي فورم تسجيل" }' >"$WORK/paste.txt"
+PASTE_JSON="$(jq -n --rawfile p "$WORK/paste.txt" '{prompt: $p}')"
+STARTED=$SECONDS
+run_hook skill-suggest.sh "$PASTE_JSON"
+[ $((SECONDS - STARTED)) -lt 4 ] && ok || ko "skill-suggest reads a 100 KB Arabic paste in time" "$((SECONDS - STARTED)) s"
+printf '%s' "$OUT" | grep -q 'create-form' && ok || ko "skill-suggest finds the request at the end of a long paste" "exit $CODE"
+export CLAUDE_PROJECT_DIR="$SUGGEST"
+
 # Every skill named in the trigger file exists.
 while IFS="$(printf '\t')" read -r skill _; do
   case "$skill" in '' | '#'*) continue ;; esac

@@ -32,7 +32,7 @@ adapted to what it found. Projects set up this way update the plugin on their ow
 - After each edit: format and lint with the project's own tools, and a warning for `any`, unsafe casts and `@ts-ignore`.
 - When Claude stops: typecheck and related tests (and the i18n validator) on the session's changes, committed or not, then one code
   review by `frontend-reviewer`.
-- It names the skills that fit each prompt.
+- It names the skills that fit each prompt, in English or Arabic (standard, Iraqi, or English words in Arabic letters).
 
 The guards are a guard rail, not a sandbox: they read shell commands the way the shell does, but not what a script file, a
 package script or a program in another language does. Keep branch protection on.

@@ -3,6 +3,19 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.14.3
+- The skill hint understands Arabic: standard, Iraqi, English words in Arabic letters, and English inside Arabic. One
+  spelling for hamza forms, ة/ه, ى/ي and diacritics; attached prefixes and endings come off (`skill-triggers-ar.txt`,
+  `arabic-hints.awk`). On 114 Arabic requests not seen while the rules were written it named the right skill for 95
+  (18 before; English: 77 for the same requests, unchanged), with 5 false hints on 123 unrelated prompts (14 before).
+  Those five were then fixed.
+- Everyday talk stays silent (`شلون` or `ليش` alone no longer suggests `explain`), while the same words in an app's domain
+  (a restaurant, a bank, a school) still get hints.
+- A project's own skill with an Arabic description can be hinted. The hook gives the same answer in every locale and
+  stays inside its timeout on long pastes (it reads the start and the end).
+- `validate-repo.sh` fails when a skill lacks a trigger in either language or an Arabic rule names a group that is not
+  defined.
+
 ## 1.14.2
 - Start dashboard: two causes of React error #418 on a direct load, reproduced and fixed in a real app. Text in the
   prerendered shell stays in the default language until hydrated (English users landing on `/403` through a redirect hit
