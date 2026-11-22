@@ -31,7 +31,14 @@ hasnt() { printf '%s' "$2" | grep -q -- "$1" && ko "$3" "$1" || ok; }
 OUT="$(sw 'freeze --days 3 --note release')"; has 'Mode ON: freeze' "$OUT" "switch turns freeze on"
 [ "$(jq -r .mode .claude/frontend-kit.json)" = freeze ] && [ "$(jq -r .modeState.previous .claude/frontend-kit.json)" = existing ] && ok || ko "freeze is stored with what it replaced"
 [ "$(jq -r .projectName .claude/frontend-kit.json)" = X ] && ok || ko "other keys survive a switch"
-has 'NOT enforced' "$OUT" "an unwired guard is reported as not enforced"
+# An unwired copy (mode-guard line removed from hooks.json) must say so; the wired copy must not.
+UNWIRED="$WORK/unwired"; mkdir -p "$UNWIRED"; cp -R "$HOOKS/.." "$UNWIRED/plugin"
+jq '.hooks.PreToolUse |= map(select((.hooks | map(.command // "") | any(test("mode-guard"))) | not))' "$HOOKS/../hooks/hooks.json" >"$UNWIRED/plugin/hooks/hooks.json"
+# freeze is on at this point: status only reads it, so the mode stays on for the checks below
+OUT="$(printf 'status' | "$UNWIRED/plugin/scripts/mode-switch.sh" "$T")"; has 'NOT enforced' "$OUT" "an unwired guard is reported as not enforced"
+WIRED="$WORK/wired"; mkdir -p "$WIRED"; cp -R "$HOOKS/.." "$WIRED/plugin"
+jq '.hooks.PreToolUse += [{"matcher":"Bash|Edit|Write|MultiEdit|NotebookEdit|mcp__.*","hooks":[{"type":"command","command":"\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-guard.sh","timeout":10,"onFailure":"block"}]}]' "$HOOKS/../hooks/hooks.json" >"$WIRED/plugin/hooks/hooks.json"
+OUT="$(printf 'status' | "$WIRED/plugin/scripts/mode-switch.sh" "$T")"; hasnt 'NOT enforced' "$OUT" "a wired guard is not reported as unenforced"
 OUT="$(ctx)"; has 'FREEZE MODE IS ON' "$OUT" "session start carries the mode"; has 'Hard rules' "$OUT" "hard rules stay in every mode"
 has 'Never commit, push or merge on' "$OUT" "git rule stays"
 OUT="$(sw 'hotfix --base HEAD --files 1')"; has 'Mode ON: hotfix' "$OUT" "task mode on top of a project mode"
