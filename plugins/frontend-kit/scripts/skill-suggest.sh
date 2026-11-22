@@ -1,9 +1,11 @@
 #!/bin/bash
 # UserPromptSubmit: checks the skills we have against the prompt and tells Claude which ones fit,
 # before it starts. Two sources:
-#   1. the kit's own skills, matched by the trigger regexes in skill-triggers.tsv (first 3 win), filtered
-#      to the project's profile (a dashboard never gets web-* skills, a website never gets dash-*);
-#   2. the project's own skills in .claude/skills/*, matched by description words (>= 3 distinct words).
+#   1. the kit's own skills, matched by the English regexes in skill-triggers.tsv and the Arabic rules in
+#      skill-triggers-ar.txt (arabic-hints.awk; first 3 in the order of the .tsv win), filtered to the
+#      project's profile (a dashboard never gets web-* skills, a website never gets dash-*);
+#   2. the project's own skills in .claude/skills/*, matched by description words (>= 3 distinct words,
+#      Arabic ones whatever their spelling or attached prefixes).
 # In plan mode (permission_mode "plan") it also points Claude at the personal /spec workflow,
 # ~/.claude/skills/spec/SKILL.md, when that file exists. That skill is user-only (disable-model-invocation),
 # so Claude reads the file instead of invoking it.
@@ -13,11 +15,15 @@ set -u
 . "$(dirname "$0")/lib.sh"
 
 MAX_SUGGESTIONS=3
+SCRIPTS="$(dirname "$0")"
 
 hook_read_input
 [ -f "$KIT_CONFIG" ] && [ "$(jq -r '.hooks.skillSuggest' "$KIT_CONFIG" 2>/dev/null)" = false ] && exit 0
 
-PROMPT="$(hook_field '.prompt' | tr '[:upper:]' '[:lower:]' | tr '\n' ' ')"
+# Bytes from here on: the same answer in every locale, and broken UTF-8 in a paste stops neither tr nor awk.
+export LC_ALL=C
+RAW_PROMPT="$(hook_field '.prompt')"
+PROMPT="$(printf '%s' "$RAW_PROMPT" | tr '[:upper:]' '[:lower:]' | tr '\n' ' ')"
 [ "${#PROMPT}" -lt 6 ] && exit 0
 # Slash commands already name their skill; agent hand-backs and notifications aren't the user's task.
 case "$PROMPT" in
@@ -29,7 +35,10 @@ PROFILE="$(kit_get '.profile' '')"
 APPS_LINE=""
 [ -f "$KIT_CONFIG" ] && APPS_LINE="$(jq -r '[.apps[]? | "\(.name) = \(.profile // "react") app under \(.path)"] | join("; ")' "$KIT_CONFIG" 2>/dev/null)"
 [ -n "$APPS_LINE" ] && PROFILE=""
-TRIGGERS="$(dirname "$0")/skill-triggers.tsv"
+TRIGGERS="$SCRIPTS/skill-triggers.tsv"
+TAB="$(printf '\t')"
+NEWLINE="
+"
 FOUND=""
 COUNT=0
 
@@ -38,6 +47,23 @@ add() {
 }- $1"
   COUNT=$((COUNT + 1))
 }
+
+# What fits in Arabic: "K<tab>skill" for the kit's skills, "N<tab>name<tab>words" for the project's.
+# The bytes D8 and D9 start the Arabic letters; a prompt without them costs nothing.
+ARABIC=""
+case "$PROMPT" in
+  *$'\330'* | *$'\331'*)
+    ARABIC="$NEWLINE$(
+      {
+        printf '%s\n' "$RAW_PROMPT" | sed "s/^/P$TAB/"
+        for file in "$HOOK_ROOT"/.claude/skills/*/SKILL.md; do
+          [ -f "$file" ] || continue
+          printf 'S\t%s\t%s\n' "$(basename "$(dirname "$file")")" "$(sed -n 's/^description: *//p' "$file" | head -n1)"
+        done
+      } | awk -v rules="$SCRIPTS/skill-triggers-ar.txt" -f "$SCRIPTS/arabic-hints.awk" 2>/dev/null
+    )$NEWLINE"
+    ;;
+esac
 
 if [ -f "$TRIGGERS" ]; then
   while IFS="$(printf '\t')" read -r skill regex; do
@@ -48,7 +74,10 @@ if [ -f "$TRIGGERS" ]; then
       website:dash-*) continue ;;
       react:web-create-* | react:web-server-fn | react:web-seo-page | react:dash-*) continue ;;
     esac
-    printf '%s' "$PROMPT" | grep -Eq "$regex" && add "frontend-kit:$skill"
+    case "$ARABIC" in
+      *"${NEWLINE}K$TAB$skill$NEWLINE"*) add "frontend-kit:$skill" ;;
+      *) printf '%s' "$PROMPT" | grep -Eq "$regex" && add "frontend-kit:$skill" ;;
+    esac
   done <"$TRIGGERS"
 fi
 
@@ -58,6 +87,12 @@ for file in "$HOOK_ROOT"/.claude/skills/*/SKILL.md; do
   [ "$COUNT" -ge "$MAX_SUGGESTIONS" ] && break
   name="$(basename "$(dirname "$file")")"
   hits=0
+  case "$ARABIC" in
+    *"${NEWLINE}N$TAB$name$TAB"*)
+      hits="${ARABIC#*"${NEWLINE}N$TAB$name$TAB"}"
+      hits="${hits%%"$NEWLINE"*}"
+      ;;
+  esac
   for word in $(sed -n 's/^description: *//p' "$file" | head -n1 | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '\n' | awk 'length($0) >= 5' | sort -u); do
     case "$PROMPT" in *"$word"*) hits=$((hits + 1)) ;; esac
   done
