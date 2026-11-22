@@ -3,6 +3,16 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.15.3
+- **Data loss fixed, update before you run the hook self-test.** In 1.15.2 and earlier, when no temp folder could be made
+  `test-hooks.sh` took the folder it was started in for its temp folder: it wrote fixtures there and deleted it at the
+  end, `.git` and uncommitted work included. It now stops before any write or delete unless it has the folder mktemp just
+  made. The same check is in `mode-test.sh` and `scripts/e2e-bench.sh` (which could also copy from or to the root of the
+  disk). All three ignore a `GIT_DIR` inherited from a git hook, which sent their git commands to the caller's repository.
+- The hook self-test no longer depends on the project that lends it `node_modules`: it writes its own lint and format
+  configs and uses the kit's validator. It failed on a project without an oxlint config.
+- `scripts/validate-repo.sh` runs `scripts/test-temp-safety.sh`, which keeps this from coming back.
+
 ## 1.15.2
 - The bundled Chrome DevTools MCP server no longer sends to Google: usage statistics are off (`--no-usage-statistics`),
   and so is the CrUX lookup that sent the URLs of traced pages (`--no-performance-crux`). Performance traces report lab

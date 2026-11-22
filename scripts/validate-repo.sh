@@ -194,4 +194,7 @@ for agent in "$KIT"/agents/*.md; do
   done
 done
 
+# A script that deletes its temp folder must never delete the caller's (it once could).
+SAFETY="$(bash scripts/test-temp-safety.sh 2>&1)" || { bad "temp-folder safety (scripts/test-temp-safety.sh):"; printf '%s\n' "$SAFETY"; }
+
 [ "$FAIL" -eq 0 ] && echo "repo checks passed" || { echo "$FAIL problem(s)"; exit 1; }
