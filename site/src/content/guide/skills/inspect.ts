@@ -41,7 +41,7 @@ export const inspect: Record<string, SkillGuide> = {
     result: [t('Pass or fail per step, with screenshots', 'نجاح أو فشل لكل خطوة مع لقطات')],
     limits: [t('Never types your password or tests on the live site.', 'لا يكتب كلمة مرورك ولا يختبر على الموقع الحي.')],
     related: ['dev', 'figma-match'],
-    needs: t('A browser tool: The assistant in Chrome or the bundled Chrome DevTools server.', 'أداة متصفح: المساعد in Chrome أو خادم Chrome DevTools المرفق.'),
+    needs: t('A browser tool: Claude in Chrome or the bundled Chrome DevTools server.', 'أداة متصفح: ⁦Claude in Chrome⁩ أو خادم Chrome DevTools المرفق.'),
   },
   performance: {
     plain: t('Makes the app faster on mid-range phones and slow networks, by measuring first.', 'يسرّع التطبيق على الهواتف المتوسطة والشبكات البطيئة، بالقياس أولاً.'),
