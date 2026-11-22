@@ -25,11 +25,27 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/skill-suggest.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-prompt.sh",
+            "timeout": 5
           }
         ]
       }
     ],
     "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-guard.sh",
+            "timeout": 10,
+            "onFailure": "block"
+          }
+        ]
+      },
       {
         "matcher": "Bash|Monitor",
         "hooks": [
@@ -156,6 +172,11 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/subagent-context.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-subagent.sh",
             "timeout": 5
           }
         ]
