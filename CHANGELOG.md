@@ -3,6 +3,11 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.15.1
+- The bundled browser MCP servers are pinned to checked versions instead of `@latest`: `chrome-devtools-mcp` 1.12.0 and
+  `@playwright/mcp` 0.0.84. Both are outside the ranges of the published advisories at the time of pinning. They need
+  Node 20.19 or later (chrome-devtools), and move only with a kit release.
+
 ## 1.15.0
 Needs Claude Code 2.1.295 or later. Run `/frontend-kit:setup` again: rules and settings already copied into a project do
 not update by themselves.
