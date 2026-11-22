@@ -195,10 +195,11 @@ kit_config_guard() {
 
 # kit_switch <name> <default on|off> → 0 when the guard is on. A project turns one off with
 # {"guards": {"<name>": false}} in .claude/frontend-kit.json; every guard added after 1.14 has such a switch.
+# (jq's // would treat false as unset, so the raw value is read.)
 kit_switch() {
-  local value
-  value="$(kit_get ".guards.$1" '')"
-  case "${value:-$2}" in false | off | 0 | no) return 1 ;; esac
+  local value=""
+  [ -f "$KIT_CONFIG" ] && value="$(jq -r ".guards.$1" "$KIT_CONFIG" 2>/dev/null)"
+  case "$value" in false | off | 0 | no) return 1 ;; esac
   return 0
 }
 
