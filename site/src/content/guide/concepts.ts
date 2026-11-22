@@ -70,7 +70,7 @@ interface Moment {
 
 /** One request, from the sentence to the link. */
 export const journey: Moment[] = [
-  { who: t('You', 'أنت'), what: t('“Add an orders page with a table and a status filter.”', '«أضف صفحة طلبات بجدول ومرشّح للحالة».') },
+  { who: t('You', 'أنت'), what: t('“Add an orders page with a table and a status filter.”', '«أضف صفحة طلبات بجدول وفلتر للحالة».') },
   { who: t('Hook', 'حارس'), what: t('Tells Claude which skills fit: the table and the filter bar.', 'يخبر Claude بالمهارات المناسبة: الجدول وشريط المرشحات.') },
   { who: t('Skills', 'مهارات'), what: t('Claude follows their steps: the guarded route, the server-paged table, filters in the URL, both languages, tests.', 'يتبع Claude خطواتها: مسار محمي وجدول يرقّمه الخادم ومرشحات في الرابط واللغتان والاختبارات.') },
   { who: t('Rules', 'قواعد'), what: t('The table, permission and API standards load while those files are edited.', 'تُحمَّل معايير الجداول والصلاحيات والـ API أثناء تعديل ملفاتها.') },

@@ -44,7 +44,7 @@ export const skillUse = {
   title: t('Three ways a skill starts', 'ثلاث طرق لبدء المهارة'),
   ways: [
     { name: t('Just ask', 'اطلب فقط'), text: t('Describe the job. Claude matches it to a skill.', 'صف العمل، فيطابقه Claude مع مهارة.'), example: t('create a customers table', 'أنشئ جدول العملاء') },
-    { name: t('Get a hint', 'يصلك تلميح'), text: t('A hook reads your sentence and names up to three kit skills that fit, before Claude starts.', 'حارس يقرأ جملتك ويسمّي حتى ثلاث مهارات مناسبة قبل أن يبدأ Claude.'), example: t('make the page faster', 'اجعل الصفحة أسرع') },
+    { name: t('Get a hint', 'يصلك تلميح'), text: t('A hook looks for key words and names up to three kit skills before Claude starts. It knows mostly English words and a few Arabic ones.', 'حارس يبحث عن كلمات مفتاحية ويسمّي حتى ثلاث مهارات قبل أن يبدأ Claude. أغلب كلماته إنجليزية ويعرف قليلاً من العربية.'), example: t('make the page faster', 'التطبيق بطيء، سرّعه') },
     { name: t('Call it', 'استدعها'), text: t('Type the skill’s name yourself.', 'اكتب اسم المهارة بنفسك.'), example: t('/frontend-kit:verify', '/frontend-kit:verify') },
   ],
   anatomyTitle: t('A skill, up close', 'المهارة عن قرب'),
