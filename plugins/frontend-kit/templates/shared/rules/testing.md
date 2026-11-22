@@ -15,10 +15,10 @@ paths:
 > Jest needs a custom jsdom environment that provides Node's `fetch`, `Request`, `Response` and `AbortController` (but keeps
 > jsdom's own `FormData`), a stub module for `import.meta.env`, and the DOM `RouterProvider` so `flushSync` behaves as in the app.
 
-Every task ships with tests. The stack: **Vitest** (jsdom) + **Testing
-Library** + **user-event** + **MSW** for unit, component and integration
-tests; **Playwright** + **@axe-core/playwright** for end-to-end and
-accessibility. No Jest, no Cypress, no hand-rolled `fetch` mocks.
+Every task ships with tests, in the project's own runner and test folders; never a second runner, never one installed
+unasked. The kit's example stack: **Vitest** (jsdom) + **Testing Library** + **user-event** + **MSW** for unit, component
+and integration tests; **Playwright** + **@axe-core/playwright** for end-to-end and accessibility. With that stack:
+no Jest, no Cypress, no hand-rolled `fetch` mocks.
 
 ## Commands
 

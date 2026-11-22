@@ -12,8 +12,8 @@ offer to change it.
 ## Find the real answer
 
 - Read the code that runs, not what names suggest: follow the call from the
-  route / container to the page hook, query hook, service and endpoint (the
-  endpoint constants and the API spec named in `CLAUDE.md`).
+  page through the project's state and data layers to the endpoint (a hook,
+  composable or service, and the API spec named in `CLAUDE.md`).
 - Website (TanStack Start): also check the route's `loader`, `beforeLoad` and
   any server function (`createServerFn`) — the work may happen on the server.
   Dashboard (Vite + TanStack Router): everything runs in the browser.

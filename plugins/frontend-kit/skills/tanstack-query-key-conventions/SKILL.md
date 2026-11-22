@@ -5,6 +5,8 @@ description: Query and mutation key conventions — every key comes from the pro
 
 # Query keys
 
+Only for a project with TanStack Query: with another data layer keep its own cache keys, and don't install Query.
+
 All keys come from one factory (its name and file are in `CLAUDE.md`, e.g.
 `qk` in `constants/query-keys.ts`). No inline arrays (`['orders']`,
 `['getProducts']`) anywhere else.

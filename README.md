@@ -1,6 +1,6 @@
 # frontend-kit
 
-A Claude Code marketplace with one plugin, `frontend-kit`, for React + TypeScript frontends. It gives a project the
+A Claude Code marketplace with one plugin, `frontend-kit`, for frontends in any stack (React + TypeScript first-class). It gives a project the
 conventions, workflows and guard rails a good frontend team would write down, and enforces the ones that can be enforced.
 
 | What | Count |
@@ -21,7 +21,7 @@ conventions, workflows and guard rails a good frontend team would write down, an
 Restart Claude Code after setup. Requirements: `jq`, Node 20+, git. The guards need Claude Code 2.1.295 or later: earlier
 versions let a call through when a guard times out or cannot start.
 
-`/frontend-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of React project it is,
+`/frontend-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of project it is,
 detects the stack (package manager, framework, router, tests, linter, formatter, i18n, source folders), shows **one proposal**
 and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json`,
 adapted to what it found.

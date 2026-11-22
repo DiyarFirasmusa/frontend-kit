@@ -1,70 +1,46 @@
 ---
 name: create-component
-description: Create or extract a React component — any new component, card, button, dialog, badge, section or other UI piece, even a small one. Use whenever the user asks to build, create, write, add or extract a component. Follows project conventions (location by ownership, named export, design tokens, logical properties, mobile first, translated strings, accessible markup). With a Figma link, run figma-match alongside.
+description: Create or extract a UI component in any frontend stack (React, Vue, Svelte, Angular, plain) — any new component, card, button, dialog, badge, section or other UI piece, even a small one. Use whenever the user asks to build, create, write, add or extract a component. Follows the project's own pattern (location by ownership, file style, tokens) with accessible markup and translated text. With a Figma link, run figma-match alongside.
 ---
 
 # Create component
 
-## Before creating
+The principles are fixed. The library, folder, file name, language and syntax are the project's: what the user said,
+then the project's own pattern, then the framework's convention, then this kit's example.
 
-1. **Does it exist?** Look in the shared components folder (primitives,
-   composed pieces) named in `CLAUDE.md` and the feature's `components/`.
-   Dashboard: the UI kit primitives (base-ui / shadcn-style) come first.
-2. **Used once?** Write it inline in the page as a local function. A file only
-   when reused or the page gets too long.
-3. **Where?** One page → that page's `components/`; the feature's main page
-   or several pages → the feature's `components/`; two features → the shared
-   components folder (primitives in its `ui/`).
+The stack is what `package.json` and the code use. The profile name `react` doesn't mean React: never write JSX or a
+hook in a project without React. The references are in `${CLAUDE_SKILL_DIR}/references/`.
 
-## Template
+## 1. Learn how this project does it, before writing
 
-```tsx
-import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+1. Read "Where things are" in `.claude/rules/project.md` and the layout in `CLAUDE.md`, if they exist.
+2. **Does it exist?** Look in the shared components and in the feature. The UI kit's primitives come before your own.
+3. Open the nearest component of the same kind. Take its folder, file name, export, props, styling and text handling.
+4. **Where?** Used once: inline, or beside the page that uses it. Used by one feature: with that feature. By two: where
+   the project keeps shared components.
 
-interface SummaryCardProps {
-  title: string
-  itemId: string
-  imageUrl: string
-  amountLabel: string
-}
+With no component to follow, read the one reference for the stack. With none, use the framework's own convention.
 
-export function SummaryCard({ title, itemId, imageUrl, amountLabel }: SummaryCardProps) {
-  const { t } = useTranslation()
-  return (
-    <Link
-      to="/items/$itemId"
-      params={{ itemId }}
-      className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-ring"
-    >
-      <img src={imageUrl} alt={title} width={160} height={160} loading="lazy" className="aspect-square w-full object-contain" />
-      <h3 className="text-base font-semibold text-foreground">{title}</h3>
-      <p className="text-sm text-muted-foreground">
-        {t('items.totalLabel')} <span dir="ltr" className="tabular-nums">{amountLabel}</span>
-      </p>
-    </Link>
-  )
-}
-```
+| Stack | Reference |
+| ----- | --------- |
+| React with TanStack Router (website and dashboard profiles) | `references/react-tanstack.md`, also beside an existing component |
+| Any other | `references/other-stacks.md` |
 
-The class names above are examples; use the project's own semantic tokens
-(`.claude/rules/styles.md`).
+## 2. Rules in every stack
 
-## Rules
+- It shows values and reports events. No request, storage, mutation or business calculation inside it.
+- One job per component, with the language (TypeScript or JavaScript) of its neighbours.
+- The project's tokens and components: no one-off colour, no second styling system, no new dependency without asking.
+- Semantic elements: a link navigates, a button acts. A name for every control, `alt` and size for images, the heading
+  level that fits where it sits, visible focus, targets of 44px.
+- Text goes through the project's i18n when it has one, in every language it ships.
+- Logical properties (start/end). The narrowest screen first, then up. States of the data it is given.
+- Rendered on a server: no browser API during render.
 
-- kebab-case file, PascalCase named export, one exported component per file, no barrels.
-- Presentational: props in, callbacks out (`onAdd`, `onRemove`). No fetching,
-  no mutations, no `useNavigate` for plain navigation (use `<Link>` with a
-  typed `to` + `params`).
-- Tokens only — no hex, no inline static styles. Mobile-first classes.
-  Logical properties; directional icons `rtl:-scale-x-100`.
-- Every string via `t('group.key')` in Arabic + English. Images: `alt`, size,
-  lazy below the fold. Icon-only buttons: `aria-label`. Headings at the right
-  level for where the component sits (never a second `<h1>`).
-- Website (TanStack Start): it renders on the server too — no `window`,
-  `localStorage` or `document` during render; read them in an effect or an
-  event handler.
-- Non-trivial behaviour → colocated `<name>.test.tsx` with the project's
-  render helper.
-- Verify: `npm run typecheck && npm run lint`, then look at it in Arabic and
-  English, phone and desktop, light and dark.
+## 3. Prove it
+
+- Non-trivial behaviour gets a test with the project's runner. With no runner, say so and don't install one.
+- Run every test you wrote. One that shares module state resets it between cases. A test you couldn't run is
+  reported as not run, never as passing.
+- Run the project's own typecheck and lint, then look at it in each language, width and theme the project has.
+- Report the file you followed and what you didn't check.

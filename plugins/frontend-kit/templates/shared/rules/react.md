@@ -7,6 +7,7 @@ paths:
 
 # React + TypeScript
 
+The project's own pattern wins over the file, export and folder examples here (`project.md`, the nearest code).
 The examples and the router lines (`createFileRoute`, `beforeLoad`, `Route`, `src/routes/`) are TanStack Router and Query.
 In another stack keep the intent (thin routes, guards in the route layer, params validated once): the project's
 framework rule in this folder wins for directives, imports, default exports and navigation.

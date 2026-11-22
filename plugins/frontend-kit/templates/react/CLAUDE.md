@@ -2,7 +2,7 @@
 
 {{PROJECT_DESCRIPTION}}
 
-A React project. The kit adapts to the stack the project really uses, recorded in
+A frontend project. The kit adapts to the stack the project really uses, recorded in
 `.claude/frontend-kit.json` (`stack`, `commands`, `srcDirs`). Read it before assuming a tool.
 
 Stack: {{FRAMEWORK}} · router {{ROUTER}} · data {{DATA_LIB}} · client state {{STATE_LIB}} ·
@@ -40,16 +40,15 @@ The real commands are in `.claude/frontend-kit.json` (`commands`) and `package.j
 
 ## Folder layout
 
-Group by feature, not by file type (`structure.md`). A feature owns its components, hooks, services and tests;
-only code used by two or more features moves to a shared folder. No barrel files, kebab-case file names,
-one component per file.
+The project's own: "Where things are" in `.claude/rules/project.md`. How code is split is fixed (`structure.md`: view,
+state, data and pure logic apart, one owner, one direction); folder and file names follow the project.
 
 ## Task delivery
 
 - Implement directly: `task` for a new task, `create-component`, `create-form`, `create-hook`, `create-store`,
   `verify` before saying done, `review` before asking to commit a non-trivial change.
 - Long runs: keep a todo list and keep going until done or truly blocked.
-- Refactor mode (`/frontend-kit:refactor-mode`): restructures the project to the standards in `structure.md`,
+- Refactor mode (`/frontend-kit:refactor-mode`): restructures the project to the principles in `structure.md` and the layout the user picks,
   phase by phase, with the gate between phases.
 
 ## Branches and environments

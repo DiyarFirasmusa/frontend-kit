@@ -1,97 +1,61 @@
 ---
 name: create-store
-description: Create a global client-side store (Zustand) for state that outlives a component — a user preference such as theme, language or sidebar, session or auth state, a cart, drafts, or data handed between routes — persisted across reloads when needed, with sign-out cleanup. Use whenever the user asks to add global, shared or persisted client state, or a store.
+description: Create shared client state in any frontend stack (a store, slice, service, rune, signal or plain module) for a value that outlives a component, such as a preference, session, cart or draft, persisted when needed. Use whenever the user asks to add global, shared or persisted client state, or a store.
 ---
 
-# Create store
+# Create shared state
 
-Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
+The principles are fixed. The library, folder, file name, language and syntax are the project's: what the user said,
+then the project's own pattern, then the framework's convention, then this kit's example.
 
-Zustand is the default. When `stack.state` in `.claude/frontend-kit.json` names something else, or says React state only, use that
-or ask before adding a state library.
+The stack is what `package.json` and the code use. The profile name `react` doesn't mean React: never write JSX or a
+hook in a project without React. The references are in `${CLAUDE_SKILL_DIR}/references/`.
 
-## First: does it need a store?
+## 1. Does it need shared state?
 
-- Server data → TanStack Query. Never copy it into Zustand.
-- Page-local UI state → `useState` in the page hook.
-- Form state → react-hook-form.
-- URL-shareable state (tab, filter, page, sort) → search params
-  (`validateSearch` + `Route.useSearch()`).
+- Server data belongs to the project's data layer. Never copy it into a store.
+- State of one screen stays with that screen. Form state stays with the form.
+- State a link should share (tab, filter, page) belongs in the URL.
 
-Two kinds remain.
+What is left is client state that several screens use, or that must survive a screen change or a reload.
 
-## Global store — `<shared>/store/<name>-store.ts`
+## 2. Learn how this project does it, before writing
 
-Client state shared by features (session flags, UI preferences, a client-side
-cart or selection). Persist only what must survive a reload, with a
-`<projectName>-` key prefix, and never tokens.
+1. Read "Where things are" in `.claude/rules/project.md` and the layout in `CLAUDE.md`, if they exist.
+2. Open the nearest existing shared state, where it is registered, and one view that uses it.
+3. Find what already does persistence, validation and reset on sign-out.
 
-```ts
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import type { LanguageId } from '@/<shared>/lib/i18n/languages'
+From those, take the library, language, folder, file name, export shape and registration. If they differ from each
+other, take the one nearest to the feature and say so.
 
-interface SettingsState {
-  language: LanguageId
-  setLanguage: (language: LanguageId) => void
-}
+When the project has no shared state yet, it lives with the feature that owns it, in the folders and file style the
+features already have. Use what is built in or already installed, with the one reference below. With no reference,
+use the framework's own convention. Ask before adding a dependency.
 
-export const useSettingsStore = create<SettingsState>()(
-  persist(
-    (set) => ({
-      language: 'ar',
-      setLanguage: (language) => {
-        set({ language })
-      },
-    }),
-    { name: '<projectName>-settings' },
-  ),
-)
-```
+| Framework | Reference |
+| --------- | --------- |
+| React with Zustand installed (website and dashboard profiles) | `references/zustand.md`, also beside an existing store |
+| React without it | `references/react.md` |
+| Vue | `references/vue.md` |
+| Svelte | `references/svelte.md` |
+| Angular | `references/angular.md` |
 
-User data must be reset by the project's sign-out function (`CLAUDE.md`
-names it) — add the new store's reset there, and to the test helper that
-resets stores between tests.
+## 3. Split it
 
-Website (TanStack Start): a persisted store hydrates on the client only —
-render the server-safe default first and don't read `localStorage` during
-render, or the HTML and the first client render disagree. The Zustand way:
-`persist(..., { skipHydration: true })`, then call `useXStore.persist.rehydrate()`
-in `beforeLoad` of client-only routes and in a layout effect for the rest.
+- **Logic:** pure transitions and derived values, as a separate testable unit when there is more than assignment.
+- **State:** holds the values and exposes named actions. Nothing changes them from outside.
+- **Storage:** through the project's helper. Validate what is read. Never store a token.
+- **View:** reads the smallest value it needs and calls actions. It knows nothing of storage or the rules.
 
-A store holds guest data only (ids, a cart of ids) when sign-out should not clear
-it: say which stores sign-out resets in `project.md`; a guest cart is not user data.
+Persist only what must survive a reload. With server rendering, never read browser storage while rendering on the
+server. Reset user data where the project signs out.
 
-## Hand-off store — `<feature>/store/<x>-store.ts`
+## 4. Prove it
 
-Passes an object between routes (a selected item, a receipt). No persist
-unless it must survive a full-page redirect (then `sessionStorage`).
-
-```ts
-interface SelectedItemState {
-  item: SelectedItem | null
-  setItem: (item: SelectedItem) => void
-  clear: () => void
-}
-
-export const useSelectedItemStore = create<SelectedItemState>((set) => ({
-  item: null,
-  setItem: (item) => {
-    set({ item })
-  },
-  clear: () => {
-    set({ item: null })
-  },
-}))
-```
-
-The receiving page redirects away when the store is empty and calls `clear()`
-when the flow ends.
-
-## Rules
-
-- `<name>-store.ts`, export `use<Name>Store`.
-- Subscribe with selectors (`useSettingsStore((state) => state.language)`);
-  outside React use `useXStore.getState()`.
-- Braced setter bodies (oxlint `curly`).
-- Unit-test the store's actions; reset between tests.
+- Write a test of the transitions, in the project's test runner. With none, use one that is built into the runtime
+  when the logic file runs there as it is (plain JavaScript on Node: `node --test`). Only when neither exists, write
+  no test, say so and ask. Never install one unasked.
+- Run every test you wrote. One that shares module state resets it between cases. A test you couldn't run is
+  reported as not run, never as passing.
+- Run the project's own typecheck, lint and tests (`commands` in `.claude/frontend-kit.json`, or its package scripts).
+- Report the existing file you followed, the files you changed, and anything not checked.

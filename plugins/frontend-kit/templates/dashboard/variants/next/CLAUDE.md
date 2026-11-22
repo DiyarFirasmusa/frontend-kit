@@ -49,7 +49,7 @@ npm run build             # next build; last
 npm run check             # typecheck + lint:check + test
 ```
 
-## Folder layout
+## Folder layout (an example: `project.md` and existing code win)
 
 Full tree, path map and ownership rules: `.claude/rules/structure.md`.
 

@@ -16,8 +16,8 @@ paths:
 > module grouped like future keys (`group.key`), no text in JSX, no second language or library without asking. The rules below
 > then apply to that catalogue.
 
-Arabic is the default language and renders right-to-left; English renders
-left-to-right. Both are first-class: every screen must be correct in both
+For a project with a right-to-left language; Arabic (the default here) and English are the kit's example pair.
+Each direction is first-class: every screen must be correct in both
 directions, so write direction-neutral code, not RTL code patched for LTR or
 the reverse.
 

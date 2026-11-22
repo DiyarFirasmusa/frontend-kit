@@ -62,7 +62,7 @@ npm run check             # typecheck + lint:check + test
 E2E runs on the built server: SSR, `head()`, status codes and hydration
 only behave for real in a production build.
 
-## Layout
+## Layout (an example: `project.md` and existing code win)
 
 ```
 src/

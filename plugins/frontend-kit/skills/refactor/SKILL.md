@@ -1,19 +1,20 @@
 ---
 name: refactor
-description: Refactor code without changing behaviour — split long files, move logic from containers into page hooks, apply the project's folder ownership rules, extract services and query hooks, remove duplication, finish JS→TS leftovers. Use when asked to clean up, restructure, split, simplify or migrate code.
+description: Refactor code without changing behaviour — split long files, separate view, state, data and logic, apply the project's own layout, extract services and hooks or their equivalents, remove duplication, finish JS→TS leftovers. Use when asked to clean up, restructure, split, simplify or migrate code.
 ---
 
 # Refactor
 
 Change structure, not behaviour. If behaviour must change too, that is a
-separate task.
+separate task. The principles are fixed; the target folders, names and libraries are the project's
+(`project.md`, the nearest code), and changing those needs the user's choice.
 
 ## Golden rules
 
 1. Tests first: make sure the code you touch is covered (add an integration
    test with MSW if it isn't) so you can prove nothing changed.
-2. Small steps; `npm run typecheck && npm run lint:check && npm run test`
-   after each one.
+2. Small steps; the project's typecheck, lint and tests (`commands`, else its
+   package scripts) after each one.
 3. One kind of change at a time (move, rename, extract) — don't mix.
 4. Delete what is dead; no commented-out code, no re-export shims.
 5. Stop and ask before touching generated files (the API types,
@@ -21,6 +22,10 @@ separate task.
    other path `CLAUDE.md` lists as protected).
 
 ## Smells → fixes
+
+In every stack: a view that fetches, stores or calculates → move that out; two jobs in one file → split; a copy → one
+owner; an import cycle → move the shared part down. The table shows the same in React + TanStack, as examples: use the
+project's equivalent, and don't bring one of those libraries in.
 
 | Smell | Fix |
 | ----- | --- |
@@ -39,7 +44,7 @@ separate task.
 | Untyped props, `any`, implicit `any` from JS days | an interface; `unknown` + narrowing |
 | Magic numbers (OTP length, page size, limits) | named constants |
 | Nested conditionals | guard clauses, early returns |
-| Strings in JSX | `t('group.key')` in Arabic + English |
+| Strings in JSX | `t('group.key')` in each language the project ships |
 
 ## Moving files
 
@@ -52,6 +57,6 @@ file naming; moving one changes its URL, so that is a behaviour change.
 
 ## Done when
 
-`npm run check:full` (or every `verify` gate) is green, the touched pages look
-and behave the same in Arabic and English on phone and desktop, and the diff
+Every `verify` gate is green, the touched pages look and behave the same in
+each language on phone and desktop, and the diff
 contains no behaviour change. Ask the user before any commit.

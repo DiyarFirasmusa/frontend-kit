@@ -13,10 +13,10 @@ These come from the user's own corrections.
   and finish with the grep that shows none are left. List the files in the report.
 - **A Figma link is the spec.** Match spacing, size, colour, radius, type and
   states exactly (`figma-match` skill). Don't "improve" a design that has a frame.
-- **Translations ship together.** Every user-facing string goes into both
-  Arabic and English in the same change. Never leave a key in one language.
+- **Translations ship together.** With i18n, every user-facing string goes into
+  each language the project ships, in the same change. Never leave a key in one.
 - **No layout shift on mobile.** Every visual change is checked at phone width
-  in Arabic and English; nothing jumps while data loads.
+  in each language the project has; nothing jumps while data loads.
 - **"Continue" / "contine"** resumes the last unfinished step. Don't restart,
   re-plan or re-ask what was answered. On long tasks keep a todo list and keep
   going until it is done or truly blocked.

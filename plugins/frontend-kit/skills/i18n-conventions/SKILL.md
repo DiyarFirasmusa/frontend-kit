@@ -5,6 +5,10 @@ description: Enforces the project's i18n conventions — exactly two-level trans
 
 # i18n conventions
 
+The project's library, key shape and languages win. What holds in any of them: no hardcoded user-facing text, static keys,
+every language changed together, plurals by each language's own categories. The rest is the kit's example for a project
+with i18next, two-level keys, Arabic and English; with another library or other languages keep the rule, not the syntax.
+
 i18next + react-i18next. Arabic (`ar`, RTL) is the default; English (`en`,
 LTR) is fully supported. `CLAUDE.md` names the i18n setup file and the
 language list.

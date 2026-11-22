@@ -1816,6 +1816,39 @@ for doc in "$PLUGIN/README.md" "$PLUGIN/skills/setup/SKILL.md"; do
   if grep -qE 'update the plugin on (its|their) own' "$doc"; then ko "a promise of automatic updates is back: $doc"; else ok; fi
 done
 
+# --- guard-paths: a skill's own supporting files open without a prompt, and nothing else --------------------
+
+OWN="$WORK/own-files"
+mkdir -p "$OWN/project/src"
+cp -R "$PLUGIN" "$OWN/plugin"
+mkdir -p "$OWN/plugin-evil/skills"
+printf 'x\n' >"$OWN/plugin-evil/skills/x.md"
+printf 'x\n' >"$OWN/outside.md"
+ln -s "$OWN/outside.md" "$OWN/plugin/skills/create-store/references/link.md"
+printf 'x\n' >"$OWN/plugin/skills/create-store/references/.env"
+own_read() { # <allow | none | deny> <tool> <path>
+  local got
+  OUT="$(jq -n --arg t "$2" --arg f "$3" '{hook_event_name: "PreToolUse", tool_name: $t, tool_input: {file_path: $f, old_string: "a", new_string: "b"}}' \
+    | CLAUDE_PROJECT_DIR="$OWN/project" "$OWN/plugin/scripts/guard-paths.sh" 2>/dev/null)"
+  got="$(printf '%s' "$OUT" | jq -r '.hookSpecificOutput.permissionDecision // "none"' 2>/dev/null)"
+  [ -n "$got" ] || got=none
+  [ "$got" = "$1" ] && ok || ko "own skill files: $2 ${3#"$OWN"/} should be $1" "got $got"
+}
+own_read allow Read "$OWN/plugin/skills/create-store/references/zustand.md"
+own_read allow Read "$OWN/plugin/skills/create-store/../create-hook/references/other-stacks.md"
+own_read none Read "$OWN/plugin/skills/create-store/references/link.md"
+own_read none Read "$OWN/plugin/skills/../scripts/lib.sh"
+own_read none Read "$OWN/plugin/skills/create-store/references/../../../../outside.md"
+own_read none Read "$OWN/plugin/skills/create-store/references/not-there.md"
+own_read none Read "$OWN/plugin/skills/create-store/references"
+own_read none Read "$OWN/plugin-evil/skills/x.md"
+own_read none Read "$OWN/outside.md"
+own_read none Read "skills/create-store/references/zustand.md"
+own_read deny Read "$OWN/plugin/skills/create-store/references/.env"
+OUT="$(jq -n --arg f "$OWN/plugin/skills/create-store/SKILL.md" '{hook_event_name: "PreToolUse", tool_name: "Edit", tool_input: {file_path: $f, old_string: "a", new_string: "b"}}' \
+  | CLAUDE_PROJECT_DIR="$OWN/project" "$OWN/plugin/scripts/guard-paths.sh" 2>/dev/null)"
+printf '%s' "$OUT" | grep -q '"allow"' && ko "own skill files: an edit is never pre-approved" "$OUT" || ok
+
 # --- settings templates: no pre-approved command that can run any other --------------------------------
 
 for SETTINGS in "$PLUGIN"/templates/*/settings.json; do

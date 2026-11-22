@@ -5,8 +5,8 @@ description: "Design ideas and UX alternatives from a searchable catalogue of st
 
 # UI/UX Pro Max - Design Intelligence
 
-> **frontend-kit context.** Stack: `react` (Tailwind v4 — also useful: `html-tailwind`).
-> Arabic RTL default + English LTR, mobile first, light and dark. Recommendations are
+> **frontend-kit context.** Stack, languages and themes: the project's (`.claude/frontend-kit.json`, `package.json`).
+> Mobile first. Recommendations are
 > input, not orders: the project's tokens, fonts and components (`.claude/rules/styles.md`)
 > win over any palette or font pairing this tool suggests. Run scripts with `python3`.
 

@@ -47,7 +47,7 @@ npm run build             # last
 npm run check             # typecheck + lint:check + test
 ```
 
-## Folder layout
+## Folder layout (an example: `project.md` and existing code win)
 
 ```text
 src/

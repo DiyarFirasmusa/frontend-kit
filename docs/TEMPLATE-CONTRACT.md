@@ -7,7 +7,7 @@ profile and copies `templates/shared/` + `templates/<profile>/` into the project
 | --------- | ----------------------------------------------------------------------------------------- |
 | website   | TanStack Start (React 19, TanStack Router file routes + SSR, server functions), TanStack Query, Zustand, Tailwind v4, i18next (Arabic RTL default + English), react-hook-form + zod, Vitest + Testing Library + MSW, Playwright + axe, oxlint + oxfmt, npm |
 | dashboard | Vite + React 19 SPA (or TanStack Start in SPA mode, or Next.js App Router: `variants/`), TanStack Router (file routes, typed search params), TanStack Query, TanStack Table, Zustand, base-ui / shadcn-style primitives, Tailwind v4, i18next RTL + English, react-hook-form + zod, Sentry, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm |
-| react     | Any React stack (Next.js, React Router, Vite, CRA, ...): stack-neutral rules, adapted by setup to what it detects |
+| react     | Any other frontend (Next.js, React Router, Vite, Vue, Svelte, Angular, plain, ...): stack-neutral principles, adapted by setup to what it detects; the name is historical |
 | fullstack | A site and an admin in one tree: the website rules for the site, the dashboard rules scoped to the admin folder   |
 
 ## Layout

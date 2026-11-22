@@ -46,7 +46,7 @@ follow that answer: `web-*` skills and the `site` rules for the site, `dash-*` s
 
 The gate runs each app's own related-tests and i18n commands on its own files (`apps[].commands`).
 
-## Folder layout
+## Folder layout (an example: `project.md` and existing code win)
 
 ```text
 src/

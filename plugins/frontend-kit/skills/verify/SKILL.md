@@ -30,8 +30,8 @@ The script names are the defaults; if `CLAUDE.md` or `.claude/frontend-kit.json`
 (`commands`) names different ones, use those. A gate whose script doesn't
 exist is reported as "not set up", never as passed.
 
-`quick` (mid-task only, never before a commit): gates 1, 2 and
-`npx vitest related --run <changed files>`.
+`quick` (mid-task only, never before a commit): gates 1, 2 and `commands.relatedTests` on the changed files
+(Vitest: `npx vitest related --run <changed files>`).
 
 Changed files: `git diff --name-only origin/<defaultBranch>...HEAD` plus
 `git status --short`.

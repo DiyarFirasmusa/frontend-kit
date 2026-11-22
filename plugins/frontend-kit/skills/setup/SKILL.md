@@ -1,6 +1,6 @@
 ---
 name: setup
-description: Install frontend-kit's project files into the current project — CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/frontend-kit.json. Asks first whether it is a new project, an existing one, one in maintenance or a refactor, then the kind of React project (website, dashboard or any React app), and adapts the rules to the detected stack. Run with /frontend-kit:setup.
+description: Install frontend-kit's project files into the current project — CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/frontend-kit.json. Asks first whether it is a new project, an existing one, one in maintenance or a refactor, then the kind of project (website, dashboard, or any other frontend in any stack), maps where each role lives, and adapts the rules to both. Run with /frontend-kit:setup.
 disable-model-invocation: true
 ---
 
@@ -11,7 +11,7 @@ Skills, agents, hooks and MCP servers already come from the plugin; nothing of t
 
 Templates live in `${CLAUDE_PLUGIN_ROOT}/templates/`:
 `shared/rules/` (every profile) and `<profile>/` (`CLAUDE.md`, `rules/`, `settings.json`, `frontend-kit.json`),
-where `<profile>` is `website`, `dashboard`, `react` (stack-neutral) or `fullstack` (site + admin in one tree).
+where `<profile>` is `website`, `dashboard`, `react` (stack-neutral, for any other frontend: the name is historical) or `fullstack` (site + admin in one tree).
 
 ## 1. Ask
 
@@ -35,22 +35,22 @@ with `modeState`, whatever the answer: a mode with rules is the user's to switch
 the mode refuses (for example `package.json` scripts in freeze) instead of working round it.
 
 For *New project* with no `package.json`: ask which framework (Vite, Next.js, TanStack Start, React Router, other)
-and offer to run that framework's official create command; run it only after the user says yes. Then continue.
-For Next.js answer *yes* to the `src/` directory prompt: the kit's layout is all under `src/`. When the user already said
+and offer to run that framework's official create command (any framework, not only those listed); run it only after the user says yes. Then continue.
+For a Next.js dashboard answer *yes* to the `src/` directory prompt: that variant's example layout is under `src/`. When the user already said
 they want a dashboard, the framework question here is question 2b, asked once.
 For *Refactor*: after setup, tell the user to run `/frontend-kit:refactor-mode audit` (setup does not restructure anything).
 
-**Question 2: what kind of React project?** (the user answers; show what you detected as the first option)
+**Question 2: what kind of project?** (the user answers; show what you detected as the first option)
 
 | Answer | Profile | Fits |
 | ------ | ------- | ---- |
 | Website (SSR, SEO, public pages) | `website` | TanStack Start rules and skills (`web-*`) |
 | Dashboard / admin app | `dashboard` | TanStack Table, Query and permission rules and skills (`dash-*`); the router part depends on question 2b |
 | Website **and** dashboard in one project | `fullstack` | Two apps in one tree (for example a TanStack Start site with an admin under `src/admin`); each app gets its own rules, skills and checks |
-| Any other React app | `react` | Stack-neutral rules; the kit adapts to the stack it detects |
+| Any other frontend, any stack (React, Vue, Svelte, Angular, Astro, Solid, plain) | `react` | Stack-neutral principles; the project's own layout and libraries |
 
 Detection only suggests: `@tanstack/react-start` suggests website; `vite` + `@tanstack/react-router` suggests
-dashboard; everything else (Next.js, CRA, Remix, React Router, Expo web, …) suggests `react`. A Next.js or
+dashboard; everything else (Next.js, CRA, Remix, React Router, Expo web, Vue, Nuxt, SvelteKit, Angular, …) suggests `react`. A Next.js or
 TanStack Start project can be a dashboard too: the user's answer decides, then question 2b.
 
 **Question 2b (only for `dashboard`): which framework?** Pre-select what was detected; a new project with nothing
@@ -115,6 +115,11 @@ The same values fill the template placeholders: `{{FRAMEWORK}}`, `{{ROUTER}}`, `
 `{{I18N_VALIDATE_CMD}}`; in fullstack also `{{SITE_RELATED_TESTS}}`, `{{SITE_I18N_VALIDATE}}`, `{{ADMIN_RELATED_TESTS}}`,
 `{{ADMIN_I18N_VALIDATE}}`.
 
+**Project map** (a project with code): read it and find, for each role in "Where things are" of `rules/project.md`, the
+folder, the file naming and one real example file (two or three files per role are enough to see the pattern). Never put a
+path in the map that you didn't see. A role with two patterns: show both and ask which one new code follows. An empty
+project has no map yet: offer the profile's example layout, and write it only when the user picks it.
+
 Also note, for the proposal: **no test runner found** (suggest adding Vitest, never install it unasked), **no type
 checker**, **no linter/formatter**; an `AGENTS.md` (Next.js 16.3+ may write one) is imported from `CLAUDE.md` with a line
 `@AGENTS.md`, never copied or replaced, and only after the user saw every tool-managed block in it: an import makes that
@@ -132,7 +137,7 @@ Before any file is written, send **one message** with everything setup is about 
 1. **What it is:** mode (new / existing / maintenance / refactor), profile, and the detected stack, as the user confirmed them.
 2. **Files it will create or merge**, one line each (`CLAUDE.md`, each rule, `settings.json`, `frontend-kit.json`,
    script additions to `package.json`, config files only when the project has none).
-3. **Adaptations to the stack**: each sentence it will rewrite or drop in the copied rules and settings (section 4).
+3. **The project map**, as the table it will write into `rules/project.md`, then the **adaptations to the stack**: each sentence it will rewrite or drop in the copied rules and settings (section 4).
 4. **What it will clean up** (the user's Claude config, trimmed to this project):
    - run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-prune.sh" <profile>` (a dry run, it changes nothing) and list its
      `REMOVE`, `EDITED` and `YOURS` lines: rules left over from another profile (website rules in a dashboard, …);
@@ -194,6 +199,8 @@ live host remove `deniedDomains`). In `frontend-kit.json` set every key the prof
   rules then keep their "no i18n library yet" note. Read framework versions from `package.json`.
 - Replacing placeholders: names can contain digits (`{{E2E_RUNNER}}`, `{{E2E_PORT}}`); after the copy search the project for any
   leftover `{{[A-Z0-9_]+}}` and resolve every one. Other double braces are content (`{{count}}`, `style={{}}`): leave them.
+- Outside React (no `react` dependency): don't copy `react.md`, take the React-only sentences out of `naming.md`, `testing.md` and
+  `CLAUDE.md`, and never offer TanStack, Zustand or react-hook-form as the default.
 - Delete a copied rule file that cannot apply (for example SSR routing rules in a client-only app, RTL rules in a
   project with one left-to-right language, i18n rules in a project with no i18n) and list what you removed.
 - Folder layouts in rules and variants are examples. In a project with code keep its own layout and rewrite the paths to it,
@@ -246,8 +253,9 @@ Only what the user approved in the proposal:
 
 - `package.json` scripts: add what `kit-package-scripts.sh` printed, never overwrite an existing script. `i18n:validate` runs the shipped `scripts/validate-i18n.ts` (Node >= 22.18); a project with its own
   validator keeps it.
-- Fill `.claude/rules/project.md` with what is already known (the files setup just created, the script wrappers,
-  the stack choices the user named); leave the rest empty for the first task to fill.
+- Fill `.claude/rules/project.md` with the approved map (an example file in each row) and what else is already known (the
+  files setup just created, the script wrappers, the stack choices the user named); leave the rest empty for the first task
+  to fill.
 - Env file: if `.env.example` exists and `.env` does not, tell the user to run `cp .env.example .env` (the kit
   denies Claude reading or editing `.env`, so the user creates it). Write `.env.example` from `{{API_BASE_ENV}}`
   if neither file exists; `.env.example` stays editable.

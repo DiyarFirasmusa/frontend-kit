@@ -7,7 +7,7 @@ metadata:
   version: "1.0.0"
 ---
 
-> **frontend-kit note.** Dashboard projects are Vite SPAs (TanStack Router + Query): skip the
+> **frontend-kit note.** Only for a project with React. Dashboard projects are Vite SPAs (TanStack Router + Query): skip the
 > `server-*` rules and every Next.js API (`next/dynamic` → `React.lazy`, SWR → TanStack Query).
 > Website projects run TanStack Start: the `server-*` ideas map to loaders and server functions,
 > not to Next.js APIs. Project rules (`.claude/rules/react.md`, the `performance` skill) win.

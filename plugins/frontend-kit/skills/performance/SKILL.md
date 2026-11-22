@@ -36,7 +36,10 @@ interactions. Use UAT (<uatHost>) or local builds, never load-test
 
 ## Loading
 
-- Routes are split by TanStack Router (`autoCodeSplitting` in the router
+The budget, measuring and principles hold in any stack. A line that names a library is the example for a project that has
+it: use the project's equivalent, don't add the library.
+
+- Routes are split. With TanStack Router by TanStack Router (`autoCodeSplitting` in the router
   plugin). Never import a route's components eagerly from a layout, store or
   shared component — it drags the feature into the shell.
 - Heavy, rarely used libraries (charts, date pickers, QR, PDF/image
@@ -75,7 +78,7 @@ subset when the project allows.
 
 ## Rendering
 
-- Zustand selectors, never whole-store subscriptions.
+- The smallest subscription a view needs (Zustand: selectors), never a whole store.
 - Stable `key`s (ids, never index) on lists.
 - `useMemo` / `memo` only where the profiler shows wasted renders.
 - Debounce search input; throttle scroll handlers with `requestAnimationFrame`.

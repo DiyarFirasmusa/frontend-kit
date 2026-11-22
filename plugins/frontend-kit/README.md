@@ -1,6 +1,10 @@
 # frontend-kit
 
-A Claude Code marketplace with one plugin for React + TypeScript frontends.
+A Claude Code marketplace with one plugin for frontends in any stack (React + TypeScript first-class).
+
+The rule is how code is written and separated (one job, view / state / data / logic apart, one direction). Folder trees,
+file names and libraries are examples: what you say comes first, then the project's own pattern, then the framework's
+convention, then the kit's example.
 
 | Plugin | What it gives a project |
 | ------ | ----------------------- |
@@ -9,9 +13,9 @@ A Claude Code marketplace with one plugin for React + TypeScript frontends.
 `/frontend-kit:setup` asks two things first, and you answer both:
 
 1. **What are we doing?** A new project, an existing project, one in maintenance, or a refactor (restructure it to the standards).
-2. **What kind of React project?** `website` (TanStack Start, SSR/SEO), `dashboard` (TanStack Table/Query + permissions, on Vite + TanStack Router, TanStack Start (SPA mode) or Next.js: you pick the framework),
+2. **What kind of project?** `website` (TanStack Start, SSR/SEO), `dashboard` (TanStack Table/Query + permissions, on Vite + TanStack Router, TanStack Start (SPA mode) or Next.js: you pick the framework),
    **both in one project** (`fullstack`: a site and an admin in one tree, each app with its own rules, skills and checks),
-   or **any other React app** (`react`: Next.js, Remix, React Router, CRA, Expo web, …).
+   or **any other frontend** (`react`, the name is historical: Next.js, React Router, Vue, Nuxt, Svelte, Angular, plain, …).
 
 It then detects the stack (package manager, framework, router, data layer, styling, tests, linter, formatter, i18n,
 source folders) and adapts the copied rules, permissions and hook commands to it. The hooks work with oxlint, eslint

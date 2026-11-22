@@ -8,6 +8,8 @@
 #                 and from .claude/frontend-kit.json: protectedPaths (by default .github/, deploy/ and, unless the
 #                 framework keeps app code there, server/) and generatedPaths (generated files, e.g. the route tree);
 #                 the gate state and the git hooks; credentials written into a file
+#   allow:        Read of the supporting files of the plugin's own skills (references/ and the like), which lie outside
+#                 the project and would otherwise prompt, or be refused where nobody can be asked
 #   ask the user: a change that loosens the kit's own protections (frontend-kit.json, Claude Code's settings,
 #                 the installed plugin)
 #
@@ -82,8 +84,28 @@ if [ "$TOOL" = Grep ]; then
   esac
 fi
 
+# A skill's supporting file: the path must really lie below this plugin's skills/ once links and .. are resolved.
+# (`allowed-tools` can grant the same, but then every use of the skill needs the user's approval first.)
+allow_own_skill_file() {
+  local given skills real
+  given="$(hook_field '.tool_input.file_path')"
+  case "$given" in /*) ;; *) return 0 ;; esac
+  skills="$(cd "$(dirname "$0")/../skills" 2>/dev/null && pwd -P)" || return 0
+  case "$skills" in /?*/skills) ;; *) return 0 ;; esac
+  real="$(hook_physical_path "$(hook_normalise_path "$given")")"
+  case "$real" in "$skills"/*) ;; *) return 0 ;; esac
+  case "$real" in */../* | */.. | */.*) return 0 ;; esac
+  [ -f "$real" ] || return 0
+  jq -n '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "allow", permissionDecisionReason: "frontend-kit: a supporting file of the plugin\u0027s own skill"}}' 2>/dev/null
+  return 0
+}
+
 case "$TOOL" in
-  Read | Grep | Glob | LSP) exit 0 ;;
+  Read)
+    allow_own_skill_file
+    exit 0
+    ;;
+  Grep | Glob | LSP) exit 0 ;;
   mcp__*upload* | mcp__*browser_drop | mcp__*set_storage_state) exit 0 ;;
   mcp__*) FILE="$(hook_field '.tool_input.filePath')"; [ -n "$FILE" ] || FILE="$(hook_field '.tool_input.filename')" ;;
   *) FILE="$(hook_field '.tool_input.file_path')"; [ -n "$FILE" ] || FILE="$(hook_field '.tool_input.notebook_path')" ;;
