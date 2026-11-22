@@ -1,23 +1,19 @@
-import { redraw } from './events.ts'
+import { all, required } from './dom.ts'
 
 export function initGate(): void {
-  const section = document.querySelector<HTMLElement>('#gate')
-  const slot = section?.querySelector<HTMLElement>('[data-stage]')
-  const output = section?.querySelector<HTMLElement>('[data-output]')
-  if (!section || !slot || !output) return
-  const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-verdict]')]
+  const demo = required<HTMLElement>('[data-gate]')
+  const output = required<HTMLElement>('[data-output]', demo)
+  const buttons = all<HTMLButtonElement>('[data-verdict]', demo)
 
   for (const button of buttons) {
     button.addEventListener('click', () => {
       for (const other of buttons) other.setAttribute('aria-pressed', String(other === button))
-      const { verdict, reason = '', note = '' } = button.dataset
-      const denied = verdict === 'deny'
-      output.dataset.result = verdict
-      output.querySelector('[data-title]')!.textContent = (denied ? output.dataset.denied : output.dataset.allowed) ?? ''
-      output.querySelector('[data-reason]')!.textContent = reason
-      output.querySelector('[data-note]')!.textContent = note
-      slot.dataset.stage = denied ? 'gateShut' : 'gateOpen'
-      redraw()
+      const { verdict = '', reason = '', note = '' } = button.dataset
+      output.dataset['result'] = verdict
+      const title = verdict === 'deny' ? output.dataset['denied'] : output.dataset['allowed']
+      required('[data-title]', output).textContent = title ?? ''
+      required('[data-reason]', output).textContent = reason
+      required('[data-note]', output).textContent = note
     })
   }
 }

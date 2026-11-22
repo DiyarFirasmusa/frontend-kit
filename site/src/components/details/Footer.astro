@@ -1,0 +1,29 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import { REPO_URL, version } from '../../lib/plugin.ts'
+import Commands from '../Commands.astro'
+import Chapter from './Chapter.astro'
+
+const { install, footer } = Astro.props.copy
+const links = [
+  [REPO_URL, footer.source],
+  [`${REPO_URL}/blob/main/CHANGELOG.md`, footer.changelog],
+  [`${REPO_URL}/tree/main/examples`, footer.examples],
+  [`${REPO_URL}/blob/main/plugins/frontend-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
+] as const
+---
+
+<Chapter id="install" title={install.title} lead={install.lead}>
+  <Commands install={install} />
+  <p class="note">{install.needs}</p>
+</Chapter>
+
+<footer class="foot">
+  <p dir="ltr">frontend-kit <span>v{version}</span></p>
+  <ul>{links.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>
+</footer>

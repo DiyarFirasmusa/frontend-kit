@@ -1,0 +1,39 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import { verdicts } from '../../lib/verdicts.ts'
+import Chapter from './Chapter.astro'
+
+const { gate } = Astro.props.copy
+---
+
+<Chapter id="try-guard" title={gate.title} lead={gate.lead}>
+  <div class="gate-demo" data-gate>
+    <ul class="gate-commands" aria-label={gate.commands}>
+      {verdicts.map(({ id, command, denied, reason }) => (
+        <li>
+          <button
+            type="button"
+            dir="ltr"
+            aria-pressed="false"
+            data-verdict={denied ? 'deny' : 'allow'}
+            data-reason={reason || gate.quiet}
+            data-note={gate.notes[id]}
+          >
+            <code>{command}</code>
+          </button>
+        </li>
+      ))}
+    </ul>
+    <div class="gate-output" role="status" data-output data-denied={gate.denied} data-allowed={gate.allowed}>
+      <p class="gate-title" data-title>{gate.waiting}</p>
+      <p class="gate-reason" dir="auto" data-reason></p>
+      <p data-note></p>
+    </div>
+  </div>
+  <p class="note">{gate.after}</p>
+</Chapter>

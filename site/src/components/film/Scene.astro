@@ -1,0 +1,89 @@
+---
+import type { Scene } from '../../content/scenes.ts'
+import type { Copy, Details, HookEvent } from '../../content/types.ts'
+import { facts, hookEvents } from '../../lib/plugin.ts'
+import { asset } from '../../lib/links.ts'
+import Commands from '../Commands.astro'
+
+interface Props {
+  scene: Scene
+  copy: Copy & Details
+  first: boolean
+  last: boolean
+}
+
+const { scene, copy, first, last } = Astro.props
+const { title, text, points, steps } = copy.scenes[scene.id]
+const words = (typeof title === 'string' ? title : title(facts)).split(' ')
+const Heading = first ? 'h1' : 'h2'
+// The last scene holds for one more screen, while the details rise over it.
+const screens = scene.hold + scene.travel + (last ? 1 : 0)
+const moments = (Object.keys(copy.session.events) as HookEvent[]).filter((event) => hookEvents.includes(event))
+const counts = [
+  [facts.skills, copy.facts.skills],
+  [facts.agents, copy.facts.agents],
+  [facts.rules, copy.facts.rules],
+  [facts.events, copy.facts.events],
+] as const
+---
+
+<section
+  id={scene.id}
+  class:list={['scene', `scene-${scene.layout}`, `scene-${scene.id}`]}
+  style={`--screens: ${screens}`}
+  data-scene
+  data-shape={scene.shape}
+  data-layout={scene.layout}
+  data-hold={scene.hold}
+  data-travel={scene.travel}
+>
+  <div class="scene-copy" data-copy-block>
+    <Heading class="scene-title">
+      {words.map((word, i) => <>{i > 0 && ' '}<span class="mask"><span data-word>{word}</span></span></>)}
+    </Heading>
+    {text && <p class="scene-text" data-part>{text}</p>}
+    {points && <ul class="points">{points.map((point) => <li data-part>{point}</li>)}</ul>}
+    {
+      steps && (
+        <ol class="steps">
+          {steps.map(([name, about]) => (
+            <li data-part data-active>
+              <strong>{name}</strong>
+              <p>{about}</p>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+    {
+      scene.id === 'checks' && (
+        <ol class="sequence" data-part>
+          {moments.map((event) => <li data-active>{copy.session.events[event][2]}</li>)}
+        </ol>
+      )
+    }
+    {
+      first && (
+        <dl class="counts" data-part>
+          {counts.map(([amount, name]) => (
+            <div>
+              <dt>{amount}</dt>
+              <dd>{name}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    {first && <div data-part><Commands install={copy.install} first /></div>}
+    {last && <div data-part><Commands install={copy.install} /></div>}
+  </div>
+  <img
+    class="scene-still"
+    src={asset(`stills/${scene.shape}.jpg`)}
+    width="1000"
+    height="620"
+    alt=""
+    loading="lazy"
+    decoding="async"
+  />
+</section>

@@ -1,0 +1,43 @@
+---
+import { agents, skillGroups } from '../../content/catalogue.ts'
+import type { Copy, Details } from '../../content/types.ts'
+import { ruleGroups } from '../../lib/plugin.ts'
+import { verdicts } from '../../lib/verdicts.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+const { copy } = Astro.props
+const labels = {
+  skills: skillGroups.flatMap((group) => Object.keys(group.skills)),
+  agents: Object.keys(agents),
+  rules: ruleGroups.map(({ group, names }) => `${copy.rules.groups[group]}: ${names.length}`),
+}
+const attack = verdicts.find((verdict) => verdict.id === 'force')
+---
+
+<div class="labels" aria-hidden="true">
+  {
+    Object.entries(labels).map(([shape, names]) =>
+      names.map((name, i) => (
+        <span class={`label label-${shape}`} dir="auto" data-label-for={shape} data-index={i} hidden>
+          {name}
+        </span>
+      )),
+    )
+  }
+  {
+    attack && (
+      <>
+        <code class="attack" data-attack hidden>
+          {attack.command}
+        </code>
+        <div class="verdict" data-verdict-card hidden>
+          <strong>{copy.gate.denied}</strong>
+          <code>{attack.reason}</code>
+        </div>
+      </>
+    )
+  }
+</div>

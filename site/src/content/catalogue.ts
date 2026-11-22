@@ -3,18 +3,14 @@ export interface Bilingual {
   ar: string
 }
 
-export interface Runner {
-  code: string
-  tone: 'blue' | 'red' | 'yellow' | 'mint' | 'pink' | 'sky'
+export interface SkillGroup {
   title: Bilingual
   skills: Record<string, Bilingual>
 }
 
-/** Every skill of the plugin, sorted onto six runners. The build fails when this and the plugin disagree. */
-export const runners: Runner[] = [
+/** Every skill of the plugin, sorted by job. The build fails when this and the plugin disagree. */
+export const skillGroups: SkillGroup[] = [
   {
-    code: 'A',
-    tone: 'blue',
     title: { en: 'Build', ar: 'البناء' },
     skills: {
       'create-component': { en: 'Creates or extracts a component: cards, buttons, dialogs, sections.', ar: 'تنشئ مكوّناً أو تستخرجه: بطاقة أو زر أو نافذة أو قسم.' },
@@ -27,8 +23,6 @@ export const runners: Runner[] = [
     },
   },
   {
-    code: 'B',
-    tone: 'red',
     title: { en: 'Dashboard', ar: 'لوحات التحكم' },
     skills: {
       'dash-create-route': { en: 'Adds a list, detail, create or edit route with its permission guard.', ar: 'تضيف مسار قائمة أو تفاصيل أو إنشاء أو تعديل مع حارس الصلاحية.' },
@@ -40,8 +34,6 @@ export const runners: Runner[] = [
     },
   },
   {
-    code: 'C',
-    tone: 'mint',
     title: { en: 'Website', ar: 'المواقع' },
     skills: {
       'web-create-route': { en: 'Adds a page route with its loader and not-found behaviour.', ar: 'تضيف مسار صفحة مع تحميل بياناته وحالة عدم وجوده.' },
@@ -51,8 +43,6 @@ export const runners: Runner[] = [
     },
   },
   {
-    code: 'D',
-    tone: 'yellow',
     title: { en: 'Work', ar: 'سير العمل' },
     skills: {
       setup: { en: 'Reads your project, proposes a setup and installs it after your yes.', ar: 'تقرأ مشروعك وتقترح إعداداً ثم تثبّته بعد موافقتك.' },
@@ -66,8 +56,6 @@ export const runners: Runner[] = [
     },
   },
   {
-    code: 'E',
-    tone: 'pink',
     title: { en: 'Inspect', ar: 'الفحص' },
     skills: {
       verify: { en: 'Runs the full gate and reports the real numbers.', ar: 'تشغّل الفحص الكامل وتعرض الأرقام الحقيقية.' },
@@ -83,8 +71,6 @@ export const runners: Runner[] = [
     },
   },
   {
-    code: 'F',
-    tone: 'sky',
     title: { en: 'Ship', ar: 'التسليم' },
     skills: {
       'branch-status': { en: 'Shows where the current branch stands.', ar: 'تعرض وضع الفرع الحالي.' },
@@ -95,7 +81,7 @@ export const runners: Runner[] = [
   },
 ]
 
-/** The ten agents, in the order the small bots stand. */
+/** The ten agents, in the order they stand in the film. */
 export const agents: Record<string, Bilingual> = {
   planner: { en: 'Splits a large task', ar: 'يقسّم المهمة الكبيرة' },
   'frontend-dev': { en: 'Writes the code', ar: 'يكتب الشيفرة' },

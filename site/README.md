@@ -24,23 +24,30 @@ Canonical links use Vercel's production domain, or `SITE_URL` when it is set (fo
 
 ## How it stays true to the plugin
 
-- Counts, version, rule files and hook events are read from `../plugins/frontend-kit` at build time.
+- Counts, version, rule files and hook events are read from `../plugins/frontend-kit` at build time, and the 3D shapes
+  are counted from the same numbers (a plate per skill, a guardian per agent, a ring per hook event).
 - The build fails when a skill, agent, hook event or rule group exists in the plugin but has no copy here (or the reverse).
   Add the sentence in both languages in `src/content/catalogue.ts` or `src/content/*-details.ts`.
-- Prose claims (why, features, questions) are written by hand. Review them when the plugin's behaviour changes.
+- Prose claims are written by hand. Review them when the plugin's behaviour changes.
 
-## Where things are
+## How the page works
+
+The page is complete as plain HTML: each scene is copy beside a still frame, then the detail chapters. When the device
+can play it, the same markup becomes a film pinned to the scroll (`html.film`).
+
+It stays on the still page without JavaScript or WebGL 2, under reduced motion, with data saver, at 2 GB of memory or
+less, and when WebGL runs in software. While it plays, a governor lowers the resolution and then the effects; if the
+film is still unusable it returns to the still page. The pause button switches between the two.
 
 | Path | What |
 | ---- | ---- |
+| `src/content/scenes.ts` | the edit: order, shape, and how long each scene holds and travels, in screens of scroll |
 | `src/content/` | all copy, one file per language |
-| `src/components/chapters/` | one component per chapter of the page |
-| `src/scene/*.ts` | formations: plain functions that return parts, shared by WebGL and the SVG posters |
-| `src/scene/renderer.ts` | one instanced draw call for every part |
-| `src/client/` | page interactions |
-| `src/styles/` | tokens, shell, then one file per group of chapters |
+| `src/film/shapes/` | each scene as a list of blocks: plain functions, covered by `npm test` |
+| `src/film/direction.ts` | camera shots, light and how blocks fly |
+| `src/film/render/` | the instanced mesh, set, camera and lens |
+| `src/client/player.ts` | maps scroll to the film; `film-copy.ts` and `film-labels.ts` move the words |
+| `src/components/film/`, `src/components/details/` | the scenes, and the chapters under them |
 
-A new chapter is a `<section data-chapter data-world="...">`. Give it a `<Slot stage="...">` and the kit flies into it.
-
-Motion follows `prefers-reduced-motion` and has a pause button. Without JavaScript or WebGL the page shows still posters.
-`public/og.jpg` is a 1200 x 630 screenshot of the hero.
+`public/stills/<shape>.jpg` (1000 x 620) and `public/og.jpg` (1200 x 630) are screenshots of the film. Take them again
+after changing a shape, shot or grade.

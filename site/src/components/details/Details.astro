@@ -1,0 +1,27 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+  locale: Locale
+}
+
+import type { Locale } from '../../content/types.ts'
+import Answers from './Answers.astro'
+import Catalogue from './Catalogue.astro'
+import Footer from './Footer.astro'
+import GateDemo from './GateDemo.astro'
+import Overview from './Overview.astro'
+import Safeguards from './Safeguards.astro'
+
+const { copy, locale } = Astro.props
+---
+
+<div class="details" id="details" data-details>
+  <Overview copy={copy} />
+  <Catalogue copy={copy} locale={locale} />
+  <Safeguards copy={copy} />
+  <GateDemo copy={copy} />
+  <Answers copy={copy} />
+  <Footer copy={copy} />
+</div>

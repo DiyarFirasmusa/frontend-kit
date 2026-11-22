@@ -1,0 +1,33 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import type { HookEvent } from '../../content/types.ts'
+import { hookEvents } from '../../lib/plugin.ts'
+import Chapter from './Chapter.astro'
+
+const { session, refactor } = Astro.props.copy
+const moments = (Object.keys(session.events) as HookEvent[]).filter((event) => hookEvents.includes(event))
+---
+
+<Chapter id="all-checks" title={session.title} lead={session.lead}>
+  <ol class="moments">
+    {moments.map((event) => (
+      <li>
+        <h3>{session.events[event][0]}</h3>
+        <code dir="ltr">{event}</code>
+        <p>{session.events[event][1]}</p>
+      </li>
+    ))}
+  </ol>
+</Chapter>
+
+<Chapter id="all-refactor" title={refactor.title} lead={refactor.lead}>
+  <ol class="phases">
+    {refactor.steps.map(([command, text]) => <li><code dir="ltr">{command}</code><p>{text}</p></li>)}
+  </ol>
+  <p class="note">{refactor.note}</p>
+</Chapter>

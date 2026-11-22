@@ -1,0 +1,188 @@
+.top {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.2vw, 1.25rem);
+  height: var(--bar);
+  padding-inline: var(--edge);
+  background: var(--void);
+}
+
+/* Over the film the bar is only a fade. */
+.film .top {
+  background: linear-gradient(rgb(5 6 7 / 0.85), rgb(5 6 7 / 0.45) 70%, transparent);
+}
+
+.film:has(.top [href='#details'][aria-current]) .top {
+  background: var(--void);
+}
+
+.brand {
+  margin-inline-end: auto;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font: 600 1.25rem var(--latin);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.top-nav {
+  display: flex;
+}
+
+.top-nav a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: clamp(0.4rem, 0.7vw, 0.8rem);
+  color: var(--muted);
+  font-size: var(--small);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+
+.top-nav a:hover,
+.top-nav a[aria-current] {
+  color: var(--ivory);
+}
+
+.motion {
+  display: none;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+.js:not(.no-film) .motion {
+  display: grid;
+}
+
+.motion i {
+  width: 11px;
+  height: 13px;
+  border-inline: 3px solid currentColor;
+}
+
+.motion.is-paused i {
+  border: 0;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.language,
+.top-install {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.language {
+  color: var(--muted);
+}
+
+.language:hover {
+  color: var(--ivory);
+}
+
+.top-install {
+  padding-inline: 1.375rem;
+  background: var(--ivory);
+  color: var(--void);
+  font-weight: 560;
+}
+
+.menu {
+  display: none;
+}
+
+.menu summary {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.menu summary i {
+  width: 20px;
+  height: 8px;
+  border-block: 2px solid currentColor;
+}
+
+.menu nav {
+  position: absolute;
+  inset-block-start: var(--bar);
+  inset-inline: 0;
+  display: grid;
+  max-height: calc(100svh - var(--bar));
+  padding: 0.5rem var(--edge) 1.25rem;
+  overflow-y: auto;
+  background: var(--void);
+}
+
+.menu nav a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border-block-end: 1px solid var(--line);
+  text-decoration: none;
+}
+
+.progress {
+  position: absolute;
+  inset: auto var(--edge) 0;
+  height: 1px;
+  background: var(--ivory);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+[dir='rtl'] .progress {
+  transform-origin: right;
+}
+
+@media (max-width: 1279px) {
+  .top-nav {
+    display: none;
+  }
+
+  .menu {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .top {
+    gap: 0;
+    padding-inline: 0.875rem;
+  }
+
+  .brand {
+    font-size: 1rem;
+  }
+
+  .language {
+    padding-inline: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  .top-install {
+    margin-inline-start: 0.375rem;
+    padding-inline: 0.625rem;
+    font-size: 0.875rem;
+  }
+}

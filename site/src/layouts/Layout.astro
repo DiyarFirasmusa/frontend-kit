@@ -1,21 +1,18 @@
 ---
-import '@fontsource-variable/tektur/wdth.css'
 import '@fontsource-variable/familjen-grotesk/index.css'
-import '@fontsource/changa/arabic-700.css'
 import '@fontsource/ibm-plex-sans-arabic/arabic-400.css'
-import '@fontsource/ibm-plex-sans-arabic/arabic-600.css'
+import '@fontsource/ibm-plex-sans-arabic/arabic-500.css'
 import '@fontsource/ibm-plex-mono/latin-500.css'
 import '../styles/tokens.css'
 import '../styles/base.css'
-import '../styles/shell.css'
-import '../styles/opening.css'
-import '../styles/story.css'
-import '../styles/features.css'
-import '../styles/workshop.css'
-import '../styles/closing.css'
+import '../styles/header.css'
+import '../styles/scenes.css'
+import '../styles/film.css'
+import '../styles/details.css'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
 import { asset, localePath } from '../lib/links.ts'
+import { REPO_URL, version } from '../lib/plugin.ts'
 
 interface Props {
   locale: Locale
@@ -24,32 +21,65 @@ interface Props {
 const { locale } = Astro.props
 const copy = content[locale]
 const absolute = (path: string) => new URL(path, Astro.site).href
+const product = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'frontend-kit',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS, Linux',
+  softwareVersion: version,
+  description: copy.meta.description,
+  inLanguage: locale,
+  url: absolute(localePath(locale)),
+  sameAs: REPO_URL,
+})
 ---
 
 <!doctype html>
-<html lang={locale} dir={copy.dir} data-world="lilac">
+<html lang={locale} dir={copy.dir}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{copy.meta.title}</title>
     <meta name="description" content={copy.meta.description} />
-    <meta name="theme-color" content="#a597f7" />
+    <meta name="theme-color" content="#050607" />
     <link rel="canonical" href={absolute(localePath(locale))} />
     <link rel="alternate" hreflang="en" href={absolute(localePath('en'))} />
     <link rel="alternate" hreflang="ar" href={absolute(localePath('ar'))} />
     <link rel="alternate" hreflang="x-default" href={absolute(localePath('en'))} />
     <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    <link rel="sitemap" href={asset('sitemap.xml')} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="frontend-kit" />
     <meta property="og:title" content={copy.meta.title} />
     <meta property="og:description" content={copy.meta.description} />
     <meta property="og:url" content={absolute(localePath(locale))} />
     <meta property="og:image" content={absolute(asset('og.jpg'))} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={locale === 'ar' ? 'ar_IQ' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={product} />
     <script is:inline>
-      // Until the 3D stage starts, hide the still posters it replaces. Shown again if it never arrives.
-      document.documentElement.classList.add('js', 'stage-pending')
-      setTimeout(() => document.documentElement.classList.remove('stage-pending'), 5000)
+      // The page is complete without the film. It is only laid out as a film when this device can play it.
+      ;(() => {
+        const root = document.documentElement
+        root.classList.add('js')
+        let choice = null
+        try {
+          choice = localStorage.getItem('kit-motion')
+        } catch {
+          // Storage is blocked: follow the system setting.
+        }
+        if (!('WebGL2RenderingContext' in window)) return root.classList.add('no-film')
+        const weak = Boolean(navigator.connection?.saveData) || (navigator.deviceMemory && navigator.deviceMemory <= 2)
+        const wanted = choice ? choice === 'on' : !matchMedia('(prefers-reduced-motion: reduce)').matches && !weak
+        if (!wanted) return
+        root.classList.add('film', 'film-loading')
+        setTimeout(() => {
+          if (root.classList.contains('film-loading')) root.classList.remove('film', 'film-loading')
+        }, 9000)
+      })()
     </script>
   </head>
   <body>

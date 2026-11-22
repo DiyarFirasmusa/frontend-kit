@@ -1,66 +1,41 @@
-@property --world {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #a597f7;
-}
-
 :root {
-  --ink-plum: #24123a;
-  --shell: #f7f5ff;
-  --blue: #2b44c7;
-  --red: #f2414f;
-  --yellow: #ffce3a;
-  --mint: #7be0b4;
-  --pink: #ffa3c7;
-  --sky: #79d5f2;
-  --orange: #ff9b54;
-  --steel: #b9b5cf;
+  --void: #050607;
+  --raised: #0d0e10;
+  --ivory: #f1ede7;
+  --muted: #bcb8b1;
+  --faint: #96938d;
+  --line: rgb(241 237 231 / 0.18);
+  --bad: #e0776b;
 
-  --display: 'Tektur Variable', 'Changa', system-ui, sans-serif;
-  --body: 'Familjen Grotesk Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --type: 'Familjen Grotesk Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --latin: 'Familjen Grotesk Variable', system-ui, sans-serif;
   --code: 'IBM Plex Mono', ui-monospace, monospace;
+  --leading: 1.55;
 
-  --size-small: 0.875rem;
-  --size-body: 1.0625rem;
-  --size-lead: clamp(1.125rem, 0.98rem + 0.6vw, 1.5rem);
-  --size-sub: clamp(1.375rem, 1.1rem + 1.1vw, 2.125rem);
-  --size-title: clamp(2.5rem, 1.2rem + 4.4vw, 5.5rem);
+  --small: 0.9375rem;
+  --body: 1.0625rem;
+  --lead: clamp(1.0625rem, 0.9rem + 0.45vw, 1.375rem);
+  --sub: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
+  --title: clamp(2.125rem, 0.5rem + min(3.9vw, 6.4vh), 4.75rem);
 
-  --inset: 12px;
-  --bar: 64px;
-  --rail: 64px;
-  --head: calc(var(--inset) + var(--bar));
-  --pad: clamp(1.5rem, 4vw, 4.5rem);
-  --start: calc(var(--inset) + var(--rail) + var(--pad));
-  --end: calc(var(--inset) + var(--pad));
-  --ease: cubic-bezier(0.65, 0, 0.2, 1);
-
-  /* The kit's shapes: a folder tab, and a corner clipped off the runner. */
-  --tab: polygon(0 0, 38% 0, calc(38% + 24px) 22px, 100% 22px, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
-  --clip: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
-
-  --world: #a597f7;
-  --ink: var(--ink-plum);
-  transition: --world 0.7s var(--ease);
+  --edge: clamp(1.25rem, 4.2vw, 4.75rem);
+  --bar: 76px;
+  --check: polygon(0 52%, 13% 38%, 36% 64%, 87% 8%, 100% 21%, 37% 93%);
 }
 
 [dir='rtl'] {
-  --display: 'Changa', 'Tektur Variable', system-ui, sans-serif;
-  --body: 'IBM Plex Sans Arabic', 'Familjen Grotesk Variable', system-ui, sans-serif;
-  --size-title: clamp(2.375rem, 1.2rem + 4vw, 5rem);
-  --tab: polygon(0 22px, calc(62% - 24px) 22px, 62% 0, 100% 0, 100% 100%, 28px 100%, 0 calc(100% - 28px));
-  --clip: polygon(0 0, 100% 0, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  --type: 'IBM Plex Sans Arabic', 'Familjen Grotesk Variable', system-ui, sans-serif;
+  --leading: 1.8;
+  --title: clamp(1.875rem, 0.5rem + min(3.4vw, 5.6vh), 4.125rem);
 }
 
-[data-world='lilac']:root { --world: #a597f7; }
-[data-world='pink']:root { --world: var(--pink); }
-[data-world='sheet']:root { --world: #e6ebf8; }
-[data-world='mint']:root { --world: var(--mint); }
-[data-world='orange']:root { --world: var(--orange); }
-[data-world='yellow']:root { --world: var(--yellow); }
-[data-world='sky']:root { --world: var(--sky); }
-[data-world='website']:root { --world: var(--mint); }
-[data-world='dashboard']:root { --world: #22349c; --ink: var(--shell); }
-[data-world='react']:root { --world: var(--sky); }
-[data-world='fullstack']:root { --world: var(--orange); }
-[data-world='night']:root { --world: var(--ink-plum); --ink: var(--shell); }
+@media (max-width: 820px) {
+  :root {
+    --bar: 64px;
+  }
+
+  :root,
+  [dir='rtl'] {
+    --title: clamp(1.5rem, 1rem + min(3.4vw, 2.2vh), 2.375rem);
+  }
+}

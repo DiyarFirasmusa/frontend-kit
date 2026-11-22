@@ -2,7 +2,7 @@ import type { Details } from './types.ts'
 
 export const enDetails: Details = {
   why: {
-    title: 'Claude is brilliant. It just hasn’t worked on your team.',
+    title: 'Why use it.',
     lead: 'Out of the box, every session starts from guesses: where files go, what finished means, what must never be touched. The kit writes that down and enforces the parts a script can enforce.',
     without: 'Without the kit',
     with: 'With the kit',
@@ -35,7 +35,7 @@ export const enDetails: Details = {
     },
   },
   features: {
-    title: 'Everything in the box.',
+    title: 'Every feature.',
     lead: 'Each feature below ships in the plugin today.',
     groups: [
       {
@@ -69,7 +69,7 @@ export const enDetails: Details = {
         title: 'It checks itself',
         items: [
           ['After each edit', 'Your own formatter and linter run on the file, and errors go straight back to Claude.'],
-          ['Before finishing', 'On uncommitted changes: typecheck, related tests and, when locale files changed, the translation validator.'],
+          ['Before finishing', 'On source changed in the session, committed or not: typecheck, related tests and, when locale files changed, the translation validator.'],
           ['A second reader', 'Once the gate passes, the reviewer agent reads the change. You can turn this off.'],
           ['Before a commit', 'Claude is warned when the change has not passed the gate.'],
         ],
@@ -113,7 +113,7 @@ export const enDetails: Details = {
     ],
   },
   rules: {
-    title: 'Rules that show up only where they matter.',
+    title: 'Every rule file.',
     lead: ({ rules }) => `${rules} rule files. Each loads by path, so Claude reads the forms rules while it edits a form, not in every session.`,
     groups: {
       shared: 'Every project',
@@ -125,22 +125,22 @@ export const enDetails: Details = {
     },
   },
   session: {
-    title: 'On watch from first prompt to last check.',
+    title: 'Every check, moment by moment.',
     lead: 'Hooks are scripts Claude Code runs at fixed moments. They do not depend on Claude remembering.',
     events: {
-      SessionStart: ['A session starts', 'Branch state, the last gate result and the hard rules are handed to Claude, also after clear and compact.'],
-      UserPromptSubmit: ['You send a prompt', 'Short phrases are understood and the skills that fit are named.'],
-      PreToolUse: ['Claude reaches for a tool', 'Known dangerous commands, files and addresses are refused before they run.'],
-      PostToolUse: ['A file is edited', 'It is formatted and linted with your project’s tools.'],
-      PostToolUseFailure: ['A tool fails', 'The failure is logged, so repeats become visible.'],
-      SubagentStop: ['A coding agent reports back', 'The typecheck must pass first, or the agent gets one more turn to fix it.'],
-      Notification: ['Claude needs you', 'A desktop alert appears on macOS.'],
-      Stop: ['Claude wants to finish', 'The quality gate runs on uncommitted source changes, then asks for a review. It gives up after three blocks in a row, so it cannot loop.'],
-      SessionEnd: ['The session ends', 'Its working files are cleaned up.'],
+      SessionStart: ['A session starts', 'Branch state, the last gate result and the hard rules are handed to Claude, also after clear and compact.', 'Session starts: rules and branch state are handed over'],
+      UserPromptSubmit: ['You send a prompt', 'Short phrases are understood and the skills that fit are named.', 'You ask: the fitting skills are named'],
+      PreToolUse: ['Claude reaches for a tool', 'Known dangerous commands, files and addresses are refused before they run.', 'A tool runs: known dangerous actions are refused'],
+      PostToolUse: ['A file is edited', 'It is formatted and linted with your project’s tools.', 'A file changes: it is formatted and linted'],
+      PostToolUseFailure: ['A tool fails', 'The failure is logged, so repeats become visible.', 'A tool fails: the failure is logged'],
+      SubagentStop: ['A coding agent reports back', 'The typecheck must pass first, or the agent gets one more turn to fix it.', 'An agent returns: the typecheck runs'],
+      Notification: ['Claude needs you', 'A desktop alert appears on macOS.', 'Claude needs you: a desktop alert appears'],
+      Stop: ['Claude wants to finish', 'The quality gate runs on source changed in the session, committed or not, then asks for a review. It gives up after three blocks in a row, so it cannot loop.', 'Claude stops: tests, then a code review'],
+      SessionEnd: ['The session ends', 'Its working files are cleaned up.', 'Session ends: working files are cleaned up'],
     },
   },
   refactor: {
-    title: 'Old project? Rebuild it piece by piece.',
+    title: 'Refactor mode, for old projects.',
     lead: 'Refactor mode brings a messy codebase up to the standard without changing what it does.',
     steps: [
       ['/frontend-kit:refactor-mode on', 'Switch the project into refactor mode.'],
