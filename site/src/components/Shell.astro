@@ -1,0 +1,45 @@
+---
+import { content } from '../content/index.ts'
+import type { Locale } from '../content/types.ts'
+import { localePath } from '../lib/links.ts'
+import { version } from '../lib/plugin.ts'
+import Mark from './Mark.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const { chrome } = content[locale]
+const other: Locale = locale === 'en' ? 'ar' : 'en'
+const links = [
+  ['why', chrome.nav.why],
+  ['features', chrome.nav.features],
+  ['profiles', chrome.nav.profiles],
+  ['gate', chrome.nav.gate],
+  ['parts', chrome.nav.parts],
+  ['answers', chrome.nav.answers],
+] as const
+---
+
+<a class="skip" href="#content">{chrome.skip}</a>
+<header class="top">
+  <a class="brand" href="#top" aria-label={chrome.home}><Mark /></a>
+  <nav>
+    {links.map(([id, label]) => <a data-nav href={`#${id}`}>{label}</a>)}
+  </nav>
+  <div class="top-actions">
+    <a class="language" href={localePath(other)} lang={other} hreflang={other}>
+      {chrome.switchLanguage}
+    </a>
+    <a class="install-tab" href="#install">{chrome.install}</a>
+  </div>
+</header>
+<div class="rail">
+  <span class="rail-version" dir="ltr">v{version}</span>
+  <span class="rail-track" aria-hidden="true"><i></i></span>
+</div>
+<button class="motion" type="button" data-motion data-pause={chrome.pause} data-play={chrome.play}>
+  <i aria-hidden="true"></i><span>{chrome.pause}</span>
+</button>
+<div class="frame" aria-hidden="true"></div>

@@ -1,0 +1,42 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import { verdicts } from '../../lib/verdicts.ts'
+import Slot from '../Slot.astro'
+
+const { gate } = Astro.props.copy
+---
+
+<section id="gate" class="chapter split gate" data-chapter data-world="night">
+  <div class="copy">
+    <h2 class="title">{gate.title}</h2>
+    <p class="lead">{gate.lead}</p>
+    <ul class="commands" aria-label={gate.commands}>
+      {verdicts.map(({ id, command, denied, reason }) => (
+        <li>
+          <button
+            type="button"
+            dir="ltr"
+            aria-pressed="false"
+            data-verdict={denied ? 'deny' : 'allow'}
+            data-reason={reason || gate.quiet}
+            data-note={gate.notes[id]}
+          >
+            <code>{command}</code>
+          </button>
+        </li>
+      ))}
+    </ul>
+    <div class="output" role="status" data-output data-denied={gate.denied} data-allowed={gate.allowed}>
+      <p class="output-title" data-title>{gate.waiting}</p>
+      <p class="output-reason" dir="auto" data-reason></p>
+      <p class="output-note" data-note></p>
+    </div>
+    <p class="after">{gate.after}</p>
+  </div>
+  <Slot stage="gateIdle" others={['gateOpen', 'gateShut']} />
+</section>

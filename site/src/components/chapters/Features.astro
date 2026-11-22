@@ -1,0 +1,26 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+const { features } = Astro.props.copy
+---
+
+<section id="features" class="chapter features" data-chapter data-world="sheet">
+  <div class="heading">
+    <h2 class="title">{features.title}</h2>
+    <p class="lead">{features.lead}</p>
+  </div>
+  <div class="stack">
+    {features.groups.map((group, i) => (
+      <article class="folder" style={`--i: ${i}`}>
+        <h3>{group.title}</h3>
+        <dl>
+          {group.items.map(([name, text]) => <div><dt>{name}</dt><dd>{text}</dd></div>)}
+        </dl>
+      </article>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,31 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import { hookEvents } from '../../lib/plugin.ts'
+import Slot from '../Slot.astro'
+
+const { session } = Astro.props.copy
+// The order the moments happen in, which is not the order of hooks.json.
+const order = Object.keys(session.events).filter((event) => hookEvents.some((shipped) => shipped === event)) as typeof hookEvents
+---
+
+<section id="session" class="chapter split flip session" data-chapter data-world="orange">
+  <div class="copy">
+    <h2 class="title">{session.title}</h2>
+    <p class="lead">{session.lead}</p>
+    <ol class="moments">
+      {order.map((event) => (
+        <li>
+          <h3>{session.events[event][0]}</h3>
+          <code dir="ltr">{event}</code>
+          <p>{session.events[event][1]}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <Slot stage="line" />
+</section>

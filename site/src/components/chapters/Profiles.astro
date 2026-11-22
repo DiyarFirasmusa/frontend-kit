@@ -1,0 +1,43 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import Slot from '../Slot.astro'
+
+const { profiles } = Astro.props.copy
+const items = Object.entries(profiles.items)
+---
+
+<section id="profiles" class="chapter profiles" data-chapter data-world="website">
+  <h2 class="title">{profiles.title}</h2>
+  <div class="profile-body">
+    <div class="profile-panels">
+      {items.map(([id, item], i) => (
+        <div id={`profile-${id}`} class="profile-panel" role="tabpanel" aria-labelledby={`tab-${id}`} data-first={i === 0}>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+          <ul class="stack-list">{item.stack.map((name) => <li><bdi>{name}</bdi></li>)}</ul>
+        </div>
+      ))}
+    </div>
+    <Slot stage="website" others={['dashboard', 'react', 'fullstack']} />
+  </div>
+  <div class="flavours" role="tablist" aria-label={profiles.list}>
+    {items.map(([id, item], i) => (
+      <button
+        id={`tab-${id}`}
+        class="flavour"
+        type="button"
+        role="tab"
+        data-formation={id}
+        aria-controls={`profile-${id}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+      >
+        <i aria-hidden="true"></i>{item.name}
+      </button>
+    ))}
+  </div>
+</section>

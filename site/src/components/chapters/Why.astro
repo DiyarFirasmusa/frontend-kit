@@ -1,0 +1,37 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import Slot from '../Slot.astro'
+
+const { why } = Astro.props.copy
+---
+
+<section id="why" class="chapter why" data-chapter data-world="pink">
+  <div class="split why-opening">
+    <div class="copy">
+      <h2 class="title">{why.title}</h2>
+      <p class="lead">{why.lead}</p>
+    </div>
+    <Slot stage="loose" />
+  </div>
+  <table class="compare">
+    <thead>
+      <tr><th scope="col">{why.without}</th><th scope="col">{why.with}</th></tr>
+    </thead>
+    <tbody>
+      {why.pairs.map(([without, withKit]) => <tr><td>{without}</td><td>{withKit}</td></tr>)}
+    </tbody>
+  </table>
+  <div class="fit">
+    {[why.fit, why.skip].map(({ title, items }) => (
+      <div class="fit-side">
+        <h3>{title}</h3>
+        <ul>{items.map((item) => <li>{item}</li>)}</ul>
+      </div>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,47 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import { INSTALL_COMMANDS, REPO_URL } from '../../lib/plugin.ts'
+import Slot from '../Slot.astro'
+
+const { install, footer } = Astro.props.copy
+const links = [
+  [REPO_URL, footer.source],
+  [`${REPO_URL}/blob/main/CHANGELOG.md`, footer.changelog],
+  [`${REPO_URL}/tree/main/examples`, footer.examples],
+  [`${REPO_URL}/blob/main/plugins/frontend-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
+] as const
+---
+
+<section id="install" class="chapter install" data-chapter data-world="lilac">
+  <div class="split install-body">
+    <div class="copy">
+      <h2 class="title">{install.title}</h2>
+      <p class="lead">{install.lead}</p>
+      <ol class="install-steps">
+        {INSTALL_COMMANDS.map((command, i) => (
+          <li>
+            <p>{install.steps[i]}</p>
+            <div class="command" dir="ltr">
+              <code>{command}</code>
+              <button type="button" data-copy={command} data-label={install.copy} data-done={install.copied} data-failed={install.failed}>
+                <span aria-live="polite" data-status>{install.copy}</span>
+              </button>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="needs">{install.needs}</p>
+      <a class="press press-ink" href={REPO_URL}><span>{install.source}</span></a>
+    </div>
+    <Slot stage="cheer" />
+  </div>
+  <footer class="foot">
+    <ul>{links.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>
+    <p class="foot-mark" dir="ltr" aria-hidden="true">frontend-kit</p>
+  </footer>
+</section>

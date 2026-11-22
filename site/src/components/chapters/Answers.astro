@@ -1,0 +1,21 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+const { answers } = Astro.props.copy
+---
+
+<section id="answers" class="chapter answers" data-chapter data-world="sheet">
+  <h2 class="title">{answers.title}</h2>
+  <div class="questions">
+    {answers.items.map(([question, answer]) => (
+      <details>
+        <summary>{question}</summary>
+        <p>{answer}</p>
+      </details>
+    ))}
+  </div>
+</section>

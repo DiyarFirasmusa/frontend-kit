@@ -1,0 +1,166 @@
+import type { Details } from './types.ts'
+
+export const enDetails: Details = {
+  why: {
+    title: 'Claude is brilliant. It just hasn’t worked on your team.',
+    lead: 'Out of the box, every session starts from guesses: where files go, what finished means, what must never be touched. The kit writes that down and enforces the parts a script can enforce.',
+    without: 'Without the kit',
+    with: 'With the kit',
+    pairs: [
+      ['A new folder structure every session', 'One folder map and naming rule, loaded for the files being edited'],
+      ['A third copy of the same button', 'Skills that look for what exists before they write'],
+      ['“Done”, and the build is red', 'Typecheck and related tests before Claude can finish'],
+      ['Only the happy path', 'Loading, error, empty and success are part of done'],
+      ['A push to main, a peek at .env', 'A hook that refuses before the command runs'],
+      ['Arabic pages that break', 'Logical CSS rules and a translation validator'],
+      ['Context lost after /clear', 'Branch, gate result and hard rules put back every time'],
+      ['The same long prompt, again', 'A short request, and the fitting skill is named for Claude'],
+    ],
+    fit: {
+      title: 'Use it when',
+      items: [
+        'You build React and TypeScript products with Claude Code.',
+        'The code has to pass review and live for years.',
+        'Several people or sessions share one codebase.',
+        'You ship in Arabic, English or both.',
+      ],
+    },
+    skip: {
+      title: 'Skip it when',
+      items: [
+        'The project is not React.',
+        'It is a throwaway prototype and checks would only slow you down.',
+        'You want Claude to open pull requests or push to main by itself.',
+      ],
+    },
+  },
+  features: {
+    title: 'Everything in the box.',
+    lead: 'Each feature below ships in the plugin today.',
+    groups: [
+      {
+        title: 'It learns your project',
+        items: [
+          ['Stack detection', 'Package manager, framework, router, data layer, styling, tests, linter, formatter, i18n and source folders. What it cannot find stays empty instead of guessed.'],
+          ['Monorepos', 'Workspace packages are found, and tests run inside the package that changed.'],
+          ['One proposal', 'You see the whole setup and approve it. Files you already have are shown as a diff first.'],
+          ['One config file', 'Ports, commands, protected branches, live hosts and paths live in .claude/frontend-kit.json.'],
+        ],
+      },
+      {
+        title: 'It holds a high bar',
+        items: [
+          ['Quality bar', 'Strict types with no any, small files, real names, no dead code, no leftover logs.'],
+          ['Every state', 'Loading, error, empty and success are designed in each UI change.'],
+          ['Scope', 'All of what was asked and nothing else. No drive-by refactors.'],
+          ['Performance', 'No request waterfalls or needless renders; images are sized and layouts stay still.'],
+        ],
+      },
+      {
+        title: 'It protects the repo',
+        items: [
+          ['Git guard', 'No commit, merge or push on protected branches, no force push, no skipped hooks, no discarded work.'],
+          ['File guard', 'Secrets, lockfiles, generated files, deploy config and the build script are off limits.'],
+          ['Live-site guard', 'No request, test or browser visit to the hosts you mark as live.'],
+          ['Permissions', 'A ready settings file with allow, ask and deny lists, adapted to your commands.'],
+        ],
+      },
+      {
+        title: 'It checks itself',
+        items: [
+          ['After each edit', 'Your own formatter and linter run on the file, and errors go straight back to Claude.'],
+          ['Before finishing', 'Typecheck, related tests and, when locale files changed, the translation validator.'],
+          ['A second reader', 'Once the gate passes, the reviewer agent reads the change. You can turn this off.'],
+          ['Before a commit', 'Claude is warned when the change has not passed the gate.'],
+        ],
+      },
+      {
+        title: 'It speaks both directions',
+        items: [
+          ['RTL and LTR', 'Logical properties, mirrored layouts and rules for Arabic and English.'],
+          ['Translations', 'Two-level keys in every language, checked by a validator.'],
+          ['Accessibility', 'Semantics, labels, focus, keyboard, contrast, 44px targets and a WCAG 2.2 AA auditor.'],
+          ['Figma', 'A skill that matches a frame in size, colour, type and state.'],
+        ],
+      },
+      {
+        title: 'It comes with tools',
+        items: [
+          ['Chrome DevTools', 'An MCP server for inspecting pages, requests and performance.'],
+          ['Playwright', 'An MCP server for driving a browser, with a skill for stable end-to-end tests.'],
+          ['Context7', 'An MCP server for current library documentation.'],
+          ['Frontend report', 'An output style that says what changed, what was checked and what was not.'],
+        ],
+      },
+      {
+        title: 'It fits a team',
+        items: [
+          ['Lives in the repo', 'CLAUDE.md, rules, settings and config are plain files your team reviews and commits.'],
+          ['Updates itself', 'Projects set up with the kit follow new plugin versions automatically.'],
+          ['Cleans up safely', 'Files of another profile are moved to a dated backup, never deleted.'],
+          ['Worked examples', 'Reference projects for Next.js, React Router, Jest, monorepos, site plus admin and refactors.'],
+        ],
+      },
+      {
+        title: 'It respects your hands',
+        items: [
+          ['You commit', 'Commit and push wait for your explicit yes.'],
+          ['You open the PR', 'Claude prints the compare link and the description. The click is yours.'],
+          ['You choose', 'Skill hints and the automatic review each have a switch.'],
+          ['You hear back', 'On macOS a desktop alert tells you when Claude is waiting.'],
+        ],
+      },
+    ],
+  },
+  rules: {
+    title: 'Rules that show up only where they matter.',
+    lead: ({ rules }) => `${rules} rule files. Each loads by path, so Claude reads the forms rules while it edits a form, not in every session.`,
+    groups: {
+      shared: 'Every project',
+      website: 'Website',
+      dashboard: 'Dashboard',
+      'dashboard/variants/next': 'Dashboard on Next.js',
+      'dashboard/variants/tanstack-start': 'Dashboard on TanStack Start',
+      react: 'Any React app',
+    },
+  },
+  session: {
+    title: 'On watch from first prompt to last check.',
+    lead: 'Hooks are scripts Claude Code runs at fixed moments. They do not depend on Claude remembering.',
+    events: {
+      SessionStart: ['A session starts', 'Branch state, the last gate result and the hard rules are handed to Claude, also after clear and compact.'],
+      UserPromptSubmit: ['You send a prompt', 'Short phrases are understood and the skills that fit are named.'],
+      PreToolUse: ['Claude reaches for a tool', 'Dangerous commands, files and addresses are refused before they run.'],
+      PostToolUse: ['A file is edited', 'It is formatted and linted with your project’s tools.'],
+      PostToolUseFailure: ['A tool fails', 'The failure is logged, so repeats become visible.'],
+      SubagentStop: ['A coding agent reports back', 'The typecheck must pass first, or the agent gets one more turn to fix it.'],
+      Notification: ['Claude needs you', 'A desktop alert appears on macOS.'],
+      Stop: ['Claude wants to finish', 'The quality gate runs on changed source, then asks for a review. It gives up after three blocks in a row, so it cannot loop.'],
+      SessionEnd: ['The session ends', 'Its working files are cleaned up.'],
+    },
+  },
+  refactor: {
+    title: 'Old project? Rebuild it piece by piece.',
+    lead: 'Refactor mode brings a messy codebase up to the standard without changing what it does.',
+    steps: [
+      ['/frontend-kit:refactor-mode on', 'Switch the project into refactor mode.'],
+      ['/frontend-kit:refactor-mode audit', 'Measure structure, types, data, forms and tests without editing code, then write a phased plan.'],
+      ['/frontend-kit:refactor-mode next', 'Carry out one phase you approved, with behaviour frozen and the gate green.'],
+      ['/frontend-kit:refactor-mode off', 'Return to normal work. Unfinished phases stay in the plan.'],
+    ],
+    note: 'Bugs found on the way are written down, not silently fixed.',
+  },
+  answers: {
+    title: 'Fair questions.',
+    items: [
+      ['Will it work on a project I already have?', 'Yes. Setup has a mode for existing projects: it detects the stack, adapts to it and shows every change to existing files before writing.'],
+      ['Do I have to use TanStack?', 'No. The website profile is built on TanStack Start. Dashboards can use Vite, TanStack Start or Next.js, and the React profile adapts to other stacks.'],
+      ['Does it cost more to run?', 'Yes, somewhat. Checks and reviews use tokens and time. On two small test tasks it cost about 1.5 times as much and scored higher on our rubric. That is a small sample.'],
+      ['Are the guards a security sandbox?', 'No. They are scripts that catch known dangerous commands, paths and hosts. Keep your branch protection and normal access controls.'],
+      ['Can I turn parts off or change the rules?', 'Yes. Rules are files in your repo. The automatic review and the skill hints have switches in the config file.'],
+      ['Will it delete my rules?', 'No. Setup shows a diff before touching an existing file, and cleanup moves files to a backup folder.'],
+      ['Does it send my code anywhere?', 'The hooks are local scripts. The bundled MCP servers are downloaded through npx, and Context7 sends documentation queries to its service.'],
+      ['Does it only speak Arabic and English?', 'Those two are first-class. With one left-to-right language, setup leaves the RTL and translation rules out.'],
+    ],
+  },
+}

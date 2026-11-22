@@ -1,0 +1,24 @@
+---
+import type { Copy, Details } from '../../content/types.ts'
+
+interface Props {
+  copy: Copy & Details
+}
+
+import { facts } from '../../lib/plugin.ts'
+import Slot from '../Slot.astro'
+
+const { runner } = Astro.props.copy
+---
+
+<section id="runner" class="chapter split flip runner" data-chapter data-world="sheet">
+  <div class="copy">
+    <h2 class="title">{runner.title}</h2>
+    <p class="lead">{runner.lead(facts)}</p>
+    <h3 class="box-title">{runner.box}</h3>
+    <dl class="box">
+      {runner.contents(facts).map(([amount, label]) => <div><dt>{amount}</dt><dd>{label}</dd></div>)}
+    </dl>
+  </div>
+  <Slot stage="sprue" />
+</section>

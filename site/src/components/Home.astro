@@ -1,0 +1,48 @@
+---
+import { content } from '../content/index.ts'
+import type { Locale } from '../content/types.ts'
+import Layout from '../layouts/Layout.astro'
+import Answers from './chapters/Answers.astro'
+import Build from './chapters/Build.astro'
+import Crew from './chapters/Crew.astro'
+import Features from './chapters/Features.astro'
+import Gate from './chapters/Gate.astro'
+import Hero from './chapters/Hero.astro'
+import Install from './chapters/Install.astro'
+import Parts from './chapters/Parts.astro'
+import Profiles from './chapters/Profiles.astro'
+import Refactor from './chapters/Refactor.astro'
+import Rules from './chapters/Rules.astro'
+import Runner from './chapters/Runner.astro'
+import Session from './chapters/Session.astro'
+import Why from './chapters/Why.astro'
+import Shell from './Shell.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const copy = content[locale]
+---
+
+<Layout locale={locale}>
+  <Shell locale={locale} />
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <main id="content" tabindex="-1">
+    <Hero copy={copy} />
+    <Why copy={copy} />
+    <Runner copy={copy} />
+    <Features copy={copy} />
+    <Build copy={copy} />
+    <Profiles copy={copy} />
+    <Rules copy={copy} />
+    <Session copy={copy} />
+    <Gate copy={copy} />
+    <Parts copy={copy} locale={locale} />
+    <Crew copy={copy} locale={locale} />
+    <Refactor copy={copy} />
+    <Answers copy={copy} />
+    <Install copy={copy} />
+  </main>
+</Layout>
