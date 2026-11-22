@@ -18,7 +18,9 @@ plugins/frontend-kit/
   agents/*.md                 shared agents
   hooks/hooks.json            hooks → ${CLAUDE_PLUGIN_ROOT}/scripts/*.sh
   scripts/                    hook scripts; they read .claude/frontend-kit.json
-  templates/shared/rules/     rules every profile gets (quality-bar, scope, git, naming, react, i18n, rtl, testing, styles, project)
+  templates/shared/rules/     rules every profile gets (quality-bar, scope, git, naming, react, typescript, i18n, rtl, formatting,
+                              accessibility, security, dependencies, testing, styles, project)
+  templates/react/rules/      also nextjs.md and react-router.md, each copied only for a project with that dependency
   templates/shared/scripts/   validate-i18n.ts (no dependencies, Node type stripping)
   templates/shared/config/    baseline .oxlintrc.json / .oxfmtrc.json (copied only when the project has none); `react/refs` and
                               `jsx-a11y/control-has-associated-label` are off on purpose: they flag `ref={field.ref}` from react-hook-form
@@ -91,7 +93,7 @@ passed), leaving out what is already on `origin/<defaultBranch>`.
 
 | Script | Does |
 | ------ | ---- |
-| `typecheck` | `tsc --noEmit` (needs a flat `tsconfig.json`; a solution file with `references` checks nothing) |
+| `typecheck` | `tsc --noEmit`, after `next typegen` or `react-router typegen` where route types are generated; `tsc -b` for a solution file with `references` (`--noEmit` checks nothing there) |
 | `lint` / `lint:check` | oxlint with / without `--fix` |
 | `fmt` / `fmt:check` | oxfmt writes / `--check` |
 | `test`, `test:watch`, `test:coverage` | Vitest |

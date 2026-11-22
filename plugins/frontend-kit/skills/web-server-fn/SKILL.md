@@ -1,6 +1,6 @@
 ---
 name: web-server-fn
-description: Website profile: create or change a TanStack Start server function (createServerFn) — zod-validated input, GET for reads and POST for writes, secrets and HttpOnly cookies read on the server only, authorisation inside the handler, safe errors, notFound/redirect, cache headers, use as a Query queryFn or from useMutation via useServerFn, and tests. Use when the user says server function, createServerFn, call the API from the server, hide an API key, keep a secret off the client, proxy a backend call, read the session cookie, CORS problem, form submit to the server, or a webhook/server-only SDK.
+description: "Website profile: create or change a TanStack Start server function (createServerFn) — zod-validated input, GET for reads and POST for writes, secrets and HttpOnly cookies read on the server only, authorisation inside the handler, safe errors, notFound/redirect, cache headers, use as a Query queryFn or from useMutation via useServerFn, and tests. Use when the user says server function, createServerFn, call the API from the server, hide an API key, keep a secret off the client, proxy a backend call, read the session cookie, CORS problem, form submit to the server, or a webhook/server-only SDK."
 ---
 
 # Server function (TanStack Start)

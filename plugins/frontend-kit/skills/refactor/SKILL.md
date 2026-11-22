@@ -27,7 +27,7 @@ separate task.
 | Route component / container with `useState` / `useEffect` / queries | move into `use-<page>-page.ts`; the component = JSX + one hook |
 | File > 500 lines | page hook + `components/` + `utils/<topic>.ts`, split by concern |
 | HTTP call inside a hook or component | a `services/<entity>.service.ts` function + a query hook |
-| `useEffect` + fetch | `useQuery` (or the route `loader` + `ensureQueryData`) |
+| `useEffect` + fetch | `useQuery` (or the route `loader` + `queryClient.query()`) |
 | Inline key array / URL | the query-key factory / the endpoint constants |
 | Toast or try/catch around an API call | remove when the API client toasts; use its opt-out flag if the flow owns the error UI |
 | Same component in two features | promote to the shared components folder |

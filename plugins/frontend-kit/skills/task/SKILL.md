@@ -1,6 +1,6 @@
 ---
 name: task
-description: Start a new task on its own branch from origin/<defaultBranch>, implement it to the quality bar, verify it, then ask before commit/push. Use only when the user says "task", "this is the task", "new task", gives a ticket link (Jira, GitHub issue, Trello card, …), or runs /task. Not for a plain request to add a component, form, store, hook, page or route: those have their own skills (create-*, dash-*, web-*), use them directly. Never opens a PR, never merges.
+description: "Start a new task on its own branch from origin/<defaultBranch>, implement it to the quality bar, verify it, then ask before commit/push. Use only when the user says \"task\", \"this is the task\", \"new task\", gives a ticket link (Jira, GitHub issue, Trello card, …), or runs /task. Not for a plain request to add a component, form, store, hook, page or route: those have their own skills (create-*, dash-*, web-*), use them directly. Never opens a PR, never merges."
 argument-hint: "[ticket-url or task description]"
 ---
 
@@ -52,9 +52,10 @@ attribution. Git details: `.claude/rules/git.md`. The bar:
 Run the `verify` skill: typecheck, lint, tests, i18n (when locales changed),
 e2e (when a flow, route or layout changed), build, with the real numbers.
 For a visible change also check the page on `http://localhost:<devPort>`
-(`dev` skill) at phone and desktop width, Arabic and English, light and dark.
+(`dev` skill) at phone and desktop width, in each of the project's languages and themes.
 On a non-trivial change, spawn the `frontend-reviewer` agent (or the `review`
-skill) and fix what it finds.
+skill, which also starts a specialist when the diff touches security,
+translations, SEO or accessibility) and fix what it finds.
 
 ## 5. Report and ask
 

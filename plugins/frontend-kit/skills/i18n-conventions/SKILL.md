@@ -32,8 +32,10 @@ language comes from the persisted setting on load.
 
 `group.key` — e.g. `orders.emptyTitle`, `common.save`. One level or three+
 levels are rejected. Both segments camelCase. i18next plural suffixes are
-allowed on the second segment (`orders.itemsCount_one`, `_other`; Arabic also
-`_zero`, `_two`, `_few`, `_many` only where the sentence changes).
+allowed on the second segment (`orders.itemsCount_one`, `_other`; an Arabic
+counted noun needs all six, adding `_zero`, `_two`, `_few`, `_many`; "Label:
+{{count}}" needs none). `count` is a number: a string returns the raw key.
+Rich text inside a sentence uses `<Trans i18nKey="group.key">`.
 
 Flatten deeper keys by joining the sub-group into the key:
 
@@ -98,7 +100,7 @@ between Arabic and English.
 - Backend messages are shown only when they are in the UI language (the API
   client's error resolver handles it) — don't translate them by hand.
 - `npm run i18n:validate` must pass: two levels, camelCase, ar/en parity,
-  plural forms (`_one` + `_other` in both; Arabic extras optional), no key in two
+  plural forms (`_one` + `_other` in both; an Arabic counted noun all six), no key in two
   bundles, and every static key the code names exists.
 - Prices, numbers, dates and times go through the project's formatters (UI
   language, Western digits, a dash for bad input). No language-dependent

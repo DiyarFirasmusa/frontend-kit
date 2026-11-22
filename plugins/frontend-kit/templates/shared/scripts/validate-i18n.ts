@@ -3,7 +3,7 @@
 //
 // Checks, for every `src/**/locales/{ar,en}.json` bundle:
 //   - both languages exist and hold the same keys (two levels: group.key, camelCase)
-//   - plural suffixes are complete (both languages: _one and _other; Arabic _zero/_two/_few/_many are optional)
+//   - plural suffixes are complete (both languages: _one and _other; an Arabic counted noun needs all six, which no script can detect)
 //   - {{variables}} match between languages; empty values are rejected
 //   - a key lives in one bundle only
 // and in code: every static t('group.key') exists, t() never gets a template literal
@@ -16,7 +16,7 @@ const ROOT = process.cwd();
 const SRC = join(ROOT, 'src');
 const KEY_PATTERN = /^[a-z][a-zA-Z0-9]*\.[a-z][a-zA-Z0-9]*(_(zero|one|two|few|many|other))?$/;
 const PLURAL_SUFFIX = /_(zero|one|two|few|many|other)$/;
-// Arabic has six plural categories, but a missing one falls back to _other; require the two every sentence needs.
+// A missing category falls back to _other, so only these two are required; counted nouns need all six (i18n.md).
 const ARABIC_FORMS = ['one', 'other'];
 const ENGLISH_FORMS = ['one', 'other'];
 const errors: string[] = [];
@@ -72,10 +72,7 @@ function flatten(file: string): Flat {
 
 const baseOf = (key: string): string => key.replace(PLURAL_SUFFIX, '');
 const varsOf = (text: string): string =>
-  [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)]
-    .map((m) => m[1])
-    .sort()
-    .join(',');
+  [...new Set([...text.matchAll(/\{\{\s*-?\s*(\w+)/g)].map((m) => m[1]))].sort().join(',');
 
 // 1. Collect bundles: the global one and one per feature folder.
 const bundles = new Map<string, { ar?: string; en?: string }>();
@@ -130,11 +127,12 @@ for (const [dir, files] of bundles) {
     }
   }
 
-  // Interpolation variables must match across languages.
-  for (const [key, arText] of ar) {
-    const enText = en.get(key) ?? en.get(`${baseOf(key)}_other`);
-    if (enText !== undefined && varsOf(arText) !== varsOf(enText) && !PLURAL_SUFFIX.test(key)) {
-      errors.push(`${rel(dir)}: "${key}" uses different {{variables}} in ar and en`);
+  // Interpolation variables must match across languages. A plural key counts as one (one form may leave {{count}} out).
+  const textOf = (flat: Flat, base: string): string =>
+    [...flat].filter(([key]) => baseOf(key) === base).map(([, text]) => text).join(' ');
+  for (const base of arBases) {
+    if (enBases.has(base) && varsOf(textOf(ar, base)) !== varsOf(textOf(en, base))) {
+      errors.push(`${rel(dir)}: "${base}" uses different {{variables}} in ar and en`);
     }
   }
 
@@ -150,7 +148,7 @@ for (const [dir, files] of bundles) {
 
 // 2. Every key the code names exists; no dynamic keys.
 const usedBases = new Set<string>();
-const STATIC_CALL = /(?<![\w$])(?:[\w$]+\.)?t\(\s*(['"])([^'"]+)\1/g;
+const STATIC_CALL = /(?<![\w$])(?:(?:[\w$]+\.)?t\(\s*|i18nKey=\{?\s*)(['"])([^'"]+)\1/g;
 // A template literal builds a key at runtime. A bare identifier is a key held in data (zod message, successMessage,
 // a map of keys): allowed, and the quoted-string scan below proves each such key exists.
 const DYNAMIC_CALL = /(?<![\w$])(?:[\w$]+\.)?t\(\s*`[^`]*\$\{/g;
