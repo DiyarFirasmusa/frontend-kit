@@ -34,6 +34,8 @@ is. All of it lives in `src/lib/monitoring.ts`; nothing else imports `@sentry/re
 
 ## No PII
 
+- Sentry 11 collects local variable values in stack frames by default (`stackFrameVariables: true`). On server runtimes those
+  values are user data: set `stackFrameVariables: false` there.
 - No default PII: on `@sentry/react` 11 set
   `dataCollection: { userInfo: false, cookies: false, httpHeaders: false, urlQueryParams: false, httpBodies: [] }`
   (`sendDefaultPii: false` on 10 and older). Never call `setUser` with a name, email or phone;

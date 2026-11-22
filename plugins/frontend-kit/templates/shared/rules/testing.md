@@ -81,7 +81,14 @@ The project's test helpers (`project.md` names the folder) provide:
 - Mock the **network** (MSW), never modules: no `vi.mock` of services, hooks,
   the API client or TanStack Query. The interceptors, toasts and cache are
   part of what is tested.
-- Async UI: `findBy*` / `waitFor`. Timers: `vi.useFakeTimers()`. No sleeps.
+- Async UI: `findBy*` / `waitFor`. Timers: `vi.useFakeTimers()`, which in Vitest 5 also fakes `Temporal` when it exists
+  (opt out with `toNotFake: ['Temporal']`). No sleeps.
+- `vi.mock`, `vi.unmock` and `vi.hoisted` sit at the top level of the file. In Vitest 5 a call inside a function or block
+  throws; it was a warning before.
+- Date-dependent UI in e2e (token expiry, "5 minutes ago"): fix the browser clock with Playwright's `page.clock` instead of
+  waiting for real time.
+- Set the time zone for the unit run (`TZ=UTC` in the global setup, or `test.env`), so formatting tests do not depend on the
+  machine that runs them.
 - Text in both languages where it matters: one English assertion, one Arabic.
 - E2E: projects cover Arabic and English, desktop and mobile, and dark. Mock
   the backend with route handlers that return the real envelope. Match text
