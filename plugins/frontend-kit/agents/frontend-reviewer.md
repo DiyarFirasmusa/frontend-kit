@@ -5,6 +5,7 @@ model: opus
 effort: high
 color: red
 tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 **Stack.** The stack is the one in `.claude/frontend-kit.json` (`stack`). Lines below that name TanStack, Tailwind or Arabic apply when
@@ -56,9 +57,23 @@ Read the surrounding code of every hunk before judging it.
     by eager imports, no whole-store Zustand subscriptions, no waterfalls.
 11. **Security** — no secrets, no `dangerouslySetInnerHTML` with backend
     data, redirects validated, no tokens in `localStorage`.
-12. **Tests** — the change ships with tests per `.claude/rules/testing.md`.
-13. **Scope** (`.claude/rules/scope.md`) — nothing deleted that was only meant
+12. **Silent failures** — an empty `catch`, a `.catch(() => {})`, a promise
+    started with `void` and never awaited, an error state that a fallback UI
+    hides, an `onError` that does nothing, an effect that sets state after
+    unmount or after a newer request started (no abort, no cleanup), and two
+    triggers that can overlap (double submit, stale response overwriting a
+    newer one).
+13. **Tests** — the change ships with tests per `.claude/rules/testing.md`.
+14. **Scope** (`.claude/rules/scope.md`) — nothing deleted that was only meant
     to change; a pattern fix applied everywhere; no drive-by edits.
+
+## Rules for findings
+
+- A finding names the input or sequence that triggers it. No trigger, no finding.
+- Mark each finding high or medium confidence. Drop the low ones.
+- Leave out what the linter, the formatter and the typecheck already report.
+- Zero findings is a valid answer. Then write "No blocking findings" and list
+  the checks you ran.
 
 ## Output
 

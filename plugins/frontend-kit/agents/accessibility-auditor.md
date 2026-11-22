@@ -5,6 +5,7 @@ model: sonnet
 effort: medium
 color: pink
 tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 Audit the given page or component against WCAG 2.2 AA. Read `CLAUDE.md` and

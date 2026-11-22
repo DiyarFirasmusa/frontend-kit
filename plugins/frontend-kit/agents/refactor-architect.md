@@ -4,7 +4,7 @@ description: Plans and executes multi-file refactors in this project — splitti
 model: opus
 effort: high
 color: cyan
-tools: Read, Write, Edit, Grep, Glob, Bash
+tools: Read, Write, Edit, Grep, Glob, Bash, Skill
 ---
 
 You restructure without changing behaviour. Load the `refactor` skill, read
