@@ -16,6 +16,8 @@ Building needs `bash`, `git` and `jq`: the gate demo runs the plugin's real `gua
 
 ## Deploy (Vercel)
 
+Live: https://frontend-kit-tan.vercel.app (project `frontend-kit`, connected to `main`).
+
 Import the repository with **Root Directory** set to `site`, and keep "Include source files outside of the Root Directory"
 on: the build reads `../plugins` and `../examples`. `vercel.json` holds the rest. Pushes to `main` then publish.
 Canonical links use Vercel's production domain, or `SITE_URL` when it is set (for a custom domain).
