@@ -31,8 +31,22 @@
   mask-image: linear-gradient(to right, #000 42%, transparent 96%);
 }
 
+/* The words sit on a shade, however busy the frame behind them is. */
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgb(5 6 7 / 0.94) 30%, rgb(5 6 7 / 0.72) 52%, transparent 78%);
+  pointer-events: none;
+}
+
+[dir='rtl'] .banner::after {
+  background: linear-gradient(to left, rgb(5 6 7 / 0.94) 30%, rgb(5 6 7 / 0.72) 52%, transparent 78%);
+}
+
 .banner-copy {
   position: relative;
+  z-index: 1;
   width: min(44rem, 100%);
   padding: calc(var(--bar) + 2rem) var(--edge) 2.75rem;
 }
@@ -541,6 +555,11 @@
 
   [dir='rtl'] .banner img {
     mask-image: linear-gradient(#000 25%, transparent);
+  }
+
+  .banner::after,
+  [dir='rtl'] .banner::after {
+    background: linear-gradient(transparent 12%, rgb(5 6 7 / 0.85) 48%, var(--void));
   }
 
   .banner-copy {
