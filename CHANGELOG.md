@@ -3,6 +3,15 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.14.2
+- Start dashboard: two causes of React error #418 on a direct load, reproduced and fixed in a real app. Text in the
+  prerendered shell stays in the default language until hydrated (English users landing on `/403` through a redirect hit
+  this every time), and an unknown URL is a catch-all route `$.tsx` (every bad URL hit it, in both languages).
+  `framework.md`, `structure.md`, `testing.md` and the variant's `CLAUDE.md` say so. An app set up earlier gets the rules
+  by re-running setup; its code needs the two changes.
+- Docs and descriptions: 39 skills, 9 hook events, 60 of 62 evals, four profiles, install from GitHub, the guards' limits.
+  `validate-repo.sh` fails when those counts or profiles go stale.
+
 ## 1.14.1
 - `guard-bash` reads a command the way the shell does (`shell-words.awk`: quotes, line continuations, heredocs,
   substitutions, keywords, subshells) and follows code handed to another command (`bash -c`, `eval`, `xargs`,

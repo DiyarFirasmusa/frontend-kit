@@ -60,6 +60,7 @@ src/
 │   ├── __root.tsx        → document shell (html lang/dir, HeadContent, Scripts), { queryClient } context, errorComponent
 │   ├── _auth/            → guest-only (login, forgot password)
 │   ├── _app/             → signed-in shell; a pathless child per shell (`_main/`, `_focused/`, `_wizard/`)
+│   ├── $.tsx             → unknown URLs, the 404 page (framework.md says why)
 │   └── (errors)/         → 401 / 403 / 404 / 500
 ├── layout/<shell>/       → one folder per shell: index.tsx + components/ (main = sidebar + top bar, auth, focused…)
 ├── features/<entity>/    → one folder per backend resource, flat (route groups are guards and shells, not areas)

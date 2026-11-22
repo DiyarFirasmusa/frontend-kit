@@ -5,10 +5,10 @@ conventions, workflows and guard rails a good frontend team would write down, an
 
 | What | Count |
 | ---- | ----- |
-| Skills (create a component, form, table, route, store, hook; verify, review, refactor, commit, ...) | 38 |
+| Skills (create a component, form, table, route, store, hook; verify, review, refactor, commit, ...) | 39 |
 | Agents (reviewer, bug hunter, accessibility auditor, planner, test engineer, ...) | 10 |
-| Hooks (guards, format + lint on edit, quality gate, code review, skill suggestions) | 11 events |
-| Project profiles | `website`, `dashboard`, `react` (any stack), `fullstack` (site + admin in one tree) |
+| Hooks (guards, format + lint on edit, quality gate, code review, skill suggestions) | 9 events |
+| Project profiles | `website`, `dashboard` (Vite, Next.js or TanStack Start), `react` (any stack), `fullstack` (site + admin in one tree) |
 
 ## Install
 
@@ -30,8 +30,12 @@ adapted to what it found. Projects set up this way update the plugin on their ow
 - No commit, merge or push on protected branches; no force push, `--no-verify`, `reset --hard`; no PR opened by Claude (it prints the compare link).
 - No requests to live hosts; no reading `.env*`; no edits to deploy config, lockfiles or generated files.
 - After each edit: format and lint with the project's own tools, and a warning for `any`, unsafe casts and `@ts-ignore`.
-- When Claude stops: typecheck and related tests (and the i18n validator), then one code review by `frontend-reviewer`.
+- When Claude stops: typecheck and related tests (and the i18n validator) on the session's changes, committed or not, then one code
+  review by `frontend-reviewer`.
 - It names the skills that fit each prompt.
+
+The guards are a guard rail, not a sandbox: they read shell commands the way the shell does, but not what a script file, a
+package script or a program in another language does. Keep branch protection on.
 
 ## Refactor mode
 
@@ -42,12 +46,13 @@ phase at a time with behaviour frozen and the gate green in between. See [`examp
 
 | | |
 | - | - |
-| [`examples/`](examples) | seven projects showing what setup produces on different stacks |
+| [`examples/`](examples) | 7 projects showing what setup produces on different stacks |
 | [`plugins/frontend-kit/README.md`](plugins/frontend-kit/README.md) | the plugin in detail |
 | [`docs/`](docs) | development guide, testing, template contract |
 | [`CHANGELOG.md`](CHANGELOG.md) | what changed in each version |
 
 Measured so far: on two small tasks in a Vite project, code written with the kit scored 90/90 on a nine-point rubric against
-81/90 without it, at about 1.5 times the cost; 62 development evals pass at 98%. Small samples from one project: a direction, not proof.
+81/90 without it, at about 1.5 times the cost; at 1.14.0, 60 of 62 development evals passed (average score 97.1%).
+Small samples from one project: a direction, not proof.
 
 Third-party skills and their licences: [`plugins/frontend-kit/THIRD_PARTY_NOTICES.md`](plugins/frontend-kit/THIRD_PARTY_NOTICES.md).

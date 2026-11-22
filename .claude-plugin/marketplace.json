@@ -4,14 +4,14 @@
     "name": "diyarfirasmusa"
   },
   "metadata": {
-    "description": "Claude Code setup for React + TypeScript frontend projects (websites and dashboards).",
+    "description": "Claude Code setup for React + TypeScript frontend projects (websites, dashboards, any React app, or a site and admin in one tree).",
     "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "frontend-kit",
       "source": "./plugins/frontend-kit",
-      "description": "Skills, agents, guards, quality gates and project templates for TanStack Start websites and Vite + TanStack Router dashboards.",
+      "description": "Skills, agents, guards, quality gates and project templates in four profiles: website, dashboard (Vite, Next.js or TanStack Start), react (any stack) and fullstack (site + admin).",
       "category": "development"
     }
   ]

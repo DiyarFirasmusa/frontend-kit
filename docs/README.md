@@ -6,4 +6,4 @@
 | [`TESTING.md`](TESTING.md) | the four test layers and how to run them |
 | [`TEMPLATE-CONTRACT.md`](TEMPLATE-CONTRACT.md) | what the templates, `frontend-kit.json` and the scripts promise each other |
 | [`../CHANGELOG.md`](../CHANGELOG.md) | what changed in each version |
-| [`../examples/`](../examples) | seven reference projects showing the setup output |
+| [`../examples/`](../examples) | 7 reference projects showing the setup output |

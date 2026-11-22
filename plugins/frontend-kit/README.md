@@ -23,7 +23,7 @@ you approve, then restructure one phase at a time with behaviour frozen and the 
 ## Install in a project
 
 ```text
-/plugin marketplace add /path/to/frontend-kit        # or owner/repo once it is on GitHub
+/plugin marketplace add DiyarFirasmusa/frontend-kit  # or the path of a local clone, to work on the kit
 /plugin install frontend-kit@frontend-kit
 /frontend-kit:setup                               # asks the profile and the project values
 ```
@@ -46,12 +46,12 @@ Values come from the project's `.claude/frontend-kit.json` (written by setup):
 - Names the skills that fit each prompt (`skill-suggest`); warns before a `git commit` that has not passed the gate.
 - Desktop alert when Claude waits for you; a log of failed tools; session clean-up.
 
-Self-test: `KIT_TEST_PROJECT=/path/to/project bash scripts/test-hooks.sh`.
+Self-test, from a clone of the repository: `KIT_TEST_PROJECT=/path/to/project bash plugins/frontend-kit/scripts/test-hooks.sh`.
 
 ## Update
 
-Bump `version` in `.claude-plugin/plugin.json` (and the marketplace entry), then in each
-project: `/plugin marketplace update frontend-kit`. Re-run `/frontend-kit:setup` to pull template changes; it
-shows a diff before touching existing files.
+Projects set up by `/frontend-kit:setup` update the plugin on their own (`autoUpdate`) when its `version` changes; by
+hand: `/plugin marketplace update frontend-kit`. Copied files (`CLAUDE.md`, rules, settings) don't update themselves:
+re-run `/frontend-kit:setup` to pull template changes; it shows a diff before touching existing files.
 
 Third-party skills and their licences: `THIRD_PARTY_NOTICES.md`.

@@ -1,12 +1,14 @@
 # frontend-kit — template contract
 
-One plugin (`frontend-kit`), two profiles. `/frontend-kit:setup` asks for the
+One plugin (`frontend-kit`), four profiles. `/frontend-kit:setup` asks for the
 profile and copies `templates/shared/` + `templates/<profile>/` into the project.
 
 | Profile   | Stack (reference project)                                                                 |
 | --------- | ----------------------------------------------------------------------------------------- |
 | website   | TanStack Start (React 19, TanStack Router file routes + SSR, server functions), TanStack Query, Zustand, Tailwind v4, i18next (Arabic RTL default + English), react-hook-form + zod, Vitest + Testing Library + MSW, Playwright + axe, oxlint + oxfmt, npm |
 | dashboard | Vite + React 19 SPA (or TanStack Start in SPA mode, or Next.js App Router: `variants/`), TanStack Router (file routes, typed search params), TanStack Query, TanStack Table, Zustand, base-ui / shadcn-style primitives, Tailwind v4, i18next RTL + English, react-hook-form + zod, Sentry, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm |
+| react     | Any React stack (Next.js, React Router, Vite, CRA, ...): stack-neutral rules, adapted by setup to what it detects |
+| fullstack | A site and an admin in one tree: the website rules for the site, the dashboard rules scoped to the admin folder   |
 
 ## Layout
 
@@ -73,7 +75,7 @@ for the names you must not publish, list them one per line in `.private-names` (
 }
 ```
 
-`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`) (stack-neutral; written by setup after the user answers). `mode`: `new`, `existing`
+`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`); written by setup after the user answers. `mode`: `new`, `existing`
 or `refactor`. `srcDirs`: the source folders every gate watches (default `["src"]`). `allowJs`: lifts the TypeScript-only guard.
 `apps[].cwd`: the folder an app's commands run in (a monorepo package); the changed files are passed relative to it. `stack`: what setup detected; rules and `commands` adapt to it. `commands.formatFile` / `commands.lintFile` (the file is
 appended) replace the detected formatter/linter; `commands.typecheck` / `commands.relatedTests` / `commands.allTests` replace the detected ones.

@@ -5,7 +5,12 @@ paths:
   - "src/router.tsx"
   - "src/start.ts"
   - "src/routes/__root.tsx"
+  - "src/routes/$.tsx"
+  - "src/client.tsx"
   - "src/env.ts"
+  - "src/**/page-loading.tsx"
+  - "src/**/language-sync.tsx"
+  - "src/**/i18n.ts"
 ---
 
 # TanStack Start, SPA mode (the dashboard on Start)
@@ -46,8 +51,27 @@ dashboard (`routing.md`, `permissions.md`), plus a prerendered shell and optiona
   `bootstrapSession()` (the session restore in `api-layer.md`) **before** hydrating, so the first guard run already
   knows the user and the permissions.
 - Set `<html lang dir>` from the stored language with a small inline script in the root route's `head` (it runs before
-  paint), and render language-dependent text from state that is already restored when hydration starts; never read
-  `localStorage` during the first render to pick text. Measure on the production build: the dev server is slower.
+  paint), with `suppressHydrationWarning` on `<html>`. Never read `localStorage` during the first render to pick text.
+
+## What the shell shows must hydrate unchanged (React error #418)
+
+The shell holds the root route and the router's `pendingComponent`, in the default language, whatever the URL is.
+That pending boundary can hydrate **late**, after effects ran and the language switched (a guard redirect does it).
+
+- Text inside the shell (the `pendingComponent`, anything in the root) uses the default language until it is hydrated.
+  Restoring the language earlier or later does not fix this; this does:
+
+  ```tsx
+  const hydrated = useHydrated(); // @tanstack/react-router
+  const label = t('app.loading', hydrated ? {} : { lng: DEFAULT_LANGUAGE });
+  ```
+
+- An unknown URL is a route of its own: `src/routes/$.tsx` renders the 404 page. Left to the root `notFoundComponent`,
+  the first render has no pending boundary where the shell has one, and every direct load of a bad URL fails to
+  hydrate. Keep `notFoundComponent` as well, for a `notFound()` thrown by a loader.
+  `npm run build` (like `npm run dev`) regenerates `routeTree.gen.ts` after the file is added; then typecheck.
+- Prove it on the production build, with both languages and a direct load of: a page, a page that redirects to `/403`,
+  an unknown URL. No console error in any of them (a navigation inside the app never shows this bug).
 
 ## E2E
 

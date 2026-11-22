@@ -1,7 +1,7 @@
 # Developing frontend-kit
 
-The kit is developed **against real apps, not in the abstract**. Two throw-away apps live in `playground/`
-(git-ignored, never pushed) and exercise every rule, skill, agent and hook. Anything that hurts there is a bug in the kit.
+The kit is developed **against real apps, not in the abstract**. Throw-away apps live in `playground/`
+(git-ignored, never pushed; `dashboard-*`, `website-*`, `combined-start`) and exercise every rule, skill, agent and hook. Anything that hurts there is a bug in the kit.
 
 ## The loop
 
@@ -10,6 +10,8 @@ The kit is developed **against real apps, not in the abstract**. Two throw-away 
 3. Fix it **in `plugins/`**, never only in the playground copy. Re-run setup in the playground (or diff the templates) to pull it back.
 4. Prove it: `KIT_TEST_PROJECT=$PWD/playground/website-start bash plugins/frontend-kit/scripts/test-hooks.sh` (and `dashboard-vite`; the path must be absolute).
 5. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json` **only** (when set in both places `plugin.json` wins silently and `claude plugin validate` warns; users get an update only when the version changes). Run `bash scripts/validate-repo.sh` and `claude plugin validate . --strict` (root, then each `plugins/<name>`; the root run does not open the plugins' files), commit only `plugins/`, `docs/`, `scripts/`, `.github/`, root files.
+6. A push to `main` publishes the website, which is built from `plugins/` and `examples/`: run `cd site && npm ci && npm run build`
+   first. It fails when a skill, agent, hook event or rule group has no copy there, or a demo verdict of the guard changes.
 
 ## What is pushed, what is not
 
@@ -26,7 +28,7 @@ Never copy playground domain code (Bazaar products, orders, …) into templates;
 
 | You want to… | Edit |
 | ------------ | ---- |
-| Change a convention both profiles share | `templates/shared/rules/*.md` |
+| Change a convention every profile shares | `templates/shared/rules/*.md` |
 | Change website- or dashboard-only conventions | `templates/<profile>/rules/*.md`, `CLAUDE.md` |
 | Add a workflow Claude can run | `skills/<name>/SKILL.md` (`web-*` / `dash-*` prefix if profile-only) |
 | Add a specialist reviewer / worker | `agents/<name>.md` |
@@ -53,7 +55,7 @@ Version history: [`CHANGELOG.md`](../CHANGELOG.md). How to test: [`TESTING.md`](
 6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase. Every playground app now has 5+ routes (1.14.0).
    The dashboard's Next.js (1.11.1) and TanStack Start (1.11.2) variants are verified end to end by real sessions, and
    all three dashboards have Playwright e2e with a live-checked `/403` (1.12.0). Not covered yet: Sentry setup on the new
-   variants, WebKit/Firefox, the real host's `_shell.html` fallback, and a dark project on Start.
+   variants, WebKit/Firefox, the visual RTL check of the storefronts, the real host's `_shell.html` fallback, and a dark project on Start.
 7. Agents are rarely chosen unprompted when the code is in the prompt (`evals/info`); decide whether the descriptions should push harder.
 
-Each phase = one branch, version bump, re-run setup in both playground apps and re-run their gates to prove nothing regressed.
+Each phase = one branch, version bump, re-run setup in the playground apps it touches and re-run their gates to prove nothing regressed.

@@ -106,4 +106,28 @@ done
 if grep -rIlE '\{\{[A-Z_]+\}\}' examples 2>/dev/null | grep -q .; then bad "examples: unreplaced {{PLACEHOLDER}}:"; grep -rIlE '\{\{[A-Z_]+\}\}' examples | head -3; fi
 if grep -rIlE '/Users/|/private/tmp|/var/folders' examples 2>/dev/null | grep -q .; then bad "examples: absolute paths:"; grep -rIlE '/Users/|/private/tmp|/var/folders' examples | head -3; fi
 
+# 9. what the READMEs and the descriptions say matches what ships
+KIT=plugins/frontend-kit
+count_dirs() { find "$1" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' '; }
+SKILLS="$(count_dirs "$KIT/skills")"
+AGENTS="$(find "$KIT/agents" -name '*.md' | wc -l | tr -d ' ')"
+EVENTS="$(jq '.hooks | length' "$KIT/hooks/hooks.json")"
+EXAMPLES="$(count_dirs examples)"
+EVALS="$(find "$KIT/evals/dev" -name prompt.md | wc -l | tr -d ' ')"
+grep -Eq "^\| Skills .*\| $SKILLS \|\$" README.md || bad "README.md: there are $SKILLS skills"
+grep -Eq "^\| Agents .*\| $AGENTS \|\$" README.md || bad "README.md: there are $AGENTS agents"
+grep -Eq "^\| Hooks .*\| $EVENTS events \|\$" README.md || bad "README.md: there are $EVENTS hook events"
+grep -q " of $EVALS development evals" README.md || bad "README.md: there are $EVALS development evals"
+for doc in README.md docs/README.md; do
+  grep -Eq "\| $EXAMPLES (reference )?projects showing" "$doc" || bad "$doc: there are $EXAMPLES examples"
+done
+for profile in "$KIT"/templates/*/; do
+  profile="$(basename "$profile")"
+  [ "$profile" = shared ] && continue
+  jq -r .description "$KIT/.claude-plugin/plugin.json" | grep -qw "$profile" || bad "plugin.json description: no $profile profile"
+  jq -r '.plugins[].description' .claude-plugin/marketplace.json | grep -qw "$profile" || bad "marketplace.json description: no $profile profile"
+  grep -q "\`$profile\`" README.md || bad "README.md: no $profile profile"
+  grep -q "^| $profile " docs/TEMPLATE-CONTRACT.md || bad "docs/TEMPLATE-CONTRACT.md: no $profile profile"
+done
+
 [ "$FAIL" -eq 0 ] && echo "repo checks passed" || { echo "$FAIL problem(s)"; exit 1; }

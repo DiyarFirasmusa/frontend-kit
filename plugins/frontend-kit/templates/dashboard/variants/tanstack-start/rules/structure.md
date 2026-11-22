@@ -24,6 +24,7 @@ src/
 │   │   │   └── <resource>/index.tsx  <resource>/$id/index.tsx
 │   │   ├── _focused/                 no sidebar, one task (create, edit)
 │   │   └── _wizard/                  bare; a wizard draws its own chrome
+│   ├── $.tsx             unknown URLs: the 404 page (framework.md)
 │   └── (errors)/403.tsx  401  500
 ├── layout/<shell>/                   main/ auth/ (focused/ wizard/ when used): index.tsx + components/, plus hooks/ and data/ (nav config, sign-out hook) when the shell needs them
 ├── features/<entity>/                flat: route groups are guards and shells, not product areas

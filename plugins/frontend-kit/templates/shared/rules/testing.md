@@ -136,7 +136,8 @@ The project's test helpers (`project.md` names the folder) provide:
   it runs the SSR bundle, whose guards see no session and 307 every signed-in deep link to `/login`. Not
   `vite build --outDir <other>`: the prerender still renders `_shell.html` from `dist/server`, so the shell points at
   files the other folder lacks. No `data-hydrated` wait: the shell has no page content to click early. Rebuild with the
-  real API URL after an e2e build (it left the fake one in `dist/`).
+  real API URL after an e2e build (it left the fake one in `dist/`). Fail the test on `pageerror` and on an error in the
+  console: a hydration mismatch shows nowhere else. Load an unknown URL and a `/403` redirect directly, in both languages.
 
 ## Website specifics (TanStack Start; the website profile only)
 
