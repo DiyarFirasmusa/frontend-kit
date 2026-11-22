@@ -1,13 +1,15 @@
 ---
 paths:
-  - "**/src/**/*auth*"
-  - "**/src/**/*session*"
-  - "**/src/**/*token*"
-  - "**/src/**/api-client*"
-  - "**/src/**/*login*"
-  - "app/**/*auth*"
-  - "app/**/*session*"
-  - "app/**/*login*"
+  - "**/{auth,session,login,logout}/**"
+  - "**/{auth,session,login,logout,use-auth,use-session,useAuth,useSession}.{js,jsx,ts,tsx}"
+  - "**/{auth,session,login}-*.{js,jsx,ts,tsx}"
+  - "**/*-{auth,session,login}.{js,jsx,ts,tsx}"
+  - "**/{auth,session}{Context,Provider,Store,Service,Client}.{js,jsx,ts,tsx}"
+  - "**/*{access,refresh,auth}-token*"
+  - "**/{token.service,token-store,token-storage}.{js,ts}"
+  - "**/api-client*"
+  - "**/{proxy,middleware}.{js,ts}"
+  - "**/*.server.{js,ts,tsx}"
 ---
 
 # Auth and session (a browser app that holds its own tokens)
@@ -32,6 +34,6 @@ cookie, use it and most of this disappears; ask for it (a refresh token in `loca
 - **Guards.** Restore the session before deciding to redirect. If the API is unreachable show an error with Retry; redirecting
   `/account` to `/login` and `/login` back to `/account` is a ping-pong.
 - **The `redirect` parameter** accepts internal paths only: parse with `new URL(value, location.origin)`, reject another origin,
-  a pathname that starts with `//`, and `/login` itself. Test `/.//evil.com`, `//evil.com`, `/\evil.com`, `https://evil.com`.
+  a pathname that starts with `//` once normalised, and `/login` itself. The helper and its test list: `security.md`.
 - **The login form** never puts the password in the URL (`method="post"`), disables double submit, and a wrong password does not
   trigger a token refresh or a retry.

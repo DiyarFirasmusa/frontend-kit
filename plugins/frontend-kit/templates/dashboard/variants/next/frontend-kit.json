@@ -25,7 +25,8 @@
     "package-lock.json"
   ],
   "generatedPaths": [
-    "next-env.d.ts"
+    "next-env.d.ts",
+    ".next/**"
   ],
   "srcDir": "src",
   "commands": {

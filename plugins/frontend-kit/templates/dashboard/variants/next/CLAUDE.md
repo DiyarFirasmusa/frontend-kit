@@ -9,19 +9,19 @@ Stack: Next.js (App Router, a client-rendered admin: `'use client'` containers),
 TypeScript (strict), URL search params parsed by zod (`routing.md`), TanStack Query 5, TanStack Table, Zustand 5 (client state
 only), axios, react-hook-form + zod 4, base-ui / shadcn-style primitives,
 Tailwind CSS v4 tokens, i18next, sonner, Sentry. Tests: Vitest + Testing
-Library + MSW, Playwright + axe. oxlint, oxfmt, husky + lint-staged +
+Library + MSW, Playwright + axe. The project's linter and formatter, husky + lint-staged +
 commitlint. Package manager: **npm**.
 
-The bar every change meets: `.claude/rules/quality-bar.md`. Area rules:
-`.claude/rules/` (path-scoped ones load with the files they cover).
+The bar every change meets: `.claude/rules/quality-bar.md`. Area rules: `.claude/rules/`
+(loaded on read or edit of a matching file, not on search).
 
 ## Hard rules
 
 - Every file under `src/` is `.ts` / `.tsx`. No `any`, no `@ts-ignore` /
   `@ts-expect-error`, no `as` to silence the compiler. Use `unknown` and narrow.
 - Pages are thin and default-exported; every container is `'use client'`. `next-env.d.ts` and `.next/` are generated:
-  never edit them. Guards live in `src/proxy.ts` (cookie check) and the `(app)` layout (permissions), see `routing.md`.
-- The admin is never indexed (`robots` metadata `noindex`, `Disallow: /`). Secrets have no `NEXT_PUBLIC_` prefix.
+  never edit them. Guards live in the group layouts and pages (`routing.md`); `src/proxy.ts` is only an optional cookie check.
+- The admin is never indexed (`robots` metadata `noindex`, not disallowed in robots.txt). Secrets have no `NEXT_PUBLIC_` prefix.
 - The URL owns a list's page, page size, sort and filters (`routing.md`); the
   Query cache owns server data. Neither is copied into `useState` or Zustand.
 - Every route behind login has a permission guard and every action checks its
@@ -39,9 +39,9 @@ The bar every change meets: `.claude/rules/quality-bar.md`. Area rules:
 
 ```sh
 npm run dev               # next dev on :{{DEV_PORT}}
-npm run typecheck         # tsc --noEmit
-npm run lint:check        # oxlint (npm run lint fixes)
-npm run fmt:check         # oxfmt (npm run fmt writes)
+npm run typecheck         # next typegen && tsc --noEmit
+npm run lint:check        # the project's linter, ESLint by default (npm run lint fixes)
+npm run fmt:check         # the project's formatter (npm run fmt writes)
 npm run test              # vitest run; one file: npx vitest run <path>
 npm run i18n:validate     # when translations changed
 npm run test:e2e          # Playwright on :{{E2E_PORT}}; when a route, flow or layout changed
@@ -60,7 +60,7 @@ src/
 │   ├── (auth)/           → guest-only (login, forgot password); layout redirects a signed-in user
 │   ├── (app)/            → signed-in shell (session gate) + loading.tsx; every page checks a permission
 │   ├── (errors)/         → 401 / 403 / 500; not-found.tsx, error.tsx, global-error.tsx at the root
-│   └── api/              → route handlers, only for same-origin glue (rare); robots.ts → Disallow: /
+│   └── api/              → route handlers, only for same-origin glue (rare); no robots Disallow (it hides noindex)
 ├── proxy.ts              → optimistic cookie check + redirect to /login (not the permission check)
 ├── features/<group>/<entity>/   → one folder per backend resource; <group> = the route group or product area
 ├── layouts/              → one shell per route group: dashboard/{header,sidebar,components}, auth/

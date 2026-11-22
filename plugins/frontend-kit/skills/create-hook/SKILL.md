@@ -42,7 +42,8 @@ hook navigates. Session-only queries also check the session
 (`enabled: isAuthed && Boolean(id)`); public queries never do.
 
 Export the `queryOptions(...)` too when a route `loader` needs the same query
-(`context.queryClient.ensureQueryData(orderQueryOptions(id))`).
+(`context.queryClient.query({ ...orderQueryOptions(id), staleTime: 'static' })`;
+`ensureQueryData` below Query 5.102). `'static'` only at that call, never on the shared options.
 
 ## 2. Page hooks (`hooks/use-<page>-page.ts`)
 

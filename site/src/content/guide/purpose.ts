@@ -165,6 +165,14 @@ export const skillPurpose: Record<string, Purpose> = {
     why: t('A generic plugin would give generic advice. Setup detects your stack and installs standards written for it.', 'إضافة عامة تعطي نصائح عامة. الإعداد يكتشف تقنياتك ويثبّت معايير مكتوبة لها.'),
     when: t('Once in each project, and again to pick up new rules. Only you can start it.', 'مرة في كل مشروع، ومجدداً لجلب القواعد الجديدة. أنت وحدك من يشغّله.'),
   },
+  mode: {
+    why: t('A release freeze or a hotfix needs other limits than everyday work. One switch changes them, and a guard holds the part a hook can see.', 'تجميد الإصدار أو الإصلاح العاجل يحتاج حدوداً غير حدود العمل اليومي. مفتاح واحد يبدّلها، وحارس يمسك ما يراه الـ hook.'),
+    when: t('Before a release, during an incident, for a read-only audit, a prototype, or an app that is only maintained. Only you switch it.', 'قبل الإصدار أو أثناء عطل أو لتدقيق بالقراءة فقط أو نموذج أولي أو تطبيق في صيانة. أنت وحدك من يبدّله.'),
+  },
+  'upgrade-mode': {
+    why: t('A major upgrade fails quietly: the new API compiles while the behaviour changes. This proves each phase against a recorded baseline.', 'الترقية الكبيرة تفشل بصمت: الواجهة البرمجية الجديدة تُبنى بينما السلوك يتغير. هذه تثبت كل مرحلة مقابل خط أساس مسجّل.'),
+    when: t('A major version of a framework or library. A patch or a single small bump is a normal task.', 'إصدار رئيسي لإطار عمل أو مكتبة. أما الترقية الصغيرة فمهمة عادية.'),
+  },
 }
 
 export const agentPurpose: Record<string, Purpose> = {
@@ -208,9 +216,28 @@ export const agentPurpose: Record<string, Purpose> = {
     why: t('Green tests still ship broken screens. This role opens every changed page in both languages, sizes and themes.', 'قد تنجح الاختبارات والشاشات معطلة. هذا الدور يفتح كل صفحة تغيرت باللغتين والحجمين والسمتين.'),
     when: t('The last gate before you are asked to commit.', 'آخر بوابة قبل أن يُطلب منك الحفظ.'),
   },
+  'frontend-security-reviewer': {
+    why: t('A leak or an open redirect looks like normal code in a review. This role reports only what it can show an attack path for.', 'التسريب أو التحويل المفتوح يبدو شيفرة عادية في المراجعة. هذا الدور لا يبلّغ إلا عمّا يستطيع بيان طريق استغلاله.'),
+    when: t('Before a release, or when sign-in, redirects, secrets, headers or server code change.', 'قبل الإصدار، أو عند تغيّر الدخول أو التحويلات أو الأسرار أو الترويسات أو شيفرة الخادم.'),
+  },
+  'i18n-rtl-reviewer': {
+    why: t('A missing plural or a physical margin is invisible to whoever does not read that language. This role compares the languages of the project with each other.', 'صيغة جمع ناقصة أو هامش باتجاه ثابت لا يراها من لا يقرأ تلك اللغة. هذا الدور يقارن لغات المشروع ببعضها.'),
+    when: t('Text, translation files or direction changed, in a project with several languages or a right-to-left one.', 'تغيّر نص أو ملفات ترجمة أو اتجاه، في مشروع متعدد اللغات أو من اليمين إلى اليسار.'),
+  },
+  'upgrade-analyst': {
+    why: t('An upgrade planned from memory misses silent changes. This role reads the official guides and maps them to your files.', 'الترقية المخططة من الذاكرة تفوتها التغييرات الصامتة. هذا الدور يقرأ الأدلة الرسمية ويطابقها مع ملفاتك.'),
+    when: t('Before a major upgrade. Not for a routine minor update.', 'قبل ترقية رئيسية، وليس لتحديث صغير معتاد.'),
+  },
+  'seo-auditor': {
+    why: t('A page can look perfect and still tell search engines to stay out. This role reads what a crawler receives.', 'قد تبدو الصفحة مثالية وهي تطلب من محركات البحث ألا تفهرسها. هذا الدور يقرأ ما يستلمه الزاحف.'),
+    when: t('A public page changed, or before a launch. Not for a signed-in dashboard.', 'تغيّرت صفحة عامة، أو قبل الإطلاق، وليس للوحة خلف تسجيل الدخول.'),
+  },
 }
 
 export const rulePurpose: Record<string, Bilingual> = {
+  'shared/accessibility.md': t('So the app works by keyboard, by screen reader and at 320 pixels, in the places that get forgotten.', 'ليعمل التطبيق بلوحة المفاتيح وقارئ الشاشة وبعرض 320 بكسل، في المواضع التي تُنسى.'),
+  'shared/dependencies.md': t('So a package is checked before it runs on your machine and in your builds.', 'لتُفحص الحزمة قبل أن تعمل على جهازك وفي بنائك.'),
+  'shared/formatting.md': t('So an amount, a date or a search is right in every language and time zone.', 'ليصحّ المبلغ والتاريخ والبحث في كل لغة ومنطقة زمنية.'),
   'shared/git.md': t('So branches, commits and pull requests stay under your control.', 'لتبقى الفروع والحفظ وطلبات الدمج تحت سيطرتك.'),
   'shared/i18n.md': t('So no language is left behind and every key can be found.', 'حتى لا تتخلف لغة ويمكن العثور على كل مفتاح.'),
   'shared/naming.md': t('So the next person guesses a file’s name correctly the first time.', 'ليخمّن الشخص التالي اسم الملف صحيحاً من أول مرة.'),
@@ -219,8 +246,11 @@ export const rulePurpose: Record<string, Bilingual> = {
   'shared/react.md': t('So components stay thin, hooks stay correct and any session writes the same React.', 'لتبقى المكوّنات خفيفة والـ hooks صحيحة وتُكتب React بالطريقة نفسها في كل جلسة.'),
   'shared/rtl.md': t('So Arabic and English are both right by construction, not patched afterwards.', 'لتصح العربية والإنجليزية من البناء لا بالترقيع لاحقاً.'),
   'shared/scope.md': t('So the assistant neither stops halfway nor changes what you never asked for.', 'حتى لا يتوقف المساعد في المنتصف ولا يغيّر ما لم تطلبه.'),
+  'shared/security.md': t('So user input cannot become a script, a redirect or a leaked token.', 'حتى لا يتحول إدخال المستخدم إلى سكربت أو تحويل أو رمز مسرّب.'),
   'shared/styles.md': t('So colour, type and spacing come from your system and layouts do not jump.', 'ليأتي اللون والخط والمسافة من نظامك ولا يقفز التخطيط.'),
   'shared/testing.md': t('So tests catch real breakage without becoming slow or flaky.', 'لتلتقط الاختبارات الكسر الحقيقي دون أن تبطؤ أو تتذبذب.'),
+
+  'shared/typescript.md': t('So the typecheck really checks, whatever the TypeScript version.', 'ليفحص فحص الأنواع فعلاً، أياً كان إصدار TypeScript.'),
 
   'website/api-layer.md': t('So server and browser call the API safely, and an error is shown once.', 'ليستدعي الخادم والمتصفح الـ API بأمان ويظهر الخطأ مرة واحدة.'),
   'website/data-loading.md': t('So data is in the first HTML and never fetched twice.', 'لتكون البيانات في أول HTML ولا تُجلب مرتين.'),
@@ -244,6 +274,8 @@ export const rulePurpose: Record<string, Bilingual> = {
   'react/auth.md': t('So tokens, guards and sign-out are handled one way in any stack.', 'لتُدار الرموز والحراسة والخروج بطريقة واحدة في أي تقنية.'),
   'react/data-and-state.md': t('So server data and interface state are never mixed up.', 'حتى لا تختلط بيانات الخادم بحالة الواجهة.'),
   'react/forms.md': t('So forms are labelled and validated whatever library you use.', 'لتكون النماذج مسمّاة ومتحققاً منها أياً كانت مكتبتك.'),
+  'react/nextjs.md': t('So Next.js server code is treated as public and cached data never crosses users.', 'لتُعامل شيفرة خادم Next.js كشيفرة عامة ولا تنتقل البيانات المخزنة بين المستخدمين.'),
+  'react/react-router.md': t('So a guard on a parent route really protects what is under it.', 'ليحمي الحارس على المسار الأب ما تحته فعلاً.'),
   'react/routing.md': t('So pages follow the router you really have, not the one the assistant assumes.', 'لتتبع الصفحات الموجّه الموجود فعلاً لا الذي يفترضه المساعد.'),
   'react/structure.md': t('So new code lands in a known shape, and a refactor has a target.', 'لتقع الشيفرة الجديدة في شكل معروف ويكون لإعادة الهيكلة هدف.'),
 }
@@ -254,6 +286,7 @@ export const hookPurpose: Record<HookEvent, Bilingual> = {
   PreToolUse: t('An instruction can be forgotten. A refusal before the tool runs cannot, so the known dangerous actions are stopped here.', 'التعليمة قد تُنسى، أما الرفض قبل تشغيل الأداة فلا. لذلك تُوقَف الأفعال الخطرة المعروفة هنا.'),
   PostToolUse: t('An error is cheapest to fix in the second it is written. This returns it to the assistant at once.', 'أرخص وقت لإصلاح الخطأ ثانية كتابته. هذا يعيده إلى المساعد فوراً.'),
   PostToolUseFailure: t('One failure is noise and five are a pattern. This keeps the record that shows the difference.', 'فشل واحد ضجيج وخمسة نمط. هذا يحفظ السجل الذي يُظهر الفرق.'),
+  SubagentStart: t('A subagent never sees the session’s opening briefing. Without this it would not know the branch rules, the live hosts or the mode.', 'الوكيل لا يرى تعريف بداية الجلسة. من دون هذا لن يعرف قواعد الفروع ولا النطاقات الحية ولا النمط.'),
   SubagentStop: t('Broken code from an agent would spread into the main session. The agent has to face the typecheck first.', 'الشيفرة المعطلة من وكيل تنتشر في الجلسة الرئيسية. على الوكيل أن يواجه فحص الأنواع أولاً.'),
   Notification: t('A long run waiting for your answer looks like one still working. An alert tells you which.', 'التشغيل الطويل المنتظر جوابك يشبه الذي ما زال يعمل. التنبيه يخبرك أيهما.'),
   Stop: t('The assistant says done before it is. This makes it prove that with your own checks, then be read by another agent.', 'يقول المساعد انتهيت قبل أن ينتهي. هذا يلزمه بالإثبات بفحوصك، ثم يقرؤه وكيل آخر.'),

@@ -34,7 +34,8 @@ export interface SeoInput {
   title: string
   description?: string
   path?: string                 // canonical path; omit on noindex pages
-  image?: string                // absolute or site-relative
+  image?: string                // absolute or site-relative; change the URL when the image changes
+  imageSize?: { width: number; height: number } // of `image`; defaults to the default card's
   type?: 'website' | 'product' | 'article'
   locale?: string               // i18n.language
   noindex?: boolean
@@ -46,6 +47,7 @@ export function seo(input: SeoInput) {
   const image = absoluteUrl(input.image ?? DEFAULT_OG_IMAGE)
   const url = input.path ? canonicalUrl(input.path) : undefined
   const ogLocale = input.locale === 'en' ? OG_LOCALE.en : OG_LOCALE.ar
+  const imageSize = input.imageSize ?? (input.image ? undefined : { width: 1200, height: 630 })
 
   const meta = [
     { title },
@@ -57,6 +59,12 @@ export function seo(input: SeoInput) {
           { property: 'og:title', content: input.title },
           { property: 'og:type', content: input.type ?? 'website' },
           { property: 'og:image', content: image },
+          ...(imageSize
+            ? [
+                { property: 'og:image:width', content: String(imageSize.width) },
+                { property: 'og:image:height', content: String(imageSize.height) },
+              ]
+            : []),
           { property: 'og:locale', content: ogLocale },
           ...(url ? [{ property: 'og:url', content: url }] : []),
           ...(input.description ? [{ property: 'og:description', content: input.description }] : []),
@@ -73,8 +81,11 @@ export function seo(input: SeoInput) {
     ? []
     : (input.jsonLd ?? []).map((data) => ({
         type: 'application/ld+json',
-        // Escape "<" so a value can never close the script tag.
-        children: JSON.stringify(data).replace(/</g, '\\u003c'),
+        // Escape "<" and the two line separators so a value can never close the script tag or break it.
+        children: JSON.stringify(data)
+          .replace(/</g, '\\u003c')
+          .replace(/\u2028/g, '\\u2028')
+          .replace(/\u2029/g, '\\u2029'),
       }))
 
   return { meta, links, scripts }
@@ -134,17 +145,6 @@ export function productJsonLd(input: {
   }
 }
 
-export function faqJsonLd(items: Array<{ question: string; answer: string }>) {
-  return {
-    '@context': CONTEXT,
-    '@type': 'FAQPage',
-    mainEntity: items.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
-    })),
-  }
-}
 ```
 
 `JSON.stringify` drops `undefined` fields, so optional values disappear
@@ -173,22 +173,24 @@ ${urls.map((path) => `  <url><loc>${escapeXml(canonicalUrl(path))}</loc></url>`)
 ```
 
 Only canonical, indexable URLs. Add `<lastmod>` only when the backend gives
-a real modification date. Over 50,000 URLs → a sitemap index.
+a real modification date; no `priority` or `changefreq`. Over 50,000 URLs → a sitemap index.
 
 ## Robots route `src/routes/robots[.]txt.ts`
 
 ```ts
 GET: () => {
   const indexable = serverEnv().SITE_INDEXABLE === 'true' // false on UAT and previews
-  const body = indexable
-    ? ['User-agent: *', 'Allow: /', ...PRIVATE_PATHS.map((p) => `Disallow: ${p}`), '', `Sitemap: ${SITE_URL}/sitemap.xml`].join('\n')
-    : 'User-agent: *\nDisallow: /'
+  // Nothing is disallowed: a crawler blocked here would never read the noindex of a private or UAT page.
+  const body = ['User-agent: *', 'Allow: /', ...(indexable ? ['', `Sitemap: ${SITE_URL}/sitemap.xml`] : [])].join('\n')
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
 }
 ```
 
-`PRIVATE_PATHS` (auth, cart, checkout, account) is one constant shared with
-the tests. Don't block AI crawlers unless the business asks.
+Where `SITE_INDEXABLE` is false every response also sends `X-Robots-Tag: noindex` (request middleware in
+`src/start.ts`), and the host puts a login or an IP allow-list in front.
+
+`PRIVATE_PATHS` (auth, cart, checkout, account) is one constant for the tests
+that assert `noindex` and absence from the sitemap. Don't block AI crawlers unless the business asks.
 
 ## GEO (being quoted by AI answers)
 

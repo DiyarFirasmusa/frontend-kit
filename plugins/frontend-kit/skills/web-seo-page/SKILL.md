@@ -1,6 +1,6 @@
 ---
 name: web-seo-page
-description: Website profile: SEO and share previews for one page of a TanStack Start site — head() title and description, canonical URL, Open Graph and Twitter tags so WhatsApp/Telegram/X/Facebook previews show the right title and image, JSON-LD (Product, BreadcrumbList, Organization, WebSite, FAQPage), noindex for private pages, robots.txt and sitemap routes, readable slugs with 301 on rename, hreflang. Use when the user says SEO, meta tags, title, description, share preview, WhatsApp/Telegram preview shows wrong image, og:image, structured data, rich results, Google, sitemap, robots, canonical, noindex, or adds a public page.
+description: "Website profile: SEO and share previews for one page of a TanStack Start site — head() title and description, canonical URL, Open Graph and Twitter tags so WhatsApp/Telegram/X/Facebook previews show the right title and image, JSON-LD (Product, BreadcrumbList, Organization, WebSite), noindex for private pages, robots.txt and sitemap routes, readable slugs with 301 on rename, hreflang. Use when the user says SEO, meta tags, title, description, share preview, WhatsApp/Telegram preview shows wrong image, og:image, structured data, rich results, Google, sitemap, robots, canonical, noindex, or adds a public page."
 ---
 
 # SEO for a page (TanStack Start)
@@ -24,8 +24,8 @@ create from `references/seo-lib.md` first, with tests.
 | Home | title, description, canonical `/`, `organizationJsonLd()` + `websiteJsonLd()` |
 | Listing / category | title, description, canonical (filters collapse), `breadcrumbJsonLd` |
 | Detail (product, article) | data-driven title/description/image, canonical from the item's slug, `productJsonLd` / `articleJsonLd` + `breadcrumbJsonLd`, `og:type` product/article |
-| Content (about, FAQ, help) | title, description, canonical, `faqJsonLd` only if the Q&A is visible |
-| Private (auth, cart, checkout, account) / fallback | `seo({ title, noindex: true })`, `X-Robots-Tag` in `headers()`, `Disallow` in robots |
+| Content (about, FAQ, help) | title, description, canonical; visible Q&A without `FAQPage` (Google retired it) |
+| Private (auth, cart, checkout, account) / fallback | `seo({ title, noindex: true })`, `X-Robots-Tag` in `headers()`; never disallowed in robots |
 
 ## 2. Make the data available on the server
 
@@ -76,8 +76,10 @@ export function productDetailHead(loaderData: ProductDetailLoaderData | undefine
 ## 5. Crawl files
 
 - Public page → listed by the sitemap route (`src/routes/sitemap[.]xml.ts`).
-- Private page → `Disallow` in robots, never in the sitemap.
-- UAT / preview environments: robots answers `Disallow: /`.
+- Private page → `noindex`, never in the sitemap, not disallowed in robots (a blocked crawler never reads `noindex`).
+- UAT / preview environments: a login or IP allow-list (recommend, deploy owns it), plus `X-Robots-Tag: noindex`.
+  `Disallow: /` does not keep a URL out of the index.
+- A product sold on the page: price over 0, shipping and return policy when the backend has them.
 
 ## 6. Markup on the page
 

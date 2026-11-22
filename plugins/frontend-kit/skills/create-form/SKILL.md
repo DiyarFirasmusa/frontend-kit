@@ -35,6 +35,8 @@ email) instead of new regexes.
 ```ts
 export function useAddressForm({ onDone }: { onDone: () => void }) {
   const createAddress = useCreateAddress()
+  // With .default, .transform or z.coerce in the schema, input and output differ:
+  // useForm<z.input<typeof schema>, unknown, z.output<typeof schema>>, and submit gets the output.
   const form = useForm<AddressValues>({
     resolver: zodResolver(addressSchema),
     defaultValues: defaultAddressForm,

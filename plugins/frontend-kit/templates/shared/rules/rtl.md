@@ -1,7 +1,9 @@
 ---
 paths:
-  - "**/src/**/*.{jsx,tsx,css}"
-  - "app/**/*.{jsx,tsx,css}"
+  - "**/src/**/*.{jsx,tsx,css,scss,sass,less}"
+  - "app/**/*.{jsx,tsx,css,scss,sass,less}"
+  - "{components,pages}/**/*.{jsx,tsx,css,scss,sass,less}"
+  - "index.html"
 ---
 
 # RTL and LTR
@@ -30,11 +32,13 @@ it — never hardcode `dir="rtl"` or `dir="ltr"` on a layout container.
 | ----- | -- |
 | `pl-4`, `pr-4` | `ps-4`, `pe-4` |
 | `ml-2`, `mr-2` | `ms-2`, `me-2` |
-| `left-0`, `right-0` | `start-0`, `end-0` |
+| `left-0`, `right-0` | Tailwind 4.2+: `inset-s-0`, `inset-e-0`; older: `start-0`, `end-0` |
 | `text-left`, `text-right` | `text-start`, `text-end` |
 | `border-l`, `border-r` | `border-s`, `border-e` |
 | `rounded-l-*`, `rounded-r-*` | `rounded-s-*`, `rounded-e-*` |
 | `[[dir=rtl]_&]:pl-6 [[dir=ltr]_&]:pr-6` | `pe-6` |
+
+Read the installed Tailwind version first: below 4.2 `inset-s-*` produces no CSS at all.
 
 In CSS: `padding-inline-start`, `margin-inline-end`, `inset-inline-start`.
 Physical `left` / `right` only for things that are genuinely visual
@@ -57,10 +61,9 @@ Carousels, sliders and swipe gestures read the computed direction
 
 ## Inputs
 
-- A free-text input follows what the user types: `dir="auto"` once it has a
-  value. An empty field has no content to infer from and browsers fall back
-  to LTR, which left-aligns an Arabic placeholder — so while empty it uses the
-  UI direction (`i18n.dir()`).
+- A free-text input follows what the user types and, while empty, the UI direction. One mechanism does both: every input
+  renders `placeholder=" "` and the base styles apply `unicode-bidi: plaintext` to `input:not(:placeholder-shown)`
+  (`theme.css`). No `dir="auto"` on inputs: it left-aligns an empty Arabic field.
 - Content that is always Latin or digits — phone numbers, OTP, card numbers,
   emails, codes, URLs — gets `dir="ltr"` on the value. Keep its placeholder
   in the UI direction with `rtl:placeholder-shown:[direction:rtl]` on the input.
@@ -72,9 +75,14 @@ Carousels, sliders and swipe gestures read the computed direction
 ## Tables and charts (dashboard)
 
 Columns follow reading order: the first column sits at the start (right in
-Arabic). Numeric columns align to the end and use `tabular-nums`. Whether a
-chart's time axis mirrors in Arabic is a design decision — follow the frame,
-or ask.
+Arabic). Numeric columns align to the end and use `tabular-nums`. Charts and time axes stay left-to-right (`dir="ltr"` on
+the chart) with Arabic labels, unless `project.md` records another decision.
+
+## Component libraries
+
+- Base UI and Radix read direction from context, not from the DOM: without it arrow keys and popups behave as LTR. Wrap
+  the app once in `DirectionProvider` (Base UI: `direction`, Radix: `dir`) with the value that sets `<html dir>`, and
+  change it with the language.
 
 ## Mixed content
 
@@ -84,6 +92,8 @@ URLs stay LTR inside Arabic text:
 ```tsx
 <span dir="ltr" className="tabular-nums">+1 555 010 0199</span>
 ```
+
+User text of unknown direction (a name, a comment, a title from the API) inside a sentence goes in `<bdi>`.
 
 Numbers stay Western digits in both languages unless `project.md` says
 otherwise; use `tabular-nums` for prices and counters. Format money and dates
@@ -97,8 +107,10 @@ direction matters.
 
 ## Details that cost time
 
-- **Free text direction.** An input follows what the user types and the UI direction while empty: every input
-  renders `placeholder=" "` and the base styles apply `unicode-bidi: plaintext` to `input:not(:placeholder-shown)`
-  (see `theme.css`). Latin-only fields (email, URL, SKU) set `dir="ltr"`.
+- **Physical transforms and origins do not mirror:** `translate-x-*`, `origin-left`, `bg-left` and `bg-linear-to-r` keep
+  their direction. Pair them with `rtl:` (`rtl:-translate-x-4`), or move the element with a logical margin.
+- **v4 `space-x-*` and `divide-x` are already logical.** `rtl:space-x-reverse` (a v3 habit) reverses them twice; delete it.
+- **`scrollLeft` is 0 at the start and negative in RTL.** Compare with 0 for the start; use `Math.abs(scrollLeft)` for
+  distance and for "reached the end".
+- **`uppercase` does nothing to Arabic,** and letter-spacing stays 0 on it.
 - **One mirror utility** for directional icons and arrows: `rtl:-scale-x-100`. Not `rotate-180`.
-- **Charts and time axes** stay left-to-right (`dir="ltr"` on the chart) with Arabic labels; do not ask each time.

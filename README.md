@@ -5,9 +5,9 @@ conventions, workflows and guard rails a good frontend team would write down, an
 
 | What | Count |
 | ---- | ----- |
-| Skills (create a component, form, table, route, store, hook; verify, review, refactor, commit, ...) | 39 |
-| Agents (reviewer, bug hunter, accessibility auditor, planner, test engineer, ...) | 10 |
-| Hooks (guards, format + lint on edit, quality gate, code review, skill suggestions) | 9 events |
+| Skills (create a component, form, table, route, store, hook; verify, review, refactor, commit, modes, ...) | 41 |
+| Agents (reviewer, bug hunter, security, SEO and accessibility auditors, planner, test engineer, ...) | 14 |
+| Hooks (guards, format + lint on edit, quality gate, code review, skill suggestions) | 10 events |
 | Project profiles | `website`, `dashboard` (Vite, Next.js or TanStack Start), `react` (any stack), `fullstack` (site + admin in one tree) |
 
 ## Install
@@ -18,9 +18,10 @@ conventions, workflows and guard rails a good frontend team would write down, an
 /frontend-kit:setup
 ```
 
-Restart Claude Code after setup. Requirements: `jq`, Node 20+, git.
+Restart Claude Code after setup. Requirements: `jq`, Node 20+, git. The guards need Claude Code 2.1.295 or later: earlier
+versions let a call through when a guard times out or cannot start.
 
-`/frontend-kit:setup` asks what you are doing (new project, existing project, refactor) and what kind of React project it is,
+`/frontend-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of React project it is,
 detects the stack (package manager, framework, router, tests, linter, formatter, i18n, source folders), shows **one proposal**
 and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json`,
 adapted to what it found. Projects set up this way update the plugin on their own (`autoUpdate`).
@@ -37,6 +38,13 @@ adapted to what it found. Projects set up this way update the plugin on their ow
 The guards are a guard rail, not a sandbox: they read shell commands the way the shell does, but not what a script file, a
 package script or a program in another language does. Keep branch protection on.
 
+## Working modes
+
+`/frontend-kit:mode <name>` turns one on: `maintenance`, `refactor`, `upgrade`, `freeze` for the project, `hotfix`,
+`read-only`, `prototype` for this checkout. `status` shows what is on and what is enforced, `off` leaves it. A project in
+the default mode (`existing`) or without a config gets no extra rule or refusal. The mode guard holds the edit tools; in
+the shell it catches common forms only.
+
 ## Refactor mode
 
 `/frontend-kit:refactor-mode audit` measures a project against the standards, writes a phased plan, and `next` carries out one
@@ -52,7 +60,7 @@ phase at a time with behaviour frozen and the gate green in between. See [`examp
 | [`CHANGELOG.md`](CHANGELOG.md) | what changed in each version |
 
 Measured so far: on two small tasks in a Vite project, code written with the kit scored 90/90 on a nine-point rubric against
-81/90 without it, at about 1.5 times the cost; at 1.14.0, 60 of 62 development evals passed (average score 97.1%).
+81/90 without it, at about 1.5 times the cost; at 1.14.0, 60 of the then 62 passed (average score 97.1%). The suite now has a total of 66 development evals; the four newest have not been run.
 Small samples from one project: a direction, not proof.
 
 Third-party skills and their licences: [`plugins/frontend-kit/THIRD_PARTY_NOTICES.md`](plugins/frontend-kit/THIRD_PARTY_NOTICES.md).

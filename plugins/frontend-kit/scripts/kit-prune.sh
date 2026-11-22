@@ -58,6 +58,16 @@ for file in "$RULES"/*.md; do
     owner="$other"
     cmp -s "$file" "$template" && identical=1
   done
+  # A dashboard variant's own rule (structure.md, framework.md) stays, unless it is another profile's unchanged file.
+  if [ "$PROFILE" = dashboard ] && [ "$identical" -eq 0 ] && compgen -G "$TEMPLATES/dashboard/variants/*/rules/$name" >/dev/null; then
+    continue
+  fi
+  # admin-<name>.md is a fullstack project's scoped copy of a dashboard rule.
+  base="${name#admin-}"
+  if [ -z "$owner" ] && [ "$base" != "$name" ] && [ -f "$TEMPLATES/dashboard/rules/$base" ]; then
+    owner="fullstack"
+    cmp -s "$file" <(bash "$HERE/kit-scope-rules.sh" admin "$TEMPLATES/dashboard/rules/$base" /dev/stdout) && identical=1
+  fi
   rel=".claude/rules/$name"
   if [ -z "$owner" ]; then
     echo "YOURS $rel"

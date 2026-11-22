@@ -9,6 +9,7 @@ The kit is developed **against real apps, not in the abstract**. Throw-away apps
 2. Friction (wrong rule, missing skill, hook false-positive, template gap) → one line in that app's `FINDINGS.md` with a file path and a suggested fix.
 3. Fix it **in `plugins/`**, never only in the playground copy. Re-run setup in the playground (or diff the templates) to pull it back.
 4. Prove it: `KIT_TEST_PROJECT=$PWD/playground/website-start bash plugins/frontend-kit/scripts/test-hooks.sh` (and `dashboard-vite`; the path must be absolute).
+   A change to a working mode also needs `bash plugins/frontend-kit/scripts/mode-test.sh`.
 5. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json` **only** (when set in both places `plugin.json` wins silently and `claude plugin validate` warns; users get an update only when the version changes). Run `bash scripts/validate-repo.sh` and `claude plugin validate . --strict` (root, then each `plugins/<name>`; the root run does not open the plugins' files), commit only `plugins/`, `docs/`, `scripts/`, `.github/`, root files.
 6. A push to `main` publishes the website, which is built from `plugins/` and `examples/`: run `cd site && npm ci && npm run build`
    first. It fails when a skill, agent, hook event, rule file or `examples/` project has no copy there, or a demo verdict of the

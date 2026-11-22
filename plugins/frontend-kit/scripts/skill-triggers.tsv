@@ -26,6 +26,8 @@ vercel-react-best-practices	(re-?renders?|memoi[sz]|waterfall|bundle size|react 
 performance	(\bslow\b|speed up|load time|\blcp\b|layout shift|\bcls\b|lighthouse|faster|performance)
 playwright-best-practices	(playwright|\be2e\b|end.to.end|flaky|page object|\baxe\b|test ?id)
 typescript-advanced-types	(generics?|conditional type|mapped type|utility type|type-?safe|template literal type)
+mode	((freeze|maintenance|hotfix|read-?only|prototype) mode|code freeze)
+upgrade-mode	(upgrade mode|(upgrade|migrate)( us| the app)?( to)? (react|next|tailwind|tanstack|vue|nuxt|svelte|angular|vite)[^,.;]* [0-9])
 refactor-mode	(refactor mode|restructure|to (the )?standards|best practices|reorgani[sz]e)
 refactor	(refactor|split (the )?(file|component)|clean ?up|duplicat|move logic)
 review	(\breview\b|code review|check my (code|changes|branch))

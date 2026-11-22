@@ -27,7 +27,24 @@ add() { OUT="$(printf '%s' "$OUT" | jq --arg k "$1" --arg v "$2" '. + {($k): $v}
 
 if has typescript; then
   # A solution-style tsconfig (create-vite's default) is checked with tsc -b; tsc --noEmit on it checks nothing.
-  if grep -q '"references"' "$PROJECT/tsconfig.json" 2>/dev/null; then add typecheck "tsc -b"; else add typecheck "tsc --noEmit"; fi
+  SOLUTION=false
+  grep -q '"references"' "$PROJECT/tsconfig.json" 2>/dev/null && SOLUTION=true
+  # tsc can't read .vue or .svelte files, and a typecheck script wins over detection: propose the stack's own checker.
+  if has vue-tsc; then
+    if [ "$SOLUTION" = true ]; then add typecheck "vue-tsc -b"; else add typecheck "vue-tsc --noEmit"; fi
+  elif has svelte-check; then
+    if [ "$SOLUTION" = false ]; then add typecheck "svelte-check --tsconfig ./tsconfig.json"
+    elif [ -f "$PROJECT/tsconfig.app.json" ]; then add typecheck "svelte-check --tsconfig ./tsconfig.app.json"
+    else add typecheck "svelte-check --no-tsconfig"; fi
+  else
+    if [ "$SOLUTION" = true ]; then CHECK_TYPES="tsc -b"; else CHECK_TYPES="tsc --noEmit"; fi
+    # Generated route types need typegen first (Next 15.5+, React Router framework mode).
+    NEXT_V="$(jq -r '((.dependencies // {}) + (.devDependencies // {})).next // ""' "$PKG" | grep -oE '[0-9]+(\.[0-9]+)?' | head -n1)"
+    if has next && awk -v v="${NEXT_V:-99}" 'BEGIN { n = split(v, p, "."); exit !(p[1] + 0 > 15 || (p[1] + 0 == 15 && (n < 2 || p[2] + 0 >= 5))) }'; then
+      CHECK_TYPES="next typegen && $CHECK_TYPES"
+    elif has @react-router/dev; then CHECK_TYPES="react-router typegen && $CHECK_TYPES"; fi
+    add typecheck "$CHECK_TYPES"
+  fi
 fi
 if has oxlint; then add lint "oxlint --fix"; add lint:check "oxlint"
 elif has eslint; then add lint "eslint --fix ."; add lint:check "eslint ."

@@ -18,13 +18,14 @@ An empty line is a decision still open: ask the user before inventing the answer
 - Backend: base URL env var, response envelope, error shape, paging shape, OpenAPI file if any:
 - Auth model (website: server-side session or browser-held token; dashboard: where the refresh token lives):
 - Critical flows that must stay covered by tests (the domain rules):
+- Time zone, browser floor, and where relevant CSP, router mode, chart axis, security floors:
 - Paths Claude must not touch beyond the kit's defaults:
 
 ## Minimum versions the rules were checked against (November 2026)
 
-Rules name APIs of these majors; when the project is older, check the API before copying a snippet.
+Only for packages the project has; when it is older, check the API before copying a snippet.
 Node 22.12+, Next.js 16.4 (App Router; read `node_modules/next/dist/docs/` first, see `AGENTS.md`), React 19.3,
-TypeScript 5, eslint 9 (`eslint-config-next`), Tailwind 4.3. Package manager: npm.
+TypeScript 5.9+, eslint 9 (`eslint-config-next`), Tailwind 4.3. Package manager: npm.
 
 ## Local quirks
 

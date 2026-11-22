@@ -132,7 +132,7 @@ export const en: Copy = {
     title: 'Install it in three commands.',
     lead: 'Run them inside Claude Code, in your project. Restart it after setup.',
     steps: ['Add the marketplace', 'Install the plugin', 'Set up the project'],
-    needs: 'Needs jq, Node 20 or newer, and git.',
+    needs: 'Needs Claude Code 2.1.295 or newer, jq, Node 20 or newer, and git.',
     copy: 'Copy',
     copied: 'Copied',
     failed: 'Press copy',

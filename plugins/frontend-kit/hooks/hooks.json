@@ -3,7 +3,7 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear|compact",
+        "matcher": "startup|resume|clear|compact|fork",
         "hooks": [
           {
             "type": "command",
@@ -25,18 +25,35 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/skill-suggest.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-prompt.sh",
+            "timeout": 5
           }
         ]
       }
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "^(Bash|Monitor|PowerShell|Edit|Write|MultiEdit|NotebookEdit|Skill|EnterWorktree|mcp__.*)$",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-bash.sh",
-            "timeout": 10
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-guard.sh",
+            "timeout": 10,
+            "onFailure": "block"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Monitor|PowerShell|mcp__terminal__run_in_terminal",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-bash.sh",
+            "timeout": 10,
+            "onFailure": "block"
           },
           {
             "type": "command",
@@ -46,21 +63,33 @@
         ]
       },
       {
-        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Read",
+        "matcher": "^(Edit|Write|MultiEdit|NotebookEdit|Read|Grep|Glob|LSP|mcp__(plugin_[A-Za-z0-9_-]+_)?(chrome-devtools|playwright)__.+|mcp__claude-in-chrome__file_upload)$",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-paths.sh",
-            "timeout": 10
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-paths.sh",
+            "timeout": 10,
+            "onFailure": "block"
           }
         ]
       },
       {
-        "matcher": "WebFetch|mcp__chrome-devtools__navigate_page|mcp__chrome-devtools__new_page|mcp__playwright__browser_navigate|mcp__claude-in-chrome__navigate|mcp__claude-in-chrome__tabs_create_mcp",
+        "matcher": "^(WebFetch|mcp__(plugin_[A-Za-z0-9_-]+_)?chrome-devtools__(navigate|navigate_page|new_page|install_pwa|launch_pwa|mock_network)|mcp__(plugin_[A-Za-z0-9_-]+_)?playwright__(browser_navigate|browser_tabs)|mcp__claude-in-chrome__(navigate|tabs_create_mcp|browser_batch)|mcp__(remote-devices__)?Claude_Browser__(navigate|preview_start|browser_batch))$",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-url.sh",
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-url.sh",
+            "timeout": 10,
+            "onFailure": "block"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/bash-edit-track.sh",
             "timeout": 10
           }
         ]
@@ -75,6 +104,16 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/post-edit.sh",
             "timeout": 60,
             "statusMessage": "Formatting and linting the edited file"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/bash-edit-track.sh",
+            "timeout": 10
           }
         ]
       }
@@ -92,7 +131,7 @@
     ],
     "SubagentStop": [
       {
-        "matcher": "(frontend-kit:)?(frontend-dev|test-engineer)",
+        "matcher": "^(frontend-kit:)?(frontend-dev|test-engineer|refactor-architect)$",
         "hooks": [
           {
             "type": "command",
@@ -132,6 +171,32 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/session-end.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/subagent-context.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-subagent.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "^(frontend-kit:)?refactor-architect$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/subagent-gate.sh",
             "timeout": 10
           }
         ]

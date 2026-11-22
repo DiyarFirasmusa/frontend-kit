@@ -20,6 +20,7 @@ export type HookEvent =
   | 'PostToolUse'
   | 'PostToolUseFailure'
   | 'SubagentStop'
+  | 'SubagentStart'
   | 'Notification'
   | 'Stop'
   | 'SessionEnd'

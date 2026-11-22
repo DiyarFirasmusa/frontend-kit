@@ -35,12 +35,12 @@ export const agentGuides: Record<string, AgentGuide> = {
     checks: [
       t('Hierarchy, spacing and type.', 'التسلسل والمسافات والخط.'),
       t('Tokens, light and dark parity.', 'رموز التصميم وتطابق الفاتح والداكن.'),
-      t('Arabic and English, phone first, every state.', 'العربية والإنجليزية والجوال أولاً وكل الحالات.'),
+      t('Each language, phone first, every state.', 'كل لغة والجوال أولاً وكل الحالات.'),
     ],
     returns: t('Issues with exact classes, before and after.', 'ملاحظات بالأصناف الدقيقة قبل وبعد.'),
   },
   'test-engineer': {
-    plain: t('Writes the tests for a finished change and runs them until they are green.', 'يكتب اختبارات التغيير المنتهي ويشغّلها حتى تنجح.'),
+    plain: t('Writes the tests for a finished change and runs them. It also repairs failing or flaky tests.', 'يكتب اختبارات التغيير المنتهي ويشغّلها، ويصلح الاختبارات الفاشلة أو المتذبذبة.'),
     ask: t('add missing tests for the cart', 'أضف اختبارات السلة الناقصة'),
     checks: [
       t('Unit tests for logic.', 'اختبارات وحدة للمنطق.'),
@@ -63,9 +63,9 @@ export const agentGuides: Record<string, AgentGuide> = {
     plain: t('The senior reviewer. It runs by itself after the quality gate passes.', 'المراجع الأقدم، ويعمل تلقائياً بعد نجاح بوابة الجودة.'),
     ask: t('review my branch', 'راجع فرعي'),
     checks: [
-      t('Correctness, types and React patterns.', 'الصحة والأنواع وأنماط React.'),
+      t('Correctness, types and your project patterns.', 'الصحة والأنواع وأنماط مشروعك.'),
       t('API layer and your domain rules.', 'طبقة الـ API وقواعد مجالك.'),
-      t('SEO, accessibility, RTL and speed.', 'البحث والوصول والاتجاه والسرعة.'),
+      t('A first pass on security, SEO, access, direction and speed.', 'نظرة أولى على الأمان والبحث والوصول والاتجاه والسرعة.'),
     ],
     returns: t('Blocking issues, should-fix items and suggestions. It never edits.', 'مشاكل مانعة وما ينبغي إصلاحه واقتراحات، ولا يعدّل أبداً.'),
   },
@@ -91,7 +91,7 @@ export const agentGuides: Record<string, AgentGuide> = {
   },
   'refactor-architect': {
     plain: t('Leads restructures bigger than one component.', 'يقود إعادة الهيكلة الأكبر من مكوّن.'),
-    ask: t('move the project to feature folders', 'انقل المشروع إلى مجلدات الميزات'),
+    ask: t('split the checkout feature into smaller files', 'قسّم ميزة الدفع إلى ملفات أصغر'),
     checks: [
       t('Maps every importer of what moves.', 'يحصر كل مستورد لما سيُنقل.'),
       t('Writes the plan and waits for approval.', 'يكتب الخطة وينتظر الموافقة.'),
@@ -105,8 +105,48 @@ export const agentGuides: Record<string, AgentGuide> = {
     checks: [
       t('Every automated check and the build.', 'كل الفحوص الآلية والبناء.'),
       t('The diff against the rules.', 'التغييرات مقابل القواعد.'),
-      t('Each changed page in both languages, sizes and themes.', 'كل صفحة تغيرت باللغتين والمقاسين والمظهرين.'),
+      t('Each changed page in every language, size and theme.', 'كل صفحة تغيرت بكل لغة ومقاس ومظهر.'),
     ],
     returns: t('Pass or fail with steps to reproduce. It never fixes.', 'نجاح أو فشل بخطوات التكرار، ولا يصلح شيئاً.'),
+  },
+  'frontend-security-reviewer': {
+    plain: t('Reads your code for security and privacy holes before a release. It reports and does not fix.', 'يبحث في الشيفرة عن ثغرات الأمان والخصوصية قبل الإصدار، ويبلّغ ولا يصلح.'),
+    ask: t('have frontend-security-reviewer check this before the release', 'اجعل frontend-security-reviewer يفحص هذا قبل الإصدار'),
+    checks: [
+      t('Reads resolved versions and secrets in client code.', 'يقرأ الإصدارات الفعلية والأسرار في شيفرة المتصفح.'),
+      t('Follows input to HTML, redirects and server functions.', 'يتتبّع المدخلات إلى HTML وإعادة التوجيه ودوال الخادم.'),
+      t('Checks tokens, headers, trackers and logs.', 'يفحص الرموز والترويسات وأدوات التتبع والسجلات.'),
+    ],
+    returns: t('Findings with file, line and attack scenario, plus what it did not check.', 'نتائج بالملف والسطر وسيناريو الهجوم، مع ما لم يفحصه.'),
+  },
+  'i18n-rtl-reviewer': {
+    plain: t('Checks that the languages of your app match: every text, every plural form and the direction of the layout.', 'يتأكد أن لغات تطبيقك متطابقة: كل نص وكل صيغة جمع واتجاه التخطيط.'),
+    ask: t('have i18n-rtl-reviewer check the new text', 'اجعل i18n-rtl-reviewer يراجع النص الجديد'),
+    checks: [
+      t('Compares the languages and their plural forms.', 'يقارن اللغات وصيغ الجمع.'),
+      t('Finds text outside translations.', 'يجد النصوص خارج ملفات الترجمة.'),
+      t('Checks direction, icons, numbers and dates.', 'يفحص الاتجاه والأيقونات والأرقام والتواريخ.'),
+    ],
+    returns: t('Findings with the line and the fix, plus what it did not check.', 'نتائج بالسطر والإصلاح، مع ما لم يفحصه.'),
+  },
+  'upgrade-analyst': {
+    plain: t('Plans a major version upgrade file by file, before anything changes.', 'يخطط الترقية الكبيرة ملفاً ملفاً قبل أن يتغير أي شيء.'),
+    ask: t('have upgrade-analyst plan React 19', 'اجعل upgrade-analyst يخطط الترقية إلى React 19'),
+    checks: [
+      t('Reads the official guide of every major it crosses.', 'يقرأ الدليل الرسمي لكل إصدار رئيسي يمرّ به.'),
+      t('Finds breaking and silent changes in your code.', 'يجد التغييرات الكاسرة والصامتة في شيفرتك.'),
+      t('Names the check for each phase.', 'يحدد فحص كل مرحلة.'),
+    ],
+    returns: t('A phased plan with files, commands it did not run and open questions.', 'خطة على مراحل بالملفات والأوامر التي لم ينفّذها والأسئلة المفتوحة.'),
+  },
+  'seo-auditor': {
+    plain: t('Checks a public page the way Google reads it: status, indexing, titles and links.', 'يفحص الصفحة العامة كما تقرأها Google: الحالة والفهرسة والعناوين والروابط.'),
+    ask: t('have seo-auditor check the product page', 'اجعل seo-auditor يفحص صفحة المنتج'),
+    checks: [
+      t('Reads the server HTML and status.', 'يقرأ HTML الخادم وحالته.'),
+      t('Checks indexing, canonical and languages.', 'يفحص الفهرسة والرابط الأساسي واللغات.'),
+      t('Checks sitemap, robots and structured data.', 'يفحص خريطة الموقع وrobots والبيانات المنظمة.'),
+    ],
+    returns: t('Blocking problems first, per URL, plus what it did not check.', 'المشاكل المانعة أولاً لكل رابط، مع ما لم يفحصه.'),
   },
 }

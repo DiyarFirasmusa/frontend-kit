@@ -1,7 +1,8 @@
 ---
 paths:
-  - "**/src/**/*.{jsx,tsx,css}"
-  - "app/**/*.{jsx,tsx,css}"
+  - "**/src/**/*.{jsx,tsx,css,scss,sass,less}"
+  - "app/**/*.{jsx,tsx,css,scss,sass,less}"
+  - "{components,pages}/**/*.{jsx,tsx,css,scss,sass,less}"
 ---
 
 # Styles
@@ -36,18 +37,31 @@ so a component written with them needs no `dark:` variant.
 - Keep to the existing size steps rather than inventing new ones; when the
   design gives pixel sizes, map them to those steps. Weights: `font-medium`,
   `font-semibold`, `font-bold`.
-- No positive letter-spacing on Arabic. Western digits with `tabular-nums`
-  for prices, counters, table numbers and OTP.
+- No positive letter-spacing on Arabic (`[&:lang(ar)]:tracking-normal` where Latin is tracked) and no tight line
+  height: it clips the marks. Western digits with `tabular-nums` for prices, counters, table numbers and OTP.
 
 ## Layout and responsive
 
 - **Mobile first.** Write the phone layout unprefixed, widen with
   `sm:` / `md:` / `lg:`. No horizontal page scroll at 360px (a wide table
   scrolls inside its own container). Touch targets ≥ 44px.
-- Logical properties only (`ps-` / `pe-` / `ms-` / `me-` / `start-` / `end-`);
-  see `.claude/rules/rtl.md`.
+- Logical properties only (`ps-` / `pe-` / `ms-` / `me-`, and for positions `inset-s-` / `inset-e-` on Tailwind 4.2+,
+  `start-` / `end-` on older); see `.claude/rules/rtl.md`.
+- Full height is `min-h-dvh`, never `100vh` (`svh` for a hero that must not resize). A component in panes or cards
+  answers to its container (`@container` + `@md:`), not the viewport.
+- A feature newer than the browser floor (`project.md`) is progressive enhancement only.
 - Use the radii and shadows the design system already uses. Delineate with a
   subtle border before reaching for a shadow; shadows stay light.
+
+## Tailwind v4 names
+
+On v4 a v3 habit compiles to nothing or to something else:
+
+- Scales moved: v3 `shadow-sm` → `shadow-xs`, `shadow` → `shadow-sm` (also `blur`, `rounded`); `ring` is 1px (`ring-3`).
+- Borders default to `currentColor`. `outline-none` removes; `outline-hidden` hides and keeps forced colours.
+- `bg-opacity-50` is gone (`bg-black/50`); variables `bg-(--x)`; important last (`flex!`); `hover:` needs a hover device.
+- Prefer `bg-linear-to-*`, `shrink-*`, from 4.2 `inset-s-*` (`start-*` still works, deprecated), and from 4.3
+  `scrollbar-gutter-stable` where a scrollbar shifts the layout.
 
 ## Component classes
 

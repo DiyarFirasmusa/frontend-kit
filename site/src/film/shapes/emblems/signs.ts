@@ -167,6 +167,13 @@ export const SIGNS = {
   signal: () => [rect(0, 0, 15.4, 12.4, GLASS), path([[-7, -1], [-3.8, -1], [-2, 3.8], [0.8, -4.4], [2.6, 0.6], [7, 0.6]], 1.2, LIGHT)],
   fullstack: () => [...placed([...browser(), rect(0, -1, 11, 3)], 0.66, -2.6, 2.8), ...placed([...browser(), rect(-4.6, -1.2, 3, 8, RAISED), ...[2, 4, 6].map((h, i) => rect(0 + i * 2.6, -5 + h / 2, 1.6, h, LIGHT))], 0.66, 2.6, -2.8, 1.2)],
   clock: () => [arc(0, 0, 7, 1.6), path([[0, 4], [0, 0], [3.4, -2]], 1.4, LIGHT)],
+  switcher: () => [rect(0, 4, 14, 6.4), disc(3.8, 4, 2.6, LIGHT), rect(-2.6, 4, 4, 1, CUT), rect(0, -4, 14, 6.4, GLASS), disc(-3.8, -4, 2.6, RAISED)],
+  upgrade: () => [rect(-5, -5.6, 4.4, 4.6), rect(0, -3.8, 4.4, 8.2), rect(5, -1.6, 4.4, 12.6, RAISED), path([[-6.4, 1.2], [-1.4, 4.4]], 1.4, LIGHT), area([[2, 6.6], [-2.6, 7], [0, 2.8]], LIGHT)],
+  packages: () => [rect(-4.1, -3.6, 7.4, 7.4), rect(-4.1, -1.4, 7.4, 1, CUT), rect(4.1, -3.6, 7.4, 7.4, RAISED), rect(4.1, -1.4, 7.4, 1, CUT), rect(0, 4.3, 7.4, 7.4, LIFTED), rect(0, 6.4, 7.4, 1, { z: 1.8, glow: -0.97 }), path([[-0.2, 2.6], [1.6, 4.2]], 1, { z: 1.9, glow: 0.7 })],
+  numerals: () => [rect(0, 0, 16, 12, GLASS), path([[-5.6, 2.4], [-4.2, 3.8], [-4.2, -3.6]], 1.3, RAISED), rect(-1.4, -3.4, 1.1, 1.5, LIGHT), arc(3.4, 1.2, 2.3, 1.3, 0, 360, RAISED), path([[5.7, 1.2], [4.6, -3.6]], 1.3, RAISED), rect(0, -5.2, 11, 0.7, LIGHT)],
+  nextLetter: () => [disc(0, 0, 7.8), path([[-3.2, -3.8], [-3.2, 3.8], [3.6, -4.8]], 1.6, CUT), path([[3.2, 3.8], [3.2, -0.8]], 1.6, LIGHT)],
+  route: () => [path([[0, 5.4], [0, 1.4], [-5.2, -4.8]], 1.5), path([[0, 1.4], [5.2, -4.8]], 1.5), disc(0, 5.6, 2.4, LIGHT), disc(-5.2, -5.2, 2.4, RAISED), disc(5.2, -5.2, 2.4, RAISED)],
+  handover: () => [...placed(person(), 0.66, 3.8, 0.4), area([[-0.4, 3.3], [-4, 6.6], [-4, 4.6], [-8, 4.6], [-8, 2], [-4, 2], [-4, 0]], LIGHT)],
 } satisfies Record<string, () => Mark[]>
 
 export type SignName = keyof typeof SIGNS

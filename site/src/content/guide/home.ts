@@ -74,6 +74,5 @@ export const home = {
   open: t('Open its full documentation', 'افتح توثيقه الكامل'),
 
   install: t('Get it in three commands.', 'ثبّتها بثلاثة أوامر.'),
-  host: t('It runs inside Claude Code.', 'تعمل داخل Claude Code.'),
   types: t('Works for', 'تعمل لـ'),
 }

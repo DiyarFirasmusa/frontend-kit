@@ -12,6 +12,7 @@
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    ".vitest/**",
     "src/routeTree.gen.ts",
     "package-lock.json"
   ]

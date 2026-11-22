@@ -43,8 +43,12 @@ FOUND=""
 COUNT=0
 
 add() {
+  local note=""
+  case "$1" in frontend-kit:mode | frontend-kit:refactor-mode | frontend-kit:upgrade-mode)
+    note=" (user-only: tell the user to type /$1; do not invoke it)" ;;
+  esac
   FOUND="${FOUND:+$FOUND
-}- $1"
+}- $1$note"
   COUNT=$((COUNT + 1))
 }
 
@@ -101,17 +105,15 @@ done
 
 SPEC_FILE="$HOME/.claude/skills/spec/SKILL.md"
 PLAN_NOTE=""
-MODE_NOTE=""
 APPS_NOTE=""
 if [ -n "$APPS_LINE" ] && [ -n "$FOUND" ]; then
   APPS_NOTE="This project has several apps: $APPS_LINE. Use the skill of the app the files belong to (web-* for a website app, dash-* for a dashboard app) and the rules scoped to that app."
 fi
-[ "$KIT_MODE" = refactor ] && MODE_NOTE="Refactor mode is ON: only the approved phase of docs/refactor-plan.md may restructure code; behaviour stays frozen (/frontend-kit:refactor-mode)."
 if [ "$(hook_field '.permission_mode')" = plan ] && [ -f "$SPEC_FILE" ]; then
   PLAN_NOTE="Plan mode is on. Read $SPEC_FILE and follow its spec workflow (questions, spec, wait for OK, then plan) before you write the plan."
 fi
 
-[ -z "$FOUND$PLAN_NOTE$MODE_NOTE" ] && exit 0
+[ -z "$FOUND$PLAN_NOTE" ] && exit 0
 CONTEXT=""
 [ -n "$FOUND" ] && CONTEXT="Skills that may fit this prompt (checked against the project's skills):
 $FOUND
@@ -119,9 +121,6 @@ Open the matching skill with the Skill tool before you start and follow it. If t
 [ -n "$PLAN_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
 
 }$PLAN_NOTE"
-[ -n "$MODE_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
-
-}$MODE_NOTE"
 [ -n "$APPS_NOTE" ] && CONTEXT="${CONTEXT:+$CONTEXT
 
 }$APPS_NOTE"

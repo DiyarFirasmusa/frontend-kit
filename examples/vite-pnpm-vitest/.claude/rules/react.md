@@ -5,15 +5,18 @@ paths:
 
 # React + TypeScript
 
-React 19, strict TypeScript, TanStack Router (file routes), TanStack Query.
-Website (TanStack Start): pages render on the server, then hydrate. Dashboard
-(Vite + TanStack Router): a client-only SPA. No React Server Components, no
-`'use client'`, no Next.js imports in either.
+React 19, strict TypeScript, Vite: a client-only app with no router and no data library yet. The router lines below
+(`createFileRoute`, `beforeLoad`, `Route`, `src/routes/`) and the Query names are TanStack's, as examples: keep the intent
+(thin routes, guards in the route layer, params validated once); `routing.md` and `data-and-state.md` win.
+No Server Components, no `'use client'`, no Next.js imports.
 
 ## TypeScript
 
 - Strict. Never `any` — use `unknown` and narrow. Never `@ts-ignore` /
   `@ts-expect-error`; fix the type.
+- Data from outside the type system (`JSON.parse`, `response.json()`, storage, URL, env) is `unknown` until it is
+  parsed (type guards until the project has a schema library); auth, permission and money responses too, whatever their
+  generated type says. No cast after.
 - Type-only imports use `import type`.
 - `interface` for object shapes, `type` for unions and aliases.
 - Backend shapes come from the generated API types (never hand-edit).
@@ -24,7 +27,9 @@ Website (TanStack Start): pages render on the server, then hydrate. Dashboard
 
 ## Components
 
-- Function components only, props typed with an interface above the component.
+- Function components (the one error boundary excepted), props typed with an interface above the component.
+- React 19: `ref` is a prop (no new `forwardRef`), callback refs use a block body, `useRef` takes an argument, and
+  `ref.current` is never touched during render.
 - Every component is a **named** export, one exported component per file.
   Route files export `Route` (TanStack Router) and nothing else that renders.
 - Markup used once stays inline in its page as a local, non-exported function.
@@ -36,13 +41,7 @@ Website (TanStack Start): pages render on the server, then hydrate. Dashboard
 ## Route components render, hooks think
 
 ```tsx
-export const Route = createFileRoute('/orders/$orderId')({
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(orderQueryOptions(params.orderId)),
-  component: OrderDetailPage,
-})
-
-function OrderDetailPage() {
-  const { t } = useTranslation()
+export function OrderDetailPage() {
   const page = useOrderDetailPage()
   return <>{/* JSX only */}</>
 }
@@ -58,12 +57,19 @@ search validation, `beforeLoad` guards, the `loader` and (website) `head()`.
 
 - `hooks/query/` holds every `useQuery` / `useMutation`; the page hook and
   pure `*-actions.ts` helpers stay at the `hooks/` root.
-- No `useEffect` for fetching — TanStack Query (and route loaders) only. No
-  server data in Zustand.
-- Zustand: always subscribe with a selector (`useSettingsStore((state) => state.language)`).
+- No hand-rolled fetch in `useEffect`: use the project's data layer (`data-and-state.md`).
+  No server data in a client store.
+- Derive during render; reset state with a `key` on the entity id; store the id, not the object. External stores use
+  `useSyncExternalStore`. Every effect cleans up.
+- `use(promise)`: a stable promise (never created in render), a boundary above, no `try`. An update that suspends runs
+  in a transition.
 - `useMemo` / `useCallback` only when it is measurably needed or the value is
   a dependency of another hook / a memoised child.
 - Floating promises get `void`: `onClick={() => { void navigate({ to: '/orders' }) }}`.
+- `useEffectEvent` (19.2+, like `<Activity>`; `<ViewTransition>` is 19.3): declared at the top level, its function called
+  only from effects or other Effect Events, never a dependency or a prop.
+- One submit mechanism per form: `<form action>` (it resets uncontrolled fields) or an `onSubmit` handler.
+- A handler over 50 ms is split and yields (`scheduler.yield()` where it exists, else a timeout).
 - Single-flight actions (submit, OTP send, pay) guard on `isPending` **and**
   a ref, so a second tap during the request does nothing.
 
@@ -91,6 +97,13 @@ search validation, `beforeLoad` guards, the `loader` and (website) `head()`.
   server functions (`createServerFn`); never import it from client code.
 - One query client per request on the server.
 
+## Edges
+
+- Inline JSON in a script escapes `<`; a redirect target from input is validated after normalising.
+- Numbers, money and dates go through the project's formatter (`project.md` names it).
+- Deleted chunks after a deploy: one `vite:preloadError` listener reloads once per message (`sessionStorage`
+  guard) and only then calls `preventDefault()`. Recommend that the host serves the HTML `no-cache`.
+
 ## Imports
 
 Third-party, then the `@/…` alias, then relative (the formatter sorts).
@@ -99,9 +112,10 @@ The HTTP library is imported only inside the API client.
 
 ## Never
 
-- Class components, default exports (except where a tool requires one).
+- Class components, except one reusable error boundary (React has no hook for that). Default exports, except where a tool
+  requires one.
 - `console.log`, `debugger`, commented-out code.
 - Inline `style={{}}` except for truly dynamic values (a computed width,
   a CSS variable); never `!important`.
-- `dangerouslySetInnerHTML` with backend data.
+- `dangerouslySetInnerHTML` with unsanitised data from outside the repo.
 - Files over 500 lines — split by extracting hooks first, then components.

@@ -87,8 +87,8 @@ mirror `docs/api/openapi.json`.
 ## Services
 
 ```ts
-export async function fetchUsers(params: UserListParams): Promise<UserListResponse> {
-  const { data } = await privateApi.get<UserListResponse>(endpoints.users.list, { params });
+export async function fetchUsers(params: UserListParams, options?: { signal?: AbortSignal }): Promise<UserListResponse> {
+  const { data } = await privateApi.get<UserListResponse>(endpoints.users.list, { params, signal: options?.signal });
   return data;
 }
 ```
@@ -99,6 +99,18 @@ export async function fetchUsers(params: UserListParams): Promise<UserListRespon
 - The service maps UI params to the backend's names (1-based page → `page=0`,
   `name.asc` → `sort=name,asc`) in one `toXQuery(params)` helper.
 - No error parsing, no toasts, no navigation in services.
+- Cancellation: pass TanStack Query's `signal` into the service (`queryFn: ({ signal }) => fetchUsers(params, { signal })`)
+  and forward it to the client, so leaving the page aborts the request. A timeout is not a cancel: show it as a network
+  error with a retry.
+- The clients set a default `timeout` (uploads override it). `axios.isCancel(error)` is a cancel; `ECONNABORTED` and
+  `ETIMEDOUT` are failures and toast.
+- Auth, session, permission and money responses are parsed with zod in the service: generated types check nothing at
+  run time. A failure is rejected with code `invalid_response` and reported without the body.
+
+## Polling and realtime
+
+- Polling (`refetchInterval`) passes `silentError`, backs off on errors and stops when the data is final.
+- One realtime connection per view: closed on unmount, reconnecting with a back-off.
 
 ## Query keys and options
 
@@ -117,7 +129,7 @@ export const qk = {
 - Each feature exports `xListQueryOptions(params)` / `xDetailQueryOptions(id)`
   (`queryOptions` from TanStack Query) used by both the route loader and the hook.
 - Lists: `placeholderData: keepPreviousData`. Lookups for selects:
-  a longer `staleTime`.
+  a longer `staleTime`. The QueryClient's default `staleTime` is above 0, so a hover or a remount is not a request.
 - `enabled: Boolean(id)` on every query that depends on an id or selection.
 - Mutations invalidate `qk.x.all` in `onSuccess` at the hook (`forms-crud.md`).
 - Sign-out clears the whole query cache.
@@ -125,9 +137,10 @@ export const qk = {
 
 ## Sessions, blobs and downloads
 
-- **Session restore.** The access token lives in memory only. The refresh token survives a reload in
-  `sessionStorage` (or an HttpOnly cookie when the backend sets one). `bootstrapSession()` runs before the first
-  render, restores permissions from `/me`, and the router mounts after it. A hook registry
+- **Session restore.** The access token lives in memory only. Prefer an HttpOnly cookie or BFF for the refresh token and
+  ask the backend for it. Without one it survives a reload in `sessionStorage`, which any XSS can read: the backend must
+  rotate it on each use and expire it; never `localStorage`, never the URL. `bootstrapSession()` runs before the first
+  render, restores permissions from `/me`, and the router mounts after it (Next.js: the `(app)` gate waits). A hook registry
   (`registerSessionHooks({ onSessionExpired, onForbidden })`) lets the API layer call the session layer without a
   circular import.
 - **Blob and CSV responses.** The envelope unwrap skips `responseType: 'blob'`; the file name comes from

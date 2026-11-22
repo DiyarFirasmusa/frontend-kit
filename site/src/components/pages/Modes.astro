@@ -1,7 +1,11 @@
 ---
+import { modeGroups } from '../../content/guide/modes.ts'
 import { t } from '../../content/guide/text.ts'
+import { content } from '../../content/index.ts'
+import type { Bilingual } from '../../content/catalogue.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl, skillUrl } from '../../lib/links.ts'
+import CommandBox from '../CommandBox.astro'
 import Block from '../guide/Block.astro'
 import Source from '../guide/Source.astro'
 
@@ -9,92 +13,98 @@ interface Props {
   locale: Locale
 }
 
+type Mode = (typeof modeGroups)[number]['modes'][number][0]
+
 const { locale } = Astro.props
-const modes = [
-  {
-    id: 'new',
-    name: t('New project', 'مشروع جديد'),
-    why: t('An empty folder has no conventions to follow, so shortcuts taken on the first day become the structure.', 'المجلد الفارغ لا أعراف فيه، فاختصارات اليوم الأول تصير هي البنية.'),
-    when: t('Nothing, or almost nothing, exists yet.', 'لا شيء موجود بعد، أو شبه لا شيء.'),
-    changes: t(
-      'At each session start the assistant is told to build to the standards from the first file: feature folders, strict types, tests, translations, and no shortcuts to fix later.',
-      'في بداية كل جلسة يُطلب من المساعد البناء على المعايير من أول ملف: مجلدات ميزات وأنواع صارمة واختبارات وترجمة، ولا اختصارات تُصلح لاحقاً.',
-    ),
-    on: t('Choose it in setup, or set "mode": "new" in the config.', 'اختره في الإعداد، أو اضبط \u2066"mode": "new"\u2069 في ملف الإعدادات.'),
-    off: t('Set "mode" to "existing" once the base is built.', 'اضبط \u2066"mode"\u2069 على \u2066"existing"\u2069 عندما يكتمل الأساس.'),
-  },
-  {
-    id: 'existing',
-    name: t('Existing project', 'مشروع قائم'),
-    why: t('A working project already has a shape. Imposing another one would turn every small change into a rewrite.', 'المشروع العامل له شكله، وفرض شكل آخر يحوّل كل تغيير صغير إلى إعادة كتابة.'),
-    when: t('The app works and you want the kit inside it. This is the default.', 'التطبيق يعمل وتريد العدّة داخله. هذا هو الافتراضي.'),
-    changes: t('Setup keeps your structure and follows your stack. The assistant gets no extra instruction at session start.', 'يُبقي الإعداد بنيتك ويتبع تقنياتك، ولا يصل المساعد توجيه إضافي في بداية الجلسة.'),
-    on: t('Choose it in setup, or set "mode": "existing".', 'اختره في الإعداد، أو اضبط \u2066"mode": "existing"\u2069.'),
-    off: t('Switch to one of the other two.', 'انتقل إلى أحد النمطين الآخرين.'),
-  },
-  {
-    id: 'refactor',
-    name: t('Refactor', 'إعادة الهيكلة'),
-    why: t('Cleaning a whole project while adding features breaks both. This keeps restructuring planned, approved and separate.', 'تنظيف مشروع كامل أثناء إضافة الميزات يفسد الاثنين. هذا يبقي إعادة البناء مخططة وموافقاً عليها ومنفصلة.'),
-    when: t('An existing project far from the standards that you decided to restructure.', 'مشروع قائم بعيد عن المعايير قررت إعادة بنائه.'),
-    changes: t(
-      'At each session start the assistant is told that refactor mode is on: audit, a plan you approve, one phase at a time, behaviour frozen, and nothing outside the plan.',
-      'في بداية كل جلسة يُبلَّغ المساعد أن نمط إعادة الهيكلة يعمل: تدقيق ثم خطة توافق عليها، مرحلة واحدة كل مرة، وسلوك ثابت، ولا شيء خارج الخطة.',
-    ),
-    on: t('/frontend-kit:refactor-mode on', '⁦/frontend-kit:refactor-mode on⁩'),
-    off: t('/frontend-kit:refactor-mode off', '⁦/frontend-kit:refactor-mode off⁩'),
-  },
-]
+const { install } = content[locale]
+const keepsTests = t('No removed or skipped tests and no refreshed snapshots.', 'لا اختبارات محذوفة أو متخطاة ولا لقطات مجدّدة.')
+const also = (en: string, ar: string): Bilingual => t(`${keepsTests.en} ${en}`, `${keepsTests.ar} ${ar}`)
+// What `/frontend-kit:mode list` says is enforced.
+const held: Record<Mode, Bilingual> = {
+  new: t('Nothing extra.', 'لا شيء إضافي.'),
+  existing: t('Nothing extra. It is the default.', 'لا شيء إضافي، وهو الافتراضي.'),
+  maintenance: also('No new dependencies.', 'ولا اعتماديات جديدة.'),
+  refactor: also('No new suppression comments.', 'ولا تعليقات إسكات جديدة.'),
+  upgrade: also('No new suppression comments and no forced installs.', 'ولا تعليقات إسكات جديدة ولا تثبيت قسري.'),
+  freeze: also('No edits of package.json, lockfiles or tool configs.', 'ولا تعديل لـ package.json أو ملفات القفل أو إعدادات الأدوات.'),
+  hotfix: also('No edits of package.json, lockfiles or tool configs, and at most five source files unless you set another number.', 'ولا تعديل لـ package.json أو ملفات القفل أو إعدادات الأدوات، وخمسة ملفات على الأكثر ما لم تحدد عدداً آخر.'),
+  'read-only': t('No edit outside the report folder. In the shell and in MCP tools, only reads.', 'لا تعديل خارج مجلد التقارير، ولا يمرّ في الطرفية وأدوات MCP إلا القراءة.'),
+  prototype: t('No edit outside the prototype folder, no package change, no commit or push.', 'لا تعديل خارج مجلد النموذج ولا تغيير للحزم ولا حفظ أو رفع.'),
+}
+const why: Record<Mode, Bilingual> = {
+  new: t('An empty folder has no conventions, so first-day shortcuts become the structure.', 'المجلد الفارغ لا أعراف فيه، فاختصارات اليوم الأول تصير هي البنية.'),
+  existing: t('A working project already has a shape. Imposing another turns each change into a rewrite.', 'المشروع العامل له شكله، وفرض شكل آخر يحوّل كل تغيير إلى إعادة كتابة.'),
+  maintenance: t('An old app that earns money should not be modernised by accident.', 'تطبيق قديم يعمل لا ينبغي أن يُحدَّث بالخطأ.'),
+  refactor: t('Cleaning a whole project while adding features breaks both.', 'تنظيف مشروع كامل أثناء إضافة الميزات يفسد الاثنين.'),
+  upgrade: t('An upgrade mixed with other work cannot be proven or rolled back.', 'الترقية المخلوطة بعمل آخر لا يمكن إثباتها ولا التراجع عنها.'),
+  freeze: t('The last days before a release are for making it stable, not larger.', 'الأيام الأخيرة قبل الإصدار للتثبيت لا للتوسيع.'),
+  hotfix: t('When production is broken, every extra line is extra risk.', 'عندما يتعطل الإنتاج فكل سطر زائد خطر زائد.'),
+  'read-only': t('An audit is worth more when the code cannot change under it.', 'التدقيق أثمن عندما لا تتغير الشيفرة تحته.'),
+  prototype: t('An experiment is fast only when it cannot leak into real code.', 'التجربة سريعة فقط عندما لا تتسرب إلى الشيفرة الحقيقية.'),
+}
 const words = {
-  key: t('One key', 'مفتاح واحد'),
-  keyText: t(
-    'The mode lives in .claude/frontend-kit.json as "mode". The guards and the quality gate are the same in all three: a mode changes what the assistant is told, not what is enforced.',
-    'النمط مكتوب في \u2066.claude/frontend-kit.json\u2069 باسم \u2066"mode"\u2069. الحرّاس وبوابة الجودة نفسها في الثلاثة: النمط يغيّر ما يُقال للمساعد، لا ما يُفرض عليه.',
+  switching: t('One switch', 'مفتاح واحد'),
+  switchingLead: t(
+    'Only you switch modes. A mode adds restrictions and never lifts a guard.',
+    'أنت وحدك من يبدّل الأنماط. والنمط يضيف قيوداً ولا يرفع حارساً.',
   ),
+  is: t('What it is', 'ما هو'),
   why: t('Why', 'لماذا'),
-  when: t('When', 'متى'),
-  changes: t('What changes', 'ماذا يتغير'),
-  on: t('Turn it on', 'تشغيله'),
-  off: t('Turn it off', 'إيقافه'),
-  status: t('See which is on', 'معرفة الحالي'),
-  statusText: t('/frontend-kit:refactor-mode status prints the mode, and the phases when there is a plan.', 'الأمر ⁦/frontend-kit:refactor-mode status⁩ يطبع النمط، والمراحل إن وُجدت خطة.'),
+  held: t('What the guard holds', 'ما يمسكه الحارس'),
+  honest: t('What is enforced, honestly', 'ما يُفرض، بصراحة'),
+  honestText: t(
+    'For the edit tools the guard knows the file and the text, so those limits hold. In the shell it catches common forms only. Everything else is an instruction. It is a guard rail, not a sandbox.',
+    'مع أدوات التعديل يعرف الحارس الملف والنص فتصمد هذه الحدود. وفي الطرفية لا يلتقط إلا الصيغ الشائعة، والباقي تعليمات. هو حاجز أمان لا بيئة معزولة.',
+  ),
+  skill: t('The mode skill', 'مهارة الأنماط'),
   config: t('Every key of the config', 'كل مفاتيح الإعدادات'),
-  skill: t('The refactor mode skill', 'مهارة نمط إعادة الهيكلة'),
-  style: t('The report style', 'أسلوب التقرير'),
-  styleLead: t(
-    'A separate switch: an output style called Frontend report, which you pick in Claude Code. It changes how the assistant reports, not how it works. Its full text, in English:',
-    'مفتاح منفصل: أسلوب إخراج اسمه Frontend report تختاره في Claude Code، يغيّر طريقة تقرير المساعد لا طريقة عمله. نصه الكامل بالإنجليزية:',
+  report: t('The two report styles', 'أسلوبا التقرير'),
+  reportLead: t(
+    'A separate switch: output styles that change how work is reported, not how it is done. Their text, in English:',
+    'مفتاح منفصل: أساليب إخراج تغيّر طريقة التقرير لا طريقة العمل. نصها بالإنجليزية:',
   ),
 }
+const commands = ['/frontend-kit:mode list', '/frontend-kit:mode status', '/frontend-kit:mode off']
 ---
 
-<Block id="key" title={words.key[locale]}><p class="big">{words.keyText[locale]}</p></Block>
+<Block id="switch" title={words.switching[locale]} lead={words.switchingLead[locale]}>
+  <ol class="explained">{commands.map((command) => <li><CommandBox command={command} install={install} /></li>)}</ol>
+</Block>
 {
-  modes.map(({ id, name, why, when, changes, on, off }) => (
-    <Block id={id} title={name[locale]}>
-      <dl class="rows">
-        {[
-          [words.why, why],
-          [words.when, when],
-          [words.changes, changes],
-          [words.on, on],
-          [words.off, off],
-        ].map(([label, text]) => (
-          <div>
-            <dt>{label![locale]}</dt>
-            <dd>{text![locale]}</dd>
-          </div>
-        ))}
-      </dl>
+  modeGroups.map(({ title, lead, modes }) => (
+    <Block title={title[locale]} lead={lead[locale]}>
+      {modes.map(([name, text]) => (
+        <div class="question">
+          <h3 id={`mode-${name}`}>
+            <code dir="ltr">{name}</code>
+          </h3>
+          <dl class="rows">
+            {[
+              [words.is, text],
+              [words.why, why[name]],
+              [words.held, held[name]],
+            ].map(([label, value]) => (
+              <div>
+                <dt>{label![locale]}</dt>
+                <dd>{value![locale]}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
     </Block>
   ))
 }
-<Block id="status" title={words.status[locale]} lead={words.statusText[locale]}>
+<Block id="enforced" title={words.honest[locale]}>
+  <p class="big">{words.honestText[locale]}</p>
   <p class="links">
+    <a class="source" href={skillUrl(locale, 'mode')}>{words.skill[locale]}</a>
     <a class="source" href={pageUrl(locale, 'configuration')}>{words.config[locale]}</a>
-    <a class="source" href={skillUrl(locale, 'refactor-mode')}>{words.skill[locale]}</a>
   </p>
 </Block>
-<Block id="report" title={words.style[locale]} lead={words.styleLead[locale]}>
+<Block id="report" title={words.report[locale]} lead={words.reportLead[locale]}>
+  <p><bdi>Frontend report</bdi></p>
   <Source file="plugins/frontend-kit/output-styles/frontend-report.md" />
+  <p><bdi>Audit report</bdi></p>
+  <Source file="plugins/frontend-kit/output-styles/audit-report.md" />
 </Block>

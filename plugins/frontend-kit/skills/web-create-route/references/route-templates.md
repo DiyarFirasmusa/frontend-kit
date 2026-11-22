@@ -183,13 +183,18 @@ export function notFoundOn404(error: unknown): never {
 ## Search params
 
 ```tsx
+import { createFileRoute, stripSearchParams } from '@tanstack/react-router'
+
+// `.catch` alone would make both fields required in every <Link search>.
 const searchSchema = z.object({
-  page: z.number().int().min(1).catch(1),
-  sort: z.enum(['newest', 'price-asc', 'price-desc']).catch('newest'),
+  page: z.number().int().min(1).default(1).catch(1),
+  sort: z.enum(['newest', 'price-asc', 'price-desc']).default('newest').catch('newest'),
 })
+const defaultSearch = searchSchema.parse({})
 
 export const Route = createFileRoute('/_site/products/')({
   validateSearch: searchSchema,
+  search: { middlewares: [stripSearchParams(defaultSearch)] },
   loaderDeps: ({ search }) => ({ page: search.page, sort: search.sort }),
   loader: ({ context, deps }) => loadProductsPage(context, deps),
   head: ({ loaderData, match }) => productsHead(loaderData, match.context.i18n),

@@ -48,7 +48,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     still: 'layers',
     name: t('Modes', 'الأنماط'),
     title: t('Modes: how the assistant approaches the project.', 'الأنماط: كيف يتعامل المساعد مع المشروع.'),
-    lead: t('One key in the config tells the assistant whether to build, to fit in or to restructure.', 'مفتاح واحد في الإعدادات يخبر المساعد هل يبني أم ينسجم أم يعيد الهيكلة.'),
+    lead: t('Nine modes, from building new to a release freeze. You switch them with one command.', 'تسعة أنماط، من البناء الجديد إلى تجميد الإصدار، تبدّلها بأمر واحد.'),
   },
   changelog: {
     id: 'changelog',

@@ -83,6 +83,8 @@ export function council(amount: number): Shape {
   const blocks: Block[] = []
   const anchors: Vec3[] = []
   const middle = (amount - 1) / 2
+  // A larger council stands slimmer in the same arc. It has no room above for every name, so it wears most of them.
+  const crowd = Math.min(1, 9 / Math.max(1, amount - 1))
 
   for (let i = 0; i < amount; i++) {
     const angle = ((i - middle) / Math.max(1, amount - 1)) * 2.05
@@ -93,7 +95,7 @@ export function council(amount: number): Shape {
     for (let row = 0; row < 25; row++) {
       const k = row / 24
       // Cloak, shoulders, neck, head.
-      const width = (k < 0.68 ? 3.5 - k * 2.1 : k < 0.78 ? 3 : k < 0.82 ? 0.7 : 1.55) * scale
+      const width = (k < 0.68 ? 3.5 - k * 2.1 : k < 0.78 ? 3 : k < 0.82 ? 0.7 : 1.55) * scale * crowd
       const columns = Math.max(2, Math.round(width / 0.46))
       for (let c = 0; c < columns; c++) {
         for (let d = 0; d < 3; d++) {
@@ -104,10 +106,12 @@ export function council(amount: number): Shape {
       }
     }
     blocks.push(
-      block(at(0, height * 0.905, 1.2), [1.1 * scale, 0.09, 0.1], { glow: 1.4, rotation: turn, keep: true }),
+      block(at(0, height * 0.905, 1.2), [1.1 * scale * crowd, 0.09, 0.1], { glow: 1.4, rotation: turn, keep: true }),
       block(at(0, height * 0.45, 1.22), [0.05, height * 0.28, 0.08], { glow: 0.7, rotation: turn, keep: true }),
     )
-    anchors.push(at(0, height + 0.9 + (i % 2) * 1.2, 0))
+    const above = at(0, height + 0.9 + (i % 2) * 1.2, 0)
+    const worn = [0.64, 0.46, 0.28, 0.1].map((share) => at(0, 11.5 * share, 1.5))
+    anchors.push(crowd < 1 ? worn[i % worn.length]! : above)
   }
   return { blocks, anchors }
 }

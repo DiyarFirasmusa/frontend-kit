@@ -12,6 +12,7 @@ export const questions = [
     answers: [
       t('New project: build to the standard from the first file.', 'مشروع جديد: ابنِ على المعيار من أول ملف.'),
       t('Existing project: keep its structure and follow its stack.', 'مشروع قائم: أبقِ بنيته واتبع تقنياته.'),
+      t('Maintenance: keep an old app running, with fixes and security only.', 'صيانة: أبقِ تطبيقاً قديماً يعمل، بإصلاحات وأمان فقط.'),
       t('Refactor: restructure it later, in approved phases.', 'إعادة هيكلة: تُعاد بنيته لاحقاً على مراحل توافق عليها.'),
     ],
   },

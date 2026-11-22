@@ -1,6 +1,6 @@
 ---
 name: web-create-route
-description: Website profile: add or change a page route in a TanStack Start site — the file route under src/routes, its loader (awaited vs streamed Query data), head() for title/description/canonical/share tags, notFound() with a real 404, 301 redirects for renamed slugs, errorComponent, pendingComponent, search-param validation, guards with beforeLoad, and the container wiring. Use when the user says new page, new route, add a URL, detail page, slug page, 404 for missing items, redirect old URLs, or a page loads data on the client that should be server-rendered.
+description: "Website profile: add or change a page route in a TanStack Start site — the file route under src/routes, its loader (awaited vs streamed Query data), head() for title/description/canonical/share tags, notFound() with a real 404, 301 redirects for renamed slugs, errorComponent, pendingComponent, search-param validation, guards with beforeLoad, and the container wiring. Use when the user says new page, new route, add a URL, detail page, slug page, 404 for missing items, redirect old URLs, or a page loads data on the client that should be server-rendered."
 ---
 
 # Create a route (TanStack Start)
@@ -71,7 +71,8 @@ Add `validateSearch` (zod) + `loaderDeps` when search params change data;
 ## 6. Links and crawl files
 
 - Every entry point is a router `<Link to="/products/$slug" params={…}>`.
-- Private path → `robots.txt` `Disallow`. Public listing/detail → sitemap route.
+- Private path → `noindex`, not disallowed in `robots.txt` (that hides the `noindex`), never in the sitemap.
+  Public listing/detail → sitemap route.
 - Run the dev server once so `src/routeTree.gen.ts` regenerates; never edit it.
 
 ## 7. Tests

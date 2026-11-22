@@ -18,7 +18,7 @@ const { install, why } = content[locale]
   <div class="column">
     <h2 data-rise>{home.install[locale]}</h2>
     <Commands install={install} />
-    <p class="needs">{home.host[locale]} {install.needs}</p>
+    <p class="needs">{install.needs}</p>
     <h3>{home.types[locale]}</h3>
     <ul class="works-for">
       {projects.map(({ name, fits }) => <li><strong>{name[locale]}</strong><span>{fits[locale]}</span></li>)}

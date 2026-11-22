@@ -1,6 +1,6 @@
 ---
 name: web-server-fn
-description: Website profile: create or change a TanStack Start server function (createServerFn) — zod-validated input, GET for reads and POST for writes, secrets and HttpOnly cookies read on the server only, authorisation inside the handler, safe errors, notFound/redirect, cache headers, use as a Query queryFn or from useMutation via useServerFn, and tests. Use when the user says server function, createServerFn, call the API from the server, hide an API key, keep a secret off the client, proxy a backend call, read the session cookie, CORS problem, form submit to the server, or a webhook/server-only SDK.
+description: "Website profile: create or change a TanStack Start server function (createServerFn) — zod-validated input, GET for reads and POST for writes, secrets and HttpOnly cookies read on the server only, authorisation inside the handler, safe errors, notFound/redirect, cache headers, use as a Query queryFn or from useMutation via useServerFn, and tests. Use when the user says server function, createServerFn, call the API from the server, hide an API key, keep a secret off the client, proxy a backend call, read the session cookie, CORS problem, form submit to the server, or a webhook/server-only SDK."
 ---
 
 # Server function (TanStack Start)
@@ -48,8 +48,10 @@ features/<group>/<feature>/server/
    HTTP endpoint.
 5. **Call** the backend through the `.server.ts` helper. Map backend errors
    to safe results: `throw notFound()` when the page should 404,
-   `throw redirect()` when it should move, otherwise throw an `Error` with
-   a translatable key — never the raw backend body, stack or token.
+   `throw redirect()` when it should move, return `{ ok: false, … }`
+   (`api-layer.md`) for an expected failure the UI handles, and throw an `Error`
+   with a translatable key for the rest — never the raw backend body, stack or
+   token. A URL built from input follows the SSRF line of `security.md`.
 6. **Headers**: personalised result → `setResponseHeaders(new Headers({
    'Cache-Control': 'private, no-store' }))`.
 7. **Return** plain serialisable data shaped for the UI.

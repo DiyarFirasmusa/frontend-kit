@@ -3,8 +3,8 @@ paths:
   - "**/*.test.{ts,tsx}"
   - "e2e/**"
   - "src/test/**"
-  - "vitest.config.ts"
-  - "playwright.config.ts"
+  - "vitest.config.*"
+  - "playwright.config.*"
 ---
 
 # Testing
@@ -37,7 +37,7 @@ npm run check:full       # check + e2e + build
 | Component | presentational components | `<name>.test.tsx` beside the source | the providers render helper |
 | Integration | every route component with the real API client, query cache and a memory router | `<name>.test.tsx` beside it | the router render helper + MSW |
 | End-to-end | each user flow | `e2e/<flow>.spec.ts` | Playwright + mocked API routes |
-| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`); serious/critical fail |
+| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`); serious/critical fail |
 
 Minimum per change: the logic you touched is unit-tested; each touched route
 component has loading / error / empty / success plus one interaction; a new
@@ -75,17 +75,32 @@ The project's test helpers (`project.md` names the folder) provide:
 - Mock the **network** (MSW), never modules: no `vi.mock` of services, hooks,
   the API client or TanStack Query. The interceptors, toasts and cache are
   part of what is tested.
-- Async UI: `findBy*` / `waitFor`. Timers: `vi.useFakeTimers()`. No sleeps.
+- Async UI: `findBy*` / `waitFor`. Timers: `vi.useFakeTimers()`, which in Vitest 5 also fakes `Temporal` when it exists
+  (opt out with `toNotFake: ['Temporal']`). No sleeps.
+- `vi.mock`, `vi.unmock` and `vi.hoisted` sit at the top level of the file. In Vitest 5 a call inside a function or block
+  throws; it was a warning before.
+- Set the time zone for the unit run (`TZ=UTC` in the script or in global setup, before the workers start; worker threads
+  ignore a `TZ` set inside them), so formatting tests do not depend on the machine that runs them.
 - Text in both languages where it matters: one English assertion, one Arabic.
 - E2E: projects cover Arabic and English, desktop and mobile, and dark. Mock
   the backend with route handlers that return the real envelope. Match text
   in both languages with a regex. Assert `html[dir]` when direction matters.
+- An automated accessibility scan checks the rendered DOM only: open dialogs and menus before the run. It does not check
+  focus order, focus return, announcements, drag alternatives, redundant entry or authentication: those need a manual pass.
 - Website (TanStack Start): e2e also asserts the server-rendered HTML (title,
   `lang`, `dir`) before hydration where SEO matters.
-- Keep a test file under ~200 lines; split by behaviour. No whole-page snapshots.
+- Keep a test file under ~200 lines; split by behaviour. No whole-page snapshots: check structure
+  by roles and names.
 - Never `it.skip` to get green — fix it or report the bug.
+- **A bug fix starts with a test that fails for that bug.** See it fail, fix, see it pass. "Already fixed" or "could not
+  reproduce", with the evidence, is a finished task; don't patch on a guess.
 - A flaky or hard e2e case (auth, clock, network, mobile): load the
   `playwright-best-practices` skill for the pattern, then keep this file's rules.
+
+## Browser APIs in tests
+
+- jsdom has no `navigator.locks`: test the lock-less fallback, and the lock itself with a small fake. Do not hit a real timer
+  for the lock timeout.
 
 ## Never
 

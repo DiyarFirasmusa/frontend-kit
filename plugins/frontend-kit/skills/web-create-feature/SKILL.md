@@ -1,6 +1,6 @@
 ---
 name: web-create-feature
-description: Website profile: scaffold a complete feature of a TanStack Start website from backend endpoints — endpoints, query keys, services or server functions, queryOptions, mutation hooks, page hook, container, file routes with loader and head(), locales in ar and en, and tests — in the project's feature-folder shape. Use when the user gives an endpoint or API doc and asks for a new page, section, catalogue, detail page, form flow or account screen, or says "new feature", "build this page from the API", "scaffold".
+description: "Website profile: scaffold a complete feature of a TanStack Start website from backend endpoints — endpoints, query keys, services or server functions, queryOptions, mutation hooks, page hook, container, file routes with loader and head(), locales in ar and en, and tests — in the project's feature-folder shape. Use when the user gives an endpoint or API doc and asks for a new page, section, catalogue, detail page, form flow or account screen, or says \"new feature\", \"build this page from the API\", \"scaffold\"."
 ---
 
 # Create a feature (TanStack Start website)
@@ -74,8 +74,8 @@ not before.
 ## 4. Wire
 
 - Navigation (header, footer, account menu) uses router `<Link>`s.
-- Public pages → sitemap route + `e2e` a11y page list. Private → robots
-  `Disallow`.
+- Public pages → sitemap route + `e2e` a11y page list. Private → `noindex`,
+  not in the sitemap, not disallowed in robots (that hides the `noindex`).
 - Locale bundles registered the way the project does it (global vs
   feature bundle); `npm run i18n:validate`.
 

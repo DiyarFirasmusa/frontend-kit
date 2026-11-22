@@ -22,6 +22,7 @@ export const inspect: Record<string, SkillGuide> = {
       t('Pins the exact changes of the branch.', 'يحدد تغييرات الفرع بدقة.'),
       t('Finds the request or ticket.', 'يجد الطلب أو التذكرة.'),
       t('Runs two fresh reviewers: standards, and request.', 'يشغّل مراجعَين بعين جديدة: للمعايير وللطلب.'),
+      t('Adds a security, translation, SEO or accessibility specialist when the change touches that.', 'يضيف مختص أمان أو ترجمة أو بحث أو وصول عندما يمسّ التغيير ذلك.'),
       t('Reports both apart and asks whether to fix.', 'يعرض التقريرين منفصلين ويسأل عن الإصلاح.'),
     ],
     result: [t('Findings with file, line and rule', 'ملاحظات بالملف والسطر والقاعدة')],

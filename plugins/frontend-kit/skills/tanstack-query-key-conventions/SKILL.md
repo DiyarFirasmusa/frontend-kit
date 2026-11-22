@@ -57,7 +57,8 @@ useMutation({
 ```
 
 - A route `loader` and the component share the same `queryOptions` so the
-  key can't drift (`context.queryClient.ensureQueryData(orderQueryOptions(id))`).
+  key can't drift (`context.queryClient.query({ ...orderQueryOptions(id), staleTime: 'static' })`;
+  `ensureQueryData` below Query 5.102). `'static'` only at that call, never on the shared options.
 - Mutations invalidate their domain's `all` (and the specific detail when
   that is enough) in `onSuccess` in the query hook.
 - Session-scoped data is cleared on sign-out by the project's sign-out

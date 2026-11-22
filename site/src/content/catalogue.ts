@@ -51,6 +51,8 @@ export const skillGroups: SkillGroup[] = [
       explain: { en: 'Answers why and how questions about your code.', ar: 'تجيب عن أسئلة لماذا وكيف في شيفرة مشروعك.' },
       refactor: { en: 'Restructures code without changing what it does.', ar: 'تعيد تنظيم الشيفرة دون تغيير ما تفعله.' },
       'refactor-mode': { en: 'Audits a project, then rebuilds it one approved phase at a time.', ar: 'تدقّق المشروع ثم تعيد بناءه مرحلة بعد مرحلة بموافقتك.' },
+      mode: { en: 'Turns a working mode on or off: freeze, hotfix, read-only and more.', ar: 'تشغّل نمط عمل أو توقفه: تجميد أو إصلاح عاجل أو قراءة فقط وغيرها.' },
+      'upgrade-mode': { en: 'Moves one dependency family to a new version, phase by phase.', ar: 'تنقل عائلة اعتماديات إلى إصدار جديد، مرحلة بعد مرحلة.' },
       'fix-everywhere': { en: 'Finds every copy of a problem, fixes each one and proves none is left.', ar: 'تجد كل نسخة من المشكلة وتصلحها وتثبت أنه لم يبقَ شيء.' },
       'backend-request': { en: 'Writes down what the frontend needs from the backend, in plain words.', ar: 'تدوّن ما تحتاجه الواجهة من الخادم بلغة بسيطة.' },
     },
@@ -81,7 +83,7 @@ export const skillGroups: SkillGroup[] = [
   },
 ]
 
-/** The ten agents, in the order they stand in the film. */
+/** Every agent, in the order they stand in the film. */
 export const agents: Record<string, Bilingual> = {
   planner: { en: 'Splits a large task', ar: 'يقسّم المهمة الكبيرة' },
   'frontend-dev': { en: 'Writes the code', ar: 'يكتب الشيفرة' },
@@ -93,4 +95,8 @@ export const agents: Record<string, Bilingual> = {
   'performance-optimizer': { en: 'Measures the slow parts', ar: 'يقيس مواضع البطء' },
   'refactor-architect': { en: 'Leads big refactors', ar: 'يقود إعادة الهيكلة' },
   'qa-engineer': { en: 'Runs the final gate', ar: 'يشغّل الفحص الأخير' },
+  'frontend-security-reviewer': { en: 'Audits security', ar: 'يدقّق الأمان' },
+  'i18n-rtl-reviewer': { en: 'Checks languages and direction', ar: 'يراجع اللغات والاتجاه' },
+  'upgrade-analyst': { en: 'Plans major upgrades', ar: 'يخطط الترقيات الكبيرة' },
+  'seo-auditor': { en: 'Checks how Google reads pages', ar: 'يفحص قراءة Google للصفحات' },
 }

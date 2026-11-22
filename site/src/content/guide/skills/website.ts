@@ -41,7 +41,7 @@ export const website: Record<string, SkillGuide> = {
       t('Classifies the page: home, list, detail, content or private.', 'يصنّف الصفحة: رئيسية أو قائمة أو تفاصيل أو محتوى أو خاصة.'),
       t('Makes the data available on the server.', 'يوفّر البيانات على الخادم.'),
       t('Writes title, description, canonical, share tags and structured data.', 'يكتب العنوان والوصف والرابط الرسمي ووسوم المشاركة والبيانات المنظّمة.'),
-      t('Updates sitemap and robots, then tests the HTML.', 'يحدّث خريطة الموقع وrobots ثم يختبر الـ HTML.'),
+      t('Updates the sitemap, gives private pages noindex, then tests the HTML.', 'يحدّث خريطة الموقع ويضع noindex للصفحات الخاصة ثم يختبر الـ HTML.'),
     ],
     result: [t('Correct tags in both languages', 'وسوم صحيحة باللغتين'), t('A report of what still needs a manual check', 'تقرير بما يحتاج فحصاً يدوياً')],
     limits: [t('Never invents ratings or facts that are not on the page.', 'لا يخترع تقييمات أو حقائق ليست في الصفحة.')],

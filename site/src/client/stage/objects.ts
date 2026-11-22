@@ -6,6 +6,8 @@ import { all } from '../dom.ts'
 const NARROW = 820
 /** The words of a page take this share of the screen. */
 const COLUMN = { wide: 0.5, phone: 0.5 }
+/** On a phone the words begin to shade the stage here, so no name is written lower. */
+const NAMED_ABOVE = 0.385
 /** How near a press must land, in pixels, at the size the object has at 22 units away. */
 const REACH = { skills: 110, agents: 90, rules: 120, checks: 0 }
 const REACH_AT = 22
@@ -62,11 +64,13 @@ export class StageObjects {
       thing.reach = REACH[thing.shape] * Math.min(1.6, REACH_AT / Math.max(1, distance))
       const focused = aside > 0.4 && thing.index === stop
       // The rings share one centre, so only the one being read is named.
-      thing.element.hidden = thing.shape === 'checks' && !focused
+      thing.element.hidden = (thing.shape === 'checks' && !focused) || (narrow && y > height * NAMED_ABOVE)
       thing.element.classList.toggle('is-focus', focused)
       const size = thing.shape === 'skills' ? Math.min(1.2, (REACH_AT / distance) * Math.min(1, width / 560 + 0.05)) : 1
       thing.element.style.opacity = String((1 - clamp(move * 5)) * (focused || stop < 0 ? 1 : 1 - aside * 0.6))
-      thing.element.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${size})`
+      // The council reaches past both edges, and its names stay readable inside them.
+      const left = thing.shape === 'agents' ? `clamp(50%, ${x}px, ${width}px - 50%)` : `${x}px`
+      thing.element.style.transform = `translate(${left}, ${y}px) translate(-50%, -50%) scale(${size})`
     }
   }
 

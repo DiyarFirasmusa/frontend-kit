@@ -5,7 +5,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "outputStyle": "Frontend report",
+  "outputStyle": "frontend-kit:Frontend report",
   "permissions": {
     "allow": [
       "Bash(npm run typecheck)",
@@ -31,7 +31,8 @@
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(git show *)",
-      "Bash(git fetch *)",
+      "Bash(git fetch origin)",
+      "Bash(git fetch origin {{DEFAULT_BRANCH}})",
       "Bash(git branch --show-current)",
       "Bash(git branch -vv)",
       "Bash(git branch -a)",
@@ -46,12 +47,12 @@
       "Bash(lsof -nP -iTCP:{{E2E_PORT}} *)",
       "Bash(git rebase origin/{{DEFAULT_BRANCH}})",
       "Bash(git rebase --continue)",
-      "Bash(git rebase --abort)",
-      "Bash(npm install *)",
-      "Bash(npm i *)",
-      "Bash(npm uninstall *)"
+      "Bash(git rebase --abort)"
     ],
     "ask": [
+      "Bash(npm install *)",
+      "Bash(npm i *)",
+      "Bash(npm uninstall *)",
       "Bash(git commit *)",
       "Bash(git push *)"
     ],
@@ -63,6 +64,12 @@
       "Read(./.env.development)",
       "Read(./.env.test)",
       "Read(./.env.staging)",
+      "Read(./.envrc)",
+      "Read(./.dev.vars)",
+      "Read(./.dev.vars.*)",
+      "Read(./.netrc)",
+      "Read(./.git-credentials)",
+      "Read(./**/*.key)",
       "Edit(./.env)",
       "Edit(./.env.local)",
       "Edit(./.env.*.local)",
@@ -72,9 +79,11 @@
       "Edit(./.env.staging)",
       "Edit(./.github/**)",
       "Edit(./deploy/**)",
-      "Edit(./server/**)",
       "Edit(./src/routeTree.gen.ts)",
       "Edit(./package-lock.json)",
+      "Bash(git diff *--output*)",
+      "Bash(git log *--output*)",
+      "Bash(git show *--output*)",
       "Bash(gh pr create)",
       "Bash(gh pr create *)",
       "Bash(gh pr new *)",

@@ -44,6 +44,8 @@ export const skillSigns: Record<string, SignName> = {
   'branch-status': 'branches',
   'backend-request': 'envelope',
   setup: 'box',
+  mode: 'switcher',
+  'upgrade-mode': 'upgrade',
 }
 
 export const agentSigns: Record<string, SignName> = {
@@ -57,6 +59,10 @@ export const agentSigns: Record<string, SignName> = {
   'performance-optimizer': 'gauge',
   'refactor-architect': 'compass',
   'qa-engineer': 'verified',
+  'frontend-security-reviewer': 'lock',
+  'i18n-rtl-reviewer': 'translate',
+  'upgrade-analyst': 'upgrade',
+  'seo-auditor': 'seo',
 }
 
 /** By file name: a rule of two project types is about the same thing in both. */
@@ -86,6 +92,13 @@ export const ruleSigns: Record<string, SignName> = {
   'auth.md': 'key',
   'data-and-state.md': 'store',
   'forms.md': 'form',
+  'accessibility.md': 'accessible',
+  'dependencies.md': 'packages',
+  'formatting.md': 'numerals',
+  'security.md': 'guard',
+  'typescript.md': 'typescript',
+  'nextjs.md': 'nextLetter',
+  'react-router.md': 'route',
 }
 
 export const hookSigns: Record<HookEvent, SignName> = {
@@ -94,6 +107,7 @@ export const hookSigns: Record<HookEvent, SignName> = {
   PreToolUse: 'guard',
   PostToolUse: 'pencil',
   PostToolUseFailure: 'warning',
+  SubagentStart: 'handover',
   SubagentStop: 'handback',
   Notification: 'bell',
   Stop: 'gate',
@@ -111,7 +125,7 @@ const pageSigns: Record<PageId, SignName> = {
   checks: 'guard',
   features: 'blocks',
   'project-types': 'fullstack',
-  modes: 'sliders',
+  modes: 'switcher',
   configuration: 'gear',
   refactor: 'rescue',
   questions: 'question',

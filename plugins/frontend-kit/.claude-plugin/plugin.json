@@ -1,6 +1,6 @@
 {
   "name": "frontend-kit",
-  "version": "1.14.3",
+  "version": "1.15.0",
   "description": "A complete Claude Code setup for React + TypeScript frontends, in four profiles: website (TanStack Start), dashboard (Vite, Next.js or TanStack Start), react (any React stack) and fullstack (site + admin in one tree). Skills, agents, git and live-site guards, format/lint on edit, quality gates, MCP servers, and project templates installed by /frontend-kit:setup. Arabic RTL + English first-class.",
   "author": { "name": "diyarfirasmusa" },
   "license": "MIT",

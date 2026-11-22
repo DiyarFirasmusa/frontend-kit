@@ -405,3 +405,10 @@
     font-size: 0.875rem;
   }
 }
+
+/* An agent's name is worn on its cloak, so it brings its own dark ground. */
+.label-agents {
+  padding-inline: 0.3em;
+  background: rgb(5 6 7 / 0.85);
+  line-height: 1.35;
+}

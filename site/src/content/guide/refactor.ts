@@ -14,7 +14,7 @@ export const rescue = {
     t('Green baseline: make the checks pass.', 'أساس ناجح: اجعل الفحوص تنجح.'),
     t('Mechanical: format, lint, renames and dead code.', 'آلية: تنسيق وتدقيق وتسمية وشيفرة ميتة.'),
     t('Types: strict and no any.', 'الأنواع: صارمة وبلا any.'),
-    t('Structure: feature folders and smaller files.', 'البنية: مجلدات ميزات وملفات أصغر.'),
+    t('Structure: the layout you picked, by default your own, and smaller files.', 'البنية: الترتيب الذي اخترته، وافتراضياً ترتيبك، وملفات أصغر.'),
     t('Patterns: one way for data, forms and state.', 'الأنماط: طريقة واحدة للبيانات والنماذج والحالة.'),
     t('Quality: tests, accessibility, translations and speed.', 'الجودة: اختبارات ووصول وترجمة وسرعة.'),
   ],

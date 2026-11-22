@@ -29,6 +29,7 @@ for skill in plugins/*/skills/*/SKILL.md; do
   name="$(sed -n 's/^name: *//p' "$skill" | head -n1 | tr -d '"')"
   [ "$name" = "$dir" ] || bad "$skill: frontmatter name '$name' != folder '$dir'"
   grep -q '^description: *.\{20,\}' "$skill" || bad "$skill: missing or too short description"
+  sed -n '2,/^---$/p' "$skill" | grep -Eq '^description: +[^" ].*: ' && bad "$skill: description holds ': ' and is not quoted"
 done
 
 # 4. hooks.json scripts exist and are executable
@@ -42,6 +43,23 @@ done
 # 5. template contract: CLAUDE.md templates stay within 150 lines; shell syntax is valid
 for t in plugins/*/templates/*/CLAUDE.md; do
   [ "$(wc -l <"$t")" -le 150 ] || bad "$t is over 150 lines"
+done
+# 5c. rules: frontmatter is only a list of quoted paths (an unreadable one makes the rule load in every session), the size
+#     stays under the on-demand cap, references are flat file names, and setup knows every placeholder
+for rule in plugins/*/templates/*/rules/*.md plugins/*/templates/*/variants/*/rules/*.md; do
+  [ -f "$rule" ] || continue
+  [ "$(wc -m <"$rule")" -le 40000 ] || bad "$rule: over 40000 characters"
+  if head -n1 "$rule" | grep -qx -- '---'; then
+    awk 'NR == 1 { next }
+      /^---$/ { closed = 1; exit }
+      NR == 2 { if ($0 != "paths:") wrong = 1; next }
+      $0 !~ /^  - "[^"\\]+"$/ { wrong = 1 }
+      END { exit (closed && !wrong) ? 0 : 1 }' "$rule" || bad "$rule: frontmatter must be paths: and quoted globs"
+  fi
+  grep -qE '`(shared|react|website|dashboard)(/rules)?/[a-z-]+[.]md`' "$rule" && bad "$rule: cites a template path; installed rules are flat"
+done
+for placeholder in $(grep -rhoE '[{][{][A-Z0-9_]+[}][}]' plugins/*/templates | sort -u); do
+  grep -qF "$placeholder" plugins/*/skills/setup/SKILL.md || bad "setup skill does not name $placeholder"
 done
 # 5b. dashboard variants (templates/dashboard/variants/<name>): CLAUDE.md within the cap, config JSON with the framework
 #     the setup skill names, every rule has frontmatter paths, and the variant is described in the setup skill
@@ -152,6 +170,28 @@ for profile in "$KIT"/templates/*/; do
   jq -r '.plugins[].description' .claude-plugin/marketplace.json | grep -qw "$profile" || bad "marketplace.json description: no $profile profile"
   grep -q "\`$profile\`" README.md || bad "README.md: no $profile profile"
   grep -q "^| $profile " docs/TEMPLATE-CONTRACT.md || bad "docs/TEMPLATE-CONTRACT.md: no $profile profile"
+done
+
+# 10. agents: name = file, YAML-safe description, tools that fit the prompt, servers that ship
+for agent in "$KIT"/agents/*.md; do
+  base="$(basename "$agent" .md)"
+  head="$(sed -n '2,/^---$/p' "$agent")"
+  tools="$(printf '%s\n' "$head" | sed -n 's/^tools: *//p' | tr -d ' ')"
+  [ "$(printf '%s\n' "$head" | sed -n 's/^name: *//p')" = "$base" ] || bad "$agent: name differs from the file"
+  # an unquoted ": " makes the frontmatter unreadable, and Claude Code then drops every field, tools included
+  printf '%s\n' "$head" | grep -Eq '^description: +[^" ].*: ' && bad "$agent: description holds ': ' and is not quoted"
+  if grep -Eq '[Ll]oad[^.]*skill|`[a-z0-9-]+` skill' "$agent"; then
+    case ",$tools," in *,Skill,*) ;; *) bad "$agent: names a skill to load but has no Skill tool" ;; esac
+  fi
+  if printf '%s\n' "$head" | grep -q '^disallowedTools:.*Write'; then
+    case ",$tools," in *,Write,* | *,Edit,* | *,NotebookEdit,*) bad "$agent: denies Write but grants a write tool" ;; esac
+  fi
+  if printf '%s\n' "$head" | grep -q '^description:.*Read-only'; then
+    case ",$tools," in *,Bash,*) bad "$agent: says read-only but has Bash" ;; esac
+  fi
+  for server in $(printf '%s\n' "$tools" | tr ',' '\n' | sed -n 's/^mcp__plugin_frontend-kit_\(.*\)__.*/\1/p' | sort -u); do
+    jq -e --arg s "$server" '.mcpServers[$s]' "$KIT/.mcp.json" >/dev/null || bad "$agent: no MCP server $server in .mcp.json"
+  done
 done
 
 [ "$FAIL" -eq 0 ] && echo "repo checks passed" || { echo "$FAIL problem(s)"; exit 1; }

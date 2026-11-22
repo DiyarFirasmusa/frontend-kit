@@ -24,5 +24,5 @@ elif [ "$RESULT" = fail ]; then
 else
   WHY="src/ changed since the last passing quality gate"
 fi
-hook_context PreToolUse "About to commit src/ changes, but $WHY. Run the verify skill (or npm run check) first and commit only when it passes, unless the user said to commit as is."
+hook_context PreToolUse "About to commit source changes, but $WHY. Run the verify skill (or npm run check) first and commit only when it passes, unless the user said to commit as is."
 exit 0

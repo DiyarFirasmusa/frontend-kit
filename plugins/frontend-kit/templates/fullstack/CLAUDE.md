@@ -2,9 +2,9 @@
 
 {{PROJECT_DESCRIPTION}}
 
-One project, two apps in one TanStack Start tree: a public **site** and an **admin** dashboard under `{{ADMIN_PATH_PREFIX}}`.
+One project, two apps in one TanStack Start tree: a public **site** and an **admin** dashboard under `{{ADMIN_PATH}}`.
 They share the toolchain and the root files only; their code, rules and checks are separate.
-The bar every change meets: `.claude/rules/quality-bar.md`. Area rules load by path (see below).
+The bar every change meets: `.claude/rules/quality-bar.md`. Area rules load when a matching file is read or edited, not searched.
 
 | App   | Profile   | Code                                              | Routes                  | Rendering                    |
 | ----- | --------- | ------------------------------------------------- | ----------------------- | ---------------------------- |
@@ -22,7 +22,7 @@ follow that answer: `web-*` skills and the `site` rules for the site, `dash-*` s
   own QueryClient, i18n instance, Toaster and auth store inside its layout route; the layout overrides the router context.
 - **Every route path under the admin starts with `{{ADMIN_PATH}}`** (links, `navigate`, redirects, tests). `tsc` cannot
   catch a missed prefix when the same path exists on the site (`/login`, `/`): grep for it.
-- The admin is never indexed: `noindex` header and meta, `Disallow: {{ADMIN_PATH}}` in robots.txt.
+- The admin is never indexed: `noindex` header and meta. Not disallowed in robots.txt, which would hide the `noindex`.
 - Module top-level code in the admin must be SSR-safe (no `window` outside effects), the server bundle still imports it.
 - One theme file; admin-only token values live under `:root[data-app='admin']`. Never hardcode a colour.
 - `<html lang dir>` and the dark class have one owner each: the site's root; the admin restores them when it unmounts.

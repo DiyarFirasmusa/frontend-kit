@@ -37,9 +37,23 @@ so a component written with them needs no `dark:` variant.
 - **Mobile first.** Write the phone layout unprefixed, widen with
   `sm:` / `md:` / `lg:`. No horizontal page scroll at 360px (a wide table
   scrolls inside its own container). Touch targets ≥ 44px.
-- Prefer logical properties (`ps-` / `pe-` / `ms-` / `me-` / `start-` / `end-`).
+- Prefer logical properties (`ps-` / `pe-` / `ms-` / `me-`, and for positions `inset-s-` / `inset-e-` on Tailwind 4.2+,
+  `start-` / `end-` on older).
+- Full height is `min-h-dvh`, never `100vh` (`svh` for a hero that must not resize). A component in panes or cards
+  answers to its container (`@container` + `@md:`), not the viewport.
+- A feature newer than the browser floor (`project.md`) is progressive enhancement only.
 - Use the radii and shadows the design system already uses. Delineate with a
   subtle border before reaching for a shadow; shadows stay light.
+
+## Tailwind v4 names
+
+On v4 a v3 habit compiles to nothing or to something else:
+
+- Scales moved: v3 `shadow-sm` → `shadow-xs`, `shadow` → `shadow-sm` (also `blur`, `rounded`); `ring` is 1px (`ring-3`).
+- Borders default to `currentColor`. `outline-none` removes; `outline-hidden` hides and keeps forced colours.
+- `bg-opacity-50` is gone (`bg-black/50`); variables `bg-(--x)`; important last (`flex!`); `hover:` needs a hover device.
+- Prefer `bg-linear-to-*`, `shrink-*`, from 4.2 `inset-s-*` (`start-*` still works, deprecated), and from 4.3
+  `scrollbar-gutter-stable` where a scrollbar shifts the layout.
 
 ## Component classes
 

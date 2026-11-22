@@ -287,6 +287,8 @@ playwright-best-practices	@e2e | @test @browser | @test مرة ينجح | @test 
 	| @test مستقر | @test @page @make | @test المستخدم @make
 typescript-advanced-types	نوع محول | نوعا محولا | @make نوع مفاتيح | @generic | @type @make ديناميكي | @type @code مشتق | @type any
 	| تايب @make | @type يستنتج | استنتاج @type | @type يمنع | @type متقدمة | @type السكيما | تايبسكربت @type
+mode	وضع_التجميد | وضع_الصيانة | وضع_القراءة_فقط | وضع_الهوتفكس | وضع_النموذج_الاولي | تجميد_الكود | فريز_مود | هوتفكس_مود
+upgrade-mode	وضع_الترقية | ابكريد_مود | ترقية_الاصدار_الرئيسي | ترقية ريأكت | ترقية نكست
 refactor-mode	ريفاكتور_مود | ريفكتر_مود | ريفاكتورينك_مود | @refactor مود | ريفاكتر_مود | وضع_اعادة_الهيكلة | وضع_الريفاكتر
 	| مود_الريفاكتر | وضع_اعادة_البناء | @standard @product | @refactor @product | @refactor @whole
 	| اعادة_هيكلة @product | اعد_هيكلة @product | نظم~ @product @whole | رتب~ @product @whole | هيكل~ @product @whole

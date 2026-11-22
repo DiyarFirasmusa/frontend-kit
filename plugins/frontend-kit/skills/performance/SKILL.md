@@ -23,10 +23,12 @@ Measure before and after, and change only what the measurement points at.
 ## Measure
 
 ```sh
-npm run build              # chunk sizes in the output
+npm run build              # chunk sizes where the tool prints them (Next.js 16 does not)
 npm run build:analyze      # treemap, when the project has the script
 npm run preview            # then Lighthouse, mobile preset
 ```
+
+Run the same command before and after and take the median of several runs; say "lab only" when there is no field data.
 
 Chrome devtools Performance panel with CPU 4× slowdown + "Fast 4G" for
 interactions. Use UAT (<uatHost>) or local builds, never load-test
@@ -41,16 +43,16 @@ interactions. Use UAT (<uatHost>) or local builds, never load-test
   generation, rich editors) are imported only in the component that needs
   them, or with `import()` on demand.
 - Prefetch the next likely page: `<Link preload="intent">` and
-  `queryClient.prefetchQuery` / `ensureQueryData` in the route `loader`.
+  `queryClient.query(options).catch(() => undefined)` in the route `loader` (Query 5.102+).
 - Website (TanStack Start): load above-the-fold data in the route `loader`
-  (`ensureQueryData`) so the HTML arrives with content; keep the rest
+  (`await queryClient.query(options)`) so the HTML arrives with content; keep the rest
   client-side. No hydration mismatches (dates, random ids, `window` in render).
 - Dashboard (Vite + TanStack Router): start the page's queries in the
   `loader` so they run in parallel with the chunk download.
 
 ## Images (usually the LCP)
 
-- The hero / first visible image: eager, `fetchpriority="high"`, sized.
+- The hero / first visible image: eager, `fetchPriority="high"` (the JSX spelling), sized.
 - Everything below the fold: `loading="lazy"`, `decoding="async"`.
 - Always `width` + `height` or an `aspect-*` box → no CLS.
 - Serve close to display size; prefer WebP/AVIF.

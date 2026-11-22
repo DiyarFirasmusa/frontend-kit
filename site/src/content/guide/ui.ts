@@ -66,7 +66,7 @@ export const skillUse = {
   title: t('Three ways a skill starts', 'ثلاث طرق لبدء المهارة'),
   ways: [
     { name: t('Just ask', 'اطلب فقط'), text: t('Describe the job. The assistant matches it to a skill.', 'صف العمل، فيطابقه المساعد مع مهارة.'), example: t('create a customers table', 'أنشئ جدول العملاء') },
-    { name: t('Get a hint', 'يصلك تلميح'), text: t('A hook looks for key words and names up to three kit skills before the assistant starts. It understands English and Arabic, standard and Iraqi.', 'حارس يبحث عن كلمات مفتاحية ويسمّي حتى ثلاث مهارات قبل أن يبدأ المساعد. يفهم الإنجليزية والعربية، الفصحى والعراقية.'), example: t('make the page faster', 'التطبيق بطيء، سرّعه') },
+    { name: t('Get a hint', 'يصلك تلميح'), text: t('A hook looks for key words and names up to three kit skills before the assistant starts. It understands English and Arabic, standard and Iraqi. It matches words, so it can miss a phrasing.', 'حارس يبحث عن كلمات مفتاحية ويسمّي حتى ثلاث مهارات قبل أن يبدأ المساعد. يفهم الإنجليزية والعربية، الفصحى والعراقية. وهو يطابق الكلمات، فقد تفوته صياغة.'), example: t('make the page faster', 'التطبيق بطيء، سرّعه') },
     { name: t('Call it', 'استدعها'), text: t('Type the skill’s name yourself.', 'اكتب اسم المهارة بنفسك.'), example: t('/frontend-kit:verify', '/frontend-kit:verify') },
   ],
   anatomyTitle: t('A skill, up close', 'المهارة عن قرب'),

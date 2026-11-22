@@ -4,13 +4,14 @@
 
 ```ts
 import { z } from 'zod';
+import { looseText } from '@/lib/list-search';
 import { USER_STATUSES } from '../types/types';
 
 export const userSearchSchema = z.object({
   page: z.coerce.number().int().min(1).catch(1).default(1),
   pageSize: z.coerce.number().pipe(z.literal([10, 20, 50])).catch(20).default(20),
   sort: z.string().catch('').default(''),
-  q: z.string().trim().catch('').default(''),
+  q: looseText.catch('').default(''), // the router hands ?q=100553 over as a number
   status: z.enum(['all', ...USER_STATUSES]).catch('all').default('all'),
   roleId: z.string().catch('').default(''),
   from: z.iso.date().optional().catch(undefined),
@@ -135,7 +136,7 @@ export function SearchField({ value, onDebouncedChange, label, clearLabel, place
 
   return (
     <div className="relative min-w-0 flex-1">
-      <SearchIcon className="text-muted pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2" aria-hidden="true" />
+      <SearchIcon className="text-muted pointer-events-none absolute inset-s-3 top-1/2 size-4 -translate-y-1/2" aria-hidden="true" />
       <input
         type="search"
         aria-label={label}
@@ -156,7 +157,7 @@ export function SearchField({ value, onDebouncedChange, label, clearLabel, place
             setText('');
             onDebouncedChange('');
           }}
-          className="absolute end-1 top-1/2 inline-flex size-11 -translate-y-1/2 items-center justify-center"
+          className="absolute inset-e-1 top-1/2 inline-flex size-11 -translate-y-1/2 items-center justify-center"
         >
           <CloseIcon className="size-4" aria-hidden="true" />
         </button>
@@ -166,7 +167,8 @@ export function SearchField({ value, onDebouncedChange, label, clearLabel, place
 }
 ```
 
-`SearchIcon` / `CloseIcon` come from the project's icon registry.
+`SearchIcon` / `CloseIcon` come from the project's icon registry. `inset-s-*` / `inset-e-*` need Tailwind 4.2: on older
+versions write `start-3` and `end-1`, or both lose their position.
 
 ## src/components/filters/filter-bar.tsx (shared layout)
 
