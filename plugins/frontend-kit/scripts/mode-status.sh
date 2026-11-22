@@ -6,7 +6,7 @@ set -u
 . "$(dirname "$0")/lib.sh"
 . "$(dirname "$0")/mode-lib.sh"
 if [ "${2:-${1:-}}" = --json ]; then
-  jq -n --arg p "$MODE_PROJECT" --arg t "$MODE_TASK" --argjson g "$(mode_guard_wired && echo true || echo false)" '{project: $p, task: ($t | select(. != "")), guardWired: $g}'
+  jq -n --arg p "$MODE_PROJECT" --arg t "$MODE_TASK" --argjson g "$(mode_guard_wired && echo true || echo false)" '{project: $p, task: ($t | select(. != "") // null), guardWired: $g}'
 else
   echo "mode: $(mode_label)"
 fi

@@ -10,6 +10,10 @@ SESSIONS="$HOOK_STATE_DIR/sessions"
 [ -d "$SESSIONS" ] || exit 0
 if [ -n "$SESSION_ID" ]; then
   rm -f "$SESSIONS/$SESSION_ID.main-edits" "$SESSIONS/$SESSION_ID.bash-fp" 2>/dev/null
+  case "$SESSION_ID" in
+    *[!A-Za-z0-9._-]* | .*) ;;
+    *) rm -f "$SESSIONS/$SESSION_ID".*.before 2>/dev/null ;;
+  esac
 fi
 find "$SESSIONS" -type f -mtime +3 -delete 2>/dev/null
 exit 0

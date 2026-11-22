@@ -30,9 +30,12 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-awk -v scope="$SCOPE" -v admin_dir="$ADMIN_DIR" -v admin_routes="$ADMIN_ROUTES" -v site_routes="$SITE_ROUTES" '
-  function emit(glob) { print "  - \"" glob "\"" }
-  BEGIN { fm = 0 }
+# The sibling rule names: an admin copy cites admin-<name>.md, not the site's rule of the same name.
+RULE_NAMES="$(for rule in "$(dirname "$IN")"/*.md; do basename "$rule" .md; done | tr '\n' ' ')"
+awk -v scope="$SCOPE" -v rule_names="$RULE_NAMES" -v admin_dir="$ADMIN_DIR" -v admin_routes="$ADMIN_ROUTES" -v site_routes="$SITE_ROUTES" '
+  # Slashed globs match at any depth, so a site glob is anchored at the root: a nested admin has the same folders.
+  function emit(glob) { print "  - \"" (scope == "site" && glob ~ /^src\// ? "/" : "") glob "\"" }
+  BEGIN { fm = 0; count = split(rule_names, names, " ") }
   /^---[[:space:]]*$/ { fm++; print; next }
   fm == 1 && /^  - "src\// {
     glob = $0
@@ -63,6 +66,10 @@ awk -v scope="$SCOPE" -v admin_dir="$ADMIN_DIR" -v admin_routes="$ADMIN_ROUTES" 
     gsub(/@@ROUTER@@/, "src/router.tsx", line)
     gsub(/@@MAIN@@/, "src/main.tsx", line)
     gsub(/@@TREE@@/, "src/routeTree.gen.ts", line)
+    for (i = 1; i <= count; i++) {
+      gsub("`" names[i] "[.]md`", "`admin-" names[i] ".md`", line)
+      gsub("[.]claude/rules/" names[i] "[.]md", ".claude/rules/admin-" names[i] ".md", line)
+    }
     print line; next
   }
   { print }

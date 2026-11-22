@@ -7,7 +7,8 @@
 #
 # One record per line, newlines inside a value written as \036:
 #   W<word>     a word, quotes and escapes resolved; a substitution keeps its text as $(inner words)
-#   R<target>   the target of a redirection
+#   R<target>   the target of a redirection that writes
+#   I<file>     the file an input redirection reads
 #   S<text>     a here-string
 #   H<body>     a heredoc body with a quoted delimiter
 #   X<body>     a heredoc body the shell expands
@@ -404,6 +405,7 @@ function end_word(frame,    w) {
     pending[++npending] = ndoc
     add_token(frame, "h" ndoc)
   } else if (redirect[frame] == "<<<") add_token(frame, "S" w)
+  else if (redirect[frame] == "<") add_token(frame, "I" w)
   else if (redirect[frame] != "") add_token(frame, "R" w)
   else {
     if (command_position[frame] && !quoted_word[frame]) {
@@ -564,7 +566,7 @@ function scan(closer, opened,    frame, c, n, parens) {
         }
       } else {
         if (n == ">" || n == "&" || (c == ">" && n == "|")) take()
-        redirect[frame] = c
+        redirect[frame] = (c == "<" && n == ">") ? ">" : c
       }
     } else {
       if (index(DIGITS, c) == 0) digits[frame] = 0

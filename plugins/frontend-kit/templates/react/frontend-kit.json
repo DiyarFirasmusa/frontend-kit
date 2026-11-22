@@ -24,7 +24,7 @@
     "server/**",
     "package-lock.json"
   ],
-  "generatedPaths": [],
+  "generatedPaths": [".next/**", "next-env.d.ts", ".react-router/**"],
   "srcDirs": [
     "{{SRC_DIR}}"
   ],

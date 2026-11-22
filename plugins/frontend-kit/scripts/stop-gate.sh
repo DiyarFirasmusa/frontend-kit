@@ -17,6 +17,8 @@ MAX_BLOCKS_IN_A_ROW=3
 OUTPUT_LINES=60
 
 hook_read_input
+# read-only runs no project code, and the fix the gate would ask for is what that mode refuses.
+if [ -f "$HOOK_STATE_DIR/task-mode.json" ] && [ "$(jq -r '.mode // empty' "$HOOK_STATE_DIR/task-mode.json" 2>/dev/null)" = read-only ]; then exit 0; fi
 ACTIVE="$(hook_field '.stop_hook_active')"
 SESSION_ID="$(hook_field '.session_id')"
 SESSION_FILE="$HOOK_STATE_DIR/sessions/${SESSION_ID:-unknown}.json"
@@ -47,9 +49,13 @@ REVIEW_DONE="$(read_session '.reviewDone')"
 # Background agents edit src/ while the main session talks to the user. When this session made no
 # src/ edit of its own and src/ changed in the last few seconds, an agent is mid-edit: its half-done
 # files would fail the gate for work that isn't finished (or ours). Wait for the next stop instead.
+# The same holds while the input lists a subagent that still runs (background_tasks), however old its last edit.
 # Our own edits always get gated. HOOK_SETTLE_SECONDS=0 turns the wait off (the hook tests do).
 SETTLE_SECONDS="${HOOK_SETTLE_SECONDS:-30}"
 MAIN_EDITS="$HOOK_STATE_DIR/sessions/${SESSION_ID:-unknown}.main-edits"
+if [ "$SETTLE_SECONDS" -gt 0 ] && [ ! -s "$MAIN_EDITS" ]; then
+  [ -n "$(hook_field '.background_tasks[]? | select(.type == "subagent") | .id')" ] && exit 0
+fi
 if [ "$SETTLE_SECONDS" -gt 0 ] && [ ! -s "$MAIN_EDITS" ] && command -v perl >/dev/null 2>&1; then
   # The age of the newest changed file, wherever it is.
   NEWEST_AGE="$(printf '%s\n' "$CHANGED" | ROOT="$HOOK_ROOT" perl -ne 'chomp; my $path = "$ENV{ROOT}/$_"; next unless -f $path; my $mtime = (stat _)[9]; $newest = $mtime if $mtime > ($newest // 0); END { print time() - $newest if $newest }' 2>/dev/null)"
@@ -182,7 +188,7 @@ if [ -z "$FAILURES" ] && [ "$REVIEW_DONE" != true ] && ! { [ -f "$KIT_CONFIG" ] 
   REVIEW_DONE=true
 fi
 REVIEW_SCOPE="the uncommitted changes"
-[ -n "$COMMITTED" ] && REVIEW_SCOPE="what this session committed (git log -p ${SINCE_HEAD:+${SINCE_HEAD:0:10}..}HEAD) and the uncommitted changes"
+[ -n "$COMMITTED" ] && REVIEW_SCOPE="what this session committed (git log -p ${SINCE_HEAD:+${SINCE_HEAD:0:10}..}HEAD -- . ':(exclude,icase)*.env*') and the uncommitted changes"
 GATED="$FINGERPRINT"
 if [ -z "$FAILURES" ]; then
   # Passed: later commits count from here, and committing exactly what just passed is no new change.

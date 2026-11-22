@@ -1,11 +1,14 @@
 # Upgrade references (official, as of 2026-11-22; open them, the pages move)
 
 Starting points only. Each item is a change a typecheck does not show; the guide of the version you target is the authority.
+The list is examples: for any other stack open that project's own migration guide. A maintenance-line update can be
+semver-minor and still breaking, so read its notes too.
 
 - React 19: https://react.dev/blog/2024/04/25/react-19-upgrade-guide — go through 18.3 first for warnings; run the codemods; render errors
   are reported differently and no longer rethrown, so error reporting may need new root options; `ref` becomes a prop.
 - Next.js 16: https://nextjs.org/docs/app/guides/upgrading/version-16 — Turbopack is the default (a custom webpack config
-  fails the build), image defaults change, async request APIs need their own codemod, middleware is not simply renamed. Experimental
+  fails the build), image defaults change, async request APIs need their own codemod, middleware is not simply renamed.
+  `next build` no longer lints and no longer prints sizes: run lint on its own and measure the bundle with an analyzer. Experimental
   agent path: https://nextjs.org/docs/app/guides/upgrading/agent-upgrade (not for production; use it only if the user wants it).
   Support dates: https://nextjs.org/support-policy
 - Tailwind v4: https://tailwindcss.com/docs/upgrade-guide — run the upgrade tool, then look at the screen: renamed scales, default

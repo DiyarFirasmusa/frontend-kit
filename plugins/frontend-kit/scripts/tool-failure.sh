@@ -8,7 +8,14 @@ hook_read_input
 TOOL="$(hook_field '.tool_name')"
 TARGET="$(hook_field '.tool_input.command')"
 [ -n "$TARGET" ] || TARGET="$(hook_field '.tool_input.file_path')"
-ERROR="$(hook_field '.error' | tr '\n' ' ' | cut -c1-300)"
+# The log is read again later: what looks like a credential is not kept.
+redact() {
+  LC_ALL=C sed -E 's/([Bb]earer|[Bb]asic) [^ "'"'"']+/\1 [redacted]/g
+    s/([A-Za-z0-9_-]*([Tt]oken|TOKEN|[Ss]ecret|SECRET|[Pp]assword|PASSWORD|[Pp]asswd|API_KEY|[Aa]pi[Kk]ey|api_key|PRIVATE_KEY|ACCESS_KEY)[A-Za-z0-9_-]*=)[^ &"'"'"']+/\1[redacted]/g
+    s#(://[^/:@ ]+:)[^@/ ]+@#\1[redacted]@#g' | LC_ALL=C sed -E "s/($KIT_TOKEN_RE)/[redacted]/g"
+}
+ERROR="$(hook_field '.error' | tr '\n' ' ' | redact | cut -c1-300)"
+TARGET="$(printf '%s' "$TARGET" | redact)"
 [ -n "$TOOL" ] || exit 0
 
 LOG="$HOOK_STATE_DIR/tool-failures.log"

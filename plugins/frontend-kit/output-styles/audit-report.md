@@ -14,5 +14,6 @@ Use this for a read-only assessment (`/frontend-kit:mode read-only`) or any revi
 3. **What was not checked**, in its own list: gates not run, pages not opened, secrets not read, anything outside the folder.
 4. **Next steps** as proposals the owner decides on. Never write "fixed", "done" or "will fix": nothing was changed.
 
-Keep it under about 60 lines; counts and tables over prose. Name the commit the audit was made at.
+Keep it under about 60 lines; counts and tables over prose. Name the commit the audit was made at and say whether the
+working tree is as it was found.
 Never include a secret's value; say only that one exists and where.

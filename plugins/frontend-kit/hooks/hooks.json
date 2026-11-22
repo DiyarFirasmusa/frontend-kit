@@ -36,22 +36,22 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|mcp__.*",
+        "matcher": "^(Bash|Monitor|PowerShell|Edit|Write|MultiEdit|NotebookEdit|Skill|EnterWorktree|mcp__.*)$",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-guard.sh",
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-guard.sh",
             "timeout": 10,
             "onFailure": "block"
           }
         ]
       },
       {
-        "matcher": "Bash|Monitor",
+        "matcher": "Bash|Monitor|PowerShell|mcp__terminal__run_in_terminal",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-bash.sh",
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-bash.sh",
             "timeout": 10,
             "onFailure": "block"
           },
@@ -63,24 +63,34 @@
         ]
       },
       {
-        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Read",
+        "matcher": "^(Edit|Write|MultiEdit|NotebookEdit|Read|Grep|Glob|LSP|mcp__(plugin_[A-Za-z0-9_-]+_)?(chrome-devtools|playwright)__.+|mcp__claude-in-chrome__file_upload)$",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-paths.sh",
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-paths.sh",
             "timeout": 10,
             "onFailure": "block"
           }
         ]
       },
       {
-        "matcher": "^(WebFetch|mcp__(plugin_[^_]+(-[^_]+)*_)?chrome-devtools__(navigate_page|new_page)|mcp__(plugin_[^_]+(-[^_]+)*_)?playwright__(browser_navigate|browser_tabs)|mcp__claude-in-chrome__(navigate|tabs_create_mcp))$",
+        "matcher": "^(WebFetch|mcp__(plugin_[A-Za-z0-9_-]+_)?chrome-devtools__(navigate|navigate_page|new_page|install_pwa|launch_pwa|mock_network)|mcp__(plugin_[A-Za-z0-9_-]+_)?playwright__(browser_navigate|browser_tabs)|mcp__claude-in-chrome__(navigate|tabs_create_mcp|browser_batch)|mcp__(remote-devices__)?Claude_Browser__(navigate|preview_start|browser_batch))$",
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-url.sh",
+            "command": "bash -p \"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-url.sh",
             "timeout": 10,
             "onFailure": "block"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/bash-edit-track.sh",
+            "timeout": 10
           }
         ]
       }
@@ -121,7 +131,7 @@
     ],
     "SubagentStop": [
       {
-        "matcher": "(frontend-kit:)?(frontend-dev|test-engineer|refactor-architect)",
+        "matcher": "^(frontend-kit:)?(frontend-dev|test-engineer|refactor-architect)$",
         "hooks": [
           {
             "type": "command",
@@ -178,6 +188,16 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-subagent.sh",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "^(frontend-kit:)?refactor-architect$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/subagent-gate.sh",
+            "timeout": 10
           }
         ]
       }

@@ -16,7 +16,11 @@ WS_GLOBS="$({ [ -f "$PROJECT/pnpm-workspace.yaml" ] && sed -n "s/^[[:space:]]*-[
 WS_DIRS=()
 while IFS= read -r glob; do
   [ -n "$glob" ] || continue
-  for dir in $PROJECT/$glob; do [ -f "$dir/package.json" ] && WS_DIRS+=("${dir#"$PROJECT"/}"); done
+  # The glob is expanded, never split: a project path may hold spaces.
+  OLD_IFS="$IFS"
+  IFS=
+  for dir in "$PROJECT"/$glob; do [ -f "$dir/package.json" ] && WS_DIRS+=("${dir#"$PROJECT"/}"); done
+  IFS="$OLD_IFS"
 done <<<"$WS_GLOBS"
 ALL_PKGS=("$PKG")
 for dir in "${WS_DIRS[@]:-}"; do [ -n "$dir" ] && ALL_PKGS+=("$PROJECT/$dir/package.json"); done
@@ -115,6 +119,16 @@ for dir in "${WS_DIRS[@]:-}"; do
 done
 SRC_JSON="$(printf '%s\n' "${SRC[@]:-}" | jq -R . | jq -s 'map(select(. != ""))')"
 
+# `next typegen` exists from 15.5. An unreadable range (latest, workspace:) counts as current.
+next_has_typegen() {
+  local version major minor=99
+  version="$(jq -rs 'map((.dependencies // {}) + (.devDependencies // {})) | add | .next // ""' "${ALL_PKGS[@]}" | grep -oE '[0-9]+(\.[0-9]+)?' | head -n1)"
+  [ -n "$version" ] || return 0
+  major="${version%%.*}"
+  case "$version" in *.*) minor="${version#*.}" ;; esac
+  [ "$major" -gt 15 ] || { [ "$major" -eq 15 ] && [ "$minor" -ge 5 ]; }
+}
+
 TYPECHECK=""
 if [ -n "$(script_of typecheck)" ]; then TYPECHECK="$RUN --silent typecheck"
 elif [ "$TS" = true ] && has vue-tsc; then
@@ -125,6 +139,9 @@ elif [ "$TS" = true ] && has svelte-check; then
   else TYPECHECK="$EXEC svelte-check --no-tsconfig"; fi
 elif [ "$TS" = true ]; then
   if [ "$SOLUTION" = true ]; then TYPECHECK="$EXEC tsc -b"; else TYPECHECK="$EXEC tsc --noEmit"; fi
+  # Generated route types: a clean checkout fails (or checks nothing) without typegen (Next 15.5+, React Router framework).
+  if has next && next_has_typegen; then TYPECHECK="$EXEC next typegen && $TYPECHECK"
+  elif has @react-router/dev; then TYPECHECK="$EXEC react-router typegen && $TYPECHECK"; fi
 fi
 RELATED=""
 case "$TESTS" in
@@ -133,7 +150,7 @@ case "$TESTS" in
 esac
 DEV_PORT="$(script_of dev | grep -oE -- '--port[ =][0-9]+|-p [0-9]+' | grep -oE '[0-9]+' | head -n1)"
 if [ -z "$DEV_PORT" ]; then
-  case "$FRAMEWORK" in "Next.js" | "TanStack Start" | "Create React App" | Remix | "React Router framework" | Nuxt) DEV_PORT=3000 ;; Vite | SvelteKit) DEV_PORT=5173 ;; Angular) DEV_PORT=4200 ;; Astro) DEV_PORT=4321 ;;
+  case "$FRAMEWORK" in "Next.js" | "TanStack Start" | "Create React App" | Remix | Nuxt) DEV_PORT=3000 ;; Vite | SvelteKit | "React Router framework") DEV_PORT=5173 ;; Angular) DEV_PORT=4200 ;; Astro) DEV_PORT=4321 ;;
     Vue | Svelte | Solid) if has vite; then DEV_PORT=5173; fi ;; Gatsby) DEV_PORT=8000 ;; *) DEV_PORT="" ;; esac
 fi
 

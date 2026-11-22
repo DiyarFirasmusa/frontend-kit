@@ -19,10 +19,27 @@ FILE="$(hook_field '.tool_input.file_path')"
 REL="$(hook_rel_path "$FILE")"
 [ -f "$HOOK_ROOT/$REL" ] || exit 0
 
-kit_watched "$REL" || exit 0
+# An edit of what the checks accept is named, wherever the file is (a note, never a block).
+CONFIG_NOTE=""
+case "/$REL" in
+  */node_modules/* | */dist/*) ;;
+  *)
+    case "${REL##*/}" in
+      tsconfig*.json | eslint.config.* | .eslintrc* | .oxlintrc* | oxlint.config.* | biome.json | biome.jsonc | vitest.config.* | jest.config.* | playwright.config.*)
+        kit_switch codeChecks &&
+          CONFIG_NOTE="$REL changes what the checks accept (types, lint or tests). Say why in your report; never loosen a check to get it green." ;;
+    esac
+    ;;
+esac
+note_and_exit() {
+  [ -n "$CONFIG_NOTE" ] && hook_context PostToolUse "$CONFIG_NOTE"
+  exit 0
+}
+
+kit_watched "$REL" || note_and_exit
 case "$REL" in
   *.ts | *.tsx | *.js | *.jsx | *.mjs | *.cjs | *.mts | *.cts | *.vue | *.svelte | *.astro | *.html | *.css | *.scss | *.sass | *.less | *.json) ;;
-  *) exit 0 ;;
+  *) note_and_exit ;;
 esac
 
 # Remember the src/ files the MAIN session edited (subagent hook input carries an agent_id), so the
@@ -141,10 +158,16 @@ esac
 
 # What a coding agent does to get a green check without fixing the cause. Context only, never a block;
 # {"guards": {"codeChecks": false}} in .claude/frontend-kit.json turns these notes off.
-if kit_switch codeChecks on; then
+if kit_switch codeChecks; then
   case "$REL" in
     *.test.* | *.spec.* | */__tests__/*)
-      TEST_HITS="$(grep -nE '(\b(describe|it|test)\.(only|skip)\b|\b(fdescribe|fit|xit|xdescribe|xtest)\(|\bit\.todo\b)' "$REL" 2>/dev/null | head -n 5)"
+      MARKER_RE='\b(describe|it|test)\.(only|skip)\b|(^|[^.A-Za-z0-9_$])(fdescribe|fit|xit|xdescribe|xtest)\(|\bit\.todo\b'
+      TEST_HITS="$(grep -nE "$MARKER_RE" "$REL" 2>/dev/null | head -n 5)"
+      # An edit that adds none is not blamed for the markers that were already there.
+      if [ -n "$TEST_HITS" ] && printf '%s' "$HOOK_INPUT" | jq -e '(.tool_input.old_string != null) or (.tool_input.edits != null)' >/dev/null 2>&1; then
+        markers() { printf '%s' "$HOOK_INPUT" | jq -r "[.tool_input | .$1?, (.edits? | arrays | .[] | .$1?)] | .[] | strings" | grep -cE "$MARKER_RE"; }
+        [ "$(markers new_string)" -gt "$(markers old_string)" ] || TEST_HITS=""
+      fi
       if [ -n "$TEST_HITS" ]; then
         WARNINGS="${WARNINGS:+$WARNINGS
 
@@ -154,7 +177,7 @@ $TEST_HITS"
       ;;
   esac
   case "$REL" in
-    *.ts | *.tsx | *.js | *.jsx | *.mjs)
+    *.ts | *.tsx | *.js | *.jsx | *.mjs | *.cjs | *.mts | *.cts | *.vue | *.svelte | *.astro | *.html)
       SUPPRESS_HITS="$(grep -nE '(@ts-nocheck|eslint-disable|oxlint-disable|biome-ignore)' "$REL" 2>/dev/null | head -n 5)"
       if [ -n "$SUPPRESS_HITS" ]; then
         WARNINGS="${WARNINGS:+$WARNINGS
@@ -162,14 +185,14 @@ $TEST_HITS"
 }Lint or type suppressions in $REL hide the finding instead of fixing it. Fix the cause, or keep the comment only with a reason the reviewer can accept:
 $SUPPRESS_HITS"
       fi
-      SINK_HITS="$(grep -nE '(dangerouslySetInnerHTML|\.innerHTML[[:space:]]*=|\beval\(|new Function\(|document\.write\()' "$REL" 2>/dev/null | grep -vE '^[0-9]+:[[:space:]]*(//|\*)' | head -n 5)"
+      SINK_HITS="$(grep -nE '(dangerouslySetInnerHTML|\.(inner|outer)HTML[[:space:]]*=([^=]|$)|insertAdjacentHTML\(|v-html=|\{@html |bypassSecurityTrust|(^|[^.$A-Za-z0-9_])eval\(|new Function\(|document\.write\()' "$REL" 2>/dev/null | grep -vE '^[0-9]+:[[:space:]]*(//|\*)' | head -n 5)"
       if [ -n "$SINK_HITS" ]; then
         WARNINGS="${WARNINGS:+$WARNINGS
 
-}Unsafe sink in $REL: never feed it user, URL or API text unsanitised (XSS). Prefer plain JSX text, or sanitise with a vetted library first:
+}Unsafe sink in $REL: never feed it user, URL or API text unsanitised (XSS). Prefer the framework's plain text binding, or sanitise with a vetted library first:
 $SINK_HITS"
       fi
-      PUBLIC_HITS="$(grep -nE '(VITE_|NEXT_PUBLIC_|PUBLIC_|EXPO_PUBLIC_|GATSBY_|NUXT_PUBLIC_)[A-Z0-9_]*(SECRET|PRIVATE|PASSWORD|TOKEN|API_KEY|SERVICE_ROLE)' "$REL" 2>/dev/null | head -n 3)"
+      PUBLIC_HITS="$(grep -nE '(VITE_|NEXT_PUBLIC_|PUBLIC_|EXPO_PUBLIC_|GATSBY_|NUXT_PUBLIC_|REACT_APP_)[A-Z0-9_]*(SECRET|PRIVATE_KEY|PASSWORD|SERVICE_ROLE)' "$REL" 2>/dev/null | head -n 3)"
       if [ -n "$PUBLIC_HITS" ]; then
         WARNINGS="${WARNINGS:+$WARNINGS
 
@@ -185,6 +208,9 @@ $PUBLIC_HITS"
 $CONFLICT_HITS"
 fi
 
+[ -n "$CONFIG_NOTE" ] && WARNINGS="${WARNINGS:+$WARNINGS
+
+}$CONFIG_NOTE"
 if [ -n "$PROBLEMS" ]; then
   printf '%s\n' "$PROBLEMS" >&2
   # Exit 2 shows stderr alone: the notes would be lost with a lint error beside them.
