@@ -9,16 +9,30 @@
 # Both arms run with project settings only (no user settings, no MCP servers) and the same tool allow-list.
 # Both arms start on branch feat/bench (cut from main). The project must have node_modules installed (it is symlinked into the copy, never modified).
 set -u
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$(cd "${1:?project dir}" && pwd)"
-TASK="$(cat "${2:?task file}")"
+fail() {
+  echo "e2e-bench: $1" >&2
+  exit 1
+}
+ROOT="$(cd "$(dirname "$0")/.." && pwd)" || fail "can't find the repository"
+# An empty SRC would copy from the root of the disk, an empty WORK would copy to it.
+SRC="$(cd -- "${1:?project dir}" && pwd)" || fail "no such project folder: $1"
+[ -n "$SRC" ] && [ "$SRC" != / ] || fail "no such project folder: $1"
+TASK="$(cat "${2:?task file}")" || fail "can't read the task file: $2"
 ARM="${3:?kit|bare}"
 OUT="${4:?out.jsonl}"
+# The script works inside its temp copy: a relative output file would land there and be deleted with it.
+case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 BUDGET="${5:-3}"
 case "$ARM" in kit | bare) ;; *) echo "arm must be kit or bare" >&2; exit 64 ;; esac
 
-WORK="$(mktemp -d "${TMPDIR:-/tmp}/kit-bench.XXXXXX")"
-[ "${KIT_BENCH_KEEP:-}" = 1 ] && echo "kept: $WORK" >&2 || trap 'rm -rf "$WORK"' EXIT
+# Started from a git hook, GIT_DIR and the like would point the copy's git commands at the caller's repository.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_CONFIG GIT_CONFIG_PARAMETERS GIT_CONFIG_COUNT
+# WORK gets the copy, a commit of it and the trap's delete: only ever the folder mktemp just made.
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/kit-bench.XXXXXX")" || fail "couldn't make a temp folder"
+case "${WORK##*/}" in kit-bench.?*) ;; *) fail "couldn't make a temp folder" ;; esac
+WORK="$(cd -- "$WORK" && pwd -P)" || fail "couldn't open the temp folder"
+case "${WORK##*/}" in kit-bench.?*) ;; *) fail "couldn't open the temp folder" ;; esac
+if [ "${KIT_BENCH_KEEP:-}" = 1 ]; then echo "kept: $WORK" >&2; else trap 'rm -rf -- "$WORK"' EXIT; fi
 rsync -a --exclude node_modules --exclude .git --exclude .claude --exclude CLAUDE.md --exclude dist --exclude .next "$SRC/" "$WORK/"
 [ -d "$SRC/node_modules" ] && ln -s "$SRC/node_modules" "$WORK/node_modules"
 if [ "$ARM" = kit ]; then

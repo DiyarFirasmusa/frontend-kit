@@ -6,10 +6,18 @@
 # An allow means exit 0 with no output. A crashed guard also blocks, so it never counts as an allow or as a deny.
 set -u
 HOOKS="$(cd "$(dirname "$0")" && pwd)"
-WORK="$(mktemp -d "${TMPDIR:-/tmp}/kit-mode-tests.XXXXXX")" || exit 1
-WORK="$(cd "$WORK" && pwd -P)" || exit 1
-[ -n "$WORK" ] || exit 1
-[ -n "${KIT_TEST_KEEP:-}" ] || trap 'rm -rf "$WORK"' EXIT
+# Started from a git hook, GIT_DIR and the like point every fixture's git command at the caller's repository.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_CONFIG GIT_CONFIG_PARAMETERS GIT_CONFIG_COUNT
+no_work_folder() {
+  echo "mode-test: couldn't make a temp folder under ${TMPDIR:-/tmp}. Nothing was written or deleted." >&2
+  exit 1
+}
+# The trap deletes WORK: only ever the folder mktemp just made (`cd ""` succeeds and stays).
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/kit-mode-tests.XXXXXX")" || no_work_folder
+case "${WORK##*/}" in kit-mode-tests.?*) ;; *) no_work_folder ;; esac
+WORK="$(cd -- "$WORK" && pwd -P)" || no_work_folder
+case "${WORK##*/}" in kit-mode-tests.?*) ;; *) no_work_folder ;; esac
+[ -n "${KIT_TEST_KEEP:-}" ] || trap 'rm -rf -- "$WORK"' EXIT
 export GIT_CEILING_DIRECTORIES="$WORK"
 PASS=0
 FAIL=0

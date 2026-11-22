@@ -7,16 +7,28 @@
 #   (default: the git root of the current folder)
 set -u
 
-HOOKS="$(cd "$(dirname "$0")" && pwd)"
-PLUGIN="$(cd "$HOOKS/.." && pwd)"
+HOOKS="$(cd "$(dirname "$0")" && pwd)" || exit 1
+PLUGIN="$(cd "$HOOKS/.." && pwd)" || exit 1
 REPO="${KIT_TEST_PROJECT:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 if [ -z "$REPO" ] || [ ! -d "$REPO/node_modules/.bin" ]; then
   echo "test-hooks: set KIT_TEST_PROJECT to a project with node_modules installed (tsc, vitest, oxlint, oxfmt)." >&2
   exit 1
 fi
+# Started from a git hook, GIT_DIR and the like point every fixture's git command at the caller's repository.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_CONFIG GIT_CONFIG_PARAMETERS GIT_CONFIG_COUNT
+no_work_folder() {
+  echo "test-hooks: couldn't make a temp folder under ${TMPDIR:-/tmp}. Nothing was written or deleted." >&2
+  exit 1
+}
+# The trap deletes WORK, so it must be the folder mktemp just made and nothing else. `cd ""` succeeds and stays:
+# never cd into mktemp's output before it is checked (scripts/test-temp-safety.sh).
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/kit-hook-tests.XXXXXX")" || no_work_folder
+case "${WORK##*/}" in kit-hook-tests.?*) ;; *) no_work_folder ;; esac
 # pwd -P: a TMPDIR ending in "/" would give paths with "//" that never match the hooks' normalised paths.
-WORK="$(cd "$(mktemp -d "${TMPDIR:-/tmp}/kit-hook-tests.XXXXXX")" && pwd -P)"
-trap 'rm -rf "$WORK"' EXIT
+WORK="$(cd -- "$WORK" && pwd -P)" || no_work_folder
+case "${WORK##*/}" in kit-hook-tests.?*) trap 'rm -rf -- "$WORK"' EXIT ;; *) no_work_folder ;; esac
+# A fixture without a repository of its own must not find one above the temp folder.
+export GIT_CEILING_DIRECTORIES="$WORK"
 
 PASS=0
 FAIL=0
@@ -58,15 +70,11 @@ make_repo() {
   [ "$branch" != main ] && git -C "$dir" checkout -q -b "$branch"
   ln -s "$REPO/node_modules" "$dir/node_modules"
   mkdir -p "$dir/scripts" "$dir/.claude"
-  # The i18n validator: the project's own, else the one the kit ships (templates/shared/scripts).
-  if [ -f "$REPO/scripts/validate-i18n.ts" ]; then
-    cp "$REPO/scripts/validate-i18n.ts" "$dir/scripts/validate-i18n.ts"
-  else
-    cp "$PLUGIN/templates/shared/scripts/validate-i18n.ts" "$dir/scripts/validate-i18n.ts"
-  fi
-  for config in oxlint.config.ts oxfmt.config.ts .oxlintrc.json .oxfmtrc.json; do
-    [ -f "$REPO/$config" ] && cp "$REPO/$config" "$dir/"
-  done
+  # The fixture is the same whatever project lends its node_modules: the validator the kit ships, and configs of
+  # its own (oxlint reports no-debugger as a warning when no config says otherwise).
+  cp "$PLUGIN/templates/shared/scripts/validate-i18n.ts" "$dir/scripts/validate-i18n.ts"
+  printf '{ "categories": { "correctness": "warn" }, "rules": { "no-debugger": "error" } }\n' >"$dir/.oxlintrc.json"
+  printf '{}\n' >"$dir/.oxfmtrc.json"
   # The project config the hooks read (written by /frontend-kit:setup in a real project).
   cat >"$dir/.claude/frontend-kit.json" <<'KITJSON'
 {
@@ -404,7 +412,7 @@ expect_hint() { # <expected substring or "-" for none> <prompt>
     if [ -z "$OUT" ]; then ok; else ko "prompt-hints none: $2" "$context"; fi
   elif printf '%s' "$context" | grep -qF "$1"; then ok; else ko "prompt-hints '$1': $2" "${context:-no output}"; fi
 }
-export CLAUDE_PROJECT_DIR="$REPO"
+export CLAUDE_PROJECT_DIR="$FEATURE"
 for p in "commit" "Commit" "commmit" "commit push" "commit and push" "yes commit push" "ok push commit" "commit push all think" "COMMIT ALL" "push"; do
   expect_hint "commit-push skill" "$p"
 done
@@ -526,7 +534,7 @@ rm -f "$FEATURE/src/settle.ts"
 # A missing tool (no npm install yet) is skipped, not reported as a type failure.
 BARE="$WORK/Projects (x)/no-tools"
 make_repo "$BARE" "fix/7-bare"
-rm "$BARE/node_modules"
+rm "$BARE/node_modules" || exit 1 # still a link: what follows would write into the borrowed project
 printf 'export const c: number = "not a number"\n' >"$BARE/src/c.ts"
 export CLAUDE_PROJECT_DIR="$BARE"
 run_hook stop-gate.sh "$(stop_input s-bare false)"
@@ -587,8 +595,8 @@ BROKEN_JQ="$WORK/broken-jq-bin"
 mkdir -p "$BROKEN_JQ"
 printf '#!/bin/bash\n[ "$1" = -n ] && exit 127\nexec %q "$@"\n' "$(command -v jq)" >"$BROKEN_JQ/jq"
 chmod +x "$BROKEN_JQ/jq"
-export CLAUDE_PROJECT_DIR="$REPO"
-run_hook_with_path "$BROKEN_JQ:$PATH" guard-paths.sh "$(jq -n --arg f "$REPO/.env" '{tool_name: "Read", tool_input: {file_path: $f}}')"
+export CLAUDE_PROJECT_DIR="$FEATURE"
+run_hook_with_path "$BROKEN_JQ:$PATH" guard-paths.sh "$(jq -n --arg f "$FEATURE/.env" '{tool_name: "Read", tool_input: {file_path: $f}}')"
 if [ "$CODE" -eq 2 ] && [ -z "$OUT" ] && printf '%s' "$ERR" | grep -q 'holds secrets'; then ok; else ko "hook_deny falls back to exit 2 when jq can't build JSON" "exit $CODE: $OUT $ERR"; fi
 export CLAUDE_PROJECT_DIR="$FEATURE"
 run_hook_with_path "$BROKEN_JQ:$PATH" guard-bash.sh "$(bash_input 'git push origin main' "$FEATURE")"
@@ -1469,7 +1477,7 @@ expect_url allow WebFetch "https://staging.example.com./"
 RN="$WORK/route-names"
 make_repo "$RN" feature/names
 export CLAUDE_PROJECT_DIR="$RN"
-rm "$RN/node_modules"
+rm "$RN/node_modules" || exit 1 # still a link: what follows would write into the borrowed project
 mkdir -p "$RN/node_modules/.bin"
 printf '#!/bin/sh\necho "$2:1:1: some warning [Warning/x]"\n' >"$RN/node_modules/.bin/oxlint"
 chmod +x "$RN/node_modules/.bin/oxlint"
