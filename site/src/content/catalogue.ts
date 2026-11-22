@@ -14,9 +14,9 @@ export const skillGroups: SkillGroup[] = [
     title: { en: 'Build', ar: 'البناء' },
     skills: {
       'create-component': { en: 'Creates or extracts a component: cards, buttons, dialogs, sections.', ar: 'تنشئ مكوّناً أو تستخرجه: بطاقة أو زر أو نافذة أو قسم.' },
-      'create-form': { en: 'Builds a form with a zod schema, translated errors and accessible fields.', ar: 'تبني نموذجاً بمخطط zod وأخطاء مترجمة وحقول سهلة الوصول.' },
-      'create-hook': { en: 'Writes a hook, from a small helper to a data-fetching query.', ar: 'تكتب hook، من أداة صغيرة إلى استعلام لجلب البيانات.' },
-      'create-store': { en: 'Adds a global store for the state that outlives a component.', ar: 'تضيف مخزناً عاماً للحالة التي تعيش أطول من المكوّن.' },
+      'create-form': { en: 'Builds a form with your form tools, one schema, translated errors and accessible fields.', ar: 'تبني نموذجاً بأدوات نماذجك ومخطط واحد وأخطاء مترجمة وحقول سهلة الوصول.' },
+      'create-hook': { en: 'Writes a hook or your stack’s equivalent, from a small helper to a data query.', ar: 'تكتب hook أو ما يقابله في تقنياتك، من أداة صغيرة إلى استعلام بيانات.' },
+      'create-store': { en: 'Adds shared state, in the form your stack uses, for what outlives a component.', ar: 'تضيف حالة مشتركة بالشكل الذي تستعمله تقنياتك، لما يعيش أطول من المكوّن.' },
       'figma-match': { en: 'Matches a Figma frame: sizes, colours, radii, type and states.', ar: 'تطابق إطار Figma في المقاسات والألوان والحواف والخطوط والحالات.' },
       'frontend-design': { en: 'Gives an original visual direction to a page that has no design yet.', ar: 'تقترح اتجاهاً بصرياً أصيلاً لصفحة لا تصميم لها بعد.' },
       'ui-ux-pro-max': { en: 'Searches a catalogue of styles, palettes, font pairs and UX guidelines.', ar: 'تبحث في فهرس للأساليب والألوان والخطوط وإرشادات التجربة.' },

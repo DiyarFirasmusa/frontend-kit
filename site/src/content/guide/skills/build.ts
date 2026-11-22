@@ -29,13 +29,13 @@ export const build: Record<string, SkillGuide> = {
     ),
     ask: [t('create a login form with phone and OTP', 'أنشئ نموذج دخول بالهاتف ورمز التحقق'), t('add an address form with validation', 'أضف نموذج عنوان مع التحقق')],
     steps: [
-      t('Writes one schema that is both the validation and the TypeScript type.', 'يكتب مخططاً واحداً هو التحقق وهو نوع TypeScript.'),
+      t('Writes one schema for the validation, and the type too where the project uses TypeScript.', 'يكتب مخططاً واحداً للتحقق، وهو النوع أيضاً حيث يستعمل المشروع TypeScript.'),
       t('Connects it to the form, with your existing field components.', 'يربطه بالنموذج وبحقولك الموجودة.'),
       t('Shows translated errors under each field and focuses the first wrong one.', 'يعرض الأخطاء مترجمة تحت كل حقل وينقل التركيز إلى أول حقل خاطئ.'),
       t('Blocks a double submit and tests the schema and the request.', 'يمنع الإرسال المزدوج ويختبر المخطط والطلب.'),
     ],
     result: [
-      t('A schema, a form hook and the markup', 'مخطط وhook للنموذج والواجهة'),
+      t('A schema, the form logic and the markup', 'مخطط ومنطق النموذج والواجهة'),
       t('Correct keyboards and autofill on phones', 'لوحة مفاتيح وتعبئة تلقائية صحيحة على الجوال'),
       t('Tests for valid and invalid input', 'اختبارات للمدخل الصحيح والخاطئ'),
     ],
@@ -44,18 +44,18 @@ export const build: Record<string, SkillGuide> = {
   },
   'create-hook': {
     plain: t(
-      'Moves logic out of components. A hook is a reusable piece of behaviour, such as loading orders or running a whole page, and this decides its shape and place.',
-      'يُخرج المنطق من المكوّنات. الـ hook سلوك قابل لإعادة الاستعمال، مثل تحميل الطلبات أو تشغيل صفحة كاملة، وهذا الدليل يحدد شكله ومكانه.',
+      'Moves logic out of components. A hook, or a composable, rune or service in other stacks, is a reusable piece of behaviour, such as loading orders or running a whole page. This decides its shape and place.',
+      'يُخرج المنطق من المكوّنات. الـ hook، أو ما يقابله في تقنيات أخرى، سلوك قابل لإعادة الاستعمال مثل تحميل الطلبات أو تشغيل صفحة كاملة. وهذا الدليل يحدد شكله ومكانه.',
     ),
     ask: [t('create a hook that loads the order details', 'أنشئ hook يحمّل تفاصيل الطلب'), t('move the logic out of this page', 'أخرج المنطق من هذه الصفحة')],
     steps: [
       t('Picks the kind: data, page or small utility.', 'يختار النوع: بيانات أو صفحة أو أداة صغيرة.'),
-      t('For data, uses your API service and the one query-key factory.', 'للبيانات يستعمل خدمة الـ API ومصنع المفاتيح الواحد.'),
+      t('For data, uses your data layer, and the one query-key factory where TanStack Query is installed.', 'للبيانات يستعمل طبقة بياناتك، ومصنع المفاتيح الواحد حيث تكون TanStack Query مثبّتة.'),
       t('For a page, validates the URL values and returns one object.', 'للصفحة يتحقق من قيم الرابط ويعيد كائناً واحداً.'),
       t('Tests it.', 'يختبره.'),
     ],
-    result: [t('A named hook next to the code that owns it', 'hook باسم واضح قرب الشيفرة التي تملكه'), t('A test', 'اختبار')],
-    limits: [t('Never fetches inside useEffect.', 'لا يجلب البيانات داخل useEffect.')],
+    result: [t('A named hook or equivalent, where your project keeps them', 'hook أو ما يقابله باسم واضح، حيث يحفظها مشروعك'), t('A test', 'اختبار')],
+    limits: [t('Never fetches data in an effect when the project has a data layer.', 'لا يجلب البيانات داخل effect إن كان للمشروع طبقة بيانات.')],
     related: ['tanstack-query-key-conventions', 'create-component', 'refactor'],
   },
   'create-store': {
@@ -66,10 +66,10 @@ export const build: Record<string, SkillGuide> = {
     ask: [t('create a store for the cart', 'أنشئ مخزناً للسلة'), t('remember the sidebar state after reload', 'تذكّر حالة الشريط الجانبي بعد التحديث')],
     steps: [
       t('Rules out better homes: server cache, URL, form or local state.', 'يستبعد الأماكن الأنسب: ذاكرة الخادم أو الرابط أو النموذج أو الحالة المحلية.'),
-      t('Writes a small store and saves only what must survive a reload.', 'يكتب مخزناً صغيراً ويحفظ فقط ما يجب أن ينجو من التحديث.'),
+      t('Writes it with the state tool you already have, and saves only what must survive a reload.', 'يكتبها بأداة الحالة الموجودة عندك، ويحفظ فقط ما يجب أن ينجو من التحديث.'),
       t('Adds its reset to sign-out and tests the actions.', 'يضيف تصفيره إلى تسجيل الخروج ويختبر أفعاله.'),
     ],
-    result: [t('A typed store with selectors', 'مخزن مضبوط الأنواع بمحدّدات'), t('A sign-out reset and tests', 'تصفير عند الخروج واختبارات')],
+    result: [t('Shared state where your project keeps it', 'حالة مشتركة حيث يحفظها مشروعك'), t('A sign-out reset and tests', 'تصفير عند الخروج واختبارات')],
     limits: [t('Never saves tokens or copies server data into the store.', 'لا يحفظ الرموز السرية ولا ينسخ بيانات الخادم إلى المخزن.'), t('Does not add a state library without asking.', 'لا يضيف مكتبة حالة دون سؤالك.')],
     related: ['create-hook'],
   },

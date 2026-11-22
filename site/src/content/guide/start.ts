@@ -17,12 +17,12 @@ export const questions = [
     ],
   },
   {
-    question: t('What kind of React project?', 'أي نوع من مشاريع React؟'),
+    question: t('What kind of project?', 'أي نوع من المشاريع؟'),
     answers: [
       t('Website: public pages, server rendering and SEO.', 'موقع: صفحات عامة وعرض من الخادم وتحسين البحث.'),
       t('Dashboard: you also pick Vite, TanStack Start or Next.js.', 'لوحة تحكم: وتختار Vite أو TanStack Start أو Next.js.'),
       t('Site plus admin in one project.', 'موقع مع إدارة في مشروع واحد.'),
-      t('Any other React app.', 'أي تطبيق React آخر.'),
+      t('Any other frontend, React or not.', 'أي واجهة أخرى، بـ React أو بغيرها.'),
     ],
   },
   {

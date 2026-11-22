@@ -17,7 +17,7 @@ export const enDetails: Details = {
     fit: {
       title: 'Use it when',
       items: [
-        'You build React and TypeScript products with a coding assistant.',
+        'You build frontends with a coding assistant, in React and TypeScript or another stack.',
         'The code has to pass review and live for years.',
         'Several people or sessions share one codebase.',
         'You ship in Arabic, English or both.',
@@ -117,7 +117,7 @@ export const enDetails: Details = {
       dashboard: 'Dashboard',
       'dashboard/variants/next': 'Dashboard on Next.js',
       'dashboard/variants/tanstack-start': 'Dashboard on TanStack Start',
-      react: 'Any React app',
+      react: 'Any other frontend',
     },
   },
   session: {

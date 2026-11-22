@@ -17,7 +17,7 @@ export const arDetails: Details = {
     fit: {
       title: 'استعملها عندما',
       items: [
-        'تبني منتجات React وTypeScript مع مساعد برمجي.',
+        'تبني واجهات مع مساعد برمجي، بـ React وTypeScript أو بتقنيات أخرى.',
         'يجب أن تجتاز الشيفرة المراجعة وتعيش سنوات.',
         'يتشارك عدة أشخاص أو جلسات مستودعاً واحداً.',
         'تطلق منتجك بالعربية أو الإنجليزية أو بكلتيهما.',
@@ -117,7 +117,7 @@ export const arDetails: Details = {
       dashboard: 'لوحة التحكم',
       'dashboard/variants/next': 'لوحة تحكم على Next.js',
       'dashboard/variants/tanstack-start': 'لوحة تحكم على TanStack Start',
-      react: 'أي تطبيق React',
+      react: 'أي واجهة أخرى',
     },
   },
   session: {

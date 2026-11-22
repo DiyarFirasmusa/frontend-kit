@@ -8,15 +8,15 @@ export const home = {
     is: {
       name: t('What is it?', 'ما هي؟'),
       text: t(
-        'A Claude Code plugin for React and TypeScript projects: written know-how, standards, reviewers and automatic guards.',
-        'إضافة تعمل داخل \u2066Claude Code\u2069 لمشاريع React وTypeScript، فيها أدلة عمل ومعايير ووكلاء مراجعة وحرّاس تلقائيون.',
+        'A Claude Code plugin for frontend projects in any stack, React and TypeScript first-class: written know-how, standards, reviewers and automatic guards.',
+        'إضافة تعمل داخل \u2066Claude Code\u2069 لمشاريع الواجهات بأي تقنيات، وReact وTypeScript بالأولوية، فيها أدلة عمل ومعايير ووكلاء مراجعة وحرّاس تلقائيون.',
       ),
     },
     does: {
       name: t('What does it do?', 'ماذا تفعل؟'),
       text: t(
-        'Your assistant builds pages, tables and forms to your standards. Known dangerous commands are refused. Its code is typechecked, tested and sent for review.',
-        'تجعل مساعدك يبني الصفحات والجداول والنماذج بمعاييرك، وترفض الأوامر الخطرة المعروفة، وتفحص أنواع الشيفرة واختباراتها ثم تطلب مراجعتها.',
+        'Your assistant builds pages, tables and forms the way your project already does them. Known dangerous commands are refused. Its code is typechecked, tested and sent for review.',
+        'تجعل مساعدك يبني الصفحات والجداول والنماذج بنفس طريقة مشروعك، وترفض الأوامر الخطرة المعروفة، وتفحص أنواع الشيفرة واختباراتها ثم تطلب مراجعتها.',
       ),
     },
     works: {

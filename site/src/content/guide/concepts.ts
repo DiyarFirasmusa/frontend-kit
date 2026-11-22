@@ -49,7 +49,7 @@ export const concepts: Concept[] = [
   {
     name: t('Project type', 'نوع المشروع'),
     like: t('The fitting', 'التفصيل على المقاس'),
-    text: t('Website, dashboard, any React app, or site plus admin. It decides what gets installed.', 'موقع أو لوحة تحكم أو أي تطبيق React أو موقع مع إدارة، ويحدد ما يُثبَّت.'),
+    text: t('Website, dashboard, any other frontend, or site plus admin. It decides what gets installed.', 'موقع أو لوحة تحكم أو أي واجهة أخرى أو موقع مع إدارة، ويحدد ما يُثبَّت.'),
     example: t('A dashboard gets table skills and permission rules.', 'لوحة التحكم تحصل على مهارات الجداول وقواعد الصلاحيات.'),
     page: 'project-types',
   },

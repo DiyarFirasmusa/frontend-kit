@@ -5,7 +5,7 @@ export const en: Copy = {
   meta: {
     title: 'frontend-kit: make your coding assistant work like a frontend team',
     description:
-      'A plugin for React and TypeScript projects. Your coding assistant builds to your standards, known dangerous commands are refused, and the code is checked and reviewed.',
+      'A plugin for frontend projects in any stack, React and TypeScript first-class. Your coding assistant builds the way your project does, known dangerous commands are refused, and the code is checked and reviewed.',
   },
   chrome: {
     skip: 'Skip to content',
@@ -19,7 +19,7 @@ export const en: Copy = {
   scenes: {
     intro: {
       title: 'The assistant, building like your best frontend team.',
-      text: 'frontend-kit is a Claude Code plugin for React and TypeScript. It gives the assistant skills, rules, a review crew and guards, then checks the work.',
+      text: 'frontend-kit is a Claude Code plugin for frontends in any stack, React and TypeScript first-class. It gives the assistant skills, rules, a review crew and guards, then checks the work.',
     },
     without: {
       title: 'Without the kit, the assistant guesses.',
@@ -53,7 +53,7 @@ export const en: Copy = {
       text: 'Tables, forms, filters and permissions on Vite, Next.js or TanStack Start.',
     },
     both: {
-      title: 'For both together, or any React app.',
+      title: 'For both together, or any other frontend.',
       text: 'A site and its admin in one project, or your existing stack, detected and adapted to.',
     },
     skills: {
