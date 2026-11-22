@@ -3,6 +3,11 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.15.2
+- The bundled Chrome DevTools MCP server no longer sends to Google: usage statistics are off (`--no-usage-statistics`),
+  and so is the CrUX lookup that sent the URLs of traced pages (`--no-performance-crux`). Performance traces report lab
+  data only, without real-user field data. Chrome's own traffic and the server's npm update check are not affected.
+
 ## 1.15.1
 - The bundled browser MCP servers are pinned to checked versions instead of `@latest`: `chrome-devtools-mcp` 1.12.0 and
   `@playwright/mcp` 0.0.84. Both are outside the ranges of the published advisories at the time of pinning. They need
