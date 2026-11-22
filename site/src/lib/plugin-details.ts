@@ -3,9 +3,10 @@ import { join, resolve } from 'node:path'
 import { agentGuides } from '../content/guide/agents.ts'
 import { exampleProjects } from '../content/guide/examples.ts'
 import { projects, type ProfileId } from '../content/guide/projects.ts'
+import { agentPurpose, hookPurpose, rulePurpose, skillPurpose } from '../content/guide/purpose.ts'
 import { ruleGuides } from '../content/guide/rules.ts'
 import { skillGuides } from '../content/guide/skills/index.ts'
-import { agentNames, assertSameNames, PLUGIN_DIR, ruleGroups, skillNames } from './plugin.ts'
+import { agentNames, assertSameNames, hookEvents, PLUGIN_DIR, ruleGroups, skillNames } from './plugin.ts'
 
 const read = (...path: string[]): string => readFileSync(join(PLUGIN_DIR, ...path), 'utf8')
 
@@ -69,6 +70,10 @@ const exampleFolders = readdirSync(resolve(PLUGIN_DIR, '../../examples'), { with
 assertSameNames('skill guides', skillNames, Object.keys(skillGuides))
 assertSameNames('agent guides', agentNames, Object.keys(agentGuides))
 assertSameNames('rule guides', Object.values(ruleFiles).flat().map((rule) => rule.key), Object.keys(ruleGuides))
+assertSameNames('skill purposes', skillNames, Object.keys(skillPurpose))
+assertSameNames('agent purposes', agentNames, Object.keys(agentPurpose))
+assertSameNames('rule purposes', Object.values(ruleFiles).flat().map((rule) => rule.key), Object.keys(rulePurpose))
+assertSameNames('hook purposes', hookEvents, Object.keys(hookPurpose))
 assertSameNames('example projects', exampleFolders, Object.keys(exampleProjects))
 
 for (const [skill, guide] of Object.entries(skillGuides)) {

@@ -5,6 +5,9 @@ import { clamp, easeOut } from '../film/timeline.ts'
 import { all, required } from './dom.ts'
 
 const THROW_FROM = 0.12
+/** The words of an explanation take this share of the screen. */
+const COLUMN = { wide: 0.45, phone: 0.56 }
+const NARROW = 820
 const DOOR = [0, CENTRE, 1.6] as [number, number, number]
 
 interface Label {
@@ -33,7 +36,7 @@ export class FilmLabels {
   }
 
   show(film: Film, shot: Shot, width: number, height: number): void {
-    const { from, to, move } = shot
+    const { from, to, move, aside, stop } = shot
     for (const { element, shape, index, order } of this.labels) {
       const strength = shape === from ? 1 - clamp(move * 5) : shape === to ? clamp((move - 0.82) * 7 - order * 0.25) : 0
       const point = strength > 0 ? film.anchors[shape as Shot['from']]?.[index] : undefined
@@ -45,15 +48,23 @@ export class FilmLabels {
       element.hidden = behind || x < -140 || x > width + 140
       if (element.hidden) continue
       const size = shape === 'skills' ? Math.min(1.2, (22 / distance) * Math.min(1, width / 560 + 0.05)) : 1
-      element.style.opacity = String(strength)
+      // While one is explained, the others step back.
+      const others = stop >= 0 && Math.round(stop) !== index && shape === from ? 1 - aside * 0.72 : 1
+      element.classList.toggle('is-focus', aside > 0.5 && shape === from && Math.round(stop) === index)
+      element.style.opacity = String(strength * others * (this.underWords(x, y, width, height) && shape === from ? 1 - aside : 1))
       element.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${size})`
     }
     this.throwCommand(film, shot, width, height)
   }
 
-  private throwCommand(film: Film, { from, hold, move }: Shot, width: number, height: number): void {
+  private underWords(x: number, y: number, width: number, height: number): boolean {
+    if (width < NARROW) return y > height * COLUMN.phone
+    return this.rtl ? x > width * (1 - COLUMN.wide) : x < width * COLUMN.wide
+  }
+
+  private throwCommand(film: Film, { from, hold, move, aside }: Shot, width: number, height: number): void {
     const { attack, verdict } = this
-    const active = from === 'gate' && move < 0.12
+    const active = from === 'gate' && move < 0.12 && aside < 0.4
     attack.hidden = !active || hold < 0.1
     verdict.hidden = !active || hold < IMPACT
     if (!active) return

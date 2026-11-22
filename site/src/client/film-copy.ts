@@ -4,6 +4,8 @@ import { all, required } from './dom.ts'
 
 const LEAVE_BY = 0.36
 const ENTER_FROM = 0.4
+/** The copy is gone before the explanation climbs into its place. */
+const YIELD_BY = 0.55
 
 interface Block {
   element: HTMLElement
@@ -30,13 +32,13 @@ export class FilmCopy {
     }))
   }
 
-  show({ index, hold, move }: Playhead): void {
+  show({ index, hold, aside, move }: Playhead, explained: number): void {
     this.blocks.forEach((block, i) => {
       let enter = 0
       let leave = 0
       if (i === index) {
         enter = 1
-        leave = clamp(move / LEAVE_BY)
+        leave = Math.max(clamp(move / LEAVE_BY), clamp(Math.max(aside, explained) / YIELD_BY))
       } else if (i === index + 1) {
         enter = clamp((move - ENTER_FROM) / (1 - ENTER_FROM))
       }

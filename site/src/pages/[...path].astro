@@ -4,15 +4,20 @@ import DocPage from '../components/DocPage.astro'
 import Home from '../components/Home.astro'
 import AgentList from '../components/pages/AgentList.astro'
 import AgentPage from '../components/pages/AgentPage.astro'
+import Changelog from '../components/pages/Changelog.astro'
 import Checks from '../components/pages/Checks.astro'
 import Configuration from '../components/pages/Configuration.astro'
+import DocsHub from '../components/pages/DocsHub.astro'
 import Examples from '../components/pages/Examples.astro'
 import Features from '../components/pages/Features.astro'
 import GetStarted from '../components/pages/GetStarted.astro'
 import Guide from '../components/pages/Guide.astro'
+import HookPage from '../components/pages/HookPage.astro'
+import Modes from '../components/pages/Modes.astro'
 import ProjectTypes from '../components/pages/ProjectTypes.astro'
 import Questions from '../components/pages/Questions.astro'
 import Refactor from '../components/pages/Refactor.astro'
+import RulePage from '../components/pages/RulePage.astro'
 import Rules from '../components/pages/Rules.astro'
 import SkillList from '../components/pages/SkillList.astro'
 import SkillPage from '../components/pages/SkillPage.astro'
@@ -36,6 +41,9 @@ interface Props {
 const { locale, route } = Astro.props
 
 const BODIES = {
+  docs: DocsHub,
+  modes: Modes,
+  changelog: Changelog,
   guide: Guide,
   'get-started': GetStarted,
   skills: SkillList,
@@ -61,6 +69,8 @@ const Body = route.kind === 'page' ? BODIES[route.id] : undefined
       {Body && <Body locale={locale} />}
       {route.kind === 'skill' && <SkillPage name={route.name} locale={locale} />}
       {route.kind === 'agent' && <AgentPage name={route.name} locale={locale} />}
+      {route.kind === 'rule' && <RulePage group={route.group} name={route.name} locale={locale} />}
+      {route.kind === 'hook' && <HookPage event={route.event} locale={locale} />}
     </DocPage>
   )
 }

@@ -1,14 +1,18 @@
 ---
 import { skillGroups } from '../../content/catalogue.ts'
 import { projects } from '../../content/guide/projects.ts'
+import { skillPurpose } from '../../content/guide/purpose.ts'
 import { skillGuides } from '../../content/guide/skills/index.ts'
 import { ui } from '../../content/guide/ui.ts'
 import type { Locale } from '../../content/types.ts'
-import { skillUrl } from '../../lib/links.ts'
+import { agentUrl, skillUrl } from '../../lib/links.ts'
 import { manualSkills, REPO_URL } from '../../lib/plugin.ts'
 import { profilesOf } from '../../lib/plugin-details.ts'
+import { skillReference } from '../../lib/reference.ts'
 import Block from '../guide/Block.astro'
 import SkillBody from '../guide/SkillBody.astro'
+import Source from '../guide/Source.astro'
+import WhyWhen from '../guide/WhyWhen.astro'
 
 interface Props {
   name: string
@@ -16,6 +20,8 @@ interface Props {
 }
 
 const { name, locale } = Astro.props
+const { matches, argument, borrowed, files, mentionedBy } = skillReference[name]!
+const [playbook, ...others] = files
 const on = profilesOf(name)
 const group = skillGroups.find(({ skills }) => name in skills)!
 const types = on.length === projects.length ? ui.everyType[locale] : projects.filter(({ id }) => on.includes(id)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
@@ -27,7 +33,60 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
   <div><dt>{ui.worksIn[locale]}</dt><dd>{types}</dd></div>
 </dl>
 
+<WhyWhen purpose={skillPurpose[name]!} locale={locale} />
 <SkillBody name={name} locale={locale} />
+
+<Block id="matches" title={ui.matches[locale]} lead={ui.matchesLead[locale]}>
+  <p class="quoted" lang="en" dir="ltr">{matches}</p>
+  {argument && <p class="muted">{ui.argument[locale]} <code dir="ltr">{argument}</code></p>}
+</Block>
+{
+  mentionedBy.length > 0 && (
+    <Block id="agents-using" title={ui.mentionedBy[locale]}>
+      <ul class="tags">
+        {mentionedBy.map((agent) => (
+          <li>
+            <a href={agentUrl(locale, agent)}>
+              <bdi>{agent}</bdi>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Block>
+  )
+}
+<Block id="playbook" title={ui.playbook[locale]} lead={(borrowed ? ui.borrowed : ui.fullText)[locale]}>
+  {
+    borrowed ? (
+      <dl class="rows">
+        <div>
+          <dt>{ui.origin[locale]}</dt>
+          <dd dir="ltr">{borrowed.origin}</dd>
+        </div>
+        <div>
+          <dt>{ui.licence[locale]}</dt>
+          <dd dir="ltr">{borrowed.licence}</dd>
+        </div>
+      </dl>
+    ) : (
+      <Source file={`plugins/frontend-kit/${playbook}`} />
+    )
+  }
+</Block>
+{
+  !borrowed && others.length > 0 && (
+    <Block id="reference-files" title={ui.otherFiles[locale]}>
+      {others.map((file) => (
+        <details class="file">
+          <summary>
+            <bdi>{file.replace(`skills/${name}/`, '')}</bdi>
+          </summary>
+          <Source file={`plugins/frontend-kit/${file}`} />
+        </details>
+      ))}
+    </Block>
+  )
+}
 
 <Block id="related" title={ui.related[locale]}>
   <ul class="cards">

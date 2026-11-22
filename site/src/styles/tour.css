@@ -1,0 +1,564 @@
+/* The explanation, a moment at a time. As plain HTML: a list read in order. */
+.tour {
+  padding: 0 var(--edge) 2rem;
+  scroll-margin-top: var(--bar);
+}
+
+.moments {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 2.5rem var(--edge);
+}
+
+.moment-slot {
+  min-width: 0;
+  scroll-margin-top: calc(var(--bar) + 1rem);
+}
+
+.moment-title {
+  font-size: var(--sub);
+  font-weight: 560;
+  line-height: 1.12;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.moment-title.is-name {
+  font-family: var(--latin);
+}
+
+.moment-text {
+  max-width: 32rem;
+  margin-block-start: 1rem;
+  color: var(--muted);
+  font-size: 1.0625rem;
+}
+
+.moment-say {
+  margin-block-start: 1.125rem;
+  color: var(--ivory);
+  font-size: 1.0625rem;
+}
+
+.moment-say q {
+  display: inline-block;
+  max-width: 100%;
+  quotes: '\201C' '\201D';
+}
+
+.moment-lines {
+  max-width: 32rem;
+  margin-block-start: 1.125rem;
+}
+
+.moment-lines li {
+  position: relative;
+  padding-block: 0.3rem;
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+.moment-lines strong {
+  display: block;
+  color: var(--ivory);
+  font-weight: 560;
+  overflow-wrap: anywhere;
+}
+
+.moment-lines .is-tick,
+.moment-lines .is-cross {
+  padding-inline-start: 1.75rem;
+}
+
+.moment-lines .is-tick::before,
+.moment-lines .is-cross::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: calc(0.3rem + 0.8em - 6px);
+  width: 14px;
+  height: 12px;
+  background: var(--ivory);
+  clip-path: var(--check);
+}
+
+.moment-lines .is-cross::before {
+  inset-block-start: calc(0.3rem + 0.8em);
+  height: 2px;
+  background: var(--bad);
+  clip-path: none;
+}
+
+.moment-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1.25rem;
+  max-width: 32rem;
+  margin-block-start: 1.125rem;
+  color: var(--ivory);
+  font: 500 var(--small) var(--latin);
+}
+
+.moment-chips li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.moment-docs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.3rem;
+  min-height: 44px;
+  margin-block-start: 0.875rem;
+  color: var(--ivory);
+  font-size: var(--small);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.keep-going {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 44px;
+  margin-block-start: 1.25rem;
+  color: var(--ivory);
+  font-size: var(--small);
+}
+
+.keep-going i {
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 30px;
+  overflow: hidden;
+  border: 1.5px solid currentColor;
+  border-radius: 10px;
+}
+
+.keep-going i::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 5px;
+  inset-inline-start: calc(50% - 1.5px);
+  width: 3px;
+  height: 7px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .keep-going i::before {
+    animation: keep-going 1.6s ease-in-out infinite;
+  }
+
+  @keyframes keep-going {
+    70%,
+    100% {
+      opacity: 0;
+      translate: 0 12px;
+    }
+  }
+}
+
+.needs {
+  margin-block-start: 0.75rem;
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+/* Always says where you are and what comes next. */
+.guide-bar {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: 9;
+  display: none;
+  align-items: center;
+  gap: 1.25rem;
+  height: var(--guide);
+  padding-inline: var(--edge);
+  background: var(--void);
+  border-block-start: 1px solid var(--line);
+}
+
+.js .guide-bar {
+  display: flex;
+}
+
+.guide-track {
+  order: 1;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.guide-track li {
+  flex: 1;
+}
+
+.guide-track a {
+  position: relative;
+  display: block;
+  height: 44px;
+  outline-offset: -2px;
+}
+
+.guide-track a::before {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(50% - 1px);
+  inset-inline: 2px;
+  height: 2px;
+  background: var(--line);
+  transition: background-color 0.3s;
+}
+
+.guide-track a.is-past::before {
+  background: var(--faint);
+}
+
+.guide-track a[aria-current]::before {
+  inset-block-start: calc(50% - 2px);
+  height: 4px;
+  background: var(--ivory);
+}
+
+.guide-track a:hover::before {
+  background: var(--ivory);
+}
+
+.guide-now {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.guide-now strong {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 560;
+  text-overflow: ellipsis;
+}
+
+.guide-now span {
+  color: var(--faint);
+  font: 500 0.8125rem var(--latin);
+}
+
+.guide-next {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  color: var(--ivory);
+  font-size: var(--small);
+  text-underline-offset: 5px;
+  white-space: nowrap;
+}
+
+.guide-next span:first-child {
+  color: var(--faint);
+}
+
+.js .details {
+  padding-block-end: var(--guide);
+}
+
+/* In the film it stands in the scene: the slots only give it its stretch of scroll. */
+.film .tour {
+  padding: 0;
+}
+
+.film .moments {
+  display: block;
+}
+
+.film .moment-slot {
+  height: 46vh;
+  height: 46lvh;
+  /* Landing on one puts its middle on the reading line. */
+  scroll-margin-top: 27lvh;
+}
+
+.film .moment {
+  position: fixed;
+  z-index: 2;
+  inset-block-start: var(--bar);
+  inset-inline-start: var(--edge);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: min(39vw, 36rem);
+  height: calc(100svh - var(--bar) - var(--guide));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.film .moment > * {
+  max-width: 100%;
+  translate: 0 1.75rem;
+  opacity: 0;
+  transition: translate 0.2s ease-in, opacity 0.2s;
+}
+
+.film .moment.is-before > * {
+  translate: 0 -1.75rem;
+}
+
+.film .moment.is-current {
+  opacity: 1;
+}
+
+.film .moment.is-current a,
+.film .moment.is-current button {
+  pointer-events: auto;
+}
+
+.film .moment.is-current > * {
+  translate: none;
+  opacity: 1;
+  transition:
+    translate 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--wait, 0s),
+    opacity 0.4s ease-out var(--wait, 0s);
+}
+
+.film .moment-title {
+  --wait: 0.08s;
+  transform-origin: center;
+  font-size: clamp(2rem, 1rem + 2.6vw, 3.5rem);
+}
+
+.film .moment-title.is-name {
+  font-size: clamp(1.875rem, 1rem + 2.1vw, 3.125rem);
+}
+
+.film .moment-title.is-long {
+  font-size: clamp(1.625rem, 1rem + 1.6vw, 2.5rem);
+}
+
+.film .moment-text {
+  --wait: 0.2s;
+}
+
+.film .moment-say {
+  --wait: 0.3s;
+}
+
+.film .moment-lines,
+.film .moment-chips {
+  --wait: 0.28s;
+}
+
+.film .moment-docs {
+  --wait: 0.5s;
+}
+
+.film .moment-lines li,
+.film .moment-chips li {
+  opacity: 0;
+  translate: 1.25rem 0;
+  transition: opacity 0.15s, translate 0.15s;
+}
+
+[dir='rtl'].film .moment-lines li,
+[dir='rtl'].film .moment-chips li {
+  translate: -1.25rem 0;
+}
+
+.film .moment.is-current .moment-lines li,
+.film .moment.is-current .moment-chips li {
+  opacity: 1;
+  translate: none;
+  transition:
+    translate 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(0.3s + var(--n) * 0.07s),
+    opacity 0.4s ease-out calc(0.3s + var(--n) * 0.07s);
+}
+
+/* What is said is typed out, as the visitor would. */
+.film .moment-say q {
+  clip-path: inset(0 100% 0 0);
+}
+
+[dir='rtl'].film .moment-say q {
+  clip-path: inset(0 0 0 100%);
+}
+
+.film .moment.is-current .moment-say q,
+[dir='rtl'].film .moment.is-current .moment-say q {
+  clip-path: inset(-2px);
+  transition: clip-path 0.8s steps(26) 0.4s;
+}
+
+.film .label.is-focus {
+  color: #fff;
+  font-weight: 700;
+}
+
+@media (max-width: 820px) {
+  .guide-bar {
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-inline: 0.875rem;
+  }
+
+  .guide-track {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 2px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .guide-track a,
+  .guide-track a::before,
+  .guide-track a[aria-current]::before {
+    inset-block-start: 0;
+    height: 2px;
+  }
+
+  .guide-now {
+    font-size: 0.875rem;
+  }
+
+  .guide-next {
+    min-width: 0;
+    font-size: 0.8125rem;
+  }
+
+  .guide-next span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .keep-going {
+    margin-block-start: 0.5rem;
+    line-height: 1.35;
+  }
+
+  /* The stage keeps the top of the screen, the moment stands below it. */
+  .film .moment {
+    inset-block: auto var(--guide);
+    inset-inline: 0;
+    justify-content: flex-end;
+    width: auto;
+    height: auto;
+    max-height: calc(100svh - var(--bar) - var(--guide));
+    padding: 4rem var(--edge) 0.5rem;
+    background: linear-gradient(to top, rgb(5 6 7 / 0.94) 70%, transparent);
+  }
+
+  .film .moment-title,
+  .film .moment-title.is-name {
+    font-size: 1.75rem;
+  }
+
+  .film .moment-title.is-long {
+    font-size: 1.375rem;
+  }
+
+  .film .moment-text,
+  .film .moment-say {
+    margin-block-start: 0.625rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .film .moment-lines,
+  .film .moment-chips {
+    margin-block-start: 0.625rem;
+  }
+
+  .film .moment-lines li {
+    padding-block: 0.15rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .film .moment-docs {
+    margin-block-start: 0.25rem;
+  }
+}
+
+@media (max-width: 359px) {
+  .guide-next span:first-child {
+    display: none;
+  }
+}
+
+@media (max-height: 520px) {
+  .film .moment {
+    width: min(48vw, 27rem);
+  }
+
+  .film .moment-title,
+  .film .moment-title.is-name,
+  .film .moment-title.is-long {
+    font-size: 1.375rem;
+  }
+
+  .film .moment-text,
+  .film .moment-say,
+  .film .moment-lines li {
+    margin-block-start: 0.375rem;
+    padding-block: 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+}
+
+.to-docs {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block-start: 0.75rem;
+  color: var(--ivory);
+  font-size: var(--small);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+@media (max-height: 520px) {
+  .film .to-docs {
+    display: none;
+  }
+}
+
+/* Little height: a line's name and its text share the line. */
+@media (max-height: 520px), (max-width: 820px) and (max-height: 620px) {
+  .film .moment-title,
+  .film .moment-title.is-name,
+  .film .moment-title.is-long {
+    font-size: 1.25rem;
+  }
+
+  .film .moment-text,
+  .film .moment-say,
+  .film .moment-lines {
+    margin-block-start: 0.375rem;
+  }
+
+  .film .moment-text,
+  .film .moment-say,
+  .film .moment-lines li {
+    padding-block: 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .film .moment-lines strong {
+    display: inline;
+    margin-inline-end: 0.35em;
+  }
+
+  .film .moment-docs {
+    margin-block-start: 0;
+  }
+}

@@ -4,7 +4,8 @@ import { STRIDE } from './shapes/blocks.ts'
 import { FULL, LITE, SHAPES, type Census, type ShapeName } from './shapes/index.ts'
 import { pack } from './shapes/pack.ts'
 import { toClip } from './pointer.ts'
-import { createTimeline } from './timeline.ts'
+import { focusAt } from './focus.ts'
+import { createTimeline, stopAt } from './timeline.ts'
 
 const census: Census = { skills: 39, agents: 10, events: 9, ruleGroups: [10, 5, 6, 3, 2, 5] }
 
@@ -37,11 +38,32 @@ test('the broken screen has the same pieces as the mended one', () => {
   assert.deepEqual(orders('broken'), orders('screen'))
 })
 
-test('the timeline holds, travels and stops at the last scene', () => {
-  const timeline = createTimeline([{ hold: 1, travel: 1 }, { hold: 2, travel: 0 }])
-  assert.deepEqual(timeline.at(0.5), { index: 0, next: 1, hold: 0.5, move: 0 })
-  assert.deepEqual(timeline.at(1.5), { index: 0, next: 1, hold: 1, move: 0.5 })
-  assert.deepEqual(timeline.at(9), { index: 1, next: 1, hold: 1, move: 0 })
+test('the timeline holds, reads, travels and stops at the last scene', () => {
+  const timeline = createTimeline([{ hold: 1, reading: 2, travel: 1 }, { hold: 2, reading: 0, travel: 0 }])
+  const at = (position: number) => timeline.at(position)
+  assert.deepEqual(at(0.5), { index: 0, next: 1, hold: 0.5, read: 0, aside: 0, move: 0 })
+  assert.deepEqual(at(2), { index: 0, next: 1, hold: 1, read: 0.5, aside: 1, move: 0 })
+  assert.deepEqual(at(3.5), { index: 0, next: 1, hold: 1, read: 1, aside: 1, move: 0.5 })
+  assert.deepEqual(at(9), { index: 1, next: 1, hold: 1, read: 0, aside: 0, move: 0 })
+})
+
+test('reading rests on every stop, in order', () => {
+  const centres = [100, 400, 700]
+  assert.deepEqual([0, 100, 400, 700, 900].map((middle) => stopAt(centres, middle)), [0, 0, 1, 2, 2])
+  assert.equal(stopAt(centres, 250), 0.5)
+  assert.equal(stopAt([], 250), -1)
+})
+
+test('every explained object can be focused', () => {
+  const counts = { skills: census.skills, agents: census.agents, rules: census.ruleGroups.length, checks: census.events }
+  for (const [name, amount] of Object.entries(counts) as [ShapeName, number][]) {
+    const { anchors } = SHAPES[name](census, FULL)
+    assert.equal(anchors?.length, amount)
+    for (let stop = 0; stop < amount; stop += 0.5) {
+      const focus = focusAt(name, anchors, stop)
+      assert.ok(focus && [...focus.eye, ...focus.look, ...focus.at].every(Number.isFinite))
+    }
+  }
 })
 
 test('a pointer that moves before the stage has a size never reaches the camera', () => {

@@ -6,11 +6,12 @@
 #film,
 .film-shade,
 .labels,
-.cue {
+.scene-hold,
+.scene-travel {
   display: none;
 }
 
-.scene {
+.scene-pin {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   gap: var(--edge);
@@ -145,24 +146,8 @@
 }
 
 @media (max-width: 820px) {
-  .scene {
+  .scene-pin {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
   }
-}
-
-.scene-more {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-block-start: 0.75rem;
-  color: var(--ivory);
-  font-size: var(--small);
-  text-decoration-color: rgb(241 237 231 / 0.4);
-  text-underline-offset: 6px;
-  transition: text-decoration-color 0.25s;
-}
-
-.scene-more:hover {
-  text-decoration-color: var(--ivory);
 }

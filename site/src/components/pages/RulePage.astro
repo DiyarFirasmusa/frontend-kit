@@ -1,0 +1,53 @@
+---
+import { projects } from '../../content/guide/projects.ts'
+import { rulePurpose } from '../../content/guide/purpose.ts'
+import { ruleGuides } from '../../content/guide/rules.ts'
+import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
+import { content } from '../../content/index.ts'
+import type { Locale } from '../../content/types.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import { ruleFiles } from '../../lib/plugin-details.ts'
+import Block from '../guide/Block.astro'
+import Source from '../guide/Source.astro'
+
+interface Props {
+  group: string
+  name: string
+  locale: Locale
+}
+
+const { group, name, locale } = Astro.props
+const key = `${group}/${name}`
+const { paths } = ruleFiles[group]!.find((rule) => rule.key === key)!
+const file = `plugins/frontend-kit/templates/${group}/rules/${name}`
+const words = {
+  says: t('What it says', 'ماذا تقول'),
+  load: t('When Claude reads it', 'متى يقرؤها Claude'),
+  loadLead: t('Only while it works on a file that matches one of these paths.', 'فقط وهو يعمل على ملف يطابق أحد هذه المسارات.'),
+  always: t('In every session, whatever file is open.', 'في كل جلسة، أياً كان الملف المفتوح.'),
+  installed: t('Installed for', 'تُثبَّت لـ'),
+  becomes: t('In your project it becomes', 'تصبح في مشروعك'),
+  yours: t('It is a copy that belongs to you: setup adapts it to your stack, and you may edit it.', 'نسخة ملكك: يكيّفها الإعداد مع تقنياتك ولك أن تعدّلها.'),
+}
+const types =
+  group === 'shared'
+    ? ui.everyType[locale]
+    : group.includes('/')
+      ? content[locale].rules.groups[group]
+      : projects.filter(({ rules }) => rules.includes(group)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
+---
+
+<dl class="glance">
+  <div><dt>{words.installed[locale]}</dt><dd>{types}</dd></div>
+  <div><dt>{words.becomes[locale]}</dt><dd><code dir="ltr">.claude/rules/{name}</code></dd></div>
+</dl>
+<Block id="why" title={ui.why[locale]}><p class="big">{rulePurpose[key]![locale]}</p></Block>
+<Block id="says" title={words.says[locale]} lead={words.yours[locale]}><p class="big">{ruleGuides[key]![locale]}</p></Block>
+<Block id="loads" title={words.load[locale]} lead={(paths.length ? words.loadLead : words.always)[locale]}>
+  {paths.length > 0 && <ul class="tags">{paths.map((path) => <li><code dir="ltr">{path}</code></li>)}</ul>}
+</Block>
+<Block id="full" title={ui.fullRule[locale]} lead={ui.fullText[locale]}>
+  <Source file={file} />
+  <a class="source" href={`${REPO_URL}/blob/main/${file}`}>{ui.source[locale]}</a>
+</Block>

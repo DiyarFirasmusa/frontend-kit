@@ -58,7 +58,6 @@ export interface Copy {
     switchLanguage: string
     pause: string
     play: string
-    cue: string
   }
   scenes: Record<SceneId, SceneCopy>
   facts: { skills: string; agents: string; rules: string; events: string }

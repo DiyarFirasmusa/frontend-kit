@@ -2,6 +2,7 @@
 import { scenes } from '../../content/scenes.ts'
 import type { Copy, Details, Locale } from '../../content/types.ts'
 import { census } from '../../lib/plugin.ts'
+import GuideBar from './GuideBar.astro'
 import Labels from './Labels.astro'
 import Scene from './Scene.astro'
 
@@ -18,6 +19,6 @@ const { copy, locale } = Astro.props
   <div class="film-shade" aria-hidden="true" data-shade></div>
   <Labels copy={copy} />
   {scenes.map((scene, i) => <Scene scene={scene} copy={copy} locale={locale} first={i === 0} last={i === scenes.length - 1} />)}
-  <p class="cue" aria-hidden="true" data-cue>{copy.chrome.cue}</p>
+  <GuideBar locale={locale} />
   <script type="application/json" id="census" set:html={JSON.stringify(census)} />
 </div>

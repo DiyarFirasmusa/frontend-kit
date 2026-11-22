@@ -18,19 +18,28 @@ function keepPlace(change: () => void, section = sectionInView()): void {
   if (!fromTop) section?.scrollIntoView({ behavior: 'instant' })
 }
 
+/** The most exact thing being read: a block of an explanation, else its scene. */
 function sectionInView(): HTMLElement | undefined {
-  return [...document.querySelectorAll<HTMLElement>('main section[id]')].findLast(
+  return [...document.querySelectorAll<HTMLElement>('main section[id], .moment-slot')].findLast(
     (section) => section.getBoundingClientRect().top <= innerHeight * 0.4,
   )
 }
 
+/** In a scene's hold the film knows best; inside an explanation the page does. */
+function placeInFilm(): HTMLElement | undefined {
+  const reading = [...document.querySelectorAll<HTMLElement>('[data-tour]')].some((tour) => {
+    const { top, bottom } = tour.getBoundingClientRect()
+    return top < innerHeight * 0.6 && bottom > innerHeight * 0.4
+  })
+  return reading ? sectionInView() : (player?.currentSection() ?? sectionInView())
+}
+
 function stillPage(): void {
   if (!root.classList.contains('film')) return
-  const inFilm = required('[data-details]').getBoundingClientRect().top > 0
   keepPlace(() => {
     player?.stop()
     root.classList.remove('film', 'film-loading', 'film-ready')
-  }, inFilm ? player?.currentSection() : sectionInView())
+  }, placeInFilm())
   showMotion(button, false)
 }
 

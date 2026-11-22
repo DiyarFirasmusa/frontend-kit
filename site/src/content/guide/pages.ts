@@ -2,6 +2,9 @@ import type { Bilingual } from '../catalogue.ts'
 import { t } from './text.ts'
 
 export type PageId =
+  | 'docs'
+  | 'modes'
+  | 'changelog'
   | 'guide'
   | 'get-started'
   | 'skills'
@@ -30,6 +33,30 @@ export interface PageSection {
 }
 
 export const PAGES: Record<PageId, PageInfo> = {
+  docs: {
+    id: 'docs',
+    still: 'skills',
+    name: t('Documentation', 'التوثيق'),
+    title: t('The complete documentation.', 'التوثيق الكامل.'),
+    lead: t(
+      'Every skill, agent, rule, hook, mode and setting: what it is, why it exists, when it applies and its full source.',
+      'كل مهارة ووكيل وقاعدة وحارس ونمط وإعداد: ما هو، ولماذا وُجد، ومتى يعمل، ونصه الكامل.',
+    ),
+  },
+  modes: {
+    id: 'modes',
+    still: 'layers',
+    name: t('Modes', 'الأنماط'),
+    title: t('Modes: how Claude approaches the project.', 'الأنماط: كيف يتعامل Claude مع المشروع.'),
+    lead: t('One key in the config tells Claude whether to build, to fit in or to restructure.', 'مفتاح واحد في الإعدادات يخبر Claude هل يبني أم ينسجم أم يعيد الهيكلة.'),
+  },
+  changelog: {
+    id: 'changelog',
+    still: 'mark',
+    name: t('Changelog', 'سجل التغييرات'),
+    title: t('What changed, version by version.', 'ماذا تغيّر في كل إصدار.'),
+    lead: t('The plugin’s own changelog, in full.', 'سجل تغييرات الإضافة كاملاً، بالإنجليزية كما كُتب.'),
+  },
   guide: {
     id: 'guide',
     still: 'screen',
@@ -132,11 +159,11 @@ export const PAGES: Record<PageId, PageInfo> = {
 }
 
 export const SECTIONS: PageSection[] = [
-  { title: t('Start here', 'ابدأ من هنا'), pages: ['guide', 'get-started', 'examples'] },
+  { title: t('Start here', 'ابدأ من هنا'), pages: ['docs', 'guide', 'get-started', 'examples'] },
   { title: t('What is inside', 'ماذا بداخلها'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
-  { title: t('Your project', 'مشروعك'), pages: ['project-types', 'configuration', 'refactor'] },
-  { title: t('Help', 'المساعدة'), pages: ['questions'] },
+  { title: t('Your project', 'مشروعك'), pages: ['project-types', 'modes', 'configuration', 'refactor'] },
+  { title: t('Help', 'المساعدة'), pages: ['questions', 'changelog'] },
 ]
 
 /** The links in the header. */
-export const HEADER_PAGES: PageId[] = ['guide', 'get-started', 'skills', 'agents', 'project-types', 'checks', 'examples']
+export const HEADER_PAGES: PageId[] = ['guide', 'get-started', 'skills', 'agents', 'project-types', 'checks']

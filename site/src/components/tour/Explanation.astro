@@ -1,0 +1,63 @@
+---
+import { tourWords } from '../../content/guide/tour.ts'
+import type { SceneId } from '../../content/scenes.ts'
+import type { Locale } from '../../content/types.ts'
+import { momentsOf } from '../../lib/moments.ts'
+
+interface Props {
+  scene: SceneId
+  locale: Locale
+}
+
+const { scene, locale } = Astro.props
+const moments = momentsOf(scene, locale)
+const LONG_TITLE = 26
+---
+
+<ol class="moments">
+  {
+    moments.map(({ id, title, named, stop, text, say, lines, chips, doc }, i) => (
+      <li id={id ?? `${scene}-${i + 1}`} class="moment-slot" data-moment data-stop={stop} data-count={named ? '' : undefined}>
+        <div class="moment" data-moment-copy>
+          <h3 class:list={['moment-title', { 'is-name': named, 'is-long': title.length > LONG_TITLE }]} data-moment-title>
+            {named ? <bdi>{title}</bdi> : title}
+          </h3>
+          {text && <p class="moment-text">{text}</p>}
+          {say && (
+            <p class="moment-say">
+              <q dir="auto">{say}</q>
+            </p>
+          )}
+          {lines && (
+            <ul class="moment-lines">
+              {lines.map(({ name, text: line, mark }, n) => (
+                <li class={mark && `is-${mark}`} style={`--n: ${n}`}>
+                  {name && (
+                    <strong>
+                      <bdi>{name}</bdi>
+                    </strong>
+                  )}
+                  <span dir={name ? 'auto' : undefined}>{line}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {chips && (
+            <ul class="moment-chips">
+              {chips.map((chip, n) => (
+                <li style={`--n: ${n}`}>
+                  <bdi>{chip}</bdi>
+                </li>
+              ))}
+            </ul>
+          )}
+          <a class="moment-docs" href={doc}>
+            {named ? tourWords.docsOf[locale] : tourWords.docs[locale]}
+            {named && ' '}
+            {named ? <bdi>{title}</bdi> : <span class="sr-only">: {title}</span>}
+          </a>
+        </div>
+      </li>
+    ))
+  }
+</ol>

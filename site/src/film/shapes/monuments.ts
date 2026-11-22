@@ -109,10 +109,12 @@ export function vault(tileScale: number): Shape {
 export function passage(arches: number, tileScale: number): Shape {
   const random = seeded(29)
   const blocks: Block[] = []
+  const anchors: Vec3[] = []
   const gap = 88 / Math.max(1, arches - 1)
   const sides = Math.round(112 / tileScale)
   for (let i = 0; i < arches; i++) {
     const z = 22 - i * gap
+    anchors.push([0, CENTRE, z])
     for (let j = 0; j < sides; j++) {
       const angle = (j / sides) * TAU
       const turn = rotation(0, 0, angle)
@@ -126,5 +128,5 @@ export function passage(arches: number, tileScale: number): Shape {
   for (let i = 0; i < 90; i++) {
     blocks.push(block(ring(random() * TAU, 5.5, 26 - random() * 100), [0.02, 0.02, 0.7 + random() * 1.4], { glow: 0.25 }))
   }
-  return { blocks, sort: (b) => -b.at[2] }
+  return { blocks, anchors, sort: (b) => -b.at[2] }
 }

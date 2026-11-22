@@ -15,7 +15,6 @@ export const en: Copy = {
     switchLanguage: 'العربية',
     pause: 'Pause motion',
     play: 'Play motion',
-    cue: 'Scroll to see how it works',
   },
   scenes: {
     intro: {
@@ -73,6 +72,22 @@ export const en: Copy = {
     guards: {
       title: 'Dangerous commands hit a wall.',
       text: 'Force pushes, skipped hooks, secrets and live hosts. The guards catch known patterns before they run.',
+    },
+    features: {
+      title: 'Every feature. Every setting.',
+      text: 'Everything in the current version, and the one file that configures it.',
+    },
+    rescue: {
+      title: 'An old, messy project? It can be rescued.',
+      text: 'Refactor mode rebuilds it in six approved phases, without changing what it does.',
+    },
+    examples: {
+      title: 'What do I type?',
+      text: 'Plain sentences. Find what you want and say it in your own words.',
+    },
+    questions: {
+      title: 'Honest answers.',
+      text: 'Cost, safety, limits, and what to do when something does not work.',
     },
     install: {
       title: 'Give Claude your standard.',

@@ -20,6 +20,8 @@
 
   --edge: clamp(1.25rem, 4.2vw, 4.75rem);
   --bar: 76px;
+  /* The guide bar at the foot of the home page. */
+  --guide: 52px;
   --check: polygon(0 52%, 13% 38%, 36% 64%, 87% 8%, 100% 21%, 37% 93%);
 }
 

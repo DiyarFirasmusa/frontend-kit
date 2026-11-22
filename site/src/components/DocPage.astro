@@ -2,9 +2,13 @@
 import { agents, skillGroups } from '../content/catalogue.ts'
 import { PAGES, SECTIONS, type PageId } from '../content/guide/pages.ts'
 import { ui } from '../content/guide/ui.ts'
-import type { Locale } from '../content/types.ts'
+import { ruleGuides } from '../content/guide/rules.ts'
+import { content } from '../content/index.ts'
+import type { HookEvent, Locale } from '../content/types.ts'
 import Layout from '../layouts/Layout.astro'
-import { agentUrl, asset, pageUrl, routeUrl, skillUrl } from '../lib/links.ts'
+import { CHAPTER_OF, onHome } from '../lib/here.ts'
+import { agentUrl, asset, hookUrl, pageUrl, routeUrl, ruleUrl, skillUrl } from '../lib/links.ts'
+import { hookEvents, ruleGroups } from '../lib/plugin.ts'
 import type { Route } from '../lib/routes.ts'
 import Header from './Header.astro'
 import SiteFooter from './SiteFooter.astro'
@@ -15,45 +19,75 @@ interface Props {
 }
 
 const { locale, route } = Astro.props
-const parent: PageId = route.kind === 'page' ? route.id : route.kind === 'skill' ? 'skills' : 'agents'
-const name = route.kind === 'page' ? undefined : route.name
+const copy = content[locale]
+const PARENT = { skill: 'skills', agent: 'agents', rule: 'rules', hook: 'checks' } as const
+const parent: PageId = route.kind === 'page' ? route.id : PARENT[route.kind]
 const info = PAGES[parent]
-const summary =
-  route.kind === 'skill'
-    ? skillGroups.find(({ skills }) => route.name in skills)?.skills[route.name]?.[locale]
-    : route.kind === 'agent'
-      ? agents[route.name]?.[locale]
-      : info.lead[locale]
-const heading = name ?? info.title[locale]
-const label = name ? `${name}: ${info.name[locale]}` : info.name[locale]
 
-// Previous and next within the same kind of page.
-const order = SECTIONS.flatMap((section) => section.pages)
-const names = route.kind === 'skill' ? skillGroups.flatMap((group) => Object.keys(group.skills)) : route.kind === 'agent' ? Object.keys(agents) : order
-const at = names.indexOf(name ?? parent)
-const neighbour = (offset: number) => {
-  const other = names[at + offset]
-  if (other === undefined) return undefined
-  if (route.kind === 'skill') return { href: skillUrl(locale, other), label: other }
-  if (route.kind === 'agent') return { href: agentUrl(locale, other), label: other }
-  return { href: pageUrl(locale, other as PageId), label: PAGES[other as PageId].name[locale] }
+/** The pages of this kind, in their order: the pager walks them and the side lists them. */
+interface Sibling {
+  key: string
+  name: string
+  /** Tells two of the same name apart. */
+  among?: string
+  href: string
+  about: string
 }
-const before = neighbour(-1)
-const after = neighbour(1)
+let siblings: Sibling[]
+switch (route.kind) {
+  case 'page':
+    siblings = SECTIONS.flatMap(({ pages }) => pages).map((id) => ({ key: id, name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead[locale] }))
+    break
+  case 'skill':
+    siblings = skillGroups.flatMap(({ skills }) =>
+      Object.entries(skills).map(([name, what]) => ({ key: name, name, href: skillUrl(locale, name), about: what[locale] })),
+    )
+    break
+  case 'agent':
+    siblings = Object.entries(agents).map(([name, what]) => ({ key: name, name, href: agentUrl(locale, name), about: what[locale] }))
+    break
+  case 'rule':
+    siblings = ruleGroups.flatMap(({ group, names }) =>
+      names.map((name) => ({
+        key: `${group}/${name}`,
+        name,
+        among: copy.rules.groups[group] ?? group,
+        href: ruleUrl(locale, group, name),
+        about: ruleGuides[`${group}/${name}`]![locale],
+      })),
+    )
+    break
+  case 'hook':
+    siblings = (Object.keys(copy.session.events) as HookEvent[])
+      .filter((event) => hookEvents.includes(event))
+      .map((event) => ({ key: event, name: event, href: hookUrl(locale, event), about: copy.session.events[event][0] }))
+}
+const key = route.kind === 'page' ? route.id : route.kind === 'rule' ? `${route.group}/${route.name}` : route.kind === 'hook' ? route.event : route.name
+const at = siblings.findIndex((sibling) => sibling.key === key)
+const here = siblings[at]!
+const before = siblings[at - 1]
+const after = siblings[at + 1]
+const detail = route.kind !== 'page'
+const summary = here.about
+const heading = detail ? here.name : info.title[locale]
+const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${here.among})` : ''}` : info.name[locale]
+const inTour = route.kind === 'skill' ? `skill-${route.name}` : route.kind === 'agent' ? `agent-${route.name}` : CHAPTER_OF[parent]
 ---
 
 <Layout locale={locale} route={route} title={`${label} | frontend-kit`} description={summary ?? ''}>
   <Header locale={locale} route={route} />
   <main id="content" class="doc" tabindex="-1">
-    <header class:list={['banner', { 'banner-small': name }]}>
+    <header class:list={['banner', { 'banner-small': parent !== 'docs' }]}>
       <img src={asset(`stills/${info.still}.jpg`)} width="1000" height="620" alt="" fetchpriority="high" />
       <div class="banner-copy">
         <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
           <a href={routeUrl(locale, { kind: 'home' })}>{ui.home[locale]}</a>
-          {name ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
+          {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
+          {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
         </nav>
-        <h1 class:list={{ 'is-name': name }}>{name ? <bdi>{heading}</bdi> : heading}</h1>
+        <h1 class:list={{ 'is-name': detail }}>{detail ? <bdi>{heading}</bdi> : heading}</h1>
         <p>{summary}</p>
+        {inTour && <a class="in-tour" href={onHome(locale, inTour)}>{ui.seeInTour[locale]}</a>}
       </div>
     </header>
     <div class="doc-body">
@@ -65,9 +99,20 @@ const after = neighbour(1)
               <ul>
                 {pages.map((id) => (
                   <li>
-                    <a href={pageUrl(locale, id)} aria-current={id === parent ? (name ? 'true' : 'page') : undefined}>
+                    <a href={pageUrl(locale, id)} aria-current={id === parent ? (detail ? 'true' : 'page') : undefined}>
                       {PAGES[id].name[locale]}
                     </a>
+                    {detail && id === parent && (
+                      <ul class="side-names">
+                        {siblings.map((sibling) => (
+                          <li>
+                            <a href={sibling.href} aria-current={sibling === here ? 'page' : undefined}>
+                              <bdi>{sibling.name}</bdi>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -81,13 +126,13 @@ const after = neighbour(1)
           {before && (
             <a href={before.href}>
               <span>{ui.previous[locale]}</span>
-              <bdi>{before.label}</bdi>
+              <bdi>{before.name}</bdi>
             </a>
           )}
           {after && (
             <a class="pager-next" href={after.href}>
               <span>{ui.next[locale]}</span>
-              <bdi>{after.label}</bdi>
+              <bdi>{after.name}</bdi>
             </a>
           )}
         </nav>

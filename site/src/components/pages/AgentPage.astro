@@ -1,11 +1,16 @@
 ---
 import { agentGuides } from '../../content/guide/agents.ts'
+import { agentPurpose } from '../../content/guide/purpose.ts'
 import { ui } from '../../content/guide/ui.ts'
 import type { Locale } from '../../content/types.ts'
 import { REPO_URL } from '../../lib/plugin.ts'
+import { skillUrl } from '../../lib/links.ts'
+import { agentReference } from '../../lib/reference.ts'
 import { agentFacts } from '../../lib/plugin-details.ts'
 import Block from '../guide/Block.astro'
 import Prompt from '../guide/Prompt.astro'
+import Source from '../guide/Source.astro'
+import WhyWhen from '../guide/WhyWhen.astro'
 
 interface Props {
   name: string
@@ -15,12 +20,15 @@ interface Props {
 const { name, locale } = Astro.props
 const guide = agentGuides[name]!
 const { model, edits } = agentFacts[name]!
+const { matches, effort, tools, skills } = agentReference[name]!
 ---
 
 <dl class="glance">
   <div><dt>{ui.model[locale]}</dt><dd><bdi>{model}</bdi></dd></div>
   <div><dt>{ui.canEdit[locale]}</dt><dd>{(edits ? ui.editsYes : ui.editsNo)[locale]}</dd></div>
+  <div><dt>{ui.effort[locale]}</dt><dd><bdi>{effort}</bdi></dd></div>
 </dl>
+<WhyWhen purpose={agentPurpose[name]!} locale={locale} masculine />
 
 <Block id="role" title={ui.agentIs[locale]}><p class="big">{guide.plain[locale]}</p></Block>
 <Block id="ask" title={ui.youType[locale]} lead={ui.anyWords[locale]}><Prompt text={guide.ask[locale]} /></Block>
@@ -29,3 +37,23 @@ const { model, edits } = agentFacts[name]!
   <p class="big">{guide.returns[locale]}</p>
   <a class="source" href={`${REPO_URL}/blob/main/plugins/frontend-kit/agents/${name}.md`}>{ui.source[locale]}</a>
 </Block>
+<Block id="matches" title={ui.matches[locale]} lead={ui.matchesHe[locale]}><p class="quoted" lang="en" dir="ltr">{matches}</p></Block>
+<Block id="tools" title={ui.tools[locale]} lead={ui.toolsLead[locale]}>
+  <ul class="tags">{tools.map((tool) => <li><code class="breaks" dir="ltr">{tool}</code></li>)}</ul>
+</Block>
+{
+  skills.length > 0 && (
+    <Block id="skills-used" title={ui.skillsRead[locale]}>
+      <ul class="tags">
+        {skills.map((skill) => (
+          <li>
+            <a href={skillUrl(locale, skill)}>
+              <bdi>{skill}</bdi>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Block>
+  )
+}
+<Block id="instructions" title={ui.instructions[locale]} lead={ui.fullText[locale]}><Source file={`plugins/frontend-kit/agents/${name}.md`} /></Block>

@@ -4,7 +4,7 @@ import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
-import { REPO_URL } from '../../lib/plugin.ts'
+import { ruleUrl } from '../../lib/links.ts'
 import { ruleFiles } from '../../lib/plugin-details.ts'
 import Block from '../guide/Block.astro'
 
@@ -44,7 +44,7 @@ const PATHS_SHOWN = 3
         {files.map(({ key, name, paths }) => (
           <div>
             <dt>
-              <a href={`${REPO_URL}/blob/main/plugins/frontend-kit/templates/${group}/rules/${name}`}>
+              <a href={ruleUrl(locale, group, name)}>
                 <bdi>{name}</bdi>
               </a>
             </dt>

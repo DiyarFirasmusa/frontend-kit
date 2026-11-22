@@ -1,5 +1,6 @@
 import { ACESFilmicToneMapping, Vector2, Vector3, WebGLRenderer } from 'three'
 import { MOVES } from './direction.ts'
+import { focusAt, type Focus } from './focus.ts'
 import { impactAt } from './impact.ts'
 import { toClip } from './pointer.ts'
 import { isSoftwareRenderer, pickQuality, type Quality } from './quality.ts'
@@ -18,6 +19,10 @@ export interface Shot {
   hold: number
   move: number
   layouts: [Layout, Layout]
+  aside: number
+  read: number
+  /** The stop being explained, fractional; -1 for none. */
+  stop: number
   time: number
   delta: number
   speed: number
@@ -121,7 +126,7 @@ export class Film {
     this.uniforms.uPixels.value = clientHeight * this.pixelRatio
   }
 
-  render({ from, to, hold, move, layouts, time, delta, speed, open }: Shot): void {
+  render({ from, to, hold, move, layouts, aside, read, stop, time, delta, speed, open }: Shot): void {
     if (!this.canvas.clientWidth || !this.canvas.clientHeight) return
     this.fitCanvas()
     this.blocks.load(from, to)
@@ -140,7 +145,14 @@ export class Film {
     uniforms.uShock.value = shock
     uniforms.uTouch.value = this.touched
 
-    const eye = rig.update({ from, to, hold, t, layouts }, this.screen, { time, delta, speed, hit, aim: pointer })
+    const focus: Focus | undefined = aside > 0 ? focusAt(from, this.anchors[from], stop) : undefined
+    uniforms.uFocusOn.value = focus ? aside * Math.max(0, 1 - move * 3) : 0
+    if (focus) {
+      uniforms.uFocus.value.fromArray(focus.at)
+      uniforms.uReach.value.fromArray(focus.reach)
+    }
+
+    const eye = rig.update({ from, to, hold, t, layouts, aside, read, focus }, this.screen, { time, delta, speed, hit, aim: pointer })
     uniforms.uEye.value.copy(eye)
     uniforms.uRay.value.set(pointer.x, pointer.y, 0.5).unproject(rig.camera).sub(eye).normalize()
     this.set.light(from, to, t)

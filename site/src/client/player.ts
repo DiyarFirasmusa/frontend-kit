@@ -2,10 +2,12 @@ import type { Film, Shot } from '../film/film.ts'
 import { Governor } from '../film/quality.ts'
 import type { Layout } from '../film/render/camera-rig.ts'
 import { isShape, type ShapeName } from '../film/shapes/index.ts'
-import { clamp, createTimeline, mix, smooth, type Timeline } from '../film/timeline.ts'
+import { clamp, createTimeline, mix, smooth, stopAt } from '../film/timeline.ts'
 import { all, required } from './dom.ts'
 import { FilmCopy } from './film-copy.ts'
 import { FilmLabels } from './film-labels.ts'
+import { FilmMoments } from './film-moments.ts'
+import { measure } from './measure.ts'
 
 const INTRO_SECONDS = 2.8
 const OPEN_SECONDS = 0.8
@@ -14,16 +16,22 @@ const FOLLOW = 5
 const CUT_DISTANCE = 2.2
 const CUT_SECONDS = 0.7
 const LANDING = 0.3
+/** Where on the screen the slot of the current moment passes. */
+const READING_LINE = 0.5
+/** The stage has turned aside this far before the first moment is called in, and not yet left. */
+const CALLED_IN = { aside: 0.6, move: 0.12 }
 
 /** Plays the film against the scroll position. */
 export class Player {
   private readonly canvas = required<HTMLCanvasElement>('#film')
   private readonly details = required<HTMLElement>('[data-details]')
   private readonly shade = required<HTMLElement>('[data-shade]')
-  private readonly cue = required<HTMLElement>('[data-cue]')
   private readonly sections = all<HTMLElement>('[data-scene]')
   private readonly shapes: ShapeName[]
-  private readonly timeline: Timeline
+  private measured = measure(this.sections, this.canvas.clientHeight)
+  private timeline = createTimeline(this.measured.beats)
+  private measureDue = false
+  private readonly moments = new FilmMoments()
   private readonly copy: FilmCopy
   private readonly labels: FilmLabels
   private readonly film: Film
@@ -42,13 +50,14 @@ export class Player {
   constructor(film: Film, rtl: boolean, giveUp: () => void) {
     this.film = film
     this.shapes = this.sections.map(({ dataset }) => (isShape(dataset['shape']) ? dataset['shape'] : 'mark'))
-    this.timeline = createTimeline(this.sections.map(({ dataset }) => ({ hold: Number(dataset['hold']), travel: Number(dataset['travel']) })))
     this.copy = new FilmCopy(this.sections, rtl)
     this.labels = new FilmLabels(rtl)
     this.governor = new Governor(() => film.cheaper(), giveUp)
 
     addEventListener('scroll', this.request, { passive: true })
-    addEventListener('resize', this.request)
+    addEventListener('resize', this.remeasureSoon)
+    // Fonts, opened answers and wrapped lines all change where a chapter starts.
+    new ResizeObserver(this.remeasureSoon).observe(required('[data-film-track]'))
     addEventListener('pageshow', this.resume)
     document.addEventListener('visibilitychange', this.resume)
     addEventListener(
@@ -60,8 +69,15 @@ export class Player {
     )
     // Copy of every scene stays readable by assistive tech, so focus has to bring its scene along.
     this.sections.forEach((section, i) => {
-      section.addEventListener('focusin', () => {
-        if (!this.playing || required('[data-copy-block]', section).classList.contains('is-shown')) return
+      section.querySelector('[data-tour]')?.addEventListener('focusin', ({ target }) => {
+        const slot = (target as Element).closest('[data-moment]')
+        if (!this.playing || !slot || slot.querySelector('.is-current')) return
+        const { top, height } = slot.getBoundingClientRect()
+        scrollTo({ top: scrollY + top + height / 2 - this.canvas.clientHeight * READING_LINE, behavior: 'instant' })
+      })
+      const block = required<HTMLElement>('[data-copy-block]', section)
+      block.addEventListener('focusin', () => {
+        if (!this.playing || block.classList.contains('is-shown')) return
         const { starts } = this.timeline
         scrollTo({ top: (starts[i]! + Number(section.dataset['hold']) * LANDING) * this.canvas.clientHeight, behavior: 'instant' })
       })
@@ -76,6 +92,7 @@ export class Player {
   play(): void {
     this.playing = true
     this.height = this.canvas.clientHeight
+    this.remeasure()
     this.position = this.goal()
     this.introDone = this.position > 0.05
     this.last = performance.now() / 1000
@@ -90,11 +107,32 @@ export class Player {
     this.copy.reset()
     this.labels.reset()
     this.canvas.style.visibility = ''
+    this.moments.reset()
   }
 
   restore(): void {
     this.film.restore()
     this.resume()
+  }
+
+  private remeasure(): void {
+    this.measured = measure(this.sections, this.canvas.clientHeight)
+    this.timeline = createTimeline(this.measured.beats)
+    this.measureDue = false
+  }
+
+  private readonly remeasureSoon = (): void => {
+    this.measureDue = true
+    this.request()
+  }
+
+  /** The moment at a point of the page, and the object it is about. */
+  private follow(index: number, middle: number): { slot: HTMLElement | undefined; stop: number } {
+    const { centres, numbers, elements } = this.measured.moments[index]!
+    if (centres.length === 0) return { slot: undefined, stop: -1 }
+    const at = stopAt(centres, middle)
+    const whole = Math.floor(at)
+    return { slot: elements[Math.round(at)], stop: mix(numbers[whole]!, numbers[Math.min(whole + 1, numbers.length - 1)]!, at - whole) }
   }
 
   private goal(): number {
@@ -119,18 +157,19 @@ export class Player {
 
     this.height = this.canvas.clientHeight
     this.width = this.canvas.clientWidth
-    const goal = this.goal()
-
     // No size yet (a hidden pane): look again on the next frame.
     if (!this.width || !this.height) return this.request()
+    if (this.measureDue) this.remeasure()
+    const goal = this.goal()
 
     // The details cover the film: nothing to draw until it comes back into view.
     const covered = this.details.getBoundingClientRect().top <= 0
     this.canvas.style.visibility = covered ? 'hidden' : ''
     if (covered) {
       this.position = goal
-      this.copy.show({ index: this.sections.length, next: this.sections.length, hold: 0, move: 0 })
+      this.copy.show({ index: this.sections.length, next: this.sections.length, hold: 0, read: 0, aside: 0, move: 0 }, 0)
       this.labels.reset()
+      this.moments.reset()
       return
     }
 
@@ -145,7 +184,13 @@ export class Player {
     }
 
     const head = this.timeline.at(this.position)
-    const { index, next, hold, move } = head
+    const { index, next, hold, read, aside, move } = head
+    const middle = scrollY + this.height * READING_LINE
+    // The camera follows the eased position, the words the real one.
+    const stop = aside > 0 ? this.follow(index, middle + (this.position - goal) * this.height).stop : -1
+    // The explanation scrolls natively, ahead of the eased stage.
+    const native = this.timeline.at(goal)
+    const explained = native.index === index ? native.aside : Number(native.index > index)
     const layouts: [Layout, Layout] = [this.layout(index), this.layout(next)]
     let shot: Shot = {
       from: this.shapes[index]!,
@@ -153,6 +198,9 @@ export class Player {
       hold,
       move,
       layouts,
+      aside,
+      read,
+      stop,
       time: this.time,
       delta,
       speed: jumped ? 0 : (this.position - before) / delta / 3,
@@ -169,15 +217,22 @@ export class Player {
         hold: 0,
         move: clamp(this.time / INTRO_SECONDS),
         layouts: [layouts[0], layouts[0]],
+        aside: 0,
+        read: 0,
+        stop: -1,
         open: smooth(clamp(this.time / OPEN_SECONDS)),
       }
     }
 
     this.film.render(shot)
-    this.copy.show(head)
+    this.copy.show(head, explained)
+    const called = this.introDone && native.aside > CALLED_IN.aside && native.move < CALLED_IN.move
+    const told = called ? this.follow(native.index, middle) : undefined
+    const from = told && told.stop >= 0 ? this.film.anchors[this.shapes[native.index]!]?.[Math.round(told.stop)] : undefined
+    this.moments.show(this.film, told?.slot, from)
     this.labels.show(this.film, shot, this.width, this.height)
-    this.shade.style.opacity = String(mix(Number(layouts[0] === 'side'), Number(layouts[1] === 'side'), move))
-    this.cue.style.opacity = String(this.position < 0.08 ? clamp(this.time - INTRO_SECONDS + 0.2) : 0)
+    const shaded = mix(mix(Number(layouts[0] === 'side'), 1, aside), Number(layouts[1] === 'side'), move)
+    this.shade.style.opacity = String(shaded)
     this.governor.frame(delta)
     this.request()
   }

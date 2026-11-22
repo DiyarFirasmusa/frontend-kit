@@ -1,0 +1,29 @@
+---
+import { t } from '../../content/guide/text.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from './Block.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const words = {
+  difference: t('How is an agent different from a skill?', 'ما الفرق بين الوكيل والمهارة؟'),
+  skill: t('A skill is knowledge. The same Claude reads the steps and does the job itself.', 'المهارة معرفة: Claude نفسه يقرأ الخطوات وينفّذ.'),
+  agent: t('An agent is a worker. A separate Claude does the job without seeing the conversation, which is why its review is honest.', 'الوكيل عامل: Claude منفصل ينفّذ دون أن يرى المحادثة، ولذلك تكون مراجعته نزيهة.'),
+  start: t('How an agent starts', 'كيف يبدأ الوكيل'),
+  ways: [
+    t('By itself: frontend-reviewer runs after the quality gate passes.', 'تلقائياً: يعمل frontend-reviewer بعد نجاح بوابة الجودة.'),
+    t('Through a skill: review starts a reviewer for you.', 'عبر مهارة: تشغّل review المراجع نيابة عنك.'),
+    t('By asking: name the agent in your sentence.', 'بطلبك: اذكر اسم الوكيل في جملتك.'),
+  ],
+}
+---
+
+<Block id="difference" title={words.difference[locale]}>
+  <div class="pair"><p>{words.skill[locale]}</p><p>{words.agent[locale]}</p></div>
+</Block>
+<Block id="start" title={words.start[locale]}>
+  <ul class="ticks">{words.ways.map((way) => <li>{way[locale]}</li>)}</ul>
+</Block>

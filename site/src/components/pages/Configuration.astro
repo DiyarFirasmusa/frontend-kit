@@ -1,7 +1,9 @@
 ---
 import { sample, settings } from '../../content/guide/configuration.ts'
+import { projects } from '../../content/guide/projects.ts'
 import { t } from '../../content/guide/text.ts'
 import type { Locale } from '../../content/types.ts'
+import { templateJson } from '../../lib/reference.ts'
 import Block from '../guide/Block.astro'
 
 interface Props {
@@ -11,6 +13,8 @@ interface Props {
 const { locale } = Astro.props
 const words = {
   sample: t('An example', 'مثال'),
+  shipped: t('What each project type ships with', 'ما يأتي مع كل نوع مشروع'),
+  shippedLead: t('The whole config and the whole permissions file that setup starts from, before it fills in your values.', 'ملف الإعدادات وملف الصلاحيات كاملين كما يبدأ منهما الإعداد، قبل أن يملأ قيمك.'),
   sampleLead: t('A dashboard with the most useful keys. Setup fills the rest.', 'لوحة تحكم بأنفع المفاتيح، ويملأ الإعداد الباقي.'),
 }
 ---
@@ -32,3 +36,19 @@ const words = {
     </Block>
   ))
 }
+<Block id="shipped" title={words.shipped[locale]} lead={words.shippedLead[locale]}>
+  {
+    projects.flatMap(({ id, name }) =>
+      (['frontend-kit.json', 'settings.json'] as const).map((file) => (
+        <details class="file">
+          <summary>
+            {name[locale]}: <bdi>{file}</bdi>
+          </summary>
+          <pre dir="ltr" tabindex="0">
+            <code>{templateJson(id, file)}</code>
+          </pre>
+        </details>
+      )),
+    )
+  }
+</Block>

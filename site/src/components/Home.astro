@@ -3,9 +3,9 @@ import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
 import Layout from '../layouts/Layout.astro'
 import type { Route } from '../lib/routes.ts'
-import Details from './details/Details.astro'
 import FilmTrack from './film/FilmTrack.astro'
 import Header from './Header.astro'
+import SiteFooter from './SiteFooter.astro'
 
 interface Props {
   locale: Locale
@@ -20,7 +20,7 @@ const route: Route = { kind: 'home' }
   <Header locale={locale} route={route} />
   <main id="content" tabindex="-1">
     <FilmTrack copy={copy} locale={locale} />
-    <Details copy={copy} locale={locale} />
+    <div class="details" data-details><SiteFooter locale={locale} /></div>
   </main>
   <script>
     import '../client/home.ts'

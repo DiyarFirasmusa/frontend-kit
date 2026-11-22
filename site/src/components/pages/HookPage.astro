@@ -1,0 +1,90 @@
+---
+import { gate, guards, hookEffects } from '../../content/guide/checks.ts'
+import { hookPurpose } from '../../content/guide/purpose.ts'
+import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
+import { content } from '../../content/index.ts'
+import type { HookEvent, Locale } from '../../content/types.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import { hookRuns } from '../../lib/reference.ts'
+import Block from '../guide/Block.astro'
+
+interface Props {
+  event: HookEvent
+  locale: Locale
+}
+
+const { event, locale } = Astro.props
+const words = {
+  effect: t('What it can do', 'ماذا يستطيع'),
+  runs: t('Scripts', 'السكربتات'),
+  does: t('What happens', 'ماذا يحدث'),
+  exact: t('Script by script', 'سكربت بعد سكربت'),
+  exactLead: t('Each script’s own description, exactly as written at the top of its file, in English.', 'وصف كل سكربت كما كُتب في رأس ملفه، بالإنجليزية.'),
+  matcher: t('Runs on', 'يعمل مع'),
+  any: t('Every time', 'كل مرة'),
+  limit: t('Time limit', 'مهلته'),
+  seconds: t('seconds', 'ثانية'),
+  refuses: t('What it refuses', 'ماذا يرفض'),
+  gate: t('The quality gate, step by step', 'بوابة الجودة خطوة بخطوة'),
+}
+const runs = hookRuns(event)
+---
+
+<dl class="glance">
+  <div><dt>{words.effect[locale]}</dt><dd>{hookEffects[event][locale]}</dd></div>
+  <div><dt>{words.runs[locale]}</dt><dd>{runs.length}</dd></div>
+</dl>
+<Block id="why" title={ui.whyHe[locale]}><p class="big">{hookPurpose[event][locale]}</p></Block>
+<Block id="does" title={words.does[locale]}><p class="big">{content[locale].session.events[event][1]}</p></Block>
+{
+  event === 'PreToolUse' && (
+    <Block id="refuses" title={words.refuses[locale]}>
+      {guards.map(({ title, script, items }) => (
+        <div class="question">
+          <h3>
+            {title[locale]} <code dir="ltr">{script}</code>
+          </h3>
+          <ul class="crosses">{items.map((item) => <li>{item[locale]}</li>)}</ul>
+        </div>
+      ))}
+    </Block>
+  )
+}
+{
+  event === 'Stop' && (
+    <Block id="gate" title={words.gate[locale]}>
+      <ol class="numbered">{gate.map((step) => <li>{step[locale]}</li>)}</ol>
+    </Block>
+  )
+}
+<Block id="scripts" title={words.exact[locale]} lead={words.exactLead[locale]}>
+  {
+    runs.map(({ script, matcher, timeout, about }) => (
+      <div class="question">
+        <h3>
+          <code dir="ltr">{script}</code>
+        </h3>
+        <dl class="rows">
+          <div>
+            <dt>{words.matcher[locale]}</dt>
+            <dd>{matcher ? <code class="breaks" dir="ltr">{matcher}</code> : words.any[locale]}</dd>
+          </div>
+          <div>
+            <dt>{words.limit[locale]}</dt>
+            <dd>
+              {timeout} {words.seconds[locale]}
+            </dd>
+          </div>
+        </dl>
+        <pre class="script-about" lang="en" dir="ltr" tabindex="0">
+          {about}
+        </pre>
+        <a class="source" href={`${REPO_URL}/blob/main/plugins/frontend-kit/scripts/${script}`}>
+          {ui.source[locale]}
+          <span class="sr-only">: {script}</span>
+        </a>
+      </div>
+    ))
+  }
+</Block>

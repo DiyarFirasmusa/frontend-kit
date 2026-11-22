@@ -7,7 +7,7 @@ export function initNavigation(): void {
   const language = required<HTMLAnchorElement>('[data-language]')
   const languageHome = language.pathname
   const details = document.querySelector<HTMLElement>('[data-details]')
-  const sections = all<HTMLElement>('main section[id]')
+  const sections = all<HTMLElement>('main section[id], main .moment-slot[id]')
   let queued = false
 
   const update = (): void => {

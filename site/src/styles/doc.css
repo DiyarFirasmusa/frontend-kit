@@ -169,7 +169,6 @@
   font-size: 1.1875rem;
 }
 
-.block > h3:first-of-type,
 .question h3,
 .anatomy h3,
 .ways h3,
@@ -571,4 +570,215 @@
   .rows > div {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.in-tour {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block-start: 0.75rem;
+  font-size: var(--small);
+  text-underline-offset: 6px;
+}
+
+/* The documentation. */
+.side-names {
+  margin-block-end: 0.5rem;
+  padding-inline-start: 0.75rem;
+  border-inline-start: 1px solid var(--line);
+}
+
+.side-names a {
+  min-height: 30px;
+  font: 500 0.8125rem / 1.35 var(--latin);
+  overflow-wrap: anywhere;
+}
+
+.index li {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 0 1.5rem;
+  align-items: baseline;
+  padding-block: 0.625rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.index li[hidden] {
+  display: none;
+}
+
+.index a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ivory);
+  font-weight: 560;
+  text-underline-offset: 6px;
+  overflow-wrap: anywhere;
+}
+
+.index a.is-name {
+  font-family: var(--latin);
+}
+
+.index p {
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+.quoted {
+  max-width: 46rem;
+  color: var(--muted);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.breaks {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.file {
+  border-block-start: 1px solid var(--line);
+}
+
+.file > summary {
+  padding-block: 0.75rem;
+  cursor: pointer;
+}
+
+.script-about {
+  margin-block: 0.75rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.source-doc {
+  min-width: 0;
+  color: var(--muted);
+  font-family: var(--latin);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.source-doc :is(h3, h4, h5) {
+  margin-block: 1.75rem 0.625rem;
+  color: var(--ivory);
+  font-weight: 560;
+  line-height: 1.3;
+}
+
+.source-doc h3 {
+  font-size: 1.375rem;
+}
+
+.source-doc h4 {
+  font-size: 1.125rem;
+}
+
+.source-doc h5 {
+  font-size: 1rem;
+}
+
+.source-doc :is(p, ul, ol, blockquote) {
+  max-width: 50rem;
+  margin-block: 0.75rem;
+}
+
+.source-doc :is(ul, ol) {
+  padding-inline-start: 1.375rem;
+}
+
+.source-doc ul {
+  list-style: disc;
+}
+
+.source-doc ol {
+  list-style: decimal;
+}
+
+.source-doc li {
+  padding-block: 0.15rem;
+}
+
+.source-doc blockquote {
+  padding-inline-start: 1rem;
+  border-inline-start: 1px solid var(--line);
+}
+
+.source-doc :not(pre) > code {
+  color: var(--ivory);
+  font-size: 0.8125em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.source-doc a {
+  color: var(--ivory);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.source-doc strong {
+  color: var(--ivory);
+  font-weight: 560;
+}
+
+.source-doc pre,
+.file pre {
+  max-width: 100%;
+  margin-block: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre;
+}
+
+.source-doc .wide {
+  max-width: 100%;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.source-doc table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.source-doc :is(th, td) {
+  min-width: 8rem;
+  padding: 0.5rem 0.75rem;
+  border-block-end: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.source-doc th {
+  color: var(--ivory);
+  font-weight: 560;
+}
+
+@media (max-width: 600px) {
+  .index li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A path can be longer than a phone is wide. */
+.doc .tags li {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.doc .tags code {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }

@@ -8,5 +8,7 @@ export default defineConfig({
   site,
   trailingSlash: 'always',
   devToolbar: { enabled: false },
+  // The documentation shows source in the site's own two tones.
+  markdown: { syntaxHighlight: false },
   vite: { build: { target: 'es2022', chunkSizeWarningLimit: 700 } },
 })

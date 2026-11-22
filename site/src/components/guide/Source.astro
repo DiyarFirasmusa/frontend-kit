@@ -1,0 +1,14 @@
+---
+import { getEntry } from 'astro:content'
+
+interface Props {
+  /** A path in the repository. */
+  file: string
+}
+
+const { file } = Astro.props
+const entry = await getEntry('reference', file)
+if (!entry?.rendered) throw new Error(`The documentation has no text for ${file}`)
+---
+
+<div class="source-doc" lang="en" dir="ltr" set:html={entry.rendered.html} />

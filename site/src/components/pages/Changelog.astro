@@ -1,0 +1,15 @@
+---
+import { t } from '../../content/guide/text.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from '../guide/Block.astro'
+import Source from '../guide/Source.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const title = t('Every version', 'كل الإصدارات')
+---
+
+<Block id="versions" title={title[locale]}><Source file="CHANGELOG.md" /></Block>
