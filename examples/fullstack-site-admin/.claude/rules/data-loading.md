@@ -25,7 +25,7 @@ so nothing is fetched twice.
 export const productQueryOptions = (slug: string) =>
   queryOptions({
     queryKey: qk.products.detail(slug),
-    queryFn: () => fetchProduct(slug),
+    queryFn: ({ signal }) => fetchProduct(slug, { signal }),
     staleTime: 5 * 60_000,
   })
 ```
@@ -63,6 +63,9 @@ loader: async ({ context: { queryClient }, params }) => {
 - `queryClient.query()` is the current API (TanStack Query 5.102+);
   `ensureQueryData`, `fetchQuery` and `prefetchQuery` are deprecated there.
   On an older Query version use `ensureQueryData` until you upgrade.
+- `query()` rejects and does not retry. A streamed query that fails on the server reaches the browser as
+  `Error('redacted')`: show a generic error with retry, don't branch on its status.
+- Load-more lists share one `infiniteQueryOptions` (filters in the key) between `queryClient.infiniteQuery` and the hook.
 
 ## Reads in components
 
@@ -81,7 +84,8 @@ loader: async ({ context: { queryClient }, params }) => {
 - File naming: `<entity>.functions.ts` exports the `createServerFn`
   wrappers (safe to import anywhere, statically — never `await import()`);
   `<entity>.server.ts` holds server-only helpers, imported only inside
-  handlers; schemas and types in plain `.ts`.
+  handlers; schemas and types in plain `.ts`. The build enforces it: `*.server.*` in client code fails the build (dev
+  only mocks it), so a green dev server proves nothing.
 - Reads are `GET`, writes are `POST`. Every input passes a zod schema in
   `.validator(schema)`; the handler trusts only validated `data`.
 - Authorise inside the handler, every time: a server function is a public
@@ -89,7 +93,7 @@ loader: async ({ context: { queryClient }, params }) => {
 - Return plain serialisable data shaped for the UI. Never return secrets,
   raw backend errors, tokens or other users' data.
 - Throw `notFound()` / `redirect()` from a handler when the page should
-  react; throw an error with a safe message otherwise.
+  react; return an expected failure as a `ServerResult` (`api-layer.md`); throw, with a safe message, only for the unexpected.
 - See the `web-server-fn` skill.
 
 ## Mutations
@@ -107,11 +111,14 @@ loader: async ({ context: { queryClient }, params }) => {
 
 - `staleTime` per domain: catalogue/content minutes, account data short,
   anything money-related `0`. Set it on the options, not ad hoc.
+- The per-request `QueryClient` sets a default `staleTime` above 0, or every hydrated query refetches at once in the
+  browser. Never `gcTime: 0` on the server: it breaks hydration.
 - With `defaultPreload: 'intent'`, keep `defaultPreloadStaleTime: 0` so Query
   (not the router) decides freshness.
-- Personalised responses (anything that depends on a cookie or the session):
+- Responses with session or sensitive data (account, checkout, OTP):
   `headers: () => ({ 'Cache-Control': 'private, no-store' })` on the route and
-  `setResponseHeaders` in the server function. Public pages may get a short
+  `setResponseHeaders` in the server function. HTML that only varies by a preference cookie: `private, no-cache`
+  (`no-store` costs the back/forward cache). Public pages may get a short
   `s-maxage` only if the HTML does not vary by cookie.
 - On sign-out: cancel and remove the account's queries
   (`queryClient.removeQueries({ queryKey: qk.account.all })`), clear stores,

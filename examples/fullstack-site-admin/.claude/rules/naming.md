@@ -45,7 +45,7 @@ Never name a file after its folder (`detail/detail.tsx`) and never write an
 | Route export | `export const Route = createFileRoute(...)` | |
 | Page component | `<Entity><Page>Page` | `OrderDetailPage` |
 | Layout | `<Name>Layout` | `AppLayout`, `SettingsLayout` |
-| Component | PascalCase noun, named export | `OrderCard` |
+| Component | PascalCase noun, named export (default only where a framework file needs one) | `OrderCard` |
 | Page hook | `use<Entity><Page>Page` | `useOrderDetailPage` |
 | Query hook | `use<Entity>` / `use<Entity>List` | `useOrder`, `useOrders` |
 | Mutation hook | `use<Verb><Entity>` | `useArchiveOrder` |

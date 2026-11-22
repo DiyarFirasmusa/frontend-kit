@@ -84,11 +84,14 @@ not fill the history.
 - `loaderDeps` picks only the search fields the fetch uses; the loader reruns
   when they change.
 - List routes **start** the fetch and do not wait for it:
-  `void context.queryClient.prefetchQuery(xListQueryOptions(params))`. The table
+  `void context.queryClient.query(xListQueryOptions(params)).catch(() => undefined)`. The table
   keeps the previous page on screen (`placeholderData: keepPreviousData`)
   instead of the route going pending on every filter change.
-- Detail and edit routes **wait**: `await context.queryClient.ensureQueryData(...)`,
-  then the page reads the same `queryOptions` with `useQuery` / `useSuspenseQuery`.
+- Detail and edit routes **wait for existence, not freshness**:
+  `await context.queryClient.query({ ...xDetailQueryOptions(id), staleTime: 'static' })`, then the page reads the same
+  `queryOptions` with `useQuery` / `useSuspenseQuery`, which refetches stale data in the background. Pass `'static'` only
+  at this call: on the shared options it stops invalidation. Query below 5.102: `ensureQueryData` / `prefetchQuery`.
+- Independent reads start together (`Promise.all`), never one after another.
 - Loaders also load the feature's locale bundle so the page never flashes keys.
 - `queryOptions` objects live in the feature's `hooks/query/` and are shared by
   the loader and the hook, so the key and fetcher can never drift apart.
@@ -97,10 +100,16 @@ not fill the history.
 
 - `beforeLoad` only. `requireAuth()` redirects to `/login` with
   `search: { redirect: location.href }`; login sends the user back there,
-  after checking it is a same-app path.
+  after checking it is a same-app path (`safeRedirect`).
 - `requirePermission(PERMS.x.view)` on every `_app/` route; missing permission
-  redirects to `/403` (`permissions.md`).
+  redirects to `/403` (`admin-permissions.md`).
 - Guards read state with `getState()` (no hooks in `beforeLoad`).
+
+## Deploys, chunks and speed
+
+- A tab that outlives a deploy asks for deleted chunks. `lazyRouteComponent` reloads once by itself; a hand-written
+  `import()` does not, so register the `vite:preloadError` listener of `react.md` at start.
+- Charts, editors and maps load on demand inside their route. Measure speed on the built app, never in dev.
 
 ## Params and navigation
 
@@ -117,7 +126,8 @@ not fill the history.
 TanStack Router JSON-parses every search value before your schema sees it, so `?q=100553` arrives as the **number**
 100553 and `?featured=true` as a boolean; `.catch()` then silently resets them. Therefore:
 
-- Free text and ids go through a `looseText` preprocess (`src/lib/list-search.ts`) that turns numbers and booleans back into strings:
+- Free text and ids go through a `looseText` preprocess (`src/admin/lib/list-search.ts`) that turns numbers and booleans
+  back into strings:
 
 ```ts
 export const looseText = z.preprocess(

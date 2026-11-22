@@ -15,6 +15,9 @@ changes: read the matching guide in `node_modules/next/dist/docs/` (see
 
 - Strict. Never `any` — use `unknown` and narrow. Never `@ts-ignore` /
   `@ts-expect-error`; fix the type.
+- Data from outside the type system (`JSON.parse`, `response.json()`, storage, URL, env) is `unknown` until it is
+  parsed (type guards until the project has a schema library); auth, permission and money responses too, whatever their
+  generated type says. No cast after.
 - Type-only imports use `import type`.
 - `interface` for object shapes, `type` for unions and aliases.
 - Backend shapes come from one place (generated or hand-written API types).
@@ -25,7 +28,9 @@ changes: read the matching guide in `node_modules/next/dist/docs/` (see
 
 ## Components
 
-- Function components only, props typed with an interface above the component.
+- Function components (the one error boundary excepted), props typed with an interface above the component.
+- React 19: `ref` is a prop (no new `forwardRef`), callback refs use a block body, `useRef` takes an argument, and
+  `ref.current` is never touched during render.
 - Every component is a **named** export, one exported component per file.
   Exception: files Next.js requires a default export from (`page.tsx`,
   `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, …).
@@ -47,11 +52,19 @@ service function) and renders the page component. Client-side orchestration
 
 ## Hooks
 
-- No `useEffect` for fetching. Server data is loaded in Server Components or
-  through the project's data layer once it has one (`data-and-state.md`).
+- No hand-rolled fetch in `useEffect`: server data is loaded in Server Components or
+  through the project's data layer once it has one (`data-and-state.md`). No server data in a client store.
+- Derive during render; reset state with a `key` on the entity id; store the id, not the object. External stores use
+  `useSyncExternalStore`. Every effect cleans up.
+- `use(promise)`: a stable promise (never created in render), a boundary above, no `try`. An update that suspends runs
+  in a transition.
 - `useMemo` / `useCallback` only when it is measurably needed or the value is
   a dependency of another hook / a memoised child.
 - Floating promises get `void`: `onClick={() => { void save() }}`.
+- `useEffectEvent` (19.2+, like `<Activity>`; `<ViewTransition>` is 19.3): declared at the top level, its function called
+  only from effects or other Effect Events, never a dependency or a prop.
+- One submit mechanism per form: `<form action>` (it resets uncontrolled fields) or an `onSubmit` handler.
+- A handler over 50 ms is split and yields (`scheduler.yield()` where it exists, else a timeout).
 - Single-flight actions (submit, pay) guard on the pending state **and** a
   ref, so a second tap during the request does nothing.
 
@@ -62,7 +75,7 @@ service function) and renders the page component. Client-side orchestration
 - URL state (tab, filter, page, sort) lives in search params, parsed and
   validated once at the page boundary with defaults.
 - Missing data → the framework's not-found; redirects use the framework's
-  redirect, with targets validated against an allow-list.
+  redirect, with targets validated as same-site paths.
 
 ## Server and client
 
@@ -73,6 +86,11 @@ service function) and renders the page component. Client-side orchestration
   imported from a `'use client'` module. Only `NEXT_PUBLIC_*` env vars reach
   the browser.
 
+## Edges
+
+- Inline JSON in a script escapes `<`; a redirect target from input is validated after normalising.
+- Numbers, money and dates go through the project's formatter (`project.md` names it).
+
 ## Imports
 
 Third-party, then the `@/…` alias, then relative.
@@ -81,9 +99,10 @@ The HTTP library is imported only inside the API client.
 
 ## Never
 
-- Class components, default exports (except where Next.js requires one).
+- Class components, except one reusable error boundary (React has no hook for that). Default exports, except where
+  Next.js or another tool requires one.
 - `console.log`, `debugger`, commented-out code.
 - Inline `style={{}}` except for truly dynamic values (a computed width,
   a CSS variable); never `!important`.
-- `dangerouslySetInnerHTML` with backend data.
+- `dangerouslySetInnerHTML` with unsanitised data from outside the repo.
 - Files over 500 lines — split by extracting hooks first, then components.

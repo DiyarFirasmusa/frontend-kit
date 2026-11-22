@@ -20,6 +20,7 @@ These come from the user's own corrections.
 - **"Fast"** means the shortest correct path, not a lower bar: the gates still run.
 - **Keep the scope.** No drive-by refactors, renames or reformatting outside
   the task. Note anything worth doing separately in the report.
+- **"Nothing needs to change", with the evidence, is a finished task.**
 - **Never touch deploy config** (`.github/`, `deploy/`, the `build` script and
   any path `CLAUDE.md` protects) unless the user asks for that exact change.
 - **Never test against production.** Use local mocks or the local dev

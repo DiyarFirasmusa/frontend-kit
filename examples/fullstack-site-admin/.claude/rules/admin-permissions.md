@@ -4,7 +4,7 @@ paths:
   - "src/admin/store/permission-store.ts"
   - "src/admin/guards/**"
   - "src/routes/admin/_app/**"
-  - "src/admin/layout/app/**"
+  - "src/admin/layout/**"
   - "src/admin/features/**/hooks/*-actions.ts"
 ---
 
@@ -15,7 +15,7 @@ they can use and get a clear 403 instead of a broken page.
 
 ## One source of names
 
-- `PERMS` in `src/constants/permissions.ts`, nested by entity, values exactly
+- `PERMS` in `src/admin/constants/permissions.ts`, nested by entity, values exactly
   the backend's strings (from the token claims or the `/me` response):
 
 ```ts
@@ -56,7 +56,9 @@ permissions; use the hook wherever the result gates JSX.
 - No permission for an action: the button, row action, bulk action or column
   is **not rendered**. Do not render a disabled button for a missing permission.
 - Allowed in general but not for this record (state, ownership): render it
-  disabled with the reason in a tooltip.
+  with `aria-disabled="true"` (it stays in the tab order) and the reason as visible text or `aria-describedby` text;
+  a tooltip alone is not reachable by keyboard. `aria-disabled` blocks nothing: the handler returns at once, and a test
+  clicks the control and asserts that no request was sent.
 - Nav config items carry their `permission`; a group with no visible items is hidden.
 - An empty list with the create permission shows the create action; without
   it, only the empty message.

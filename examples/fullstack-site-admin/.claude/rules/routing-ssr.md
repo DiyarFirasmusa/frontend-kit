@@ -90,8 +90,8 @@ words, the same in both languages.
   throwing `redirect({ to: '/login', search: { redirect: location.href } })`.
   `beforeLoad` runs before every child loader, so private data never starts
   loading for a guest.
-- The redirect target after login is validated as a same-site path; never
-  redirect to an absolute URL taken from the query string.
+- The redirect target after login is validated as a same-site path after
+  normalising (`safeRedirect`); never redirect to an absolute URL from the query string.
 - Permanent moves (renamed slug, old URL scheme) use
   `throw redirect({ …, statusCode: 301 })`; the default is 307 (temporary).
 - Never call `navigate()` in render or in a loader; on the server it is a
