@@ -10,3 +10,6 @@ playground/
 
 # eval results (local)
 plugins/*/evals/results/
+
+# names that must never be published (read by scripts/validate-repo.sh)
+.private-names

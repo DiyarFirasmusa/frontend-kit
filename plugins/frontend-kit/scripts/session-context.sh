@@ -1,8 +1,8 @@
 #!/bin/bash
 # SessionStart(startup|resume|clear|compact): one compact block of where the work stands plus the
 # hard rules, re-injected after /clear and /compact. Reads local refs only (no fetch), so it is instant and offline.
-# It also records the src/ fingerprint the session starts from, so the Stop gate only checks
-# changes made in this session.
+# It also records the src/ fingerprint, commit and time the session starts from, so the Stop gate checks
+# the changes made in this session, committed or not, and only those.
 set -u
 . "$(dirname "$0")/lib.sh"
 
@@ -15,7 +15,8 @@ find "$HOOK_STATE_DIR/sessions" -name '*.json' -mtime +3 -delete 2>/dev/null
 SESSION_FILE="$HOOK_STATE_DIR/sessions/${SESSION_ID:-unknown}.json"
 # A resumed or compacted session keeps the baseline it started with.
 if [ ! -f "$SESSION_FILE" ]; then
-  jq -n --arg baseline "$(hook_src_fingerprint)" '{baseline: $baseline, lastGated: "", blocks: 0}' >"$SESSION_FILE"
+  jq -n --arg baseline "$(hook_src_fingerprint)" --arg head "$(git_ rev-parse -q --verify HEAD)" --arg at "$(date +%s)" \
+    '{baseline: $baseline, sinceHead: $head, sinceTime: $at, lastGated: "", blocks: 0}' >"$SESSION_FILE"
 fi
 
 BRANCH="$(git_ branch --show-current)"

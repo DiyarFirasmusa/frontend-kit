@@ -44,7 +44,9 @@
       "Bash(git remote get-url *)",
       "Bash(lsof -nP -iTCP:{{DEV_PORT}} *)",
       "Bash(lsof -nP -iTCP:{{E2E_PORT}} *)",
-      "Bash(git rebase *)",
+      "Bash(git rebase origin/{{DEFAULT_BRANCH}})",
+      "Bash(git rebase --continue)",
+      "Bash(git rebase --abort)",
       "Bash(npm install *)",
       "Bash(npm i *)",
       "Bash(npm uninstall *)"

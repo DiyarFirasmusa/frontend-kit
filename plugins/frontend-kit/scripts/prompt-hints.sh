@@ -1,6 +1,6 @@
 #!/bin/bash
 # UserPromptSubmit: maps the user's short, often misspelled phrasing to what they mean, as context
-# for Claude. Never blocks and never rewrites the prompt. Patterns come from ~5,800 of their prompts.
+# for Claude. Never blocks and never rewrites the prompt. Patterns come from real short prompts.
 set -u
 . "$(dirname "$0")/lib.sh"
 

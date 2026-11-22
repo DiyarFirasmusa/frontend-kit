@@ -1,5 +1,6 @@
 #!/bin/bash
-# Stop: the quality gate Claude can't skip. When src/ changed during this session, it runs
+# Stop: the quality gate Claude can't skip. When src/ changed during this session (uncommitted, or committed
+# since the session started or the gate last passed), it runs
 #   the typecheck: commands.typecheck, else tsc --noEmit -p tsconfig.json
 #   the related tests: commands.relatedTests (the changed files are appended), else vitest related or jest --findRelatedTests
 #   commands.i18nValidate from .claude/frontend-kit.json (only when a locale file changed)
@@ -20,11 +21,15 @@ ACTIVE="$(hook_field '.stop_hook_active')"
 SESSION_ID="$(hook_field '.session_id')"
 SESSION_FILE="$HOOK_STATE_DIR/sessions/${SESSION_ID:-unknown}.json"
 
-CHANGED="$(hook_changed_src_files)"
+read_session() { jq -r "$1 // empty" "$SESSION_FILE" 2>/dev/null; }
+SINCE_HEAD="$(read_session '.sinceHead')"
+SINCE_TIME="$(read_session '.sinceTime')"
+UNCOMMITTED="$(hook_changed_src_files)"
+COMMITTED="$(hook_committed_src_files "$SINCE_HEAD" "$SINCE_TIME")"
+CHANGED="$(printf '%s\n%s\n' "$UNCOMMITTED" "$COMMITTED" | sed '/^$/d' | sort -u)"
 [ -z "$CHANGED" ] && exit 0
 
-FINGERPRINT="$(hook_src_fingerprint)"
-read_session() { jq -r "$1 // empty" "$SESSION_FILE" 2>/dev/null; }
+FINGERPRINT="$(printf '%s\n' "$CHANGED" | hook_files_fingerprint)"
 BASELINE="$(read_session '.baseline')"
 LAST_GATED="$(read_session '.lastGated')"
 BLOCKS="$(read_session '.blocks')"
@@ -178,14 +183,24 @@ if [ -z "$FAILURES" ] && [ "$REVIEW_DONE" != true ] && ! { [ -f "$KIT_CONFIG" ] 
   REVIEW_NOW=true
   REVIEW_DONE=true
 fi
-jq -n --arg baseline "$BASELINE" --arg gated "$FINGERPRINT" --argjson blocks "$NEXT_BLOCKS" --argjson reviewDone "${REVIEW_DONE:-false}" \
-  '{baseline: $baseline, lastGated: $gated, blocks: $blocks, reviewDone: $reviewDone}' >"$SESSION_FILE"
+REVIEW_SCOPE="the uncommitted changes"
+[ -n "$COMMITTED" ] && REVIEW_SCOPE="what this session committed (git log -p ${SINCE_HEAD:+${SINCE_HEAD:0:10}..}HEAD) and the uncommitted changes"
+GATED="$FINGERPRINT"
+if [ -z "$FAILURES" ]; then
+  # Passed: later commits count from here, and committing exactly what just passed is no new change.
+  GATED="$(printf '%s\n' "$UNCOMMITTED" | hook_files_fingerprint)"
+  SINCE_HEAD="$(git -C "$HOOK_ROOT" rev-parse -q --verify HEAD 2>/dev/null)"
+  SINCE_TIME="$(date +%s)"
+fi
+jq -n --arg baseline "$BASELINE" --arg gated "$GATED" --arg head "$SINCE_HEAD" --arg at "$SINCE_TIME" \
+  --argjson blocks "$NEXT_BLOCKS" --argjson reviewDone "${REVIEW_DONE:-false}" \
+  '{baseline: $baseline, sinceHead: $head, sinceTime: $at, lastGated: $gated, blocks: $blocks, reviewDone: $reviewDone}' >"$SESSION_FILE"
 
 FILE_COUNT="$(printf '%s\n' "$CHANGED" | grep -c .)"
 if [ -z "$FAILURES" ]; then
   "$(dirname "$0")/record-gate.sh" pass stop-hook "${PASSED#, } on $FILE_COUNT changed src files"
   if [ "$REVIEW_NOW" = true ]; then
-    echo "The quality gate passed on $FILE_COUNT changed src files. Before you finish, run a code review: start the frontend-reviewer agent (Agent tool, subagent_type \"frontend-reviewer\"; it runs on Opus) on the uncommitted changes. Fix every real finding (correctness, the project's rules); skip nitpicks. Do not run the review a second time after fixing. Then finish." >&2
+    echo "The quality gate passed on $FILE_COUNT changed src files. Before you finish, run a code review: start the frontend-reviewer agent (Agent tool, subagent_type \"frontend-reviewer\"; it runs on Opus) on $REVIEW_SCOPE. Fix every real finding (correctness, the project's rules); skip nitpicks. Do not run the review a second time after fixing. Then finish." >&2
     exit 2
   fi
   exit 0

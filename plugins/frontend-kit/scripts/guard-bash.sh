@@ -3,20 +3,28 @@
 #
 #   - opening or merging a PR (the user opens PRs from the compare link)
 #   - pushing to a protected branch (main/master by default) in any spelling, force pushes, deleting one
-#   - committing or merging on a protected branch, skipping git hooks (--no-verify, -n, HUSKY=0, core.hooksPath)
-#   - commands that throw away uncommitted work (reset --hard, clean -f, checkout/restore .)
-#   - recursive rm outside the project and the temp folders, or of the project's top-level folders
+#   - putting work on a protected branch (commit, merge, cherry-pick, revert, am, moving the branch)
+#   - skipping the project's git hooks (--no-verify, commit -n, HUSKY=0, LEFTHOOK=0, core.hooksPath)
+#   - commands that throw away uncommitted work (reset --hard, clean -f, checkout -f, checkout/restore .)
+#   - recursive rm (or find -delete) outside the project and the temp folders, or of its top-level folders
 #   - network calls to the live hosts listed in .claude/frontend-kit.json (liveHosts)
+#   - reading .env secrets through the shell (cat .env, git show HEAD:.env); .env.example is fine
 #
-# Permission rules are prefix matches and miss spellings like `git -C . push` or `sh -c '…'`, so this
-# script parses the command instead. It answers with a JSON deny (exit 0) and stays silent to allow;
-# it fails closed (exit 2) when jq is missing or the script itself breaks (see lib.sh).
+# shell-words.awk reads the command the way the shell does (quotes, line continuations, heredocs,
+# substitutions, keywords); this script judges each simple command, and follows code handed to another
+# command (bash -c, eval, xargs, find -exec, git rebase -x, git aliases). Permission rules are prefix
+# matches and miss such spellings. It answers with a JSON deny (exit 0) and stays silent to allow; it fails
+# closed (exit 2) when jq is missing or the script itself breaks (see lib.sh), and refuses what it can't
+# check inside the hook's timeout, because a hook that times out lets the command through.
 #
-#   - reading .env secrets through the shell (cat .env, source .env.local, cp .env /tmp); .env.example is fine
+# It is a guard rail, not a sandbox. It does not see inside script files, package scripts or programs in
+# other languages, and it does not expand variables (a push or rm to a variable is refused instead).
+# Known gap: bash 3.2 itself misreads a heredoc with an unbalanced quote or paren nested in two $(…).
 set -uf
 # shellcheck disable=SC2034 # read by lib.sh
 HOOK_KIND=guard # fail closed: see lib.sh
-. "$(dirname "$0")/lib.sh"
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "$HOOK_DIR/lib.sh"
 
 hook_read_input
 COMMAND="$(hook_field '.tool_input.command')"
@@ -24,81 +32,85 @@ COMMAND="$(hook_field '.tool_input.command')"
 CWD="$(hook_field '.cwd')"
 CWD="${CWD:-$HOOK_ROOT}"
 
-PROTECTED_BRANCH_RE="^(refs/heads/)?($(kit_alternation '.protectedBranches' 'main|master'))\$"
-# No live host configured → a pattern that never matches.
-LIVE_HOST_RE="(^|[^A-Za-z0-9-])($(kit_alternation '.liveHosts' 'no-live-host\.invalid'))"
-NETWORK_TOOLS=' curl wget http https xh open lynx w3m nc ab hey k6 lighthouse unlighthouse playwright newman node npx npm pnpm bunx yarn tsx '
+# Byte-wise from here: much faster on long commands, and every word we look for is ASCII.
+export LC_ALL=C
+
+TIME_LIMIT=5 # seconds; hooks.json gives this hook 10
+MAX_COMMAND=100000 # bytes. Linux refuses a longer argument anyway, and long text belongs in the Write tool
+MAX_WORD=16000     # bytes in one word. bash 3.2 matches patterns in quadratic time: 100 KB takes 13 s
+MAX_NESTING=8
+NEWLINE=$'\n'
+ENCODED_NEWLINE=$'\036'
+ASSIGNMENT_RE='^[A-Za-z_][A-Za-z0-9_]*\+?='
+NETWORK_TOOLS=' curl wget http https xh open lynx w3m nc ab hey k6 lighthouse unlighthouse playwright newman node npx npm pnpm bunx bun yarn tsx '
 PROTECTED_TOP_LEVEL=' .git .github .claude .husky src docs e2e public scripts deploy server '
-ROOT_TOKEN='@ROOT@'
+GIT_COMMANDS=' add am apply archive bisect blame branch bundle cat-file check-ignore checkout cherry cherry-pick clean clone commit config describe diff diff-tree difftool fetch for-each-ref format-patch fsck gc grep hash-object help init log ls-files ls-remote ls-tree merge merge-base mergetool mv notes pull push range-diff rebase reflog remote reset restore rev-list rev-parse revert rm shortlog show show-ref sparse-checkout stash status submodule switch symbolic-ref tag update-index update-ref var version worktree '
 
-# --- Normalising -------------------------------------------------------------------------------
+PROTECTED=()
+while IFS= read -r ITEM; do
+  [ -n "$ITEM" ] && PROTECTED+=("$ITEM")
+done <<<"$(kit_list '.protectedBranches')"
+[ ${#PROTECTED[@]} -gt 0 ] || PROTECTED=(main master)
+LIVE_HOSTS_RE="$(kit_alternation '.liveHosts' '')"
+[ -n "$LIVE_HOSTS_RE" ] && LIVE_HOSTS_RE="(^|[^A-Za-z0-9-])($LIVE_HOSTS_RE)"
 
-# Quotes around a single word carry no meaning for us ("main" == main); quoted text with spaces is
-# message text, replaced by a placeholder so a commit message can never look like a command.
-unquote_words() {
-  sed -E "s/\"([^\" ]*)\"/\1/g; s/'([^' ]*)'/\1/g"
-}
-drop_quoted_text() {
-  sed -E "s/\"[^\"]*\"/ Q /g; s/'[^']*'/ Q /g"
-}
-# Heredoc bodies are data (commit messages, file contents), unless the heredoc feeds a shell.
-drop_heredoc_bodies() {
-  awk -v q="'" '
-    delim != "" { if ($0 ~ "^[ \t]*" delim "[ \t]*$") delim = ""; next }
-    { print }
-    $0 !~ /(^|[^A-Za-z])(sh|bash|zsh|dash)[ \t]*<</ && match($0, "<<-?[ \t]*[\"" q "]?[A-Za-z_][A-Za-z0-9_]*") {
-      delim = substr($0, RSTART, RLENGTH)
-      sub("^<<-?[ \t]*[\"" q "]?", "", delim)
-    }'
-}
-# One shell command per line: split on && || ; | & $( ` ( ) and newlines. Redirections that contain
-# & or | go first, so they don't split a command: fd duplications (2>&1, >&2, <&0) carry no file and
-# are dropped; &> / &>> / >| become plain > / >>.
-split_commands() {
-  awk '{ gsub(/[0-9]*[<>]&[0-9]*-?/, " "); gsub(/&>/, ">"); gsub(/>\|/, ">"); gsub(/&&|\|\||\$\(|[;|&`()]/, "\n"); print }'
-}
-# Puts spaces around redirection operators (> >> < << <<< with an optional fd number), so
-# `main>/dev/null` is the word main plus a redirection, never the word `main>/dev/null`.
-space_redirections() {
-  sed -E 's/[0-9]*(>>?|<<?<?)/ \1 /g'
-}
+# State of the walk through the command line.
+CHAINED_BRANCH="" # "git checkout -b x && …": holds only while every next command is joined by &&
+CHAINED_DIR=""
+STICKY_BRANCH="" # a switch TO a protected branch: holds for the rest of the command
+STICKY_DIR=""
+JOINED_BY=""  # what came before the current command
+FOLLOWED_BY="" # and what comes after it
+VIA_XARGS=""
 
-# True for a word naming a .env secrets file (.env, .env.local, $CLAUDE_PROJECT_DIR/.env, .env*,
-# --env-file=.env); .env.example and words that merely contain "env" (process.env, envError) are fine.
-is_env_file_word() {
-  local word="${1##*=}" base
-  base="${word##*/}"
-  case "$base" in
-    .env.example) return 1 ;;
-    .env | .env.* | '.env*' | '.env?'* | '.env['*) return 0 ;;
-  esac
+# --- Small helpers -----------------------------------------------------------------------------
+# No subshells in these: a deny must exit the script, and a long command has thousands of words.
+
+# git takes any unique prefix of a long option. long_option <arg> <full option> <shortest prefix>
+long_option() {
+  local arg="${1%%=*}"
+  case "$arg" in "$3"*) ;; *) return 1 ;; esac
+  case "$2" in "$arg"*) return 0 ;; esac
   return 1
 }
 
-# The project path has spaces and parentheses ("Projects (from Trash)"); a placeholder keeps quoted
-# absolute paths into the project as single words that survive the splitting below.
-COMMAND="${COMMAND//"$HOOK_ROOT"/$ROOT_TOKEN}"
-COMMAND="${COMMAND//'${CLAUDE_PROJECT_DIR}'/$ROOT_TOKEN}"
-COMMAND="${COMMAND//'$CLAUDE_PROJECT_DIR'/$ROOT_TOKEN}"
-NORMALISED="$(printf '%s\n' "$COMMAND" | drop_heredoc_bodies | unquote_words)"
-SEGMENTS="$(printf '%s\n' "$NORMALISED" | drop_quoted_text | split_commands)"
-# Code handed to another shell (`bash -c '…'`, `eval "…"`, `ssh host '…'`) is checked as well.
-if printf '%s' "$NORMALISED" | grep -Eq '(^|[^A-Za-z])(sh|bash|zsh|dash)[[:space:]]+-[A-Za-z]*c|(^|[[:space:];&|])(eval|ssh|xargs)[[:space:]]'; then
-  INNER="$(printf '%s\n' "$NORMALISED" | grep -oE "\"[^\"]*\"|'[^']*'" | sed -E "s/^[\"']//; s/[\"']$//" | split_commands)"
-  SEGMENTS="$SEGMENTS
-$INNER"
-fi
+# short_flag <arg> <letter> <letters that take a value>: is the flag in this cluster (-qf)?
+short_flag() {
+  local cluster="${1#-}" letter
+  case "$1" in --* | [!-]*) return 1 ;; esac
+  while [ -n "$cluster" ]; do
+    letter="${cluster:0:1}"
+    [ "$letter" = "$2" ] && return 0
+    case "$3" in *"$letter"*) return 1 ;; esac
+    cluster="${cluster:1}"
+  done
+  return 1
+}
 
-# --- Helpers -----------------------------------------------------------------------------------
+is_dynamic() {
+  case "$1" in *'$'* | *'`'*) return 0 ;; esac
+  return 1
+}
 
-# Lexically resolves a path against a base: no symlinks, handles . and .. and ~.
+is_protected_branch() {
+  local name="${1#refs/heads/}" item result=1
+  name="${name#heads/}"
+  [ -n "$name" ] || return 1
+  shopt -s nocasematch # on macOS "Main" is the same branch as main
+  for item in "${PROTECTED[@]}"; do
+    case "$name" in "$item") result=0; break ;; esac
+  done
+  shopt -u nocasematch
+  return $result
+}
+
+# Sets RESOLVED: the path against a base, lexically (no symlinks; . .. and ~ handled).
 resolve_path() {
   local base="$1" path="$2" out="" part
   # shellcheck disable=SC2088 # "~" here is the literal text of the command, expanded by hand below
   case "$path" in
-    "$ROOT_TOKEN"*) path="$HOOK_ROOT${path#"$ROOT_TOKEN"}" ;;
-    "~") path="$HOME" ;;
-    "~/"*) path="$HOME/${path#\~/}" ;;
+    "~") path="${HOME:-/}" ;;
+    "~/"*) path="${HOME:-}/${path#\~/}" ;;
     /*) ;;
     *) path="$base/$path" ;;
   esac
@@ -110,134 +122,278 @@ resolve_path() {
       *) out="$out/$part" ;;
     esac
   done
-  printf '%s' "${out:-/}"
+  RESOLVED="${out:-/}"
 }
 
-current_branch() {
-  git -C "$1" branch --show-current 2>/dev/null
+# Sets BRANCH: where this directory is at this point of the command.
+find_branch() {
+  if [ -n "$CHAINED_BRANCH" ] && [ "$CHAINED_DIR" = "$1" ]; then
+    BRANCH="$CHAINED_BRANCH"
+  elif [ -n "$STICKY_BRANCH" ] && [ "$STICKY_DIR" = "$1" ]; then
+    BRANCH="$STICKY_BRANCH"
+  else
+    BRANCH="$(git -C "$1" branch --show-current 2>/dev/null </dev/null)"
+  fi
 }
 
-is_protected_branch() {
-  printf '%s' "$1" | grep -Eq "$PROTECTED_BRANCH_RE"
+refuse_on_protected() { # <dir> <what>
+  find_branch "$1"
+  is_protected_branch "$BRANCH" &&
+    hook_deny "Blocked: you are on $BRANCH. Never $2 on a protected branch ($KIT_PROTECTED_BRANCHES). Create a task branch from origin/$KIT_DEFAULT_BRANCH first."
+}
+
+deny_hook_skip() {
+  hook_deny "Blocked: $1 skips the project's git hooks. Fix what the hook reports and run it again; only the user can ask to skip hooks."
+}
+
+deny_pull_request() {
+  hook_deny "Blocked: never open or merge a pull request; the user does that by hand. $(kit_compare_hint)"
+}
+
+# --- Words every command is checked for ---------------------------------------------------------
+
+# A word naming a .env secrets file (.env, .Env.local, HEAD:.env, @.env, --env-file=.env, .en?, a link to one).
+check_env_word() {
+  local word="$1" base found=""
+  case "$word" in
+    *' '* | *"$NEWLINE"*)
+      # Text with spaces is a message, unless it is a path.
+      case "$word" in /* | ./* | ../* | '~/'* | '$'*) ;; *) return ;; esac
+      case "$word" in *"$NEWLINE"*) return ;; esac
+      ;;
+  esac
+  base="${word##*/}"
+  base="${base##*=}"
+  base="${base##*:}"
+  base="${base#@}"
+  case "$base" in *' '*) return ;; esac
+  shopt -s nocasematch
+  case "$base" in
+    .env.example) ;;
+    .env | .env.* | '.env*' | '.env?'* | '.env['*) found=1 ;;
+    .e*[*?[]* | '.['*)
+      # shellcheck disable=SC2254 # the word is a glob: does it match .env?
+      case .env in $base) found=1 ;; esac
+      ;;
+  esac
+  shopt -u nocasematch
+  if [ -z "$found" ] && [ "${#word}" -lt 1024 ]; then
+    local file="$word" target
+    case "$file" in /*) ;; *) file="$CWD/$file" ;; esac
+    if [ -L "$file" ]; then
+      target="$(readlink "$file" 2>/dev/null)"
+      case "${target##*/}" in
+        .env.example) ;;
+        .env | .env.*) found=1; base="${target##*/}" ;;
+      esac
+    fi
+  fi
+  [ -n "$found" ] &&
+    hook_deny "Blocked: $base holds secrets and stays out of Claude's context, in the shell too. Use .env.example for names and defaults, and ask the user for any value you need."
+}
+
+has_live_host() {
+  local result=1
+  [ -n "$LIVE_HOSTS_RE" ] || return 1
+  shopt -s nocasematch
+  [[ "$1" =~ $LIVE_HOSTS_RE ]] && result=0
+  shopt -u nocasematch
+  return $result
+}
+
+# VAR=value before a command, or handed to export.
+check_assignment() {
+  local name="${1%%=*}" value="${1#*=}"
+  case "$name" in
+    HUSKY | LEFTHOOK) case "$value" in 0* | false) deny_hook_skip "$name=$value" ;; esac ;;
+    HUSKY_SKIP_HOOKS | SKIP_SIMPLE_GIT_HOOKS) deny_hook_skip "$name" ;;
+    GIT_CONFIG_PARAMETERS | GIT_CONFIG_KEY_*)
+      shopt -s nocasematch
+      case "$value" in
+        *hookspath* | *alias.*) shopt -u nocasematch; deny_hook_skip "setting core.hooksPath or an alias through $name" ;;
+      esac
+      shopt -u nocasematch
+      ;;
+  esac
 }
 
 # --- git ---------------------------------------------------------------------------------------
 
-SWITCHED_TO_PROTECTED=""
-
-# A one-off `git -c key=value`: hooks must keep running, and aliases would hide the real command.
-check_git_config() {
+check_git_config_value() {
+  shopt -s nocasematch
+  local kind=""
   case "$1" in
-    [Cc][Oo][Rr][Ee].[Hh][Oo][Oo][Kk][Ss][Pp][Aa][Tt][Hh]=*)
-      hook_deny "Blocked: overriding core.hooksPath skips husky (lint-staged, commitlint). Fix the hook failure instead." ;;
-    [Aa][Ll][Ii][Aa][Ss].*)
-      hook_deny "Blocked: a one-off \`git -c alias.…\` hides which git command really runs. Spell the command out (e.g. git push -u origin <branch>)." ;;
+    core.hookspath=*) kind=hooks ;;
+    alias.*) kind=alias ;;
+  esac
+  shopt -u nocasematch
+  case "$kind" in
+    hooks) deny_hook_skip "overriding core.hooksPath" ;;
+    alias) hook_deny "Blocked: a one-off \`git -c alias.…\` hides which git command really runs. Spell the command out (e.g. git push -u origin <branch>)." ;;
   esac
 }
 
 check_git() {
-  local dir="$CWD" i=1 sub="" token
-  # Global options before the subcommand.
-  while [ $i -lt ${#WORDS[@]} ]; do
-    token="${WORDS[$i]}"
-    case "$token" in
-      -C) i=$((i + 1)); dir="$(resolve_path "$dir" "${WORDS[$i]:-.}")" ;;
-      -c) i=$((i + 1)); check_git_config "${WORDS[$i]:-}" ;;
-      -c?*) check_git_config "${token#-c}" ;;
-      --git-dir | --work-tree | --namespace | --exec-path) i=$((i + 1)) ;;
+  local dir="$CWD" sub=""
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -C)
+        shift
+        if [ $# -gt 0 ] && ! is_dynamic "$1"; then resolve_path "$dir" "$1"; dir="$RESOLVED"; fi
+        ;;
+      -c | --config-env) shift; [ $# -gt 0 ] && check_git_config_value "$1" ;;
+      -c?*) check_git_config_value "${1#-c}" ;;
+      --config-env=*) check_git_config_value "${1#--config-env=}" ;;
+      --git-dir | --work-tree | --namespace | --super-prefix | --attr-source) shift ;;
       -*) ;;
-      *) sub="$token"; break ;;
+      *) sub="$1"; shift; break ;;
     esac
-    i=$((i + 1))
+    [ $# -gt 0 ] && shift
   done
-  [ -z "$sub" ] && return
+  [ -n "$sub" ] || return 0
+  run_git "$dir" "$sub" "$@"
+}
 
-  local args=("${WORDS[@]:$((i + 1))}")
-  local arg
-  for arg in ${args[@]+"${args[@]}"}; do
-    [ "$arg" = "--no-verify" ] &&
-      hook_deny "Blocked: --no-verify skips husky (lint-staged + commitlint). Fix what the hook reports and run it again; only the user can ask to skip hooks."
+run_git() { # <dir> <subcommand> <args…>
+  local dir="$1" sub="$2" arg
+  shift 2
+  for arg in "$@"; do
+    [ "$arg" = "--" ] && break
+    long_option "$arg" --no-verify --no-veri && deny_hook_skip "--no-verify"
   done
+  if [ -n "$VIA_XARGS" ]; then
+    case "$sub" in push | reset | checkout | switch | restore | clean | branch | update-ref)
+      hook_deny "Blocked: \`xargs git $sub\` takes its arguments from input, so it can't be checked. Write the command out with literal arguments." ;;
+    esac
+  fi
 
   case "$sub" in
-    push) check_git_push "$dir" ${args[@]+"${args[@]}"} ;;
-    commit)
-      for arg in ${args[@]+"${args[@]}"}; do
-        case "$arg" in
-          --) break ;;
-          --*) ;;
-          -*n*) printf '%s' "$arg" | grep -Eq '^-[A-Za-z]+$' &&
-            hook_deny "Blocked: \`git commit -n\` skips husky (lint-staged + commitlint). Fix what the hook reports instead." ;;
-        esac
+    push) git_push "$dir" "$@" ;;
+    commit) git_commit "$dir" "$@" ;;
+    merge | cherry-pick | revert | am)
+      for arg in "$@"; do
+        case "$arg" in --abort | --quit) return 0 ;; esac
       done
-      is_protected_branch "$(current_branch "$dir")" &&
-        hook_deny "Blocked: you are on $(current_branch "$dir"). Never commit on a protected branch ($KIT_PROTECTED_BRANCHES). Create a task branch from origin/$KIT_DEFAULT_BRANCH first."
-      ;;
-    merge)
-      if [ -n "$SWITCHED_TO_PROTECTED" ] || is_protected_branch "$(current_branch "$dir")"; then
-        hook_deny "Blocked: merging into a protected branch ($KIT_PROTECTED_BRANCHES) is the user's job. Push the task branch and print the compare link instead."
+      find_branch "$dir"
+      if [ "$sub" = merge ] && is_protected_branch "$BRANCH"; then
+        hook_deny "Blocked: merging into a protected branch ($KIT_PROTECTED_BRANCHES) is the user's job. Push the task branch instead and give the user its compare link."
       fi
+      refuse_on_protected "$dir" "$sub"
       ;;
-    checkout | switch)
-      for arg in ${args[@]+"${args[@]}"}; do
-        is_protected_branch "$arg" && SWITCHED_TO_PROTECTED=1
-      done
-      if [ "$sub" = checkout ]; then check_discard_all "checkout" ${args[@]+"${args[@]}"}; fi
-      ;;
-    restore)
-      local staged_only=""
-      for arg in ${args[@]+"${args[@]}"}; do
-        case "$arg" in --staged | -S) staged_only=1 ;; --worktree | -W) staged_only="" ; break ;; esac
-      done
-      [ -z "$staged_only" ] && check_discard_all "restore" ${args[@]+"${args[@]}"}
-      ;;
+    pull) git_pull "$dir" "$@" ;;
+    rebase) git_rebase "$dir" "$@" ;;
+    checkout) git_checkout "$dir" "$@" ;;
+    switch) git_switch "$dir" "$@" ;;
+    restore) git_restore "$dir" "$@" ;;
     reset)
-      for arg in ${args[@]+"${args[@]}"}; do
-        [ "$arg" = "--hard" ] &&
+      for arg in "$@"; do
+        [ "$arg" = "--" ] && break
+        long_option "$arg" --hard --ha &&
           hook_deny "Blocked: \`git reset --hard\` throws away uncommitted work. Ask the user; to undo one file use \`git restore <file>\`."
       done
       ;;
     clean)
-      for arg in ${args[@]+"${args[@]}"}; do
+      for arg in "$@"; do
+        [ "$arg" = "--" ] && break
+        if long_option "$arg" --force --f || short_flag "$arg" f e; then
+          hook_deny "Blocked: \`git clean -f\` deletes untracked files for good. List them with \`git clean -n\` and ask the user."
+        fi
+      done
+      ;;
+    branch) git_branch "$@" ;;
+    update-ref)
+      for arg in "$@"; do
         case "$arg" in
-          --force | -[A-Za-z]*f* | -f*)
-            hook_deny "Blocked: \`git clean -f\` deletes untracked files for good. List them with \`git clean -n\` and ask the user." ;;
+          --stdin) hook_deny "Blocked: \`git update-ref --stdin\` can't be checked. Use git branch or git switch." ;;
+          refs/heads/*) is_protected_branch "$arg" && hook_deny "Blocked: never move or delete a protected branch ($KIT_PROTECTED_BRANCHES)." ;;
         esac
       done
       ;;
-    branch)
-      local deleting=""
-      for arg in ${args[@]+"${args[@]}"}; do
-        case "$arg" in -D | -d | --delete) deleting=1 ;; esac
-        [ -n "$deleting" ] && is_protected_branch "$arg" && hook_deny "Blocked: never delete a protected branch ($KIT_PROTECTED_BRANCHES)."
+    config) git_config "$@" ;;
+    bisect)
+      if [ "${1:-}" = run ]; then shift; run_words "$@"; fi
+      ;;
+    submodule)
+      while [ $# -gt 0 ]; do
+        if [ "$1" = foreach ]; then
+          shift
+          while [ $# -gt 0 ]; do case "$1" in -*) shift ;; *) break ;; esac; done
+          [ $# -gt 0 ] && scan_text "$*"
+          return 0
+        fi
+        shift
       done
       ;;
+    *) git_alias "$dir" "$sub" "$@" ;;
   esac
+  return 0
 }
 
-check_discard_all() {
-  local verb="$1" arg
+# A configured alias is judged by what it runs.
+git_alias() {
+  local dir="$1" sub="$2" value arg quoted="" quote="'" escaped="'\\''"
+  shift 2
+  case "$GIT_COMMANDS" in *" $sub "*) return 0 ;; esac
+  case "$sub" in *[!A-Za-z0-9-]* | '') return 0 ;; esac
+  value="$(git -C "$dir" config --get "alias.$sub" 2>/dev/null </dev/null)"
+  [ -n "$value" ] || return 0
+  for arg in "$@"; do quoted="$quoted '${arg//$quote/$escaped}'"; done
+  local saved="$CWD"
+  CWD="$dir"
+  case "$value" in
+    '!'*) scan_text "${value#!}$quoted" ;;
+    *) scan_text "git $value$quoted" ;;
+  esac
+  CWD="$saved"
+}
+
+git_commit() {
+  local dir="$1" cluster letter
   shift
-  for arg in "$@"; do
-    case "$arg" in
-      . | :/ | ./ | '*')
-        hook_deny "Blocked: \`git $verb $arg\` throws away every uncommitted change. Restore the specific files you changed, or ask the user." ;;
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --) break ;;
+      --message | --file | --author | --date | --template | --trailer | --reuse-message | --reedit-message) [ $# -gt 1 ] && shift ;;
+      --*) ;;
+      -?*)
+        cluster="${1#-}"
+        while [ -n "$cluster" ]; do
+          letter="${cluster:0:1}"
+          cluster="${cluster:1}"
+          case "$letter" in
+            n) deny_hook_skip "\`git commit -n\`" ;;
+            m | F | C | c | t) # takes a value: the rest of the word, else the next one
+              [ -z "$cluster" ] && [ $# -gt 1 ] && shift
+              break
+              ;;
+            u | S) break ;;
+          esac
+        done
+        ;;
     esac
+    shift
   done
+  refuse_on_protected "$dir" "commit"
 }
 
-check_git_push() {
-  local dir="$1" arg skip_next="" positionals=()
+git_push() {
+  local dir="$1" positionals=() arg
   shift
-  for arg in "$@"; do
-    if [ -n "$skip_next" ]; then skip_next=""; continue; fi
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
     case "$arg" in
-      --force | --force-with-lease* | --force-if-includes | -f | -[A-Za-z]*f*)
+      --for*)
         hook_deny "Blocked: force pushes rewrite shared history. Push normally; if the push is rejected, fetch and tell the user." ;;
-      --mirror | --all)
-        hook_deny "Blocked: \`git push $arg\` would push the protected branches ($KIT_PROTECTED_BRANCHES) too. Push only the task branch: git push -u origin <branch>." ;;
-      -o | --push-option | --repo | --receive-pack | --exec) skip_next=1 ;;
-      -*) ;;
+      -o | --push-option | --repo | --receive-pack | --exec) [ $# -gt 0 ] && shift ;;
+      --*)
+        if long_option "$arg" --mirror --m || long_option "$arg" --all --al || long_option "$arg" --branches --b; then
+          hook_deny "Blocked: \`git push $arg\` would push the protected branches ($KIT_PROTECTED_BRANCHES) too. Push only the task branch: git push -u origin <branch>."
+        fi
+        ;;
+      -*)
+        short_flag "$arg" f o &&
+          hook_deny "Blocked: force pushes rewrite shared history. Push normally; if the push is rejected, fetch and tell the user." ;;
       +*)
         hook_deny "Blocked: a '+' refspec is a force push. Push normally." ;;
       *) positionals+=("$arg") ;;
@@ -247,36 +403,375 @@ check_git_push() {
   local count=${#positionals[@]} k destination
   if [ "$count" -le 1 ]; then
     # No refspec: git pushes the current branch.
-    local branch
-    branch="$(current_branch "$dir")"
-    is_protected_branch "$branch" &&
-      hook_deny "Blocked: the current branch is $branch. Never push a protected branch ($KIT_PROTECTED_BRANCHES). Switch to the task branch."
+    find_branch "$dir"
+    is_protected_branch "$BRANCH" &&
+      hook_deny "Blocked: the current branch is $BRANCH. Never push a protected branch ($KIT_PROTECTED_BRANCHES). Switch to the task branch."
     [ "$count" -eq 1 ] && is_protected_branch "${positionals[0]}" &&
       hook_deny "Blocked: never push to a protected branch ($KIT_PROTECTED_BRANCHES). Push only the task branch: git push -u origin <branch>."
-    return
+    return 0
   fi
   for ((k = 1; k < count; k++)); do
-    destination="${positionals[$k]##*:}"
-    if is_protected_branch "$destination" || { [ "$destination" = "HEAD" ] && is_protected_branch "$(current_branch "$dir")"; }; then
+    destination="${positionals[$k]}"
+    [ "$destination" = ":" ] &&
+      hook_deny "Blocked: the ':' refspec pushes every matching branch, protected ones included. Push only the task branch: git push -u origin <branch>."
+    destination="${destination##*:}"
+    case "$destination" in
+      HEAD | @ | '$(git branch --show-current)' | '$(git rev-parse --abbrev-ref HEAD)' | '$(git symbolic-ref --short HEAD)')
+        find_branch "$dir"
+        destination="$BRANCH"
+        ;;
+      refs/tags/*) continue ;;
+      *'$'* | *'`'* | *'*'* | *'?'* | *'{'*)
+        hook_deny "Blocked: the push target $destination can't be checked against the protected branches ($KIT_PROTECTED_BRANCHES). Write the branch name out: git push -u origin <branch>." ;;
+    esac
+    is_protected_branch "$destination" &&
       hook_deny "Blocked: never push to a protected branch ($KIT_PROTECTED_BRANCHES). Push only the task branch: git push -u origin <branch>."
-    fi
+  done
+  return 0
+}
+
+# Syncing a protected branch with its own remote is fine; bringing another branch into it is not.
+git_pull() {
+  local dir="$1" positionals=() k count
+  shift
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -s | -X | --strategy | --strategy-option | --depth | --upload-pack) [ $# -gt 1 ] && shift ;;
+      -*) ;;
+      *) positionals+=("$1") ;;
+    esac
+    shift
+  done
+  count=${#positionals[@]}
+  [ "$count" -ge 2 ] || return 0
+  find_branch "$dir"
+  is_protected_branch "$BRANCH" || return 0
+  for ((k = 1; k < count; k++)); do
+    case "${positionals[$k]}" in
+      "$BRANCH" | "refs/heads/$BRANCH" | "$BRANCH:$BRANCH") ;;
+      *) hook_deny "Blocked: pulling ${positionals[$k]} into $BRANCH is a merge into a protected branch ($KIT_PROTECTED_BRANCHES), the user's job. Work on the task branch." ;;
+    esac
   done
 }
 
-# --- gh ----------------------------------------------------------------------------------------
-
-check_gh() {
-  local joined=" ${WORDS[*]} "
-  if printf '%s' "$joined" | grep -Eq ' pr (create|new|merge) |gh pr (create|new|merge)$'; then
-    hook_deny "Blocked: never open or merge a pull request; the user does that by hand. Print the compare link instead: $(kit_compare_link)"
+git_rebase() {
+  local dir="$1" positionals=() resuming="" value
+  shift
+  while [ $# -gt 0 ]; do
+    value=""
+    case "$1" in
+      --abort | --quit | --continue | --skip) resuming=1 ;;
+      --onto | --strategy | --strategy-option | -s | -X) [ $# -gt 1 ] && shift ;;
+      --ex*=*) value="${1#*=}" ;;
+      --ex*) if [ $# -gt 1 ]; then shift; value="$1"; fi ;;
+      --*) ;;
+      -*)
+        if short_flag "$1" x "sXC"; then
+          value="${1#*x}"
+          if [ -z "$value" ] && [ $# -gt 1 ]; then shift; value="$1"; fi
+        fi
+        ;;
+      *) positionals+=("$1") ;;
+    esac
+    if [ -n "$value" ]; then
+      local saved="$CWD"
+      CWD="$dir"
+      scan_text "$value"
+      CWD="$saved"
+    fi
+    shift
+  done
+  [ -n "$resuming" ] && return 0
+  if [ ${#positionals[@]} -ge 2 ] && is_protected_branch "${positionals[1]}"; then
+    hook_deny "Blocked: never rebase a protected branch ($KIT_PROTECTED_BRANCHES)."
   fi
-  if printf '%s' "$joined" | grep -Eq ' api ' && printf '%s' "$joined" | grep -Eq '/pulls|/merges' &&
-    printf '%s' "$joined" | grep -Eq '(-X|--method)[ =]?(POST|PUT|PATCH)|/merge|-f |-F |--field|--raw-field|--input'; then
-    hook_deny "Blocked: creating or merging pull requests through the GitHub API is the user's job. Print the compare link instead."
+  [ ${#positionals[@]} -ge 1 ] || return 0
+  find_branch "$dir"
+  is_protected_branch "$BRANCH" || return 0
+  case "${positionals[0]}" in
+    "$BRANCH" | */"$BRANCH" | '@{u}' | '@{upstream}') ;;
+    *) hook_deny "Blocked: rebasing $BRANCH onto ${positionals[0]} changes a protected branch ($KIT_PROTECTED_BRANCHES). Work on the task branch." ;;
+  esac
+}
+
+# checkout/switch to <target>: what the following commands of this line run on.
+note_switch() { # <dir> <target> <created: 1 or empty>
+  local dir="$1" target="$2" created="$3"
+  if [ "$target" = "-" ]; then
+    target="$(git -C "$dir" rev-parse --abbrev-ref '@{-1}' 2>/dev/null </dev/null)"
+  fi
+  [ -n "$target" ] || return 0
+  if is_protected_branch "$target"; then
+    STICKY_DIR="$dir"
+    STICKY_BRANCH="${target#refs/heads/}"
+    CHAINED_BRANCH=""
+    return 0
+  fi
+  # Leaving a protected branch counts only if the rest of the line can't run when the switch fails.
+  case "$JOINED_BY" in '||' | '|') return 0 ;; esac
+  [ "$FOLLOWED_BY" = "&&" ] || return 0
+  find_branch "$dir"
+  is_protected_branch "$BRANCH" || return 0
+  if [ -z "$created" ]; then
+    is_dynamic "$target" && return 0
+    git -C "$dir" rev-parse -q --verify "$target^{commit}" >/dev/null 2>&1 </dev/null ||
+      git -C "$dir" rev-parse -q --verify "refs/remotes/origin/$target" >/dev/null 2>&1 </dev/null || return 0
+  fi
+  CHAINED_DIR="$dir"
+  CHAINED_BRANCH="$target"
+}
+
+check_discard_all() { # <dir> <verb> <pathspec>
+  local all=""
+  case "$3" in
+    . | ./ | :/ | ':/*' | '*' | ':(top)' | :) all=1 ;;
+    .* | /* | *..*)
+      if ! is_dynamic "$3"; then
+        resolve_path "$1" "$3"
+        [ "$RESOLVED" = "$HOOK_ROOT" ] && all=1
+      fi
+      ;;
+  esac
+  [ -n "$all" ] &&
+    hook_deny "Blocked: \`git $2 $3\` throws away every uncommitted change. Restore the specific files you changed, or ask the user."
+}
+
+git_checkout() {
+  local dir="$1" created="" paths="" positionals=() arg
+  shift
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+    if [ -n "$paths" ]; then check_discard_all "$dir" checkout "$arg"; continue; fi
+    case "$arg" in
+      --) paths=1 ;;
+      --orphan) if [ $# -gt 0 ]; then created="$1"; shift; fi ;;
+      --orphan=*) created="${arg#*=}" ;;
+      --*)
+        long_option "$arg" --force --f &&
+          hook_deny "Blocked: \`git checkout --force\` throws away uncommitted work. Commit it or ask the user." ;;
+      -?*)
+        short_flag "$arg" f bB &&
+          hook_deny "Blocked: \`git checkout -f\` throws away uncommitted work. Commit it or ask the user."
+        if short_flag "$arg" b B; then
+          created="${arg#*b}"
+          if [ -z "$created" ] && [ $# -gt 0 ]; then created="$1"; shift; fi
+        elif short_flag "$arg" B b; then
+          created="${arg#*B}"
+          if [ -z "$created" ] && [ $# -gt 0 ]; then created="$1"; shift; fi
+          is_protected_branch "$created" && hook_deny "Blocked: never reset a protected branch ($KIT_PROTECTED_BRANCHES) with checkout -B."
+        fi
+        ;;
+      *)
+        check_discard_all "$dir" checkout "$arg"
+        positionals+=("$arg")
+        ;;
+    esac
+  done
+  if [ -n "$created" ]; then
+    note_switch "$dir" "$created" 1
+  elif [ -z "$paths" ] && [ ${#positionals[@]} -eq 1 ]; then
+    note_switch "$dir" "${positionals[0]}" ""
   fi
 }
 
-# --- rm ----------------------------------------------------------------------------------------
+git_switch() {
+  local dir="$1" created="" reset="" target="" arg
+  shift
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+    case "$arg" in
+      --create | --orphan) if [ $# -gt 0 ]; then created="$1"; shift; fi ;;
+      --force-create) if [ $# -gt 0 ]; then created="$1"; reset=1; shift; fi ;;
+      --create=* | --orphan=*) created="${arg#*=}" ;;
+      --force-create=*) created="${arg#*=}"; reset=1 ;;
+      --*)
+        if long_option "$arg" --discard-changes --di || long_option "$arg" --force --f; then
+          hook_deny "Blocked: \`git switch $arg\` throws away uncommitted work. Commit it or ask the user."
+        fi
+        ;;
+      -?*)
+        short_flag "$arg" f cC &&
+          hook_deny "Blocked: \`git switch -f\` throws away uncommitted work. Commit it or ask the user."
+        if short_flag "$arg" c C; then
+          created="${arg#*c}"
+          if [ -z "$created" ] && [ $# -gt 0 ]; then created="$1"; shift; fi
+        elif short_flag "$arg" C c; then
+          created="${arg#*C}"
+          reset=1
+          if [ -z "$created" ] && [ $# -gt 0 ]; then created="$1"; shift; fi
+        fi
+        ;;
+      *) [ -n "$target" ] || target="$arg" ;;
+    esac
+  done
+  [ -n "$reset" ] && is_protected_branch "$created" &&
+    hook_deny "Blocked: never reset a protected branch ($KIT_PROTECTED_BRANCHES) with switch -C."
+  if [ -n "$created" ]; then note_switch "$dir" "$created" 1; else note_switch "$dir" "$target" ""; fi
+}
+
+git_restore() {
+  local dir="$1" staged="" worktree="" specs=() arg ended=""
+  shift
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+    if [ -n "$ended" ]; then specs+=("$arg"); continue; fi
+    case "$arg" in
+      --) ended=1 ;;
+      -s | --source) [ $# -gt 0 ] && shift ;;
+      --*)
+        long_option "$arg" --staged --st && staged=1
+        long_option "$arg" --worktree --w && worktree=1
+        ;;
+      -?*)
+        short_flag "$arg" S s && staged=1
+        short_flag "$arg" W s && worktree=1
+        ;;
+      *) specs+=("$arg") ;;
+    esac
+  done
+  [ -n "$staged" ] && [ -z "$worktree" ] && return 0
+  for arg in ${specs[@]+"${specs[@]}"}; do check_discard_all "$dir" restore "$arg"; done
+}
+
+git_branch() {
+  local arg deleting="" forcing="" moving="" positionals=()
+  for arg in "$@"; do
+    case "$arg" in
+      --*)
+        long_option "$arg" --delete --de && deleting=1
+        long_option "$arg" --force --forc && forcing=1
+        ;;
+      -?*)
+        short_flag "$arg" d u && deleting=1
+        short_flag "$arg" D u && deleting=1
+        short_flag "$arg" f u && forcing=1
+        short_flag "$arg" M u && moving=1
+        short_flag "$arg" C u && moving=1
+        ;;
+      *) positionals+=("$arg") ;;
+    esac
+  done
+  [ ${#positionals[@]} -gt 0 ] || return 0
+  if [ -n "$deleting$moving" ]; then
+    for arg in "${positionals[@]}"; do
+      is_protected_branch "$arg" && hook_deny "Blocked: never delete or overwrite a protected branch ($KIT_PROTECTED_BRANCHES)."
+    done
+  elif [ -n "$forcing" ] && is_protected_branch "${positionals[0]}"; then
+    hook_deny "Blocked: never move a protected branch ($KIT_PROTECTED_BRANCHES) with branch -f."
+  fi
+}
+
+git_config() {
+  local reads="" writes="" key="" value="" has_value="" arg
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+    case "$arg" in
+      -f | --file | --blob | --type | --default | --comment | --value) [ $# -gt 0 ] && shift ;;
+      --get* | -l | --list) reads=1 ;;
+      --unset* | --add | --replace-all) writes=1 ;;
+      -*) ;;
+      *)
+        if [ -z "$key" ]; then
+          case "$arg" in
+            get | list) reads=1 ;;
+            set | unset) writes=1 ;;
+            *) key="$arg" ;;
+          esac
+        elif [ -z "$has_value" ]; then
+          value="$arg"
+          has_value=1
+        fi
+        ;;
+    esac
+  done
+  [ -n "$key" ] && [ -z "$reads" ] && [ -n "$writes$has_value" ] || return 0
+  shopt -s nocasematch
+  local kind=""
+  case "$key" in
+    core.hookspath) kind=hooks ;;
+    alias.*) kind=alias ;;
+  esac
+  shopt -u nocasematch
+  if [ "$kind" = hooks ]; then deny_hook_skip "changing core.hooksPath"; fi
+  if [ "$kind" = alias ] && [ -n "$value" ]; then
+    case "$value" in
+      '!'*) scan_text "${value#!}" ;;
+      *) scan_text "git $value" ;;
+    esac
+  fi
+  return 0
+}
+
+# --- GitHub ------------------------------------------------------------------------------------
+
+check_gh() {
+  local positionals=() arg
+  local all=("$@")
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -R | --repo) [ $# -gt 1 ] && shift ;;
+      -*) ;;
+      *) positionals+=("$1") ;;
+    esac
+    shift
+  done
+  [ ${#positionals[@]} -gt 0 ] || return 0
+  case "${positionals[0]} ${positionals[1]:-}" in
+    'pr create' | 'pr new' | 'pr merge') deny_pull_request ;;
+    'alias set') [ ${#positionals[@]} -ge 4 ] && scan_text "gh ${positionals[3]}" ;;
+  esac
+  [ "${positionals[0]}" = api ] || return 0
+
+  local method="" fields="" endpoint="" graphql="" unreadable="" previous="" texts=""
+  for arg in "${all[@]}"; do
+    case "$previous" in
+      -X | --method) method="$arg" ;;
+      -F | --field) case "$arg" in query=@*) unreadable=1 ;; esac ;;
+    esac
+    case "$arg" in
+      -X?*) method="${arg#-X}"; method="${method#=}" ;;
+      --method=*) method="${arg#*=}" ;;
+      -f* | -F* | --field* | --raw-field*) fields=1 ;;
+      --input*) fields=1; unreadable=1 ;;
+      graphql | /graphql) graphql=1 ;;
+      */pulls | */pulls/* | */pulls\?* | */merges | */merge) endpoint=1 ;;
+    esac
+    texts="$texts $arg"
+    previous="$arg"
+  done
+  if [ -n "$graphql" ]; then
+    [ -n "$unreadable" ] &&
+      hook_deny "Blocked: a GraphQL request whose query comes from a file can't be checked. Pass the query inline."
+    for arg in ${SEG_STDIN[@]+"${SEG_STDIN[@]}"}; do texts="$texts $arg"; done
+    case "$texts" in
+      *createPullRequest* | *mergePullRequest* | *enablePullRequestAutoMerge* | *enqueuePullRequest* | *mergeBranch*) deny_pull_request ;;
+    esac
+    return 0
+  fi
+  [ -n "$endpoint" ] || return 0
+  case "$method" in
+    [Pp][Oo][Ss][Tt] | [Pp][Uu][Tt] | [Pp][Aa][Tt][Cc][Hh]) deny_pull_request ;;
+    '') [ -n "$fields" ] && deny_pull_request ;;
+  esac
+  return 0
+}
+
+check_github_request() {
+  local arg endpoint="" writes=""
+  for arg in "$@"; do
+    case "$arg" in
+      *api.github.com*/pulls* | *api.github.com*/merge*) endpoint=1 ;;
+      -d* | --data* | --json* | -XPOST | -XPUT | -XPATCH | POST | PUT | PATCH | --request=P* | --method=P* | --post-data*) writes=1 ;;
+    esac
+  done
+  if [ -n "$endpoint" ] && [ -n "$writes" ]; then deny_pull_request; fi
+}
+
+# --- rm and find -delete -----------------------------------------------------------------------
 
 is_temp_path() {
   case "$1" in
@@ -286,114 +781,429 @@ is_temp_path() {
   return 1
 }
 
+check_delete() { # <verb> <target>
+  local verb="$1" target="$2" rel="" first where=outside
+  case "$target" in
+    *'$'* | *'`'* | '~'[!/]*)
+      hook_deny "Blocked: \`$verb\` with a variable or computed path can't be checked. Use a literal path inside the project or the scratchpad." ;;
+  esac
+  resolve_path "$CWD" "$target"
+  shopt -s nocasematch # macOS file names
+  case "$RESOLVED" in
+    "$HOOK_ROOT") where=root ;;
+    "$HOOK_ROOT"/*) where=inside ;;
+    *) case "$HOOK_ROOT" in "${RESOLVED%/}"/*) where=root ;; esac ;;
+  esac
+  shopt -u nocasematch
+  case "$where" in
+    root) hook_deny "Blocked: \`$verb $target\` deletes the whole project." ;;
+    outside)
+      is_temp_path "$RESOLVED" ||
+        hook_deny "Blocked: \`$verb $target\` is outside the project and the temp folders ($RESOLVED). Ask the user to do it."
+      return 0
+      ;;
+  esac
+  rel="${RESOLVED:${#HOOK_ROOT}+1}"
+  first="${rel%%/*}"
+  case "$first" in *'*'* | *'?'* | *'{'* | *'['*)
+    hook_deny "Blocked: \`$verb $target\` would delete the project's top-level folders." ;;
+  esac
+  shopt -s nocasematch
+  local blocked=""
+  case "$first" in .git) blocked=git ;; esac
+  case "$rel" in
+    "$first" | "$first"/'*' | "$first"/'**' | "$first"/'.*' | "$first"/'**/*')
+      case "$PROTECTED_TOP_LEVEL" in *" $first "*) blocked=${blocked:-top} ;; esac ;;
+  esac
+  shopt -u nocasematch
+  case "$blocked" in
+    top) hook_deny "Blocked: \`$verb $target\` deletes the project's $first/ folder. Delete only the files you created, or ask the user." ;;
+    git) hook_deny "Blocked: never delete anything inside .git/." ;;
+  esac
+  return 0
+}
+
 check_rm() {
   local recursive="" ends_options="" arg targets=()
-  local i
-  for ((i = 1; i < ${#WORDS[@]}; i++)); do
-    arg="${WORDS[$i]}"
+  for arg in "$@"; do
     if [ -z "$ends_options" ]; then
       case "$arg" in
         --) ends_options=1; continue ;;
-        --recursive) recursive=1; continue ;;
-        --*) continue ;;
+        --*) long_option "$arg" --recursive --r && recursive=1; continue ;;
         -*) case "$arg" in *[rR]*) recursive=1 ;; esac; continue ;;
       esac
     fi
     targets+=("$arg")
   done
-  [ -z "$recursive" ] && return
-
-  local target resolved rel first
-  for target in ${targets[@]+"${targets[@]}"}; do
-    case "$target" in
-      *'$'* | Q)
-        hook_deny "Blocked: \`rm -r\` with a variable or quoted path can't be checked. Use a literal path inside the project or the scratchpad." ;;
-    esac
-    resolved="$(resolve_path "$CWD" "$target")"
-    case "$resolved" in
-      "$HOOK_ROOT")
-        hook_deny "Blocked: \`rm -r $target\` deletes the whole project." ;;
-      "$HOOK_ROOT"/*)
-        rel="${resolved#"$HOOK_ROOT"/}"
-        first="${rel%%/*}"
-        case "$first" in *'*'* | *'?'*)
-          hook_deny "Blocked: \`rm -r $target\` would delete the project's top-level folders." ;;
-        esac
-        if [ "$rel" = "$first" ] && printf '%s' "$PROTECTED_TOP_LEVEL" | grep -q " $first "; then
-          hook_deny "Blocked: \`rm -r $target\` deletes the project's $first/ folder. Delete only the files you created, or ask the user."
-        fi
-        [ "$first" = ".git" ] && hook_deny "Blocked: never delete anything inside .git/."
-        ;;
-      *)
-        is_temp_path "$resolved" ||
-          hook_deny "Blocked: \`rm -r $target\` is outside the project and the temp folders ($resolved). Ask the user to do it." ;;
-    esac
-  done
+  [ -n "$recursive" ] || return 0
+  [ -n "$VIA_XARGS" ] &&
+    hook_deny "Blocked: \`xargs rm -r\` takes its paths from input, so they can't be checked. Use literal paths."
+  for arg in ${targets[@]+"${targets[@]}"}; do check_delete "rm -r" "$arg"; done
 }
 
-# --- live store --------------------------------------------------------------------------------
-
-check_live_host() {
-  local segment="$1" name="$2"
-  printf '%s' "$segment" | grep -Eq "$LIVE_HOST_RE" || return
-  # *SITE_URL variables only name the canonical address written into pages and the sitemap (SEO);
-  # they never make a request, so pointing them at the live host is allowed.
-  local request_vars
-  request_vars="$(printf '%s' "$ASSIGNMENTS" | tr ' ' '\n' | grep -Ev '^([A-Z_]*_)?SITE_URL=')"
-  if [ -n "$request_vars" ] && printf '%s' "$request_vars" | grep -Eq "$LIVE_HOST_RE"; then
-    hook_deny "Blocked: never point a run at the live site ($KIT_LIVE_HOSTS). Use local mocks or $KIT_UAT_HOST."
+check_find() {
+  local roots=() filtered="" deletes="" arg previous=""
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -H | -L | -P | -E) shift ;;
+      -* | '(' | '!') break ;;
+      *) roots+=("$1"); shift ;;
+    esac
+  done
+  [ ${#roots[@]} -gt 0 ] || roots=(.)
+  for arg in "$@"; do
+    case "$arg" in
+      -empty | -newer* | -mtime | -mmin | -size | -atime | -ctime | -regex | -iregex) filtered=1 ;;
+      -delete) deletes=1 ;;
+    esac
+    case "$previous" in -name | -iname | -path | -ipath | -wholename) [ "$arg" != '*' ] && filtered=1 ;; esac
+    previous="$arg"
+  done
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -exec | -execdir | -ok | -okdir)
+        shift
+        local inner=()
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            ';' | +) break ;;
+            '{}') [ -n "$filtered" ] || inner+=("${roots[@]}") ;;
+            *) inner+=("$1") ;;
+          esac
+          shift
+        done
+        [ ${#inner[@]} -gt 0 ] && run_words "${inner[@]}"
+        ;;
+    esac
+    [ $# -gt 0 ] && shift
+  done
+  if [ -n "$deletes" ] && [ -z "$filtered" ]; then
+    for arg in "${roots[@]}"; do check_delete "find -delete" "$arg"; done
   fi
-  if printf '%s' "$NETWORK_TOOLS" | grep -q " $name "; then
-    hook_deny "Blocked: never send requests to the live site ($KIT_LIVE_HOSTS). Use local mocks or $KIT_UAT_HOST."
-  fi
+  return 0
 }
 
-# --- Main loop ---------------------------------------------------------------------------------
+# --- Commands that run other commands ----------------------------------------------------------
 
-while IFS= read -r SEGMENT; do
-  RAW_WORDS=()
-  read -r -a RAW_WORDS <<<"$(printf '%s' "$SEGMENT" | space_redirections)" || true
-  # Every word, redirection targets included, is checked for .env files; the command itself is
-  # parsed without its redirections (`git push origin main >/dev/null` pushes origin main).
-  WORDS=()
-  REDIRECT_TARGET=""
-  for WORD in ${RAW_WORDS[@]+"${RAW_WORDS[@]}"}; do
-    is_env_file_word "$WORD" &&
-      hook_deny "Blocked: ${WORD##*/} holds secrets and stays out of Claude's context, in the shell too. Use .env.example for names and defaults, and ask the user for any value you need."
-    if [ -n "$REDIRECT_TARGET" ]; then REDIRECT_TARGET=""; continue; fi
-    case "$WORD" in '>' | '>>' | '<' | '<<' | '<<<') REDIRECT_TARGET=1; continue ;; esac
-    WORDS+=("$WORD")
+change_directory() {
+  while [ $# -gt 0 ]; do
+    case "$1" in --) shift; break ;; -?*) shift ;; *) break ;; esac
   done
-  [ ${#WORDS[@]} -eq 0 ] && continue
+  case "$JOINED_BY" in '||' | '|') return 0 ;; esac
+  [ "$FOLLOWED_BY" = '|' ] && return 0
+  local target="${1:-${HOME:-/}}"
+  case "$target" in -) return 0 ;; esac
+  is_dynamic "$target" && return 0
+  resolve_path "$CWD" "$target"
+  # A cd that fails leaves the next command where it was, unless && keeps that command from running.
+  if [ "$FOLLOWED_BY" = "&&" ] || [ -d "$RESOLVED" ]; then CWD="$RESOLVED"; fi
+}
 
-  # Leading VAR=value assignments and wrapper commands don't change what runs. A leading backslash
-  # (\git, which skips aliases) changes nothing either.
-  ASSIGNMENTS=""
-  while [ ${#WORDS[@]} -gt 0 ]; do
-    WORDS[0]="${WORDS[0]#\\}"
-    case "${WORDS[0]}" in
-      [A-Za-z_]*=*)
-        ASSIGNMENTS="$ASSIGNMENTS ${WORDS[0]}"
-        case "${WORDS[0]}" in HUSKY=0* | HUSKY_SKIP_HOOKS=*)
-          hook_deny "Blocked: HUSKY=0 skips the git hooks (lint-staged + commitlint). Fix what the hook reports instead." ;;
-        esac
+check_shell() {
+  local with_c=""
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --) shift; break ;;
+      -o | -O | +o | +O | --rcfile | --init-file) shift ;;
+      --*) ;;
+      -?*)
+        case "$1" in *c*) with_c=1 ;; esac
+        case "$1" in *o | *O) shift ;; esac
         ;;
-      sudo | command | builtin | exec | nohup | time | env | caffeinate | nice | timeout | gtimeout | xargs) ;;
-      -* | [0-9]*) ;; # options and durations of the wrapper just removed (env -i, nice -n 5, timeout 30s)
+      +?*) ;;
       *) break ;;
     esac
-    WORDS=("${WORDS[@]:1}")
+    [ $# -gt 0 ] && shift
   done
-  [ ${#WORDS[@]} -eq 0 ] && continue
+  if [ -n "$with_c" ]; then
+    [ $# -gt 0 ] && scan_text "$1"
+    return 0
+  fi
+  case "${1:-}" in '' | - | /dev/stdin) scan_stdin ;; esac
+  return 0
+}
 
-  NAME="${WORDS[0]##*/}"
-  check_live_host "$SEGMENT" "$NAME"
-  case "$NAME" in
-    git) check_git ;;
-    gh) check_gh ;;
-    rm) check_rm ;;
-    cd) [ ${#WORDS[@]} -gt 1 ] && CWD="$(resolve_path "$CWD" "${WORDS[1]}")" ;;
+# A shell that reads its code from stdin: heredocs, here-strings and what is piped into it.
+scan_stdin() {
+  local text
+  for text in ${SEG_STDIN[@]+"${SEG_STDIN[@]}"}; do scan_text "$text"; done
+  for text in ${PIPED[@]+"${PIPED[@]}"}; do scan_text "$text"; done
+}
+
+check_ssh() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -[pilFoJLRDbcEeISWwmOQB]) shift ;;
+      -*) ;;
+      *) break ;;
+    esac
+    [ $# -gt 0 ] && shift
+  done
+  if [ $# -gt 1 ]; then shift; scan_text "$*"; fi
+  return 0
+}
+
+# One simple command: strips what doesn't change what runs, then judges the command itself.
+run_words() {
+  local name="" request_vars="" VIA_XARGS="$VIA_XARGS" word
+  while [ $# -gt 0 ]; do
+    if [[ "$1" =~ $ASSIGNMENT_RE ]]; then
+      check_assignment "$1"
+      # *SITE_URL variables only name the canonical address written into pages and the sitemap (SEO);
+      # they never make a request, so pointing them at the live host is allowed.
+      case "${1%%=*}" in
+        SITE_URL | *_SITE_URL) ;;
+        *) request_vars="$request_vars $1" ;;
+      esac
+      shift
+      continue
+    fi
+    name="${1##*/}"
+    name="${name#\\}"
+    name="${name#=}" # zsh: =git
+    case "$name" in *[A-Z]*) name="$(printf '%s' "$name" | tr '[:upper:]' '[:lower:]')" ;; esac
+    case "$name" in
+      if | then | elif | else | fi | do | 'done' | while | until | '!' | '{' | '}' | esac | coproc) shift ;;
+      for | select | case | in) return 0 ;;
+      function)
+        shift
+        [ $# -gt 0 ] && shift
+        ;;
+      builtin | noglob | nocorrect | - | nohup | setsid) shift ;;
+      command)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in -v | -V) return 0 ;; -*) shift ;; *) break ;; esac
+        done
+        ;;
+      exec)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in -a) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac
+        done
+        ;;
+      sudo | doas)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in -[ughpCDRTrt] | --user | --group) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac
+        done
+        ;;
+      env)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            -S | --split-string)
+              shift
+              [ $# -gt 0 ] && scan_text "$*"
+              return 0
+              ;;
+            -S* | --split-string=*)
+              word="${1#-S}"
+              word="${word#--split-string=}"
+              shift
+              scan_text "$word $*"
+              return 0
+              ;;
+            -C | --chdir)
+              shift
+              if [ $# -gt 0 ]; then
+                # The directory holds for this command only.
+                resolve_path "$CWD" "$1"
+                local CWD="$RESOLVED"
+                shift
+              fi
+              ;;
+            -u | -P | --unset) shift; [ $# -gt 0 ] && shift ;;
+            -*) shift ;;
+            *) break ;;
+          esac
+        done
+        ;;
+      time | caffeinate | stdbuf | ionice)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            -t | -w | -o | -e | -c | -n)
+              # `time -p` has no value; the others do, and a value is never a command.
+              if [ "$name" = time ] && [ "$1" != -o ]; then shift; else shift; [ $# -gt 0 ] && shift; fi
+              ;;
+            -*) shift ;;
+            *) break ;;
+          esac
+        done
+        ;;
+      nice)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in -n) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac
+        done
+        ;;
+      timeout | gtimeout)
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in -s | -k | --signal | --kill-after) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac
+        done
+        [ $# -gt 0 ] && shift # the duration
+        ;;
+      xargs)
+        VIA_XARGS=1
+        shift
+        while [ $# -gt 0 ]; do
+          case "$1" in -[IJLnPdEsaR] | --max-args | --max-procs | --delimiter | --arg-file) shift; [ $# -gt 0 ] && shift ;; -*) shift ;; *) break ;; esac
+        done
+        ;;
+      *) break ;;
+    esac
+    name=""
+  done
+  if [ -z "$name" ] || [ $# -eq 0 ]; then return 0; fi
+  shift
+
+  if [ -n "$LIVE_HOSTS_RE" ]; then
+    if [ -n "$request_vars" ] && has_live_host "$request_vars"; then
+      hook_deny "Blocked: never point a run at the live site ($KIT_LIVE_HOSTS). Use local mocks or $KIT_UAT_HOST."
+    fi
+    case "$NETWORK_TOOLS" in *" $name "*)
+      for word in "$@" ${SEG_TARGETS[@]+"${SEG_TARGETS[@]}"}; do
+        has_live_host "$word" &&
+          hook_deny "Blocked: never send requests to the live site ($KIT_LIVE_HOSTS). Use local mocks or $KIT_UAT_HOST."
+      done
+      ;;
+    esac
+  fi
+
+  case "$name" in
+    git) check_git "$@" ;;
+    git-*) run_git "$CWD" "${name#git-}" "$@" ;;
+    gh) check_gh "$@" ;;
+    curl | wget | xh | http | https) check_github_request "$@" ;;
+    rm) check_rm "$@" ;;
+    find | gfind) check_find "$@" ;;
+    cd | pushd | chdir) change_directory "$@" ;;
+    eval) [ $# -gt 0 ] && scan_text "$*" ;;
+    sh | bash | zsh | dash | ksh | fish | ash) check_shell "$@" ;;
+    source | .) case "${1:-}" in /dev/stdin | -) scan_stdin ;; esac ;;
+    ssh) check_ssh "$@" ;;
+    export | declare | typeset | readonly | local)
+      for word in "$@"; do
+        [[ "$word" =~ $ASSIGNMENT_RE ]] && check_assignment "$word"
+      done
+      ;;
   esac
-done <<<"$SEGMENTS"
+  return 0
+}
 
+# --- Walking the command line ------------------------------------------------------------------
+
+NESTING=0
+scan_text() { # <text> [body: a heredoc the shell expands]
+  read_commands "$1" "${2:-command}"
+  # macOS /bin/bash 3.2 ends a $(…) elsewhere when a comment, a case or a heredoc is inside: judge that reading too.
+  case "$1" in
+    *'$('*'#'* | *'$('*'<<'* | *'$('*case*) [ "${2:-command}" = command ] && read_commands "$1" old-bash ;;
+  esac
+  return 0
+}
+
+read_commands() { # <text> <command | body | old-bash>
+  local mode="$2" output
+  NESTING=$((NESTING + 1))
+  [ "$NESTING" -le "$MAX_NESTING" ] ||
+    hook_deny "Blocked: this command nests shells too deeply to check. Run the inner command directly."
+  output="$(printf '%s\n' "$1" | awk -v mode="$mode" -f "$HOOK_DIR/shell-words.awk")" ||
+    hook_deny "Blocked: this command can't be read by the guard (too deeply nested, too many heredocs, or awk failed). Split it into simpler commands."
+  if [ -z "$output" ]; then NESTING=$((NESTING - 1)); return 0; fi
+
+  # A nested scan (bash -c, eval) starts where its caller is and changes nothing for it.
+  local CWD="$CWD" CHAINED_BRANCH="$CHAINED_BRANCH" CHAINED_DIR="$CHAINED_DIR" JOINED_BY="" FOLLOWED_BY=""
+  local SEG_WORDS=() SEG_TARGETS=() SEG_STDIN=() SEG_EXPAND=() PIPED=()
+  local saved_cwd=() saved_branch=() saved_joined=() level=0 records=() record value arg
+
+  # Read first: the commands run below must not share this loop's stdin.
+  while IFS= read -r record; do
+    records+=("$record")
+    if [ "${#record}" -gt "$MAX_WORD" ]; then
+      case "${record:0:1}" in W | R | S) deny_too_long ;; esac
+    fi
+    [ "$SECONDS" -lt "$TIME_LIMIT" ] || deny_too_long
+  done <<<"$output"
+
+  for record in "${records[@]}"; do
+    [ "$SECONDS" -lt "$TIME_LIMIT" ] || deny_too_long
+    case "$record" in
+      '(' | '[')
+        saved_cwd[level]="$CWD"
+        saved_branch[level]="$CHAINED_BRANCH"
+        saved_joined[level]="$JOINED_BY"
+        level=$((level + 1))
+        JOINED_BY=""
+        continue
+        ;;
+      ')' | ']')
+        if [ "$level" -gt 0 ]; then
+          level=$((level - 1))
+          CWD="${saved_cwd[level]}"
+          JOINED_BY="${saved_joined[level]}"
+          # A substitution doesn't break the && chain around it; a subshell's end does.
+          if [ "$record" = ']' ]; then CHAINED_BRANCH="${saved_branch[level]}"; fi
+        fi
+        continue
+        ;;
+    esac
+    value="${record:1}"
+    case "$value" in *"$ENCODED_NEWLINE"*) value="$(printf '%s' "$value" | tr '\036' '\n')" ;; esac
+    case "$value" in
+      *CLAUDE_PROJECT_DIR*)
+        value="${value//'${CLAUDE_PROJECT_DIR}'/$HOOK_ROOT}"
+        value="${value//'$CLAUDE_PROJECT_DIR'/$HOOK_ROOT}"
+        ;;
+    esac
+    case "$record" in
+      W*) SEG_WORDS+=("$value") ;;
+      R*) SEG_TARGETS+=("$value") ;;
+      S* | H*) SEG_STDIN+=("$value") ;;
+      X*) SEG_STDIN+=("$value"); SEG_EXPAND+=("$value") ;;
+      E*)
+        FOLLOWED_BY="$value"
+        for arg in ${SEG_WORDS[@]+"${SEG_WORDS[@]}"} ${SEG_TARGETS[@]+"${SEG_TARGETS[@]}"}; do
+          [ "$SECONDS" -lt "$TIME_LIMIT" ] || deny_too_long
+          check_env_word "$arg"
+        done
+        for arg in ${SEG_EXPAND[@]+"${SEG_EXPAND[@]}"}; do
+          case "$arg" in *'$('* | *'`'*) scan_text "$arg" body ;; esac
+        done
+        [ ${#SEG_WORDS[@]} -gt 0 ] && run_words "${SEG_WORDS[@]}"
+        PIPED=()
+        if [ "$value" = '|' ]; then
+          case "${SEG_WORDS[0]:-}" in
+            echo | printf | */echo | */printf)
+              local printed=""
+              for arg in "${SEG_WORDS[@]:1}"; do
+                case "$arg" in -n | -e | -E) continue ;; esac
+                printed="${printed:+$printed }$arg"
+                [ "${SEG_WORDS[0]##*/}" = printf ] && PIPED+=("$arg")
+              done
+              [ -n "$printed" ] && PIPED+=("$printed")
+              ;;
+          esac
+          PIPED+=(${SEG_STDIN[@]+"${SEG_STDIN[@]}"})
+        fi
+        [ "$value" = "&&" ] || CHAINED_BRANCH=""
+        JOINED_BY="$value"
+        SEG_WORDS=()
+        SEG_TARGETS=()
+        SEG_STDIN=()
+        SEG_EXPAND=()
+        ;;
+    esac
+  done
+  NESTING=$((NESTING - 1))
+}
+
+deny_too_long() {
+  hook_deny "Blocked: this command is too long to check before the hook times out. Split it up, or write long text with the Write tool."
+}
+
+[ "${#COMMAND}" -le "$MAX_COMMAND" ] || deny_too_long
+scan_text "$COMMAND"
 exit 0

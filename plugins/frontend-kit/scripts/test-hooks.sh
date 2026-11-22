@@ -86,7 +86,7 @@ KITJSON
   printf '{\n  "name": "fixture",\n  "scripts": {\n    "build": "vite build",\n    "lint": "oxlint --fix"\n  }\n}\n' >"$dir/package.json"
 }
 
-# The real project lives under "Projects (from Trash)": the fixtures get spaces and parentheses too.
+# Project paths can have spaces and parentheses: the fixtures get both.
 FEATURE="$WORK/Projects (x)/feature"
 MAIN="$WORK/Projects (x)/main"
 make_repo "$FEATURE" "fix/123-thing"
@@ -262,9 +262,10 @@ expect_bash deny "$MAIN" 'git merge origin/fix/1'
 expect_bash allow "$MAIN" 'git checkout -b fix/9-x origin/main'
 expect_bash allow "$MAIN" 'git status'
 
-# The real repo, with its path full of spaces and parentheses.
+# rm checks use a project path outside the temp folders, where rm is allowed; nothing there has to exist.
+PROJECT_REPO="$REPO"
+REPO="/srv/Projects (x)/shop"
 export CLAUDE_PROJECT_DIR="$REPO"
-# rm checks run against the real repo path: the fixtures live in the temp folder, where rm is allowed.
 for cmd in 'rm -rf ..' 'rm -rf .' 'rm -rf src' 'rm -rf .git' 'rm -rf .git/hooks' 'rm -rf *' 'rm -r -f ../other-project' \
   'cd .. && rm -rf shop' 'rm -rf ./docs'; do
   expect_bash deny "$REPO" "$cmd"
@@ -282,7 +283,6 @@ expect_bash allow "$REPO" ""
 # --- guard-paths.sh ----------------------------------------------------------------------------
 
 export CLAUDE_PROJECT_DIR="$FEATURE"
-PROJECT_REPO="$REPO"
 REPO="$FEATURE"
 expect_path() { # <allow|deny> <tool> <file> [extra tool_input json]
   local input extra="${4:-}"
@@ -957,6 +957,407 @@ printf 'export const a = 1\n' >"$MR/apps/web/src/a.ts"
 export CLAUDE_PROJECT_DIR="$MR"
 run_hook stop-gate.sh "$(stop_input s-mono false)"
 if [ "$CODE" -eq 2 ] && grep -q 'cwd=web args=related --run src/a.ts' "$WORK/vitest-call.txt" 2>/dev/null; then ok; else ko "stop-gate runs an app's related tests in its cwd with relative paths" "exit $CODE: $ERR | $(cat "$WORK/vitest-call.txt" 2>/dev/null)"; fi
+
+# --- guard-bash.sh reads commands the way the shell does (1.14.1) --------------------------------------
+
+GB="$WORK/Projects (x)/guard"
+GM="$WORK/Projects (x)/guard-main"
+make_repo "$GB" "fix/9-guard"
+make_repo "$GM" main
+git -C "$GB" remote add origin https://github.com/acme/shop.git
+git -C "$GB" branch other
+git -C "$GM" branch fix/existing
+git -C "$GB" config alias.yolo 'push --force'
+git -C "$GB" config alias.st 'status --short'
+git -C "$GB" config alias.bang '!git reset --hard'
+printf 'SECRET=x\n' >"$GB/.env"
+ln -s ../.env "$GB/src/settings-link"
+NL=$'\n'
+BS=$'\\'
+export CLAUDE_PROJECT_DIR="$GB"
+
+for cmd in \
+  "git push origin fix/9-guard $BS$NL  --force" \
+  "git push origin $BS$NL  main" \
+  "git pu${BS}${NL}sh origin main" \
+  "git reset $BS$NL  --hard" \
+  "git commit -m x $BS$NL  --no-verify" \
+  "gh pr $BS$NL  create --fill" \
+  "curl -s $BS$NL  https://store.example.com/api" \
+  "echo \"<<EOF\"${NL}git push --force" \
+  "echo '<<EOF'${NL}git push --force${NL}EOF" \
+  "echo 'a\"b'; git push --force; echo 'c\"d'" \
+  "echo \"it's\"; git push --force; echo \"it's\"" \
+  "# don't do this${NL}git push --force${NL}# it's done" \
+  "echo \"${BS}\"\"; git push --force; echo \"${BS}\"\"" \
+  'echo $((1<<2))'"${NL}git push --force${NL}2" \
+  'echo $[1<<2]'"${NL}git push --force" \
+  "cat <<EOF${NL}body${NL}EOF${NL}git push --force" \
+  "cat <<'END-OF-TEXT'${NL}body${NL}END-OF-TEXT${NL}git push --force" \
+  "cat <<-EOF${NL}	body${NL}	EOF${NL}git push --force" \
+  "cat <<EOF${NL}\$(git push --force)${NL}EOF" \
+  "bash <<EOF${NL}git push --force${NL}EOF" \
+  "cat <<'EOF' | sh${NL}git push --force${NL}EOF" \
+  "bash <<<'git push --force'" \
+  "echo 'git push --force' | sh" \
+  'echo "$(git push --force)"' \
+  'echo `git push --force`' \
+  'cat <(git push --force)' \
+  'echo "$(case x in x) echo hi;; esac)"; git push --force' \
+  "git push \$'--force'" \
+  "git push \$'\\x2d\\x2dforce'" \
+  'git push --fo""rce' \
+  'GIT push --force' \
+  'if true; then git push --force; fi' \
+  'if false; then :; else git push --force; fi' \
+  'for i in 1 2; do git push --force; done' \
+  'while true; do git push --force; done' \
+  '{ git push --force; }' \
+  '! git push --force' \
+  'f() { git push --force; }; f' \
+  'function f { git push --force; }; f' \
+  'case x in x) git push --force ;; esac' \
+  '(cd src && git push --force)' \
+  'noglob git push --force' \
+  'sudo -u deploy git push --force' \
+  'env -u HUSKY git push --force' \
+  "env -S 'git push --force'" \
+  'timeout -s KILL 30 git push --force' \
+  'nice -n 5 git push --force' \
+  "bash -lc 'git push --force'" \
+  "bash -o pipefail -c 'git push --force'" \
+  "sh -c 'bash -c \"git push --force\"'" \
+  "eval 'git push --force'" \
+  "ssh build 'git push --force'" \
+  'find . -name package.json -exec git push --force ;' \
+  'git push --forc' \
+  'git push --force-with-l' \
+  'git push --mirr origin' \
+  'git push --al origin' \
+  'git push --branches origin' \
+  'git push --no-verif' \
+  'git commit --no-verif -m x' \
+  'git commit -qn -m x' \
+  'git reset --har' \
+  'git clean --forc' \
+  'git checkout -f' \
+  'git checkout --forc other' \
+  'git checkout -qf other' \
+  'git checkout ./' \
+  'git checkout :/' \
+  'git checkout -- src/..' \
+  'git switch --discard-changes other' \
+  'git switch -f other' \
+  'git restore -SW .' \
+  'git restore --staged --worktree .' \
+  'git push origin HEAD:heads/main' \
+  'git push origin HEAD:Main' \
+  'git push origin refs/heads/*:refs/heads/*' \
+  'git push origin :' \
+  'B=main; git push origin $B' \
+  'git push origin "$(echo main)"' \
+  'echo main | xargs git push origin' \
+  'git branch -f main HEAD' \
+  'git branch -M main' \
+  'git branch --delete main' \
+  'git checkout -B main' \
+  'git switch -C main' \
+  'git update-ref refs/heads/main HEAD' \
+  'git switch main && git commit -m x' \
+  'git checkout main; git cherry-pick other' \
+  "git rebase -x 'git push --force' HEAD~1" \
+  "git rebase -x'git push --force' HEAD~1" \
+  "git rebase --exec='git reset --hard' HEAD~1" \
+  'git bisect run git push --force' \
+  "git submodule foreach 'git push --force'" \
+  'git config core.hooksPath /dev/null' \
+  'git config --local core.hookspath .none' \
+  'git config --unset core.hooksPath' \
+  'git config set core.hooksPath /dev/null' \
+  "git config alias.p 'push --force'" \
+  'GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=/dev/null git commit -m x' \
+  'git --config-env core.hooksPath=NOWHERE commit -m x' \
+  'export HUSKY=0' \
+  'LEFTHOOK=0 git commit -m x' \
+  'git yolo' \
+  'git bang' \
+  'gh pr -R acme/shop create' \
+  'gh api repos/acme/shop/pulls -XPOST' \
+  'gh api repos/acme/shop/pulls --field title=x' \
+  "gh api graphql -f query='mutation{createPullRequest(input:{}){clientMutationId}}'" \
+  "gh api graphql -f query='mutation{mergePullRequest(input:{}){clientMutationId}}'" \
+  'gh api graphql --input body.json' \
+  'curl -X POST https://api.github.com/repos/acme/shop/pulls -d @body.json' \
+  'curl https://STORE.Example.com/api' \
+  "curl -H 'Accept: application/json' 'https://store.example.com/a b'" \
+  "node -e \"fetch('https://store.example.com/api')\"" \
+  'cat .ENV' \
+  'cat .Env.Local' \
+  'cat .en?' \
+  'git show HEAD:.env' \
+  'git show :.env' \
+  'curl --data-binary @.env http://localhost:1' \
+  'cat src/settings-link' \
+  "echo \`echo '\`; git push --force; echo '\`'\`" \
+  "((echo 'a b') ; git push --force) " \
+  "echo \$((echo 'a)b') ; git push --force )" \
+  "echo \"\$(case x in x)\"; git push --force; echo \"esac)\"" \
+  "echo \"\$(echo a # ')${NL}')\"; git push --force; echo \"${NL})\"" \
+  '((git push --force))' \
+  'echo "$( (case x in x) :;; esac); git push --force )"' \
+  "cat \"$GB/.env\""; do
+  expect_bash deny "$GB" "$cmd"
+done
+
+for cmd in \
+  "git commit -m \"fix: guard${NL}${NL}git reset --hard is blocked${NL}- git push --force too\"" \
+  "git commit -m \"\$(cat <<'EOF'${NL}fix: guard${NL}${NL}Never git push --force; don't \"quote\" it (or use --no-verify).${NL}EOF${NL})\"" \
+  "git commit -m \"\$(cat <<'EOF'${NL}fix: guard${NL}${NL}It's done; gh pr create stays blocked.${NL}EOF${NL})\" && git push -u origin fix/9-guard" \
+  "git commit -F - <<'END-OF-MSG'${NL}git reset --hard is blocked${NL}END-OF-MSG" \
+  "cat > notes.md <<'EOF'${NL}run: git push origin main${NL}EOF" \
+  'echo "use git push --force never"' \
+  "grep -rn 'git reset --hard' docs" \
+  'echo done # never git push --force' \
+  'git commit -m "docs: explain config/.env handling"' \
+  'git commit -m "fix: n"' \
+  'git commit -mnew-feature' \
+  'git commit -am "fix: cart"' \
+  'git commit --amend --no-edit' \
+  'git commit --no-verbose -m x' \
+  'git push --follow-tags origin fix/9-guard' \
+  'git push --no-verbose origin fix/9-guard' \
+  'git push origin HEAD:refs/heads/fix/9-guard' \
+  'git push -u origin "$(git branch --show-current)"' \
+  'git push -u origin $(git rev-parse --abbrev-ref HEAD)' \
+  'git push --tags origin' \
+  'git push origin v1.2.0' \
+  'git push -o ci.skip origin fix/9-guard' \
+  'git merge --no-verify-signatures origin/main' \
+  'git checkout main -- src/a.ts' \
+  'git checkout -b fix/10 origin/main' \
+  'git switch -c fix/11 origin/main' \
+  'git switch other' \
+  'git restore --staged .' \
+  'git restore -S .' \
+  'git reset --soft HEAD~1' \
+  'git reset HEAD -- src/a.ts' \
+  'git rebase origin/main' \
+  'git rebase --continue' \
+  "git rebase -x 'npm run typecheck' origin/main" \
+  'git branch -f fix/old origin/main' \
+  'git branch -d fix/old' \
+  'git config core.hooksPath' \
+  'git config --get core.hooksPath' \
+  'git config user.name' \
+  'git st' \
+  'gh pr view 12 --comments' \
+  "gh pr list --search 'pr create'" \
+  'gh api repos/acme/shop/pulls' \
+  'gh api -X GET repos/acme/shop/pulls -f state=open' \
+  "gh api graphql -f query='query{viewer{login}}'" \
+  'echo $((1<<2))' \
+  'echo $(( (2 + 3) * 4 ))' \
+  'if [ -d dist ]; then rm -rf dist; fi' \
+  'for f in src/*.ts; do wc -l "$f"; done' \
+  "find . -name '*.tmp' -delete" \
+  "rm -rf \"$GB/build output\"" \
+  "cat src/a.ts | grep -n export" \
+  'ls .*' \
+  'cat .env.example' \
+  'npm run check 2>&1 | tail -20'; do
+  expect_bash allow "$GB" "$cmd"
+done
+
+export CLAUDE_PROJECT_DIR="$GM"
+for cmd in 'git cherry-pick fix/existing' 'git revert --no-edit HEAD' 'git am fix.patch' 'git pull origin fix/existing' \
+  'git rebase fix/existing' 'git checkout -b fix/new; git commit -m x' 'git checkout -b fix/new || git commit -m x' \
+  'cd $(pwd) && git commit -m x' 'cd /no/such/dir; git commit -m x' '(cd /tmp); git commit -m x' 'git push origin @'; do
+  expect_bash deny "$GM" "$cmd"
+done
+for cmd in 'git checkout -b fix/new && git commit -m x' 'git switch -c fix/new origin/main && git add -A && git commit -m x' \
+  'git switch fix/existing && git commit -m x' 'git pull --ff-only' 'git pull --rebase origin main' 'git rebase origin/main' \
+  'git merge --abort' 'git cherry-pick --abort'; do
+  expect_bash allow "$GM" "$cmd"
+done
+
+# rm, judged by where the project is, not by where this machine keeps it. Nothing here has to exist.
+RM_ROOT="/srv/Projects (x)/shop"
+export CLAUDE_PROJECT_DIR="$RM_ROOT"
+for cmd in '(cd /tmp); rm -rf src' 'cd /no/such/dir; rm -rf src' 'rm -rf src/*' 'rm -rf {src,e2e}' 'rm -rf SRC' 'rm -rf .GIT/hooks' \
+  'find src -delete' 'find src -exec rm -rf {} +' 'echo src | xargs rm -rf' '(case x in x) cd /tmp;; esac); rm -rf src'; do
+  expect_bash deny "$RM_ROOT" "$cmd"
+done
+for cmd in "find . -name '*.tmp' -delete" 'rm -rf "build output"' 'rm -rf dist/*'; do
+  expect_bash allow "$RM_ROOT" "$cmd"
+done
+# A project that itself lives in a temp folder still can't be deleted from inside.
+export CLAUDE_PROJECT_DIR="$GB"
+expect_bash deny "$GB" 'rm -rf ..'
+expect_bash deny "$GB" 'cd src && rm -rf ../..'
+
+# The messages: no husky assumed, and one mention of the compare link.
+reason() { printf '%s' "$OUT" | jq -r '.hookSpecificOutput.permissionDecisionReason // ""'; }
+for cmd in 'git commit --no-verify -m x' 'git commit -nm x' 'git -c core.hooksPath=/dev/null commit -m x'; do
+  run_hook guard-bash.sh "$(bash_input "$cmd" "$GB")"
+  reason | grep -qiE 'husky|lint-staged|commitlint' && ko "the hook-skip message assumes husky: $cmd" "$(reason)" || ok
+done
+PL="$WORK/pr-link"
+make_repo "$PL" fix/link
+rm "$PL/.claude/frontend-kit.json"
+export CLAUDE_PROJECT_DIR="$PL"
+run_hook guard-bash.sh "$(bash_input 'gh pr create --fill' "$PL")"
+[ "$(reason | grep -o 'compare link' | grep -c .)" = 1 ] && ok || ko "the PR message says 'compare link' once without a known repo" "$(reason)"
+for remote in https://github.com/acme/shop.git git@github.com:acme/shop.git https://user:token@github.com/acme/shop; do
+  git -C "$PL" remote remove origin 2>/dev/null
+  git -C "$PL" remote add origin "$remote"
+  run_hook guard-bash.sh "$(bash_input 'gh pr create --fill' "$PL")"
+  if reason | grep -qF 'https://github.com/acme/shop/compare/main...' && ! reason | grep -q token; then ok; else ko "the PR message reads the repo from origin ($remote)" "$(reason)"; fi
+done
+
+# A command too large to check in time must never slip through by timing the hook out (10 s).
+export CLAUDE_PROJECT_DIR="$GB"
+BIG="cat > big.txt <<'EOF'${NL}$(awk 'BEGIN { for (i = 0; i < 1400; i++) print "line " i " with some (text) \"quoted\" and don'\''t, forty bytes or so" }')${NL}EOF${NL}git push --force"
+STARTED=$SECONDS
+expect_bash deny "$GB" "$BIG"
+[ $((SECONDS - STARTED)) -lt 8 ] && ok || ko "guard-bash checks a long heredoc within the hook timeout" "$((SECONDS - STARTED)) s"
+expect_bash allow "$GB" "${BIG%${NL}git push --force}"
+LONG="$(awk 'BEGIN { s = "a"; while (length(s) < 120000) s = s s; print s }')"
+STARTED=$SECONDS
+expect_bash deny "$GB" "echo ${LONG:0:90000}"
+expect_bash deny "$GB" "echo \"$LONG\""
+[ $((SECONDS - STARTED)) -lt 8 ] && ok || ko "guard-bash refuses an oversized word before it can time out" "$((SECONDS - STARTED)) s"
+BIG="$(awk 'BEGIN { for (i = 0; i < 1500; i++) print "echo step " i }')${NL}git push --force"
+STARTED=$SECONDS
+expect_bash deny "$GB" "$BIG"
+[ $((SECONDS - STARTED)) -lt 9 ] && ok || ko "guard-bash checks 1500 commands within the hook timeout" "$((SECONDS - STARTED)) s"
+
+# --- guard-paths and guard-url: case, links, spellings of a host ----------------------------------------
+
+export CLAUDE_PROJECT_DIR="$GB"
+mkdir -p "$GB/.github/workflows"
+printf 'name: ci\n' >"$GB/.github/workflows/ci.yml"
+ln -s ../.github/workflows/ci.yml "$GB/src/ci-link.yml"
+ln -s ../.github/workflows "$GB/src/flows"
+expect_path deny Read "$GB/.ENV"
+expect_path deny Read "$GB/.Env.Local"
+expect_path deny Read "$GB/src/settings-link"
+expect_path allow Read "$GB/.ENV.EXAMPLE"
+expect_path deny Write "$GB/.GITHUB/workflows/x.yml"
+expect_path deny Edit "$GB/.GIT/config"
+expect_path deny Edit "$GB/packages/ui/.git/config"
+expect_path deny Write "$GB/Package-Lock.json"
+expect_path deny Write "$GB/src/helpers.JS"
+expect_path deny Edit "$GB/src/ci-link.yml"
+expect_path deny Write "$GB/src/flows/new.yml"
+expect_path deny Write "$(printf '%s' "$GB" | sed 's/guard$/GUARD/')/.github/workflows/x.yml"
+expect_path allow Write "$GB/src/ok.tsx"
+expect_url deny WebFetch "https://store.example.com./cards"
+expect_url deny WebFetch "https://user:pass@store.example.com/cards"
+expect_url deny WebFetch " https://store.example.com/cards"
+expect_url deny WebFetch "store.example.com/cards"
+expect_url allow WebFetch "https://staging.example.com./"
+
+# --- Route-style and Arabic file names, deleted files ----------------------------------------------------
+
+RN="$WORK/route-names"
+make_repo "$RN" feature/names
+export CLAUDE_PROJECT_DIR="$RN"
+rm "$RN/node_modules"
+mkdir -p "$RN/node_modules/.bin"
+printf '#!/bin/sh\necho "$2:1:1: some warning [Warning/x]"\n' >"$RN/node_modules/.bin/oxlint"
+chmod +x "$RN/node_modules/.bin/oxlint"
+for name in '$id.tsx' '[id].tsx' '(group)+x.tsx'; do
+  printf 'export const x = 1\n' >"$RN/src/$name"
+  run_hook post-edit.sh "$(edit_input "$RN/src/$name")"
+  printf '%s' "$OUT" | grep -qF 'some warning' && ok || ko "post-edit keeps oxlint warnings for $name" "exit $CODE: $OUT"
+  rm -f "$RN/src/$name"
+done
+jq '.commands = {typecheck: "true", relatedTests: "printf \"%s\\n\" >related.txt"}' "$RN/.claude/frontend-kit.json" >"$WORK/rn.json" && mv "$WORK/rn.json" "$RN/.claude/frontend-kit.json"
+printf 'export const x = 1\n' >"$RN/src/صفحة.tsx"
+git -C "$RN" add src
+run_hook stop-gate.sh "$(stop_input s-names false)"
+grep -qF 'src/صفحة.tsx' "$RN/related.txt" 2>/dev/null && ok || ko "stop-gate passes an Arabic file name to the related tests" "$(cat "$RN/related.txt" 2>/dev/null)"
+git -C "$RN" commit -q -m names
+jq '.commands.typecheck = "exit 1"' "$RN/.claude/frontend-kit.json" >"$WORK/rn.json" && mv "$WORK/rn.json" "$RN/.claude/frontend-kit.json"
+run_hook session-context.sh '{"hook_event_name":"SessionStart","session_id":"s-delete","source":"startup"}'
+rm "$RN/src/a.ts"
+run_hook stop-gate.sh "$(stop_input s-delete false)"
+[ "$CODE" -eq 2 ] && ok || ko "stop-gate checks a change that only deletes a file" "exit $CODE"
+
+# A project that is a folder inside the repository: paths stay relative to the project.
+NP="$WORK/nested"
+make_repo "$NP" feature/nested
+mkdir -p "$NP/web/src" "$NP/web/.claude"
+printf '{"stopGate":{"review":false},"srcDirs":["src"],"commands":{"typecheck":"true","relatedTests":"printf \\"%%s\\\\n\\" >related.txt"}}\n' >"$NP/web/.claude/frontend-kit.json"
+printf 'export const n = 1\n' >"$NP/web/src/n.ts"
+git -C "$NP" add web/src
+export CLAUDE_PROJECT_DIR="$NP/web"
+run_hook stop-gate.sh "$(stop_input s-nested false)"
+grep -qx 'src/n.ts' "$NP/web/related.txt" 2>/dev/null && ok || ko "stop-gate works in a project nested in its repository" "$(cat "$NP/web/related.txt" 2>/dev/null)"
+
+# --- stop-gate: committed work is still this session's work -----------------------------------------------
+
+CW="$WORK/committed"
+make_repo "$CW" feature/committed
+export CLAUDE_PROJECT_DIR="$CW"
+cw_config() { printf '{"stopGate":{"review":%s},"commands":{"typecheck":"%s","relatedTests":"true"}}\n' "$1" "$2" >"$CW/.claude/frontend-kit.json"; }
+cw_start() { run_hook session-context.sh "{\"hook_event_name\":\"SessionStart\",\"session_id\":\"$1\",\"source\":\"startup\"}"; }
+cw_commit() { git -C "$CW" add src && git -C "$CW" commit -q -m "$1"; }
+cw_config false 'exit 1'
+cw_start c-fail
+printf 'export const broken = 1\n' >"$CW/src/broken.ts"
+cw_commit broken
+run_hook stop-gate.sh "$(stop_input c-fail false)"
+[ "$CODE" -eq 2 ] && ok || ko "stop-gate checks work that was committed in this session" "exit $CODE"
+
+cw_config false 'echo run >>typecheck-runs; true'
+cw_start c-pass
+printf 'export const fine = 1\n' >"$CW/src/fine.ts"
+run_hook stop-gate.sh "$(stop_input c-pass false)"
+cw_commit fine
+run_hook stop-gate.sh "$(stop_input c-pass false)"
+[ "$CODE" -eq 0 ] && [ "$(grep -c run "$CW/typecheck-runs" 2>/dev/null)" = 1 ] && ok || ko "committing what already passed the gate does not run it again" "exit $CODE, runs: $(cat "$CW/typecheck-runs" 2>/dev/null)"
+run_hook stop-gate.sh "$(stop_input c-pass false)"
+[ "$CODE" -eq 0 ] && [ "$(grep -c run "$CW/typecheck-runs" 2>/dev/null)" = 1 ] && ok || ko "a clean tree after the gated commit stays quiet" "exit $CODE"
+
+cw_config true 'true'
+cw_start c-review
+printf 'export const r = 1\n' >"$CW/src/r.ts"
+cw_commit r
+run_hook stop-gate.sh "$(stop_input c-review false)"
+[ "$CODE" -eq 2 ] && printf '%s' "$ERR" | grep -q 'frontend-reviewer' && printf '%s' "$ERR" | grep -q 'committed' && ok || ko "the review request covers committed work" "exit $CODE: $ERR"
+
+cw_config false 'exit 1'
+printf 'export const old = 1\n' >"$CW/src/old.ts"
+cw_start c-old-dirty
+cw_commit old
+run_hook stop-gate.sh "$(stop_input c-old-dirty false)"
+[ "$CODE" -eq 0 ] && ok || ko "committing changes that predate the session, untouched, is not gated" "exit $CODE"
+
+git -C "$CW" checkout -q -b feature/older
+printf 'export const o = 1\n' >"$CW/src/o.ts"
+git -C "$CW" add src
+GIT_AUTHOR_DATE='2020-01-01T00:00:00Z' GIT_COMMITTER_DATE='2020-01-01T00:00:00Z' git -C "$CW" commit -q -m older
+git -C "$CW" checkout -q feature/committed
+cw_start c-switch
+git -C "$CW" checkout -q feature/older
+run_hook stop-gate.sh "$(stop_input c-switch false)"
+[ "$CODE" -eq 0 ] && ok || ko "switching to an older branch is not gated" "exit $CODE: $ERR"
+
+git -C "$CW" checkout -q -b upstream
+printf 'export const u = 1\n' >"$CW/src/u.ts"
+cw_start c-pull
+cw_commit upstream
+git -C "$CW" update-ref refs/remotes/origin/main HEAD
+jq '.lastGated = "" | .baseline = "none"' "$CW/.claude/state/sessions/c-pull.json" >"$WORK/cw.json" && mv "$WORK/cw.json" "$CW/.claude/state/sessions/c-pull.json"
+run_hook stop-gate.sh "$(stop_input c-pull false)"
+[ "$CODE" -eq 0 ] && ok || ko "commits that are already on the default branch are not gated" "exit $CODE: $ERR"
+
+# --- settings templates: no pre-approved command that can run any other --------------------------------
+
+for SETTINGS in "$PLUGIN"/templates/*/settings.json; do
+  jq -e '.permissions.allow | index("Bash(git rebase *)") == null and index("Bash(git rebase --continue)") != null' "$SETTINGS" >/dev/null && ok || ko "git rebase is allowed only in its plain forms: $SETTINGS"
+done
 
 # --- Every hook script is executable and valid bash -------------------------------------------
 

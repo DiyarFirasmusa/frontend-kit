@@ -11,9 +11,11 @@ hook_read_input
 URL="$(hook_field '.tool_input.url')"
 [ -z "$URL" ] && exit 0
 
-HOST="$(printf '%s' "$URL" | sed -E 's#^[A-Za-z]+://##; s#^[^@/]*@##; s#[/?\#:].*$##' | tr '[:upper:]' '[:lower:]')"
+# A leading blank, credentials, a port, a trailing dot or capitals don't make it another host.
+HOST="$(printf '%s' "$URL" | tr -d '\t\r\n' | sed -E 's#^ +##; s#^[A-Za-z][A-Za-z0-9+.-]*:[/\\]+##; s#[/?\#\\].*$##; s#^.*@##; s#:[0-9]*$##; s#[. ]+$##' | tr '[:upper:]' '[:lower:]')"
 while IFS= read -r live; do
   live="$(printf '%s' "$live" | tr '[:upper:]' '[:lower:]')"
+  live="${live%.}"
   [ -z "$live" ] && continue
   if [ "$HOST" = "$live" ] || [ "$HOST" = "www.$live" ]; then
     hook_deny "Blocked: never test against the live site ($HOST). Use http://localhost:$KIT_DEV_PORT or $KIT_UAT_HOST. If the user wants something checked on the live site, ask them to open it themselves."

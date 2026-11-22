@@ -56,14 +56,28 @@ for v in plugins/*/templates/dashboard/variants/*/; do
   grep -q "| \`$name\` |" plugins/*/skills/setup/SKILL.md || bad "setup skill does not mention the $name variant"
   [ "$name" != "tanstack-start" ] || [ -f "$v/e2e/serve-spa.ts" ] || bad "$v: e2e/serve-spa.ts missing"
 done
+for awk_file in plugins/*/scripts/*.awk; do
+  [ -f "$awk_file" ] || continue
+  awk -f "$awk_file" </dev/null >/dev/null 2>&1 || bad "awk syntax error: $awk_file"
+done
 for sh in plugins/*/scripts/*.sh scripts/*.sh; do
   bash -n "$sh" 2>/dev/null || bad "shell syntax error: $sh"
 done
 command -v shellcheck >/dev/null && { shellcheck -S warning plugins/*/scripts/*.sh scripts/*.sh >/tmp/shellcheck.out 2>&1 || { bad "shellcheck findings (see below)"; cat /tmp/shellcheck.out; }; }
 
-# 6. no project or company names leaked into templates
-if grep -rniE 'hassa|inventory-storage|bazaar' plugins/*/templates plugins/*/skills 2>/dev/null | grep -v THIRD_PARTY | grep -q .; then
-  bad "domain-specific names in templates or skills:"; grep -rniE 'hassa|inventory-storage|bazaar' plugins/*/templates plugins/*/skills | head
+# 6. no playground domain in templates or skills, and no private name in anything that gets pushed. The private
+#    names are not written here (the repo is public): one per line in .private-names (git-ignored), or in the
+#    file KIT_PRIVATE_NAMES points at.
+if grep -rniE 'bazaar' plugins/*/templates plugins/*/skills 2>/dev/null | grep -v THIRD_PARTY | grep -q .; then
+  bad "playground domain names in templates or skills:"; grep -rniE 'bazaar' plugins/*/templates plugins/*/skills | head
+fi
+PRIVATE_NAMES="${KIT_PRIVATE_NAMES:-$ROOT/.private-names}"
+if [ -f "$PRIVATE_NAMES" ]; then
+  NAMES="$(sed '/^[[:space:]]*$/d' "$PRIVATE_NAMES")"
+  if [ -n "$NAMES" ]; then
+    LEAKS="$(git grep --untracked -nIiwF -e "$NAMES" -- . 2>/dev/null | cut -c1-160)"
+    [ -z "$LEAKS" ] || { bad "private names in files that get pushed:"; printf '%s\n' "$LEAKS" | head; }
+  fi
 fi
 
 # 7. eval cases: a prompt, at least one grader, dev-/heldout- name matching the folder they sit in

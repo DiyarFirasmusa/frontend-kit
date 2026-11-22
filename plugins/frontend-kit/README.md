@@ -34,11 +34,13 @@ Restart Claude Code after setup. Requirements: `jq` (`brew install jq`), Node 20
 
 Values come from the project's `.claude/frontend-kit.json` (written by setup):
 
-- No commit, merge or push on protected branches; no force push, `--no-verify`, `reset --hard`, `clean -f`.
+- No commit, merge, cherry-pick or push on protected branches; no force push, `--no-verify`, `reset --hard`, `clean -f`,
+  `checkout -f`. The guard reads commands like the shell does, but it is a guard rail, not a sandbox: it does not see
+  inside script files, package scripts or programs in other languages.
 - No PR opened or merged by Claude; it prints the compare link instead.
 - No request, test or browser visit to the live hosts.
 - No reading `.env*` secrets (`.env.example` is fine); no edits to deploy config or generated files.
-- Format + lint every edited file (with the project's own tools); typecheck + related tests before Claude finishes a turn; typecheck before a
+- Format + lint every edited file (with the project's own tools); typecheck + related tests before Claude finishes a turn (committed work included); typecheck before a
   coding agent reports back.
 - After a passing gate, one code review by the `frontend-reviewer` agent (Opus; `stopGate.review: false` turns it off).
 - Names the skills that fit each prompt (`skill-suggest`); warns before a `git commit` that has not passed the gate.

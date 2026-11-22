@@ -3,6 +3,25 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.14.1
+- `guard-bash` reads a command the way the shell does (`shell-words.awk`: quotes, line continuations, heredocs,
+  substitutions, keywords, subshells) and follows code handed to another command (`bash -c`, `eval`, `xargs`,
+  `find -exec`, `git rebase -x`, git aliases). Closed: git's abbreviated options (`--forc`, `reset --har`), `checkout -f`,
+  `switch --discard-changes`, cherry-pick / revert / am / pull onto a protected branch, `core.hooksPath` through
+  `git config`, `heads/main` and wildcard refspecs, GraphQL PR creation, `find -delete`, capitals in hosts and file names.
+- Fewer false blocks: a commit message may name a blocked command, `git checkout -b x && git commit` works from main,
+  quoted paths with spaces work with `rm`, reading pull requests through `gh api` is allowed.
+- A push or a recursive delete whose target is a variable is refused (write the name out). So is what can't be checked
+  inside the hook's timeout (a command over 100 KB, a single word over 16 KB): a hook that times out lets it through.
+- `guard-paths` follows links and ignores case (`.ENV`, `.GITHUB/`); `guard-url` ignores a trailing dot and capitals.
+- The Stop gate also checks work committed during the session, changes that only delete files, Arabic file names and a
+  project nested inside its repository. Committing what just passed does not run it again.
+- `post-edit` shows oxlint warnings for route files such as `$id.tsx` and `[id].tsx`.
+- Guard messages don't assume husky; the PR message reads the compare link from the origin remote.
+- Settings templates allow `git rebase` only in its plain forms, because `git rebase -x` runs any command. A project
+  set up earlier keeps its old rule until setup is run again; the guard covers it meanwhile.
+- The repo checks take private names from a git-ignored `.private-names`.
+
 ## 1.14.0
 - Every playground is now a complete app with at least five routes, built by real kit sessions (cost no object): the Next.js and
   TanStack Start dashboards have six areas each; `fresh-next`, `fresh-rr`, `fresh-vite-ts`, `fresh-vite-js`, `classic-jest` and

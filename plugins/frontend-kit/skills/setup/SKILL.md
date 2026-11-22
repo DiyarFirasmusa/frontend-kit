@@ -52,7 +52,7 @@ detected defaults to the first row.
 | Answer | `dashboard` variant | `stack.framework` | What changes |
 | ------ | ------------------- | ----------------- | ------------ |
 | Vite SPA (TanStack Router) | none (the base template) | `Vite` | file routes, `beforeLoad` guards, loaders, generated `routeTree.gen.ts` |
-| TanStack Start (SPA mode) | `tanstack-start` | `TanStack Start` | same router and guards; adds the Start shell, `getRouter()`, `spa.enabled`, SSR-safe module code (`rules/framework.md`) and the MOJ-style folder structure: `src/shared/`, `layout/<shell>/`, flat features, `tabs/` and `steps/` (`rules/structure.md`) |
+| TanStack Start (SPA mode) | `tanstack-start` | `TanStack Start` | same router and guards; adds the Start shell, `getRouter()`, `spa.enabled`, SSR-safe module code (`rules/framework.md`) and the portal folder structure: `src/shared/`, `layout/<shell>/`, flat features, `tabs/` and `steps/` (`rules/structure.md`) |
 | Next.js (App Router) | `next` | `Next.js` | `app/` pages, `proxy.ts` + layout guards, zod over `useSearchParams`, no loaders, `@sentry/nextjs`, and the production-site folder structure: `layouts/`, `modals/`, `wrappers/`, `contexts/`, `config/`, `i18n/`, `api/{client,errors}` (`rules/structure.md`) |
 
 The variant only replaces the router-bound parts; every other dashboard rule and skill (tables, forms, permissions,

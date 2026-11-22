@@ -6,7 +6,7 @@ profile and copies `templates/shared/` + `templates/<profile>/` into the project
 | Profile   | Stack (reference project)                                                                 |
 | --------- | ----------------------------------------------------------------------------------------- |
 | website   | TanStack Start (React 19, TanStack Router file routes + SSR, server functions), TanStack Query, Zustand, Tailwind v4, i18next (Arabic RTL default + English), react-hook-form + zod, Vitest + Testing Library + MSW, Playwright + axe, oxlint + oxfmt, npm |
-| dashboard | Vite + React 19 SPA (or TanStack Start in SPA mode, or Next.js App Router: `variants/`), TanStack Router (file routes, typed search params), TanStack Query, TanStack Table, Zustand, base-ui / shadcn-style primitives, Tailwind v4, i18next RTL + English, react-hook-form + zod, Sentry, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm (reference: inventory-storage) |
+| dashboard | Vite + React 19 SPA (or TanStack Start in SPA mode, or Next.js App Router: `variants/`), TanStack Router (file routes, typed search params), TanStack Query, TanStack Table, Zustand, base-ui / shadcn-style primitives, Tailwind v4, i18next RTL + English, react-hook-form + zod, Sentry, Vitest + MSW, Playwright + axe, oxlint + oxfmt, npm |
 
 ## Layout
 
@@ -42,8 +42,9 @@ plugins/frontend-kit/
 start, e.g. main) · `{{PROTECTED_BRANCHES}}` (e.g. main, master) · `{{DEV_PORT}}` · `{{E2E_PORT}}` ·
 `{{API_BASE_ENV}}` (e.g. VITE_API_BASE_URL)
 
-Never write a real host, company, person or endpoint into a template. Hassa / inventory-specific domain rules
-(checkout, beIN, Aqsati, warehouses, …) do not belong here — keep the patterns, drop the domain.
+Never write a real host, company, client, project, person or endpoint into the repo, as a reference or as an example
+of what not to write either: the repo is public. Keep the patterns, drop the domain. To have `validate-repo.sh` check
+for the names you must not publish, list them one per line in `.private-names` (git-ignored).
 
 ## frontend-kit.json (read by the hook scripts)
 
@@ -76,6 +77,8 @@ Never write a real host, company, person or endpoint into a template. Hassa / in
 or `refactor`. `srcDirs`: the source folders every gate watches (default `["src"]`). `allowJs`: lifts the TypeScript-only guard.
 `apps[].cwd`: the folder an app's commands run in (a monorepo package); the changed files are passed relative to it. `stack`: what setup detected; rules and `commands` adapt to it. `commands.formatFile` / `commands.lintFile` (the file is
 appended) replace the detected formatter/linter; `commands.typecheck` / `commands.relatedTests` / `commands.allTests` replace the detected ones.
+The Stop gate looks at the uncommitted changes and at what was committed since the session started (or the gate last
+passed), leaving out what is already on `origin/<defaultBranch>`.
 `stopGate.tests`: `related` (default, only tests related to changed files) or `all` (runs `commands.allTests`).
 `stopGate.review: false` turns off the end-of-turn code review by the `frontend-reviewer` agent (Opus).
 `hooks.skillSuggest: false` turns off the per-prompt skill suggestions.

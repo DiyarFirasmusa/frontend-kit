@@ -132,12 +132,32 @@ KIT_PROTECTED_BRANCHES="$(kit_list '.protectedBranches' | paste -sd'/' -)"
 KIT_PROTECTED_BRANCHES="${KIT_PROTECTED_BRANCHES:-main/master}"
 KIT_LIVE_HOSTS="$(kit_list '.liveHosts' | paste -sd',' - | sed 's/,/, /g')"
 
-# The compare link printed instead of opening a PR.
-kit_compare_link() {
+# owner/name on GitHub: githubRepo from the config, else read from the origin remote (no credentials kept).
+kit_github_repo() {
   if [ -n "$KIT_GITHUB_REPO" ]; then
-    printf 'https://github.com/%s/compare/%s...<branch>?expand=1' "$KIT_GITHUB_REPO" "$KIT_DEFAULT_BRANCH"
+    printf '%s' "$KIT_GITHUB_REPO"
+    return 0
+  fi
+  git -C "$HOOK_ROOT" remote get-url origin 2>/dev/null </dev/null |
+    sed -nE 's#^(.*[/@])?github\.com[:/]([^/]+/[^/]+)/*$#\2#p' | sed -E 's#\.git$##'
+}
+
+# The compare link printed instead of opening a PR; empty when the repository isn't known.
+kit_compare_link() {
+  local repo
+  repo="$(kit_github_repo)"
+  [ -n "$repo" ] && printf 'https://github.com/%s/compare/%s...<branch>?expand=1' "$repo" "$KIT_DEFAULT_BRANCH"
+  return 0
+}
+
+# The sentence that goes with a refused PR.
+kit_compare_hint() {
+  local link
+  link="$(kit_compare_link)"
+  if [ -n "$link" ]; then
+    printf 'Print the compare link instead: %s' "$link"
   else
-    printf 'the GitHub compare link for the branch'
+    printf 'Push the branch and give the user its compare link (githubRepo is not set in .claude/frontend-kit.json).'
   fi
 }
 
@@ -200,31 +220,55 @@ hook_normalise_path() {
   printf '%s' "${out:-/}"
 }
 
-# A fingerprint of every uncommitted change under src/ (tracked diff + untracked files).
-# Equal fingerprints mean nothing in src/ changed between two moments.
-hook_src_fingerprint() {
-  local dirs
-  dirs="$(printf '%s\n' "$KIT_SRC_DIRS" | tr '\n' ' ')"
+# --- What changed under the source folders ----------------------------------------------------------
+# Names come NUL-separated from git: otherwise Arabic and other non-ASCII names arrive quoted and escaped.
+# They are relative to the project, which can be a folder inside its repository.
+
+KIT_SRC_PATHS=()
+while IFS= read -r dir; do
+  [ -n "$dir" ] && KIT_SRC_PATHS+=("$dir")
+done <<<"$KIT_SRC_DIRS"
+
+# Uncommitted changes (tracked edits and deletions + untracked), one project-relative path per line.
+hook_changed_src_files() {
   {
-    # shellcheck disable=SC2086
-    git -C "$HOOK_ROOT" diff HEAD -- $dirs 2>/dev/null
-    # shellcheck disable=SC2086
-    git -C "$HOOK_ROOT" ls-files --others --exclude-standard -z -- $dirs 2>/dev/null |
-      while IFS= read -r -d '' file; do
-        printf '%s\n' "$file"
-        cat "$HOOK_ROOT/$file" 2>/dev/null
-      done
-  } | shasum | cut -c1-16
+    if git -C "$HOOK_ROOT" rev-parse -q --verify HEAD >/dev/null 2>&1; then
+      git -C "$HOOK_ROOT" diff -z --name-only --relative --no-renames HEAD -- "${KIT_SRC_PATHS[@]}" 2>/dev/null
+    else
+      git -C "$HOOK_ROOT" ls-files -z --cached -- "${KIT_SRC_PATHS[@]}" 2>/dev/null # no commit yet
+    fi
+    git -C "$HOOK_ROOT" ls-files -z --others --exclude-standard -- "${KIT_SRC_PATHS[@]}" 2>/dev/null
+  } | tr '\0' '\n' | sed '/^$/d' | sort -u
 }
 
-# Changed src/ files (tracked edits + untracked), one project-relative path per line.
-hook_changed_src_files() {
-  local dirs
-  dirs="$(printf '%s\n' "$KIT_SRC_DIRS" | tr '\n' ' ')"
-  {
-    # shellcheck disable=SC2086
-    git -C "$HOOK_ROOT" diff --name-only --diff-filter=ACMR HEAD -- $dirs 2>/dev/null
-    # shellcheck disable=SC2086
-    git -C "$HOOK_ROOT" ls-files --others --exclude-standard -- $dirs 2>/dev/null
-  } | sort -u
+# hook_committed_src_files <since commit> <since epoch seconds> → the files of the commits made after both,
+# leaving out what is already on origin/<defaultBranch> (a pull or a sync is not this session's work).
+hook_committed_src_files() {
+  local since="$1" epoch="$2" range=(HEAD) main="refs/remotes/origin/$KIT_DEFAULT_BRANCH"
+  case "$epoch" in '' | *[!0-9]*) return 0 ;; esac
+  git -C "$HOOK_ROOT" rev-parse -q --verify HEAD >/dev/null 2>&1 || return 0
+  if [ -n "$since" ] && git -C "$HOOK_ROOT" rev-parse -q --verify "$since^{commit}" >/dev/null 2>&1; then range+=("^$since"); fi
+  if git -C "$HOOK_ROOT" rev-parse -q --verify "$main" >/dev/null 2>&1; then range+=("^$main"); fi
+  git -C "$HOOK_ROOT" log -z --format= --name-only --relative --no-renames --since="@$epoch" \
+    "${range[@]}" -- "${KIT_SRC_PATHS[@]}" 2>/dev/null | tr '\0' '\n' | sed '/^$/d' | sort -u
+}
+
+hook_hash() {
+  if command -v shasum >/dev/null 2>&1; then shasum; else sha1sum; fi | cut -c1-16
+}
+
+# A fingerprint of the content of the listed files (stdin, one path per line). It doesn't change when the same
+# content gets committed. A deleted file counts as "deleted".
+hook_files_fingerprint() {
+  local file
+  while IFS= read -r file; do
+    [ -n "$file" ] || continue
+    printf '\n>> %s\n' "$file"
+    if [ -f "$HOOK_ROOT/$file" ]; then cat "$HOOK_ROOT/$file" 2>/dev/null; else printf '(deleted)'; fi
+  done | hook_hash
+}
+
+# The fingerprint of every uncommitted change under the source folders.
+hook_src_fingerprint() {
+  hook_changed_src_files | hook_files_fingerprint
 }

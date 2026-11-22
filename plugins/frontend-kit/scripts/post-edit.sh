@@ -64,7 +64,8 @@ $(printf '%s\n' "$LINT" | grep -vE '^\s*$' | tail -n 30)"
       # An ancestor .gitignore that ignores the whole project (nested apps, playgrounds) makes oxlint find no
       # file to lint: that is "nothing checked", not a failure.
       printf '%s' "$LINT" | grep -q 'No files found to lint' && LINT_STATUS=0
-      FINDINGS="$(printf '%s\n' "$LINT" | grep -E "^$REL:[0-9]+:[0-9]+:" | head -n 30)"
+      # The path is text, not a pattern: $id.tsx and [id].tsx are ordinary route file names.
+      FINDINGS="$(printf '%s\n' "$LINT" | FINDINGS_PREFIX="$REL:" awk 'index($0, ENVIRON["FINDINGS_PREFIX"]) == 1 && substr($0, length(ENVIRON["FINDINGS_PREFIX"]) + 1) ~ /^[0-9]+:[0-9]+:/' | head -n 30)"
       if [ $LINT_STATUS -ne 0 ]; then
         PROBLEMS="oxlint errors in $REL (fix them; don't silence them):
 $FINDINGS"
