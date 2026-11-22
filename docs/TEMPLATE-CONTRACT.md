@@ -75,8 +75,8 @@ for the names you must not publish, list them one per line in `.private-names` (
 }
 ```
 
-`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`); written by setup after the user answers. `mode`: `new`, `existing`
-or `refactor`. `srcDirs`: the source folders every gate watches (default `["src"]`). `allowJs`: lifts the TypeScript-only guard.
+`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`); written by setup after the user answers. `mode` (project modes and task modes: `/frontend-kit:mode list`; setup writes `new`, `existing`,
+`maintenance` or `refactor`). `srcDirs`: the source folders every gate watches (unset, or none of them exists: code in any folder). `allowJs`: lifts the TypeScript-only guard.
 `apps[].cwd`: the folder an app's commands run in (a monorepo package); the changed files are passed relative to it. `stack`: what setup detected; rules and `commands` adapt to it. `commands.formatFile` / `commands.lintFile` (the file is
 appended) replace the detected formatter/linter; `commands.typecheck` / `commands.relatedTests` / `commands.allTests` replace the detected ones.
 The Stop gate looks at the uncommitted changes and at what was committed since the session started (or the gate last
