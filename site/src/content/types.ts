@@ -34,18 +34,16 @@ export interface SceneCopy {
 /** The long read under the film: why to use the kit and everything it holds. */
 export interface Details {
   why: {
-    title: string
-    lead: string
     without: string
     with: string
     pairs: [without: string, withKit: string][]
     fit: { title: string; items: string[] }
     skip: { title: string; items: string[] }
   }
-  features: { title: string; lead: string; groups: { title: string; items: [name: string, text: string][] }[] }
-  rules: { title: string; lead: (facts: Facts) => string; groups: Record<string, string> }
-  session: { title: string; lead: string; events: Record<HookEvent, [name: string, text: string, short: string]> }
-  refactor: { title: string; lead: string; steps: [command: string, text: string][]; note: string }
+  features: { groups: { title: string; items: [name: string, text: string][] }[] }
+  rules: { groups: Record<string, string> }
+  session: { events: Record<HookEvent, [name: string, text: string, short: string]> }
+  refactor: { steps: [command: string, text: string][]; note: string }
   answers: { title: string; items: [question: string, answer: string][] }
 }
 
@@ -56,7 +54,6 @@ export interface Copy {
     skip: string
     sections: string
     menu: string
-    nav: { why: string; how: string; projects: string; skills: string; agents: string; checks: string; guards: string; details: string }
     install: string
     switchLanguage: string
     pause: string
@@ -66,7 +63,6 @@ export interface Copy {
   scenes: Record<SceneId, SceneCopy>
   facts: { skills: string; agents: string; rules: string; events: string }
   box: { title: string; lead: string; contents: (facts: Facts) => [amount: number, label: string][] }
-  projects: { title: string; lead: string; items: { name: string; text: string; stack: string[] }[] }
   gate: {
     title: string
     lead: string
@@ -78,8 +74,6 @@ export interface Copy {
     notes: Record<VerdictId, string>
     after: string
   }
-  parts: { title: string; lead: (facts: Facts) => string; manual: string }
-  crew: { title: string; lead: (facts: Facts) => string }
   install: { title: string; lead: string; steps: string[]; needs: string; copy: string; copied: string; failed: string }
   footer: { source: string; changelog: string; examples: string; notices: string }
 }

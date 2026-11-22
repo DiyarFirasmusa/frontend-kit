@@ -1,0 +1,26 @@
+---
+import { problems } from '../../content/guide/problems.ts'
+import { t } from '../../content/guide/text.ts'
+import { content } from '../../content/index.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from '../guide/Block.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const { answers } = content[locale]
+const trouble = t('When something does not work', 'عندما لا يعمل شيء')
+---
+
+<Block id="answers" title={answers.title}>
+  <div class="questions">
+    {answers.items.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}
+  </div>
+</Block>
+<Block id="problems" title={trouble[locale]}>
+  <div class="questions">
+    {problems.map(([problem, fix]) => <details><summary>{problem[locale]}</summary><p>{fix[locale]}</p></details>)}
+  </div>
+</Block>

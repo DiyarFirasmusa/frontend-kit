@@ -10,7 +10,7 @@ export const PLUGIN_DIR = resolve(process.cwd(), '../plugins/frontend-kit')
 
 const read = (...path: string[]): string => readFileSync(join(PLUGIN_DIR, ...path), 'utf8')
 
-function assertSameNames(kind: string, shipped: string[], described: string[]): void {
+export function assertSameNames(kind: string, shipped: string[], described: string[]): void {
   const missing = shipped.filter((name) => !described.includes(name))
   const stale = described.filter((name) => !shipped.includes(name))
   if (missing.length === 0 && stale.length === 0) return
@@ -19,10 +19,10 @@ function assertSameNames(kind: string, shipped: string[], described: string[]): 
   )
 }
 
-const skillNames = readdirSync(join(PLUGIN_DIR, 'skills'), { withFileTypes: true })
+export const skillNames = readdirSync(join(PLUGIN_DIR, 'skills'), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
-const agentNames = readdirSync(join(PLUGIN_DIR, 'agents'))
+export const agentNames = readdirSync(join(PLUGIN_DIR, 'agents'))
   .filter((file) => file.endsWith('.md'))
   .map((file) => file.replace(/\.md$/, ''))
 

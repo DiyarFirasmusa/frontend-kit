@@ -1,15 +1,13 @@
 ---
-import type { Copy, Details } from '../../content/types.ts'
+import { content } from '../content/index.ts'
+import type { Locale } from '../content/types.ts'
+import { REPO_URL, version } from '../lib/plugin.ts'
 
 interface Props {
-  copy: Copy & Details
+  locale: Locale
 }
 
-import { REPO_URL, version } from '../../lib/plugin.ts'
-import Commands from '../Commands.astro'
-import Chapter from './Chapter.astro'
-
-const { install, footer } = Astro.props.copy
+const { footer } = content[Astro.props.locale]
 const links = [
   [REPO_URL, footer.source],
   [`${REPO_URL}/blob/main/CHANGELOG.md`, footer.changelog],
@@ -17,11 +15,6 @@ const links = [
   [`${REPO_URL}/blob/main/plugins/frontend-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
 ] as const
 ---
-
-<Chapter id="install" title={install.title} lead={install.lead}>
-  <Commands install={install} />
-  <p class="note">{install.needs}</p>
-</Chapter>
 
 <footer class="foot">
   <p dir="ltr">frontend-kit <span>v{version}</span></p>

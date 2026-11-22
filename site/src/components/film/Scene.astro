@@ -1,18 +1,36 @@
 ---
-import type { Scene } from '../../content/scenes.ts'
-import type { Copy, Details, HookEvent } from '../../content/types.ts'
+import { PAGES, type PageId } from '../../content/guide/pages.ts'
+import type { Scene, SceneId } from '../../content/scenes.ts'
+import type { Copy, Details, HookEvent, Locale } from '../../content/types.ts'
 import { facts, hookEvents } from '../../lib/plugin.ts'
-import { asset } from '../../lib/links.ts'
+import { asset, pageUrl } from '../../lib/links.ts'
 import Commands from '../Commands.astro'
 
 interface Props {
   scene: Scene
   copy: Copy & Details
+  locale: Locale
   first: boolean
   last: boolean
 }
 
-const { scene, copy, first, last } = Astro.props
+const { scene, copy, locale, first, last } = Astro.props
+const MORE: Record<SceneId, PageId | undefined> = {
+  intro: 'guide',
+  without: undefined,
+  with: 'guide',
+  how: 'get-started',
+  website: 'project-types',
+  dashboard: 'project-types',
+  both: 'project-types',
+  skills: 'skills',
+  agents: 'agents',
+  rules: 'rules',
+  checks: 'checks',
+  guards: 'checks',
+  install: undefined,
+}
+const more = MORE[scene.id]
 const { title, text, points, steps } = copy.scenes[scene.id]
 const words = (typeof title === 'string' ? title : title(facts)).split(' ')
 const Heading = first ? 'h1' : 'h2'
@@ -72,6 +90,13 @@ const counts = [
             </div>
           ))}
         </dl>
+      )
+    }
+    {
+      more && (
+        <a class="scene-more" data-part href={pageUrl(locale, more)}>
+          {PAGES[more].title[locale]}
+        </a>
       )
     }
     {first && <div data-part><Commands install={copy.install} first /></div>}

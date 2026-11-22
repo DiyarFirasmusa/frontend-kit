@@ -1,14 +1,7 @@
 import type { Census } from '../film/shapes/index.ts'
-import { initCopy } from './copy-button.ts'
 import { required } from './dom.ts'
-import { initGate } from './gate.ts'
 import { hasChoice, saveChoice, showMotion } from './motion.ts'
-import { initNavigation } from './navigation.ts'
 import type { Player } from './player.ts'
-
-initCopy()
-initGate()
-initNavigation()
 
 const RESTORE_WITHIN_MS = 5000
 

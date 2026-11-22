@@ -1,22 +1,23 @@
 ---
 import { scenes } from '../../content/scenes.ts'
-import type { Copy, Details } from '../../content/types.ts'
+import type { Copy, Details, Locale } from '../../content/types.ts'
 import { census } from '../../lib/plugin.ts'
 import Labels from './Labels.astro'
 import Scene from './Scene.astro'
 
 interface Props {
   copy: Copy & Details
+  locale: Locale
 }
 
-const { copy } = Astro.props
+const { copy, locale } = Astro.props
 ---
 
 <div class="film-track" data-film-track>
   <canvas id="film" aria-hidden="true"></canvas>
   <div class="film-shade" aria-hidden="true" data-shade></div>
   <Labels copy={copy} />
-  {scenes.map((scene, i) => <Scene scene={scene} copy={copy} first={i === 0} last={i === scenes.length - 1} />)}
+  {scenes.map((scene, i) => <Scene scene={scene} copy={copy} locale={locale} first={i === 0} last={i === scenes.length - 1} />)}
   <p class="cue" aria-hidden="true" data-cue>{copy.chrome.cue}</p>
   <script type="application/json" id="census" set:html={JSON.stringify(census)} />
 </div>

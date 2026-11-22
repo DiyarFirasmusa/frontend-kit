@@ -1,0 +1,98 @@
+---
+import { agents, skillGroups } from '../content/catalogue.ts'
+import { PAGES, SECTIONS, type PageId } from '../content/guide/pages.ts'
+import { ui } from '../content/guide/ui.ts'
+import type { Locale } from '../content/types.ts'
+import Layout from '../layouts/Layout.astro'
+import { agentUrl, asset, pageUrl, routeUrl, skillUrl } from '../lib/links.ts'
+import type { Route } from '../lib/routes.ts'
+import Header from './Header.astro'
+import SiteFooter from './SiteFooter.astro'
+
+interface Props {
+  locale: Locale
+  route: Exclude<Route, { kind: 'home' }>
+}
+
+const { locale, route } = Astro.props
+const parent: PageId = route.kind === 'page' ? route.id : route.kind === 'skill' ? 'skills' : 'agents'
+const name = route.kind === 'page' ? undefined : route.name
+const info = PAGES[parent]
+const summary =
+  route.kind === 'skill'
+    ? skillGroups.find(({ skills }) => route.name in skills)?.skills[route.name]?.[locale]
+    : route.kind === 'agent'
+      ? agents[route.name]?.[locale]
+      : info.lead[locale]
+const heading = name ?? info.title[locale]
+const label = name ? `${name}: ${info.name[locale]}` : info.name[locale]
+
+// Previous and next within the same kind of page.
+const order = SECTIONS.flatMap((section) => section.pages)
+const names = route.kind === 'skill' ? skillGroups.flatMap((group) => Object.keys(group.skills)) : route.kind === 'agent' ? Object.keys(agents) : order
+const at = names.indexOf(name ?? parent)
+const neighbour = (offset: number) => {
+  const other = names[at + offset]
+  if (other === undefined) return undefined
+  if (route.kind === 'skill') return { href: skillUrl(locale, other), label: other }
+  if (route.kind === 'agent') return { href: agentUrl(locale, other), label: other }
+  return { href: pageUrl(locale, other as PageId), label: PAGES[other as PageId].name[locale] }
+}
+const before = neighbour(-1)
+const after = neighbour(1)
+---
+
+<Layout locale={locale} route={route} title={`${label} | frontend-kit`} description={summary ?? ''}>
+  <Header locale={locale} route={route} />
+  <main id="content" class="doc" tabindex="-1">
+    <header class:list={['banner', { 'banner-small': name }]}>
+      <img src={asset(`stills/${info.still}.jpg`)} width="1000" height="620" alt="" fetchpriority="high" />
+      <div class="banner-copy">
+        <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
+          <a href={routeUrl(locale, { kind: 'home' })}>{ui.home[locale]}</a>
+          {name ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
+        </nav>
+        <h1 class:list={{ 'is-name': name }}>{name ? <bdi>{heading}</bdi> : heading}</h1>
+        <p>{summary}</p>
+      </div>
+    </header>
+    <div class="doc-body">
+      <nav class="side" aria-label={ui.allPages[locale]}>
+        {
+          SECTIONS.map(({ title, pages }) => (
+            <div>
+              <p>{title[locale]}</p>
+              <ul>
+                {pages.map((id) => (
+                  <li>
+                    <a href={pageUrl(locale, id)} aria-current={id === parent ? (name ? 'true' : 'page') : undefined}>
+                      {PAGES[id].name[locale]}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+      <article class="doc-article">
+        <slot />
+        <nav class="pager" aria-label={`${ui.previous[locale]} / ${ui.next[locale]}`}>
+          {before && (
+            <a href={before.href}>
+              <span>{ui.previous[locale]}</span>
+              <bdi>{before.label}</bdi>
+            </a>
+          )}
+          {after && (
+            <a class="pager-next" href={after.href}>
+              <span>{ui.next[locale]}</span>
+              <bdi>{after.label}</bdi>
+            </a>
+          )}
+        </nav>
+      </article>
+    </div>
+  </main>
+  <SiteFooter locale={locale} />
+</Layout>

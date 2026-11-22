@@ -1,0 +1,34 @@
+---
+import { sample, settings } from '../../content/guide/configuration.ts'
+import { t } from '../../content/guide/text.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from '../guide/Block.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const words = {
+  sample: t('An example', 'مثال'),
+  sampleLead: t('A dashboard with the most useful keys. Setup fills the rest.', 'لوحة تحكم بأنفع المفاتيح، ويملأ الإعداد الباقي.'),
+}
+---
+
+<Block id="example" title={words.sample[locale]} lead={words.sampleLead[locale]}>
+  <pre dir="ltr" tabindex="0" role="region" aria-label=".claude/frontend-kit.json"><code>{sample}</code></pre>
+</Block>
+{
+  settings.map(({ title, keys }) => (
+    <Block title={title[locale]}>
+      <dl class="rows">
+        {keys.map(([key, text]) => (
+          <div>
+            <dt><code dir="ltr">{key}</code></dt>
+            <dd>{text[locale]}</dd>
+          </div>
+        ))}
+      </dl>
+    </Block>
+  ))
+}

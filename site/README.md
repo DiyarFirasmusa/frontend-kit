@@ -26,11 +26,27 @@ Canonical links use Vercel's production domain, or `SITE_URL` when it is set (fo
 
 - Counts, version, rule files and hook events are read from `../plugins/frontend-kit` at build time, and the 3D shapes
   are counted from the same numbers (a plate per skill, a guardian per agent, a ring per hook event).
-- The build fails when a skill, agent, hook event or rule group exists in the plugin but has no copy here (or the reverse).
-  Add the sentence in both languages in `src/content/catalogue.ts` or `src/content/*-details.ts`.
+- The build fails when the plugin has a skill, agent, rule file, hook event or example project with no copy here (or the
+  reverse). What to add, in both languages:
+
+  | Added to the plugin | Add here |
+  | ------------------- | -------- |
+  | a skill | one line in `src/content/catalogue.ts`, its page in `src/content/guide/skills/<group>.ts` |
+  | an agent | one line in `src/content/catalogue.ts`, its page in `src/content/guide/agents.ts` |
+  | a rule file | `src/content/guide/rules.ts` (a new folder also needs a name in `src/content/*-details.ts`) |
+  | a hook event | `src/content/*-details.ts` and `src/content/guide/checks.ts` |
+  | an example project | `src/content/guide/examples.ts` |
+
 - Prose claims are written by hand. Review them when the plugin's behaviour changes.
 
-## How the page works
+## The pages
+
+`src/pages/[...path].astro` builds every route in both languages from `src/lib/routes.ts`: the home page, twelve topic
+pages (`src/content/guide/pages.ts` names them, `src/components/pages/` draws them) and one page per skill and per agent.
+A new topic page is an entry in `PAGES`, a place in `SECTIONS` and a component in `BODIES`. Only the home page loads
+Three.js.
+
+## How the home page works
 
 The page is complete as plain HTML: each scene is copy beside a still frame, then the detail chapters. When the device
 can play it, the same markup becomes a film pinned to the scroll (`html.film`).
@@ -47,7 +63,7 @@ film is still unusable it returns to the still page. The pause button switches b
 | `src/film/direction.ts` | camera shots, light and how blocks fly |
 | `src/film/render/` | the instanced mesh, set, camera and lens |
 | `src/client/player.ts` | maps scroll to the film; `film-copy.ts` and `film-labels.ts` move the words |
-| `src/components/film/`, `src/components/details/` | the scenes, and the chapters under them |
+| `src/components/film/`, `src/components/details/` | the scenes, and the plain-words chapters under them |
 
 `public/stills/<shape>.jpg` (1000 x 620) and `public/og.jpg` (1200 x 630) are screenshots of the film. Take them again
 after changing a shape, shot or grade.

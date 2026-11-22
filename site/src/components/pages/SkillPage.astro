@@ -1,0 +1,44 @@
+---
+import { skillGroups } from '../../content/catalogue.ts'
+import { projects } from '../../content/guide/projects.ts'
+import { skillGuides } from '../../content/guide/skills/index.ts'
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import { skillUrl } from '../../lib/links.ts'
+import { manualSkills, REPO_URL } from '../../lib/plugin.ts'
+import { profilesOf } from '../../lib/plugin-details.ts'
+import Block from '../guide/Block.astro'
+import SkillBody from '../guide/SkillBody.astro'
+
+interface Props {
+  name: string
+  locale: Locale
+}
+
+const { name, locale } = Astro.props
+const on = profilesOf(name)
+const group = skillGroups.find(({ skills }) => name in skills)!
+const types = on.length === projects.length ? ui.everyType[locale] : projects.filter(({ id }) => on.includes(id)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
+---
+
+<dl class="glance">
+  <div><dt>{ui.group[locale]}</dt><dd>{group.title[locale]}</dd></div>
+  <div><dt>{ui.starts[locale]}</dt><dd>{(manualSkills.has(name) ? ui.manual : ui.auto)[locale]}</dd></div>
+  <div><dt>{ui.worksIn[locale]}</dt><dd>{types}</dd></div>
+</dl>
+
+<SkillBody name={name} locale={locale} />
+
+<Block id="related" title={ui.related[locale]}>
+  <ul class="cards">
+    {skillGuides[name]!.related.map((other) => (
+      <li>
+        <a class="card" href={skillUrl(locale, other)}>
+          <strong><bdi>{other}</bdi></strong>
+          <span>{skillGroups.find(({ skills }) => other in skills)?.skills[other]?.[locale]}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <a class="source" href={`${REPO_URL}/blob/main/plugins/frontend-kit/skills/${name}/SKILL.md`}>{ui.source[locale]}</a>
+</Block>

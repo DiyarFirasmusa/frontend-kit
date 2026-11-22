@@ -1,0 +1,51 @@
+---
+import type { PageId } from '../../content/guide/pages.ts'
+import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
+import { content } from '../../content/index.ts'
+import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
+import { facts } from '../../lib/plugin.ts'
+import Block from '../guide/Block.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const { features, box } = content[locale]
+// In the order of the feature groups.
+const DETAIL: (PageId | undefined)[] = ['get-started', 'rules', 'checks', 'checks', 'rules', undefined, 'project-types', 'configuration']
+const tools = t('The tool servers', 'خوادم الأدوات')
+const servers = [
+  ['Chrome DevTools', t('Opens pages, reads the console and requests, takes screenshots and records performance.', 'يفتح الصفحات ويقرأ الأخطاء والطلبات ويلتقط الشاشة ويسجّل الأداء.')],
+  ['Playwright', t('Drives a browser through your flows.', 'يقود متصفحاً عبر مسارات تطبيقك.')],
+  ['Context7', t('Fetches current documentation of libraries. An API key is optional.', 'يجلب التوثيق الحديث للمكتبات، ومفتاح الـ API اختياري.')],
+] as const
+---
+
+<Block id="inventory" title={box.title}>
+  <dl class="inventory">{box.contents(facts).map(([amount, label]) => <div><dt>{amount}</dt><dd>{label}</dd></div>)}</dl>
+</Block>
+{
+  features.groups.map((group, i) => (
+    <Block title={group.title}>
+      <dl class="rows">
+        {group.items.map(([name, text]) => (
+          <div>
+            <dt>{name}</dt>
+            <dd>{text}</dd>
+          </div>
+        ))}
+      </dl>
+      {DETAIL[i] && (
+        <a class="source" href={pageUrl(locale, DETAIL[i])}>
+          {ui.learnMore[locale]}
+        </a>
+      )}
+    </Block>
+  ))
+}
+<Block id="tools" title={tools[locale]}>
+  <dl class="rows">{servers.map(([name, text]) => <div><dt><bdi>{name}</bdi></dt><dd>{text[locale]}</dd></div>)}</dl>
+</Block>

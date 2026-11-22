@@ -1,0 +1,14 @@
+---
+import { journey } from '../../content/guide/concepts.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<ol class="journey">
+  {journey.map(({ who, what }) => <li><strong>{who[locale]}</strong><p>{what[locale]}</p></li>)}
+</ol>

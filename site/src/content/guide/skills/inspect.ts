@@ -1,0 +1,130 @@
+import { t } from '../text.ts'
+import type { SkillGuide } from './types.ts'
+
+export const inspect: Record<string, SkillGuide> = {
+  verify: {
+    plain: t('All the checks of the project in one go, with the real numbers.', 'كل فحوص المشروع دفعة واحدة، بالأرقام الحقيقية.'),
+    ask: [t('run all checks', 'شغّل كل الفحوص'), t('is it working? verify before we commit', 'هل يعمل؟ تحقق قبل الحفظ')],
+    steps: [
+      t('Typecheck, lint and format.', 'فحص الأنواع والمدقّق والتنسيق.'),
+      t('Unit tests, and translations when they changed.', 'اختبارات الوحدة، والترجمة إن تغيّرت.'),
+      t('End-to-end when a flow changed, then the build.', 'الاختبار الشامل إن تغيّر مسار، ثم البناء.'),
+      t('Stops at a failure, fixes the cause and runs again.', 'يتوقف عند الفشل ويصلح السبب ويعيد.'),
+    ],
+    result: [t('A table of real results', 'جدول بالنتائج الحقيقية'), t('A record the commit check reads', 'سجل يقرؤه فحص الحفظ')],
+    limits: [t('A missing script is reported, never counted as passed.', 'الأمر الناقص يُذكر ولا يُحسب ناجحاً.')],
+    related: ['review', 'commit-push'],
+  },
+  review: {
+    plain: t('A second reader for your branch. It asks two questions: is it good code, and is it what was asked?', 'قارئ ثانٍ لفرعك يسأل سؤالين: هل الشيفرة جيدة، وهل هي المطلوب؟'),
+    ask: [t('review the code before commit', 'راجع الشيفرة قبل الحفظ'), t('review with a separate agent against this ticket', 'راجع بوكيل منفصل مقابل هذه التذكرة')],
+    steps: [
+      t('Pins the exact changes of the branch.', 'يحدد تغييرات الفرع بدقة.'),
+      t('Finds the request or ticket.', 'يجد الطلب أو التذكرة.'),
+      t('Runs two fresh reviewers: standards, and request.', 'يشغّل مراجعَين بعين جديدة: للمعايير وللطلب.'),
+      t('Reports both apart and asks whether to fix.', 'يعرض التقريرين منفصلين ويسأل عن الإصلاح.'),
+    ],
+    result: [t('Findings with file, line and rule', 'ملاحظات بالملف والسطر والقاعدة')],
+    limits: [t('Never edits, stages or commits.', 'لا يعدّل ولا يحفظ.')],
+    related: ['verify', 'vercel-react-best-practices'],
+  },
+  'live-check': {
+    plain: t('Claude uses your app in a real browser, like a person, on local or test servers.', 'يستعمل Claude تطبيقك في متصفح حقيقي كإنسان، على خادم محلي أو تجريبي.'),
+    ask: [t('check it in Chrome as a real user', 'افحصه في Chrome كمستخدم حقيقي'), t('live check the OTP flow', 'افحص مسار رمز التحقق في المتصفح')],
+    steps: [
+      t('Opens the local or test app.', 'يفتح التطبيق المحلي أو التجريبي.'),
+      t('Asks you to sign in when needed.', 'يطلب منك الدخول عند الحاجة.'),
+      t('Walks the flow in both languages, sizes and themes.', 'يمرّ بالمسار باللغتين والمقاسين والمظهرين.'),
+      t('Reports steps, console errors and failed requests.', 'يذكر الخطوات وأخطاء المتصفح والطلبات الفاشلة.'),
+    ],
+    result: [t('Pass or fail per step, with screenshots', 'نجاح أو فشل لكل خطوة مع لقطات')],
+    limits: [t('Never types your password or tests on the live site.', 'لا يكتب كلمة مرورك ولا يختبر على الموقع الحي.')],
+    related: ['dev', 'figma-match'],
+    needs: t('A browser tool: Claude in Chrome or the bundled Chrome DevTools server.', 'أداة متصفح: Claude in Chrome أو خادم Chrome DevTools المرفق.'),
+  },
+  performance: {
+    plain: t('Makes the app faster on mid-range phones and slow networks, by measuring first.', 'يسرّع التطبيق على الهواتف المتوسطة والشبكات البطيئة، بالقياس أولاً.'),
+    ask: [t('this page is slow on phones', 'هذه الصفحة بطيئة على الهواتف'), t('fix the layout shift and improve Lighthouse', 'أصلح قفز التخطيط وحسّن Lighthouse')],
+    steps: [
+      t('Measures against a budget: LCP under 2.5 s, INP under 200 ms, CLS under 0.1.', 'يقيس مقابل حدود: LCP أقل من 2.5 ثانية وINP أقل من 200ms وCLS أقل من 0.1.'),
+      t('Fixes only what the numbers point at: loading, images, fonts, data or rendering.', 'يصلح ما تشير إليه الأرقام فقط: التحميل أو الصور أو الخطوط أو البيانات أو الرسم.'),
+      t('Measures again.', 'يقيس مجدداً.'),
+    ],
+    result: [t('Before and after numbers for each change', 'أرقام قبل وبعد لكل تغيير')],
+    limits: [t('Never load-tests the live site.', 'لا يختبر الضغط على الموقع الحي.')],
+    related: ['vercel-react-best-practices', 'web-seo-page'],
+  },
+  'playwright-best-practices': {
+    plain: t('A reference library for end-to-end tests that do not fail at random.', 'مكتبة مرجعية لاختبارات شاملة لا تفشل عشوائياً.'),
+    ask: [t('write a Playwright test for checkout', 'اكتب اختبار Playwright للدفع'), t('this e2e test is flaky', 'هذا الاختبار الشامل متذبذب')],
+    steps: [
+      t('Opens the guide for the job: writing, debugging, mocking, auth or CI.', 'يفتح دليل العمل المطلوب: كتابة أو تصحيح أو محاكاة أو دخول أو CI.'),
+      t('Uses stable locators and waits.', 'يستعمل محددات وانتظاراً مستقرين.'),
+      t('Runs the test to prove it.', 'يشغّل الاختبار لإثباته.'),
+    ],
+    result: [t('Stable end-to-end tests', 'اختبارات شاملة مستقرة')],
+    limits: [t('A third-party reference. Your project’s testing rule wins.', 'مرجع من طرف آخر، وقاعدة الاختبار في مشروعك هي الأولى.')],
+    related: ['verify'],
+  },
+  'i18n-conventions': {
+    plain: t('Keeps Arabic and English translations complete and in one shape.', 'يُبقي ترجمات العربية والإنجليزية كاملة وبشكل واحد.'),
+    ask: [t('add the translation keys for this page', 'أضف مفاتيح ترجمة هذه الصفحة'), t('translate the new button', 'ترجم الزر الجديد')],
+    steps: [
+      t('Uses keys of exactly two levels, such as orders.emptyTitle.', 'يستعمل مفاتيح بمستويين تماماً مثل orders.emptyTitle.'),
+      t('Writes both languages together, with correct plurals.', 'يكتب اللغتين معاً بصيغ جمع صحيحة.'),
+      t('Puts each key in one bundle.', 'يضع كل مفتاح في حزمة واحدة.'),
+      t('Runs the validator.', 'يشغّل المدقّق.'),
+    ],
+    result: [t('Matching locale files', 'ملفات ترجمة متطابقة')],
+    limits: [t('No dynamic keys and no glued sentence pieces.', 'لا مفاتيح متغيرة ولا جمل ملصقة من قطع.')],
+    related: ['create-form', 'create-component'],
+  },
+  'tanstack-query-key-conventions': {
+    plain: t('A query key is the name of cached data. One factory makes every name, so refreshing never misses a screen.', 'مفتاح الاستعلام اسم البيانات المخزنة. مصنع واحد يصنع كل الأسماء، فلا يفوت التحديث شاشة.'),
+    ask: [t('add a query for the order list', 'أضف استعلاماً لقائمة الطلبات'), t('the list does not refresh after edit', 'القائمة لا تتحدث بعد التعديل')],
+    steps: [
+      t('Adds the key to the project’s one factory.', 'يضيف المفتاح إلى مصنع المشروع.'),
+      t('Groups it under its domain.', 'يجمعه تحت مجاله.'),
+      t('Invalidates the whole family after a change.', 'يحدّث العائلة كلها بعد التغيير.'),
+    ],
+    result: [t('Predictable caching', 'تخزين مؤقت يمكن توقعه')],
+    limits: [t('No inline key arrays anywhere else.', 'لا مفاتيح مكتوبة في مكان آخر.')],
+    related: ['create-hook', 'dash-create-table'],
+  },
+  'typescript-advanced-types': {
+    plain: t('A reference for hard type problems.', 'مرجع لمسائل الأنواع الصعبة.'),
+    ask: [t('make this API client type-safe with generics', 'اجعل عميل الـ API مضبوط الأنواع بالـ generics'), t('write a mapped type for these keys', 'اكتب نوعاً محوّلاً لهذه المفاتيح')],
+    steps: [
+      t('Picks the tool: generics, conditional, mapped or template types.', 'يختار الأداة: عامة أو شرطية أو محوّلة أو قوالب.'),
+      t('Writes the type and tests it.', 'يكتب النوع ويختبره.'),
+      t('Watches compile speed.', 'يراقب سرعة الترجمة البرمجية.'),
+    ],
+    result: [t('Types that catch mistakes early', 'أنواع تكشف الأخطاء مبكراً')],
+    limits: [t('A third-party reference. The kit’s no-any rule still holds.', 'مرجع من طرف آخر، وقاعدة منع any تبقى سارية.')],
+    related: ['refactor'],
+  },
+  'vercel-react-best-practices': {
+    plain: t('React performance rules from Vercel Engineering, for audits and reviews.', 'قواعد أداء React من مهندسي Vercel، للتدقيق والمراجعة.'),
+    ask: [t('audit this component for re-renders', 'دقّق إعادة الرسم في هذا المكوّن'), t('reduce the bundle with React best practices', 'قلّل الحزمة بأفضل ممارسات React')],
+    steps: [
+      t('Looks for waterfalls and bundle weight first.', 'يبحث أولاً عن شلالات الطلبات وثقل الحزمة.'),
+      t('Then data, re-renders and rendering.', 'ثم البيانات وإعادة الرسم.'),
+      t('Reports by impact.', 'يرتب التقرير حسب الأثر.'),
+    ],
+    result: [t('Findings ranked by impact', 'ملاحظات مرتبة حسب الأثر')],
+    limits: [t('Not for everyday component work. The project’s rules win.', 'ليس لعمل المكوّنات اليومي، وقواعد المشروع هي الأولى.')],
+    related: ['performance', 'review'],
+  },
+  'web-design-guidelines': {
+    plain: t('Audits interface files against Vercel’s Web Interface Guidelines.', 'يدقّق ملفات الواجهة وفق إرشادات Vercel لواجهات الويب.'),
+    ask: [t('audit the design of src/features/cart', 'دقّق تصميم src/features/cart'), t('check my UI against guidelines', 'افحص واجهتي وفق الإرشادات')],
+    steps: [
+      t('Downloads the latest guidelines.', 'يجلب أحدث الإرشادات.'),
+      t('Reads the files you named.', 'يقرأ الملفات التي سمّيتها.'),
+      t('Checks them and your project rules.', 'يفحصها مع قواعد مشروعك.'),
+    ],
+    result: [t('Violations as file and line', 'المخالفات بالملف والسطر')],
+    limits: [t('Needs the internet for the guidelines. Use accessibility-auditor for an accessibility audit.', 'يحتاج الإنترنت لجلب الإرشادات. ولتدقيق الوصول استعمل accessibility-auditor.')],
+    related: ['ui-ux-pro-max', 'review'],
+  },
+}

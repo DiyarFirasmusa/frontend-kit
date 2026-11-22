@@ -1,7 +1,8 @@
 import { all, required } from './dom.ts'
 
 export function initGate(): void {
-  const demo = required<HTMLElement>('[data-gate]')
+  const demo = document.querySelector<HTMLElement>('[data-gate]')
+  if (!demo) return
   const output = required<HTMLElement>('[data-output]', demo)
   const buttons = all<HTMLButtonElement>('[data-verdict]', demo)
 

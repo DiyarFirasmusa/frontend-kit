@@ -2,6 +2,7 @@
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
 import Layout from '../layouts/Layout.astro'
+import type { Route } from '../lib/routes.ts'
 import Details from './details/Details.astro'
 import FilmTrack from './film/FilmTrack.astro'
 import Header from './Header.astro'
@@ -12,12 +13,16 @@ interface Props {
 
 const { locale } = Astro.props
 const copy = content[locale]
+const route: Route = { kind: 'home' }
 ---
 
-<Layout locale={locale}>
-  <Header locale={locale} />
+<Layout locale={locale} route={route} title={copy.meta.title} description={copy.meta.description}>
+  <Header locale={locale} route={route} />
   <main id="content" tabindex="-1">
-    <FilmTrack copy={copy} />
+    <FilmTrack copy={copy} locale={locale} />
     <Details copy={copy} locale={locale} />
   </main>
+  <script>
+    import '../client/home.ts'
+  </script>
 </Layout>

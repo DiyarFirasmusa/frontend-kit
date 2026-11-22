@@ -1,0 +1,45 @@
+---
+import { t } from '../../content/guide/text.ts'
+import { content } from '../../content/index.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from '../guide/Block.astro'
+import Concepts from '../guide/Concepts.astro'
+import Journey from '../guide/Journey.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const { why } = content[locale]
+const words = {
+  problem: t('The problem', 'المشكلة'),
+  problemText: t(
+    'Claude Code can write React very fast. But it does not know your team: where files go, which components exist, what finished means, what must never be touched. So it guesses, and each session guesses differently.',
+    'يكتب Claude Code بـ React بسرعة كبيرة، لكنه لا يعرف فريقك: أين تُوضع الملفات، وأي المكوّنات موجودة، ومتى ينتهي العمل، وما الذي لا يُمسّ. فيخمّن، وكل جلسة تخمّن بشكل مختلف.',
+  ),
+  answer: t('What the kit does about it', 'ماذا تفعل العدّة'),
+  answerText: t(
+    'It gives Claude three things: the knowledge of how to do each job, a team to check the work, and automatic checkpoints it cannot forget. You keep working in plain sentences.',
+    'تمنح Claude ثلاثة أشياء: معرفة طريقة كل عمل، وفريقاً يفحص العمل، ونقاط تفتيش آلية لا ينساها. وأنت تواصل العمل بجمل عادية.',
+  ),
+  parts: t('The six words you need', 'الكلمات الست التي تحتاجها'),
+  partsLead: t('Everything in the kit is one of these. Open any of them for the detail.', 'كل ما في العدّة واحد من هذه، وافتح أياً منها للتفاصيل.'),
+  journey: t('One request, start to finish', 'طلب واحد من البداية إلى النهاية'),
+  journeyLead: t('This is what happens in a dashboard project when you type one sentence.', 'هذا ما يحدث في مشروع لوحة تحكم عندما تكتب جملة واحدة.'),
+  compare: t('With and without it', 'بها ومن دونها'),
+}
+---
+
+<Block id="problem" title={words.problem[locale]}><p class="big">{words.problemText[locale]}</p></Block>
+<Block id="answer" title={words.answer[locale]}><p class="big">{words.answerText[locale]}</p></Block>
+<Block id="words" title={words.parts[locale]} lead={words.partsLead[locale]}><Concepts locale={locale} /></Block>
+<Block id="journey" title={words.journey[locale]} lead={words.journeyLead[locale]}><Journey locale={locale} /></Block>
+<Block id="compare" title={words.compare[locale]}>
+  <table class="compare">
+    <thead><tr><th scope="col">{why.without}</th><th scope="col">{why.with}</th></tr></thead>
+    <tbody>{why.pairs.map(([without, withKit]) => <tr><td>{without}</td><td>{withKit}</td></tr>)}</tbody>
+  </table>
+</Block>
+<Block id="fit" title={why.fit.title}><ul class="ticks">{why.fit.items.map((item) => <li>{item}</li>)}</ul></Block>
+<Block id="skip" title={why.skip.title}><ul class="crosses">{why.skip.items.map((item) => <li>{item}</li>)}</ul></Block>

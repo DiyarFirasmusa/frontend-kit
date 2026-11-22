@@ -1,0 +1,31 @@
+---
+import { PAGES, SECTIONS } from '../../content/guide/pages.ts'
+import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<div class="page-index">
+  {
+    SECTIONS.map(({ title, pages }) => (
+      <div>
+        <h3>{title[locale]}</h3>
+        <ul>
+          {pages.map((id) => (
+            <li>
+              <a href={pageUrl(locale, id)}>
+                <strong>{PAGES[id].name[locale]}</strong>
+                <span>{PAGES[id].lead[locale]}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>

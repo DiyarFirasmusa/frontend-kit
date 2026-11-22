@@ -1,0 +1,50 @@
+---
+import { exampleProjects, recipes } from '../../content/guide/examples.ts'
+import { skillGuides } from '../../content/guide/skills/index.ts'
+import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import { skillUrl } from '../../lib/links.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import Block from '../guide/Block.astro'
+import Journey from '../guide/Journey.astro'
+import Prompt from '../guide/Prompt.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const words = {
+  full: t('A whole example', 'مثال كامل'),
+  projects: t('Example projects', 'مشاريع أمثلة'),
+  projectsLead: t('Small projects that show what setup produces on different stacks.', 'مشاريع صغيرة تُظهر ما ينتجه الإعداد على تقنيات مختلفة.'),
+}
+---
+
+{
+  recipes.map(({ title, items }) => (
+    <Block title={title[locale]}>
+      <ul class="recipes">
+        {items.map(({ want, skills }) => (
+          <li>
+            <h3>{want[locale]}</h3>
+            <Prompt text={skillGuides[skills[0]!]!.ask[0]![locale]} />
+            <p>
+              <span>{ui.use[locale]}</span>
+              {skills.map((name) => <a href={skillUrl(locale, name)}><bdi>{name}</bdi></a>)}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </Block>
+  ))
+}
+<Block id="full" title={words.full[locale]}><Journey locale={locale} /></Block>
+<Block id="projects" title={words.projects[locale]} lead={words.projectsLead[locale]}>
+  <dl class="rows">
+    {Object.entries(exampleProjects).map(([name, text]) => (
+      <div><dt><a href={`${REPO_URL}/tree/main/examples/${name}`}><bdi>{name}</bdi></a></dt><dd>{text[locale]}</dd></div>
+    ))}
+  </dl>
+</Block>

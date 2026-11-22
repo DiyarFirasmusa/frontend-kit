@@ -11,16 +11,6 @@ export const en: Copy = {
     skip: 'Skip to content',
     sections: 'Sections',
     menu: 'Menu',
-    nav: {
-      why: 'Why',
-      how: 'How it works',
-      projects: 'Project types',
-      skills: 'Skills',
-      agents: 'Agents',
-      checks: 'Checks',
-      guards: 'Guards',
-      details: 'All details',
-    },
     install: 'Install',
     switchLanguage: 'العربية',
     pause: 'Pause motion',
@@ -68,16 +58,16 @@ export const en: Copy = {
       text: 'A site and its admin in one project, or your existing stack, detected and adapted to.',
     },
     skills: {
-      title: ({ skills }) => `${skills} skills, ready by name.`,
-      text: 'From one component to a whole feature. Claude picks the one that fits.',
+      title: ({ skills }) => `${skills} skills, a playbook for each job.`,
+      text: 'A skill is a set of written steps for one job. Say “add a table”, and Claude follows the table skill.',
     },
     agents: {
       title: ({ agents }) => `${agents} agents behind every change.`,
-      text: 'They plan, build, test, review and audit. Each has one job.',
+      text: 'An agent is a second Claude with one role and fresh eyes: it plans, builds, tests, reviews or audits.',
     },
     rules: {
       title: ({ rules }) => `${rules} rules, loaded where they matter.`,
-      text: 'Editing a form loads the forms rules. Nothing else gets in the way.',
+      text: 'A rule is a standard saved in your repo. Editing a form loads the forms rule.',
     },
     checks: { title: 'Watched from first prompt to last check.' },
     guards: {
@@ -104,28 +94,6 @@ export const en: Copy = {
       [examples, 'example projects to read'],
     ],
   },
-  projects: {
-    title: 'Four project types.',
-    lead: 'Setup asks which one you are building, then installs only what belongs to it.',
-    items: [
-      { name: 'Website', text: 'Public pages rendered on the server, with loaders, SEO, share previews and server functions.', stack: ['TanStack Start'] },
-      {
-        name: 'Dashboard',
-        text: 'Tables, forms, filters and permissions, with a folder map for each framework you can pick.',
-        stack: ['Vite + TanStack Router', 'TanStack Start SPA', 'Next.js'],
-      },
-      {
-        name: 'Any React app',
-        text: 'Setup reads the project and adapts rules, commands and permissions to the stack it finds.',
-        stack: ['Next.js', 'React Router', 'Remix', 'Expo web'],
-      },
-      {
-        name: 'Site + admin',
-        text: 'A public site and its admin in one tree. Each keeps its own rules, skills and checks.',
-        stack: ['TanStack Start'],
-      },
-    ],
-  },
   gate: {
     title: 'Try the guard yourself.',
     lead: 'Pick a command and send it as Claude. Each answer is the real output of the hook in the plugin. It catches known patterns and is not a sandbox.',
@@ -144,15 +112,6 @@ export const en: Copy = {
       typecheck: 'Ordinary work goes straight through.',
     },
     after: 'When Claude stops after changing source, committed or not, typecheck and related tests run. Then a reviewer agent reads the change.',
-  },
-  parts: {
-    title: 'Every skill, and what it does.',
-    lead: ({ skills }) => `${skills} skills, sorted by job. Claude picks one when your request fits, and you can call any by name as /frontend-kit:name.`,
-    manual: 'Only when you call it.',
-  },
-  crew: {
-    title: 'Every agent, and its job.',
-    lead: ({ agents }) => `${agents} agents. The reviewers read the code fresh, so they are not checking their own homework.`,
   },
   install: {
     title: 'Install it in three commands.',

@@ -1,6 +1,7 @@
 ---
 import type { Copy } from '../content/types.ts'
 import { INSTALL_COMMANDS } from '../lib/plugin.ts'
+import CommandBox from './CommandBox.astro'
 
 interface Props {
   install: Copy['install']
@@ -17,12 +18,7 @@ const commands = first ? INSTALL_COMMANDS.slice(0, 1) : INSTALL_COMMANDS
     commands.map((command, i) => (
       <li>
         <p class:list={['command-name', { 'sr-only': first }]}>{install.steps[i]}</p>
-        <div class="command" dir="ltr">
-          <code>{command}</code>
-          <button type="button" data-copy={command} data-label={install.copy} data-done={install.copied} data-failed={install.failed}>
-            <span aria-live="polite" data-status>{install.copy}</span>
-          </button>
-        </div>
+        <CommandBox command={command} install={install} />
       </li>
     ))
   }

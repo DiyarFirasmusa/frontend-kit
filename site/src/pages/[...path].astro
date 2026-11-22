@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from 'astro'
+import DocPage from '../components/DocPage.astro'
+import Home from '../components/Home.astro'
+import AgentList from '../components/pages/AgentList.astro'
+import AgentPage from '../components/pages/AgentPage.astro'
+import Checks from '../components/pages/Checks.astro'
+import Configuration from '../components/pages/Configuration.astro'
+import Examples from '../components/pages/Examples.astro'
+import Features from '../components/pages/Features.astro'
+import GetStarted from '../components/pages/GetStarted.astro'
+import Guide from '../components/pages/Guide.astro'
+import ProjectTypes from '../components/pages/ProjectTypes.astro'
+import Questions from '../components/pages/Questions.astro'
+import Refactor from '../components/pages/Refactor.astro'
+import Rules from '../components/pages/Rules.astro'
+import SkillList from '../components/pages/SkillList.astro'
+import SkillPage from '../components/pages/SkillPage.astro'
+import type { PageId } from '../content/guide/pages.ts'
+import type { Locale } from '../content/types.ts'
+import { allRoutes, LOCALES, routePath, type Route } from '../lib/routes.ts'
+
+export const getStaticPaths = (() =>
+  LOCALES.flatMap((locale) =>
+    allRoutes().map((route) => {
+      const path = `${locale === 'en' ? '' : `${locale}/`}${routePath(route)}`.replace(/\/$/, '')
+      return { params: { path: path === '' ? undefined : path }, props: { locale: locale as Locale, route } }
+    }),
+  )) satisfies GetStaticPaths
+
+interface Props {
+  locale: Locale
+  route: Route
+}
+
+const { locale, route } = Astro.props
+
+const BODIES = {
+  guide: Guide,
+  'get-started': GetStarted,
+  skills: SkillList,
+  agents: AgentList,
+  features: Features,
+  'project-types': ProjectTypes,
+  rules: Rules,
+  checks: Checks,
+  configuration: Configuration,
+  refactor: Refactor,
+  examples: Examples,
+  questions: Questions,
+} satisfies Record<PageId, unknown>
+
+const Body = route.kind === 'page' ? BODIES[route.id] : undefined
+---
+
+{
+  route.kind === 'home' ? (
+    <Home locale={locale} />
+  ) : (
+    <DocPage locale={locale} route={route}>
+      {Body && <Body locale={locale} />}
+      {route.kind === 'skill' && <SkillPage name={route.name} locale={locale} />}
+      {route.kind === 'agent' && <AgentPage name={route.name} locale={locale} />}
+    </DocPage>
+  )
+}

@@ -1,0 +1,52 @@
+import { t } from './text.ts'
+
+/** The words of the pages' own furniture. */
+export const ui = {
+  home: t('Home', 'الرئيسية'),
+  allPages: t('All pages', 'كل الصفحات'),
+  whereYouAre: t('Where you are', 'موقعك في الموقع'),
+  learnMore: t('Read more', 'اقرأ المزيد'),
+  next: t('Next', 'التالي'),
+  previous: t('Previous', 'السابق'),
+  whatItIs: t('What it is', 'ما هي'),
+  youType: t('What you type', 'ماذا تكتب'),
+  anyWords: t('Your own words work too. These are examples.', 'وكلماتك الخاصة تعمل أيضاً، فهذه أمثلة.'),
+  byName: t('Or call it by name', 'أو استدعها باسمها'),
+  whatHappens: t('What Claude then does', 'ماذا يفعل Claude بعدها'),
+  youGet: t('What you get', 'ماذا تستلم'),
+  wont: t('What it will not do', 'ما لا تفعله'),
+  needs: t('It needs', 'تحتاج'),
+  related: t('Works well with', 'تعمل جيداً مع'),
+  worksIn: t('Project types', 'أنواع المشاريع'),
+  starts: t('How it starts', 'كيف تبدأ'),
+  auto: t('By your request, or by name', 'بطلبك أو باسمها'),
+  manual: t('Only when you call it by name', 'عند استدعائها باسمها فقط'),
+  group: t('Group', 'المجموعة'),
+  source: t('Read its source', 'اقرأ مصدرها'),
+  everyType: t('All four', 'الأربعة'),
+  search: t('Search skills: table, form, SEO…', 'ابحث في المهارات: جدول، نموذج، SEO…'),
+  noMatch: t('No skill matches. Try another word.', 'لا مهارة تطابق. جرّب كلمة أخرى.'),
+  say: t('Say', 'قل'),
+  use: t('It uses', 'يستعمل'),
+  whatItChecks: t('What it does', 'ماذا يفعل'),
+  reports: t('What it hands back', 'ماذا يسلّم'),
+  agentIs: t('Its role', 'دوره'),
+  model: t('Model', 'النموذج'),
+  canEdit: t('Can it edit files?', 'هل يعدّل الملفات؟'),
+  editsYes: t('Yes', 'نعم'),
+  editsNo: t('No, it only reports', 'لا، يكتب تقريراً فقط'),
+  always: t('Loads in every session', 'تُحمَّل في كل جلسة'),
+  loadsFor: t('Loads for', 'تُحمَّل مع'),
+  scripts: t('Scripts', 'السكربتات'),
+}
+
+export const skillUse = {
+  title: t('Three ways a skill starts', 'ثلاث طرق لبدء المهارة'),
+  ways: [
+    { name: t('Just ask', 'اطلب فقط'), text: t('Describe the job. Claude matches it to a skill.', 'صف العمل، فيطابقه Claude مع مهارة.'), example: t('create a customers table', 'أنشئ جدول العملاء') },
+    { name: t('Get a hint', 'يصلك تلميح'), text: t('A hook reads your sentence and names up to three kit skills that fit, before Claude starts.', 'حارس يقرأ جملتك ويسمّي حتى ثلاث مهارات مناسبة قبل أن يبدأ Claude.'), example: t('make the page faster', 'اجعل الصفحة أسرع') },
+    { name: t('Call it', 'استدعها'), text: t('Type the skill’s name yourself.', 'اكتب اسم المهارة بنفسك.'), example: t('/frontend-kit:verify', '/frontend-kit:verify') },
+  ],
+  anatomyTitle: t('A skill, up close', 'المهارة عن قرب'),
+  anatomy: t('Here is create-form. Every skill has a page like this one.', 'هذه create-form، ولكل مهارة صفحة مثلها.'),
+}

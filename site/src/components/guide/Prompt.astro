@@ -1,0 +1,9 @@
+---
+interface Props {
+  text: string
+}
+
+const { text } = Astro.props
+---
+
+<p class="prompt" dir="auto"><span aria-hidden="true">›</span><bdi>{text}</bdi></p>

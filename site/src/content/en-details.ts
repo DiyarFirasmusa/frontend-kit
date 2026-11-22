@@ -2,8 +2,6 @@ import type { Details } from './types.ts'
 
 export const enDetails: Details = {
   why: {
-    title: 'Why use it.',
-    lead: 'Out of the box, every session starts from guesses: where files go, what finished means, what must never be touched. The kit writes that down and enforces the parts a script can enforce.',
     without: 'Without the kit',
     with: 'With the kit',
     pairs: [
@@ -35,8 +33,6 @@ export const enDetails: Details = {
     },
   },
   features: {
-    title: 'Every feature.',
-    lead: 'Each feature below ships in the plugin today.',
     groups: [
       {
         title: 'It learns your project',
@@ -113,8 +109,6 @@ export const enDetails: Details = {
     ],
   },
   rules: {
-    title: 'Every rule file.',
-    lead: ({ rules }) => `${rules} rule files. Each loads by path, so Claude reads the forms rules while it edits a form, not in every session.`,
     groups: {
       shared: 'Every project',
       website: 'Website',
@@ -125,8 +119,6 @@ export const enDetails: Details = {
     },
   },
   session: {
-    title: 'Every check, moment by moment.',
-    lead: 'Hooks are scripts Claude Code runs at fixed moments. They do not depend on Claude remembering.',
     events: {
       SessionStart: ['A session starts', 'Branch state, the last gate result and the hard rules are handed to Claude, also after clear and compact.', 'Session starts: rules and branch state are handed over'],
       UserPromptSubmit: ['You send a prompt', 'Short phrases are understood and the skills that fit are named.', 'You ask: the fitting skills are named'],
@@ -140,8 +132,6 @@ export const enDetails: Details = {
     },
   },
   refactor: {
-    title: 'Refactor mode, for old projects.',
-    lead: 'Refactor mode brings a messy codebase up to the standard without changing what it does.',
     steps: [
       ['/frontend-kit:refactor-mode on', 'Switch the project into refactor mode.'],
       ['/frontend-kit:refactor-mode audit', 'Measure structure, types, data, forms and tests without editing code, then write a phased plan.'],

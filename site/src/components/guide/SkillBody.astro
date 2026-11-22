@@ -1,0 +1,34 @@
+---
+import { skillGuides } from '../../content/guide/skills/index.ts'
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from './Block.astro'
+import Prompt from './Prompt.astro'
+
+interface Props {
+  name: string
+  locale: Locale
+}
+
+const { name, locale } = Astro.props
+const guide = skillGuides[name]!
+---
+
+<Block id="what" title={ui.whatItIs[locale]}>
+  <p class="big">{guide.plain[locale]}</p>
+</Block>
+<Block id="ask" title={ui.youType[locale]} lead={ui.anyWords[locale]}>
+  {guide.ask.map((example) => <Prompt text={example[locale]} />)}
+  <p class="by-name">{ui.byName[locale]}</p>
+  <code class="call" dir="ltr">/frontend-kit:{name}</code>
+</Block>
+<Block id="steps" title={ui.whatHappens[locale]}>
+  <ol class="numbered">{guide.steps.map((step) => <li>{step[locale]}</li>)}</ol>
+</Block>
+<Block id="result" title={ui.youGet[locale]}>
+  <ul class="ticks">{guide.result.map((item) => <li>{item[locale]}</li>)}</ul>
+</Block>
+<Block id="limits" title={ui.wont[locale]}>
+  <ul class="crosses">{guide.limits.map((item) => <li>{item[locale]}</li>)}</ul>
+</Block>
+{guide.needs && <Block id="needs" title={ui.needs[locale]}><p>{guide.needs[locale]}</p></Block>}

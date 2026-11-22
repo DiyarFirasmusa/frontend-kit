@@ -16,7 +16,7 @@
   background: linear-gradient(rgb(5 6 7 / 0.85), rgb(5 6 7 / 0.45) 70%, transparent);
 }
 
-.film:has(.top [href='#details'][aria-current]) .top {
+.film.past-film .top {
   background: var(--void);
 }
 
@@ -185,4 +185,21 @@
     padding-inline: 0.625rem;
     font-size: 0.875rem;
   }
+}
+
+.menu nav div + div {
+  margin-block-start: 1rem;
+}
+
+.menu nav p {
+  padding-block: 0.5rem 0.25rem;
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.menu nav [aria-current],
+.top-nav [aria-current] {
+  color: var(--ivory);
+  text-decoration: underline;
+  text-underline-offset: 8px;
 }

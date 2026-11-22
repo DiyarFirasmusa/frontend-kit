@@ -1,0 +1,57 @@
+---
+import { projects } from '../../content/guide/projects.ts'
+import { t } from '../../content/guide/text.ts'
+import type { Locale } from '../../content/types.ts'
+import { skillUrl } from '../../lib/links.ts'
+import { skillNames } from '../../lib/plugin.ts'
+import { profilesOf, ruleFiles } from '../../lib/plugin-details.ts'
+import Block from '../guide/Block.astro'
+import Prompt from '../guide/Prompt.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const words = {
+  which: t('Which one is mine?', 'أيها يناسبني؟'),
+  fits: t('For', 'لمن'),
+  gets: t('What it adds', 'ماذا يضيف'),
+  stack: t('Made for', 'مصنوع لـ'),
+  special: t('Its special skills', 'مهاراته الخاصة'),
+  neutral: t('The shared skills, which adapt to the stack.', 'المهارات المشتركة، وتتكيّف مع التقنيات.'),
+  rules: t('Its rules, besides the shared ones', 'قواعده، إضافة إلى المشتركة'),
+  ask: t('A first sentence', 'جملة أولى'),
+}
+const special = skillNames.filter((name) => profilesOf(name).length < projects.length)
+---
+
+<Block id="which" title={words.which[locale]}>
+  <dl class="rows">
+    {projects.map(({ id, name, fits }) => <div><dt><a href={`#${id}`}>{name[locale]}</a></dt><dd>{fits[locale]}</dd></div>)}
+  </dl>
+</Block>
+{
+  projects.map((project) => {
+    const own = special.filter((name) => profilesOf(name).includes(project.id))
+    const rules = new Set(project.rules.flatMap((group) => (ruleFiles[group] ?? []).map((rule) => rule.name)))
+    return (
+      <Block id={project.id} title={project.name[locale]} lead={project.fits[locale]}>
+        <h3>{words.gets[locale]}</h3>
+        <ul class="ticks">{project.gets.map((item) => <li>{item[locale]}</li>)}</ul>
+        <h3>{words.stack[locale]}</h3>
+        <ul class="tags">{project.stack.map((item) => <li><bdi>{item}</bdi></li>)}</ul>
+        <h3>{words.special[locale]}</h3>
+        {own.length > 0 ? (
+          <ul class="tags">{own.map((name) => <li><a href={skillUrl(locale, name)}><bdi>{name}</bdi></a></li>)}</ul>
+        ) : (
+          <p class="muted">{words.neutral[locale]}</p>
+        )}
+        <h3>{words.rules[locale]}</h3>
+        <ul class="tags">{[...rules].map((name) => <li><bdi>{name}</bdi></li>)}</ul>
+        <h3>{words.ask[locale]}</h3>
+        <Prompt text={project.ask[locale]} />
+      </Block>
+    )
+  })
+}

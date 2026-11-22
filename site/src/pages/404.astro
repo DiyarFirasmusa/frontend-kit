@@ -1,0 +1,19 @@
+---
+import PageIndex from '../components/guide/PageIndex.astro'
+import Header from '../components/Header.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+import Layout from '../layouts/Layout.astro'
+import type { Route } from '../lib/routes.ts'
+
+const route: Route = { kind: 'home' }
+---
+
+<Layout locale="en" route={route} title="Page not found | frontend-kit" description="This page does not exist." indexable={false}>
+  <Header locale="en" route={{ kind: 'page', id: 'guide' }} />
+  <main id="content" class="missing" tabindex="-1">
+    <h1>This page does not exist.</h1>
+    <p lang="ar" dir="rtl">هذه الصفحة غير موجودة.</p>
+    <PageIndex locale="en" />
+  </main>
+  <SiteFooter locale="en" />
+</Layout>

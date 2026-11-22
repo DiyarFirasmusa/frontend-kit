@@ -1,0 +1,31 @@
+---
+import { agentGuides } from '../../content/guide/agents.ts'
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import { agentFacts } from '../../lib/plugin-details.ts'
+import Block from '../guide/Block.astro'
+import Prompt from '../guide/Prompt.astro'
+
+interface Props {
+  name: string
+  locale: Locale
+}
+
+const { name, locale } = Astro.props
+const guide = agentGuides[name]!
+const { model, edits } = agentFacts[name]!
+---
+
+<dl class="glance">
+  <div><dt>{ui.model[locale]}</dt><dd><bdi>{model}</bdi></dd></div>
+  <div><dt>{ui.canEdit[locale]}</dt><dd>{(edits ? ui.editsYes : ui.editsNo)[locale]}</dd></div>
+</dl>
+
+<Block id="role" title={ui.agentIs[locale]}><p class="big">{guide.plain[locale]}</p></Block>
+<Block id="ask" title={ui.youType[locale]} lead={ui.anyWords[locale]}><Prompt text={guide.ask[locale]} /></Block>
+<Block id="does" title={ui.whatItChecks[locale]}><ol class="numbered">{guide.checks.map((check) => <li>{check[locale]}</li>)}</ol></Block>
+<Block id="returns" title={ui.reports[locale]}>
+  <p class="big">{guide.returns[locale]}</p>
+  <a class="source" href={`${REPO_URL}/blob/main/plugins/frontend-kit/agents/${name}.md`}>{ui.source[locale]}</a>
+</Block>

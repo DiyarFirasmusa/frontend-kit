@@ -1,0 +1,60 @@
+---
+import { gate, guards, hookEffects, limits } from '../../content/guide/checks.ts'
+import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
+import { content } from '../../content/index.ts'
+import type { HookEvent, Locale } from '../../content/types.ts'
+import { hookEvents } from '../../lib/plugin.ts'
+import { hookScripts } from '../../lib/plugin-details.ts'
+import GateDemo from '../details/GateDemo.astro'
+import Block from '../guide/Block.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const copy = content[locale]
+const { session } = copy
+const moments = (Object.keys(session.events) as HookEvent[]).filter((event) => hookEvents.includes(event))
+const words = {
+  timeline: t('A session, moment by moment', 'الجلسة لحظة بلحظة'),
+  guards: t('What the guards refuse', 'ما ترفضه الحرّاس'),
+  guardsLead: t('These are the known patterns they catch.', 'هذه الأنماط المعروفة التي تلتقطها.'),
+  gate: t('The quality gate, step by step', 'بوابة الجودة خطوة بخطوة'),
+  gateLead: t('It runs when Claude thinks it is finished.', 'تعمل عندما يظن Claude أنه انتهى.'),
+  limits: t('What they cannot do', 'ما لا تستطيعه'),
+}
+---
+
+<Block id="timeline" title={words.timeline[locale]}>
+  <ol class="timeline">
+    {moments.map((event) => (
+      <li>
+        <div class="timeline-head">
+          <h3>{session.events[event][0]}</h3>
+          <span>{hookEffects[event][locale]}</span>
+        </div>
+        <p>{session.events[event][1]}</p>
+        <small>
+          <span class="sr-only">{ui.scripts[locale]}: </span>
+          <code dir="ltr">{event}</code>
+          {hookScripts[event]?.map((script) => <code dir="ltr">{script}</code>)}
+        </small>
+      </li>
+    ))}
+  </ol>
+</Block>
+<Block id="guards" title={words.guards[locale]} lead={words.guardsLead[locale]}>
+  {guards.map(({ title, script, items }) => (
+    <div class="question">
+      <h3>{title[locale]} <code dir="ltr">{script}</code></h3>
+      <ul class="crosses">{items.map((item) => <li>{item[locale]}</li>)}</ul>
+    </div>
+  ))}
+</Block>
+<Block id="try-guard" title={copy.gate.title} lead={copy.gate.lead}><GateDemo gate={copy.gate} /></Block>
+<Block id="gate" title={words.gate[locale]} lead={words.gateLead[locale]}>
+  <ol class="numbered">{gate.map((step) => <li>{step[locale]}</li>)}</ol>
+</Block>
+<Block id="limits" title={words.limits[locale]}><ul class="crosses">{limits.map((limit) => <li>{limit[locale]}</li>)}</ul></Block>
