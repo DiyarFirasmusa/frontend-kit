@@ -44,10 +44,17 @@ so a component written with them needs no `dark:` variant.
 - **Mobile first.** Write the phone layout unprefixed, widen with
   `sm:` / `md:` / `lg:`. No horizontal page scroll at 360px (a wide table
   scrolls inside its own container). Touch targets ≥ 44px.
-- Logical properties only (`ps-` / `pe-` / `ms-` / `me-` / `start-` / `end-`);
+- Logical properties only (`ps-` / `pe-` / `ms-` / `me-` / `inset-s-` / `inset-e-`);
   see `.claude/rules/rtl.md`.
 - Use the radii and shadows the design system already uses. Delineate with a
   subtle border before reaching for a shadow; shadows stay light.
+
+## Tailwind v4 names
+
+Agents write v3 names, and a v3 name that v4 does not know fails silently (no class, no error). Use the v4 names
+(checked against Tailwind 4.3): `inset-s-*` / `inset-e-*` for the logical sides (`start-*` / `end-*` are deprecated),
+`bg-linear-to-*` for gradients, `outline-hidden` to hide an outline and keep it visible in forced colours, `shrink-*`
+instead of `flex-shrink-*`.
 
 ## Component classes
 

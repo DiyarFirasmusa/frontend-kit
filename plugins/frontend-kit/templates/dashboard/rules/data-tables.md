@@ -76,7 +76,7 @@ Page past the end (rows empty, page > 1): navigate to the last valid page.
 - Inline icon buttons for one or two actions, a menu beyond that. Every icon
   button has an `aria-label` that names the row (`t('users.editRow', { name })`).
 - An action the user lacks permission for is not rendered. An action not
-  allowed for this row's state is disabled with a reason in a tooltip.
+  allowed for this row's state uses `aria-disabled` and shows the reason as text beside it (a tooltip alone is not keyboard-reachable).
 - Row click opens the detail page only when there is one; the row is then a
   real link (`<Link>` in the primary cell), not a clickable `<tr>`.
 
@@ -103,12 +103,12 @@ Page past the end (rows empty, page > 1): navigate to the last valid page.
 
 ## RTL and layout
 
-- Logical properties only: `text-start`, `ps-*`, `pe-*`, `start-0` for sticky
+- Logical properties only: `text-start`, `ps-*`, `pe-*`, `inset-s-0` for sticky
   columns. Numbers stay `text-end` in both directions.
 - Pagination arrows flip in RTL (`rtl:-scale-x-100`, the same utility as every other directional icon); "next" still means the
   next page.
 - Wide tables scroll inside their own container (`overflow-x-auto`) with the
-  first column sticky at `start-0`; the page itself never scrolls sideways.
+  first column sticky at `inset-s-0`; the page itself never scrolls sideways.
 - On phones, keep the key columns and hide the rest with column visibility, or
   render the same rows as cards. Touch targets ≥ 44px.
 

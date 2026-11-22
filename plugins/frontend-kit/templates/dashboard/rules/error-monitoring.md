@@ -60,6 +60,8 @@ Handled errors that matter go through `reportError(error, context)` from
 
 ## Boundaries
 
+- `createRoot` takes `onCaughtError` and `onUncaughtError` (React 19): render errors are not rethrown, so those two options
+  are where they reach `reportError`.
 - The root route's `errorComponent` renders the standalone error page with
   reload + home; `_app/route.tsx` has its own `errorComponent` so a crashed
   page keeps the sidebar and top bar.

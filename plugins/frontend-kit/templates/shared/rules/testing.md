@@ -43,7 +43,7 @@ npm run check:full       # check + e2e + build
 | Component | presentational components | `<name>.test.tsx` beside the source | the providers render helper |
 | Integration | every route component with the real API client, query cache and a memory router | `<name>.test.tsx` beside it | the router render helper + MSW |
 | End-to-end | each user flow | `e2e/<flow>.spec.ts` | Playwright + mocked API routes |
-| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`); serious/critical fail |
+| Accessibility | every page | the axe spec's page list | axe, WCAG 2.2 AA (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`); serious/critical fail |
 
 Minimum per change: the logic you touched is unit-tested; each touched route
 component has loading / error / empty / success plus one interaction; a new
@@ -106,7 +106,8 @@ The project's test helpers (`project.md` names the folder) provide:
 - **TanStack Router:** a `*.test.tsx` beside route files is read as a route unless `routeFileIgnorePattern` excludes it.
 - jsdom has no `navigator.locks`: test the lock-less fallback, and the lock itself with a small fake. Do not hit a real timer
   for the lock timeout.
-- MSW: import helpers (`delay`, `HttpResponse`) from the paths of the installed major version; check its docs, not memory.
+- MSW 3: `http` and `HttpResponse` from `msw/http`, `delay` from `msw/utils/delay`, the server from `msw/node`. MSW 2 imports
+  all of them from `msw`. Check the installed package's `exports` before you import.
 
 ## Never
 

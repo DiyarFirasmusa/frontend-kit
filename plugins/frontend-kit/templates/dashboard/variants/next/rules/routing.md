@@ -78,7 +78,7 @@ Page, page size, sort, search text and every filter live in the URL: shareable, 
   `placeholderData: keepPreviousData`, so changing a filter keeps the old rows on screen.
 - Detail and edit pages use `useSuspenseQuery(xDetailQueryOptions(id))` inside a `<Suspense>` plus an error boundary
   (`error.tsx` next to the page, or `<Wrapper>`); a 404 from the backend calls `notFound()` from `next/navigation`.
-- Warm a likely next page on intent: `queryClient.prefetchQuery(...)` from the row link's `onMouseEnter` /
+- Warm a likely next page on intent: `queryClient.query(...).catch(() => undefined)` from the row link's `onMouseEnter` /
   `onFocus`. Code is prefetched by `<Link>` itself.
 - The feature's locale bundle loads in the container (a `useFeatureLocale('app/users')` hook that suspends), so the
   page never flashes keys.

@@ -32,7 +32,8 @@ for the installed major (the file names below are the ones its wizard creates); 
 
 ## No PII
 
-Same as every dashboard: `sendDefaultPii: false`, a `beforeSend` that drops request bodies, cookies, auth headers and
+Same as every dashboard: `dataCollection` with `userInfo`, `cookies`, `httpHeaders` and `urlQueryParams` set to `false` and `httpBodies: []`
+(`sendDefaultPii: false` on `@sentry/nextjs` 10 and older), a `beforeSend` that drops request bodies, cookies, auth headers and
 query strings with personal data; only the user id (never email or name) goes in `setUser`. The API clients scrub
 before they capture (`interceptors.ts`).
 
