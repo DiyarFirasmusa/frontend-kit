@@ -3,7 +3,7 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear|compact",
+        "matcher": "startup|resume|clear|compact|fork",
         "hooks": [
           {
             "type": "command",
@@ -25,18 +25,35 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/skill-suggest.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-prompt.sh",
+            "timeout": 5
           }
         ]
       }
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-guard.sh",
+            "timeout": 10,
+            "onFailure": "block"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Monitor",
         "hooks": [
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-bash.sh",
-            "timeout": 10
+            "timeout": 10,
+            "onFailure": "block"
           },
           {
             "type": "command",
@@ -51,17 +68,19 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-paths.sh",
-            "timeout": 10
+            "timeout": 10,
+            "onFailure": "block"
           }
         ]
       },
       {
-        "matcher": "WebFetch|mcp__chrome-devtools__navigate_page|mcp__chrome-devtools__new_page|mcp__playwright__browser_navigate|mcp__claude-in-chrome__navigate|mcp__claude-in-chrome__tabs_create_mcp",
+        "matcher": "^(WebFetch|mcp__(plugin_[^_]+(-[^_]+)*_)?chrome-devtools__(navigate_page|new_page)|mcp__(plugin_[^_]+(-[^_]+)*_)?playwright__(browser_navigate|browser_tabs)|mcp__claude-in-chrome__(navigate|tabs_create_mcp))$",
         "hooks": [
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-url.sh",
-            "timeout": 10
+            "timeout": 10,
+            "onFailure": "block"
           }
         ]
       }
@@ -75,6 +94,16 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/post-edit.sh",
             "timeout": 60,
             "statusMessage": "Formatting and linting the edited file"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/bash-edit-track.sh",
+            "timeout": 10
           }
         ]
       }
@@ -92,7 +121,7 @@
     ],
     "SubagentStop": [
       {
-        "matcher": "(frontend-kit:)?(frontend-dev|test-engineer)",
+        "matcher": "(frontend-kit:)?(frontend-dev|test-engineer|refactor-architect)",
         "hooks": [
           {
             "type": "command",
@@ -133,6 +162,22 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/session-end.sh",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/subagent-context.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/mode-subagent.sh",
+            "timeout": 5
           }
         ]
       }

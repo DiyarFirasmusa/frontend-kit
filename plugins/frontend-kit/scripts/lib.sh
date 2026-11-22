@@ -23,6 +23,8 @@ fi
 
 # The project root. Claude Code exports CLAUDE_PROJECT_DIR to hooks; tests set it too.
 HOOK_ROOT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+# A trailing slash would make every "inside the project" comparison below fail.
+[ "${#HOOK_ROOT}" -gt 1 ] && HOOK_ROOT="${HOOK_ROOT%/}"
 HOOK_STATE_DIR="$HOOK_ROOT/.claude/state"
 
 # The project's own settings for these hooks, written by /frontend-kit:setup. Every value has a safe
@@ -48,10 +50,20 @@ kit_alternation() {
   printf '%s' "${joined:-$2}"
 }
 
+# One jq call reads every value the hooks need on each run (a jq start costs ~8 ms on macOS, and ten of
+# them were the main cost of a guard). Fields are separated by \036, list items by \037.
+KIT_RAW_LISTS=""
+if [ -f "$KIT_CONFIG" ]; then
+  KIT_RAW_LISTS="$(jq -r '[(.srcDirs // [] | map(tostring) | join("\u001f")), (.srcDir // "" | tostring), (.projectName // "" | tostring),
+    (.mode // "" | tostring), (.defaultBranch // "" | tostring), (.githubRepo // "" | tostring), (.uatHost // "" | tostring),
+    (.devPort // "" | tostring), (.protectedBranches // [] | map(tostring) | join("\u001f")), (.liveHosts // [] | map(tostring) | join("\u001f"))] | join("\u001e")' "$KIT_CONFIG" 2>/dev/null)"
+fi
+IFS=$'\036' read -r RAW_SRC_DIRS RAW_SRC_DIR RAW_NAME RAW_MODE RAW_BRANCH RAW_REPO RAW_UAT RAW_PORT RAW_PROTECTED RAW_LIVE <<<"$KIT_RAW_LISTS"
+
 # The source folders the gates watch: .srcDirs (list) or .srcDir (string) in frontend-kit.json, default src.
 # Any layout works (src, app, pages, packages/web/src): list the folders once and every hook follows.
-KIT_SRC_DIRS="$(kit_list '.srcDirs')"
-[ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="$(kit_get '.srcDir' '')"
+KIT_SRC_DIRS="$(printf '%s' "$RAW_SRC_DIRS" | tr '\037' '\n')"
+[ -n "$KIT_SRC_DIRS" ] || KIT_SRC_DIRS="$RAW_SRC_DIR"
 if [ -z "$KIT_SRC_DIRS" ]; then
   # Nothing configured: watch the folders that exist (Next.js and React Router keep code in app/, not src/).
   for dir in src app pages components lib; do
@@ -121,16 +133,16 @@ kit_in_src() {
   return 1
 }
 
-KIT_PROJECT_NAME="$(kit_get '.projectName' 'this project')"
+KIT_PROJECT_NAME="${RAW_NAME:-this project}"
 # new | existing | refactor: how the project is being worked on (asked by /frontend-kit:setup).
-KIT_MODE="$(kit_get '.mode' 'existing')"
-KIT_DEFAULT_BRANCH="$(kit_get '.defaultBranch' 'main')"
-KIT_GITHUB_REPO="$(kit_get '.githubRepo' '')"
-KIT_UAT_HOST="$(kit_get '.uatHost' 'the test environment')"
-KIT_DEV_PORT="$(kit_get '.devPort' '5173')"
-KIT_PROTECTED_BRANCHES="$(kit_list '.protectedBranches' | paste -sd'/' -)"
+KIT_MODE="${RAW_MODE:-existing}"
+KIT_DEFAULT_BRANCH="${RAW_BRANCH:-main}"
+KIT_GITHUB_REPO="$RAW_REPO"
+KIT_UAT_HOST="${RAW_UAT:-the test environment}"
+KIT_DEV_PORT="${RAW_PORT:-5173}"
+KIT_PROTECTED_BRANCHES="$(printf '%s' "$RAW_PROTECTED" | tr '\037' '/')"
 KIT_PROTECTED_BRANCHES="${KIT_PROTECTED_BRANCHES:-main/master}"
-KIT_LIVE_HOSTS="$(kit_list '.liveHosts' | paste -sd',' - | sed 's/,/, /g')"
+KIT_LIVE_HOSTS="$(printf '%s' "$RAW_LIVE" | sed 's/\x1f/, /g')"
 
 # owner/name on GitHub: githubRepo from the config, else read from the origin remote (no credentials kept).
 kit_github_repo() {
@@ -161,9 +173,34 @@ kit_compare_hint() {
   fi
 }
 
-# Reads the whole hook input once; every helper below reads from HOOK_INPUT.
+# Reads the whole hook input once; every helper below reads from HOOK_INPUT. A guard that gets something that is
+# not a JSON object (empty, truncated, an array) refuses: Claude Code always sends an object, so anything else
+# means the call can't be judged, and an unjudged call must not go through.
 hook_read_input() {
   HOOK_INPUT="$(cat)"
+  if [ "${HOOK_KIND:-}" = guard ] && ! printf '%s' "$HOOK_INPUT" | jq -e 'type == "object"' >/dev/null 2>&1; then
+    echo "Blocked: the ${0##*/} hook got input it can't read, so this call is refused." >&2
+    exit 2
+  fi
+}
+
+# Guards that decide on the project's config (live hosts, protected branches) refuse when that file exists but
+# isn't valid JSON: reading it as "empty" would silently switch the protections off. Fixing the file with the
+# Edit tool is never blocked.
+kit_config_guard() {
+  [ -f "$KIT_CONFIG" ] || return 0
+  jq -e 'type == "object"' "$KIT_CONFIG" >/dev/null 2>&1 && return 0
+  hook_deny "Blocked: .claude/frontend-kit.json is not valid JSON, so the guards can't read the live hosts and protected branches. Fix the file first (Edit tool), or run /frontend-kit:setup again."
+}
+
+# kit_switch <name> <default on|off> → 0 when the guard is on. A project turns one off with
+# {"guards": {"<name>": false}} in .claude/frontend-kit.json; every guard added after 1.14 has such a switch.
+# (jq's // would treat false as unset, so the raw value is read.)
+kit_switch() {
+  local value=""
+  [ -f "$KIT_CONFIG" ] && value="$(jq -r ".guards.$1" "$KIT_CONFIG" 2>/dev/null)"
+  case "$value" in false | off | 0 | no) return 1 ;; esac
+  return 0
 }
 
 # hook_field '.tool_input.command' → the value, or empty when absent.

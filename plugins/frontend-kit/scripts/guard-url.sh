@@ -11,8 +11,13 @@ hook_read_input
 URL="$(hook_field '.tool_input.url')"
 [ -z "$URL" ] && exit 0
 
-# A leading blank, credentials, a port, a trailing dot or capitals don't make it another host.
-HOST="$(printf '%s' "$URL" | tr -d '\t\r\n' | sed -E 's#^ +##; s#^[A-Za-z][A-Za-z0-9+.-]*:[/\\]+##; s#[/?\#\\].*$##; s#^.*@##; s#:[0-9]*$##; s#[. ]+$##' | tr '[:upper:]' '[:lower:]')"
+# The host as the browser reads it. A leading blank, credentials, a port, a trailing dot, capitals, %2E for a dot,
+# an ideographic or fullwidth dot, invisible characters, a view-source: or blob: wrapper and a scheme written
+# without slashes (https:host) don't make it another host. (Fullwidth letters need Unicode folding: out of reach
+# in bash, left to the sandbox's deniedDomains.)
+percent_decode() { printf '%b' "$(printf '%s' "$1" | sed 's/\\/\\\\/g; s/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g')"; }
+HOST="$(percent_decode "$(printf '%s' "$URL" | tr -d '\t\r\n')" | LC_ALL=C sed $'s/\xe3\x80\x82/./g; s/\xef\xbc\x8e/./g; s/\xef\xbd\xa1/./g; s/\xe2\x80[\x8b-\x8d]//g; s/\xe2\x81\xa0//g; s/\xef\xbb\xbf//g; s/\xc2\xad//g' |
+  tr '[:upper:]' '[:lower:]' | sed -E 's#^[[:space:]]+##; s#^(view-source|blob|jar):##; s#^(https?|wss?|ftp|file):[/\\]*##; s#[/?\#\\].*$##; s#^.*@##; s#:[0-9]*$##; s#[. ]+$##' | tr '[:upper:]' '[:lower:]')"
 while IFS= read -r live; do
   live="$(printf '%s' "$live" | tr '[:upper:]' '[:lower:]')"
   live="${live%.}"

@@ -10,7 +10,7 @@ hook_read_input
 AGENT="$(hook_field '.agent_type')"
 AGENT="${AGENT##*:}" # plugin agents may be reported as <plugin>:<name>
 case "$AGENT" in
-  frontend-dev | test-engineer) ;;
+  frontend-dev | test-engineer | refactor-architect) ;;
   *) exit 0 ;;
 esac
 [ "$(hook_field '.stop_hook_active')" = true ] && exit 0
