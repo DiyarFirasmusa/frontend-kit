@@ -1,18 +1,24 @@
 # frontend-kit website
 
-The public site of the plugin: Astro (static), Three.js, English at `/frontend-kit/` and Arabic at `/frontend-kit/ar/`.
+The public site of the plugin: Astro (static), Three.js, English at `/` and Arabic at `/ar/`.
 It is not part of the plugin and is not installed into projects.
 
 ```bash
 cd site
 npm ci
-npm run dev        # http://localhost:4321/frontend-kit/
+npm run dev        # http://localhost:4321/
 npm run check      # types
 npm test           # scene geometry and timeline
 npm run build      # site/dist
 ```
 
 Building needs `bash`, `git` and `jq`: the gate demo runs the plugin's real `guard-bash.sh` and prints what it answers.
+
+## Deploy (Vercel)
+
+Import the repository with **Root Directory** set to `site`, and keep "Include source files outside of the Root Directory"
+on: the build reads `../plugins` and `../examples`. `vercel.json` holds the rest. Pushes to `main` then publish.
+Canonical links use Vercel's production domain, or `SITE_URL` when it is set (for a custom domain).
 
 ## How it stays true to the plugin
 
