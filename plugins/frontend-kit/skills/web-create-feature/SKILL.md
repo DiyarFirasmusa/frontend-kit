@@ -74,8 +74,8 @@ not before.
 ## 4. Wire
 
 - Navigation (header, footer, account menu) uses router `<Link>`s.
-- Public pages → sitemap route + `e2e` a11y page list. Private → robots
-  `Disallow`.
+- Public pages → sitemap route + `e2e` a11y page list. Private → `noindex`,
+  not in the sitemap, not disallowed in robots (that hides the `noindex`).
 - Locale bundles registered the way the project does it (global vs
   feature bundle); `npm run i18n:validate`.
 

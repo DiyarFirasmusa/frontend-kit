@@ -45,7 +45,7 @@ The user checks every screen on a phone and rejects any jump.
   badges), `min-h-*` on sections that stream in.
 - Images always have `width` + `height` or an `aspect-*` box.
 - `<html lang dir>` and the theme are right in the first HTML (no flip after
-  hydration); fonts use `font-display: swap` with a metric-matched fallback.
+  hydration); fonts use `font-display: swap` with a metric-matched fallback (`size-adjust` on its `@font-face`).
 - Banners, cookie bars and "open in app" prompts overlay or reserve their
   space; they never push content down after load.
 - Animate `transform` and `opacity`, never `width`, `height`, `top`, `margin`.
@@ -78,6 +78,7 @@ The user checks every screen on a phone and rejects any jump.
   thread.
 - Third-party scripts (analytics, chat) load after hydration, never in the
   `<head>` blocking path.
+- After a deploy route components reload by themselves; a hand-written `import()` needs `react.md`'s chunk listener.
 
 ## Navigation speed
 
@@ -86,11 +87,13 @@ The user checks every screen on a phone and rejects any jump.
 - Lists of product tiles can use `preload="viewport"` on the tile links when
   the next tap is very likely.
 - Catalogue `staleTime` in minutes so back-navigation is instant.
+- Keep the back/forward cache: `pagehide`, never `unload`; reopen sockets and refresh on `pageshow` (`persisted`).
 
 ## Rendering
 
 - Zustand selectors, never whole-store subscriptions.
-- Stable keys (ids) on lists; long lists paginate or virtualise.
+- Stable keys (ids) on lists; long lists paginate. Virtualise only unbounded client lists; long static sections get
+  `content-visibility: auto`.
 - Debounce search input; throttle scroll handlers with `requestAnimationFrame`.
 - `memo` / `useMemo` / `useCallback` only where the profiler shows wasted renders.
 
@@ -98,5 +101,5 @@ The user checks every screen on a phone and rejects any jump.
 
 - Static assets are fingerprinted by the build: long `immutable` cache.
 - Public HTML may get a short `s-maxage` + `stale-while-revalidate` from
-  `headers()` only when it does not vary by cookie; personalised HTML is
-  `private, no-store`. The host config is owned by deploy; recommend, don't edit.
+  `headers()` only when it does not vary by cookie; sensitive HTML is `private, no-store`, other personalised HTML
+  `private, no-cache`. The host config is owned by deploy; recommend, don't edit.

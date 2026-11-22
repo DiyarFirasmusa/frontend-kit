@@ -45,11 +45,11 @@ finished. The Stop hook runs typecheck and related tests on every change.
 
 ## Before you say "done" — check these five against your own diff
 
-1. **Touch targets:** every button, link, input, checkbox and icon button is at least 44×44 px, this kit's touch standard (`min-h-11 min-w-11`, or
-   `min-height: 44px; min-width: 44px`). WCAG 2.2 AA needs 24×24 CSS px (2.5.8); 44 is the stricter house target. A 24px icon button gets padding, not a smaller hit area.
+1. **Touch targets:** every button, link, input, checkbox and icon button is at least 44×44 px (`min-h-11 min-w-11`, or
+   `min-height: 44px; min-width: 44px`; the WCAG minimum is 24). A 24px icon button gets padding, not a smaller hit area.
 2. **No `any`, no casts:** grep your diff for `: any`, `as any`, `as unknown as`, `@ts-ignore`, `@ts-expect-error`. Use
    `unknown` and narrow, or fix the type.
-3. **Logical direction only:** no `left`/`right`/`margin-left`/`padding-right`/`ml-`/`pr-`/`text-left`. Use `start`/`end`,
+3. **Logical direction only:** no `left`/`right`/`margin-left`/`padding-right`/`ml-`/`pr-`/`text-left`. Use `inset-inline-*`,
    `margin-inline-*`, `padding-inline-*`, `ms-`/`pe-`/`text-start`.
 4. **Names and text:** every control has a visible label or `aria-label`; no user-facing string is hardcoded in one language.
 5. **Tests assert behaviour:** each new component or hook has a test of what it does (clicks, states, edge cases), not only that it renders.

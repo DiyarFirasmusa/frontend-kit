@@ -12,8 +12,8 @@ Tailwind CSS v4 tokens, i18next, sonner, Sentry. Tests: Vitest + Testing
 Library + MSW, Playwright + axe. oxlint, oxfmt, husky + lint-staged +
 commitlint. Package manager: **npm**.
 
-The bar every change meets: `.claude/rules/quality-bar.md`. Area rules:
-`.claude/rules/` (path-scoped ones load with the files they cover).
+The bar every change meets: `.claude/rules/quality-bar.md`. Area rules: `.claude/rules/`
+(loaded on read or edit of a matching file, not on search).
 
 ## Hard rules
 

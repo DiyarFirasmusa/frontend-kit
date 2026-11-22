@@ -2,6 +2,8 @@
 paths:
   - "src/routes/**"
   - "src/router.tsx"
+  - "src/main.tsx"
+  - "src/client.tsx"
   - "src/guards/**"
   - "src/features/**/validations/search.ts"
   - "src/lib/list-search.ts"
@@ -92,8 +94,11 @@ not fill the history.
   `void context.queryClient.query(xListQueryOptions(params)).catch(() => undefined)`. The table
   keeps the previous page on screen (`placeholderData: keepPreviousData`)
   instead of the route going pending on every filter change.
-- Detail and edit routes **wait**: `await context.queryClient.query(...)`,
-  then the page reads the same `queryOptions` with `useQuery` / `useSuspenseQuery`.
+- Detail and edit routes **wait for existence, not freshness**:
+  `await context.queryClient.query({ ...xDetailQueryOptions(id), staleTime: 'static' })`, then the page reads the same
+  `queryOptions` with `useQuery` / `useSuspenseQuery`, which refetches stale data in the background. Pass `'static'` only
+  at this call: on the shared options it stops invalidation. Query below 5.102: `ensureQueryData` / `prefetchQuery`.
+- Independent reads start together (`Promise.all`), never one after another.
 - Loaders also load the feature's locale bundle so the page never flashes keys.
 - `queryOptions` objects live in the feature's `hooks/query/` and are shared by
   the loader and the hook, so the key and fetcher can never drift apart.
@@ -102,10 +107,16 @@ not fill the history.
 
 - `beforeLoad` only. `requireAuth()` redirects to `/login` with
   `search: { redirect: location.href }`; login sends the user back there,
-  after checking it is a same-app path.
+  after checking it is a same-app path (`safeRedirect`, `security.md`).
 - `requirePermission(PERMS.x.view)` on every `_app/` route; missing permission
   redirects to `/403` (`permissions.md`).
 - Guards read state with `getState()` (no hooks in `beforeLoad`).
+
+## Deploys, chunks and speed
+
+- A tab that outlives a deploy asks for deleted chunks. `lazyRouteComponent` reloads once by itself; a hand-written
+  `import()` does not, so register the `vite:preloadError` listener of `react.md` at start.
+- Charts, editors and maps load on demand inside their route. Measure speed on the built app, never in dev.
 
 ## Params and navigation
 

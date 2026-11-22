@@ -71,7 +71,8 @@ Add `validateSearch` (zod) + `loaderDeps` when search params change data;
 ## 6. Links and crawl files
 
 - Every entry point is a router `<Link to="/products/$slug" params={…}>`.
-- Private path → `robots.txt` `Disallow`. Public listing/detail → sitemap route.
+- Private path → `noindex`, not disallowed in `robots.txt` (that hides the `noindex`), never in the sitemap.
+  Public listing/detail → sitemap route.
 - Run the dev server once so `src/routeTree.gen.ts` regenerates; never edit it.
 
 ## 7. Tests

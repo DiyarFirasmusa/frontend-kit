@@ -69,6 +69,15 @@ The HTTP library (fetch or axios) is imported only inside `src/shared/api/`.
   `meta: { successMessage: 'products.saved' }`, `meta: { silent: true }`,
   `meta: { silentErrorStatuses: [409] }`. Hooks and components never call
   `toast()` for API results.
+- Type that `meta` once (in `shared/api/`), so no read needs a cast:
+
+```ts
+declare module '@tanstack/react-query' {
+  interface Register {
+    mutationMeta: { successMessage?: string; silent?: boolean; silentErrorStatuses?: readonly number[] };
+  }
+}
+```
 - Read errors are **not** toasted: an awaited loader read fails into the
   route `errorComponent`; a streamed or client-only section shows its own
   inline error with retry.
@@ -103,8 +112,8 @@ The HTTP library (fetch or axios) is imported only inside `src/shared/api/`.
 ## Services
 
 ```ts
-export async function fetchProduct(slug: string): Promise<ProductDto> {
-  return apiClient.get<ProductDto>(endpoints.products.detail(slug))
+export async function fetchProduct(slug: string, options?: { signal?: AbortSignal }): Promise<ProductDto> {
+  return apiClient.get<ProductDto>(endpoints.products.detail(slug), options)
 }
 ```
 
@@ -115,6 +124,11 @@ export async function fetchProduct(slug: string): Promise<ProductDto> {
 - Cancellation: pass TanStack Query's `signal` into the service (`queryFn: ({ signal }) => fetchProduct(slug, { signal })`)
   and forward it to the HTTP client, so a route change aborts the request. A timeout is not a cancel: show it as a network
   error with a retry.
+- The client sets a default timeout (uploads override it). `fetch` has none and does not reject on 4xx or 5xx: combine
+  a timeout signal with the caller's and check `response.ok`. With axios `axios.isCancel(error)` is a cancel,
+  `ECONNABORTED` and `ETIMEDOUT` are failures.
+- Auth, session, price and payment responses are parsed with zod in the service: generated types check nothing at run
+  time. A failure is an `ApiError` with code `invalid_response`, reported without the body.
 - Language goes in one header from the client (from the request's i18n on
   the server, the current language in the browser), never per call.
 

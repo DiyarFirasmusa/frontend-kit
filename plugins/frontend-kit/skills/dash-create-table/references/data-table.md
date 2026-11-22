@@ -256,11 +256,14 @@ Pieces kept in their own files (each small, each tested):
 - `sort-icon.tsx` — up / down / neutral icon, `aria-hidden` (the `<th>`
   carries `aria-sort`).
 - `data-table-pagination.tsx` — `<nav aria-label={t('table.pagination')}>`,
-  previous / next buttons (icons `rtl:rotate-180`), "page X of Y · N results"
+  previous / next buttons (icons `rtl:-scale-x-100`), "page X of Y · N results"
   in an `aria-live="polite"` region, page-size `<select>` with a label. Every
   button ≥ 44px.
 - `data-table-row-actions.tsx` — renders `RowAction[]`: inline icon buttons
-  (`aria-label` per row) for one or two, a menu beyond.
+  (`aria-label` per row) for one or two, a menu beyond. An action with a
+  `disabledReasonKey` stays focusable: `aria-disabled="true"`, the reason linked
+  with `aria-describedby`, and a click handler that returns before `onSelect`
+  (`aria-disabled` blocks nothing). Test: click it, assert `onSelect` was not called.
 - `data-table-bulk-bar.tsx` — count + actions + clear, shown when the
   selection is not empty.
 

@@ -12,8 +12,8 @@ zod 4, i18next, Tailwind CSS v4 tokens. Tests: Vitest + Testing Library + MSW,
 Playwright + axe. oxlint, oxfmt, husky + lint-staged + commitlint.
 Package manager: **npm**.
 
-Rules live in `.claude/rules/` (path-scoped ones load with the files they
-cover). The bar every change meets: `.claude/rules/quality-bar.md`.
+Rules live in `.claude/rules/` and load when a matching file is read or edited,
+not searched. The bar every change meets: `.claude/rules/quality-bar.md`.
 
 ## Hard rules
 

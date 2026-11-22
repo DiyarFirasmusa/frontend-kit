@@ -6,7 +6,7 @@ paths:
   - "app/test/**"
   - "vitest.config.*"
   - "jest.config.*"
-  - "playwright.config.ts"
+  - "playwright.config.*"
 ---
 
 # Testing
@@ -87,19 +87,23 @@ The project's test helpers (`project.md` names the folder) provide:
   throws; it was a warning before.
 - Date-dependent UI in e2e (token expiry, "5 minutes ago"): fix the browser clock with Playwright's `page.clock` instead of
   waiting for real time.
-- Set the time zone for the unit run (`TZ=UTC` in the global setup, or `test.env`), so formatting tests do not depend on the
-  machine that runs them.
+- Set the time zone for the unit run (`TZ=UTC` in the script or in global setup, before the workers start; worker threads
+  ignore a `TZ` set inside them), so formatting tests do not depend on the machine that runs them.
+- E2E sets `timezoneId` and `locale` in the project's `use`, for the same reason.
 - Text in both languages where it matters: one English assertion, one Arabic.
 - E2E: projects cover Arabic and English, desktop and mobile, and dark. Mock
   the backend with route handlers that return the real envelope. Match text
   in both languages with a regex. Assert `html[dir]` when direction matters.
+- axe checks the rendered DOM only: open dialogs and menus before the run. It does not check focus order, focus return,
+  announcements, drag alternatives, redundant entry or authentication: those need a Playwright check or a manual pass.
 - E2E server: `reuseExistingServer` silently tests whatever already listens on
   the port (another project's dev server turned a whole suite red). Use this
   project's own e2e port from `.claude/frontend-kit.json`, and if the run fails
   at once on every test, check `lsof -nP -iTCP:<e2ePort>` before touching code.
 - Website (TanStack Start): e2e also asserts the server-rendered HTML (title,
   `lang`, `dir`) before hydration where SEO matters.
-- Keep a test file under ~200 lines; split by behaviour. No whole-page snapshots.
+- Keep a test file under ~200 lines; split by behaviour. No whole-page snapshots: check structure with
+  `toMatchAriaSnapshot` (regenerate those after upgrading to Playwright 1.65).
 - Never `it.skip` to get green — fix it or report the bug.
 - A flaky or hard e2e case (auth, clock, network, mobile): load the
   `playwright-best-practices` skill for the pattern, then keep this file's rules.
@@ -107,14 +111,16 @@ The project's test helpers (`project.md` names the folder) provide:
 ## Router and browser APIs in tests
 
 - **React Router:** build the table with a `createRoutes()` factory and render `createMemoryRouter(createRoutes(), { initialEntries })`
-  (a fresh table per test: resolved `lazy` modules are cached on the route objects). Framework mode: `createRoutesStub`.
-- **Next.js:** `next/navigation` has no public test provider. One shared stub (`src/test/next-navigation.ts`) is the single allowed
-  module mock; everything else is the real thing.
+  (a fresh table per test: resolved `lazy` modules are cached on the route objects). Framework mode: `createRoutesStub` for
+  components only (it does not fit typed route modules); test loaders as functions and route modules end to end.
+- **Next.js:** `next/navigation` has no public test provider. Use the project's router-context render helper. Only where
+  there is none, one shared stub (for example `src/test/next-navigation.ts`) is the single allowed module mock.
 - **TanStack Router:** a `*.test.tsx` beside route files is read as a route unless `routeFileIgnorePattern` excludes it.
 - jsdom has no `navigator.locks`: test the lock-less fallback, and the lock itself with a small fake. Do not hit a real timer
   for the lock timeout.
 - MSW 3: `http` and `HttpResponse` from `msw/http`, `delay` from `msw/utils/delay`, the server from `msw/node`. MSW 2 imports
-  all of them from `msw`. Check the installed package's `exports` before you import.
+  all of them from `msw`. Check the installed package's `exports` before you import. `server.listen()` runs once: a
+  second call throws.
 
 ## Never
 

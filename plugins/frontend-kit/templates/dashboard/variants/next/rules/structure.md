@@ -13,6 +13,8 @@ paths:
   - "src/contexts/**"
   - "src/config/**"
   - "src/i18n/**"
+  - "app/**"
+  - "{features,layouts}/**"
 ---
 
 # Folder structure (Next.js dashboard)
@@ -86,5 +88,6 @@ src/
 - **Page hook name**: `use-<page>-page.ts` (`use-list-page.ts` for the main list, `use-overview-page.ts`, `use-settings-page.ts`).
 - A feature without a main page (errors, overview) keeps what its pages share at the feature root, never in `pages/components/`.
 - Optional folders stay uncreated until used: no empty `header/`, `hooks/`, `401/`, `500/`.
-- A `(group)` folder under `app/` holds only `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`: no logic, no components.
+- A `(group)` folder under `app/` holds only the framework's special files (`default.tsx` for a parallel slot, for example)
+  and route folders: no logic, no components.
 - No barrels (`index.ts` re-exports); kebab-case files; a page never imports a sibling page; imports go up, never sideways.

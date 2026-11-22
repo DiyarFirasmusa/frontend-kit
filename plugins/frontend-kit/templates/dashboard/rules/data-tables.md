@@ -53,7 +53,9 @@ The backend pages, sorts and filters. The table only renders one page.
   `tabular-nums`; ids and codes `font-mono`, `dir="ltr"`.
 - Status cells: a `Record<Status, Tone>` map + a translated label, never colour alone.
 - Column extras (alignment, width, sticky) go in `meta`, typed once by
-  augmenting `ColumnMeta` in `src/types/table.ts`.
+  augmenting `ColumnMeta` in `src/types/table.ts`. Table 9 needs the same three type parameters
+  (`ColumnMeta<in out TFeatures extends TableFeatures, in out TData extends RowData, TValue extends CellData = CellData>`);
+  for one table only, the `columnMeta: metaHelper<...>()` slot of `tableFeatures` does it.
 
 ## States
 
@@ -77,6 +79,7 @@ Page past the end (rows empty, page > 1): navigate to the last valid page.
   button has an `aria-label` that names the row (`t('users.editRow', { name })`).
 - An action the user lacks permission for is not rendered. An action not
   allowed for this row's state uses `aria-disabled` and shows the reason as text beside it (a tooltip alone is not keyboard-reachable).
+  `aria-disabled` blocks nothing: the handler returns before `onSelect`, and a test clicks it and asserts no request.
 - Row click opens the detail page only when there is one; the row is then a
   real link (`<Link>` in the primary cell), not a clickable `<tr>`.
 
@@ -92,7 +95,9 @@ Page past the end (rows empty, page > 1): navigate to the last valid page.
 
 ## Accessibility
 
-- A real `<table>` with `<caption>` (visually hidden if needed), `<th scope="col">`.
+- A real `<table>` with `<caption>` (visually hidden if needed), `<th scope="col">`; the identifying column's cells
+  are `<th scope="row">`; checkbox and action headers carry visually hidden text.
+- A horizontal wrapper with no focusable child gets `tabIndex={0}`, `role="region"` and a name.
 - Sortable headers are `<button>`s inside the `<th>`; the `<th>` carries
   `aria-sort="ascending" | "descending" | "none"` from `getIsSorted()`.
 - Checkboxes have labels ("Select row …", "Select all on this page") and the
@@ -104,19 +109,21 @@ Page past the end (rows empty, page > 1): navigate to the last valid page.
 ## RTL and layout
 
 - Logical properties only: `text-start`, `ps-*`, `pe-*`, `inset-s-0` for sticky
-  columns. Numbers stay `text-end` in both directions.
+  columns (`start-0` below Tailwind 4.2, where `inset-s-0` is no class). Numbers stay `text-end` in both directions.
 - Pagination arrows flip in RTL (`rtl:-scale-x-100`, the same utility as every other directional icon); "next" still means the
   next page.
 - Wide tables scroll inside their own container (`overflow-x-auto`) with the
-  first column sticky at `inset-s-0`; the page itself never scrolls sideways.
+  first column sticky at the start; the page itself never scrolls sideways.
 - On phones, keep the key columns and hide the rest with column visibility, or
   render the same rows as cards. Touch targets ≥ 44px.
 
 
 ## Selection, visibility and server pages
 
-- With `manualPagination`, `table.getIsAllPageRowsSelected()` is wrong (false while every visible row is selected).
-  Derive the header checkbox from `table.getRowModel().rows` (`rows.every((row) => row.getIsSelected())`).
+- With `manualPagination` (Table 9) `table.getIsAllPageRowsSelected()` covers the rows of the loaded page; it never means
+  "all results".
+- `data` keeps its identity: the query's array or a module-level empty constant, never `data ?? []` inline.
+- Sorting a small client-owned list uses `Intl.Collator(locale, { numeric: true })`.
 - Clear selection from the page/filter/sort **key** (a `useRowSelection(resetKey)` that derives "empty" when the key
   changes), not from an effect that watches them.
 - Column visibility: a menu on the table toolbar, persisted per table (a small store keyed by table id), default

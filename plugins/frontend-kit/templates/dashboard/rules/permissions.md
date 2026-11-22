@@ -6,7 +6,6 @@ paths:
   - "src/routes/_app/**"
   - "src/app/(app)/**"
   - "src/proxy.ts"
-  - "src/layout/app/**"
   - "src/features/**/hooks/*-actions.ts"
   - "src/shared/constants/permissions.ts"
   - "src/shared/store/permission-store.ts"
@@ -67,7 +66,8 @@ permissions; use the hook wherever the result gates JSX.
   is **not rendered**. Do not render a disabled button for a missing permission.
 - Allowed in general but not for this record (state, ownership): render it
   with `aria-disabled="true"` (it stays in the tab order) and the reason as visible text or `aria-describedby` text;
-  a tooltip alone is not reachable by keyboard.
+  a tooltip alone is not reachable by keyboard. `aria-disabled` blocks nothing: the handler returns at once, and a test
+  clicks the control and asserts that no request was sent.
 - Nav config items carry their `permission`; a group with no visible items is hidden.
 - An empty list with the create permission shows the create action; without
   it, only the empty message.
@@ -88,7 +88,8 @@ permissions; use the hook wherever the result gates JSX.
 - The form is wrapped in `<fieldset disabled>`; components that ignore fieldset (a base-ui `Switch`, custom
   toggles) get `disabled` explicitly; inline table toggles become plain badges.
 - No save/submit button, and a visible read-only notice says why.
-- A 403 from the backend refreshes the permission data (`/me`) and calls `router.invalidate()` (Next.js: `router.refresh()`) so guards re-run; the
+- A 403 from the backend refreshes the permission data (`/me`) and calls `router.invalidate()` so guards re-run (Next.js: the
+  store update is enough, guards subscribe; `router.refresh()` only for Server Components that show permissions); the
   `(errors)/403` page renders inside the signed-in shell, not bare.
 
 ## Don't

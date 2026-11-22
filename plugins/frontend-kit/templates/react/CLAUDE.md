@@ -9,7 +9,8 @@ Stack: {{FRAMEWORK}} · router {{ROUTER}} · data {{DATA_LIB}} · client state {
 styling {{STYLING}} · tests {{TEST_RUNNER}} / {{E2E_RUNNER}} · lint {{LINTER}} · format {{FORMATTER}} ·
 i18n {{I18N_LIB}} · package manager **{{PACKAGE_MANAGER}}**. Source folders: `{{SRC_DIR}}`.
 
-The bar every change meets: `.claude/rules/quality-bar.md`. Area rules: `.claude/rules/`.
+The bar every change meets: `.claude/rules/quality-bar.md`. Area rules: `.claude/rules/`
+(loaded on read or edit of a matching file, not on search).
 
 ## Hard rules
 

@@ -91,15 +91,16 @@ export const Route = createFileRoute('/_app/users/')({
   loader: async ({ context, deps }) => {
     // Start the list fetch without blocking: the table keeps the previous page
     // on screen instead of the route going pending on every filter change.
-    void context.queryClient.prefetchQuery(usersListQueryOptions(deps));
+    void context.queryClient.query(usersListQueryOptions(deps)).catch(() => undefined); // the table shows the error
     await loadFeatureLocale('app/users'); // only when the project lazy-loads feature locales (`lib/i18n`); else drop the line
   },
   component: UsersListContainer,
 });
 ```
 
-Detail and edit routes `await context.queryClient.ensureQueryData(...)` and
-turn a 404 into `notFound()`; see the reference.
+Detail and edit routes `await context.queryClient.query({ ...options, staleTime: 'static' })` (cached data opens at
+once; `'static'` only at this call) and turn a 404 into `notFound()`; see the reference. Query below 5.102:
+`ensureQueryData` and `prefetchQuery`.
 
 ## 4. Reading the route from the feature
 

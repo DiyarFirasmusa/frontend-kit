@@ -93,7 +93,8 @@ export function requirePermission(permission: Permission): void {
 ```
 
 The login route's schema has `redirect: z.string().catch('').default('')`, and
-login only follows it when it starts with `/` and not `//` (no open redirect).
+login only follows `safeRedirect(redirect, window.location.origin)` (`security.md`): a leading-slash check alone lets
+`/.//evil.com` through.
 
 ## Layout group
 
@@ -143,7 +144,7 @@ export const Route = createFileRoute('/_app/users/$userId/')({
   loader: async ({ context, params }) => {
     await loadFeatureLocale('app/users');
     try {
-      await context.queryClient.ensureQueryData(userDetailQueryOptions(params.userId));
+      await context.queryClient.query({ ...userDetailQueryOptions(params.userId), staleTime: 'static' });
     } catch (error: unknown) {
       if (getErrorStatus(error) === 404) {
         throw notFound();
@@ -199,7 +200,7 @@ export const Route = createFileRoute('/_app/users/$userId/edit')({
   loader: async ({ context, params }) => {
     await Promise.all([
       loadFeatureLocale('app/users'),
-      context.queryClient.ensureQueryData(userDetailQueryOptions(params.userId)),
+      context.queryClient.query({ ...userDetailQueryOptions(params.userId), staleTime: 'static' }),
     ]);
   },
   component: RouteComponent,

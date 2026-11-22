@@ -34,8 +34,8 @@ is. All of it lives in `src/lib/monitoring.ts`; nothing else imports `@sentry/re
 
 ## No PII
 
-- Sentry 11 collects local variable values in stack frames by default (`stackFrameVariables: true`). On server runtimes those
-  values are user data: set `stackFrameVariables: false` there.
+- Sentry 11 collects local variable values in stack frames by default (`dataCollection.stackFrameVariables: true`). On
+  server runtimes those values are user data: set `dataCollection.stackFrameVariables: false` there.
 - No default PII: on `@sentry/react` 11 set
   `dataCollection: { userInfo: false, cookies: false, httpHeaders: false, urlQueryParams: false, httpBodies: [] }`
   (`sendDefaultPii: false` on 10 and older). Never call `setUser` with a name, email or phone;
@@ -62,8 +62,9 @@ Handled errors that matter go through `reportError(error, context)` from
 
 ## Boundaries
 
-- `createRoot` takes `onCaughtError` and `onUncaughtError` (React 19): render errors are not rethrown, so those two options
-  are where they reach `reportError`.
+- React 19 does not rethrow render errors. `createRoot` (Start: `hydrateRoot`) gets `onUncaughtError` → `reportError`.
+  Caught errors are reported by the boundaries below **or** by `onCaughtError`, never both: the router's boundary is an
+  error boundary, so that option fires for everything it catches.
 - The root route's `errorComponent` renders the standalone error page with
   reload + home; `_app/route.tsx` has its own `errorComponent` so a crashed
   page keeps the sidebar and top bar.

@@ -47,6 +47,8 @@ Skill: `dash-create-crud`.
   `toXPayload(values)` and `toXFormValues(detail)`. The two mappers are pure and
   unit-tested; the backend payload and the form shape are allowed to differ.
 - Messages are i18n keys in both `ar` and `en`.
+- With `.default`, `.transform` or `z.coerce` the schema's input and output differ:
+  `useForm<z.input<typeof xSchema>, unknown, z.output<typeof xSchema>>`, and the submit handler gets the output.
 - Backend validation errors (400/422 with field details) are mapped onto the
   fields with `setError` in the form hook, through one shared helper; the
   client still toasts the summary.
@@ -90,6 +92,8 @@ Skill: `dash-create-crud`.
 - Every input has a visible `<label>`; required fields are marked in text,
   not colour only; errors are linked with `aria-describedby`.
 - Phone, email, codes and numbers are `dir="ltr"` inputs inside RTL forms.
+- Credential and address fields carry their `autocomplete` token. A single value the user may copy but not edit is text
+  or `readOnly`; a whole read-only form keeps the fieldset of `permissions.md`.
 - Footer buttons use logical order: primary at the inline end in both directions.
 
 

@@ -42,6 +42,7 @@ head: ({ loaderData }) =>
   with the same `name`/`property` win. **Links are not de-duplicated**, so
   the canonical is set on the page (leaf) route only — never in `__root` or
   a layout.
+- `noindex` and the canonical are in the server HTML, never set or removed only by client code.
 - Every value comes from the locale bundle or the data. Dynamic pages build
   them from what the loader awaited; never `head()` from a query that only
   runs in the browser.
@@ -79,6 +80,8 @@ head: ({ loaderData }) =>
   (no `SearchAction`; Google retired the sitelinks search box).
 - Product detail: `Product` with `name`, `image`, `description`, `sku`,
   `brand`, `offers` (`price`, `priceCurrency`, `availability`, `url`).
+  A product sold on the page has an `Offer` (not `AggregateOffer`) with a price over 0, and shipping and return policy
+  when the backend has them (else `backend-request`). One URL per variant and per currency.
   Only facts visible on the page; never invent ratings or reviews.
 - Every page below home: `BreadcrumbList` matching the visible breadcrumb.
 - No `FAQPage` for search: Google stopped showing FAQ rich results in 2026. Visible FAQs can stay without the markup.
@@ -90,6 +93,7 @@ head: ({ loaderData }) =>
 - `og:image` is an absolute URL, 1200×630 (≥ 600×315), under 300 KB (WhatsApp drops images over 600 KB), JPEG/PNG/WebP,
   served without auth. Product pages use the product image or a generated
   card; others fall back to `DEFAULT_OG_IMAGE`.
+- Send `og:image:width` and `og:image:height`, and change the URL when the image changes (previews cache by URL).
 - `og:url` equals the canonical. `og:locale` follows the page language
   (`ar_AR` / `en_US`); `og:site_name` is `SITE_NAME`.
 - Check a page by fetching its HTML without JavaScript (`curl` the built
@@ -119,12 +123,12 @@ head: ({ loaderData }) =>
 
 - `robots.txt`: allow public paths, `Sitemap:` line with
   the absolute sitemap URL. Static in `public/`, or a server route
-  (`src/routes/robots[.]txt.ts`) when rules differ per environment — UAT and
-  previews are protected by a login or an IP allow-list; `Disallow: /` does not keep a URL out of the index.
+  (`src/routes/robots[.]txt.ts`) when it differs per environment.
+- UAT and previews sit behind a login or an IP allow-list; `Disallow: /` does not keep a URL out of the index.
 - Sitemap: a server route (`src/routes/sitemap[.]xml.ts`) that lists
   canonical, indexable URLs only (static pages + catalogue from the API),
   with `Content-Type: application/xml` and a cache header. A private path
-  never appears in it.
+  never appears in it. `lastmod` is the content's real change date (never now or build time); no `priority` or `changefreq`.
 
 ## Checking
 

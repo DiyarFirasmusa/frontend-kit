@@ -9,7 +9,7 @@ when the project's `app/` is at the root. Check the snippets against the install
 ```tsx
 // src/app/(app)/users/page.tsx
 import { Suspense } from 'react';
-import { ListSkeleton } from '@/components/wrapper/list-skeleton';
+import { ListSkeleton } from '@/components/wrappers/list-skeleton';
 import { UsersListContainer } from '@/features/app/users';
 
 export default function UsersPage() {
@@ -138,24 +138,33 @@ const SESSION_MARKER = 'session'; // a non-sensitive marker cookie set at login,
 
 export function proxy(request: NextRequest) {
   if (request.cookies.has(SESSION_MARKER)) return NextResponse.next();
-  const url = new URL('/login', request.url);
+  const url = request.nextUrl.clone(); // keeps the basePath
+  url.pathname = '/login';
+  url.search = '';
   url.searchParams.set('redirect', request.nextUrl.pathname + request.nextUrl.search);
   return NextResponse.redirect(url);
 }
 
 export const config = {
-  matcher: ['/((?!login|forgot-password|403|api|_next/static|_next/image|favicon.ico|robots.txt).*)'],
+  // End every excluded segment with (?:/|$), or `api` also skips /api-keys. `brand/` and `fonts/` stand for the folders
+  // of the project's public/. Never exclude "anything with a dot": /users/john.doe is a page.
+  matcher: ['/((?!(?:login|forgot-password|403|api)(?:/|$)|_next/static/|_next/image|favicon\\.ico$|robots\\.txt$|brand/|fonts/).*)'],
 };
 ```
+
+Test the matcher with a page that shares a prefix with each exclusion (`/api-keys`, `/login-history`) and with one
+public asset.
 
 When the session is only in browser memory (no marker cookie), leave the proxy out and let `<RequireAuth>` do the work;
 do not invent a cookie just to have a proxy.
 
 ## Not found and errors
 
-- 404 from the backend on a detail page: `notFound()` from `next/navigation` inside the query's `queryFn` consumer (the
-  page hook), rendering `app/not-found.tsx` (or the nearest one).
-- `error.tsx` next to a route segment for a failed page; `global-error.tsx` for a broken root layout.
+- 404 from the backend on a detail page: `useSuspenseQuery` throws before the component runs, so the `queryFn` returns
+  `null` for a 404 (the request passes `silentErrorStatuses: [404]`) and the container calls `notFound()` from
+  `next/navigation` when the data is `null`. It renders the nearest `not-found.tsx`; the HTTP status stays 200.
+- `error.tsx` next to a route segment for a failed page (`retry` refetches on 16.3+; `reset` only clears the state);
+  `global-error.tsx` for a broken root layout, with its own `<html>`, `<body>` and styles.
 - `/403` is a normal page under `(errors)/403/page.tsx`, rendered inside the signed-in shell.
 
 ## Nav entry

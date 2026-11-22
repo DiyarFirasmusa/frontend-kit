@@ -73,9 +73,10 @@ function toUserListQuery(params: UserListParams): Record<string, string | number
   return query;
 }
 
-export async function fetchUsers(params: UserListParams): Promise<UserListResponse> {
+export async function fetchUsers(params: UserListParams, options?: { signal?: AbortSignal }): Promise<UserListResponse> {
   const { data } = await privateApi.get<UserListResponse>(endpoints.users.list, {
     params: toUserListQuery(params),
+    signal: options?.signal,
   });
   return data;
 }
@@ -92,7 +93,7 @@ import type { UserListParams } from '../../types/types';
 export function usersListQueryOptions(params: UserListParams) {
   return queryOptions({
     queryKey: qk.users.list(params),
-    queryFn: () => fetchUsers(params),
+    queryFn: ({ signal }) => fetchUsers(params, { signal }),
     placeholderData: keepPreviousData,
   });
 }
@@ -127,7 +128,7 @@ export function getUserRowActions(row: UserRow, deps: UserActionDeps): RowAction
       labelKey: 'users.delete',
       icon: 'delete',
       tone: 'danger',
-      // Allowed in general, not for this row: render disabled with the reason.
+      // Allowed in general, not for this row: aria-disabled with the reason, and the click does nothing (data-table.md).
       disabledReasonKey: row.status === 'active' ? 'users.deleteActiveBlocked' : undefined,
       onSelect: () => { deps.onDelete(row); },
     });
