@@ -3,9 +3,9 @@ import type { Copy } from './types.ts'
 export const ar: Copy = {
   dir: 'rtl',
   meta: {
-    title: 'frontend-kit، عدّة واجهات React الاحترافية',
+    title: 'frontend-kit: اجعل مساعدك البرمجي يعمل كفريق واجهات',
     description:
-      'عدّة تجعل مساعدك البرمجي يبني React وTypeScript مثل فريق واجهات متمكّن: مهارات ووكلاء وقواعد وحرّاس وفحوص جودة، بالعربية والإنجليزية.',
+      'إضافة لمشاريع React وTypeScript. يبني مساعدك البرمجي بمعاييرك، وتُرفض الأوامر الخطرة المعروفة، وتُفحص الشيفرة وتُراجع.',
   },
   chrome: {
     skip: 'انتقل إلى المحتوى',

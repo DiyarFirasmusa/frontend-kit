@@ -3,9 +3,9 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'frontend-kit, the kit for production React frontends',
+    title: 'frontend-kit: make your coding assistant work like a frontend team',
     description:
-      'A kit that makes your coding assistant build React and TypeScript like a careful frontend team: skills, agents, rules, guards and quality checks, in English and Arabic.',
+      'A plugin for React and TypeScript projects. Your coding assistant builds to your standards, known dangerous commands are refused, and the code is checked and reviewed.',
   },
   chrome: {
     skip: 'Skip to content',

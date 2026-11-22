@@ -3,6 +3,7 @@ import { home } from '../../content/guide/home.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { asset, pageUrl } from '../../lib/links.ts'
+import { facts } from '../../lib/plugin.ts'
 import Commands from '../Commands.astro'
 
 interface Props {
@@ -10,15 +11,40 @@ interface Props {
 }
 
 const { locale } = Astro.props
+const { is, does, works } = home.answers
+const { kinds } = home
+const counts = [
+  [kinds.skills, facts.skills, 'skills'],
+  [kinds.agents, facts.agents, 'agents'],
+  [kinds.rules, facts.rules, 'rules'],
+  [kinds.checks, facts.events, 'checks'],
+] as const
 ---
 
 <section id="intro" class="hero" data-stage-shape="mark">
   <div class="column">
     <h1 data-rise>{home.title[locale]}</h1>
-    <p class="hero-what">{home.what[locale]}</p>
-    <ul class="changes">
-      {home.changes.map(({ name, text }) => <li><strong>{name[locale]}</strong><span>{text[locale]}</span></li>)}
-    </ul>
+    <dl class="answers">
+      <div>
+        <dt>{is.name[locale]}</dt>
+        <dd>
+          {is.text[locale]}
+          <span class="counts">
+            {counts.map(([name, count, page]) => <a href={pageUrl(locale, page)}>{name[locale]} <b>{count}</b></a>)}
+          </span>
+        </dd>
+      </div>
+      <div>
+        <dt>{does.name[locale]}</dt>
+        <dd>{does.text[locale]}</dd>
+      </div>
+      <div>
+        <dt>{works.name[locale]}</dt>
+        <dd>
+          <ol>{works.steps.map((step) => <li>{step[locale]}</li>)}</ol>
+        </dd>
+      </div>
+    </dl>
     <Commands install={content[locale].install} first />
     <p class="hero-ways">
       <a href="#example">{home.see[locale]}</a>

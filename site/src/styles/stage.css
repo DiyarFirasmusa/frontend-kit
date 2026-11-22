@@ -138,33 +138,68 @@ body > .foot {
 }
 
 .hero h1 {
-  font-size: clamp(2.125rem, 0.7rem + min(3.5vw, 5.6vh), 4.375rem);
+  font-size: clamp(1.75rem, 0.6rem + min(2.3vw, 3.7vh), 3.25rem);
 }
 
-.hero-what {
-  max-width: 34rem;
-  margin-block-start: 1.25rem;
-  font-size: var(--lead);
+/* What it is, what it does, how it works: all of it readable before the first scroll. */
+.answers {
+  max-width: 36rem;
+  margin-block: clamp(0.75rem, 2.5vh, 1.75rem) clamp(0.625rem, 1.8vh, 1.25rem);
 }
 
-.changes {
-  max-width: 34rem;
-  margin-block: 1.5rem;
+.answers > div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 0.125rem 1rem;
+  padding-block: clamp(0.5rem, 1.3vh, 0.875rem);
+  border-block-start: 1px solid var(--line);
 }
 
-.changes li,
+.answers dt {
+  color: #fff;
+  font-weight: 700;
+}
+
+.answers dd {
+  margin: 0;
+  font-size: clamp(0.875rem, 0.5rem + 0.9vh, 1.0625rem);
+  line-height: 1.6;
+}
+
+.answers .counts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+  color: var(--muted);
+}
+
+.answers .counts a {
+  display: inline-flex;
+  gap: 0.3em;
+  align-items: center;
+  min-height: 24px;
+}
+
+.answers .counts b {
+  color: #fff;
+}
+
+.answers ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  list-style: decimal;
+}
+
 .works-for li {
   padding-block: 0.5rem;
   border-block-start: 1px solid var(--line);
 }
 
-.changes strong,
 .works-for strong {
   display: block;
   font-weight: 560;
 }
 
-.changes span,
 .works-for span {
   color: var(--muted);
   font-size: var(--small);
@@ -486,6 +521,15 @@ body > .foot {
     animation: arrive 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
   }
 
+  /* The first answers must be readable at once. */
+  .live .hero .column > * {
+    animation-duration: 0.5s;
+  }
+
+  .live .hero .column > :nth-child(n + 2) {
+    animation-delay: 0.06s;
+  }
+
   @keyframes arrive {
     from {
       opacity: 0;
@@ -522,28 +566,32 @@ body > .foot {
   }
 
   .live .hero {
-    padding-block: 26svh 0.5rem;
+    padding-block: max(var(--bar), 14svh) 0.5rem;
+  }
+
+  /* The words get their own ground before they begin, so none is read over the shape. */
+  .live .hero .column {
+    margin-block-start: -2rem;
+    padding-block-start: 2rem;
+    background: linear-gradient(transparent, rgb(5 6 7 / 0.9) 2rem);
   }
 
   .live .hero h1 {
-    font-size: 1.875rem;
+    font-size: 1.5rem;
   }
 
-  .live .hero-what {
-    margin-block-start: 0.75rem;
-    font-size: 1rem;
+  .answers > div {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 0.375rem;
   }
 
-  .live .changes {
-    margin-block: 0.875rem;
+  .answers dt {
+    font-size: 0.875rem;
   }
 
-  .live .changes li {
-    padding-block: 0.25rem;
-  }
-
-  .live .changes span {
-    display: none;
+  .answers dd {
+    font-size: 0.8125rem;
+    line-height: 1.5;
   }
 
   .live .example .column {

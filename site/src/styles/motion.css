@@ -159,7 +159,7 @@
 
   .rows > div,
   .index li,
-  .changes li,
+  .answers > div,
   .works-for li {
     background: linear-gradient(var(--ivory), var(--ivory)) no-repeat 0 0 / 0 1px;
     transition: background-size 0.55s var(--glide);
@@ -167,7 +167,7 @@
 
   .rows > div:hover,
   .index li:hover,
-  .changes li:hover,
+  .answers > div:hover,
   .works-for li:hover {
     background-size: 100% 1px;
   }
