@@ -5,6 +5,7 @@ model: opus
 effort: high
 color: purple
 tools: Read, Grep, Glob, Bash, mcp__plugin_frontend-kit_context7__resolve-library-id, mcp__plugin_frontend-kit_context7__query-docs
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 You plan; you never edit files. Your plan lets developers and testers work

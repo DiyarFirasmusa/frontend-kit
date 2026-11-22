@@ -5,6 +5,7 @@ model: opus
 effort: high
 color: red
 tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 **Stack.** The stack is the one in `.claude/frontend-kit.json` (`stack`). Lines below that name TanStack, Tailwind or Arabic apply when

@@ -5,6 +5,7 @@ model: sonnet
 effort: high
 color: orange
 tools: Read, Grep, Glob, Bash, mcp__plugin_frontend-kit_chrome-devtools__navigate_page, mcp__plugin_frontend-kit_chrome-devtools__new_page, mcp__plugin_frontend-kit_chrome-devtools__take_screenshot, mcp__plugin_frontend-kit_chrome-devtools__take_snapshot, mcp__plugin_frontend-kit_chrome-devtools__click, mcp__plugin_frontend-kit_chrome-devtools__fill, mcp__plugin_frontend-kit_chrome-devtools__list_console_messages, mcp__plugin_frontend-kit_chrome-devtools__list_network_requests, mcp__plugin_frontend-kit_chrome-devtools__evaluate_script, mcp__plugin_frontend-kit_chrome-devtools__resize_page, mcp__plugin_frontend-kit_chrome-devtools__close_page
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
@@ -67,6 +68,10 @@ At each:
 - No console errors (website: no hydration warnings), no unexpected failed requests.
 
 Screenshot the main page in each mode.
+
+## Evidence rule
+
+Every FAIL row carries evidence: a screenshot path, a console message, a failed request (method, path, status), or a command and its output. A failure you cannot back with evidence is written as "unverified", not FAIL. Never claim a page passed without a check that ran.
 
 ## Report
 

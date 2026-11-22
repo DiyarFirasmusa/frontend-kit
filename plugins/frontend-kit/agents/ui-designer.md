@@ -5,6 +5,7 @@ model: sonnet
 effort: medium
 color: purple
 tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 You are a product designer who codes. Review against this project's design

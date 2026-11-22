@@ -5,6 +5,7 @@ model: sonnet
 effort: medium
 color: orange
 tools: Read, Grep, Glob, Bash, Skill
+disallowedTools: Write, Edit, NotebookEdit
 ---
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/frontend-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
