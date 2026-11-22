@@ -2,6 +2,15 @@
 name: setup
 description: Install frontend-kit's project files into the current project — CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/frontend-kit.json. Asks first whether it is a new project, an existing one, one in maintenance or a refactor, then the kind of project (website, dashboard, or any other frontend in any stack), maps where each role lives, and adapts the rules to both. Run with /frontend-kit:setup.
 disable-model-invocation: true
+allowed-tools:
+  - Read(/${CLAUDE_PLUGIN_ROOT}/templates/**)
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-detect-stack.sh")
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-detect-stack.sh" *)
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-prune.sh" *)
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh")
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh" *)
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-scope-rules.sh" *)
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-update-check.sh")
 ---
 
 # frontend-kit setup
