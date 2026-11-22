@@ -3,6 +3,12 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## 1.15.4
+- Updates are described as they work. `/plugin marketplace update` alone never updated the installed plugin, and
+  `autoUpdate` does nothing outside interactive sessions or where updates are disabled, as in the Claude desktop app.
+  By hand: `claude plugin marketplace update frontend-kit && claude plugin update frontend-kit@frontend-kit`.
+- `/frontend-kit:setup` ends with `kit-update-check.sh` and says whether updates will arrive by themselves.
+
 ## 1.15.3
 - **Data loss fixed, update before you run the hook self-test.** In 1.15.2 and earlier, when no temp folder could be made
   `test-hooks.sh` took the folder it was started in for its temp folder: it wrote fixtures there and deleted it at the

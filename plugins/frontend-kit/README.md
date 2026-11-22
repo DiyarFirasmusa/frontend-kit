@@ -73,8 +73,21 @@ Self-test, from a clone of the repository: `KIT_TEST_PROJECT=/path/to/project ba
 
 ## Update
 
-Projects set up by `/frontend-kit:setup` update the plugin on their own (`autoUpdate`) when its `version` changes; by
-hand: `/plugin marketplace update frontend-kit`. Copied files (`CLAUDE.md`, rules, settings) don't update themselves:
+By hand, in the project's folder. Both commands: the first alone refreshes the list and leaves the installed version.
+`claude plugin list` shows the version you have. Restart Claude Code afterwards.
+
+```bash
+claude plugin marketplace update frontend-kit && claude plugin update frontend-kit@frontend-kit
+```
+
+On its own only when all of these hold:
+
+- `autoUpdate` is true for the kit's marketplace (`/frontend-kit:setup` writes it; it is off by default);
+- the session is interactive (the update runs up to ten minutes after the first message);
+- none of `DISABLE_AUTOUPDATER`, `DISABLE_UPDATES` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is set, or
+  `FORCE_AUTOUPDATE_PLUGINS=1` is too. The Claude desktop app sets `DISABLE_AUTOUPDATER`, so there update by hand.
+
+Setup checks this and says which case you are in. Copied files (`CLAUDE.md`, rules, settings) never update themselves:
 re-run `/frontend-kit:setup` to pull template changes; it shows a diff before touching existing files.
 
 Third-party skills and their licences: `THIRD_PARTY_NOTICES.md`.
