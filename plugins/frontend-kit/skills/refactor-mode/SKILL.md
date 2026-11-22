@@ -3,6 +3,7 @@ name: refactor-mode
 description: Turn refactor mode on or off and run it — audit the project against the kit's standards, write a phased plan, then restructure phase by phase without changing behaviour. Run with /frontend-kit:refactor-mode.
 argument-hint: "[on | off | status | audit | next]"
 disable-model-invocation: true
+allowed-tools: Bash("${CLAUDE_PLUGIN_ROOT}/scripts/mode-switch.sh" *)
 ---
 
 # Refactor mode
@@ -14,19 +15,22 @@ Refactor mode brings an existing project up to the standards in `.claude/rules/`
 (`scope.md`) is lifted **for the planned phases only**. Everything else still holds: branch per task, ask before
 commit and push, the hooks, the gate.
 
-## `on`
+```!
+"${CLAUDE_PLUGIN_ROOT}/scripts/mode-switch.sh" "${CLAUDE_PROJECT_DIR}" refactor <<'KIT_MODE_ARGS_7F3A'
+$ARGUMENTS
+KIT_MODE_ARGS_7F3A
+```
 
-1. Read `.claude/frontend-kit.json`; stop if it is missing (run `/frontend-kit:setup` first).
-2. Set `"mode": "refactor"` with `jq` (keep every other key), show the diff, write the file.
-3. Say what comes next: `/frontend-kit:refactor-mode audit`.
+## `on`, `off`, `status`
 
-## `off`
+The line above is their result (the switch already ran; `/frontend-kit:mode` is the same switch for every mode). Show it. After `on`
+say what comes next: `/frontend-kit:refactor-mode audit`. Never change the mode yourself, with a tool or by editing
+`.claude/frontend-kit.json`: only the user switches modes, and the mode guard refuses it. `off` keeps unfinished phases in
+`docs/refactor-plan.md`. For `audit` and `next` the line says whether refactor mode is on: if it is not, say so and stop.
 
-Set `"mode": "existing"` the same way. Unfinished phases stay in `docs/refactor-plan.md`.
-
-## `status`
-
-Print the mode and, from `docs/refactor-plan.md`, which phases are done, current and pending. Edit nothing.
+**What is enforced.** The mode guard blocks deleting a test file, adding `.skip`/`.only`, shrinking a test file's cases,
+refreshing snapshots and adding a suppression comment (`@ts-ignore`, `eslint-disable`). Everything else here (frozen behaviour,
+one phase at a time, the approved plan) is an instruction to you.
 
 ## `audit` (read-only)
 
@@ -44,14 +48,25 @@ Create a task branch from `origin/<defaultBranch>` if you are on a protected one
 - **Kit leftovers:** `kit-prune.sh <profile>` (dry run) lists rules from another profile; they go into phase 2.
 - **Quality:** test coverage of the logic, flaky or skipped tests, `console.log`, TODOs, secrets in the repo.
 
+- **Public surface (the frozen things):** record the routes and URLs, exports others import, network requests, storage keys,
+  analytics events and i18n keys. They are compared again at the end of every phase.
+
 Write `docs/refactor-plan.md`: findings with counts and example `file:line`, then **phases** ordered by risk:
 
+0. Safety net: where the code to be moved has no test, pin what it does today (a characterization test, or a route-level or e2e
+   test), in its own commit before the code moves, labelled "current behaviour, not verified correct". Show the user anything
+   that looks like a bug instead of fixing or enshrining it.
 1. Green baseline (fix the red gate; no restructuring).
 2. Mechanical (format, lint autofix, import order, file renames, dead code removal, kit leftovers moved to `.claude/kit-backup/`).
 3. Types (strict, remove `any`, type the API layer).
 4. Structure (move to feature folders, split big files, extract hooks; move first, change nothing else).
 5. Patterns (data layer, forms, state: one library, one way).
-6. Quality (tests for the logic that moved, accessibility, i18n, performance budgets).
+6. Quality (more tests, accessibility, i18n, performance budgets).
+
+Some steps cannot keep behaviour frozen: making a red baseline green, removing code that is used dynamically, hook-dependency
+lint fixes, strictness fixes that add guards, swapping one data or form library for another, and accessibility, i18n or
+performance work. Each of these is listed as a **behaviour change**, approved on its own, with how its equivalence or
+difference is shown. A route file move changes a URL: it keeps the URL or needs an approved redirect map.
 
 Each phase lists its files, the check that proves it done, and the rollback (it is one commit). Show the plan and
 **wait for the user's OK**; they may drop or reorder phases.
@@ -66,8 +81,15 @@ Run the first pending phase of the approved plan:
 3. Work in small steps; after each batch run the typecheck and the related tests. Use `fix-everywhere` for patterns.
 4. At the end run `verify` and report the real numbers against the audit baseline: same tests passing, same
    typecheck result, fewer findings.
-5. Mark the phase done in the plan, then **ask before commit and push** (one commit per phase, conventional
+5. Compare the public surface against the audit's record; any difference is reported, not shipped. At a phase end run the
+   whole unit suite, the build and e2e, not only the related tests.
+6. Mark the phase done in the plan, then **ask before commit and push** (one commit per phase, conventional
    message). Stop; the user starts the next phase.
+
+## Leaving
+
+When the plan is done (or dropped by the user): transitional code and shims removed, `/frontend-kit:refactor-mode off`.
+"Rollback is one commit" holds only while later phases do not depend on an earlier one; the plan says where they do.
 
 ## Rules while it is on
 

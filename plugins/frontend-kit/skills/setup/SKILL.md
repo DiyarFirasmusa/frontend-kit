@@ -19,13 +19,18 @@ The flow is: ask (1) → detect (2) → **proposal the user approves (3)** → c
 
 Ask in this order. The first two are the user's own answers: detection only pre-selects an option, never decides.
 
-**Question 1: what are we doing?** (one question, three options)
+**Question 1: what are we doing?** (one question, four options)
 
 | Answer | Meaning | Sets |
 | ------ | ------- | ---- |
 | New project | Nothing or almost nothing exists yet; build to the standards from the first file | `"mode": "new"` |
 | Existing project | Add the kit to a working project; keep its structure, follow its stack | `"mode": "existing"` |
+| Maintenance | An old app that is kept running, not developed: fixes and security only, no modernising | `"mode": "maintenance"` |
 | Refactor | An existing project the user wants restructured to the standards (phased, behaviour frozen) | `"mode": "refactor"` |
+
+Other modes are turned on later, not here: `/frontend-kit:mode list` shows `upgrade`, `freeze`, `hotfix`, `read-only` and `prototype`
+and what each one enforces. If `.claude/frontend-kit.json` already holds a mode other than `existing` or `new`, setup keeps it:
+the mode guard refuses a change of `"mode"` made by a tool, so tell the user to run `/frontend-kit:mode <name>` instead.
 
 For *New project* with no `package.json`: ask which framework (Vite, Next.js, TanStack Start, React Router, other)
 and offer to run that framework's official create command; run it only after the user says yes. Then continue.
@@ -230,6 +235,7 @@ Only what the user approved in the proposal:
 - Check `jq` is installed (`command -v jq`): every hook needs it. If missing, say `brew install jq`.
 - Report in 3–6 lines: profile, files created / merged / skipped, values used, and the next steps:
   - Restart Claude Code so the new CLAUDE.md, rules and settings load.
+  - Modes: `/frontend-kit:mode status` shows the mode, `/frontend-kit:mode list` all of them.
   - Refactor mode chosen: run `/frontend-kit:refactor-mode audit`. New project: start with the `task` skill.
   - Hook self-test: `KIT_TEST_PROJECT="$PWD" bash "${CLAUDE_PLUGIN_ROOT}/scripts/test-hooks.sh"`.
 - Do not commit. The user commits when they say so. Tell them the kit files (`CLAUDE.md`, `.claude/`, new
