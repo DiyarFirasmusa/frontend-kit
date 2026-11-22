@@ -49,6 +49,7 @@ export class Player {
 
     addEventListener('scroll', this.request, { passive: true })
     addEventListener('resize', this.request)
+    addEventListener('pageshow', this.resume)
     document.addEventListener('visibilitychange', this.resume)
     addEventListener(
       'pointermove',
@@ -91,6 +92,11 @@ export class Player {
     this.canvas.style.visibility = ''
   }
 
+  restore(): void {
+    this.film.restore()
+    this.resume()
+  }
+
   private goal(): number {
     return clamp(scrollY / Math.max(1, this.height), 0, this.timeline.length)
   }
@@ -114,6 +120,9 @@ export class Player {
     this.height = this.canvas.clientHeight
     this.width = this.canvas.clientWidth
     const goal = this.goal()
+
+    // No size yet (a hidden pane): look again on the next frame.
+    if (!this.width || !this.height) return this.request()
 
     // The details cover the film: nothing to draw until it comes back into view.
     const covered = this.details.getBoundingClientRect().top <= 0

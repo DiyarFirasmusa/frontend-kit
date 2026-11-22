@@ -1,6 +1,7 @@
 import { ACESFilmicToneMapping, Vector2, Vector3, WebGLRenderer } from 'three'
 import { MOVES } from './direction.ts'
 import { impactAt } from './impact.ts'
+import { toClip } from './pointer.ts'
 import { isSoftwareRenderer, pickQuality, type Quality } from './quality.ts'
 import { BlockMesh } from './render/block-mesh.ts'
 import { CameraRig, type Layout, type Projected, type Screen } from './render/camera-rig.ts'
@@ -38,6 +39,7 @@ export class Film {
   private readonly sun = new Vector3()
   private readonly cheaperSteps: (() => void)[]
   private pixelRatio: number
+  private resizeDue = true
   private touched = 0
 
   static async create(canvas: HTMLCanvasElement, census: Census, rtl: boolean): Promise<Film> {
@@ -85,7 +87,10 @@ export class Film {
   }
 
   point(x: number, y: number): void {
-    this.pointer.set((x / this.screen.width) * 2 - 1, 1 - (y / this.screen.height) * 2)
+    // Not `screen`: the pointer can move before the first frame has measured it.
+    const clip = toClip(x, y, this.canvas.clientWidth, this.canvas.clientHeight)
+    if (!clip) return
+    this.pointer.set(...clip)
     this.touched = 1
   }
 
@@ -93,14 +98,21 @@ export class Film {
     return this.rig.project(point)
   }
 
+  /** After the GPU dropped the context, what was drawn once into textures is empty. */
+  restore(): void {
+    this.set.lightRoom(this.renderer)
+    this.resizeDue = true
+  }
+
   private setPixelRatio(value: number): void {
     this.pixelRatio = value
-    this.screen.width = 0
+    this.resizeDue = true
   }
 
   private fitCanvas(): void {
     const { clientWidth, clientHeight } = this.canvas
-    if (clientWidth === this.screen.width && clientHeight === this.screen.height) return
+    if (!this.resizeDue && clientWidth === this.screen.width && clientHeight === this.screen.height) return
+    this.resizeDue = false
     this.screen.width = clientWidth
     this.screen.height = clientHeight
     this.renderer.setPixelRatio(this.pixelRatio)
@@ -110,7 +122,7 @@ export class Film {
   }
 
   render({ from, to, hold, move, layouts, time, delta, speed, open }: Shot): void {
-    if (!this.canvas.clientWidth) return
+    if (!this.canvas.clientWidth || !this.canvas.clientHeight) return
     this.fitCanvas()
     this.blocks.load(from, to)
 

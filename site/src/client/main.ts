@@ -10,6 +10,8 @@ initCopy()
 initGate()
 initNavigation()
 
+const RESTORE_WITHIN_MS = 5000
+
 const root = document.documentElement
 const button = required<HTMLButtonElement>('[data-motion]')
 const canvas = required<HTMLCanvasElement>('#film')
@@ -49,7 +51,8 @@ async function loadPlayer(): Promise<Player> {
   const census = JSON.parse(required('#census').textContent ?? '') as Census
   const rtl = root.dir === 'rtl'
   const film = await Film.create(canvas, census, rtl)
-  return new Player(film, rtl, unavailable)
+  // Too slow is not impossible: the still page keeps its play button.
+  return new Player(film, rtl, stillPage)
 }
 
 async function playFilm(): Promise<void> {
@@ -79,7 +82,17 @@ matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (event
   if (event.matches && !hasChoice()) stillPage()
 })
 
-canvas.addEventListener('webglcontextlost', unavailable)
+// The GPU can drop the context and hand it straight back, for example while the page reloads.
+let restoreTimer = 0
+canvas.addEventListener('webglcontextlost', (event) => {
+  event.preventDefault()
+  restoreTimer = window.setTimeout(unavailable, RESTORE_WITHIN_MS)
+})
+canvas.addEventListener('webglcontextrestored', () => {
+  clearTimeout(restoreTimer)
+  // After three's own listener has set its state up again.
+  setTimeout(() => player?.restore())
+})
 
 if (root.classList.contains('film')) void playFilm()
 else showMotion(button, false)

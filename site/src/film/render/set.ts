@@ -44,10 +44,8 @@ export class FilmSet {
     this.uniforms = uniforms
     const { scene } = this
 
-    const pmrem = new PMREMGenerator(renderer)
-    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+    this.lightRoom(renderer)
     scene.environmentIntensity = 0.3
-    pmrem.dispose()
     scene.fog = this.fog
 
     this.key.position.set(-14, 22, 18)
@@ -75,6 +73,13 @@ export class FilmSet {
     )
     haze.frustumCulled = false
     scene.add(haze)
+  }
+
+  /** Renders the studio that the metal reflects. */
+  lightRoom(renderer: WebGLRenderer): void {
+    const pmrem = new PMREMGenerator(renderer)
+    this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+    pmrem.dispose()
   }
 
   dropReflection(): void {

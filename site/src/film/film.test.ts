@@ -3,6 +3,7 @@ import { test } from 'node:test'
 import { STRIDE } from './shapes/blocks.ts'
 import { FULL, LITE, SHAPES, type Census, type ShapeName } from './shapes/index.ts'
 import { pack } from './shapes/pack.ts'
+import { toClip } from './pointer.ts'
 import { createTimeline } from './timeline.ts'
 
 const census: Census = { skills: 39, agents: 10, events: 9, ruleGroups: [10, 5, 6, 3, 2, 5] }
@@ -41,4 +42,12 @@ test('the timeline holds, travels and stops at the last scene', () => {
   assert.deepEqual(timeline.at(0.5), { index: 0, next: 1, hold: 0.5, move: 0 })
   assert.deepEqual(timeline.at(1.5), { index: 0, next: 1, hold: 1, move: 0.5 })
   assert.deepEqual(timeline.at(9), { index: 1, next: 1, hold: 1, move: 0 })
+})
+
+test('a pointer that moves before the stage has a size never reaches the camera', () => {
+  for (const [width, height] of [[0, 0], [0, 800], [1000, 0]] as const) {
+    assert.equal(toClip(180, 400, width, height), undefined)
+  }
+  assert.deepEqual(toClip(0, 800, 1000, 800), [-1, -1])
+  assert.deepEqual(toClip(500, 400, 1000, 800), [0, 0])
 })

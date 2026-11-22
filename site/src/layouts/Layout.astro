@@ -76,9 +76,14 @@ const product = JSON.stringify({
         const wanted = choice ? choice === 'on' : !matchMedia('(prefers-reduced-motion: reduce)').matches && !weak
         if (!wanted) return
         root.classList.add('film', 'film-loading')
-        setTimeout(() => {
-          if (root.classList.contains('film-loading')) root.classList.remove('film', 'film-loading')
-        }, 9000)
+        // Only time the visitor can see counts: a tab opened in the background is throttled, not stuck.
+        let seconds = 0
+        const watch = setInterval(() => {
+          if (!root.classList.contains('film-loading')) return clearInterval(watch)
+          if (document.hidden || ++seconds < 9) return
+          clearInterval(watch)
+          root.classList.remove('film', 'film-loading')
+        }, 1000)
       })()
     </script>
   </head>
