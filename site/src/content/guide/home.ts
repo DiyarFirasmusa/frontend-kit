@@ -26,33 +26,33 @@ export const home = {
   see: t('See one request, step by step', 'شاهد طلباً واحداً خطوة بخطوة'),
   docs: t('Read the documentation', 'اقرأ التوثيق'),
 
-  example: t('One request, start to finish', 'طلب واحد، من أوله إلى آخره'),
-  exampleLead: t('You type one sentence. This is what happens next.', 'تكتب جملة واحدة، وهذا ما يحدث بعدها.'),
+  example: t('One request, start to finish', 'من أول طلب إلى آخر خطوة'),
+  exampleLead: t('You type one sentence. This is what happens next.', 'تكتب جملة واحدة، وتتابع ما يحدث بعدها خطوة بخطوة.'),
   prompt: t('Add an orders page with a table and a status filter', 'أنشئ صفحة طلبات فيها جدول وفلتر للحالة'),
   steps: {
     skills: {
-      name: t('Picks the right playbooks', 'يختار الأدلة المناسبة'),
-      text: t('The table and filter skills say how to build it: server paging, filters in the URL, every state.', 'مهارتا الجدول والفلتر تحددان طريقة البناء: تقسيم الصفحات من الخادم، والفلاتر في الرابط، وكل الحالات.'),
+      name: t('Picks the right playbooks', 'يختار المهارات المناسبة'),
+      text: t('The table and filter skills say how to build it: server paging, filters in the URL, every state.', 'تحدد مهارتا الجدول والفلتر كيف تُبنى الصفحة: ترقيم الصفحات من الخادم، والفلاتر في الرابط، وكل حالات العرض.'),
     },
     rules: {
       name: t('Reads your project’s rules', 'يقرأ قواعد مشروعك'),
-      text: t('While it edits those files, the rules for tables, permissions and your API are loaded.', 'أثناء تعديله هذه الملفات، تُحمَّل قواعد الجداول والصلاحيات والـ API.'),
+      text: t('While it edits those files, the rules for tables, permissions and your API are loaded.', 'وهو يعدّل هذه الملفات، تكون أمامه قواعد الجداول والصلاحيات والـ API.'),
     },
     guard: {
       name: t('Refuses a risky command', 'يرفض أمراً خطراً'),
-      text: t('If it tries a force push, the hook stops it with this answer:', 'إذا حاول إجراء force push، يوقفه الحارس بهذه الإجابة:'),
+      text: t('If it tries a force push, the hook stops it with this answer:', 'إذا حاول رفعاً بالقوة (force push)، يوقفه الحارس بهذا الرد:'),
     },
     gate: {
       name: t('Runs typecheck and tests', 'يشغّل فحص الأنواع والاختبارات'),
-      text: t('Before it can finish. A failure goes back to it to fix.', 'قبل أن ينهي. وأي فشل يعود إليه ليصلحه.'),
+      text: t('Before it can finish. A failure goes back to it to fix.', 'تعمل قبل أن ينهي المساعد عمله، وأي فشل يعود إليه ليصلحه.'),
     },
     review: {
       name: t('Gets a second opinion', 'يأخذ رأياً ثانياً'),
-      text: t('frontend-reviewer reads the change with fresh eyes and lists what to fix.', 'يقرأ frontend-reviewer التغيير بنظرة جديدة، ويذكر ما يجب إصلاحه.'),
+      text: t('frontend-reviewer reads the change with fresh eyes and lists what to fix.', 'يقرأ frontend-reviewer التغيير بعين جديدة، ويكتب ما يجب إصلاحه.'),
     },
     done: {
       name: t('Asks you', 'يسألك'),
-      text: t('A short report and one question: commit and push? The pull request stays your call.', 'تقرير قصير وسؤال واحد: أحفظ وأرفع؟ أما فتح طلب الدمج (pull request) فقرارك.'),
+      text: t('A short report and one question: commit and push? The pull request stays your call.', 'تصلك خلاصة قصيرة وسؤال واحد: هل أحفظ وأرفع؟ أما فتح الـ pull request فقرارك.'),
     },
   },
   /** The words of the session panel. */
@@ -64,12 +64,12 @@ export const home = {
     typecheck: t('typecheck', 'فحص الأنواع'),
     tests: t('related tests', 'الاختبارات المرتبطة'),
     reviewing: t('reviewing the change', 'يراجع التغيير'),
-    ask: t('Commit and push?', 'أحفظ وأرفع؟'),
+    ask: t('Commit and push?', 'هل أحفظ وأرفع؟'),
   },
 
   // Where a project stands when the kit arrives: new, already running, or a mess.
   starts: {
-    title: t('New, running or messy: it fits', 'تناسب المشروع الجديد، والقائم، والفوضوي'),
+    title: t('New, running or messy: it fits', 'مشروع جديد أو قائم أو فوضوي؟ تناسبها كلها'),
     lead: t('Start a project with it, add it to the one you are working on, or use it to clean an old one up. Then keep working, clean.', 'ابدأ بها مشروعاً جديداً، أو أضفها إلى مشروعك الحالي، أو نظّف بها مشروعاً قديماً. ثم واصل عملك بكود نظيف.'),
     cases: [
       {
