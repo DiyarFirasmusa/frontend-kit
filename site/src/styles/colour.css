@@ -903,3 +903,10 @@ body .top.is-scrolled::before {
     padding-inline-start: 0.75rem;
   }
 }
+
+/* Links to a place on the same page, like the ones in the header, glide there instead of jumping. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
