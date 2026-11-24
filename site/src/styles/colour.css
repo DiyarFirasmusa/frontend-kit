@@ -904,3 +904,10 @@ body:not(:has(main.doc)) .top::before {
 body:not(:has(main.doc)) .top.is-scrolled::before {
   opacity: 1;
 }
+
+/* On doc pages the logo lines up with the side menu: both start the same distance from the edge. */
+@media (min-width: 901px) {
+  body:has(main.doc) .top {
+    padding-inline-start: 0.75rem;
+  }
+}
