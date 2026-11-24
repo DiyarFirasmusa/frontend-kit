@@ -6,8 +6,7 @@ import { ruleGuides } from '../content/guide/rules.ts'
 import { content } from '../content/index.ts'
 import type { HookEvent, Locale } from '../content/types.ts'
 import Layout from '../layouts/Layout.astro'
-import { viewOfRoute } from '../lib/kit-map.ts'
-import { agentUrl, asset, hookUrl, pageUrl, ruleUrl, skillUrl } from '../lib/links.ts'
+import { agentUrl, hookUrl, pageUrl, ruleUrl, skillUrl } from '../lib/links.ts'
 import { hookEvents, ruleGroups } from '../lib/plugin.ts'
 import type { Route } from '../lib/routes.ts'
 import DocsTree from './docs/DocsTree.astro'
@@ -72,14 +71,13 @@ const detail = route.kind !== 'page'
 const summary = here.about
 const heading = detail ? here.name : info.title[locale]
 const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${here.among})` : ''}` : info.name[locale]
-const { shape, stop } = viewOfRoute(route)
 ---
 
 <Layout locale={locale} route={route} title={`${label} | frontend-kit`} description={summary ?? ''}>
   <Header locale={locale} route={route} />
-  <main id="content" class="doc" tabindex="-1" data-stage-shape={shape} data-stage-stop={stop} data-stage-layout="far">
+  <main id="content" class="doc" tabindex="-1">
     <DocsTree locale={locale} route={route} />
-    <div class="column">
+    <div class="column" transition:name="page">
       <header class="doc-head">
         <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
           {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
@@ -87,7 +85,6 @@ const { shape, stop } = viewOfRoute(route)
         </nav>
         <h1 class:list={{ 'is-name': detail }} data-rise={detail ? undefined : ''}>{detail ? <bdi>{heading}</bdi> : heading}</h1>
         <p class="doc-summary">{summary}</p>
-        <img class="still" src={asset(`stills/${info.still}.jpg`)} width="1000" height="620" alt="" />
       </header>
       <article class="doc-article">
         <slot />

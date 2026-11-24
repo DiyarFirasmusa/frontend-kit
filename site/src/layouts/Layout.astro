@@ -10,9 +10,9 @@ import '../styles/details.css'
 import '../styles/guide.css'
 import '../styles/doc.css'
 import '../styles/stage.css'
+import '../styles/home.css'
 import '../styles/motion.css'
 import { ClientRouter } from 'astro:transitions'
-import Stage from '../components/stage/Stage.astro'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
 import { asset, routeUrl } from '../lib/links.ts'
@@ -75,34 +75,8 @@ const product = JSON.stringify({
     <script is:inline>
       document.documentElement.classList.add('js')
     </script>
-    <script is:inline>
-      // The page is complete without the stage. It is only laid out around it when this device can play it.
-      ;(() => {
-        const root = document.documentElement
-        let choice = null
-        try {
-          choice = localStorage.getItem('kit-motion')
-        } catch {
-          // Storage is blocked: follow the system setting.
-        }
-        if (!('WebGL2RenderingContext' in window)) return root.classList.add('no-live')
-        const weak = Boolean(navigator.connection?.saveData) || (navigator.deviceMemory && navigator.deviceMemory <= 2)
-        const wanted = choice ? choice === 'on' : !matchMedia('(prefers-reduced-motion: reduce)').matches && !weak
-        if (!wanted) return
-        root.classList.add('live', 'live-loading')
-        // Only time the visitor can see counts: a tab opened in the background is throttled, not stuck.
-        let seconds = 0
-        const watch = setInterval(() => {
-          if (!root.classList.contains('live-loading')) return clearInterval(watch)
-          if (document.hidden || ++seconds < 9) return
-          clearInterval(watch)
-          root.classList.remove('live', 'live-loading')
-        }, 1000)
-      })()
-    </script>
   </head>
   <body>
-    <Stage locale={locale} />
     <slot />
     <script>
       import '../client/app.ts'

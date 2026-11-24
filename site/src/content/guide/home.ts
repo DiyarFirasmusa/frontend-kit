@@ -2,62 +2,68 @@ import { t } from './text.ts'
 
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
-  title: t('A plugin that makes your coding assistant work like a frontend team.', 'إضافة تجعل مساعدك البرمجي يعمل كفريق واجهات.'),
-  // The three questions of a first visit, each answered in full on the first screen.
-  answers: {
-    is: {
-      name: t('What is it?', 'ما هي؟'),
-      text: t(
-        'A Claude Code plugin for frontend projects in any stack, React and TypeScript first-class: written know-how, standards, reviewers and automatic guards.',
-        'إضافة تعمل داخل \u2066Claude Code\u2069 لمشاريع الواجهات بأي تقنيات، وReact وTypeScript بالأولوية، فيها أدلة عمل ومعايير ووكلاء مراجعة وحرّاس تلقائيون.',
-      ),
+  title: t('Your coding assistant, working like a frontend team.', 'مساعدك البرمجي، يعمل كفريق واجهات.'),
+  lead: t(
+    'A Claude Code plugin. It teaches the assistant how your project is built, stops risky commands, and checks every change before you commit.',
+    'إضافة لـ ⁦Claude Code⁩. تعلّم المساعد طريقة بناء مشروعك، وتوقف الأوامر الخطرة، وتفحص كل تغيير قبل الحفظ.',
+  ),
+  // Three things a first visit should take away, one line each.
+  points: [
+    {
+      name: t('Builds your way', 'يبني بطريقتك'),
+      text: t('Pages, tables and forms follow the patterns your project already uses.', 'الصفحات والجداول والنماذج تتبع أنماط مشروعك نفسها.'),
     },
-    does: {
-      name: t('What does it do?', 'ماذا تفعل؟'),
-      text: t(
-        'Your assistant builds pages, tables and forms the way your project already does them. Known dangerous commands are refused. Its code is typechecked, tested and sent for review.',
-        'تجعل مساعدك يبني الصفحات والجداول والنماذج بنفس طريقة مشروعك، وترفض الأوامر الخطرة المعروفة، وتفحص أنواع الشيفرة واختباراتها ثم تطلب مراجعتها.',
-      ),
+    {
+      name: t('Blocks risky commands', 'يمنع الأوامر الخطرة'),
+      text: t('Force pushes, pushes to main and reading secrets are refused.', 'الرفع القسري والرفع إلى main وقراءة الأسرار تُرفض.'),
     },
-    works: {
-      name: t('How does it work?', 'كيف تعمل؟'),
-      steps: [
-        t('Install it once. Setup adapts it to your project.', 'تثبّتها مرة، والإعداد يلائمها لمشروعك.'),
-        t('Ask in your own words. The assistant follows the matching guide.', 'تطلب بكلامك، فيتبع المساعد الدليل المناسب.'),
-        t('Checks run by themselves, and you approve the commit.', 'تعمل الفحوص وحدها، وأنت توافق على الحفظ.'),
-      ],
+    {
+      name: t('Checks before you commit', 'يفحص قبل الحفظ'),
+      text: t('Typecheck, tests and a second reviewer run. You approve the commit.', 'فحص الأنواع والاختبارات ومراجع ثانٍ. وأنت توافق على الحفظ.'),
     },
-  },
-  see: t('See it on a real request', 'شاهدها على طلب حقيقي'),
+  ],
+  see: t('See one request, step by step', 'شاهد طلباً واحداً خطوة بخطوة'),
   docs: t('Read the documentation', 'اقرأ التوثيق'),
 
-  example: t('How it works, step by step, on one request', 'كيف تعمل خطوة بخطوة، على طلب واحد'),
+  example: t('One request, start to finish', 'طلب واحد، من البداية للنهاية'),
+  exampleLead: t('You type one sentence. This is what happens next.', 'تكتب جملة واحدة. هذا ما يحدث بعدها.'),
   prompt: t('Add an orders page with a table and a status filter', 'أضف صفحة طلبات بجدول وفلتر للحالة'),
   steps: {
     skills: {
-      name: t('1. The matching skills are named', '1. تُسمّى المهارات المناسبة'),
-      text: t('The table and filter skills are named before work starts: server paging, filters in the URL, all four states.', 'تُسمّى مهارتا الجدول والمرشحات قبل البدء: ترقيم من الخادم ومرشحات في الرابط والحالات الأربع.'),
+      name: t('Picks the right playbooks', 'يختار الأدلة المناسبة'),
+      text: t('The table and filter skills say how to build it: server paging, filters in the URL, every state.', 'مهارتا الجدول والفلتر تحددان طريقة البناء: ترقيم من الخادم، فلاتر في الرابط، وكل الحالات.'),
     },
     rules: {
-      name: t('2. Your project’s rules load', '2. تُحمَّل قواعد مشروعك'),
-      text: t('While it edits those files, the rules for tables, permissions and your API are in front of it.', 'أثناء تعديل تلك الملفات تكون قواعد الجداول والصلاحيات والـ API أمامه.'),
+      name: t('Reads your project’s rules', 'يقرأ قواعد مشروعك'),
+      text: t('While it edits those files, the rules for tables, permissions and your API are loaded.', 'أثناء تعديل تلك الملفات تُحمَّل قواعد الجداول والصلاحيات والـ API.'),
     },
     guard: {
-      name: t('3. A dangerous command is refused', '3. يُرفض الأمر الخطر'),
-      text: t('If it tries a force push, the hook answers with exactly this:', 'إذا حاول رفعاً قسرياً أجابه الحارس بهذا النص تماماً:'),
+      name: t('Refuses a risky command', 'يرفض أمراً خطراً'),
+      text: t('If it tries a force push, the hook stops it with this answer:', 'إذا حاول رفعاً قسرياً، يوقفه الحارس بهذا الرد:'),
     },
     gate: {
-      name: t('4. Typecheck and tests run', '4. يعمل فحص الأنواع والاختبارات'),
-      text: t('Typecheck and related tests run when it tries to finish. A failure goes back to it, up to three times in a row.', 'يعمل فحص الأنواع والاختبارات المرتبطة عندما يحاول الانتهاء، ويعود إليه الفشل حتى ثلاث مرات متتالية.'),
+      name: t('Runs typecheck and tests', 'يشغّل فحص الأنواع والاختبارات'),
+      text: t('Before it can finish. A failure goes back to it to fix.', 'قبل أن ينتهي. وأي فشل يعود إليه ليصلحه.'),
     },
     review: {
-      name: t('5. A second agent reviews the change', '5. وكيل ثانٍ يراجع التغيير'),
-      text: t('frontend-reviewer reads it with fresh eyes and reports what to fix.', 'يقرؤه frontend-reviewer بعين جديدة ويذكر ما يجب إصلاحه.'),
+      name: t('Gets a second opinion', 'يأخذ رأياً ثانياً'),
+      text: t('frontend-reviewer reads the change with fresh eyes and lists what to fix.', 'يقرأ frontend-reviewer التغيير بعين جديدة ويذكر ما يجب إصلاحه.'),
     },
     done: {
-      name: t('6. You approve commit and push', '6. توافق على الحفظ والرفع'),
-      text: t('You get a short report and one question: commit and push? The pull request stays your click.', 'يصلك تقرير قصير وسؤال واحد: أحفظ وأرفع؟ ويبقى فتح طلب الدمج بيدك.'),
+      name: t('Asks you', 'يسألك'),
+      text: t('A short report and one question: commit and push? The pull request stays your call.', 'تقرير قصير وسؤال واحد: أحفظ وأرفع؟ وفتح طلب الدمج قرارك.'),
     },
+  },
+  /** The words of the session panel. */
+  session: {
+    skill: t('skill', 'مهارة'),
+    rule: t('rule', 'قاعدة'),
+    blocked: t('blocked', 'مرفوض'),
+    passed: t('passed', 'ناجح'),
+    typecheck: t('typecheck', 'فحص الأنواع'),
+    tests: t('related tests', 'الاختبارات المرتبطة'),
+    reviewing: t('reviewing the change', 'يراجع التغيير'),
+    ask: t('Commit and push?', 'أحفظ وأرفع؟'),
   },
 
   inside: t('What is inside', 'ماذا بداخلها'),

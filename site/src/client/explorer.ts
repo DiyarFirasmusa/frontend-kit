@@ -1,5 +1,4 @@
 import { all, required } from './dom.ts'
-import { cueStage } from './stage/host.ts'
 
 const NARROW = 820
 
@@ -21,7 +20,6 @@ export function initExplorer(): void {
     for (const other of picks) other.setAttribute('aria-current', String(other === pick))
     for (const panel of panels) panel.hidden = panel.dataset['panel'] !== choice
     explorer.dataset['stageShape'] = whole ? kindOf : shape
-    cueStage()
   }
 
   for (const pick of picks) {

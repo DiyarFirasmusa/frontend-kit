@@ -2,7 +2,7 @@
 import { home } from '../../content/guide/home.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
-import { asset, pageUrl } from '../../lib/links.ts'
+import { pageUrl } from '../../lib/links.ts'
 import { facts } from '../../lib/plugin.ts'
 import Commands from '../Commands.astro'
 
@@ -11,7 +11,6 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const { is, does, works } = home.answers
 const { kinds } = home
 const counts = [
   [kinds.skills, facts.skills, 'skills'],
@@ -21,35 +20,41 @@ const counts = [
 ] as const
 ---
 
-<section id="intro" class="hero" data-stage-shape="mark">
-  <div class="column">
-    <h1 data-rise>{home.title[locale]}</h1>
-    <dl class="answers">
-      <div>
-        <dt>{is.name[locale]}</dt>
-        <dd>
-          {is.text[locale]}
-          <span class="counts">
-            {counts.map(([name, count, page]) => <a href={pageUrl(locale, page)}>{name[locale]} <b>{count}</b></a>)}
-          </span>
-        </dd>
-      </div>
-      <div>
-        <dt>{does.name[locale]}</dt>
-        <dd>{does.text[locale]}</dd>
-      </div>
-      <div>
-        <dt>{works.name[locale]}</dt>
-        <dd>
-          <ol>{works.steps.map((step) => <li>{step[locale]}</li>)}</ol>
-        </dd>
-      </div>
-    </dl>
-    <Commands install={content[locale].install} first />
-    <p class="hero-ways">
+<section id="intro" class="hero">
+  <div class="column hero-copy">
+    <h1 class="enter">{home.title[locale]}</h1>
+    <p class="hero-lead enter">{home.lead[locale]}</p>
+    <div class="enter">
+      <Commands install={content[locale].install} first />
+    </div>
+    <p class="hero-ways enter">
       <a href="#example">{home.see[locale]}</a>
       <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
     </p>
   </div>
-  <img class="still" src={asset('stills/mark.jpg')} width="1000" height="620" alt="" />
+  <div class="hero-grid">
+    <ul class="points">
+      {
+        home.points.map(({ name, text }, i) => (
+          <li class="enter">
+            <span class="point-number" dir="ltr">0{i + 1}</span>
+            <h2>{name[locale]}</h2>
+            <p>{text[locale]}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <ul class="counts">
+      {
+        counts.map(([name, count, page]) => (
+          <li class="enter">
+            <a href={pageUrl(locale, page)}>
+              <b dir="ltr">{count}</b>
+              <span>{name[locale]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>

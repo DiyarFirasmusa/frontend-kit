@@ -17,7 +17,7 @@ const MOST_STAGGERED = 9
 
 /** Nothing on the page just sits there: each piece arrives as it is reached. */
 export function initReveal(signal: AbortSignal): void {
-  if (!document.documentElement.classList.contains('live')) return
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
   const watcher = new IntersectionObserver(
     (entries) => {
       let order = 0

@@ -21,7 +21,7 @@ const route: Route = { kind: 'home' }
 
 <Layout locale={locale} route={route} title={meta.title} description={meta.description}>
   <Header locale={locale} route={route} />
-  <main id="content" class="home" tabindex="-1" data-score>
+  <main id="content" class="home" tabindex="-1" transition:name="page">
     <Hero locale={locale} />
     <Example locale={locale} />
     <Explorer locale={locale} />

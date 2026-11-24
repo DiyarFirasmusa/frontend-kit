@@ -37,10 +37,6 @@ const places = [
     {places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)}
   </nav>
   <a class="top-docs" href={pageUrl(locale, 'docs')} aria-current={home ? undefined : 'true'}>{PAGES.docs.name[locale]}</a>
-  <button class="motion" type="button" data-motion data-pause={chrome.pause} data-play={chrome.play} title={chrome.pause}>
-    <i aria-hidden="true"></i>
-    <span class="sr-only">{chrome.pause}</span>
-  </button>
   <a class="language" href={routeUrl(other, route)} lang={other} hreflang={other} data-language data-astro-reload>{chrome.switchLanguage}</a>
   <a class="top-install" href={`${start}#install`}>{chrome.install}</a>
   <details class="menu" data-menu>

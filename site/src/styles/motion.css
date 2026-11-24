@@ -3,78 +3,9 @@
   display: inline-block;
 }
 
-/* The words and the blocks are one gesture: both follow `--shown`, which the scroll writes. */
-.live [data-score] [data-stage-shape] {
-  --in: var(--shown, 1);
-}
-
-.live [data-score] [data-stage-shape] .rise {
-  --word: clamp(0, var(--in) * 1.7 - var(--w) * 0.7, 1);
-  opacity: var(--word);
-  transform: translateY(calc((1 - var(--word)) * 0.85em)) rotate(calc((1 - var(--word)) * 5deg));
-  filter: blur(calc((1 - var(--word)) * 6px));
-}
-
-.live .hero .column > :not(h1),
-.live .example-ask > :not(h2),
-.live .run > li > :not(h3) {
-  --line: clamp(0, var(--in) * 1.8 - 0.8, 1);
-  opacity: var(--line);
-  transform: translateY(calc((1 - var(--line)) * 2.5rem));
-}
-
-.live .run > li > pre {
-  --line: clamp(0, var(--in) * 2.6 - 1.6, 1);
-  clip-path: inset(0 calc((1 - var(--line)) * 100%) 0 0);
-}
-
-.live .run > li::before {
-  scale: calc(0.4 + var(--in) * 1.2);
-}
-
-/* What has focus is always readable. */
-.live .run > li:focus-within,
-.live .example-ask:focus-within,
-.live .hero:focus-within {
-  --in: 1;
-}
-
-.live .run > li,
-.live .run > li.is-cued {
-  opacity: 1;
-}
-
-/* Room for the slow scroll to be watched. */
-.live .hero {
-  min-height: 115svh;
-}
-
-.live .example-ask {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 90svh;
-}
-
-.live .run > li {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 105svh;
-}
-
-.live .run > li::before {
-  inset-block-start: calc(50% - 5px);
-}
-
-.live .inside,
-.live .get-it {
-  padding-block-start: 22svh;
-}
-
 .arrives {
   opacity: 0;
-  translate: 0 2rem;
+  translate: 0 1rem;
 }
 
 .arrives.has-arrived {
@@ -90,11 +21,6 @@
     interpolate-size: allow-keywords;
     --spring: cubic-bezier(0.3, 1.5, 0.5, 1);
     --glide: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .live .doc-head .rise {
-    animation: rise 0.9s var(--glide) both;
-    animation-delay: calc(0.15s + var(--w) * 0.35s);
   }
 
   @keyframes rise {
@@ -271,82 +197,5 @@
     50% {
       border-color: rgb(224 119 107 / 0.4);
     }
-  }
-
-  .live .brand {
-    display: flex;
-    gap: 0.6rem;
-  }
-}
-
-@media (max-width: 820px) {
-  .live .run > li,
-  .live .example-ask {
-    justify-content: flex-end;
-    min-height: 100svh;
-    padding-block-end: 14svh;
-  }
-
-  .live .run > li {
-    background: linear-gradient(transparent 38svh, rgb(5 6 7 / 0.88) 56svh);
-  }
-
-  .live .example-ask {
-    background: linear-gradient(transparent 34svh, rgb(5 6 7 / 0.88) 56svh);
-  }
-
-  .live .hero {
-    min-height: 100svh;
-  }
-
-  .live .inside {
-    padding-block-start: 34svh;
-  }
-
-  .live .get-it {
-    padding-block-start: 36svh;
-  }
-}
-
-/* A step is said as large as it is shown. */
-.run h3 {
-  font-size: clamp(1.875rem, 1.1rem + 2vw, 3.25rem);
-  line-height: 1.2;
-}
-
-.run > li > p {
-  color: var(--ivory);
-  font-size: var(--lead);
-}
-
-@media (max-width: 820px) {
-  /* The stage has its own shade: one that scrolled would sweep across it. */
-  .live .run > li,
-  .live .example-ask {
-    background: none;
-  }
-
-  .run h3 {
-    font-size: 1.625rem;
-  }
-
-  .run > li > p {
-    font-size: 1rem;
-  }
-
-  .live .inside .choices {
-    min-height: 54px;
-    overflow-y: hidden;
-  }
-
-  .live .inside .choices .arrives {
-    translate: none;
-  }
-}
-
-@media (min-width: 901px) {
-  /* The shape keeps its whole room: the words end before it begins. */
-  .live .doc {
-    grid-template-columns: 14rem minmax(0, min(34rem, 39vw)) minmax(0, 1fr);
   }
 }
