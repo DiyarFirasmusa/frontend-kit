@@ -40,7 +40,13 @@ const places = [
     <a class="nav-docs" href={pageUrl(locale, 'docs')} aria-current={home ? undefined : 'true'}>{PAGES.docs.name[locale]}</a>
   </nav>
   <a class="top-docs" href={pageUrl(locale, 'docs')} aria-current={home ? undefined : 'true'}>{PAGES.docs.name[locale]}</a>
-  <a class="language" href={routeUrl(other, route)} lang={other} hreflang={other} data-language data-astro-reload>{chrome.switchLanguage}</a>
+  <a class="language" href={routeUrl(other, route)} lang={other} hreflang={other} data-language data-astro-reload title={chrome.switchLanguage}>
+    <svg class="language-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"></path>
+    </svg>
+    <span class="sr-only">{chrome.switchLanguage}</span>
+  </a>
   <a class="top-install" href={`${start}#install`}>{chrome.install}</a>
   <details class="menu" data-menu>
     <summary><span class="sr-only">{chrome.menu}</span><i aria-hidden="true"></i></summary>

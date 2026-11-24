@@ -793,3 +793,59 @@ body::after {
     transform: scaleX(1);
   }
 }
+
+/* The language switch is a globe, not a word. */
+.language {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  min-height: 0;
+  padding: 0;
+  border-radius: var(--radius-pill);
+}
+
+.language-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: rotate 0.6s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.language:hover .language-icon {
+  rotate: 90deg;
+}
+
+@media (max-width: 480px) {
+  .language {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+}
+
+/* The globe wears the system's orange, like the rest of the header. */
+.language {
+  border-color: rgb(217 119 87 / 0.45);
+  background: rgb(217 119 87 / 0.08);
+  color: var(--accent);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s;
+}
+
+.language:hover {
+  border-color: var(--accent);
+  background: rgb(217 119 87 / 0.18);
+  color: #fff;
+}
+
+.language-icon circle,
+.language-icon path {
+  vector-effect: non-scaling-stroke;
+}

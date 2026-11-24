@@ -17,18 +17,18 @@ const { rules } = content[locale]
 const words = {
   how: t('How a rule works', 'كيف تعمل القاعدة'),
   steps: [
-    t('Setup copies the rules of your project type into .claude/rules/ and adapts them to your stack.', 'ينسخ الإعداد قواعد نوع مشروعك إلى ‎.claude/rules/ ويكيّفها مع تقنياتك.'),
-    t('At the top of most files is a list of paths. The assistant loads the rule when it works on a matching file.', 'في أعلى أغلب الملفات قائمة مسارات، ويحمّل المساعد القاعدة عندما يعمل على ملف يطابق أحدها.'),
+    t('Setup copies the rules of your project type into .claude/rules/ and adapts them to your stack.', 'ينسخ الإعداد قواعد نوع مشروعك إلى ‎.claude/rules/ ويضبطها لتناسب تقنياتك.'),
+    t('At the top of most files is a list of paths. The assistant loads the rule when it works on a matching file.', 'في أعلى أغلب الملفات قائمة مسارات. وعندما يعمل المساعد على ملف يطابق أحدها، يقرأ القاعدة.'),
     t('They are ordinary files in your repo. Edit them, and your team reviews the change like any other.', 'هي ملفات عادية في المستودع. عدّلها، وسيراجع فريقك التغيير كأي تغيير آخر.'),
   ],
-  bar: t('The quality bar, the most important one', 'معيار الجودة، وهو أهم القواعد'),
+  bar: t('The quality bar, the most important one', 'معيار الجودة، وهو أهم قاعدة'),
   barItems: [
     t('Strict types: no any, no forced casts, no ignored errors.', 'أنواع صارمة: لا any، ولا تحويل قسري للأنواع، ولا أخطاء متجاهلة.'),
     t('Small files with honest names, and no dead code.', 'ملفات صغيرة بأسماء صادقة، وبلا كود ميت.'),
     t('Loading, error, empty and success, each designed.', 'لكل حالة تصميمها: التحميل والخطأ والفراغ والنجاح.'),
-    t('Touch targets of at least 44 pixels, keyboard and screen readers.', 'أهداف لمس لا تقل عن 44 بكسل، ودعم للوحة المفاتيح وقارئات الشاشة.'),
+    t('Touch targets of at least 44 pixels, keyboard and screen readers.', 'مناطق لمس لا تقل عن 44 بكسل، وتعمل بلوحة المفاتيح وقارئات الشاشة.'),
     t('Arabic and English, with logical CSS only.', 'دعم العربية والإنجليزية، باستخدام CSS المنطقي فقط.'),
-    t('Tests with every change, and no claim of a check that did not run.', 'اختبارات مع كل تغيير، ولا يدّعي المساعد فحصاً لم يُجرِه.'),
+    t('Tests with every change, and no claim of a check that did not run.', 'اختبارات مع كل تغيير، ولا يقول المساعد إنه فحص شيئا لم يفحصه.'),
   ],
 }
 // The first few globs say enough.

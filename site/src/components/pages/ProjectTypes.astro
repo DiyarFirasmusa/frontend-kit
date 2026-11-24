@@ -16,11 +16,11 @@ const { locale } = Astro.props
 const words = {
   which: t('Which one is mine?', 'أي نوع يناسبني؟'),
   fits: t('For', 'لمن'),
-  gets: t('What it adds', 'ما الذي يضيفه'),
-  stack: t('Made for', 'مصمَّم لـ'),
+  gets: t('What it adds', 'ماذا يضيف'),
+  stack: t('Made for', 'مصمم لـ'),
   special: t('Its special skills', 'مهاراته الخاصة'),
-  neutral: t('The shared skills, which adapt to the stack.', 'المهارات المشتركة، وهي تتكيّف مع التقنيات المستخدمة.'),
-  rules: t('Its rules, besides the shared ones', 'قواعده، إضافة إلى القواعد المشتركة'),
+  neutral: t('The shared skills, which adapt to the stack.', 'المهارات المشتركة، وتتكيف مع تقنياتك.'),
+  rules: t('Its rules, besides the shared ones', 'قواعده، غير القواعد المشتركة'),
   ask: t('A first sentence', 'جملة أولى'),
 }
 const special = skillNames.filter((name) => profilesOf(name).length < projects.length)

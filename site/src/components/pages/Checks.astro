@@ -20,11 +20,11 @@ const { session } = copy
 const moments = (Object.keys(session.events) as HookEvent[]).filter((event) => hookEvents.includes(event))
 const words = {
   timeline: t('A session, moment by moment', 'الجلسة لحظة بلحظة'),
-  guards: t('What the guards refuse', 'ما الذي يرفضه الحرّاس'),
-  guardsLead: t('These are the known patterns they catch.', 'هذه هي الأنماط المعروفة التي يلتقطها الحرّاس.'),
+  guards: t('What the guards refuse', 'ماذا يرفض الحراس'),
+  guardsLead: t('These are the known patterns they catch.', 'هذه الأنماط المعروفة التي يلتقطها الحراس.'),
   gate: t('The quality gate, step by step', 'بوابة الجودة خطوة بخطوة'),
   gateLead: t('It runs when the assistant thinks it is finished.', 'تعمل عندما يظن المساعد أنه أنهى عمله.'),
-  limits: t('What they cannot do', 'ما لا يستطيع الحرّاس فعله'),
+  limits: t('What they cannot do', 'ما لا يستطيع الحراس فعله'),
 }
 ---
 
