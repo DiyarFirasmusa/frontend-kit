@@ -1,0 +1,86 @@
+/* ---------------------------------------------------------------------------------------------
+   ROUNDED. Every box, button, chip and field has a radius. The grids that are drawn with a 1px gap
+   are rounded as a whole and clip their cells.
+   --------------------------------------------------------------------------------------------- */
+:root {
+  --radius: 0.875rem;
+  --radius-sm: 0.5rem;
+  --radius-pill: 999px;
+}
+
+/* Grids of cells: one rounded frame. */
+.points,
+.counts,
+.start-cases,
+.install-steps,
+.works-for,
+.fit,
+.kinds,
+.choices {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Boxes. */
+.cc,
+.detail,
+.command,
+.card,
+.prompt,
+.gate-output,
+.block pre,
+.file pre,
+.refusal,
+.call,
+.pair p,
+.source-doc,
+.questions details,
+.menu nav,
+.doc-map {
+  border-radius: var(--radius);
+}
+
+.command,
+.prompt,
+.gate-output {
+  overflow: hidden;
+}
+
+.cc-welcome,
+.cc-input,
+.cc-user,
+.start-command,
+.pager a,
+.finder input,
+.tree-search input,
+.gate-commands button,
+.numbered > li::before {
+  border-radius: var(--radius-sm);
+}
+
+/* Small things are pills. */
+.tags li,
+.start-mode,
+.top-docs,
+.marquee-track li,
+.demo-dots li {
+  border-radius: var(--radius-pill);
+}
+
+.tree a,
+.tree nav summary {
+  border-radius: var(--radius-sm);
+}
+
+.marquee {
+  border-radius: var(--radius);
+  border-inline: 1px solid var(--line);
+}
+
+/* Cells sit inside a rounded frame: they stay square, the frame clips them. */
+.command button,
+.kinds button,
+.points li,
+.start-cases li {
+  border-radius: 0;
+}

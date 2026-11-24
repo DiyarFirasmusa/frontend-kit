@@ -15,15 +15,15 @@ body::before {
   pointer-events: none;
   background:
     radial-gradient(52rem 38rem at 88% -6%, rgb(217 119 87 / 0.26), transparent 62%),
-    radial-gradient(44rem 34rem at -8% 38%, rgb(232 176 74 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 96% 108%, rgb(92 191 174 / 0.14), transparent 62%);
+    radial-gradient(44rem 34rem at -8% 38%, rgb(242 161 131 / 0.13), transparent 62%),
+    radial-gradient(56rem 36rem at 96% 108%, rgb(241 237 231 / 0.14), transparent 62%);
 }
 
 [dir='rtl'] body::before {
   background:
     radial-gradient(52rem 38rem at 12% -6%, rgb(217 119 87 / 0.26), transparent 62%),
-    radial-gradient(44rem 34rem at 108% 38%, rgb(232 176 74 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 4% 108%, rgb(92 191 174 / 0.14), transparent 62%);
+    radial-gradient(44rem 34rem at 108% 38%, rgb(242 161 131 / 0.13), transparent 62%),
+    radial-gradient(56rem 36rem at 4% 108%, rgb(241 237 231 / 0.14), transparent 62%);
 }
 
 /* The grid over the whole page, fading towards the edges. */
@@ -57,7 +57,7 @@ body::after {
   position: absolute;
   inset: -15% -10%;
   z-index: -1;
-  background: radial-gradient(closest-side, rgb(217 119 87 / 0.32), rgb(232 176 74 / 0.08) 60%, transparent);
+  background: radial-gradient(closest-side, rgb(217 119 87 / 0.32), rgb(242 161 131 / 0.08) 60%, transparent);
   filter: blur(8px);
   pointer-events: none;
 }
@@ -263,22 +263,22 @@ body::after {
 }
 
 .marquee-track li:nth-child(4n + 2) {
-  border-color: rgb(232 176 74 / 0.45);
-  color: #f1d9a3;
+  border-color: rgb(242 161 131 / 0.45);
+  color: #f4b9a0;
 }
 
 .marquee-track li:nth-child(4n + 3) {
-  border-color: rgb(92 191 174 / 0.45);
-  color: #b4e3da;
+  border-color: rgb(241 237 231 / 0.45);
+  color: #e8e4de;
 }
 
 .marquee-track li:nth-child(4n) {
-  border-color: rgb(212 162 127 / 0.45);
-  color: #e6cdb8;
+  border-color: rgb(184 95 63 / 0.45);
+  color: #f0c4b2;
 }
 
 .marquee {
-  background: linear-gradient(90deg, rgb(217 119 87 / 0.06), rgb(232 176 74 / 0.04), rgb(92 191 174 / 0.06));
+  background: linear-gradient(90deg, rgb(217 119 87 / 0.06), rgb(242 161 131 / 0.04), rgb(241 237 231 / 0.06));
 }
 
 /* Sections: a coloured hairline at the top and a faint wash under it. */
@@ -287,18 +287,18 @@ body::after {
 .inside,
 .get-it {
   border-block-start: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, var(--accent), var(--amber), var(--teal), transparent) 1;
+  border-image: linear-gradient(90deg, transparent, var(--accent), transparent) 1;
   background: linear-gradient(180deg, rgb(217 119 87 / 0.06), transparent 28rem);
 }
 
 .starts,
 .get-it {
-  background: linear-gradient(180deg, rgb(92 191 174 / 0.06), transparent 28rem);
+  background: linear-gradient(180deg, rgb(241 237 231 / 0.06), transparent 28rem);
 }
 
 .section-head h2,
 .example-head h2 {
-  background: linear-gradient(90deg, #fff 55%, var(--sand));
+  background: linear-gradient(90deg, #fff 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -306,7 +306,7 @@ body::after {
 
 [dir='rtl'] .section-head h2,
 [dir='rtl'] .example-head h2 {
-  background: linear-gradient(270deg, #fff 55%, var(--sand));
+  background: linear-gradient(270deg, #fff 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
 }
