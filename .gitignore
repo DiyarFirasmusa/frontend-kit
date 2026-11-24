@@ -8,6 +8,9 @@ node_modules/
 # local test apps (not part of the marketplace)
 playground/
 
+# logo and colour explorations the identity moved past (local only)
+brand/archive/
+
 # eval results (local)
 plugins/*/evals/results/
 

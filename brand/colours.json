@@ -1,0 +1,28 @@
+{
+  "name": "Wajiha Kit",
+  "note": "The values of the identity. The guide is wajiha-identity.html; the site reads them from site/src/styles/tokens.css and identity.css.",
+  "base": {
+    "void": "#050607",
+    "raised": "#0d0e10",
+    "ivory": "#f1ede7",
+    "muted": "#bcb8b1",
+    "faint": "#96938d"
+  },
+  "pair": {
+    "orange": { "value": "#d97757", "deep": "#b85f3f", "soft": "#f2a183", "job": "the request and the action" },
+    "turquoise": { "value": "#19abab", "deep": "#006c6d", "soft": "#57cdcd", "job": "the way around and the result" }
+  },
+  "kinds": {
+    "skills": "#d97757",
+    "rules": "#f2a183",
+    "agents": "#57cdcd",
+    "checks": "#19abab",
+    "guides": "#19abab"
+  },
+  "blend": "linear-gradient(in oklab 90deg, #d97757, #f1ede7 50%, #19abab)",
+  "fonts": {
+    "latin": "Familjen Grotesk",
+    "arabic": "IBM Plex Sans Arabic",
+    "code": "IBM Plex Mono"
+  }
+}
