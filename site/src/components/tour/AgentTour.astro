@@ -1,0 +1,64 @@
+---
+import { agents } from '../../content/catalogue.ts'
+import { agentGuides } from '../../content/guide/agents.ts'
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import { agentFacts } from '../../lib/plugin-details.ts'
+import AgentBasics from '../guide/AgentBasics.astro'
+import Prompt from '../guide/Prompt.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const names = Object.keys(agents)
+---
+
+<AgentBasics locale={locale} />
+
+{
+  names.map((name, i) => {
+    const guide = agentGuides[name]!
+    const { model, edits } = agentFacts[name]!
+    return (
+      <article id={`agent-${name}`} class="explain" data-stop={i}>
+        <header class="explain-head">
+          <h3>
+            <bdi>{name}</bdi>
+          </h3>
+          <span class="explain-count" dir="ltr">
+            {i + 1} / {names.length}
+          </span>
+        </header>
+        <p class="explain-plain">{guide.plain[locale]}</p>
+        <div class="explain-say">
+          <h4>{ui.youType[locale]}</h4>
+          <Prompt text={guide.ask[locale]} />
+        </div>
+        <div class="explain-columns">
+          <div>
+            <h4>{ui.whatItChecks[locale]}</h4>
+            <ol class="numbered">{guide.checks.map((check) => <li>{check[locale]}</li>)}</ol>
+          </div>
+          <div>
+            <h4>{ui.reports[locale]}</h4>
+            <p>{guide.returns[locale]}</p>
+          </div>
+        </div>
+        <dl class="explain-meta">
+          <div>
+            <dt>{ui.model[locale]}</dt>
+            <dd>
+              <bdi>{model}</bdi>
+            </dd>
+          </div>
+          <div>
+            <dt>{ui.canEdit[locale]}</dt>
+            <dd>{(edits ? ui.editsYes : ui.editsNo)[locale]}</dd>
+          </div>
+        </dl>
+      </article>
+    )
+  })
+}

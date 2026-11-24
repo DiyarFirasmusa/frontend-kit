@@ -1,0 +1,120 @@
+---
+import { skillGroups } from '../../content/catalogue.ts'
+import { projects } from '../../content/guide/projects.ts'
+import { skillGuides } from '../../content/guide/skills/index.ts'
+import { tourWords } from '../../content/guide/tour.ts'
+import { skillUse, ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import { manualSkills } from '../../lib/plugin.ts'
+import { profilesOf } from '../../lib/plugin-details.ts'
+import Block from '../guide/Block.astro'
+import Prompt from '../guide/Prompt.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+// The order of the plates on the wall.
+const order = skillGroups.flatMap((group) => Object.keys(group.skills))
+const types = (name: string): string => {
+  const on = profilesOf(name)
+  if (on.length === projects.length) return ui.everyType[locale]
+  return projects.filter(({ id }) => on.includes(id)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
+}
+---
+
+<Block title={skillUse.title[locale]} lead={ui.anyWords[locale]}>
+  <ol class="ways">
+    {skillUse.ways.map(({ name, text, example }) => (
+      <li>
+        <h4>{name[locale]}</h4>
+        <p>{text[locale]}</p>
+        <Prompt text={example[locale]} />
+      </li>
+    ))}
+  </ol>
+</Block>
+
+<Block title={tourWords.docs[locale]} lead={tourWords.docs[locale]}>
+  {skillGroups.map(({ title, skills }) => (
+    <div class="glance-group">
+      <h4>{title[locale]}</h4>
+      <ul>
+        {Object.entries(skills).map(([name, what]) => (
+          <li>
+            <a href={`#skill-${name}`}><bdi>{name}</bdi></a>
+            <span>{what[locale]}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</Block>
+
+{
+  skillGroups.map(({ title, skills }) => (
+    <>
+      <h3 class="tour-group">{title[locale]}</h3>
+      {Object.keys(skills).map((name) => {
+        const guide = skillGuides[name]!
+        const at = order.indexOf(name)
+        return (
+          <article id={`skill-${name}`} class="explain" data-stop={at}>
+            <header class="explain-head">
+              <h4>
+                <bdi>{name}</bdi>
+              </h4>
+              <span class="explain-count" dir="ltr">
+                {at + 1} / {order.length}
+              </span>
+            </header>
+            <p class="explain-plain">{guide.plain[locale]}</p>
+            <div class="explain-say">
+              <h5>{ui.youType[locale]}</h5>
+              {guide.ask.map((example) => (
+                <Prompt text={example[locale]} />
+              ))}
+            </div>
+            <div class="explain-columns">
+              <div>
+                <h5>{ui.whatHappens[locale]}</h5>
+                <ol class="numbered">{guide.steps.map((step) => <li>{step[locale]}</li>)}</ol>
+              </div>
+              <div>
+                <h5>{ui.youGet[locale]}</h5>
+                <ul class="ticks">{guide.result.map((item) => <li>{item[locale]}</li>)}</ul>
+                <h5>{ui.wont[locale]}</h5>
+                <ul class="crosses">{guide.limits.map((item) => <li>{item[locale]}</li>)}</ul>
+              </div>
+            </div>
+            <dl class="explain-meta">
+              <div>
+                <dt>{ui.byName[locale]}</dt>
+                <dd>
+                  <code dir="ltr">/frontend-kit:{name}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>{ui.worksIn[locale]}</dt>
+                <dd>{types(name)}</dd>
+              </div>
+              {manualSkills.has(name) && (
+                <div>
+                  <dt>{ui.starts[locale]}</dt>
+                  <dd>{ui.manual[locale]}</dd>
+                </div>
+              )}
+              {guide.needs && (
+                <div>
+                  <dt>{ui.needs[locale]}</dt>
+                  <dd>{guide.needs[locale]}</dd>
+                </div>
+              )}
+            </dl>
+          </article>
+        )
+      })}
+    </>
+  ))
+}
