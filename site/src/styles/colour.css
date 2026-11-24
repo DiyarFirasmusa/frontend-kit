@@ -881,16 +881,8 @@ body::after {
   will-change: transform;
 }
 
-/* On the documentation pages the text scrolls right under the bar, so the bar gets a ground there. The home page keeps it clear. */
-body:has(main.doc) .top,
-body:has(main.doc) .top.is-scrolled {
-  background: rgb(5 6 7 / 0.94);
-  box-shadow: 0 1px 0 var(--line);
-  text-shadow: none;
-}
-
-/* On the home page, once the page moves, a soft shade under the bar keeps words passing beneath it readable. It is not a box: it fades to nothing. */
-body:not(:has(main.doc)) .top::before {
+/* On every page, once the page moves, a soft shade under the bar keeps words passing beneath it readable. It is not a box: it fades to nothing. */
+body .top::before {
   content: '';
   position: absolute;
   inset: 0 0 -1.25rem;
@@ -901,7 +893,7 @@ body:not(:has(main.doc)) .top::before {
   pointer-events: none;
 }
 
-body:not(:has(main.doc)) .top.is-scrolled::before {
+body .top.is-scrolled::before {
   opacity: 1;
 }
 
