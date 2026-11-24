@@ -381,3 +381,33 @@ body::before {
   border-radius: 2px;
   background: var(--kc);
 }
+
+/* ---------------------------------------------------------------------------------------------
+   THE BLEND. Orange and turquoise are opposites, so a plain blend between them goes grey-brown, and
+   a blend in OKLCH goes through olive or pink. Going through ivory (an identity colour) in OKLab
+   stays clean. Used in three places only: the second line of the home headline, the reading line
+   and the hairline over each home section. The solid colours stay everywhere else.
+   --------------------------------------------------------------------------------------------- */
+.hero h1 span:last-child {
+  background-image: linear-gradient(90deg, var(--accent), var(--turq));
+  background-image: linear-gradient(in oklab 90deg, var(--accent), var(--ivory) 50%, var(--turq));
+}
+[dir='rtl'] .hero h1 span:last-child {
+  background-image: linear-gradient(270deg, var(--accent), var(--turq));
+  background-image: linear-gradient(in oklab 270deg, var(--accent), var(--ivory) 50%, var(--turq));
+}
+.progress {
+  background-image: linear-gradient(90deg, var(--accent), var(--turq));
+  background-image: linear-gradient(in oklab 90deg, var(--accent), var(--ivory) 50%, var(--turq));
+}
+[dir='rtl'] .progress {
+  background-image: linear-gradient(270deg, var(--accent), var(--turq));
+  background-image: linear-gradient(in oklab 270deg, var(--accent), var(--ivory) 50%, var(--turq));
+}
+.example,
+.starts,
+.inside,
+.get-it {
+  border-image: linear-gradient(90deg, transparent, var(--accent), var(--turq), transparent) 1;
+  border-image: linear-gradient(in oklab 90deg, transparent, var(--accent), var(--ivory), var(--turq), transparent) 1;
+}
