@@ -3,7 +3,7 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'wajiha-kit: build any frontend project, with the best result',
+    title: 'Wajiha: build any frontend project, with the best result',
     description:
       'A plugin for frontend projects in any stack, React and TypeScript first-class. Your coding assistant builds the way your project does, known dangerous commands are refused, and the code is checked and reviewed.',
   },
