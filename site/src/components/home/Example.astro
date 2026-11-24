@@ -32,8 +32,8 @@ const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
   {
     ...gate_,
     lines: [
-      gate({ en: '✓ typecheck passed', ar: '✓ نجح فحص الأنواع' }),
-      gate({ en: '✓ related tests passed', ar: '✓ نجحت الاختبارات المرتبطة' }),
+      gate({ en: 'typecheck passed', ar: 'نجح فحص الأنواع' }),
+      gate({ en: 'related tests passed', ar: 'نجحت الاختبارات المرتبطة' }),
     ],
   },
   { ...review, lines: [{ call: 'Agent(frontend-reviewer)', note: say.reviewing }] },
@@ -79,7 +79,7 @@ const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
         <i>&gt;</i>
         <span>Try “fix lint errors”</span>
       </div>
-      <p class="cc-foot" aria-hidden="true"><span>? for shortcuts</span></p>
+      <div class="cc-foot" aria-hidden="true"><span>? for shortcuts</span></div>
     </figure>
   </div>
 </section>

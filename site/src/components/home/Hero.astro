@@ -31,7 +31,7 @@ const counts = [
 
 const main = verdicts.find(({ id }) => id === 'main')!
 const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
-const typecheck: Bilingual = { en: '✓ typecheck passed', ar: '✓ نجح فحص الأنواع' }
+const typecheck: Bilingual = { en: 'typecheck passed', ar: 'نجح فحص الأنواع' }
 
 // Four real requests, played one after another in the console. Names and answers come from the kit itself.
 const demos: { prompt: Bilingual; lines: Line[] }[] = [
@@ -40,7 +40,7 @@ const demos: { prompt: Bilingual; lines: Line[] }[] = [
     lines: [
       { call: 'Skill(dash-create-table)' },
       { call: 'Rule(dashboard/data-tables.md)' },
-      gate({ en: '✓ typecheck and related tests passed', ar: '✓ نجح فحص الأنواع والاختبارات المرتبطة' }),
+      gate({ en: 'typecheck and related tests passed', ar: 'نجح فحص الأنواع والاختبارات المرتبطة' }),
     ],
   },
   {
@@ -60,7 +60,7 @@ const demos: { prompt: Bilingual; lines: Line[] }[] = [
     prompt: { en: 'Clean up this old project', ar: 'نظّف هذا المشروع القديم' },
     lines: [
       { call: 'Mode(refactor)', note: { en: 'measures the mess, plans six phases', ar: 'يقيس الفوضى ويخطط ست مراحل' } },
-      gate({ en: '✓ behaviour unchanged', ar: '✓ السلوك لم يتغير' }),
+      gate({ en: 'behaviour unchanged', ar: 'السلوك لم يتغير' }),
     ],
   },
 ]
@@ -87,7 +87,6 @@ const demos: { prompt: Bilingual; lines: Line[] }[] = [
             <p class="cc-user">
               <i aria-hidden="true">&gt;</i>
               <q data-type dir="auto">{prompt[locale]}</q>
-              <b class="caret" aria-hidden="true"></b>
             </p>
             <div class="cc-lines">
               {lines.map((line) => <CcLine locale={locale} {...line} />)}
@@ -95,14 +94,17 @@ const demos: { prompt: Bilingual; lines: Line[] }[] = [
           </div>
         ))
       }
-      <div class="cc-input" aria-hidden="true">
+      <p class="cc-status" data-status hidden aria-hidden="true"><i data-spinner>✻</i> <span>Thinking…</span> <small>(esc to interrupt)</small></p>
+      <div class="cc-input" aria-hidden="true" data-box>
         <i>&gt;</i>
-        <span>Try “fix lint errors”</span>
+        <span class="cc-placeholder">Try “fix lint errors”</span>
+        <span class="cc-typed" data-input dir="auto"></span>
+        <b class="caret"></b>
       </div>
-      <p class="cc-foot" aria-hidden="true">
+      <div class="cc-foot" aria-hidden="true">
         <span>? for shortcuts</span>
         <ol class="demo-dots">{demos.map((_, i) => <li data-dot={i} class:list={{ 'is-on': i === 0 }}></li>)}</ol>
-      </p>
+      </div>
     </figure>
     <ul class="counts">
       {

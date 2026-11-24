@@ -7,12 +7,19 @@ const wait = (ms: number, signal: AbortSignal): Promise<void> =>
     signal.addEventListener('abort', () => (clearTimeout(timer), resolve()), { once: true })
   })
 
-/** The terminal in the opening screen plays four real requests, one after another. */
+const SPINNER = ['✻', '✶', '✳', '✢', '·', '✢', '✳', '✶']
+
+/** The console in the opening screen plays four real requests, as Claude Code does: type, Enter, think, answer. */
 function playTerminal(signal: AbortSignal): void {
   const terminal = document.querySelector<HTMLElement>('[data-live]')
   if (!terminal || calm()) return
   const demos = all<HTMLElement>('[data-demo]', terminal)
   const dots = all<HTMLElement>('[data-dot]', terminal)
+  const box = terminal.querySelector<HTMLElement>('[data-box]')
+  const input = terminal.querySelector<HTMLElement>('[data-input]')
+  const status = terminal.querySelector<HTMLElement>('[data-status]')
+  const spinner = terminal.querySelector<HTMLElement>('[data-spinner]')
+  if (!box || !input || !status || !spinner) return
   terminal.classList.add('is-playing')
 
   void (async () => {
@@ -22,24 +29,46 @@ function playTerminal(signal: AbortSignal): void {
       for (const [i, other] of demos.entries()) other.hidden = i !== at
       for (const [i, dot] of dots.entries()) dot.classList.toggle('is-on', i === at)
 
-      const typed = demo.querySelector<HTMLElement>('[data-type]')!
       const lines = all<HTMLElement>('[data-line]', demo)
-      const full = typed.textContent ?? ''
+      const sent = demo.querySelector<HTMLElement>('.cc-user')!
+      const words = sent.querySelector('q')?.textContent ?? ''
       for (const line of lines) line.classList.remove('is-in')
-      typed.textContent = ''
-      demo.classList.add('is-typing')
-      for (let n = 1; n <= full.length && !signal.aborted; n++) {
-        typed.textContent = full.slice(0, n)
-        await wait(34, signal)
+      demo.classList.add('is-waiting')
+
+      // Typed into the box at the bottom, one key at a time.
+      box.classList.add('is-typing')
+      input.textContent = ''
+      for (let n = 1; n <= words.length && !signal.aborted; n++) {
+        input.textContent = words.slice(0, n)
+        await wait(36, signal)
       }
-      demo.classList.remove('is-typing')
-      await wait(350, signal)
+      await wait(420, signal)
+
+      // Enter: the box empties, and what was typed stands above as the message.
+      input.textContent = ''
+      box.classList.remove('is-typing')
+      demo.classList.remove('is-waiting')
+      await wait(200, signal)
+
+      // Thinking: a turning star and a count of the seconds.
+      status.hidden = false
+      const began = performance.now()
+      const tick = setInterval(() => {
+        const seconds = Math.floor((performance.now() - began) / 1000)
+        spinner.textContent = SPINNER[Math.floor((performance.now() - began) / 110) % SPINNER.length]!
+        const label = status.querySelector('span')
+        if (label) label.textContent = `Thinking… ${seconds}s`
+      }, 110)
+      await wait(1100, signal)
+      clearInterval(tick)
+      status.hidden = true
+
       for (const line of lines) {
         if (signal.aborted) return
         line.classList.add('is-in')
-        await wait(420, signal)
+        await wait(480, signal)
       }
-      await wait(2600, signal)
+      await wait(2800, signal)
     }
   })()
 }

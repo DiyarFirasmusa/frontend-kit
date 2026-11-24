@@ -420,10 +420,6 @@
   animation: blink 1s steps(1) infinite;
 }
 
-.is-playing .demo:not(.is-typing) .caret {
-  opacity: 0.3;
-}
-
 @keyframes blink {
   50% {
     opacity: 0;
