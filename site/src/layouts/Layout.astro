@@ -37,6 +37,8 @@ const { locale, route, title, description, indexable = true } = Astro.props
 const home = route.kind === 'home' && indexable
 const copy = content[locale]
 const absolute = (path: string) => new URL(path, Astro.site).href
+// The picture that shows when the link is shared: one look for the home page, one for the documentation, in each language.
+const share = `og${route.kind === 'home' ? '' : '-docs'}${locale === 'ar' ? '-ar' : ''}.jpg`
 const product = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -71,7 +73,9 @@ const product = JSON.stringify({
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={absolute(routeUrl(locale, route))} />
-    <meta property="og:image" content={absolute(asset('og.jpg'))} />
+    <meta property="og:image" content={absolute(asset(share))} />
+    <meta property="og:image:alt" content={copy.meta.title} />
+    <meta name="twitter:image" content={absolute(asset(share))} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={locale === 'ar' ? 'ar_IQ' : 'en_US'} />
