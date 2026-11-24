@@ -5,7 +5,7 @@ export const settings = [
     title: t('Project', 'المشروع'),
     keys: [
       ['profile', t('website, dashboard, react or fullstack.', 'website أو dashboard أو react أو fullstack.')],
-      ['mode', t('new, existing, maintenance, refactor, upgrade or freeze. Switch it with /frontend-kit:mode.', 'new أو existing أو maintenance أو refactor أو upgrade أو freeze. بدله بالأمر \u2066/frontend-kit:mode\u2069.')],
+      ['mode', t('new, existing, maintenance, refactor, upgrade or freeze. Switch it with /wajiha-kit:mode.', 'new أو existing أو maintenance أو refactor أو upgrade أو freeze. بدله بالأمر \u2066/wajiha-kit:mode\u2069.')],
       ['stack', t('What setup found: package manager, framework, router, data, state, styling, tests, lint, format and i18n.', 'ما وجده الإعداد في مشروعك: مدير الحزم، والإطار، والـ router، والبيانات، والحالة، والـ styling، والاختبارات، وlint، والتنسيق، والترجمة.')],
       ['srcDirs', t('The folders that count as your source. Without them, code in any folder is watched.', 'المجلدات التي فيها كود مشروعك. إن لم تحددها، يراقب الحراس الكود في كل المجلدات.')],
       ['apps', t('The apps of a monorepo or a site plus admin, with their own folders.', 'تطبيقات الـ monorepo أو الموقع مع الإدارة، ولكل تطبيق مجلداته.')],

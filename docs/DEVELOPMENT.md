@@ -1,15 +1,15 @@
-# Developing frontend-kit
+# Developing wajiha-kit
 
 The kit is developed **against real apps, not in the abstract**. Throw-away apps live in `playground/`
 (git-ignored, never pushed; `dashboard-*`, `website-*`, `combined-start`) and exercise every rule, skill, agent and hook. Anything that hurts there is a bug in the kit.
 
 ## The loop
 
-1. Do real work in a playground app with the kit installed (`/frontend-kit:setup` output: `CLAUDE.md`, `.claude/rules`, `.claude/frontend-kit.json`).
+1. Do real work in a playground app with the kit installed (`/wajiha-kit:setup` output: `CLAUDE.md`, `.claude/rules`, `.claude/wajiha-kit.json`).
 2. Friction (wrong rule, missing skill, hook false-positive, template gap) → one line in that app's `FINDINGS.md` with a file path and a suggested fix.
 3. Fix it **in `plugins/`**, never only in the playground copy. Re-run setup in the playground (or diff the templates) to pull it back.
-4. Prove it: `KIT_TEST_PROJECT=$PWD/playground/website-start bash plugins/frontend-kit/scripts/test-hooks.sh` (and `dashboard-vite`; the path must be absolute).
-   A change to a working mode also needs `bash plugins/frontend-kit/scripts/mode-test.sh`.
+4. Prove it: `KIT_TEST_PROJECT=$PWD/playground/website-start bash plugins/wajiha-kit/scripts/test-hooks.sh` (and `dashboard-vite`; the path must be absolute).
+   A change to a working mode also needs `bash plugins/wajiha-kit/scripts/mode-test.sh`.
 5. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json` **only** (when set in both places `plugin.json` wins silently and `claude plugin validate` warns; users get an update only when the version changes). Run `bash scripts/validate-repo.sh` and `claude plugin validate . --strict` (root, then each `plugins/<name>`; the root run does not open the plugins' files), commit only `plugins/`, `docs/`, `scripts/`, `.github/`, root files.
 6. A push to `main` publishes the website, which is built from `plugins/` and `examples/`: run `cd site && npm ci && npm run build`
    first. It fails when a skill, agent, hook event, rule file or `examples/` project has no copy there, or a demo verdict of the
@@ -53,7 +53,7 @@ Version history: [`CHANGELOG.md`](../CHANGELOG.md). How to test: [`TESTING.md`](
 2. Cut skill-listing cost: shorter descriptions or `disable-model-invocation` on side-effect skills. A `Skill(...)` deny rule blocks use but does not
    hide the entry, so the profile-based clean-up does not save listing tokens (the `commit` mapping in `CLAUDE.md` relies on auto-invocation: needs a decision).
 3. Arabic-correctness block (digits, currency decimals, typography, bidi) and an RTL lint in `post-edit`; a shadcn RTL step in setup.
-4. Install manifest + `/frontend-kit:doctor` + an upgrade path for projects that were already set up.
+4. Install manifest + `/wajiha-kit:doctor` + an upgrade path for projects that were already set up.
 5. Shared UI templates (`TextField`, `ConfirmDialog`, `format.ts`) once a profile's design system is decided.
 6. More project shapes: yarn, bun, Biome, Expo, Storybook, a large codebase. Every playground app now has 5+ routes (1.14.0).
    The dashboard's Next.js (1.11.1) and TanStack Start (1.11.2) variants are verified end to end by real sessions, and

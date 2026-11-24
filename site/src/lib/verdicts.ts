@@ -28,7 +28,7 @@ function runGuard(): Verdict[] {
   mkdirSync(join(project, '.claude'), { recursive: true })
   execFileSync('git', ['init', '-q', '-b', 'main', project], { stdio: 'ignore' })
   const config = { projectName: 'demo', defaultBranch: 'main', protectedBranches: ['main'], liveHosts: ['api.example.com'] }
-  writeFileSync(join(project, '.claude', 'frontend-kit.json'), JSON.stringify(config))
+  writeFileSync(join(project, '.claude', 'wajiha-kit.json'), JSON.stringify(config))
 
   return (Object.entries(COMMANDS) as [VerdictId, string][]).map(([id, command]) => {
     // The guard reads the command as data and never executes it.

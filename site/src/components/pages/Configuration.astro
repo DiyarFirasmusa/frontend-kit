@@ -20,7 +20,7 @@ const words = {
 ---
 
 <Block id="example" title={words.sample[locale]} lead={words.sampleLead[locale]}>
-  <pre dir="ltr" tabindex="0" role="region" aria-label=".claude/frontend-kit.json"><code>{sample}</code></pre>
+  <pre dir="ltr" tabindex="0" role="region" aria-label=".claude/wajiha-kit.json"><code>{sample}</code></pre>
 </Block>
 {
   settings.map(({ title, keys }) => (
@@ -39,7 +39,7 @@ const words = {
 <Block id="shipped" title={words.shipped[locale]} lead={words.shippedLead[locale]}>
   {
     projects.flatMap(({ id, name }) =>
-      (['frontend-kit.json', 'settings.json'] as const).map((file) => (
+      (['wajiha-kit.json', 'settings.json'] as const).map((file) => (
         <details class="file">
           <summary>
             {name[locale]}: <bdi>{file}</bdi>

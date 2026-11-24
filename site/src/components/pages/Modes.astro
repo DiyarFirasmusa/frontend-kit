@@ -19,7 +19,7 @@ const { locale } = Astro.props
 const { install } = content[locale]
 const keepsTests = t('No removed or skipped tests and no refreshed snapshots.', 'لا يحذف المساعد أي اختبار ولا يتخطاه، ولا يجدد لقطات الاختبار.')
 const also = (en: string, ar: string): Bilingual => t(`${keepsTests.en} ${en}`, `${keepsTests.ar} ${ar}`)
-// What `/frontend-kit:mode list` says is enforced.
+// What `/wajiha-kit:mode list` says is enforced.
 const held: Record<Mode, Bilingual> = {
   new: t('Nothing extra.', 'لا شيء إضافي.'),
   existing: t('Nothing extra. It is the default.', 'لا شيء إضافي. هذا هو النمط الافتراضي.'),
@@ -64,7 +64,7 @@ const words = {
     'مفتاح منفصل: أساليب إخراج تغير شكل التقرير، لا طريقة العمل. هذا نصها بالإنجليزية:',
   ),
 }
-const commands = ['/frontend-kit:mode list', '/frontend-kit:mode status', '/frontend-kit:mode off']
+const commands = ['/wajiha-kit:mode list', '/wajiha-kit:mode status', '/wajiha-kit:mode off']
 ---
 
 <Block id="switch" title={words.switching[locale]} lead={words.switchingLead[locale]}>
@@ -104,7 +104,7 @@ const commands = ['/frontend-kit:mode list', '/frontend-kit:mode status', '/fron
 </Block>
 <Block id="report" title={words.report[locale]} lead={words.reportLead[locale]}>
   <p><bdi>Frontend report</bdi></p>
-  <Source file="plugins/frontend-kit/output-styles/frontend-report.md" />
+  <Source file="plugins/wajiha-kit/output-styles/frontend-report.md" />
   <p><bdi>Audit report</bdi></p>
-  <Source file="plugins/frontend-kit/output-styles/audit-report.md" />
+  <Source file="plugins/wajiha-kit/output-styles/audit-report.md" />
 </Block>

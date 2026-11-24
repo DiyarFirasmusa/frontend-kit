@@ -5,12 +5,12 @@ Five layers. Run the cheap ones on every change and the paid ones when behaviour
 | Layer | What it proves | Command | Costs money |
 | ----- | -------------- | ------- | ----------- |
 | Repo checks | JSON valid, versions consistent, skill and eval layout, examples complete | `bash scripts/validate-repo.sh` and `claude plugin validate . --strict` | no |
-| Hook tests | every hook script and helper on throwaway git repos | `KIT_TEST_PROJECT=<project with node_modules> bash plugins/frontend-kit/scripts/test-hooks.sh` | no |
-| Mode tests | the working modes: what each refuses and lets through, the silent default, the switch | `bash plugins/frontend-kit/scripts/mode-test.sh` | no |
+| Hook tests | every hook script and helper on throwaway git repos | `KIT_TEST_PROJECT=<project with node_modules> bash plugins/wajiha-kit/scripts/test-hooks.sh` | no |
+| Mode tests | the working modes: what each refuses and lets through, the silent default, the switch | `bash plugins/wajiha-kit/scripts/mode-test.sh` | no |
 | Evals | does Claude pick and follow the skills and agents | `bash scripts/eval.sh dev` (also `info`, `heldout`, `save`, `compare`) | yes |
 | Benchmark | kit against bare on a real task, scored by the project's checks and a rubric judge | `bash scripts/e2e-bench.sh <project> <task.md> <kit\|bare> <out.jsonl>` | yes |
 
-## Evals (`plugins/frontend-kit/evals/`)
+## Evals (`plugins/wajiha-kit/evals/`)
 
 Native `claude plugin eval` cases: `prompt.md` plus `graders/*.md`.
 
@@ -32,7 +32,7 @@ and tests plus `bench-judge.sh` (nine yes/no criteria on the diff; the judge nev
 
 ## Real sessions without a UI
 
-`claude -p ... --plugin-dir plugins/frontend-kit --setting-sources project --strict-mcp-config` in a disposable copy
+`claude -p ... --plugin-dir plugins/wajiha-kit --setting-sources project --strict-mcp-config` in a disposable copy
 runs the real skills and hooks. Useful flags: `--include-hook-events --output-format stream-json --verbose` (hook outputs),
 `--resume <id>` (a second turn, for approval steps), and a `--settings` JSON with an `InstructionsLoaded` hook to log which
 rule files load for a file.

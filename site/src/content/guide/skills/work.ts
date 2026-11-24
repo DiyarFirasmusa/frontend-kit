@@ -7,7 +7,7 @@ export const work: Record<string, SkillGuide> = {
       'The first thing you run. A plugin cannot write project rules by itself, so setup reads your project and installs them after you agree.',
       'أول أمر تشغله. الإضافة لا تستطيع كتابة قواعد المشروع بنفسها، لذلك يقرأ setup مشروعك ويضع القواعد فيه بعد موافقتك.',
     ),
-    ask: [t('/frontend-kit:setup', '/frontend-kit:setup')],
+    ask: [t('/wajiha-kit:setup', '/wajiha-kit:setup')],
     steps: [
       t('Asks: new, existing, maintenance or refactor, and which kind of project.', 'يسألك: المشروع جديد أم موجود، أم للصيانة أم لإعادة الهيكلة؟ وما نوعه؟'),
       t('Detects your stack from package.json and the config files.', 'يعرف تقنيات مشروعك من package.json وملفات الإعدادات.'),
@@ -28,7 +28,7 @@ export const work: Record<string, SkillGuide> = {
   },
   task: {
     plain: t('One ticket from start to finish: branch, code, checks, report, and then your decision.', 'مهمة واحدة من البداية إلى النهاية: فرع، وكود، وفحوص، وتقرير، ثم قرارك.'),
-    ask: [t('new task: add order export <ticket link>', 'مهمة جديدة: أضف تصدير الطلبات <رابط التذكرة>'), t('/frontend-kit:task', '/frontend-kit:task')],
+    ask: [t('new task: add order export <ticket link>', 'مهمة جديدة: أضف تصدير الطلبات <رابط التذكرة>'), t('/wajiha-kit:task', '/wajiha-kit:task')],
     steps: [
       t('Says the task back in a few lines and asks if something decisive is unclear.', 'يعيد المهمة بكلامه في أسطر قليلة، ويسألك إن كان شيء مهم غير واضح.'),
       t('Creates a branch from the latest main.', 'ينشئ فرعا من آخر main.'),
@@ -79,7 +79,7 @@ export const work: Record<string, SkillGuide> = {
   },
   'refactor-mode': {
     plain: t('Brings a whole old project up to the standard, in phases you approve.', 'يوصل مشروعا قديما كاملا إلى المعيار المطلوب، على مراحل توافق عليها.'),
-    ask: [t('/frontend-kit:refactor-mode audit', '/frontend-kit:refactor-mode audit'), t('/frontend-kit:refactor-mode next', '/frontend-kit:refactor-mode next')],
+    ask: [t('/wajiha-kit:refactor-mode audit', '/wajiha-kit:refactor-mode audit'), t('/wajiha-kit:refactor-mode next', '/wajiha-kit:refactor-mode next')],
     steps: [
       t('on: switches the project into the mode.', 'on: ينقل المشروع إلى هذا النمط.'),
       t('audit: measures everything without editing code and writes a six-phase plan.', 'audit: يقيس كل شيء دون تعديل الكود، ويكتب خطة من ست مراحل.'),
@@ -98,7 +98,7 @@ export const work: Record<string, SkillGuide> = {
       'A switch for how careful the work must be: a freeze before a release, a hotfix, a read-only review. Only you turn it.',
       'مفتاح يحدد مقدار الحذر في العمل: تجميد قبل الإصدار، أو إصلاح عاجل، أو مراجعة للقراءة فقط. أنت وحدك تشغله.',
     ),
-    ask: [t('/frontend-kit:mode freeze --days 3', '/frontend-kit:mode freeze --days 3'), t('/frontend-kit:mode off', '/frontend-kit:mode off')],
+    ask: [t('/wajiha-kit:mode freeze --days 3', '/wajiha-kit:mode freeze --days 3'), t('/wajiha-kit:mode off', '/wajiha-kit:mode off')],
     steps: [
       t('list: names every mode and what it enforces.', 'list: يعرض كل نمط وما يفرضه.'),
       t('A mode’s name turns it on, for the project or for this checkout.', 'اسم النمط يشغله، للمشروع كله أو لهذه النسخة منه.'),
@@ -120,7 +120,7 @@ export const work: Record<string, SkillGuide> = {
       'A major upgrade done as its own job: one family of packages, in phases you approve, proven by the whole test suite.',
       'ترقية كبيرة كعمل مستقل: مجموعة حزم واحدة، على مراحل توافق عليها، وكل الاختبارات تثبت نجاحها.',
     ),
-    ask: [t('/frontend-kit:upgrade-mode on', '/frontend-kit:upgrade-mode on'), t('/frontend-kit:upgrade-mode plan', '/frontend-kit:upgrade-mode plan')],
+    ask: [t('/wajiha-kit:upgrade-mode on', '/wajiha-kit:upgrade-mode on'), t('/wajiha-kit:upgrade-mode plan', '/wajiha-kit:upgrade-mode plan')],
     steps: [
       t('on: switches the project into upgrade mode.', 'on: ينقل المشروع إلى نمط الترقية.'),
       t('plan: records a baseline, reads the official guides and waits for your yes.', 'plan: يسجل خط الأساس، ويقرأ الأدلة الرسمية، وينتظر موافقتك.'),

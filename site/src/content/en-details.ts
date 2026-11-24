@@ -40,7 +40,7 @@ export const enDetails: Details = {
           ['Stack detection', 'Package manager, framework, router, data layer, styling, tests, linter, formatter, i18n and source folders. What it cannot find stays empty instead of guessed.'],
           ['Monorepos', 'Workspace packages are found, and tests run inside the package that changed.'],
           ['One proposal', 'You see the whole setup and approve it. Files you already have are shown as a diff first.'],
-          ['One config file', 'Ports, commands, protected branches, live hosts and paths live in .claude/frontend-kit.json.'],
+          ['One config file', 'Ports, commands, protected branches, live hosts and paths live in .claude/wajiha-kit.json.'],
         ],
       },
       {
@@ -136,10 +136,10 @@ export const enDetails: Details = {
   },
   refactor: {
     steps: [
-      ['/frontend-kit:refactor-mode on', 'Switch the project into refactor mode.'],
-      ['/frontend-kit:refactor-mode audit', 'Measure structure, types, data, forms and tests without editing code, then write a phased plan.'],
-      ['/frontend-kit:refactor-mode next', 'Carry out one phase you approved, with behaviour frozen and the gate green.'],
-      ['/frontend-kit:refactor-mode off', 'Return to normal work. Unfinished phases stay in the plan.'],
+      ['/wajiha-kit:refactor-mode on', 'Switch the project into refactor mode.'],
+      ['/wajiha-kit:refactor-mode audit', 'Measure structure, types, data, forms and tests without editing code, then write a phased plan.'],
+      ['/wajiha-kit:refactor-mode next', 'Carry out one phase you approved, with behaviour frozen and the gate green.'],
+      ['/wajiha-kit:refactor-mode off', 'Return to normal work. Unfinished phases stay in the plan.'],
     ],
     note: 'Bugs found on the way are written down, not silently fixed.',
   },

@@ -3,7 +3,7 @@
 A React Router v7 app (framework mode): the code lives in app/, not src/.
 
 A React project. The kit adapts to the stack the project really uses, recorded in
-`.claude/frontend-kit.json` (`stack`, `commands`, `srcDirs`). Read it before assuming a tool.
+`.claude/wajiha-kit.json` (`stack`, `commands`, `srcDirs`). Read it before assuming a tool.
 
 Stack: React Router framework · router React Router · data none yet · client state React state ·
 styling Tailwind · tests none yet / none · lint none · format none ·
@@ -27,7 +27,7 @@ The bar every change meets: `.claude/rules/quality-bar.md`. Area rules: `.claude
 
 ## Commands
 
-The real commands are in `.claude/frontend-kit.json` (`commands`) and `package.json` scripts. Typical set:
+The real commands are in `.claude/wajiha-kit.json` (`commands`) and `package.json` scripts. Typical set:
 
 ```sh
 npm run dev            # the dev server on :3000
@@ -48,7 +48,7 @@ one component per file.
 - Implement directly: `task` for a new task, `create-component`, `create-form`, `create-hook`, `create-store`,
   `verify` before saying done, `review` before asking to commit a non-trivial change.
 - Long runs: keep a todo list and keep going until done or truly blocked.
-- Refactor mode (`/frontend-kit:refactor-mode`): restructures the project to the standards in `structure.md`,
+- Refactor mode (`/wajiha-kit:refactor-mode`): restructures the project to the standards in `structure.md`,
   phase by phase, with the gate between phases.
 
 ## Branches and environments

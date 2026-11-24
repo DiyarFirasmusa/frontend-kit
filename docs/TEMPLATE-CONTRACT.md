@@ -1,6 +1,6 @@
-# frontend-kit — template contract
+# wajiha-kit — template contract
 
-One plugin (`frontend-kit`), four profiles. `/frontend-kit:setup` asks for the
+One plugin (`wajiha-kit`), four profiles. `/wajiha-kit:setup` asks for the
 profile and copies `templates/shared/` + `templates/<profile>/` into the project.
 
 | Profile   | Stack (reference project)                                                                 |
@@ -13,11 +13,11 @@ profile and copies `templates/shared/` + `templates/<profile>/` into the project
 ## Layout
 
 ```
-plugins/frontend-kit/
+plugins/wajiha-kit/
   skills/<name>/SKILL.md      shared skills (no prefix), dash-* (dashboard only), web-* (website only)
   agents/*.md                 shared agents
   hooks/hooks.json            hooks → ${CLAUDE_PLUGIN_ROOT}/scripts/*.sh
-  scripts/                    hook scripts; they read .claude/frontend-kit.json
+  scripts/                    hook scripts; they read .claude/wajiha-kit.json
   templates/shared/rules/     rules every profile gets (quality-bar, scope, git, naming, react, typescript, i18n, rtl, formatting,
                               accessibility, security, dependencies, testing, styles, project)
   templates/react/rules/      also nextjs.md and react-router.md, each copied only for a project with that dependency
@@ -31,10 +31,10 @@ plugins/frontend-kit/
                               refer to go in rules/project.md (shared), never into CLAUDE.md
     rules/*.md                profile-only rules (frontmatter `paths:` where it helps)
     settings.json             permissions (+ attribution, outputStyle, the kit marketplace with autoUpdate, which Claude Code honours only where updates aren't disabled) — no hooks (hooks live in the plugin)
-    frontend-kit.json         the project config the hooks read (schema below)
+    wajiha-kit.json         the project config the hooks read (schema below)
   templates/dashboard/variants/<variant>/   only the router-bound parts of the dashboard for another framework
                               (`tanstack-start`, `next`): `CLAUDE.md` (replaces the base one, same 150-line cap),
-                              `rules/*.md` (replace a rule of the same name or add one), `frontend-kit.json` (`stack`,
+                              `rules/*.md` (replace a rule of the same name or add one), `wajiha-kit.json` (`stack`,
                               `generatedPaths`, merged into the base). Vite + TanStack Router is the base template.
                               Everything not router-bound (tables, forms, permissions, API layer) is shared.
 ```
@@ -50,7 +50,7 @@ Never write a real host, company, client, project, person or endpoint into the r
 of what not to write either: the repo is public. Keep the patterns, drop the domain. To have `validate-repo.sh` check
 for the names you must not publish, list them one per line in `.private-names` (git-ignored).
 
-## frontend-kit.json (read by the hook scripts)
+## wajiha-kit.json (read by the hook scripts)
 
 ```json
 {
@@ -95,9 +95,9 @@ for the names you must not publish, list them one per line in `.private-names` (
 `protectedPaths` may be a list or one string; any other type makes the Bash and URL guards refuse. `server/**` stays in it
 only where that folder is deploy config, not application code (Nuxt, Nitro, SolidStart, Analog).
 
-`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`); written by setup after the user answers. `mode` (project modes and task modes: `/frontend-kit:mode list`; setup writes `new`, `existing`,
+`profile`: `website`, `dashboard`, `react` or `fullstack` (two apps in one tree: `apps` lists each with `name`, `profile`, `path`, `routes`, `apiBaseEnv`, `commands`); written by setup after the user answers. `mode` (project modes and task modes: `/wajiha-kit:mode list`; setup writes `new`, `existing`,
 `maintenance` or `refactor`). `srcDirs`: the source folders every gate watches (unset, or none of them exists: code in any folder). `allowJs`: lifts the TypeScript-only guard.
-`modeState` (since, until, note, previous) is written only by `/frontend-kit:mode`; task modes live in
+`modeState` (since, until, note, previous) is written only by `/wajiha-kit:mode`; task modes live in
 `.claude/state/task-mode.json`, per checkout. `modes.reportDir` and `modes.prototypeDir` (defaults `docs/audits` and
 `prototypes`) are the folders read-only and prototype may write.
 `apps[].cwd`: the folder an app's commands run in (a monorepo package); the changed files are passed relative to it. `stack`: what setup detected; rules and `commands` adapt to it. `commands.formatFile` / `commands.lintFile` (the file is

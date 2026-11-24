@@ -67,7 +67,7 @@ export const skillUse = {
   ways: [
     { name: t('Just ask', 'اطلب فقط'), text: t('Describe the job. The assistant matches it to a skill.', 'صف المهمة. يختار المساعد المهارة المناسبة.'), example: t('create a customers table', 'أنشئ جدول العملاء') },
     { name: t('Get a hint', 'احصل على تلميح'), text: t('A hook looks for key words and names up to three kit skills before the assistant starts. It understands English and Arabic, standard and Iraqi. It matches words, so it can miss a phrasing.', 'قبل أن يبدأ المساعد، يبحث حارس عن كلمات مفتاحية ويقترح حتى ثلاث مهارات من الإضافة. يفهم الإنجليزية والعربية، الفصحى والعراقية. لكنه يطابق الكلمات فقط، فقد تفوته بعض الصياغات.'), example: t('make the page faster', 'اجعل الصفحة أسرع') },
-    { name: t('Call it', 'اكتب اسمها'), text: t('Type the skill’s name yourself.', 'اكتب اسم المهارة بنفسك.'), example: t('/frontend-kit:verify', '/frontend-kit:verify') },
+    { name: t('Call it', 'اكتب اسمها'), text: t('Type the skill’s name yourself.', 'اكتب اسم المهارة بنفسك.'), example: t('/wajiha-kit:verify', '/wajiha-kit:verify') },
   ],
   anatomyTitle: t('A skill, up close', 'المهارة عن قرب'),
   anatomy: t('Here is create-form. Every skill has a page like this one.', 'هذه مهارة create-form. ولكل مهارة صفحة مثلها.'),

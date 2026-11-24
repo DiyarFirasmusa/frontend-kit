@@ -67,7 +67,7 @@ for v in plugins/*/templates/dashboard/variants/*/; do
   name="$(basename "$v")"
   [ -f "$v/CLAUDE.md" ] || bad "$v: CLAUDE.md missing"
   [ "$(wc -l <"$v/CLAUDE.md")" -le 150 ] || bad "$v/CLAUDE.md is over 150 lines"
-  jq -e '.stack.framework and .profile == "dashboard"' "$v/frontend-kit.json" >/dev/null 2>&1 || bad "$v/frontend-kit.json: needs profile dashboard and stack.framework"
+  jq -e '.stack.framework and .profile == "dashboard"' "$v/wajiha-kit.json" >/dev/null 2>&1 || bad "$v/wajiha-kit.json: needs profile dashboard and stack.framework"
   for rule in "$v"/rules/*.md; do
     [ -f "$rule" ] && { head -1 "$rule" | grep -qx -- '---' || bad "$rule: no frontmatter"; }
   done
@@ -136,11 +136,11 @@ done
 for dir in examples/*/; do
   dir="${dir%/}"
   [ -f "$dir/README.md" ] || bad "$dir: no README.md"
-  if [ -f "$dir/.claude/frontend-kit.json" ]; then
-    jq empty "$dir/.claude/frontend-kit.json" 2>/dev/null || bad "$dir: invalid .claude/frontend-kit.json"
+  if [ -f "$dir/.claude/wajiha-kit.json" ]; then
+    jq empty "$dir/.claude/wajiha-kit.json" 2>/dev/null || bad "$dir: invalid .claude/wajiha-kit.json"
     if [ -f "$dir/package.json" ]; then
-      want="$(jq -c '.srcDirs // []' "$dir/.claude/frontend-kit.json")"
-      got="$(bash plugins/frontend-kit/scripts/kit-detect-stack.sh "$dir" 2>/dev/null | jq -c '.srcDirs' 2>/dev/null)"
+      want="$(jq -c '.srcDirs // []' "$dir/.claude/wajiha-kit.json")"
+      got="$(bash plugins/wajiha-kit/scripts/kit-detect-stack.sh "$dir" 2>/dev/null | jq -c '.srcDirs' 2>/dev/null)"
       [ "$want" = "$got" ] || bad "$dir: srcDirs $want in the config, detection finds $got"
     fi
   fi
@@ -149,7 +149,7 @@ if grep -rIlE '\{\{[A-Z_]+\}\}' examples 2>/dev/null | grep -q .; then bad "exam
 if grep -rIlE '/Users/|/private/tmp|/var/folders' examples 2>/dev/null | grep -q .; then bad "examples: absolute paths:"; grep -rIlE '/Users/|/private/tmp|/var/folders' examples | head -3; fi
 
 # 9. what the READMEs and the descriptions say matches what ships
-KIT=plugins/frontend-kit
+KIT=plugins/wajiha-kit
 count_dirs() { find "$1" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' '; }
 SKILLS="$(count_dirs "$KIT/skills")"
 AGENTS="$(find "$KIT/agents" -name '*.md' | wc -l | tr -d ' ')"
@@ -189,7 +189,7 @@ for agent in "$KIT"/agents/*.md; do
   if printf '%s\n' "$head" | grep -q '^description:.*Read-only'; then
     case ",$tools," in *,Bash,*) bad "$agent: says read-only but has Bash" ;; esac
   fi
-  for server in $(printf '%s\n' "$tools" | tr ',' '\n' | sed -n 's/^mcp__plugin_frontend-kit_\(.*\)__.*/\1/p' | sort -u); do
+  for server in $(printf '%s\n' "$tools" | tr ',' '\n' | sed -n 's/^mcp__plugin_wajiha-kit_\(.*\)__.*/\1/p' | sort -u); do
     jq -e --arg s "$server" '.mcpServers[$s]' "$KIT/.mcp.json" >/dev/null || bad "$agent: no MCP server $server in .mcp.json"
   done
 done

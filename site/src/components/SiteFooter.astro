@@ -12,11 +12,11 @@ const links = [
   [REPO_URL, footer.source],
   [`${REPO_URL}/blob/main/CHANGELOG.md`, footer.changelog],
   [`${REPO_URL}/tree/main/examples`, footer.examples],
-  [`${REPO_URL}/blob/main/plugins/frontend-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
+  [`${REPO_URL}/blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
 ] as const
 ---
 
 <footer class="foot">
-  <p dir="ltr">frontend-kit <span>v{version}</span></p>
+  <p dir="ltr">Wajiha <span>v{version}</span></p>
   <ul>{links.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>
 </footer>

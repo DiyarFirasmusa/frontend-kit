@@ -1,6 +1,6 @@
 # Git and GitHub
 
-The frontend-kit hooks (`guard-bash.sh`) and the deny rules in
+The wajiha-kit hooks (`guard-bash.sh`) and the deny rules in
 `.claude/settings.json` block most of the "never" list below. A block is the
 answer, not an obstacle: don't look for another spelling.
 
@@ -28,7 +28,7 @@ answer, not an obstacle: don't look for another spelling.
   Body (optional): 1–4 plain lines on what changed for users.
 - Stage the task's files by path. Never stage `.env*`, `.claude/settings.local.json`,
   `.claude/state/`, `dist/`, `.output/`. Project config under `.claude/`
-  (rules, `settings.json`, `frontend-kit.json`) is committed when the task changed it.
+  (rules, `settings.json`, `wajiha-kit.json`) is committed when the task changed it.
 - A failing pre-commit hook (lint-staged, commitlint) means fix and commit
   again. Never `--no-verify`, `-n`, `HUSKY=0` or a custom `core.hooksPath`.
 - Push only the task branch: `git push -u origin <branch>`. Never force.

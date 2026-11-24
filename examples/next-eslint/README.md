@@ -3,7 +3,7 @@
 Next.js, existing project, `react` profile.
 
 A fresh `create-next-app` project (Next.js 16, App Router, ESLint 9, Tailwind 4, npm, no tests) after a real run of
-`/frontend-kit:setup`.
+`/wajiha-kit:setup`.
 
 ## What setup decided
 - **Stack found:** no data layer, no test runner, no formatter, one LTR language, an `AGENTS.md` written by Next.js.
@@ -13,6 +13,6 @@ A fresh `create-next-app` project (Next.js 16, App Router, ESLint 9, Tailwind 4,
 - **Reported:** "no test runner found", with Vitest suggested and not installed.
 - **Rewritten:** `react.md` and `data-and-state.md` name the Next.js App Router and server components instead of TanStack.
 
-Read `CLAUDE.md`, `.claude/frontend-kit.json` and `.claude/rules/react.md` first.
+Read `CLAUDE.md`, `.claude/wajiha-kit.json` and `.claude/rules/react.md` first.
 
 Back to the [examples index](../README.md).

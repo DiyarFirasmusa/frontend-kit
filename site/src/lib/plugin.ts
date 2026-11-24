@@ -6,7 +6,7 @@ import type { Census } from '../film/shapes/index.ts'
 import type { Facts, HookEvent } from '../content/types.ts'
 
 // Astro runs from site/, next to plugins/.
-export const PLUGIN_DIR = resolve(process.cwd(), '../plugins/frontend-kit')
+export const PLUGIN_DIR = resolve(process.cwd(), '../plugins/wajiha-kit')
 
 const read = (...path: string[]): string => readFileSync(join(PLUGIN_DIR, ...path), 'utf8')
 
@@ -65,10 +65,10 @@ export const census: Census = {
   ruleGroups: ruleGroups.map(({ names }) => names.length),
 }
 
-export const REPO = 'DiyarFirasmusa/frontend-kit'
+export const REPO = 'DiyarFirasmusa/wajiha-kit'
 export const REPO_URL = `https://github.com/${REPO}`
 export const INSTALL_COMMANDS = [
   `/plugin marketplace add ${REPO}`,
-  '/plugin install frontend-kit@frontend-kit',
-  '/frontend-kit:setup',
+  '/plugin install wajiha-kit@wajiha-kit',
+  '/wajiha-kit:setup',
 ]

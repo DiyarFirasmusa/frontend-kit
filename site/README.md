@@ -1,4 +1,4 @@
-# frontend-kit website
+# Wajiha website
 
 The public site of the plugin: Astro (static), Three.js, English at `/` and Arabic at `/ar/`.
 It is not part of the plugin and is not installed into projects.
@@ -16,7 +16,7 @@ Building needs `bash`, `git` and `jq`: the gate demo runs the plugin's real `gua
 
 ## Deploy (Vercel)
 
-Live: https://frontend-kit-tan.vercel.app (project `frontend-kit`, connected to `main`).
+Live: https://frontend-kit-tan.vercel.app (project `wajiha-kit`, connected to `main`).
 
 Import the repository with **Root Directory** set to `site`, and keep "Include source files outside of the Root Directory"
 on: the build reads `../plugins` and `../examples`. `vercel.json` holds the rest. Pushes to `main` then publish.
@@ -24,7 +24,7 @@ Canonical links use Vercel's production domain, or `SITE_URL` when it is set (fo
 
 ## How it stays true to the plugin
 
-- Counts, version, rule files and hook events are read from `../plugins/frontend-kit` at build time, and the 3D shapes
+- Counts, version, rule files and hook events are read from `../plugins/wajiha-kit` at build time, and the 3D shapes
   are counted from the same numbers (a plate per skill, a guardian per agent, a ring per hook event).
 - The build fails when the plugin has a skill, agent, rule file, hook event or example project with no copy here (or the
   reverse). What to add, in both languages:

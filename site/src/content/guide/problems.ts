@@ -11,11 +11,11 @@ export const problems = [
   ],
   [
     t('The assistant does not use the skill I expected.', 'لم يستخدم المساعد المهارة التي توقعتها.'),
-    t('Call it by name: /frontend-kit: followed by the skill’s name. Skills of another project type are switched off on purpose.', 'اكتب اسمها بنفسك: ‎/frontend-kit: ثم اسم المهارة. وتعطل مهارات أنواع المشاريع الأخرى عمدا.'),
+    t('Call it by name: /wajiha-kit: followed by the skill’s name. Skills of another project type are switched off on purpose.', 'اكتب اسمها بنفسك: ‎/wajiha-kit: ثم اسم المهارة. وتعطل مهارات أنواع المشاريع الأخرى عمدا.'),
   ],
   [
     t('The quality gate keeps failing.', 'بوابة الجودة تفشل دائما.'),
-    t('Run the commands from frontend-kit.json yourself. A gate that points at a script that does not exist can never pass.', 'شغّل الأوامر الموجودة في frontend-kit.json بنفسك. إذا كانت البوابة تشير إلى سكربت غير موجود، فلن تنجح أبدا.'),
+    t('Run the commands from wajiha-kit.json yourself. A gate that points at a script that does not exist can never pass.', 'شغّل الأوامر الموجودة في wajiha-kit.json بنفسك. إذا كانت البوابة تشير إلى سكربت غير موجود، فلن تنجح أبدا.'),
   ],
   [
     t('It is too slow or costs too much for small edits.', 'الإضافة بطيئة أو مكلفة في التعديلات الصغيرة.'),
@@ -23,7 +23,7 @@ export const problems = [
   ],
   [
     t('A teammate does not get the kit.', 'الإضافة لا تصل إلى أحد الزملاء.'),
-    t('They run claude plugin install frontend-kit@frontend-kit --scope project once in a terminal.', 'يشغل الزميل هذا الأمر مرة واحدة في الطرفية: \u2066claude plugin install frontend-kit@frontend-kit --scope project\u2069'),
+    t('They run claude plugin install wajiha-kit@wajiha-kit --scope project once in a terminal.', 'يشغل الزميل هذا الأمر مرة واحدة في الطرفية: \u2066claude plugin install wajiha-kit@wajiha-kit --scope project\u2069'),
   ],
   [
     t('Setup stopped while writing into .claude.', 'توقف الإعداد أثناء الكتابة في ‎.claude.'),

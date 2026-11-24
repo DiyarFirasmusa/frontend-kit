@@ -35,7 +35,7 @@ const { matches, effort, tools, skills } = agentReference[name]!
 <Block id="does" title={ui.whatItChecks[locale]}><ol class="numbered">{guide.checks.map((check) => <li>{check[locale]}</li>)}</ol></Block>
 <Block id="returns" title={ui.reports[locale]}>
   <p class="big">{guide.returns[locale]}</p>
-  <a class="source" href={`${REPO_URL}/blob/main/plugins/frontend-kit/agents/${name}.md`}>{ui.source[locale]}</a>
+  <a class="source" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/agents/${name}.md`}>{ui.source[locale]}</a>
 </Block>
 <Block id="matches" title={ui.matches[locale]} lead={ui.matchesHe[locale]}><p class="quoted" lang="en" dir="ltr">{matches}</p></Block>
 <Block id="tools" title={ui.tools[locale]} lead={ui.toolsLead[locale]}>
@@ -56,4 +56,4 @@ const { matches, effort, tools, skills } = agentReference[name]!
     </Block>
   )
 }
-<Block id="instructions" title={ui.instructions[locale]} lead={ui.fullText[locale]}><Source file={`plugins/frontend-kit/agents/${name}.md`} /></Block>
+<Block id="instructions" title={ui.instructions[locale]} lead={ui.fullText[locale]}><Source file={`plugins/wajiha-kit/agents/${name}.md`} /></Block>

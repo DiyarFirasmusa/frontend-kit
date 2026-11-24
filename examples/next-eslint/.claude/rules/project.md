@@ -47,5 +47,5 @@ Tooling surprises specific to this repo (nested git folders, ignored directories
 
 - Script wrappers: `npm run check` = typecheck + `lint:check`; `npm run check:full` = check + build.
 - No `origin` git remote yet; no formatter, no test runner.
-- Kit setup (frontend-kit, react profile, existing mode) created `CLAUDE.md` (imports `AGENTS.md`), `.claude/rules/`,
-  `.claude/settings.json`, `.claude/frontend-kit.json`.
+- Kit setup (wajiha-kit, react profile, existing mode) created `CLAUDE.md` (imports `AGENTS.md`), `.claude/rules/`,
+  `.claude/settings.json`, `.claude/wajiha-kit.json`.

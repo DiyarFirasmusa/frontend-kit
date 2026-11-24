@@ -4,7 +4,7 @@
 #
 #   bash scripts/e2e-bench.sh <project-dir> <task-file> <kit|bare> <out.jsonl> [budget-usd]
 #
-#   kit   the project as set up by the kit (.claude/, CLAUDE.md) + `--plugin-dir plugins/frontend-kit`
+#   kit   the project as set up by the kit (.claude/, CLAUDE.md) + `--plugin-dir plugins/wajiha-kit`
 #   bare  the same sources with no .claude/, no CLAUDE.md and no plugin
 # Both arms run with project settings only (no user settings, no MCP servers) and the same tool allow-list.
 # Both arms start on branch feat/bench (cut from main). The project must have node_modules installed (it is symlinked into the copy, never modified).
@@ -49,7 +49,7 @@ git checkout -q -b feat/bench
 ARGS=(-p "$TASK" --output-format json --permission-mode acceptEdits --setting-sources project --strict-mcp-config
   --no-session-persistence --max-budget-usd "$BUDGET"
   --allowedTools "Read" "Glob" "Grep" "Edit" "Write" "Bash(npm run *)" "Bash(pnpm *)" "Bash(npx *)" "Bash(git status*)" "Bash(git diff*)" "Bash(ls*)")
-[ "$ARM" = kit ] && ARGS+=(--plugin-dir "$ROOT/plugins/frontend-kit")
+[ "$ARM" = kit ] && ARGS+=(--plugin-dir "$ROOT/plugins/wajiha-kit")
 START="$(date +%s)"
 claude "${ARGS[@]}" >"$WORK/run.json" 2>"$WORK/run.err"
 SECS=$(($(date +%s) - START))

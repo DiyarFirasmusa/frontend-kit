@@ -92,7 +92,7 @@ The project's test helpers (`project.md` names the folder) provide:
   announcements, drag alternatives, redundant entry or authentication: those need a Playwright check or a manual pass.
 - E2E server: `reuseExistingServer` silently tests whatever already listens on
   the port (another project's dev server turned a whole suite red). Use this
-  project's own e2e port (3400, `.claude/frontend-kit.json`), and if the run fails
+  project's own e2e port (3400, `.claude/wajiha-kit.json`), and if the run fails
   at once on every test, check `lsof -nP -iTCP:3400` before touching code.
 - Website (TanStack Start): e2e also asserts the server-rendered HTML (title,
   `lang`, `dir`) before hydration where SEO matters.

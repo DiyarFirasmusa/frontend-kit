@@ -102,8 +102,8 @@ check_script() { # <script> <first line of real work> [args...]
   if printf '%s' "$OUT" | grep -qF 'GIT_DIR=[] GIT_INDEX_FILE=[]'; then ok; else ko "$script keeps the caller's GIT_DIR"; fi
 }
 
-check_script plugins/frontend-kit/scripts/test-hooks.sh '^PASS=0'
-check_script plugins/frontend-kit/scripts/mode-test.sh '^PASS=0'
+check_script plugins/wajiha-kit/scripts/test-hooks.sh '^PASS=0'
+check_script plugins/wajiha-kit/scripts/mode-test.sh '^PASS=0'
 check_script scripts/e2e-bench.sh '^git init ' "$BOX/project" "$BOX/task.txt" bare "$BOX/out.jsonl"
 
 # The bench with a project folder that isn't there: it used to copy from the root of the disk.

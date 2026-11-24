@@ -1,4 +1,4 @@
-# frontend-kit
+# wajiha-kit
 
 **A plugin that makes your coding assistant work like a frontend team.**
 
@@ -13,7 +13,7 @@
   2. Ask in your own words. The assistant follows the matching guide.
   3. Checks run by themselves, and you approve the commit.
 
-The marketplace has one plugin, `frontend-kit`. It gives a project the conventions, workflows and guard rails a good
+The marketplace has one plugin, `wajiha-kit`. It gives a project the conventions, workflows and guard rails a good
 frontend team would write down, and enforces the ones that can be enforced.
 
 | What | Count |
@@ -26,27 +26,27 @@ frontend team would write down, and enforces the ones that can be enforced.
 ## Install
 
 ```text
-/plugin marketplace add DiyarFirasmusa/frontend-kit
-/plugin install frontend-kit@frontend-kit
-/frontend-kit:setup
+/plugin marketplace add DiyarFirasmusa/wajiha-kit
+/plugin install wajiha-kit@wajiha-kit
+/wajiha-kit:setup
 ```
 
 Restart Claude Code after setup. Requirements: `jq`, Node 20+, git. The guards need Claude Code 2.1.295 or later: earlier
 versions let a call through when a guard times out or cannot start.
 
-`/frontend-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of project it is,
+`/wajiha-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of project it is,
 detects the stack (package manager, framework, router, tests, linter, formatter, i18n, source folders), shows **one proposal**
-and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/frontend-kit.json`,
+and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/wajiha-kit.json`,
 adapted to what it found.
 
 **Updates don't always arrive by themselves.** Setup turns on `autoUpdate` for the kit's marketplace, but Claude Code
 updates plugins only in interactive sessions, and not at all where `DISABLE_AUTOUPDATER`, `DISABLE_UPDATES` or
 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is set (the Claude desktop app sets the first), unless
 `FORCE_AUTOUPDATE_PLUGINS=1` is too. To update by hand, in the project's folder (both commands: the first alone refreshes
-only the list), then restart Claude Code and run `/frontend-kit:setup` again for template changes:
+only the list), then restart Claude Code and run `/wajiha-kit:setup` again for template changes:
 
 ```bash
-claude plugin marketplace update frontend-kit && claude plugin update frontend-kit@frontend-kit
+claude plugin marketplace update wajiha-kit && claude plugin update wajiha-kit@wajiha-kit
 ```
 
 ## What it enforces
@@ -63,14 +63,14 @@ package script or a program in another language does. Keep branch protection on.
 
 ## Working modes
 
-`/frontend-kit:mode <name>` turns one on: `maintenance`, `refactor`, `upgrade`, `freeze` for the project, `hotfix`,
+`/wajiha-kit:mode <name>` turns one on: `maintenance`, `refactor`, `upgrade`, `freeze` for the project, `hotfix`,
 `read-only`, `prototype` for this checkout. `status` shows what is on and what is enforced, `off` leaves it. A project in
 the default mode (`existing`) or without a config gets no extra rule or refusal. The mode guard holds the edit tools; in
 the shell it catches common forms only.
 
 ## Refactor mode
 
-`/frontend-kit:refactor-mode audit` measures a project against the standards, writes a phased plan, and `next` carries out one
+`/wajiha-kit:refactor-mode audit` measures a project against the standards, writes a phased plan, and `next` carries out one
 phase at a time with behaviour frozen and the gate green in between. See [`examples/refactor-legacy`](examples/refactor-legacy).
 
 ## Where to look
@@ -78,7 +78,7 @@ phase at a time with behaviour frozen and the gate green in between. See [`examp
 | | |
 | - | - |
 | [`examples/`](examples) | 7 projects showing what setup produces on different stacks |
-| [`plugins/frontend-kit/README.md`](plugins/frontend-kit/README.md) | the plugin in detail |
+| [`plugins/wajiha-kit/README.md`](plugins/wajiha-kit/README.md) | the plugin in detail |
 | [`docs/`](docs) | development guide, testing, template contract |
 | [`CHANGELOG.md`](CHANGELOG.md) | what changed in each version |
 
@@ -86,4 +86,4 @@ Measured so far: on two small tasks in a Vite project, code written with the kit
 81/90 without it, at about 1.5 times the cost; at 1.14.0, 60 of the then 62 passed (average score 97.1%). The suite now has a total of 66 development evals; the four newest have not been run.
 Small samples from one project: a direction, not proof.
 
-Third-party skills and their licences: [`plugins/frontend-kit/THIRD_PARTY_NOTICES.md`](plugins/frontend-kit/THIRD_PARTY_NOTICES.md).
+Third-party skills and their licences: [`plugins/wajiha-kit/THIRD_PARTY_NOTICES.md`](plugins/wajiha-kit/THIRD_PARTY_NOTICES.md).

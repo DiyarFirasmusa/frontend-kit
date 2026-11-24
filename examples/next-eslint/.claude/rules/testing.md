@@ -22,7 +22,7 @@ npm run check:full       # check + build
 ```
 
 Add `test`, `test:e2e` and the like here (and `commands.relatedTests` in
-`.claude/frontend-kit.json`) once a runner is installed.
+`.claude/wajiha-kit.json`) once a runner is installed.
 
 ## What to write (once a runner exists)
 

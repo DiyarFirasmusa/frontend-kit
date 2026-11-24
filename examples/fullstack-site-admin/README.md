@@ -13,9 +13,9 @@ src/admin/                    the admin's code (api, components, features, guard
 
 ## What setup decided
 - **Scoped rules:** website rules apply to `src/features|shared` and `src/routes/_site`; the dashboard rules were copied as `admin-<name>.md` and their paths moved under `src/admin` and `src/routes/admin`, so reading an admin file loads `admin-api-layer.md` and not the site's `api-layer.md` (checked with an `InstructionsLoaded` hook log).
-- **Per app commands:** `apps` in `.claude/frontend-kit.json` gives each app its own `i18nValidate` and `relatedTests`.
+- **Per app commands:** `apps` in `.claude/wajiha-kit.json` gives each app its own `i18nValidate` and `relatedTests`.
 - **No skill deny rules:** both apps' skills stay available.
 
-Read `.claude/frontend-kit.json` (the `apps` block), then `.claude/rules/admin-api-layer.md` versus `.claude/rules/api-layer.md`.
+Read `.claude/wajiha-kit.json` (the `apps` block), then `.claude/rules/admin-api-layer.md` versus `.claude/rules/api-layer.md`.
 
 Back to the [examples index](../README.md).

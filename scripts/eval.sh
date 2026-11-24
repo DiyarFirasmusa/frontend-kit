@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs the frontend-kit skill evals (plugins/frontend-kit/evals) with `claude plugin eval`.
+# Runs the wajiha-kit skill evals (plugins/wajiha-kit/evals) with `claude plugin eval`.
 # EVERY run calls the API and costs money. Cases per run: see the count it prints before it starts.
 #
 #   bash scripts/eval.sh dev       run the dev cases (3 runs each, no no-plugin arm)
@@ -12,7 +12,7 @@
 # EVAL_JOBS=<1-8> to run cases in parallel, EVAL_TRUST=1 to skip the "trust this plugin directory" prompt (CI, your own plugin).
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PLUGIN="$ROOT/plugins/frontend-kit"
+PLUGIN="$ROOT/plugins/wajiha-kit"
 RESULTS="$PLUGIN/evals/results"
 THRESHOLD=0.8
 

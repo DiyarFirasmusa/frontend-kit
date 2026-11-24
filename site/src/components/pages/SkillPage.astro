@@ -69,7 +69,7 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
         </div>
       </dl>
     ) : (
-      <Source file={`plugins/frontend-kit/${playbook}`} />
+      <Source file={`plugins/wajiha-kit/${playbook}`} />
     )
   }
 </Block>
@@ -81,7 +81,7 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
           <summary>
             <bdi>{file.replace(`skills/${name}/`, '')}</bdi>
           </summary>
-          <Source file={`plugins/frontend-kit/${file}`} />
+          <Source file={`plugins/wajiha-kit/${file}`} />
         </details>
       ))}
     </Block>
@@ -99,5 +99,5 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
       </li>
     ))}
   </ul>
-  <a class="source" href={`${REPO_URL}/blob/main/plugins/frontend-kit/skills/${name}/SKILL.md`}>{ui.source[locale]}</a>
+  <a class="source" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/skills/${name}/SKILL.md`}>{ui.source[locale]}</a>
 </Block>

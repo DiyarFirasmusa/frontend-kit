@@ -30,6 +30,6 @@ jobs:
           git init -q && git config user.email ci@example.com && git config user.name ci
           echo "KIT_TEST_PROJECT=$PWD" >> "$GITHUB_ENV"
       - name: Working modes self-test
-        run: bash plugins/frontend-kit/scripts/mode-test.sh
+        run: bash plugins/wajiha-kit/scripts/mode-test.sh
       - name: Hook self-test
-        run: bash plugins/frontend-kit/scripts/test-hooks.sh
+        run: bash plugins/wajiha-kit/scripts/test-hooks.sh

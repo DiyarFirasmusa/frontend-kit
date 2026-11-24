@@ -1,5 +1,5 @@
 {
-  "name": "frontend-kit",
+  "name": "wajiha-kit",
   "owner": {
     "name": "diyarfirasmusa"
   },
@@ -9,8 +9,8 @@
   },
   "plugins": [
     {
-      "name": "frontend-kit",
-      "source": "./plugins/frontend-kit",
+      "name": "wajiha-kit",
+      "source": "./plugins/wajiha-kit",
       "description": "Skills, agents, guards, quality gates and project templates in four profiles: website, dashboard (Vite, Next.js or TanStack Start), react (any stack) and fullstack (site + admin).",
       "category": "development"
     }

@@ -5,7 +5,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "outputStyle": "frontend-kit:Frontend report",
+  "outputStyle": "wajiha-kit:Frontend report",
   "permissions": {
     "allow": [
       "Bash(npm run typecheck)",
@@ -110,31 +110,31 @@
       "Bash(git clean -xdf*)",
       "Bash(npm publish)",
       "Bash(npm publish *)",
-      "Skill(frontend-kit:web-create-feature)",
-      "Skill(frontend-kit:web-create-route)",
-      "Skill(frontend-kit:web-seo-page)",
-      "Skill(frontend-kit:web-server-fn)",
-      "Skill(frontend-kit:dash-create-crud)",
-      "Skill(frontend-kit:dash-create-detail)",
-      "Skill(frontend-kit:dash-create-filter-bar)",
-      "Skill(frontend-kit:dash-create-route)",
-      "Skill(frontend-kit:dash-create-settings-form)",
-      "Skill(frontend-kit:dash-create-table)"
+      "Skill(wajiha-kit:web-create-feature)",
+      "Skill(wajiha-kit:web-create-route)",
+      "Skill(wajiha-kit:web-seo-page)",
+      "Skill(wajiha-kit:web-server-fn)",
+      "Skill(wajiha-kit:dash-create-crud)",
+      "Skill(wajiha-kit:dash-create-detail)",
+      "Skill(wajiha-kit:dash-create-filter-bar)",
+      "Skill(wajiha-kit:dash-create-route)",
+      "Skill(wajiha-kit:dash-create-settings-form)",
+      "Skill(wajiha-kit:dash-create-table)"
     ]
   },
   "sandbox": {
     "network": {}
   },
   "extraKnownMarketplaces": {
-    "frontend-kit": {
+    "wajiha-kit": {
       "source": {
         "source": "github",
-        "repo": "DiyarFirasmusa/frontend-kit"
+        "repo": "DiyarFirasmusa/wajiha-kit"
       },
       "autoUpdate": true
     }
   },
   "enabledPlugins": {
-    "frontend-kit@frontend-kit": true
+    "wajiha-kit@wajiha-kit": true
   }
 }

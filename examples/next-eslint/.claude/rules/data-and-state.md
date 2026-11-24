@@ -1,6 +1,6 @@
 # Data and state
 
-Use the data layer the project already has (see `stack.data` in `.claude/frontend-kit.json`). Today that is Next.js
+Use the data layer the project already has (see `stack.data` in `.claude/wajiha-kit.json`). Today that is Next.js
 itself: data loaded in Server Components / route handlers with `fetch` through one API client; no client cache
 library yet. Do not add one unasked. The rules below hold for whichever layer is used.
 

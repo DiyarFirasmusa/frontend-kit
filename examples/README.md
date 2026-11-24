@@ -1,6 +1,6 @@
 # Examples
 
-Seven small projects that show what `/frontend-kit:setup` produces and how the kit adapts to the stack it finds.
+Seven small projects that show what `/wajiha-kit:setup` produces and how the kit adapts to the stack it finds.
 They are references to read, not apps to ship. Nothing here is installed by the plugin.
 
 | Example | Stack | Mode and profile | Origin | What to look at |
@@ -21,14 +21,14 @@ files; the rules folder is left out there because it is the template with the st
 
 ```bash
 cd examples/next-eslint
-claude --plugin-dir ../../plugins/frontend-kit
+claude --plugin-dir ../../plugins/wajiha-kit
 ```
 
 Then ask for a small change (a component, a form) and watch the hooks: format and lint after each edit, the quality gate
 when Claude stops, one code review by `frontend-reviewer`. To see detection on any folder:
 
 ```bash
-plugins/frontend-kit/scripts/kit-detect-stack.sh examples/pnpm-monorepo | jq
+plugins/wajiha-kit/scripts/kit-detect-stack.sh examples/pnpm-monorepo | jq
 ```
 
 ## Keeping them honest

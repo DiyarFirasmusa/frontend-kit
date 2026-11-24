@@ -31,7 +31,7 @@ export const ruleFiles: Record<string, RuleFile[]> = Object.fromEntries(
 const switchedOff = new Map(
   projects.map(({ id }) => {
     const deny: string[] = JSON.parse(read('templates', id, 'settings.json')).permissions.deny
-    return [id, new Set(deny.map((rule) => /^Skill\(frontend-kit:(.+)\)$/.exec(rule)?.[1]).filter((name) => name !== undefined))] as const
+    return [id, new Set(deny.map((rule) => /^Skill\(wajiha-kit:(.+)\)$/.exec(rule)?.[1]).filter((name) => name !== undefined))] as const
   }),
 )
 

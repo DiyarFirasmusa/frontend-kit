@@ -20,7 +20,7 @@ interface Props {
 const { group, name, locale } = Astro.props
 const key = `${group}/${name}`
 const { paths } = ruleFiles[group]!.find((rule) => rule.key === key)!
-const file = `plugins/frontend-kit/templates/${group}/rules/${name}`
+const file = `plugins/wajiha-kit/templates/${group}/rules/${name}`
 const words = {
   says: t('What it says', 'ماذا تقول'),
   load: t('When the assistant reads it', 'متى يقرأها المساعد'),

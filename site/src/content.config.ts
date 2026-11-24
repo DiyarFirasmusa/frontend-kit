@@ -2,9 +2,9 @@ import { defineCollection } from 'astro:content'
 import { globSync, readFileSync } from 'node:fs'
 import { dirname, posix, resolve } from 'node:path'
 
-const PLUGIN = 'plugins/frontend-kit'
+const PLUGIN = 'plugins/wajiha-kit'
 const ROOT = resolve(process.cwd(), '..')
-const BLOB = 'https://github.com/DiyarFirasmusa/frontend-kit/blob/main/'
+const BLOB = 'https://github.com/DiyarFirasmusa/wajiha-kit/blob/main/'
 
 /** Placeholders such as <name> are words, not tags. Code keeps its own, also when a span of it wraps a line. */
 function tagsAsWords(markdown: string): string {

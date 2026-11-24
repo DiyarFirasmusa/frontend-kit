@@ -61,7 +61,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'guide',
     still: 'screen',
     name: t('What is it?', 'ما هي؟'),
-    title: t('What is frontend-kit?', 'ما هي frontend-kit؟'),
+    title: t('What is Wajiha?', 'ما هي واجهة؟'),
     lead: t(
       'A kit that teaches your coding assistant how a good frontend team builds, and puts checks around it so the work is proven before you see it.',
       'إضافة تعلم مساعد البرمجة كيف يبني فريق واجهات محترف، وتضيف فحوصا تثبت أن العمل سليم قبل أن تراه.',
@@ -133,7 +133,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     still: 'website',
     name: t('Configuration', 'الإعدادات'),
     title: t('One file to configure it.', 'ملف واحد للإعدادات.'),
-    lead: t('Setup writes .claude/frontend-kit.json. Change a value there and the skills, agents and hooks follow.', 'يكتب الإعداد الملف ‎.claude/frontend-kit.json. غير قيمة فيه، فتتبعها المهارات والوكلاء والحراس.'),
+    lead: t('Setup writes .claude/wajiha-kit.json. Change a value there and the skills, agents and hooks follow.', 'يكتب الإعداد الملف ‎.claude/wajiha-kit.json. غير قيمة فيه، فتتبعها المهارات والوكلاء والحراس.'),
   },
   refactor: {
     id: 'refactor',

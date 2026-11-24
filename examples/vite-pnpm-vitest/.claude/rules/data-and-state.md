@@ -1,6 +1,6 @@
 # Data and state
 
-Use the data layer the project already has (see `stack.data` in `.claude/frontend-kit.json`: TanStack Query, SWR,
+Use the data layer the project already has (see `stack.data` in `.claude/wajiha-kit.json`: TanStack Query, SWR,
 RTK Query, Apollo, plain fetch hooks). The rules below hold for all of them.
 
 - **Server state and client state are different things.** Server data lives in the data layer's cache, keyed

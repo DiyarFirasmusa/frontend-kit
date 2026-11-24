@@ -10,7 +10,7 @@ paths:
 > (`margin-inline-start`, `padding-inline`), `[dir='rtl']` for the few mirrored things and a `prefers-color-scheme` dark token
 > set. The Tailwind utilities below are examples of the intent, not required syntax.
 
-> **No i18n library yet** (`stack.i18n` in `.claude/frontend-kit.json`): keep every user-visible string in one catalogue
+> **No i18n library yet** (`stack.i18n` in `.claude/wajiha-kit.json`): keep every user-visible string in one catalogue
 > module grouped like future keys (`group.key`), no text in JSX, no second language or library without asking. The rules below
 > then apply to that catalogue.
 

@@ -5,8 +5,8 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build any frontend project. Get the best result.', 'ابدأ بأي مشروع واجهات. واحصل على أفضل نتيجة.'),
   lead: t(
-    'frontend-kit is a Claude Code plugin. Say what you want in plain words, and your assistant builds it the way a senior frontend team would: clean code, fast pages, accessible screens, checked before you commit.',
-    '\u2066frontend-kit\u2069 إضافة لـ \u2066Claude Code\u2069. قل ما تريده بكلمات بسيطة، فيبنيه مساعدك كما يبنيه فريق واجهات متمرس: كود نظيف، وصفحات سريعة، وشاشات يستخدمها الجميع. ثم يفحص النتيجة قبل أن تحفظها.',
+    'Wajiha is a Claude Code plugin. Say what you want in plain words, and your assistant builds it the way a senior frontend team would: clean code, fast pages, accessible screens, checked before you commit.',
+    'واجهة إضافة لـ \u2066Claude Code\u2069. قل ما تريده بكلمات بسيطة، فيبنيه مساعدك كما يبنيه فريق واجهات متمرس: كود نظيف، وصفحات سريعة، وشاشات يستخدمها الجميع. ثم يفحص النتيجة قبل أن تحفظها.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
@@ -76,21 +76,21 @@ export const home = {
         mode: 'new',
         name: t('A new project', 'مشروع جديد'),
         text: t('Built to the standard from the first file.', 'كل شيء حسب المعايير من أول ملف.'),
-        command: '/frontend-kit:mode new',
+        command: '/wajiha-kit:mode new',
         page: 'get-started',
       },
       {
         mode: 'existing',
         name: t('A project you are working on', 'مشروع تعمل عليه'),
         text: t('Setup reads your project and follows what it already does. Nothing is rewritten; you carry on where you were.', 'يقرأ الإعداد مشروعك ويتبع طريقته. لا يعيد كتابة أي شيء، وتتابع من حيث كنت.'),
-        command: '/frontend-kit:setup',
+        command: '/wajiha-kit:setup',
         page: 'get-started',
       },
       {
         mode: 'refactor',
         name: t('An old or messy project', 'مشروع قديم أو فوضوي'),
         text: t('Refactor mode measures the mess, plans six phases and runs them one at a time, without changing what the app does.', 'يقيس نمط إعادة الهيكلة حجم الفوضى، ويخطط ست مراحل وينفذها واحدة بعد أخرى. ولا يتغير ما يفعله التطبيق.'),
-        command: '/frontend-kit:refactor-mode on',
+        command: '/wajiha-kit:refactor-mode on',
         page: 'refactor',
       },
     ],

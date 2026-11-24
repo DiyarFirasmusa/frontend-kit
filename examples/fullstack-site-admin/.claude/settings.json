@@ -5,7 +5,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "outputStyle": "frontend-kit:Frontend report",
+  "outputStyle": "wajiha-kit:Frontend report",
   "permissions": {
     "allow": [
       "Bash(npm run typecheck)",
@@ -116,15 +116,15 @@
     ]
   },
   "extraKnownMarketplaces": {
-    "frontend-kit": {
+    "wajiha-kit": {
       "source": {
         "source": "github",
-        "repo": "DiyarFirasmusa/frontend-kit"
+        "repo": "DiyarFirasmusa/wajiha-kit"
       },
       "autoUpdate": true
     }
   },
   "enabledPlugins": {
-    "frontend-kit@frontend-kit": true
+    "wajiha-kit@wajiha-kit": true
   }
 }

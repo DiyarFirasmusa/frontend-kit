@@ -22,7 +22,7 @@ const borrowed = new Map(
 const skillSources = new Map(skillNames.map((name) => [name, read('skills', name, 'SKILL.md')]))
 const agentSources = new Map(agentNames.map((name) => [name, read('agents', `${name}.md`)]))
 
-const names = (source: string, skill: string): boolean => new RegExp(`\`(/?frontend-kit:|/)?${skill}\`|frontend-kit:${skill}\\b`).test(source)
+const names = (source: string, skill: string): boolean => new RegExp(`\`(/?wajiha-kit:|/)?${skill}\`|wajiha-kit:${skill}\\b`).test(source)
 
 export interface SkillReference {
   /** The text Claude matches a request against. */
@@ -97,4 +97,4 @@ export const hookRuns = (event: HookEvent): HookRun[] =>
     }),
   )
 
-export const templateJson = (profile: string, file: 'frontend-kit.json' | 'settings.json'): string => read('templates', profile, file).trim()
+export const templateJson = (profile: string, file: 'wajiha-kit.json' | 'settings.json'): string => read('templates', profile, file).trim()

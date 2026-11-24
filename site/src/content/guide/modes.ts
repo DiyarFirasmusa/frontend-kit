@@ -1,6 +1,6 @@
 import { t } from './text.ts'
 
-/** What `/frontend-kit:mode list` prints, in plain words. */
+/** What `/wajiha-kit:mode list` prints, in plain words. */
 export const modeGroups = [
   {
     title: t('Modes of the project', 'أنماط المشروع'),

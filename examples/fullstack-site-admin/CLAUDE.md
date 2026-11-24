@@ -1,6 +1,6 @@
 # CLAUDE.md — bazaar-combined
 
-Bazaar combined bench - public storefront AND staff admin dashboard (/admin) in ONE TanStack Start project (local test bench for the frontend-kit plugin, never deployed).
+Bazaar combined bench - public storefront AND staff admin dashboard (/admin) in ONE TanStack Start project (local test bench for the wajiha-kit plugin, never deployed).
 
 One project, two apps in one TanStack Start tree: a public **site** and an **admin** dashboard under `/admin`.
 They share the toolchain and the root files only; their code, rules and checks are separate.
@@ -11,7 +11,7 @@ The bar every change meets: `.claude/rules/quality-bar.md`. Area rules load by p
 | site  | website   | `src/features`, `src/shared`                      | `src/routes/_site`       | SSR, SEO, public             |
 | admin | dashboard | `src/admin`                                   | `src/routes/admin`      | `ssr: false`, `noindex`, auth |
 
-Which app is a file in? The longest `path` in `.claude/frontend-kit.json` → `apps`. The hooks, the rules and the skills
+Which app is a file in? The longest `path` in `.claude/wajiha-kit.json` → `apps`. The hooks, the rules and the skills
 follow that answer: `web-*` skills and the `site` rules for the site, `dash-*` skills and the `admin-*` rules for the admin.
 
 ## Hard rules
@@ -69,7 +69,7 @@ Inside each app the layout rules of its profile apply (`website`: feature folder
 - Implement directly: `task`, `web-create-route` / `-feature` / `-server-fn` / `-seo-page` for the site,
   `dash-create-route` / `-table` / `-crud` / `-filter-bar` / `-detail` / `-settings-form` for the admin,
   `verify` before saying done, `review` before asking to commit a non-trivial change.
-- Refactor mode: `/frontend-kit:refactor-mode` restructures one app at a time.
+- Refactor mode: `/wajiha-kit:refactor-mode` restructures one app at a time.
 
 ## Branches and environments
 

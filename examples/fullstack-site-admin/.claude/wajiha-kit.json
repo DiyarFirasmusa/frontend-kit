@@ -1,0 +1,75 @@
+{
+  "projectName": "bazaar-combined",
+  "projectDescription": "Bazaar combined bench - public storefront AND staff admin dashboard (/admin) in ONE TanStack Start project (local test bench for the wajiha-kit plugin, never deployed).",
+  "profile": "fullstack",
+  "mode": "existing",
+  "liveHosts": [],
+  "uatHost": "",
+  "githubRepo": "",
+  "defaultBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master"
+  ],
+  "devPort": "3300",
+  "e2ePort": "3400",
+  "apiBaseEnv": "VITE_API_BASE_URL",
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    ".github/**",
+    "deploy/**",
+    "server/**",
+    "package-lock.json"
+  ],
+  "generatedPaths": [
+    "src/routeTree.gen.ts"
+  ],
+  "srcDir": "src",
+  "commands": {
+    "typecheck": "npm run --silent typecheck",
+    "relatedTests": "npx vitest related --run --passWithNoTests",
+    "i18nValidate": "npm run i18n:validate"
+  },
+  "srcDirs": [
+    "src"
+  ],
+  "apps": [
+    {
+      "name": "site",
+      "profile": "website",
+      "path": "src",
+      "routes": "src/routes/_site",
+      "commands": {
+        "i18nValidate": "node scripts/i18n-validate.mjs",
+        "relatedTests": ""
+      }
+    },
+    {
+      "name": "admin",
+      "profile": "dashboard",
+      "path": "src/admin",
+      "routes": "src/routes/admin",
+      "apiBaseEnv": "VITE_ADMIN_API_BASE_URL",
+      "commands": {
+        "i18nValidate": "node scripts/validate-i18n-admin.ts",
+        "relatedTests": ""
+      }
+    }
+  ],
+  "stack": {
+    "packageManager": "npm",
+    "framework": "TanStack Start",
+    "router": "TanStack Router",
+    "data": "TanStack Query",
+    "state": "Zustand",
+    "styling": "Tailwind",
+    "tests": "vitest",
+    "e2e": "playwright",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "i18n": "i18next",
+    "forms": "react-hook-form",
+    "typescript": true
+  }
+}

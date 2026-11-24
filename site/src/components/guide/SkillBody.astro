@@ -20,7 +20,7 @@ const guide = skillGuides[name]!
 <Block id="ask" title={ui.youType[locale]} lead={ui.anyWords[locale]}>
   {guide.ask.map((example) => <Prompt text={example[locale]} />)}
   <p class="by-name">{ui.byName[locale]}</p>
-  <code class="call" dir="ltr">/frontend-kit:{name}</code>
+  <code class="call" dir="ltr">/wajiha-kit:{name}</code>
 </Block>
 <Block id="steps" title={ui.whatHappens[locale]}>
   <ol class="numbered">{guide.steps.map((step) => <li>{step[locale]}</li>)}</ol>

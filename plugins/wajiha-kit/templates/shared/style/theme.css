@@ -1,0 +1,117 @@
+/* Design tokens for wajiha-kit projects (copied once by /wajiha-kit:setup; the project owns it afterwards).
+   Needs: tailwindcss v4, and the font packages named below (swap them for the project's fonts).
+   Components use the semantic utilities (bg-surface, text-muted, border-border, bg-primary, text-danger, …) and
+   need no `dark:` variant. Replace the palette; keep the token names, the rules and skills refer to them. */
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/noto-sans-arabic';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic tokens. Components use these utilities and need no `dark:` variant. */
+:root {
+  --background: #f6f7fb;
+  --surface: #ffffff;
+  --surface-dim: #eef0f6;
+  --foreground: #121826;
+  --muted: #566074;
+  --border: #d9dde8;
+  --input: #c3c9d8;
+  --ring: #4338ca;
+  --primary: #4338ca;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e8e7fb;
+  --success: #0f6b3f;
+  --success-soft: #dcf5e6;
+  --warning: #8a4b00;
+  --warning-soft: #fdecc8;
+  --danger: #b4231c;
+  --danger-soft: #fde4e1;
+  --info: #0b5a8f;
+  --info-soft: #dcecfa;
+  --neutral-soft: #e6e9f0;
+  --overlay: rgb(10 14 26 / 0.55);
+}
+
+.dark {
+  --background: #0d111c;
+  --surface: #151b2b;
+  --surface-dim: #1c2336;
+  --foreground: #eef1f8;
+  --muted: #a6afc2;
+  --border: #2b3550;
+  --input: #3a4766;
+  --ring: #8b87ff;
+  --primary: #8b87ff;
+  --primary-foreground: #0d111c;
+  --primary-soft: #26274f;
+  --success: #62d493;
+  --success-soft: #11321f;
+  --warning: #f3b659;
+  --warning-soft: #3a2a0c;
+  --danger: #ff8a80;
+  --danger-soft: #3d1613;
+  --info: #7cc4f5;
+  --info-soft: #0f2d44;
+  --neutral-soft: #262e44;
+  --overlay: rgb(0 0 0 / 0.65);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-neutral-soft: var(--neutral-soft);
+  --color-overlay: var(--overlay);
+  --font-sans: 'Inter Variable', 'Noto Sans Arabic Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  /* A free-text input follows what the user types (its text direction is read from the content);
+     while empty it follows the UI direction. Inputs always carry a placeholder so
+     :placeholder-shown can tell the two states apart. Latin-only fields set dir="ltr". */
+  input:not(
+      [dir='ltr'],
+      [type='checkbox'],
+      [type='radio'],
+      [type='file'],
+      [type='date'],
+      [type='number']
+    ):not(:placeholder-shown),
+  textarea:not([dir='ltr']):not(:placeholder-shown) {
+    unicode-bidi: plaintext;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
