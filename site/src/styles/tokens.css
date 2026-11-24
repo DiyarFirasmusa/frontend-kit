@@ -14,6 +14,11 @@
   --sand: #b85f3f;
   --teal: #f1ede7;
   --rose: var(--bad);
+  /* Wajiha's own turquoise, made at the orange's lightness and strength. Orange is the request and the action;
+     turquoise is the way around and the result (links, where you are, focus, steps, progress, checks). */
+  --turq: #19abab;
+  --turq-deep: #006c6d;
+  --turq-soft: rgb(25 171 171 / 0.16);
 
   --type: 'Familjen Grotesk Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --latin: 'Familjen Grotesk Variable', system-ui, sans-serif;

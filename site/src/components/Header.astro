@@ -28,9 +28,11 @@ const places = [
 <a class="skip" href="#content">{chrome.skip}</a>
 <header class="top">
   <a class="brand" href={home ? '#intro' : start}>
-    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
-      <path fill-rule="evenodd" d="M5 5h30v30H5zm2.8 2.8v24.4h24.4V7.8z"></path>
-      <path d="M11 11h18v5.2H11zM11 18.4h5.6V29H11zM18.8 18.4H29V29H18.8zM19 7h2v4h-2zM7 22h4v2H7zM29 21h4v2h-4zM23 29h2v4h-2z"></path>
+    <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="4" y="4" width="56" height="12" rx="3"></rect>
+      <rect class="brand-menu" x="46" y="23" width="14" height="37" rx="3"></rect>
+      <rect class="brand-block" x="4" y="23" width="35" height="17" rx="3"></rect>
+      <rect x="4" y="47" width="35" height="13" rx="3"></rect>
     </svg>
     <bdi>Wajiha Kit</bdi>
     <small class="brand-version" dir="ltr">v{version}</small>

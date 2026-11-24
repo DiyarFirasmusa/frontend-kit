@@ -1,0 +1,136 @@
+/* ---------------------------------------------------------------------------------------------
+   IDENTITY. Wajiha Kit's two colours, loaded last. Black and ivory stay most of the page.
+   Orange (--accent) is the request and the action: the main button, the console, the caret.
+   Turquoise (--turq) is the way around and the result: links, where you are, focus, step numbers,
+   the progress line, the checks. The guide is brand/wajiha-identity.html.
+   --------------------------------------------------------------------------------------------- */
+
+/* The mark: ivory blocks, the menu turquoise, the block you asked for orange. It never turns. */
+.brand-mark,
+.brand:hover .brand-mark {
+  fill: var(--ivory);
+  rotate: none;
+}
+.brand-mark .brand-menu {
+  fill: var(--turq);
+}
+.brand-mark .brand-block {
+  fill: var(--accent);
+}
+.brand-version {
+  border-color: rgb(25 171 171 / 0.45);
+  background: rgb(25 171 171 / 0.1);
+  color: var(--turq);
+}
+
+/* Focus and the reading line. */
+:focus-visible {
+  outline-color: var(--turq);
+}
+.progress {
+  background: var(--turq);
+}
+.top.is-scrolled {
+  box-shadow: 0 1px 0 rgb(25 171 171 / 0.28), 0 0.75rem 2rem rgb(0 0 0 / 0.35);
+}
+
+/* Where you are, and the way around. */
+.top-nav a:hover,
+.language:hover,
+.menu summary:hover {
+  color: var(--turq);
+}
+.top-nav a[aria-current],
+.menu nav [aria-current] {
+  text-decoration-color: var(--turq);
+}
+.top-nav a::before,
+.top-nav a::after {
+  background: var(--turq);
+  color: var(--turq);
+}
+.top-docs {
+  border-color: rgb(25 171 171 / 0.55);
+}
+.top-docs:hover,
+.top-docs[aria-current] {
+  border-color: var(--turq);
+  background: rgb(25 171 171 / 0.14);
+}
+.language {
+  border-color: rgb(25 171 171 / 0.45);
+  background: rgb(25 171 171 / 0.08);
+}
+.language:hover {
+  border-color: var(--turq);
+  background: rgb(25 171 171 / 0.22);
+}
+.menu nav {
+  border-color: rgb(25 171 171 / 0.3);
+}
+@media (max-width: 1279px) {
+  .top-nav a[aria-current] {
+    background: var(--turq-soft);
+    color: var(--turq);
+  }
+}
+.hero-ways a,
+.detail-open {
+  text-decoration-color: var(--turq);
+}
+.hero-ways a:hover,
+.detail-open:hover,
+.counts a:hover b,
+.kinds [aria-pressed='true'] b {
+  color: var(--turq);
+}
+.js .choices [aria-current='true'] {
+  box-shadow: inset 3px 0 0 var(--turq);
+}
+[dir='rtl'] .js .choices [aria-current='true'] {
+  box-shadow: inset -3px 0 0 var(--turq);
+}
+
+/* Step numbers. */
+.point-number,
+.run-number,
+.step-number {
+  border-color: rgb(25 171 171 / 0.55);
+  background: rgb(25 171 171 / 0.1);
+  color: var(--turq);
+}
+.run > li[aria-current] .run-number,
+.is-playing .run > li[aria-current] .run-number,
+.install-steps li:hover .step-number,
+.points li:hover .point-number {
+  border-color: var(--turq);
+  background: var(--turq);
+  color: var(--void);
+}
+
+/* The result: every check. */
+.ticks li::before,
+.fit .ticks li::before {
+  color: var(--turq);
+  background: var(--turq);
+}
+.fit > div:first-child {
+  border-block-start-color: var(--turq);
+}
+.cc-tick {
+  color: var(--turq);
+}
+
+/* The light behind the page: turquoise from the top, orange from below. */
+body::before {
+  background:
+    radial-gradient(52rem 38rem at 88% -6%, rgb(25 171 171 / 0.2), transparent 62%),
+    radial-gradient(44rem 34rem at -8% 38%, rgb(217 119 87 / 0.13), transparent 62%),
+    radial-gradient(56rem 36rem at 96% 108%, rgb(241 237 231 / 0.14), transparent 62%);
+}
+[dir='rtl'] body::before {
+  background:
+    radial-gradient(52rem 38rem at 12% -6%, rgb(25 171 171 / 0.2), transparent 62%),
+    radial-gradient(44rem 34rem at 108% 38%, rgb(217 119 87 / 0.13), transparent 62%),
+    radial-gradient(56rem 36rem at 4% 108%, rgb(241 237 231 / 0.14), transparent 62%);
+}

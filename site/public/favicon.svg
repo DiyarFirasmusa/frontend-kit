@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="9" fill="#050607"/><g fill="#f1ede7"><path fill-rule="evenodd" d="M7 7h26v26H7zm2.4 2.4v21.2h21.2V9.4z"/><rect x="12" y="12" width="16" height="4.6"/><rect x="12" y="18.4" width="5" height="9.6"/><rect x="18.8" y="18.4" width="9.2" height="9.6"/><path d="M19 9h2v3h-2zM9 22h3v2H9zM28 21h3v2h-3zM22.4 28h2v3h-2z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Wajiha Kit">
+  <title>Wajiha Kit (app icon, avatar, favicon)</title>
+  <rect width="64" height="64" rx="14" fill="#0d0e10"/>
+  <g transform="translate(11 11) scale(.65625)">
+    <rect x="4" y="4" width="56" height="12" rx="3" fill="#f1ede7"/>
+    <rect x="46" y="23" width="14" height="37" rx="3" fill="#19abab"/>
+    <rect x="4" y="23" width="35" height="17" rx="3" fill="#d97757"/>
+    <rect x="4" y="47" width="35" height="13" rx="3" fill="#f1ede7"/>
+  </g>
+</svg>
