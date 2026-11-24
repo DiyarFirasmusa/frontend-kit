@@ -600,3 +600,14 @@ body::after {
 .live {
   min-height: 19rem;
 }
+
+/* The Arabic headline is two lines, one sentence each. */
+[dir='rtl'] .hero h1 {
+  max-width: none;
+  font-size: clamp(1.625rem, 0.5rem + 3.2vw, 3.75rem);
+  line-height: 1.35;
+}
+
+[dir='rtl'] .hero h1 span {
+  white-space: nowrap;
+}
