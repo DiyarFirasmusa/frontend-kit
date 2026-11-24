@@ -4,6 +4,7 @@ import { t } from '../content/guide/text.ts'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
 import { pageUrl, routeUrl } from '../lib/links.ts'
+import { version } from '../lib/plugin.ts'
 import type { Route } from '../lib/routes.ts'
 
 interface Props {
@@ -32,6 +33,7 @@ const places = [
       <path d="M11 11h18v5.2H11zM11 18.4h5.6V29H11zM18.8 18.4H29V29H18.8zM19 7h2v4h-2zM7 22h4v2H7zM29 21h4v2h-4zM23 29h2v4h-2z"></path>
     </svg>
     <bdi>frontend-kit</bdi>
+    <small class="brand-version" dir="ltr">v{version}</small>
   </a>
   <nav class="top-nav" aria-label={chrome.sections}>
     {places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)}
