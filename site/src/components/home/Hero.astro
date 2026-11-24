@@ -1,13 +1,23 @@
 ---
+import type { Bilingual } from '../../content/catalogue.ts'
 import { home } from '../../content/guide/home.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
 import { facts } from '../../lib/plugin.ts'
+import { verdicts } from '../../lib/verdicts.ts'
 import Commands from '../Commands.astro'
+import CcLine from './CcLine.astro'
+import CcWelcome from './CcWelcome.astro'
 
 interface Props {
   locale: Locale
+}
+
+interface Line {
+  call: string
+  note?: string | Bilingual
+  mark?: 'ok' | 'bad' | 'ask'
 }
 
 const { locale } = Astro.props
@@ -18,9 +28,45 @@ const counts = [
   [kinds.rules, facts.rules, 'rules'],
   [kinds.checks, facts.events, 'checks'],
 ] as const
+
+const main = verdicts.find(({ id }) => id === 'main')!
+const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
+const typecheck: Bilingual = { en: '✓ typecheck passed', ar: '✓ نجح فحص الأنواع' }
+
+// Four real requests, played one after another in the console. Names and answers come from the kit itself.
+const demos: { prompt: Bilingual; lines: Line[] }[] = [
+  {
+    prompt: home.prompt,
+    lines: [
+      { call: 'Skill(dash-create-table)' },
+      { call: 'Rule(dashboard/data-tables.md)' },
+      gate({ en: '✓ typecheck and related tests passed', ar: '✓ نجح فحص الأنواع والاختبارات المرتبطة' }),
+    ],
+  },
+  {
+    prompt: { en: 'Make the product page faster', ar: 'اجعل صفحة المنتج أسرع' },
+    lines: [
+      { call: 'Skill(performance)' },
+      { call: 'Rule(website/performance.md)' },
+      { call: 'Agent(frontend-reviewer)', note: { en: 'reviewing the change', ar: 'يراجع التغيير' } },
+      gate(typecheck),
+    ],
+  },
+  {
+    prompt: { en: 'Push this to main', ar: 'ارفع هذا إلى main' },
+    lines: [{ call: `Bash(${main.command})`, note: main.reason, mark: 'bad' }],
+  },
+  {
+    prompt: { en: 'Clean up this old project', ar: 'نظّف هذا المشروع القديم' },
+    lines: [
+      { call: 'Mode(refactor)', note: { en: 'measures the mess, plans six phases', ar: 'يقيس الفوضى ويخطط ست مراحل' } },
+      gate({ en: '✓ behaviour unchanged', ar: '✓ السلوك لم يتغير' }),
+    ],
+  },
+]
 ---
 
-<section id="intro" class="hero">
+<section id="intro" class="hero" data-hero>
   <div class="column hero-copy">
     <h1 class="enter">{home.title[locale].split(/(?<=\.) /).map((part) => <span>{part}</span>)}</h1>
     <p class="hero-lead enter">{home.lead[locale]}</p>
@@ -32,24 +78,38 @@ const counts = [
       <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
     </p>
   </div>
-  <div class="hero-grid">
-    <ul class="points">
+  <div class="hero-side">
+    <figure class="cc live" dir="ltr" data-live aria-label={home.example[locale]}>
+      <CcWelcome />
       {
-        home.points.map(({ name, text }, i) => (
-          <li class="enter">
-            <span class="point-number" dir="ltr">0{i + 1}</span>
-            <h2>{name[locale]}</h2>
-            <p>{text[locale]}</p>
-          </li>
+        demos.map(({ prompt, lines }, i) => (
+          <div class="demo" data-demo={i} hidden={i > 0}>
+            <p class="cc-user">
+              <i aria-hidden="true">&gt;</i>
+              <q data-type dir="auto">{prompt[locale]}</q>
+              <b class="caret" aria-hidden="true"></b>
+            </p>
+            <div class="cc-lines">
+              {lines.map((line) => <CcLine locale={locale} {...line} />)}
+            </div>
+          </div>
         ))
       }
-    </ul>
+      <div class="cc-input" aria-hidden="true">
+        <i>&gt;</i>
+        <span>Try “fix lint errors”</span>
+      </div>
+      <p class="cc-foot" aria-hidden="true">
+        <span>? for shortcuts</span>
+        <ol class="demo-dots">{demos.map((_, i) => <li data-dot={i} class:list={{ 'is-on': i === 0 }}></li>)}</ol>
+      </p>
+    </figure>
     <ul class="counts">
       {
         counts.map(([name, count, page]) => (
           <li class="enter">
             <a href={pageUrl(locale, page)}>
-              <b dir="ltr">{count}</b>
+              <b dir="ltr" data-count={count}>{count}</b>
               <span>{name[locale]}</span>
             </a>
           </li>

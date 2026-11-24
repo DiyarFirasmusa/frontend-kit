@@ -1,0 +1,31 @@
+---
+import type { Bilingual } from '../../content/catalogue.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+  /** What Claude Code prints after the bullet: a tool call, a hook, or a plain message. */
+  call: string
+  /** The result line under it. */
+  note?: string | Bilingual | undefined
+  mark?: 'ok' | 'bad' | 'ask' | undefined
+}
+
+const { locale, call, note, mark } = Astro.props
+const result = typeof note === 'string' ? note : note?.[locale]
+---
+
+<div class:list={['cc-line', mark && `is-${mark}`]} data-line>
+  <p class="cc-call">
+    <i aria-hidden="true">●</i>
+    <span dir="auto">{call}</span>
+  </p>
+  {
+    result && (
+      <p class="cc-note">
+        <i aria-hidden="true">⎿</i>
+        <span dir="auto">{result}</span>
+      </p>
+    )
+  }
+</div>

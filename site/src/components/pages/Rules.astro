@@ -15,20 +15,20 @@ interface Props {
 const { locale } = Astro.props
 const { rules } = content[locale]
 const words = {
-  how: t('How a rule works', 'شلون تشتغل القاعدة'),
+  how: t('How a rule works', 'كيف تعمل القاعدة'),
   steps: [
-    t('Setup copies the rules of your project type into .claude/rules/ and adapts them to your stack.', 'الإعداد ينسخ قواعد نوع مشروعك إلى‎.claude/rules/ ويكيّفها مع تقنياتك.'),
-    t('At the top of most files is a list of paths. The assistant loads the rule when it works on a matching file.', 'ببداية أغلب الملفات قائمة مسارات، والمساعد يحمّل القاعدة لما يشتغل على ملف يطابقها.'),
-    t('They are ordinary files in your repo. Edit them, and your team reviews the change like any other.', 'هي ملفات عادية بمستودعك. عدّلها، وفريقك يراجع التغيير مثل أي تغيير ثاني.'),
+    t('Setup copies the rules of your project type into .claude/rules/ and adapts them to your stack.', 'ينسخ الإعداد قواعد نوع مشروعك إلى ‎.claude/rules/ ويكيّفها مع تقنياتك.'),
+    t('At the top of most files is a list of paths. The assistant loads the rule when it works on a matching file.', 'في أعلى أغلب الملفات قائمة مسارات، ويحمّل المساعد القاعدة عندما يعمل على ملف يطابق أحدها.'),
+    t('They are ordinary files in your repo. Edit them, and your team reviews the change like any other.', 'هي ملفات عادية في المستودع. عدّلها، وسيراجع فريقك التغيير كأي تغيير آخر.'),
   ],
-  bar: t('The quality bar, the most important one', 'معيار الجودة، وهو أهمها'),
+  bar: t('The quality bar, the most important one', 'معيار الجودة، وهو أهم القواعد'),
   barItems: [
-    t('Strict types: no any, no forced casts, no ignored errors.', 'أنواع صارمة: لا any، ولا تحويل بالقوة، ولا أخطاء متجاهلة.'),
-    t('Small files with honest names, and no dead code.', 'ملفات صغيرة بأسماء صادقة، وبدون كود ميت.'),
-    t('Loading, error, empty and success, each designed.', 'التحميل والخطأ والفراغ والنجاح، كل وحدة إلها تصميم.'),
-    t('Touch targets of at least 44 pixels, keyboard and screen readers.', 'أهداف لمس 44 بكسل على الأقل، ولوحة المفاتيح وقارئات الشاشة.'),
-    t('Arabic and English, with logical CSS only.', 'العربي والإنجليزي، بـ CSS منطقي بس.'),
-    t('Tests with every change, and no claim of a check that did not run.', 'اختبارات مع كل تغيير، وما يدّعي فحص ما اشتغل.'),
+    t('Strict types: no any, no forced casts, no ignored errors.', 'أنواع صارمة: لا any، ولا تحويل قسري للأنواع، ولا أخطاء متجاهلة.'),
+    t('Small files with honest names, and no dead code.', 'ملفات صغيرة بأسماء صادقة، وبلا كود ميت.'),
+    t('Loading, error, empty and success, each designed.', 'لكل حالة تصميمها: التحميل والخطأ والفراغ والنجاح.'),
+    t('Touch targets of at least 44 pixels, keyboard and screen readers.', 'أهداف لمس لا تقل عن 44 بكسل، ودعم للوحة المفاتيح وقارئات الشاشة.'),
+    t('Arabic and English, with logical CSS only.', 'دعم العربية والإنجليزية، باستخدام CSS المنطقي فقط.'),
+    t('Tests with every change, and no claim of a check that did not run.', 'اختبارات مع كل تغيير، ولا يدّعي المساعد فحصاً لم يُجرِه.'),
   ],
 }
 // The first few globs say enough.

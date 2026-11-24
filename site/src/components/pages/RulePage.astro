@@ -22,13 +22,13 @@ const key = `${group}/${name}`
 const { paths } = ruleFiles[group]!.find((rule) => rule.key === key)!
 const file = `plugins/frontend-kit/templates/${group}/rules/${name}`
 const words = {
-  says: t('What it says', 'شنو تقول'),
-  load: t('When the assistant reads it', 'متى يقراها المساعد'),
-  loadLead: t('Only while it works on a file that matches one of these paths.', 'بس وهو يشتغل على ملف يطابق واحد من هالمسارات.'),
-  always: t('In every session, whatever file is open.', 'بكل جلسة، مهما كان الملف المفتوح.'),
-  installed: t('Installed for', 'تنثبّت لـ'),
-  becomes: t('In your project it becomes', 'تصير بمشروعك'),
-  yours: t('It is a copy that belongs to you: setup adapts it to your stack, and you may edit it.', 'نسخة إلك: الإعداد يكيّفها مع تقنياتك، وتقدر تعدّلها.'),
+  says: t('What it says', 'ماذا تقول'),
+  load: t('When the assistant reads it', 'متى يقرأها المساعد'),
+  loadLead: t('Only while it works on a file that matches one of these paths.', 'فقط أثناء عمله على ملف يطابق أحد هذه المسارات.'),
+  always: t('In every session, whatever file is open.', 'في كل جلسة، أياً كان الملف المفتوح.'),
+  installed: t('Installed for', 'تُثبَّت لـ'),
+  becomes: t('In your project it becomes', 'تصبح في مشروعك'),
+  yours: t('It is a copy that belongs to you: setup adapts it to your stack, and you may edit it.', 'هذه نسخة ملك لك: يكيّفها الإعداد مع تقنياتك، ويمكنك تعديلها.'),
 }
 const types =
   group === 'shared'

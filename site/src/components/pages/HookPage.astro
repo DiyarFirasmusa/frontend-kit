@@ -16,16 +16,16 @@ interface Props {
 
 const { event, locale } = Astro.props
 const words = {
-  effect: t('What it can do', 'شنو يقدر يسوي'),
+  effect: t('What it can do', 'ما الذي يستطيع فعله'),
   runs: t('Scripts', 'السكربتات'),
-  does: t('What happens', 'شنو يصير'),
+  does: t('What happens', 'ما الذي يحدث'),
   exact: t('Script by script', 'سكربت بعد سكربت'),
-  exactLead: t('Each script’s own description, exactly as written at the top of its file, in English.', 'وصف كل سكربت مثل ما مكتوب براس ملفه، بالإنجليزي.'),
-  matcher: t('Runs on', 'يشتغل مع'),
+  exactLead: t('Each script’s own description, exactly as written at the top of its file, in English.', 'وصف كل سكربت كما هو مكتوب في أعلى ملفه، بالإنجليزية.'),
+  matcher: t('Runs on', 'يعمل عند'),
   any: t('Every time', 'كل مرة'),
-  limit: t('Time limit', 'مهلته'),
+  limit: t('Time limit', 'المهلة'),
   seconds: t('seconds', 'ثانية'),
-  refuses: t('What it refuses', 'شنو يرفض'),
+  refuses: t('What it refuses', 'ما الذي يرفضه'),
   gate: t('The quality gate, step by step', 'بوابة الجودة خطوة بخطوة'),
 }
 const runs = hookRuns(event)

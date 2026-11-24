@@ -82,35 +82,78 @@
   text-underline-offset: 6px;
 }
 
-/* Three plain promises and the four numbers, each in its own cell of the grid. */
-.hero-grid {
+/* The right side of the opening screen: a terminal that plays real requests, and the four numbers. */
+.hero-side {
   display: grid;
+  gap: 1rem;
+  margin-inline-end: var(--edge);
+}
+
+.counts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   border: 1px solid var(--line);
   background: var(--line);
 }
 
-.points {
-  display: grid;
-  gap: 1px;
-}
-
-.points li,
 .counts li {
   background: var(--void);
 }
 
+.counts a {
+  display: grid;
+  gap: 0.125rem;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.counts a:hover {
+  background: var(--raised);
+}
+
+.counts b {
+  color: #fff;
+  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.25rem) / 1 var(--latin);
+  font-variant-numeric: tabular-nums;
+}
+
+.counts span {
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.counts a:hover span {
+  color: var(--ivory);
+}
+
+/* Three plain promises, right under the opening screen. */
+.points-band {
+  padding-inline: var(--edge);
+  padding-block-end: 4rem;
+}
+
+.points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
 .points li {
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  gap: 0.25rem 1rem;
-  padding: 1.375rem 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 0.5rem;
+  padding: 2rem 1.75rem;
+  background: var(--void);
 }
 
 .point-number {
-  grid-row: span 2;
   color: var(--faint);
-  font: 500 0.8125rem / 2 var(--code);
+  font: 500 0.8125rem var(--code);
 }
 
 .home .points h2 {
@@ -121,34 +164,134 @@
 
 .points p {
   color: var(--muted);
-  font-size: var(--small);
 }
 
-.counts {
+/* The light that follows the pointer over a grid: each cell glows where the hand is. */
+.glow-grid,
+.hero,
+.start-cases,
+.install-steps,
+.works-for,
+.fit,
+.kinds,
+.choices {
+  --mx: -50vmax;
+  --my: -50vmax;
+}
+
+.glow-cell,
+.start-cases li,
+.works-for li,
+.fit > div,
+.install-steps li {
+  position: relative;
+}
+
+@media (hover: hover) {
+  .glow-grid::after,
+  .start-cases::after,
+  .install-steps::after,
+  .works-for::after,
+  .fit::after,
+  .choices::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(18rem circle at var(--mx) var(--my), rgb(241 237 231 / 0.09), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .glow-grid,
+  .start-cases,
+  .install-steps,
+  .works-for,
+  .fit,
+  .choices {
+    position: relative;
+  }
+
+  .is-lit.glow-grid::after,
+  .is-lit.start-cases::after,
+  .is-lit.install-steps::after,
+  .is-lit.works-for::after,
+  .is-lit.fit::after,
+  .is-lit.choices::after {
+    opacity: 1;
+  }
+
+  /* The opening grid lights up under the pointer too. */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(rgb(241 237 231 / 0.2) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
+      linear-gradient(90deg, rgb(241 237 231 / 0.2) 1px, transparent 1px) 0 0 / var(--cell) var(--cell);
+    mask-image: radial-gradient(14rem circle at var(--mx) var(--my), #000, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .hero.is-lit::after {
+    opacity: 1;
+  }
+}
+
+/* Two slow rows of the kit's own names. */
+.marquee {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
+  gap: 0.75rem;
+  padding-block: 1.5rem;
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 
-.counts a {
-  display: grid;
-  gap: 0.125rem;
-  padding: 1rem 1.25rem;
-  text-decoration: none;
+.marquee-row {
+  display: flex;
+  overflow: hidden;
 }
 
-.counts b {
-  color: #fff;
-  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.25rem) / 1 var(--latin);
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  padding-inline-end: 0.75rem;
 }
 
-.counts span {
-  color: var(--faint);
-  font-size: 0.8125rem;
+.marquee-track li {
+  flex-shrink: 0;
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font: 500 0.875rem / 1.4 var(--code);
+  white-space: nowrap;
 }
 
-.counts a:hover span {
-  color: var(--ivory);
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: drift 70s linear infinite;
+  }
+
+  .marquee-row.is-reverse .marquee-track {
+    animation-direction: reverse;
+    animation-duration: 90s;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes drift {
+    to {
+      translate: -100%;
+    }
+  }
 }
 
 /* EXAMPLE: the steps on one side, the session they produce on the other. */
@@ -200,103 +343,222 @@
   color: var(--muted);
 }
 
-/* The session: a plain terminal, black on black, lines in the kit's own words. */
-.session {
+/* The console is Claude Code as it looks when you open it: always left to right, like the program itself. */
+.cc {
   margin: 0;
+  padding: 1rem;
   border: 1px solid var(--line);
-  background: var(--raised);
-  font: 500 0.875rem / 1.7 var(--code);
+  border-radius: 0.5rem;
+  background: #0a0b0c;
+  box-shadow: 0 0 0 1px rgb(241 237 231 / 0.03), 0 2rem 4rem rgb(0 0 0 / 0.5);
+  direction: ltr;
+  text-align: left;
+  font: 400 0.8125rem / 1.65 var(--code);
 }
 
-.session-bar {
+.cc p {
+  margin: 0;
+}
+
+.cc-dim {
+  color: var(--faint);
+}
+
+.cc-welcome {
+  margin-block-end: 1rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+}
+
+.cc-welcome i {
+  margin-inline-end: 0.25rem;
+  color: var(--ivory);
+  font-style: normal;
+}
+
+.cc-welcome b {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* What you typed. */
+.cc-user {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.25rem;
+  background: rgb(241 237 231 / 0.07);
+  color: #fff;
+}
+
+.cc-user i,
+.cc-input i {
+  color: var(--faint);
+  font-style: normal;
+}
+
+.cc-user q {
+  quotes: none;
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  text-align: left;
+  unicode-bidi: plaintext;
+}
+
+.caret {
+  display: none;
+  width: 0.5rem;
+  height: 1.05em;
+  background: var(--ivory);
+}
+
+.is-playing .caret {
+  display: inline-block;
+  align-self: center;
+  animation: blink 1s steps(1) infinite;
+}
+
+.is-playing .demo:not(.is-typing) .caret {
+  opacity: 0.3;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* What Claude Code prints back: a bullet and the call, then its result under an elbow. */
+.cc-lines,
+.session-lines,
+.group-inner {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cc-lines,
+.session-lines {
+  margin-block: 0.875rem;
+}
+
+.cc-line {
+  display: grid;
+  gap: 0.0625rem;
+}
+
+.cc-call,
+.cc-note {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  overflow-wrap: anywhere;
+}
+
+.cc-call {
+  color: #fff;
+  font-weight: 500;
+}
+
+.cc-call i {
+  color: var(--ivory);
+  font-style: normal;
+}
+
+.cc-note {
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+}
+
+.cc-note i {
+  color: var(--faint);
+  font-style: normal;
+}
+
+.cc-note span {
+  text-align: left;
+  unicode-bidi: plaintext;
+}
+
+.cc-line.is-ok .cc-note {
+  color: var(--ivory);
+}
+
+.cc-line.is-bad .cc-call i,
+.cc-line.is-bad .cc-note,
+.cc-line.is-bad .cc-note i {
+  color: #f3b3ab;
+}
+
+.cc-line.is-bad .cc-call i {
+  color: var(--bad);
+}
+
+.cc-line.is-ask .cc-call {
+  font-family: var(--latin);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* The box you type into, and the line under it. */
+.cc-input {
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  color: var(--faint);
+}
+
+.cc-foot {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.75rem 1rem;
-  border-block-end: 1px solid var(--line);
+  justify-content: space-between;
+  padding: 0.375rem 0.75rem 0;
   color: var(--faint);
   font-size: 0.75rem;
 }
 
-.session-bar i {
-  width: 0.5rem;
-  height: 0.5rem;
-  border: 1px solid var(--faint);
-  border-radius: 50%;
-}
-
-.session-bar span {
-  margin-inline-start: auto;
-}
-
-.session-prompt {
+.demo-dots {
   display: flex;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-block-end: 1px dashed var(--line);
-  color: #fff;
-  font-family: var(--type);
-  font-size: 1rem;
+  gap: 0.375rem;
 }
 
-.session-prompt span {
-  color: var(--faint);
-  font-family: var(--code);
+.demo-dots li {
+  width: 1rem;
+  height: 2px;
+  background: var(--line);
+  transition:
+    background-color 0.4s,
+    width 0.4s;
 }
 
-.session-lines {
-  display: grid;
-  padding: 0.75rem 1.25rem 1.25rem;
-}
-
-.session-lines > li {
-  padding-block: 0.375rem;
-}
-
-.session-line {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
-  gap: 1rem;
-  color: var(--ivory);
-  overflow-wrap: anywhere;
-}
-
-.session-line > :only-child {
-  grid-column: 1 / -1;
-}
-
-.session-tag {
-  color: var(--faint);
-}
-
-.session-line.is-bad {
-  color: #f3b3ab;
-}
-
-.session-line.is-bad .session-tag {
-  color: var(--bad);
-}
-
-.session-line.is-ok .session-tag::before {
-  content: '✓ ';
-}
-
-.session-line.is-bad .session-tag::before {
-  content: '✕ ';
-}
-
-.session-line.is-ask {
-  margin-block-start: 0.5rem;
-  padding: 0.625rem 0.875rem;
+.demo-dots .is-on {
+  width: 1.75rem;
   background: var(--ivory);
-  color: var(--void);
-  font-family: var(--type);
-  font-weight: 600;
 }
 
-/* With the script, the session plays along with the steps. */
+.live {
+  min-height: 21rem;
+}
+
+/* With the script, each line arrives when it is its turn. */
+.is-playing .cc-lines > .cc-line {
+  opacity: 0;
+  translate: 0 0.5rem;
+  transition:
+    opacity 0.4s,
+    translate 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.is-playing .cc-lines > .cc-line.is-in {
+  opacity: 1;
+  translate: none;
+}
+
+/* On the page of steps, the console plays along with them. */
 @media (min-width: 901px) {
-  .is-playing .session {
+  .is-playing .cc {
     position: sticky;
     inset-block-start: calc(var(--bar) + 2rem);
   }
@@ -315,35 +577,27 @@
     opacity: 1;
   }
 
-  .is-playing .session-lines > li {
+  .is-playing .session-group {
     display: grid;
     grid-template-rows: 0fr;
-    padding-block: 0;
     opacity: 0;
     transition:
       grid-template-rows 0.5s var(--glide, ease),
-      padding-block 0.5s var(--glide, ease),
       opacity 0.4s ease;
   }
 
-  .is-playing .session-lines > li > * {
+  .is-playing .session-group > * {
     min-height: 0;
     overflow: hidden;
   }
 
-  .is-playing .session-lines > li.is-shown {
+  .is-playing .session-group.is-shown {
     grid-template-rows: 1fr;
-    padding-block: 0.375rem;
-    opacity: 0.45;
+    opacity: 0.5;
   }
 
-  .is-playing .session-lines > li.is-now {
+  .is-playing .session-group.is-now {
     opacity: 1;
-  }
-
-  /* Grouped lines are one block: the wrapper takes the grid, its lines stack inside it. */
-  .is-playing .session-lines > li > .session-line + .session-line {
-    margin-block-start: 0;
   }
 }
 
@@ -353,18 +607,15 @@
     animation: enter 0.8s var(--glide, ease) both;
   }
 
-  .hero-copy .enter:nth-child(2),
-  .points li:nth-child(1) {
+  .hero-copy .enter:nth-child(2) {
     animation-delay: 0.08s;
   }
 
-  .hero-copy .enter:nth-child(3),
-  .points li:nth-child(2) {
+  .hero-copy .enter:nth-child(3) {
     animation-delay: 0.16s;
   }
 
-  .hero-copy .enter:nth-child(4),
-  .points li:nth-child(3) {
+  .hero-copy .enter:nth-child(4) {
     animation-delay: 0.24s;
   }
 
@@ -390,9 +641,8 @@
     min-height: auto;
   }
 
-  .hero-grid {
+  .hero-side {
     margin-inline: var(--edge);
-    padding: 0;
   }
 }
 
@@ -402,7 +652,7 @@
     gap: 2rem;
   }
 
-  .session {
+  .cc {
     order: -1;
   }
 }
@@ -416,15 +666,8 @@
     padding: 1.125rem 1rem;
   }
 
-  .session-line {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
 }
 
-.hero-grid {
-  margin-inline-end: var(--edge);
-}
 
 .works-for li {
   padding-block: 0.5rem;
@@ -833,3 +1076,32 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Cells answer a hand: they lift to a lighter ground. */
+.start-cases li,
+.works-for li,
+.fit > div,
+.points li,
+.install-steps li {
+  transition: background-color 0.3s;
+}
+
+.start-cases li:hover,
+.works-for li:hover,
+.fit > div:hover,
+.points li:hover,
+.install-steps li:hover {
+  background: var(--raised);
+}
+
+.points li:hover .point-number {
+  color: var(--ivory);
+}
+
+@media (max-width: 900px) {
+  .points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+}
+

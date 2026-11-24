@@ -9,14 +9,14 @@ interface Props {
 
 const { locale } = Astro.props
 const words = {
-  difference: t('How is an agent different from a skill?', 'شنو الفرق بين الوكيل والمهارة؟'),
-  skill: t('A skill is knowledge. The same assistant reads the steps and does the job itself.', 'المهارة معرفة: نفس المساعد يقرا الخطوات ويسوي الشغل بنفسه.'),
-  agent: t('An agent is a worker. A separate assistant does the job without seeing the conversation, which is why its review is honest.', 'الوكيل شغّيل: مساعد منفصل يسوي الشغل بدون ما يشوف المحادثة، ولهذا مراجعته نزيهة.'),
-  start: t('How an agent starts', 'شلون يبدأ الوكيل'),
+  difference: t('How is an agent different from a skill?', 'ما الفرق بين الوكيل والمهارة؟'),
+  skill: t('A skill is knowledge. The same assistant reads the steps and does the job itself.', 'المهارة معرفة: يقرأ المساعد نفسه الخطوات وينفّذ العمل بنفسه.'),
+  agent: t('An agent is a worker. A separate assistant does the job without seeing the conversation, which is why its review is honest.', 'الوكيل عامل مستقل: مساعد منفصل ينفّذ العمل دون أن يرى المحادثة، ولهذا تكون مراجعته نزيهة.'),
+  start: t('How an agent starts', 'كيف يبدأ الوكيل'),
   ways: [
-    t('By itself: frontend-reviewer runs after the quality gate passes.', 'لحاله: frontend-reviewer يشتغل بعد ما تنجح بوابة الجودة.'),
-    t('Through a skill: review starts a reviewer for you.', 'عن طريق مهارة: review تشغّل المراجع بدالك.'),
-    t('By asking: name the agent in your sentence.', 'تطلبه انت: اذكر اسم الوكيل بجملتك.'),
+    t('By itself: frontend-reviewer runs after the quality gate passes.', 'من تلقاء نفسه: يعمل frontend-reviewer بعد أن تنجح بوابة الجودة.'),
+    t('Through a skill: review starts a reviewer for you.', 'عبر مهارة: تشغّل review مراجعاً نيابةً عنك.'),
+    t('By asking: name the agent in your sentence.', 'بطلب منك: اذكر اسم الوكيل في جملتك.'),
   ],
 }
 ---

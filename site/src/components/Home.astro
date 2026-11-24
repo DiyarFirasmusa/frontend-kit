@@ -8,6 +8,8 @@ import Example from './home/Example.astro'
 import Explorer from './home/Explorer.astro'
 import GetIt from './home/GetIt.astro'
 import Hero from './home/Hero.astro'
+import Marquee from './home/Marquee.astro'
+import Points from './home/Points.astro'
 import Starts from './home/Starts.astro'
 import SiteFooter from './SiteFooter.astro'
 
@@ -24,6 +26,8 @@ const route: Route = { kind: 'home' }
   <Header locale={locale} route={route} />
   <main id="content" class="home" tabindex="-1" transition:name="page">
     <Hero locale={locale} />
+    <Points locale={locale} />
+    <Marquee />
     <Example locale={locale} />
     <Starts locale={locale} />
     <Explorer locale={locale} />

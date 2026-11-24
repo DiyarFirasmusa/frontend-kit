@@ -4,6 +4,7 @@ import { initExample } from './example.ts'
 import { initExplorer } from './explorer.ts'
 import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
+import { initLife } from './life.ts'
 import { initChrome } from './page-chrome.ts'
 import { initReveal } from './reveal.ts'
 import { initWords } from './words.ts'
@@ -22,4 +23,5 @@ document.addEventListener('astro:page-load', () => {
   initTree()
   initReveal(page.signal)
   initGate()
+  initLife(page.signal)
 })

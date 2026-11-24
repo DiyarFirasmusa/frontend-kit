@@ -3,62 +3,48 @@ import type { Bilingual } from '../../content/catalogue.ts'
 import { home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
 import { verdicts } from '../../lib/verdicts.ts'
+import CcLine from './CcLine.astro'
+import CcWelcome from './CcWelcome.astro'
 
 interface Props {
   locale: Locale
 }
 
 interface Line {
-  /** A short tag at the start of the line, if any. */
-  tag?: Bilingual
-  text: string
+  call: string
+  note?: string | Bilingual
   mark?: 'ok' | 'bad' | 'ask'
 }
 
 const { locale } = Astro.props
 const refused = verdicts.find(({ id }) => id === 'force')!
-const { skills, rules, guard, gate, review, done } = home.steps
+const { skills, rules, guard, gate: gate_, review, done } = home.steps
 const say = home.session
-// What the session shows at each step: real names from the kit, the real answer of its guard.
+const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
+// What the console shows at each step: real names from the kit, the real answer of its guard.
 const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
-  {
-    ...skills,
-    lines: [
-      { tag: say.skill, text: 'dash-create-table' },
-      { tag: say.skill, text: 'dash-create-filter-bar' },
-    ],
-  },
+  { ...skills, lines: [{ call: 'Skill(dash-create-table)' }, { call: 'Skill(dash-create-filter-bar)' }] },
   {
     ...rules,
-    lines: [
-      { tag: say.rule, text: 'dashboard/data-tables.md' },
-      { tag: say.rule, text: 'dashboard/permissions.md' },
-      { tag: say.rule, text: 'dashboard/api-layer.md' },
-    ],
+    lines: [{ call: 'Rule(dashboard/data-tables.md)' }, { call: 'Rule(dashboard/permissions.md)' }, { call: 'Rule(dashboard/api-layer.md)' }],
   },
+  { ...guard, lines: [{ call: `Bash(${refused.command})`, note: refused.reason, mark: 'bad' }] },
   {
-    ...guard,
+    ...gate_,
     lines: [
-      { text: `$ ${refused.command}` },
-      { tag: say.blocked, text: refused.reason.replace(/^Blocked:\s*/i, ''), mark: 'bad' },
+      gate({ en: '✓ typecheck passed', ar: '✓ نجح فحص الأنواع' }),
+      gate({ en: '✓ related tests passed', ar: '✓ نجحت الاختبارات المرتبطة' }),
     ],
   },
-  {
-    ...gate,
-    lines: [
-      { tag: say.passed, text: say.typecheck[locale], mark: 'ok' },
-      { tag: say.passed, text: say.tests[locale], mark: 'ok' },
-    ],
-  },
-  { ...review, lines: [{ tag: { en: 'agent', ar: 'وكيل' }, text: `frontend-reviewer · ${say.reviewing[locale]}` }] },
-  { ...done, lines: [{ text: say.ask[locale], mark: 'ask' }] },
+  { ...review, lines: [{ call: 'Agent(frontend-reviewer)', note: say.reviewing }] },
+  { ...done, lines: [{ call: say.ask[locale], mark: 'ask' }] },
 ]
 ---
 
 <section id="example" class="example" data-example>
   <div class="column example-head">
-    <h2 class="enter">{home.example[locale]}</h2>
-    <p class="enter">{home.exampleLead[locale]}</p>
+    <h2>{home.example[locale]}</h2>
+    <p>{home.exampleLead[locale]}</p>
   </div>
   <div class="column example-body">
     <ol class="run">
@@ -74,29 +60,26 @@ const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
         ))
       }
     </ol>
-    <figure class="session" aria-label={home.example[locale]}>
-      <div class="session-bar" aria-hidden="true">
-        <i></i><i></i><i></i>
-        <span dir="ltr">claude</span>
-      </div>
-      <p class="session-prompt">
-        <span aria-hidden="true">&gt;</span>
-        {home.prompt[locale]}
+    <figure class="cc" dir="ltr" aria-label={home.example[locale]}>
+      <CcWelcome />
+      <p class="cc-user">
+        <i aria-hidden="true">&gt;</i>
+        <q dir="auto">{home.prompt[locale]}</q>
       </p>
-      <ol class="session-lines">
+      <div class="session-lines">
         {
           steps.map(({ lines }, i) => (
-            <li data-shows={i}>
-              {lines.map(({ tag, text, mark }) => (
-                <p class:list={['session-line', mark && `is-${mark}`]}>
-                  {tag && <span class="session-tag">{tag[locale]}</span>}
-                  <span dir="auto">{text}</span>
-                </p>
-              ))}
-            </li>
+            <div class="session-group" data-shows={i}>
+              <div class="group-inner">{lines.map((line) => <CcLine locale={locale} {...line} />)}</div>
+            </div>
           ))
         }
-      </ol>
+      </div>
+      <div class="cc-input" aria-hidden="true">
+        <i>&gt;</i>
+        <span>Try “fix lint errors”</span>
+      </div>
+      <p class="cc-foot" aria-hidden="true"><span>? for shortcuts</span></p>
     </figure>
   </div>
 </section>

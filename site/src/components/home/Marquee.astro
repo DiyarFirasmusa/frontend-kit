@@ -1,0 +1,18 @@
+---
+import { agentOrder, skillOrder } from '../../lib/kit-map.ts'
+
+// Two slow rows of the kit's own names, moving against each other. Decorative: the names are all listed below.
+const half = Math.ceil(skillOrder.length / 2)
+const rows = [skillOrder.slice(0, half), [...skillOrder.slice(half), ...agentOrder]]
+---
+
+<div class="marquee" aria-hidden="true" dir="ltr">
+  {
+    rows.map((names, row) => (
+      <div class:list={['marquee-row', { 'is-reverse': row === 1 }]}>
+        <ul class="marquee-track">{names.map((name) => <li>{name}</li>)}</ul>
+        <ul class="marquee-track">{names.map((name) => <li>{name}</li>)}</ul>
+      </div>
+    ))
+  }
+</div>
