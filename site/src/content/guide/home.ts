@@ -3,7 +3,7 @@ import { t } from './text.ts'
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
-  title: t('Build any frontend project. Get the best result.', 'ابنِ أي مشروع واجهات. واحصل على أفضل نتيجة.'),
+  title: t('Build any frontend project. Get the best result.', 'ابدأ بأي مشروع واجهات. واحصل على أفضل نتيجة.'),
   lead: t(
     'frontend-kit is a Claude Code plugin. Say what you want in plain words, and your assistant builds it the way a senior frontend team would: clean code, fast pages, accessible screens, checked before you commit.',
     '⁦frontend-kit⁩ إضافة لـ ⁦Claude Code⁩. قل ما تريده بكلمات بسيطة، ويبنيه مساعدك كما يبنيه فريق واجهات متمرّس: كود نظيف، وصفحات سريعة، وشاشات يستطيع الجميع استخدامها. ثم يفحص النتيجة قبل أن تحفظها.',
