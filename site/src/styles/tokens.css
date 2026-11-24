@@ -6,6 +6,9 @@
   --faint: #96938d;
   --line: rgb(241 237 231 / 0.18);
   --bad: #e0776b;
+  /* Claude's own orange, used in touches only: the star, the bullets, the line you have read, the focus. */
+  --accent: #d97757;
+  --accent-soft: rgb(217 119 87 / 0.16);
 
   --type: 'Familjen Grotesk Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --latin: 'Familjen Grotesk Variable', system-ui, sans-serif;

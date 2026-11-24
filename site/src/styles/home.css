@@ -1105,3 +1105,104 @@
 
 }
 
+
+/* Claude's orange, in touches: it marks what is alive and what is yours to press. */
+.cc-welcome i,
+.cc-call i,
+.cc-user i,
+.cc-input i {
+  color: var(--accent);
+}
+
+.cc-line.is-bad .cc-call i {
+  color: var(--bad);
+}
+
+.caret {
+  background: var(--accent);
+}
+
+.demo-dots .is-on {
+  background: var(--accent);
+}
+
+.point-number,
+.run-number,
+.step-number {
+  color: var(--accent);
+}
+
+.counts b {
+  transition: color 0.3s;
+}
+
+.counts a:hover b {
+  color: var(--accent);
+}
+
+.hero-ways a,
+.detail-open {
+  text-decoration-color: var(--accent);
+}
+
+.hero-ways a:hover,
+.detail-open:hover {
+  color: var(--accent);
+}
+
+.start-mode {
+  border-color: var(--accent-soft);
+  color: var(--accent);
+}
+
+.start-command code::before {
+  content: '$ ';
+  color: var(--accent);
+}
+
+.marquee-track li:hover {
+  border-color: var(--accent);
+  color: var(--ivory);
+}
+
+.session-prompt span {
+  color: var(--accent);
+}
+
+@media (hover: hover) {
+  .glow-grid::after,
+  .start-cases::after,
+  .install-steps::after,
+  .works-for::after,
+  .fit::after,
+  .choices::after {
+    background: radial-gradient(18rem circle at var(--mx) var(--my), rgb(217 119 87 / 0.12), transparent 70%);
+  }
+
+  .hero::after {
+    background:
+      linear-gradient(rgb(217 119 87 / 0.28) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
+      linear-gradient(90deg, rgb(217 119 87 / 0.28) 1px, transparent 1px) 0 0 / var(--cell) var(--cell);
+  }
+}
+
+.kinds [aria-pressed='true'] b {
+  color: var(--accent);
+}
+
+.install-steps li:hover .step-number,
+.points li:hover .point-number {
+  color: var(--accent);
+}
+
+.is-playing .run > li[aria-current] .run-number {
+  color: var(--accent);
+}
+
+.js .choices [aria-current='true'] {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+[dir='rtl'] .js .choices [aria-current='true'] {
+  box-shadow: inset -3px 0 0 var(--accent);
+}

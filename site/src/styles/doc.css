@@ -257,6 +257,7 @@
 }
 
 .ticks li::before {
+  color: var(--accent);
   inset-block-start: calc(0.4rem + 0.8em - 6px);
   width: 16px;
   height: 12px;

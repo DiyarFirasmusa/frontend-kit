@@ -81,8 +81,13 @@ code {
   display: none !important;
 }
 
+::selection {
+  background: var(--accent);
+  color: var(--void);
+}
+
 :focus-visible {
-  outline: 2px solid var(--ivory);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 

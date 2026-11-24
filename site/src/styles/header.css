@@ -144,8 +144,8 @@
 .progress {
   position: absolute;
   inset: auto var(--edge) 0;
-  height: 1px;
-  background: var(--ivory);
+  height: 2px;
+  background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
   pointer-events: none;
