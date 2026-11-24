@@ -541,7 +541,7 @@
   }
 
   .is-playing .run > li {
-    min-height: 42svh;
+    min-height: 32svh;
     align-content: center;
   }
 
