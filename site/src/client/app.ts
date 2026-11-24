@@ -7,9 +7,12 @@ import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
 import { initChrome } from './page-chrome.ts'
 import { initReveal } from './reveal.ts'
+import { initSmooth } from './smooth.ts'
 import { initWords } from './words.ts'
 
 let page = new AbortController()
+
+initSmooth()
 
 document.addEventListener('astro:page-load', () => {
   page.abort()
