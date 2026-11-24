@@ -14,7 +14,7 @@ const { locale } = Astro.props
     {
       home.points.map(({ name, text }, i) => (
         <li class="glow-cell">
-          <span class="point-number" dir="ltr">0{i + 1}</span>
+          <span class="point-number" dir="ltr">{i + 1}</span>
           <h2>{name[locale]}</h2>
           <p>{text[locale]}</p>
         </li>

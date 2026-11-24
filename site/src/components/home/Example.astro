@@ -52,7 +52,7 @@ const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
         steps.map(({ name, text }, i) => (
           <li data-step={i} aria-current={i === 0 ? 'step' : undefined}>
             <span class="run-number" dir="ltr">
-              {String(i + 1).padStart(2, '0')}
+              {i + 1}
             </span>
             <h3>{name[locale]}</h3>
             <p>{text[locale]}</p>
