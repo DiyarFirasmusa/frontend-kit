@@ -3,6 +3,10 @@ import '@fontsource-variable/familjen-grotesk/index.css'
 import '@fontsource/ibm-plex-sans-arabic/arabic-400.css'
 import '@fontsource/ibm-plex-sans-arabic/arabic-500.css'
 import '@fontsource/ibm-plex-mono/latin-500.css'
+import grotesk from '@fontsource-variable/familjen-grotesk/files/familjen-grotesk-latin-wght-normal.woff2?url'
+import arabic400 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url'
+import arabic500 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url'
+import mono from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url'
 import '../styles/tokens.css'
 import '../styles/base.css'
 import '../styles/header.css'
@@ -72,6 +76,10 @@ const product = JSON.stringify({
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={locale === 'ar' ? 'ar_IQ' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" as="font" type="font/woff2" href={grotesk} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={mono} crossorigin />
+    {locale === 'ar' && <link rel="preload" as="font" type="font/woff2" href={arabic400} crossorigin />}
+    {locale === 'ar' && <link rel="preload" as="font" type="font/woff2" href={arabic500} crossorigin />}
     <ClientRouter fallback="swap" />
     {home && <script type="application/ld+json" set:html={product} />}
     <script is:inline>

@@ -965,3 +965,43 @@ body .top.is-scrolled::before {
     transform: scale(1);
   }
 }
+
+/* NO JUMPING: the hero console keeps one height whatever it is showing, so nothing below it moves while it plays. */
+.cc.live {
+  display: flex;
+  flex-direction: column;
+  height: 23rem;
+  min-height: 0;
+}
+
+.cc.live .demo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cc.live .cc-status {
+  margin-block: 0 0.75rem;
+}
+
+/* The thinking line keeps its room when it is not showing; the typed message keeps its room too. */
+.cc-status[hidden] {
+  display: block !important;
+  visibility: hidden;
+}
+
+.demo.is-waiting .cc-user {
+  display: flex;
+  visibility: hidden;
+}
+
+.demo.is-waiting .cc-lines {
+  display: grid;
+  visibility: hidden;
+}
+
+@media (max-width: 620px) {
+  .cc.live {
+    height: 27rem;
+  }
+}
