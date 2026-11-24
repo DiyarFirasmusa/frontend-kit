@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wajiha — visual identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--void:#050607;--raised:#0d0e10;--ivory:#f1ede7;--muted:#bcb8b1;--faint:#96938d;--line:rgb(241 237 231 / .18);
+--orange:#d97757;--orange-deep:#b85f3f;--teal:#19abab;--teal-deep:#006c6d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--void);color:var(--ivory);font-family:'Familjen Grotesk',system-ui,sans-serif;line-height:1.5}
+main{max-width:1180px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:72px}
+.ar{font-family:'IBM Plex Sans Arabic',sans-serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+.label{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+h1{margin:0;font-size:clamp(40px,7vw,76px);font-weight:600;letter-spacing:-.03em;line-height:1.02}
+h2{margin:0 0 20px;font-size:28px;font-weight:600;letter-spacing:-.02em}
+p{margin:0;color:var(--muted)}
+.card{background:var(--raised);border:1px solid var(--line);border-radius:18px;padding:24px}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.center{display:flex;align-items:center;justify-content:center}
+.row{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.lock{font-size:clamp(40px,6vw,64px);font-weight:600;letter-spacing:-.025em;line-height:1}
+/* mark colours: currentColor = plain blocks, --acc = the content block, --men = the menu */
+.mark{color:var(--ivory);--acc:var(--orange);--men:var(--teal)}
+.on-light{color:var(--void);--acc:var(--orange-deep);--men:var(--teal-deep)}
+.on-colour{color:var(--void);--acc:var(--ivory);--men:var(--void)}
+.sw{border-radius:14px;padding:16px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+.sw b{font-size:20px;font-weight:600}
+.sw span{font-family:'IBM Plex Mono',monospace;font-size:13px}
+ul{margin:0;padding-left:18px;color:var(--muted)}
+li{margin:4px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600}
+td{color:var(--muted)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:8px;vertical-align:-1px}
+.dont{display:flex;flex-direction:column;align-items:center;gap:14px;min-height:170px;justify-content:center}
+.dont span{color:var(--muted);font-size:15px;text-align:center}
+.btn{display:inline-flex;background:var(--orange);color:var(--void);font-weight:600;padding:9px 15px;border-radius:9px;font-size:14px}
+.link{color:var(--teal);text-decoration:underline;text-underline-offset:3px;font-size:14px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 64 64">
+    <rect x="5" y="5" width="54" height="12" rx="4" fill="currentColor"/>
+    <rect x="45" y="21" width="14" height="38" rx="4" style="fill:var(--men)"/>
+    <rect x="5" y="21" width="36" height="20" rx="4" style="fill:var(--acc)"/>
+    <rect x="5" y="45" width="36" height="14" rx="4" fill="currentColor"/>
+  </symbol>
+  <!-- 32 px and below: wider gaps -->
+  <symbol id="mark-small" viewBox="0 0 64 64">
+    <rect x="4" y="4" width="56" height="12" rx="3" fill="currentColor"/>
+    <rect x="46" y="23" width="14" height="37" rx="3" style="fill:var(--men)"/>
+    <rect x="4" y="23" width="35" height="17" rx="3" style="fill:var(--acc)"/>
+    <rect x="4" y="47" width="35" height="13" rx="3" fill="currentColor"/>
+  </symbol>
+  <!-- app icon and avatar -->
+  <symbol id="tile" viewBox="0 0 64 64">
+    <rect x=".5" y=".5" width="63" height="63" rx="14" fill="#0d0e10" stroke="rgb(241 237 231 / .35)"/>
+    <g transform="translate(12 12) scale(.625)">
+      <rect x="5" y="5" width="54" height="12" rx="4" fill="#f1ede7"/>
+      <rect x="45" y="21" width="14" height="38" rx="4" fill="#19abab"/>
+      <rect x="5" y="21" width="36" height="20" rx="4" fill="#d97757"/>
+      <rect x="5" y="45" width="36" height="14" rx="4" fill="#f1ede7"/>
+    </g>
+  </symbol>
+</svg>
+
+<main>
+
+<header class="grid g2" style="align-items:center">
+  <div style="display:flex;flex-direction:column;gap:18px">
+    <div class="label">Visual identity · v3</div>
+    <h1>Wajiha Kit<br><span class="ar" style="font-weight:700">واجهة</span></h1>
+    <p style="font-size:19px;max-width:540px">The parts of a page. The menu on the right, the Arabic part, is turquoise: the colour of tiled mosque fronts. The block you asked for is Claude’s orange.</p>
+  </div>
+  <div class="card center" style="min-height:320px">
+    <svg class="mark" width="220" height="220" role="img" aria-label="Wajiha mark: top bar, turquoise menu on the right, orange content block"><use href="#mark"/></svg>
+  </div>
+</header>
+
+<section>
+  <div class="label">01</div>
+  <h2>Logo</h2>
+  <div class="grid g2">
+    <div class="card row" style="min-height:140px">
+      <svg class="mark" width="64" height="64" aria-hidden="true"><use href="#mark"/></svg>
+      <span class="lock">wajiha<span style="color:var(--faint);font-weight:500"> kit</span></span>
+    </div>
+    <div class="card row" dir="rtl" style="min-height:140px">
+      <svg class="mark" width="64" height="64" aria-hidden="true"><use href="#mark"/></svg>
+      <span class="lock ar" style="font-weight:700;line-height:1.15">واجهة</span>
+    </div>
+    <div class="row center" style="background:var(--ivory);border-radius:18px;min-height:160px">
+      <svg class="on-light" width="52" height="52" aria-hidden="true"><use href="#mark"/></svg>
+      <span class="lock" style="color:var(--void);font-size:48px">wajiha<span style="color:#5f5c57;font-weight:500"> kit</span></span>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:20px">
+      <div class="center" style="background:var(--teal);border-radius:18px;min-height:160px">
+        <svg class="on-colour" width="76" height="76" role="img" aria-label="Mark on turquoise"><use href="#mark"/></svg>
+      </div>
+      <div class="center" style="background:var(--orange);border-radius:18px;min-height:160px">
+        <svg class="on-colour" width="76" height="76" role="img" aria-label="Mark on orange"><use href="#mark"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:20px">
+    <div class="label" style="margin-bottom:16px">Sizes</div>
+    <div class="row" style="align-items:flex-end;gap:32px">
+      <svg class="mark" width="16" height="16" aria-hidden="true"><use href="#mark-small"/></svg>
+      <svg class="mark" width="24" height="24" aria-hidden="true"><use href="#mark-small"/></svg>
+      <svg class="mark" width="32" height="32" aria-hidden="true"><use href="#mark-small"/></svg>
+      <svg class="mark" width="48" height="48" aria-hidden="true"><use href="#mark"/></svg>
+      <svg width="64" height="64" role="img" aria-label="App tile"><use href="#tile"/></svg>
+      <p style="max-width:420px;font-size:15px">At 32 px and below use the small version: wider gaps, so the blocks don’t run together. On a coloured ground the mark turns black and ivory. The tile is for app icons and avatars.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="label">02</div>
+  <h2>Colour</h2>
+  <div class="grid g4">
+    <div class="sw" style="background:var(--void);border:1px solid rgb(241 237 231 / .28)"><b>Void</b><span style="color:var(--muted)">#050607 · the page</span></div>
+    <div class="sw" style="background:var(--ivory);color:var(--void)"><b>Ivory</b><span style="color:#3a3835">#F1EDE7 · text, light ground</span></div>
+    <div class="sw" style="background:var(--orange);color:var(--void)"><b>Orange</b><span style="color:#2a1209">#D97757 · the request</span></div>
+    <div class="sw" style="background:var(--teal);color:var(--void)"><b>Turquoise</b><span style="color:#04201f">#19ABAB · the way and the result</span></div>
+    <div class="sw" style="background:var(--raised);border:1px solid rgb(241 237 231 / .28);min-height:90px"><b>Raised</b><span style="color:var(--muted)">#0D0E10 · cards</span></div>
+    <div class="sw" style="background:var(--muted);color:var(--void);min-height:90px"><b>Muted</b><span>#BCB8B1 · text · Faint #96938D</span></div>
+    <div class="sw" style="background:var(--orange-deep);color:var(--ivory);min-height:90px"><b>Orange deep</b><span>#B85F3F · on ivory, shapes only</span></div>
+    <div class="sw" style="background:var(--teal-deep);color:var(--ivory);min-height:90px"><b>Turquoise deep</b><span>#006C6D · on ivory, text too</span></div>
+  </div>
+
+  <table style="margin-top:24px">
+    <tr><th style="width:24%">Colour</th><th style="width:34%">Its one job</th><th>Where it shows</th></tr>
+    <tr><td><span class="dot" style="background:var(--orange)"></span>Orange</td><td>You and Claude: the request, the action</td><td>The main button, the console prompt and bullets, the content block in the logo</td></tr>
+    <tr><td><span class="dot" style="background:var(--teal)"></span>Turquoise</td><td>Wajiha: the way around, the result</td><td>Links, the active page, the focus ring, step numbers, the progress line, the ✓ checks, the menu in the logo</td></tr>
+    <tr><td><span class="dot" style="background:var(--ivory)"></span>Black and ivory</td><td>Everything else</td><td>Ground, text, cards and lines: still most of the page</td></tr>
+  </table>
+
+  <div class="grid g3" style="margin-top:20px;font-size:15px">
+    <p><b style="color:var(--ivory)">Why they match:</b> turquoise is made at the same lightness and strength as the orange. Only the hue differs, so neither shouts over the other.</p>
+    <p><b style="color:var(--ivory)">Never side by side as big areas.</b> Each is a touch. Two big blocks of both at once look loud.</p>
+    <p><b style="color:var(--ivory)">Contrast, measured:</b> orange 6.5:1 and turquoise 7.2:1 on black. On ivory, turquoise deep 5.4:1 works for text; orange deep 3.8:1 is for shapes only.</p>
+  </div>
+</section>
+
+<section>
+  <div class="label">03</div>
+  <h2>Type</h2>
+  <div class="grid g3">
+    <div class="card">
+      <div class="label">Latin · Familjen Grotesk</div>
+      <div style="font-size:48px;font-weight:600;letter-spacing:-.025em;line-height:1.05;margin:12px 0">Build it<br>in words.</div>
+      <p style="font-size:15px">Headings 600, body 400, tight tracking on large sizes.</p>
+    </div>
+    <div class="card" dir="rtl">
+      <div class="label" dir="ltr" style="text-align:right">Arabic · IBM Plex Sans Arabic</div>
+      <div class="ar" style="font-size:40px;font-weight:700;line-height:1.35;margin:12px 0">ابنِ بالكلام<br>واجهتك.</div>
+      <p class="ar" style="font-size:15px;line-height:1.8">العناوين 700، النص 400، وسطر أعلى قليلاً من اللاتيني.</p>
+    </div>
+    <div class="card">
+      <div class="label">Code · IBM Plex Mono</div>
+      <div class="mono" style="font-size:17px;line-height:1.8;margin-top:12px">
+        <div><span style="color:var(--orange)">&gt;</span> /wajiha-kit:setup</div>
+        <div style="color:var(--muted)">.claude/wajiha-kit.json</div>
+        <div style="color:var(--muted)"><span style="color:var(--teal)">✓</span> npm run check</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="label">04</div>
+  <h2>Where it appears</h2>
+  <div style="position:relative;aspect-ratio:2/1;border-radius:18px;overflow:hidden;border:1px solid rgb(241 237 231 / .28);background:var(--void)">
+    <div style="position:absolute;inset:0;background:radial-gradient(45% 60% at 95% -5%, rgb(25 171 171 / .26), transparent 66%),radial-gradient(40% 55% at 70% 110%, rgb(217 119 87 / .18), transparent 66%)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(rgb(241 237 231 / .05) 1px, transparent 1px) 0 0/5.5% 11%,linear-gradient(90deg, rgb(241 237 231 / .05) 1px, transparent 1px) 0 0/5.5% 11%"></div>
+    <div class="row" style="position:absolute;left:6%;top:10%;gap:3%">
+      <svg class="mark" style="width:clamp(36px,6vw,72px);height:clamp(36px,6vw,72px)" aria-hidden="true"><use href="#mark"/></svg>
+      <span style="font-size:clamp(28px,5vw,60px);font-weight:600;letter-spacing:-.025em">wajiha<span style="color:var(--faint);font-weight:500"> kit</span></span>
+    </div>
+    <div style="position:absolute;left:6%;bottom:11%;width:70%">
+      <div style="font-size:clamp(24px,5.6vw,66px);font-weight:600;letter-spacing:-.03em;line-height:1.05">Say what you want.<br>Your assistant builds it.</div>
+      <div class="ar" dir="rtl" style="font-size:clamp(14px,2vw,24px);color:var(--muted);margin-top:2%;width:fit-content">قل ما تريد، ويبنيه مساعدك.</div>
+    </div>
+  </div>
+  <p class="mono" style="font-size:13px;margin:10px 0 20px;color:var(--faint)">GitHub social card · 1280 × 640</p>
+  <div class="grid g3">
+    <div class="card mono" style="font-size:14px;line-height:1.8">
+      <div class="label" style="margin-bottom:8px">Terminal</div>
+      <div><span style="color:var(--orange)">&gt;</span> /wajiha-kit:setup</div>
+      <div><span style="color:var(--orange)">●</span> What do you want to build?</div>
+      <div style="color:var(--muted)">&nbsp;&nbsp;└ A dashboard for my API</div>
+      <div><span style="color:var(--orange)">●</span> Built. Checked before saying so:</div>
+      <div style="color:var(--muted)">&nbsp;&nbsp;└ <span style="color:var(--teal)">✓</span> typecheck <span style="color:var(--teal)">✓</span> tests <span style="color:var(--teal)">✓</span> build</div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:18px">
+      <div>
+        <div class="label" style="margin-bottom:12px">Browser tab</div>
+        <div class="row" style="gap:10px;background:#1a1b1e;border-radius:10px 10px 0 0;padding:10px 14px;width:fit-content">
+          <svg class="mark" width="16" height="16" aria-hidden="true"><use href="#mark-small"/></svg>
+          <span style="font-size:14px">Wajiha Kit: build any front…</span>
+        </div>
+      </div>
+      <div>
+        <div class="label" style="margin-bottom:12px">Button and link</div>
+        <div class="row" style="gap:16px"><span class="btn">Get started</span><span class="link">Read the docs</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:14px">App icon</div>
+      <div class="row" style="gap:16px">
+        <svg width="88" height="88" role="img" aria-label="App icon on dark"><use href="#tile"/></svg>
+        <div class="center" style="width:88px;height:88px;border-radius:20px;background:var(--ivory)"><svg class="on-light" width="54" height="54" aria-hidden="true"><use href="#mark"/></svg></div>
+        <div class="center" style="width:88px;height:88px;border-radius:20px;background:var(--teal)"><svg class="on-colour" width="54" height="54" aria-hidden="true"><use href="#mark"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="label">05</div>
+  <h2>Rules</h2>
+  <div class="grid g2">
+    <div class="card row" style="gap:24px">
+      <div style="padding:28px;border:1px dashed var(--faint);border-radius:8px">
+        <svg class="mark" width="88" height="88" role="img" aria-label="Mark with clear space"><use href="#mark"/></svg>
+      </div>
+      <p style="flex:1;min-width:200px;font-size:15px">Keep a margin around the mark equal to a third of its width. Smallest: 16 px for the mark, 80 px for the mark with the name.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:10px">How we write</div>
+      <ul style="font-size:15px">
+        <li>Plain words, short sentences.</li>
+        <li>The name is “Wajiha Kit” in English and «واجهة» in Arabic. Always with “Kit” in English: other companies already use “Wajiha” alone.</li>
+        <li>The technical name <span class="mono" style="color:var(--ivory)">wajiha-kit</span> is for commands and files only.</li>
+        <li>Arabic is simple Modern Standard, not dialect.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="label" style="margin:28px 0 14px">Don’t</div>
+  <div class="grid g4">
+    <div class="card dont"><svg class="mark" width="80" height="80" style="transform:scaleX(1.5)" aria-hidden="true"><use href="#mark"/></svg><span>Don’t stretch it</span></div>
+    <div class="card dont"><svg class="mark" width="80" height="80" style="transform:scaleX(-1)" aria-hidden="true"><use href="#mark"/></svg><span>Don’t move the menu to the left</span></div>
+    <div class="card dont"><svg class="mark" width="80" height="80" style="--acc:var(--teal);--men:var(--orange)" aria-hidden="true"><use href="#mark"/></svg><span>Don’t swap the two colours</span></div>
+    <div class="card dont"><svg class="mark" width="80" height="80" style="filter:drop-shadow(0 6px 10px rgb(25 171 171 / .9))" aria-hidden="true"><use href="#mark"/></svg><span>Don’t add shadows or glow</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="label">06</div>
+  <h2>Files</h2>
+  <table>
+    <tr><th style="width:30%">File in <span class="mono">brand/logo/</span></th><th>Use it for</th></tr>
+    <tr><td class="mono">mark.svg</td><td>The mark on a dark ground, 48 px and up</td></tr>
+    <tr><td class="mono">mark-small.svg</td><td>The mark on a dark ground, 32 px and below</td></tr>
+    <tr><td class="mono">mark-on-light.svg</td><td>The mark on ivory or white</td></tr>
+    <tr><td class="mono">mark-mono.svg</td><td>The mark on an orange or turquoise ground</td></tr>
+    <tr><td class="mono">tile.svg</td><td>Favicon, app icon, GitHub avatar: works on light and dark</td></tr>
+  </table>
+  <p style="font-size:15px;margin-top:14px">The name next to the mark is set in Familjen Grotesk (English) and IBM Plex Sans Arabic (Arabic), both free on Google Fonts. It is typed, not drawn, so it stays sharp and editable.</p>
+</section>
+
+</main>
+</body>
+</html>

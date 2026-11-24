@@ -3,7 +3,7 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'Wajiha: build any frontend project, with the best result',
+    title: 'Wajiha Kit: build any frontend project, with the best result',
     description:
       'A plugin for frontend projects in any stack, React and TypeScript first-class. Your coding assistant builds the way your project does, known dangerous commands are refused, and the code is checked and reviewed.',
   },
@@ -19,7 +19,7 @@ export const en: Copy = {
   scenes: {
     intro: {
       title: 'The assistant, building like your best frontend team.',
-      text: 'Wajiha is a Claude Code plugin for frontends in any stack, React and TypeScript first-class. It gives the assistant skills, rules, a review crew and guards, then checks the work.',
+      text: 'Wajiha Kit is a Claude Code plugin for frontends in any stack, React and TypeScript first-class. It gives the assistant skills, rules, a review crew and guards, then checks the work.',
     },
     without: {
       title: 'Without the kit, the assistant guesses.',

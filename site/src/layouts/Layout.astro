@@ -42,7 +42,7 @@ const share = `og${route.kind === 'home' ? '' : '-docs'}${locale === 'ar' ? '-ar
 const product = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Wajiha',
+  name: 'Wajiha Kit',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'macOS, Linux',
   softwareVersion: version,
@@ -69,7 +69,7 @@ const product = JSON.stringify({
     <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
     <link rel="sitemap" href={asset('sitemap.xml')} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Wajiha" />
+    <meta property="og:site_name" content="Wajiha Kit" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={absolute(routeUrl(locale, route))} />

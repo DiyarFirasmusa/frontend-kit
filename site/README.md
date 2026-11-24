@@ -1,4 +1,4 @@
-# Wajiha website
+# Wajiha Kit website
 
 The public site of the plugin: Astro (static), Three.js, English at `/` and Arabic at `/ar/`.
 It is not part of the plugin and is not installed into projects.

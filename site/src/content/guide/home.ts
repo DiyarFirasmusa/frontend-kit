@@ -5,7 +5,7 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build any frontend project. Get the best result.', 'ابدأ بأي مشروع واجهات. واحصل على أفضل نتيجة.'),
   lead: t(
-    'Wajiha is a Claude Code plugin. Say what you want in plain words, and your assistant builds it the way a senior frontend team would: clean code, fast pages, accessible screens, checked before you commit.',
+    'Wajiha Kit is a Claude Code plugin. Say what you want in plain words, and your assistant builds it the way a senior frontend team would: clean code, fast pages, accessible screens, checked before you commit.',
     'واجهة إضافة لـ \u2066Claude Code\u2069. قل ما تريده بكلمات بسيطة، فيبنيه مساعدك كما يبنيه فريق واجهات متمرس: كود نظيف، وصفحات سريعة، وشاشات يستخدمها الجميع. ثم يفحص النتيجة قبل أن تحفظها.',
   ),
   // Ask simply, get it built well, get it checked: one line each.

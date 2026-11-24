@@ -73,7 +73,7 @@ const heading = detail ? here.name : info.title[locale]
 const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${here.among})` : ''}` : info.name[locale]
 ---
 
-<Layout locale={locale} route={route} title={`${label} | Wajiha`} description={summary ?? ''}>
+<Layout locale={locale} route={route} title={`${label} | Wajiha Kit`} description={summary ?? ''}>
   <Header locale={locale} route={route} />
   <main id="content" class="doc" tabindex="-1">
     <DocsTree locale={locale} route={route} />

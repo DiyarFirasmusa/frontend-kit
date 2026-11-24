@@ -7,4 +7,4 @@ max_turns: 8
 allowed_tools: [Skill, Read, Glob, Grep]
 ---
 
-set up Wajiha for my project
+set up Wajiha Kit for my project

@@ -61,7 +61,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'guide',
     still: 'screen',
     name: t('What is it?', 'ما هي؟'),
-    title: t('What is Wajiha?', 'ما هي واجهة؟'),
+    title: t('What is Wajiha Kit?', 'ما هي واجهة؟'),
     lead: t(
       'A kit that teaches your coding assistant how a good frontend team builds, and puts checks around it so the work is proven before you see it.',
       'إضافة تعلم مساعد البرمجة كيف يبني فريق واجهات محترف، وتضيف فحوصا تثبت أن العمل سليم قبل أن تراه.',
