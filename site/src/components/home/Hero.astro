@@ -22,7 +22,7 @@ const counts = [
 
 <section id="intro" class="hero">
   <div class="column hero-copy">
-    <h1 class="enter">{home.title[locale]}</h1>
+    <h1 class="enter">{home.title[locale].split(/(?<=\.) /).map((part) => <span>{part}</span>)}</h1>
     <p class="hero-lead enter">{home.lead[locale]}</p>
     <div class="enter">
       <Commands install={content[locale].install} first />

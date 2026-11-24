@@ -42,6 +42,7 @@
 
 .hero h1 {
   max-width: 17ch;
+  text-wrap: balance;
   color: #fff;
   font-size: clamp(2.125rem, 1rem + 3vw, 4.125rem);
   line-height: 1.04;
@@ -462,4 +463,8 @@
       translate: 0 0.75rem;
     }
   }
+}
+
+.hero h1 span {
+  display: block;
 }
