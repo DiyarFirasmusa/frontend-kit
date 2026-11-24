@@ -8,8 +8,7 @@ const ARRIVING = [
   '.doc-article :is(.ticks, .crosses, .numbered, .tags, .timeline, .recipes, .cards) > li',
   '.doc-article .glance > div',
   '.doc-article .source-doc > *',
-  '.inside .choices li',
-  '.get-it :is(.commands, .works-for, .ticks, .crosses) > li',
+  '.get-it :is(.install-steps, .works-for, .fit)',
   '.foot > *',
 ].join(',')
 const STAGGER_MS = 55

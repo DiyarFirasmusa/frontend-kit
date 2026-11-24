@@ -2,7 +2,7 @@ import { all, required } from './dom.ts'
 
 const NARROW = 820
 
-/** Press a name and it is explained in place; the stage turns to it. */
+/** Press a name and it is explained in place. */
 export function initExplorer(): void {
   const explorer = document.querySelector<HTMLElement>('[data-explorer]')
   if (!explorer) return
@@ -12,14 +12,12 @@ export function initExplorer(): void {
   const panels = all<HTMLElement>('[data-panel]', explorer)
   const detail = required<HTMLElement>('[data-detail]', explorer)
 
-  /** `whole` keeps all of its kind on the stage, each to press; a pick becomes its own shape. */
-  const choose = (pick: HTMLAnchorElement, whole = false): void => {
-    const { choice, kindOf, shape } = pick.dataset
+  const choose = (pick: HTMLAnchorElement): void => {
+    const { choice, kindOf } = pick.dataset
     for (const tab of tabs) tab.setAttribute('aria-pressed', String(tab.dataset['kind'] === kindOf))
     for (const list of lists) list.hidden = list.dataset['kindList'] !== kindOf
     for (const other of picks) other.setAttribute('aria-current', String(other === pick))
     for (const panel of panels) panel.hidden = panel.dataset['panel'] !== choice
-    explorer.dataset['stageShape'] = whole ? kindOf : shape
   }
 
   for (const pick of picks) {
@@ -28,8 +26,8 @@ export function initExplorer(): void {
       if (event.metaKey || event.ctrlKey || event.shiftKey) return
       event.preventDefault()
       choose(pick)
-      // On a phone the stage is the top of the section, so the section comes back to the top.
-      if (innerWidth < NARROW) return explorer.scrollIntoView({ block: 'start', behavior: 'smooth' })
+      // On a phone the explanation sits above the names: bring it into view.
+      if (innerWidth < NARROW) return detail.scrollIntoView({ block: 'start', behavior: 'smooth' })
       const { top } = detail.getBoundingClientRect()
       if (top < 90 || top > innerHeight * 0.75) detail.scrollIntoView({ block: 'start', behavior: 'smooth' })
     })
@@ -37,8 +35,8 @@ export function initExplorer(): void {
   for (const tab of tabs) {
     tab.addEventListener('click', () => {
       const first = picks.find((pick) => pick.dataset['kindOf'] === tab.dataset['kind'])
-      if (first) choose(first, true)
+      if (first) choose(first)
     })
   }
-  if (picks[0]) choose(picks[0], true)
+  if (picks[0]) choose(picks[0])
 }

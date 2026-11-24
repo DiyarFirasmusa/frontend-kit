@@ -19,8 +19,8 @@ const start = home ? '' : routeUrl(locale, { kind: 'home' })
 const PARENT = { home: undefined, skill: 'skills', agent: 'agents', rule: 'rules', hook: 'checks' } as const
 const current: PageId | undefined = route.kind === 'page' ? route.id : PARENT[route.kind]
 const places = [
-  ['example', t('How it works', 'كيف تعمل')],
-  ['inside', t('What is inside', 'ماذا بداخلها')],
+  ['example', t('How it works', 'شلون تشتغل')],
+  ['inside', t('What is inside', 'شنو بداخلها')],
 ] as const
 ---
 

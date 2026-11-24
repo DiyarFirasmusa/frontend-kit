@@ -16,11 +16,11 @@ const { locale } = Astro.props
 const { features, box } = content[locale]
 // In the order of the feature groups.
 const DETAIL: (PageId | undefined)[] = ['get-started', 'rules', 'checks', 'checks', 'rules', undefined, 'project-types', 'configuration']
-const tools = t('The tool servers', 'خوادم الأدوات')
+const tools = t('The tool servers', 'سيرفرات الأدوات')
 const servers = [
-  ['Chrome DevTools', t('Opens pages, reads the console and requests, takes screenshots and records performance.', 'يفتح الصفحات ويقرأ الأخطاء والطلبات ويلتقط الشاشة ويسجّل الأداء.')],
-  ['Playwright', t('Drives a browser through your flows.', 'يقود متصفحاً عبر مسارات تطبيقك.')],
-  ['Context7', t('Fetches current documentation of libraries. An API key is optional.', 'يجلب التوثيق الحديث للمكتبات، ومفتاح الـ API اختياري.')],
+  ['Chrome DevTools', t('Opens pages, reads the console and requests, takes screenshots and records performance.', 'يفتح الصفحات، ويقرا الأخطاء والطلبات، ويصوّر الشاشة، ويسجّل الأداء.')],
+  ['Playwright', t('Drives a browser through your flows.', 'يسوق متصفح ويمشي بيه بمسارات تطبيقك.')],
+  ['Context7', t('Fetches current documentation of libraries. An API key is optional.', 'يجيب آخر توثيق للمكتبات، ومفتاح الـ API اختياري.')],
 ] as const
 ---
 

@@ -468,3 +468,368 @@
 .hero h1 span {
   display: block;
 }
+
+/* The heading of every section after the hero: one line of title, one line of lead. */
+.inside,
+.get-it {
+  padding-block: 7rem 5rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.section-head {
+  margin-block-end: 3rem;
+}
+
+.section-head p {
+  max-width: 40rem;
+  margin-block-start: 0.75rem;
+  color: var(--muted);
+  font-size: var(--lead);
+}
+
+/* WHAT IS INSIDE: four kinds as cells, the names as a grid, the pick explained in a panel. */
+.kinds {
+  display: none;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.js .kinds {
+  display: grid;
+}
+
+.kinds button {
+  display: grid;
+  gap: 0.125rem;
+  justify-items: start;
+  padding: 1rem 1.25rem;
+  background: var(--void);
+  color: var(--muted);
+  cursor: pointer;
+  text-align: start;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.kinds button b {
+  color: #fff;
+  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.25rem) / 1 var(--latin);
+  transition: color 0.3s;
+}
+
+.kinds button:hover {
+  background: var(--raised);
+}
+
+.kinds [aria-pressed='true'] {
+  background: var(--ivory);
+  color: var(--void);
+}
+
+.kinds [aria-pressed='true'] b {
+  color: var(--void);
+}
+
+.inside-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 2rem;
+  align-items: start;
+  margin-block-start: 2rem;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.js .choices[hidden] {
+  display: none;
+}
+
+.choices li {
+  background: var(--void);
+}
+
+.choices a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  height: 100%;
+  padding-inline: 0.875rem;
+  color: var(--muted);
+  font: 500 0.875rem / 1.3 var(--code);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.choices a:hover {
+  background: var(--raised);
+  color: var(--ivory);
+}
+
+.js .choices [aria-current='true'] {
+  background: var(--ivory);
+  color: var(--void);
+}
+
+/* Without the script every list shows and each name is a link to its page. */
+.detail {
+  display: none;
+}
+
+.js .detail {
+  display: block;
+  position: sticky;
+  inset-block-start: calc(var(--bar) + 1.5rem);
+  border: 1px solid var(--line);
+  background: var(--raised);
+  scroll-margin-top: calc(var(--bar) + 1rem);
+}
+
+.detail article {
+  padding: 1.5rem;
+}
+
+.detail-kind {
+  color: var(--faint);
+  font-size: var(--small);
+}
+
+.detail h3 {
+  margin-block: 0.375rem 1rem;
+  color: #fff;
+  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.125rem) / 1.15 var(--code);
+  overflow-wrap: anywhere;
+}
+
+.detail dl > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding-block: 0.75rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.detail dt {
+  color: var(--faint);
+  font-size: var(--small);
+}
+
+.detail dd {
+  color: var(--ivory);
+}
+
+/* What you would type, shown as you would type it. */
+.detail-say {
+  margin-block-start: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 1px dashed var(--line);
+  background: var(--void);
+}
+
+.detail-say p {
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.detail-say q {
+  display: block;
+  margin-block-start: 0.25rem;
+  color: #fff;
+  quotes: none;
+}
+
+.detail-say q::before {
+  content: '> ';
+  color: var(--faint);
+  font-family: var(--code);
+}
+
+.detail-open {
+  margin-block-start: 1rem;
+}
+
+/* GET IT: three numbered commands in one grid, then who it is for. */
+.install-steps {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.install-steps li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 14rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--void);
+}
+
+.step-number {
+  color: var(--faint);
+  font: 500 0.875rem var(--code);
+}
+
+.install-steps p {
+  color: #fff;
+  font-weight: 560;
+}
+
+.get-it-title {
+  margin-block: 4rem 1.25rem;
+}
+
+.home .get-it h3 {
+  font-size: var(--sub);
+}
+
+.works-for {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.works-for li {
+  display: grid;
+  align-content: start;
+  gap: 0.375rem;
+  padding: 1.25rem;
+  border: 0;
+  background: var(--void);
+}
+
+.works-for strong {
+  color: #fff;
+  font-size: 1.125rem;
+}
+
+.fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1px;
+  margin-block: 4rem 1.5rem;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.fit > div {
+  padding: 1.5rem;
+  background: var(--void);
+}
+
+.home .fit h3 {
+  margin-block-end: 1rem;
+  font-size: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .inside-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .js .detail {
+    position: static;
+    order: -1;
+  }
+
+  .install-steps li {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+
+  .install-steps .command {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .kinds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .choices {
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  }
+
+  .detail dl > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* WHERE YOU START: new, running or messy, each in its own cell. */
+.starts {
+  padding-block: 7rem 4rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.start-cases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.start-cases li {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.75rem;
+  padding: 1.75rem 1.5rem;
+  background: var(--void);
+}
+
+.start-mode {
+  justify-self: start;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--line);
+  color: var(--faint);
+  font: 500 0.75rem / 1.6 var(--code);
+}
+
+.home .start-cases h3 {
+  color: #fff;
+  font-size: var(--sub);
+  line-height: 1.25;
+}
+
+.start-cases p {
+  color: var(--muted);
+}
+
+.start-command {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.875rem;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  color: var(--ivory);
+  font: 500 0.8125rem var(--code);
+  text-decoration: none;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.start-command:hover {
+  background: var(--ivory);
+  color: var(--void);
+}
+
+@media (max-width: 900px) {
+  .start-cases {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

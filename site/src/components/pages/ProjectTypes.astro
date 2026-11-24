@@ -14,14 +14,14 @@ interface Props {
 
 const { locale } = Astro.props
 const words = {
-  which: t('Which one is mine?', 'أيها يناسبني؟'),
+  which: t('Which one is mine?', 'أي واحد يناسبني؟'),
   fits: t('For', 'لمن'),
-  gets: t('What it adds', 'ماذا يضيف'),
-  stack: t('Made for', 'مصنوع لـ'),
+  gets: t('What it adds', 'شنو يضيف'),
+  stack: t('Made for', 'مسوّى لـ'),
   special: t('Its special skills', 'مهاراته الخاصة'),
-  neutral: t('The shared skills, which adapt to the stack.', 'المهارات المشتركة، وتتكيّف مع التقنيات.'),
-  rules: t('Its rules, besides the shared ones', 'قواعده، إضافة إلى المشتركة'),
-  ask: t('A first sentence', 'جملة أولى'),
+  neutral: t('The shared skills, which adapt to the stack.', 'المهارات المشتركة، وتتكيّف حسب التقنيات.'),
+  rules: t('Its rules, besides the shared ones', 'قواعده، فوق المشتركة'),
+  ask: t('A first sentence', 'أول جملة'),
 }
 const special = skillNames.filter((name) => profilesOf(name).length < projects.length)
 ---

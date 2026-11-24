@@ -53,16 +53,12 @@
       text-underline-offset 0.35s var(--glide);
   }
 
-  .choices a:hover,
-  .kinds button:hover,
   .tags li:hover,
   .top-docs:hover,
   .top-install:hover {
     translate: 0 -4px;
   }
 
-  .choices a:active,
-  .kinds button:active,
   .command button:active,
   .top a:active,
   .tree a:active {
@@ -85,16 +81,14 @@
 
   .rows > div,
   .index li,
-  .answers > div,
-  .works-for li {
+  .answers > div {
     background: linear-gradient(var(--ivory), var(--ivory)) no-repeat 0 0 / 0 1px;
     transition: background-size 0.55s var(--glide);
   }
 
   .rows > div:hover,
   .index li:hover,
-  .answers > div:hover,
-  .works-for li:hover {
+  .answers > div:hover {
     background-size: 100% 1px;
   }
 
@@ -130,8 +124,7 @@
   @keyframes dealt {
     from {
       opacity: 0;
-      translate: 0 1.25rem;
-      filter: blur(5px);
+      translate: 0 0.5rem;
     }
   }
 

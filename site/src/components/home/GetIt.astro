@@ -4,7 +4,8 @@ import { projects } from '../../content/guide/projects.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
-import Commands from '../Commands.astro'
+import { INSTALL_COMMANDS } from '../../lib/plugin.ts'
+import CommandBox from '../CommandBox.astro'
 
 interface Props {
   locale: Locale
@@ -14,15 +15,38 @@ const { locale } = Astro.props
 const { install, why } = content[locale]
 ---
 
-<section id="install" class="get-it" data-stage-shape="mark">
+<section id="install" class="get-it">
+  <div class="column section-head">
+    <h2>{home.install[locale]}</h2>
+    <p>{install.needs}</p>
+  </div>
   <div class="column">
-    <h2 data-rise>{home.install[locale]}</h2>
-    <Commands install={install} />
-    <p class="needs">{install.needs}</p>
-    <h3>{home.types[locale]}</h3>
+    <ol class="install-steps">
+      {
+        INSTALL_COMMANDS.map((command, i) => (
+          <li>
+            <span class="step-number" dir="ltr">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <p>{install.steps[i]}</p>
+            <CommandBox command={command} install={install} />
+          </li>
+        ))
+      }
+    </ol>
+
+    <h3 class="get-it-title">{home.types[locale]}</h3>
     <ul class="works-for">
-      {projects.map(({ name, fits }) => <li><strong>{name[locale]}</strong><span>{fits[locale]}</span></li>)}
+      {
+        projects.map(({ name, fits }) => (
+          <li>
+            <strong>{name[locale]}</strong>
+            <span>{fits[locale]}</span>
+          </li>
+        ))
+      }
     </ul>
+
     <div class="fit">
       <div>
         <h3>{why.fit.title}</h3>

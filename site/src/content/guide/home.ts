@@ -16,7 +16,7 @@ export const home = {
     },
     {
       name: t('It is built well', 'يطلع مضبوط'),
-      text: t('Typed, clean code with performance, accessibility, security and RTL built in from the start.', 'كود نظيف ومضبوط الأنواع، والسرعة وسهولة الاستخدام والأمان ودعم العربي من أول يوم.'),
+      text: t('Typed, clean code with performance, accessibility, security and RTL built in from the start.', 'كود نظيف ومضبوط الأنواع، والسرعة وسهولة الوصول والأمان ودعم العربي من أول يوم.'),
     },
     {
       name: t('It is checked', 'ومفحوص'),
@@ -65,6 +65,36 @@ export const home = {
     tests: t('related tests', 'الاختبارات المرتبطة'),
     reviewing: t('reviewing the change', 'يراجع التغيير'),
     ask: t('Commit and push?', 'أحفظ وأرفع؟'),
+  },
+
+  // Where a project stands when the kit arrives: new, already running, or a mess.
+  starts: {
+    title: t('New, running or messy: it fits', 'جديد، شغّال، أو فوضوي: تركب عليه'),
+    lead: t('Start a project with it, add it to the one you are working on, or use it to clean an old one up. Then keep working, clean.', 'ابدِ مشروع جديد بيها، أو ركّبها على مشروعك الحالي، أو نظّف بيها مشروع قديم. وبعدها كمّل شغلك نظيف.'),
+    cases: [
+      {
+        mode: 'new',
+        name: t('A new project', 'مشروع جديد'),
+        text: t('Built to the standard from the first file.', 'ينبني على المعايير من أول ملف.'),
+        command: '/frontend-kit:mode new',
+        page: 'get-started',
+      },
+      {
+        mode: 'existing',
+        name: t('A project you are working on', 'مشروع شغّال عليه'),
+        text: t('Setup reads your project and follows what it already does. Nothing is rewritten; you carry on where you were.', 'الإعداد يقرا مشروعك ويمشي على طريقته. ما ينكتب شي من جديد، وتكمّل من وين ما وقفت.'),
+        command: '/frontend-kit:setup',
+        page: 'get-started',
+      },
+      {
+        mode: 'refactor',
+        name: t('An old or messy project', 'مشروع قديم أو فوضوي'),
+        text: t('Refactor mode measures the mess, plans six phases and runs them one at a time, without changing what the app does.', 'نمط إعادة الهيكلة يقيس الفوضى، يخطط ست مراحل وينفذها وحدة وحدة، بدون ما يغيّر شنو يسوي التطبيق.'),
+        command: '/frontend-kit:refactor-mode on',
+        page: 'refactor',
+      },
+    ],
+    more: t('Nine modes in all, from building new to a release freeze', 'تسع أنماط بالكامل، من البناء الجديد لحد تجميد الإصدار'),
   },
 
   inside: t('What is inside', 'شنو بداخلها'),

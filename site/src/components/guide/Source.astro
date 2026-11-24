@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { file } = Astro.props
-const open = t('Show the whole file', 'اعرض الملف كاملاً')
+const open = t('Show the whole file', 'اعرض الملف كله')
 const entry = await getEntry('reference', file)
 if (!entry?.rendered) throw new Error(`The documentation has no text for ${file}`)
 ---

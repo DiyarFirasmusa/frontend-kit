@@ -17,51 +17,51 @@ type Mode = (typeof modeGroups)[number]['modes'][number][0]
 
 const { locale } = Astro.props
 const { install } = content[locale]
-const keepsTests = t('No removed or skipped tests and no refreshed snapshots.', 'لا اختبارات محذوفة أو متخطاة ولا لقطات مجدّدة.')
+const keepsTests = t('No removed or skipped tests and no refreshed snapshots.', 'ما ينحذف اختبار ولا ينتخطى، ولا تتجدد اللقطات.')
 const also = (en: string, ar: string): Bilingual => t(`${keepsTests.en} ${en}`, `${keepsTests.ar} ${ar}`)
 // What `/frontend-kit:mode list` says is enforced.
 const held: Record<Mode, Bilingual> = {
-  new: t('Nothing extra.', 'لا شيء إضافي.'),
-  existing: t('Nothing extra. It is the default.', 'لا شيء إضافي، وهو الافتراضي.'),
-  maintenance: also('No new dependencies.', 'ولا اعتماديات جديدة.'),
-  refactor: also('No new suppression comments.', 'ولا تعليقات إسكات جديدة.'),
-  upgrade: also('No new suppression comments and no forced installs.', 'ولا تعليقات إسكات جديدة ولا تثبيت قسري.'),
-  freeze: also('No edits of package.json, lockfiles or tool configs.', 'ولا تعديل لـ package.json أو ملفات القفل أو إعدادات الأدوات.'),
-  hotfix: also('No edits of package.json, lockfiles or tool configs, and at most five source files unless you set another number.', 'ولا تعديل لـ package.json أو ملفات القفل أو إعدادات الأدوات، وخمسة ملفات على الأكثر ما لم تحدد عدداً آخر.'),
-  'read-only': t('No edit outside the report folder. In the shell and in MCP tools, only reads.', 'لا تعديل خارج مجلد التقارير، ولا يمرّ في الطرفية وأدوات MCP إلا القراءة.'),
-  prototype: t('No edit outside the prototype folder, no package change, no commit or push.', 'لا تعديل خارج مجلد النموذج ولا تغيير للحزم ولا حفظ أو رفع.'),
+  new: t('Nothing extra.', 'لا شي زيادة.'),
+  existing: t('Nothing extra. It is the default.', 'لا شي زيادة، وهذا الافتراضي.'),
+  maintenance: also('No new dependencies.', 'ولا تنضاف اعتماديات جديدة.'),
+  refactor: also('No new suppression comments.', 'ولا تنضاف تعليقات إسكات جديدة.'),
+  upgrade: also('No new suppression comments and no forced installs.', 'ولا تنضاف تعليقات إسكات جديدة، ولا تثبيت بالقوة.'),
+  freeze: also('No edits of package.json, lockfiles or tool configs.', 'وممنوع تعديل package.json أو ملفات القفل أو إعدادات الأدوات.'),
+  hotfix: also('No edits of package.json, lockfiles or tool configs, and at most five source files unless you set another number.', 'وممنوع تعديل package.json أو ملفات القفل أو إعدادات الأدوات، وبالأكثر خمس ملفات كود، إلا إذا حددت رقم ثاني.'),
+  'read-only': t('No edit outside the report folder. In the shell and in MCP tools, only reads.', 'لا تعديل خارج مجلد التقارير، وبالطرفية وأدوات MCP بس القراءة مسموحة.'),
+  prototype: t('No edit outside the prototype folder, no package change, no commit or push.', 'لا تعديل خارج مجلد النموذج، ولا تغيير بالحزم، ولا حفظ أو رفع.'),
 }
 const why: Record<Mode, Bilingual> = {
-  new: t('An empty folder has no conventions, so first-day shortcuts become the structure.', 'المجلد الفارغ لا أعراف فيه، فاختصارات اليوم الأول تصير هي البنية.'),
-  existing: t('A working project already has a shape. Imposing another turns each change into a rewrite.', 'المشروع العامل له شكله، وفرض شكل آخر يحوّل كل تغيير إلى إعادة كتابة.'),
-  maintenance: t('An old app that earns money should not be modernised by accident.', 'تطبيق قديم يعمل لا ينبغي أن يُحدَّث بالخطأ.'),
-  refactor: t('Cleaning a whole project while adding features breaks both.', 'تنظيف مشروع كامل أثناء إضافة الميزات يفسد الاثنين.'),
-  upgrade: t('An upgrade mixed with other work cannot be proven or rolled back.', 'الترقية المخلوطة بعمل آخر لا يمكن إثباتها ولا التراجع عنها.'),
-  freeze: t('The last days before a release are for making it stable, not larger.', 'الأيام الأخيرة قبل الإصدار للتثبيت لا للتوسيع.'),
-  hotfix: t('When production is broken, every extra line is extra risk.', 'عندما يتعطل الإنتاج فكل سطر زائد خطر زائد.'),
-  'read-only': t('An audit is worth more when the code cannot change under it.', 'التدقيق أثمن عندما لا تتغير الشيفرة تحته.'),
-  prototype: t('An experiment is fast only when it cannot leak into real code.', 'التجربة سريعة فقط عندما لا تتسرب إلى الشيفرة الحقيقية.'),
+  new: t('An empty folder has no conventions, so first-day shortcuts become the structure.', 'المجلد الفاضي ما إله أعراف، فاختصارات أول يوم تصير هي البنية.'),
+  existing: t('A working project already has a shape. Imposing another turns each change into a rewrite.', 'المشروع الشغّال إله شكله، ولو فرضت عليه شكل ثاني كل تغيير يصير إعادة كتابة.'),
+  maintenance: t('An old app that earns money should not be modernised by accident.', 'تطبيق قديم شغّال ما لازم يتحدّث بالغلط.'),
+  refactor: t('Cleaning a whole project while adding features breaks both.', 'تنظّف مشروع كامل وانت تضيف ميزات؟ تخرّب الاثنين.'),
+  upgrade: t('An upgrade mixed with other work cannot be proven or rolled back.', 'الترقية اللي تختلط بشغل ثاني ما تقدر تثبتها ولا ترجع عنها.'),
+  freeze: t('The last days before a release are for making it stable, not larger.', 'آخر أيام قبل الإصدار للتثبيت، مو للتوسيع.'),
+  hotfix: t('When production is broken, every extra line is extra risk.', 'لما يتعطل الإنتاج، كل سطر زيادة خطر زيادة.'),
+  'read-only': t('An audit is worth more when the code cannot change under it.', 'التدقيق يسوى أكثر لما الكود ما يقدر يتغير تحته.'),
+  prototype: t('An experiment is fast only when it cannot leak into real code.', 'التجربة تكون سريعة بس لما ما تقدر تتسرب للكود الحقيقي.'),
 }
 const words = {
   switching: t('One switch', 'مفتاح واحد'),
   switchingLead: t(
     'Only you switch modes. A mode adds restrictions and never lifts a guard.',
-    'أنت وحدك من يبدّل الأنماط. والنمط يضيف قيوداً ولا يرفع حارساً.',
+    'بس انت تبدّل الأنماط. والنمط يضيف قيود، وما يشيل أي حارس.',
   ),
-  is: t('What it is', 'ما هو'),
-  why: t('Why', 'لماذا'),
-  held: t('What the guard holds', 'ما يمسكه الحارس'),
-  honest: t('What is enforced, honestly', 'ما يُفرض، بصراحة'),
+  is: t('What it is', 'شنو هو'),
+  why: t('Why', 'ليش'),
+  held: t('What the guard holds', 'شنو يمسك الحارس'),
+  honest: t('What is enforced, honestly', 'شنو ينفرض، بصراحة'),
   honestText: t(
     'For the edit tools the guard knows the file and the text, so those limits hold. In the shell it catches common forms only. Everything else is an instruction. It is a guard rail, not a sandbox.',
-    'مع أدوات التعديل يعرف الحارس الملف والنص فتصمد هذه الحدود. وفي الطرفية لا يلتقط إلا الصيغ الشائعة، والباقي تعليمات. هو حاجز أمان لا بيئة معزولة.',
+    'مع أدوات التعديل الحارس يعرف الملف والنص، فهالحدود تصمد. بالطرفية يلقط بس الصيغ الشائعة، والباقي تعليمات. هو حاجز أمان، مو بيئة معزولة.',
   ),
   skill: t('The mode skill', 'مهارة الأنماط'),
   config: t('Every key of the config', 'كل مفاتيح الإعدادات'),
-  report: t('The two report styles', 'أسلوبا التقرير'),
+  report: t('The two report styles', 'أسلوبين للتقرير'),
   reportLead: t(
     'A separate switch: output styles that change how work is reported, not how it is done. Their text, in English:',
-    'مفتاح منفصل: أساليب إخراج تغيّر طريقة التقرير لا طريقة العمل. نصها بالإنجليزية:',
+    'مفتاح منفصل: أساليب إخراج تغيّر شلون ينكتب التقرير، مو شلون ينسوي الشغل. نصها بالإنجليزي:',
   ),
 }
 const commands = ['/frontend-kit:mode list', '/frontend-kit:mode status', '/frontend-kit:mode off']

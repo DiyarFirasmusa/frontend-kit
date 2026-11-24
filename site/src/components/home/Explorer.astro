@@ -1,5 +1,4 @@
 ---
-import { emblemOf } from '../../content/emblems.ts'
 import { agentGuides } from '../../content/guide/agents.ts'
 import { home } from '../../content/guide/home.ts'
 import { agentPurpose, hookPurpose, rulePurpose, skillPurpose } from '../../content/guide/purpose.ts'
@@ -19,13 +18,9 @@ interface Props {
 interface Choice {
   id: string
   name: string
-  stop: number
-  emblem: string
   href: string
   facts: [label: Bilingual, text: string][]
   say?: string
-  /** The first on its object: a press on the stage picks it. */
-  front: boolean
 }
 
 const { locale } = Astro.props
@@ -34,12 +29,9 @@ const { why, when, does } = home
 const kinds: { kind: keyof typeof home.kinds; choices: Choice[] }[] = [
   {
     kind: 'skills',
-    choices: skillOrder.map((name, stop) => ({
+    choices: skillOrder.map((name) => ({
       id: `skill-${name}`,
       name,
-      stop,
-      emblem: emblemOf.skill(name),
-      front: true,
       href: skillUrl(locale, name),
       facts: [
         [does, skillGuides[name]!.plain[locale]],
@@ -51,12 +43,9 @@ const kinds: { kind: keyof typeof home.kinds; choices: Choice[] }[] = [
   },
   {
     kind: 'agents',
-    choices: agentOrder.map((name, stop) => ({
+    choices: agentOrder.map((name) => ({
       id: `agent-${name}`,
       name,
-      stop,
-      emblem: emblemOf.agent(name),
-      front: true,
       href: agentUrl(locale, name),
       facts: [
         [does, agentGuides[name]!.plain[locale]],
@@ -68,13 +57,10 @@ const kinds: { kind: keyof typeof home.kinds; choices: Choice[] }[] = [
   },
   {
     kind: 'rules',
-    choices: ruleGroups.flatMap(({ group, names }, stop) =>
-      names.map((name, i) => ({
+    choices: ruleGroups.flatMap(({ group, names }) =>
+      names.map((name) => ({
         id: `rule-${group.replaceAll('/', '-')}-${name.replace('.md', '')}`,
         name: group === 'shared' ? name : `${group.split('/').at(-1)}/${name}`,
-        stop,
-        emblem: emblemOf.rule(name),
-        front: i === 0,
         href: ruleUrl(locale, group, name),
         facts: [
           [does, ruleGuides[`${group}/${name}`]![locale]],
@@ -85,12 +71,9 @@ const kinds: { kind: keyof typeof home.kinds; choices: Choice[] }[] = [
   },
   {
     kind: 'checks',
-    choices: hookOrder.map((event, stop) => ({
+    choices: hookOrder.map((event) => ({
       id: `hook-${event}`,
       name: event,
-      stop,
-      emblem: emblemOf.hook(event),
-      front: true,
       href: hookUrl(locale, event),
       facts: [
         [when, copy.session.events[event][0]],
@@ -102,65 +85,70 @@ const kinds: { kind: keyof typeof home.kinds; choices: Choice[] }[] = [
 ]
 ---
 
-<section id="inside" class="inside" data-explorer data-stage-shape="skills">
+<section id="inside" class="inside" data-explorer>
+  <div class="column section-head">
+    <h2>{home.inside[locale]}</h2>
+    <p>{home.insideLead[locale]}</p>
+  </div>
   <div class="column">
-    <h2 data-rise>{home.inside[locale]}</h2>
-    <p class="inside-lead">{home.insideLead[locale]}</p>
     <div class="kinds">
       {
         kinds.map(({ kind, choices }, i) => (
           <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-kind={kind}>
-            {home.kinds[kind][locale]} <span>{choices.length}</span>
+            <b dir="ltr">{choices.length}</b>
+            <span>{home.kinds[kind][locale]}</span>
           </button>
         ))
       }
     </div>
-    <div class="detail" aria-live="polite" data-detail>
-      {
-        kinds.flatMap(({ kind, choices }) =>
-          choices.map(({ id, name, href, facts, say }, i) => (
-            <article data-panel={id} hidden={kind !== 'skills' || i > 0}>
-              <p class="detail-kind">{home.kindIs[kind][locale]}</p>
-              <h3>
-                <bdi>{name}</bdi>
-              </h3>
-              <dl>
-                {facts.map(([label, text]) => (
-                  <div>
-                    <dt>{label[locale]}</dt>
-                    <dd>{text}</dd>
-                  </div>
-                ))}
+    <div class="inside-body">
+      <div class="inside-list">
+        {
+          kinds.map(({ kind, choices }) => (
+            <ul class="choices" data-kind-list={kind}>
+              {choices.map(({ id, name, href }) => (
+                <li>
+                  <a href={href} data-choice={id} data-kind-of={kind}>
+                    <bdi>{name}</bdi>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+      <div class="detail" aria-live="polite" data-detail>
+        {
+          kinds.flatMap(({ kind, choices }) =>
+            choices.map(({ id, name, href, facts, say }, i) => (
+              <article data-panel={id} hidden={kind !== 'skills' || i > 0}>
+                <p class="detail-kind">{home.kindIs[kind][locale]}</p>
+                <h3>
+                  <bdi>{name}</bdi>
+                </h3>
+                <dl>
+                  {facts.map(([label, text]) => (
+                    <div>
+                      <dt>{label[locale]}</dt>
+                      <dd>{text}</dd>
+                    </div>
+                  ))}
+                </dl>
                 {say && (
-                  <div>
-                    <dt>{home.type[locale]}</dt>
-                    <dd class="detail-say">
-                      <q dir="auto">{say}</q>
-                    </dd>
+                  <div class="detail-say">
+                    <p>{home.type[locale]}</p>
+                    <q dir="auto">{say}</q>
                   </div>
                 )}
-              </dl>
-              <a class="detail-open" href={href}>
-                {home.open[locale]}
-                <span class="sr-only">: {name}</span>
-              </a>
-            </article>
-          )),
-        )
-      }
+                <a class="detail-open" href={href}>
+                  {home.open[locale]}
+                  <span class="sr-only">: {name}</span>
+                </a>
+              </article>
+            )),
+          )
+        }
+      </div>
     </div>
-    {
-      kinds.map(({ kind, choices }) => (
-        <ul class="choices" data-kind-list={kind}>
-          {choices.map(({ id, name, stop, emblem, href, front }) => (
-            <li>
-              <a href={href} data-choice={id} data-kind-of={kind} data-shape={emblem} data-pick={front ? `${kind}-${stop}` : undefined}>
-                <bdi>{name}</bdi>
-              </a>
-            </li>
-          ))}
-        </ul>
-      ))
-    }
   </div>
 </section>
