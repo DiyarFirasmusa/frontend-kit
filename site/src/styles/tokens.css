@@ -9,6 +9,11 @@
   /* Claude's own orange, used in touches only: the star, the bullets, the line you have read, the focus. */
   --accent: #d97757;
   --accent-soft: rgb(217 119 87 / 0.16);
+  /* Its warm and cool neighbours, so each kind of thing has its own colour. */
+  --amber: #e8b04a;
+  --sand: #d4a27f;
+  --teal: #5cbfae;
+  --rose: #e0776b;
 
   --type: 'Familjen Grotesk Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --latin: 'Familjen Grotesk Variable', system-ui, sans-serif;

@@ -94,9 +94,14 @@
 
 .top-install {
   padding-inline: 1.375rem;
-  background: var(--ivory);
+  background: var(--accent);
   color: var(--void);
-  font-weight: 560;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.top-install:hover {
+  background: var(--amber);
 }
 
 .menu {

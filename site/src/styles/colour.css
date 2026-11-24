@@ -1,0 +1,379 @@
+/* ---------------------------------------------------------------------------------------------
+   COLOUR. A warm glow behind everything, a grid you can see, and one colour for each kind of thing:
+   skills orange, agents amber, rules teal, hooks sand.
+   --------------------------------------------------------------------------------------------- */
+.home {
+  --grid-line: rgb(241 237 231 / 0.11);
+}
+
+/* The light behind the page: it stays put while the page moves over it. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(52rem 38rem at 88% -6%, rgb(217 119 87 / 0.26), transparent 62%),
+    radial-gradient(44rem 34rem at -8% 38%, rgb(232 176 74 / 0.13), transparent 62%),
+    radial-gradient(56rem 36rem at 96% 108%, rgb(92 191 174 / 0.14), transparent 62%);
+}
+
+[dir='rtl'] body::before {
+  background:
+    radial-gradient(52rem 38rem at 12% -6%, rgb(217 119 87 / 0.26), transparent 62%),
+    radial-gradient(44rem 34rem at 108% 38%, rgb(232 176 74 / 0.13), transparent 62%),
+    radial-gradient(56rem 36rem at 4% 108%, rgb(92 191 174 / 0.14), transparent 62%);
+}
+
+/* The grid over the whole page, fading towards the edges. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 20%, transparent 85%);
+}
+
+.hero::before {
+  mask-image: radial-gradient(ellipse 90% 80% at 70% 45%, #000 35%, transparent 90%);
+}
+
+[dir='rtl'] .hero::before {
+  mask-image: radial-gradient(ellipse 90% 80% at 30% 45%, #000 35%, transparent 90%);
+}
+
+/* A glow right behind the console. */
+.hero-side {
+  position: relative;
+}
+
+.hero-side::before {
+  content: '';
+  position: absolute;
+  inset: -15% -10%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(217 119 87 / 0.32), rgb(232 176 74 / 0.08) 60%, transparent);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.cc {
+  border-color: rgb(217 119 87 / 0.35);
+  box-shadow:
+    0 0 0 1px rgb(217 119 87 / 0.08),
+    0 0 4rem rgb(217 119 87 / 0.16),
+    0 2rem 4rem rgb(0 0 0 / 0.5);
+}
+
+/* The second sentence of the headline carries the colour. */
+.hero h1 span:last-child {
+  background: linear-gradient(90deg, var(--accent), var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[dir='rtl'] .hero h1 span:last-child {
+  background: linear-gradient(270deg, var(--accent), var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Each cell wears the colour of what it is. */
+.points li,
+.start-cases li {
+  border-block-start: 2px solid var(--c, var(--accent));
+}
+
+.points li:nth-child(1),
+.start-cases li:nth-child(1) {
+  --c: var(--accent);
+}
+
+.points li:nth-child(2),
+.start-cases li:nth-child(2) {
+  --c: var(--amber);
+}
+
+.points li:nth-child(3),
+.start-cases li:nth-child(3) {
+  --c: var(--teal);
+}
+
+.point-number,
+.start-mode {
+  color: var(--c, var(--accent));
+}
+
+.start-mode {
+  border-color: color-mix(in srgb, var(--c, var(--accent)) 40%, transparent);
+  background: color-mix(in srgb, var(--c, var(--accent)) 10%, transparent);
+}
+
+.points li:hover,
+.start-cases li:hover {
+  background: color-mix(in srgb, var(--c, var(--accent)) 9%, var(--void));
+}
+
+.points li:hover .point-number {
+  color: var(--c, var(--accent));
+}
+
+.start-command::before {
+  content: '$';
+  margin-inline-end: 0.5rem;
+  color: var(--c, var(--accent));
+}
+
+.start-command code::before {
+  content: none;
+}
+
+.start-command:hover {
+  background: var(--c, var(--accent));
+  color: var(--void);
+}
+
+.start-command:hover::before {
+  color: var(--void);
+}
+
+/* The four numbers and the four kinds. */
+.counts li:nth-child(1) b {
+  color: var(--accent);
+}
+
+.counts li:nth-child(2) b {
+  color: var(--amber);
+}
+
+.counts li:nth-child(3) b {
+  color: var(--teal);
+}
+
+.counts li:nth-child(4) b {
+  color: var(--sand);
+}
+
+.counts a:hover b {
+  color: #fff;
+}
+
+.kinds [data-kind='skills'] {
+  --kc: var(--accent);
+}
+
+.kinds [data-kind='agents'] {
+  --kc: var(--amber);
+}
+
+.kinds [data-kind='rules'] {
+  --kc: var(--teal);
+}
+
+.kinds [data-kind='checks'] {
+  --kc: var(--sand);
+}
+
+.kinds button {
+  border-block-start: 2px solid var(--kc);
+}
+
+.kinds button b {
+  color: var(--kc);
+}
+
+.kinds button:hover {
+  background: color-mix(in srgb, var(--kc) 12%, var(--void));
+}
+
+.kinds [aria-pressed='true'] {
+  background: var(--kc);
+  color: var(--void);
+}
+
+.kinds [aria-pressed='true'] b {
+  color: var(--void);
+}
+
+/* The name you picked takes its kind's colour. */
+.inside {
+  --pick: var(--accent);
+}
+
+.inside:has([data-kind='agents'][aria-pressed='true']) {
+  --pick: var(--amber);
+}
+
+.inside:has([data-kind='rules'][aria-pressed='true']) {
+  --pick: var(--teal);
+}
+
+.inside:has([data-kind='checks'][aria-pressed='true']) {
+  --pick: var(--sand);
+}
+
+.js .choices [aria-current='true'] {
+  background: var(--pick);
+  color: var(--void);
+  box-shadow: none;
+}
+
+[dir='rtl'] .js .choices [aria-current='true'] {
+  box-shadow: none;
+}
+
+.choices a:hover {
+  background: color-mix(in srgb, var(--pick) 14%, var(--void));
+  color: #fff;
+}
+
+.detail {
+  border-color: color-mix(in srgb, var(--pick) 45%, transparent);
+  box-shadow: 0 0 3rem color-mix(in srgb, var(--pick) 12%, transparent);
+}
+
+.detail-kind {
+  color: var(--pick);
+}
+
+.detail-say q::before {
+  color: var(--pick);
+}
+
+/* The console: bullets orange, a pass teal, a refusal rose. */
+.cc-line.is-ok .cc-note,
+.cc-line.is-ok .cc-note i {
+  color: var(--teal);
+}
+
+.cc-user {
+  background: rgb(217 119 87 / 0.1);
+}
+
+/* Chips drifting past take the four colours in turn. */
+.marquee-track li:nth-child(4n + 1) {
+  border-color: rgb(217 119 87 / 0.5);
+  color: #f0c4b2;
+}
+
+.marquee-track li:nth-child(4n + 2) {
+  border-color: rgb(232 176 74 / 0.45);
+  color: #f1d9a3;
+}
+
+.marquee-track li:nth-child(4n + 3) {
+  border-color: rgb(92 191 174 / 0.45);
+  color: #b4e3da;
+}
+
+.marquee-track li:nth-child(4n) {
+  border-color: rgb(212 162 127 / 0.45);
+  color: #e6cdb8;
+}
+
+.marquee {
+  background: linear-gradient(90deg, rgb(217 119 87 / 0.06), rgb(232 176 74 / 0.04), rgb(92 191 174 / 0.06));
+}
+
+/* Sections: a coloured hairline at the top and a faint wash under it. */
+.example,
+.starts,
+.inside,
+.get-it {
+  border-block-start: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--accent), var(--amber), var(--teal), transparent) 1;
+  background: linear-gradient(180deg, rgb(217 119 87 / 0.06), transparent 28rem);
+}
+
+.starts,
+.get-it {
+  background: linear-gradient(180deg, rgb(92 191 174 / 0.06), transparent 28rem);
+}
+
+.section-head h2,
+.example-head h2 {
+  background: linear-gradient(90deg, #fff 55%, var(--sand));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[dir='rtl'] .section-head h2,
+[dir='rtl'] .example-head h2 {
+  background: linear-gradient(270deg, #fff 55%, var(--sand));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Install: the numbered rows and who it is for. */
+.install-steps li:hover {
+  background: rgb(217 119 87 / 0.08);
+}
+
+.command button:hover {
+  background: var(--accent);
+  color: var(--void);
+}
+
+.works-for strong::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-inline-end: 0.5rem;
+  background: var(--accent);
+}
+
+.works-for li:nth-child(4n + 2) strong::before {
+  background: var(--amber);
+}
+
+.works-for li:nth-child(4n + 3) strong::before {
+  background: var(--teal);
+}
+
+.works-for li:nth-child(4n) strong::before {
+  background: var(--sand);
+}
+
+.fit .ticks li::before {
+  background: var(--teal);
+}
+
+.fit .crosses li::before {
+  background: var(--rose);
+}
+
+.fit > div:first-child {
+  border-block-start: 2px solid var(--teal);
+}
+
+.fit > div:last-child {
+  border-block-start: 2px solid var(--rose);
+}
+
+/* The cells are a little see-through, so the glow and the grid behind the page show in them. */
+.points li,
+.counts li,
+.start-cases li,
+.install-steps li,
+.works-for li,
+.fit > div,
+.choices li,
+.kinds button {
+  background-color: rgb(5 6 7 / 0.7);
+}
+
+.kinds [aria-pressed='true'] {
+  background-color: var(--kc);
+}
+
+.cc {
+  background: rgb(10 11 12 / 0.86);
+}
