@@ -82,7 +82,7 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
   <nav aria-label={PAGES.docs.name[locale]} data-tree-list>
     {
       groups.map(({ name, kind, leaves }) => (
-        <details open={kind === route.kind || (kind === 'skill' && route.kind === 'page' && route.id === 'docs')} data-tree-group>
+        <details open={kind === route.kind || (kind === 'skill' && route.kind === 'page' && route.id === 'docs')} data-tree-group data-kind={kind}>
           <summary>
             {name} <span>{leaves.length}</span>
           </summary>
