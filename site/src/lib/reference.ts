@@ -38,6 +38,7 @@ export const skillReference: Record<string, SkillReference> = Object.fromEntries
   skillNames.map((name) => {
     const head = frontmatter(skillSources.get(name)!)
     const others = globSync(`skills/${name}/**/*.md`, { cwd: PLUGIN_DIR })
+      .map((file) => file.replaceAll('\\', '/'))
       .filter((file) => !file.endsWith(`/${name}/SKILL.md`))
       .sort()
     return [

@@ -49,7 +49,7 @@ const reference = defineCollection({
     load: async ({ store, renderMarkdown }) => {
       const files = [
         'CHANGELOG.md',
-        ...['skills/**/*.md', 'agents/*.md', 'templates/**/rules/*.md', 'output-styles/*.md'].flatMap((pattern) => globSync(`${PLUGIN}/${pattern}`, { cwd: ROOT })),
+        ...['skills/**/*.md', 'agents/*.md', 'templates/**/rules/*.md', 'output-styles/*.md'].flatMap((pattern) => globSync(`${PLUGIN}/${pattern}`, { cwd: ROOT }).map((file) => file.replaceAll('\\', '/'))),
       ]
       store.clear()
       for (const file of files) {

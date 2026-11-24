@@ -35,7 +35,7 @@ export const manualSkills = new Set(
 
 export const version: string = JSON.parse(read('.claude-plugin', 'plugin.json')).version
 
-const ruleFiles = globSync('templates/**/rules/*.md', { cwd: PLUGIN_DIR }).sort()
+const ruleFiles = globSync('templates/**/rules/*.md', { cwd: PLUGIN_DIR }).map((file) => file.replaceAll('\\', '/')).sort()
 
 export const ruleGroups = Object.keys(enDetails.rules.groups).map((group) => ({
   group,
