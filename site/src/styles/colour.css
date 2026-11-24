@@ -34,9 +34,8 @@ body::after {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem;
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 20%, transparent 85%);
+    linear-gradient(rgb(241 237 231 / 0.05) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.05) 1px, transparent 1px) 0 0 / 4rem 4rem;
 }
 
 .hero::before {
@@ -58,7 +57,6 @@ body::after {
   inset: -15% -10%;
   z-index: -1;
   background: radial-gradient(closest-side, rgb(217 119 87 / 0.32), rgb(242 161 131 / 0.08) 60%, transparent);
-  filter: blur(8px);
   pointer-events: none;
 }
 
@@ -381,8 +379,6 @@ body::after {
 /* THE HEADER: glass over the glow, an orange mark, the version, and an orange line under the place you are. */
 .top {
   background: rgb(5 6 7 / 0.62);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
-  backdrop-filter: blur(16px) saturate(1.5);
   transition:
     background-color 0.3s,
     box-shadow 0.3s;
@@ -587,8 +583,6 @@ body::after {
 .top,
 .top.is-scrolled {
   background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
   box-shadow: none;
   text-shadow: 0 0 0.75rem rgb(5 6 7 / 0.95), 0 0 0.25rem rgb(5 6 7 / 0.9);
 }
@@ -710,16 +704,12 @@ body::after {
 /* The pill and the chip carry a little ground of their own, so they stay readable over whatever scrolls beneath. */
 @media (min-width: 1280px) {
   .top-nav {
-    background: rgb(5 6 7 / 0.72);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    background: rgb(5 6 7 / 0.85);
   }
 }
 
 .language {
   background: rgb(5 6 7 / 0.6);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
 }
 
 /* THE HEADER'S LINKS, third version: plain numbered words with an orange line that slides in. No pill, no box. */
@@ -734,8 +724,6 @@ body::after {
     border: 0;
     border-radius: 0;
     background: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
     counter-reset: place;
   }
 
@@ -832,20 +820,63 @@ body::after {
 .language {
   border-color: rgb(217 119 87 / 0.45);
   background: rgb(217 119 87 / 0.08);
-  color: var(--accent);
+  color: #fff;
   transition:
     background-color 0.3s,
-    border-color 0.3s,
-    color 0.3s;
+    border-color 0.3s;
 }
 
 .language:hover {
   border-color: var(--accent);
-  background: rgb(217 119 87 / 0.18);
-  color: #fff;
+  background: rgb(217 119 87 / 0.22);
 }
 
 .language-icon circle,
 .language-icon path {
   vector-effect: non-scaling-stroke;
+}
+
+
+/* LIGHTER ON THE PAGE: the console and the marquee paint on their own, so the rest of the page is left alone. */
+.cc {
+  contain: layout paint;
+}
+
+.marquee {
+  mask-image: none;
+}
+
+.marquee::before,
+.marquee::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  z-index: 2;
+  width: 14%;
+  pointer-events: none;
+}
+
+.marquee {
+  position: relative;
+}
+
+.marquee::before {
+  inset-inline-start: 0;
+  background: linear-gradient(90deg, var(--void), transparent);
+}
+
+.marquee::after {
+  inset-inline-end: 0;
+  background: linear-gradient(270deg, var(--void), transparent);
+}
+
+.marquee-track {
+  will-change: transform;
+}
+
+/* The two fixed layers behind the page each get their own layer, so scrolling does not repaint them. */
+body::before,
+body::after {
+  transform: translateZ(0);
+  will-change: transform;
 }

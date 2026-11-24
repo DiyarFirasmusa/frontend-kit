@@ -24,7 +24,16 @@ export function initChrome(signal: AbortSignal): void {
     const range = document.documentElement.scrollHeight - innerHeight
     progress.style.transform = `scaleX(${range > 0 ? scrollY / range : 0})`
   }
-  addEventListener('scroll', update, { passive: true, signal })
+  // The scroll event can fire several times a frame: read the page once per frame.
+  let queued = 0
+  const soon = (): void => {
+    if (queued) return
+    queued = requestAnimationFrame(() => {
+      queued = 0
+      update()
+    })
+  }
+  addEventListener('scroll', soon, { passive: true, signal })
   addEventListener('resize', update, { signal })
 
   language.addEventListener('click', () => {

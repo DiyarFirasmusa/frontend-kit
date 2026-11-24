@@ -102,20 +102,29 @@ function countUp(signal: AbortSignal): void {
   signal.addEventListener('abort', () => watcher.disconnect())
 }
 
-/** A soft light follows the pointer over the grids, so the page answers a hand. */
+/** A soft light follows the pointer over the grids. One update per frame, so a fast hand costs nothing. */
 function glow(signal: AbortSignal): void {
   if (calm() || !matchMedia('(hover: hover)').matches) return
-  const surfaces = all<HTMLElement>('.hero, .glow-grid, .start-cases, .install-steps, .works-for, .fit, .kinds, .choices')
+  const surfaces = all<HTMLElement>('.glow-grid, .start-cases, .install-steps, .works-for, .fit, .choices')
   for (const surface of surfaces) {
+    let frame = 0
+    let x = 0
+    let y = 0
+    const paint = (): void => {
+      frame = 0
+      surface.style.setProperty('--mx', `${x}px`)
+      surface.style.setProperty('--my', `${y}px`)
+    }
     surface.addEventListener(
       'pointermove',
       (event) => {
         const { left, top } = surface.getBoundingClientRect()
-        surface.style.setProperty('--mx', `${event.clientX - left}px`)
-        surface.style.setProperty('--my', `${event.clientY - top}px`)
+        x = event.clientX - left
+        y = event.clientY - top
         surface.classList.add('is-lit')
+        if (!frame) frame = requestAnimationFrame(paint)
       },
-      { signal },
+      { passive: true, signal },
     )
     surface.addEventListener('pointerleave', () => surface.classList.remove('is-lit'), { signal })
   }
