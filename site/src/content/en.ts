@@ -3,7 +3,7 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'frontend-kit: make your coding assistant work like a frontend team',
+    title: 'frontend-kit: build any frontend project from a simple ask, with the best result',
     description:
       'A plugin for frontend projects in any stack, React and TypeScript first-class. Your coding assistant builds the way your project does, known dangerous commands are refused, and the code is checked and reviewed.',
   },

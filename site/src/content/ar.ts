@@ -3,7 +3,7 @@ import type { Copy } from './types.ts'
 export const ar: Copy = {
   dir: 'rtl',
   meta: {
-    title: 'frontend-kit: اجعل مساعدك البرمجي يعمل كفريق واجهات',
+    title: 'frontend-kit: ابنِ أي مشروع واجهات بطلب بسيط، بأفضل نتيجة',
     description:
       'إضافة لمشاريع الواجهات بأي تقنيات، وReact وTypeScript بالأولوية. يبني مساعدك البرمجي بطريقة مشروعك، وتُرفض الأوامر الخطرة المعروفة، وتُفحص الشيفرة وتُراجع.',
   },

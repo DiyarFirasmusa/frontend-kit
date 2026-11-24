@@ -2,24 +2,25 @@ import { t } from './text.ts'
 
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
-  title: t('Your coding assistant, working like a frontend team.', 'مساعدك البرمجي، يعمل كفريق واجهات.'),
+  // The goal of the kit, said first: the smallest ask, the best result.
+  title: t('Build any frontend project from a simple ask. Get the best result.', 'ابنِ أي مشروع واجهات بطلب بسيط، بأفضل نتيجة.'),
   lead: t(
-    'A Claude Code plugin. It teaches the assistant how your project is built, stops risky commands, and checks every change before you commit.',
-    'إضافة لـ ⁦Claude Code⁩. تعلّم المساعد طريقة بناء مشروعك، وتوقف الأوامر الخطرة، وتفحص كل تغيير قبل الحفظ.',
+    'frontend-kit is a Claude Code plugin. Say what you want in plain words, and your assistant builds it the way a senior frontend team would: clean code, fast pages, accessible screens, checked before you commit.',
+    '⁦frontend-kit⁩ إضافة لـ ⁦Claude Code⁩. قل ما تريد بكلامك العادي، ويبنيه مساعدك كما يبنيه فريق واجهات محترف: شيفرة نظيفة، وصفحات سريعة، وواجهات يستعملها الجميع، وكلها مفحوصة قبل الحفظ.',
   ),
-  // Three things a first visit should take away, one line each.
+  // Ask simply, get it built well, get it checked: one line each.
   points: [
     {
-      name: t('Builds your way', 'يبني بطريقتك'),
-      text: t('Pages, tables and forms follow the patterns your project already uses.', 'الصفحات والجداول والنماذج تتبع أنماط مشروعك نفسها.'),
+      name: t('You ask simply', 'تطلب ببساطة'),
+      text: t('One sentence is enough. The right playbooks and your project’s rules are picked for you.', 'جملة واحدة تكفي. تُختار الأدلة المناسبة وقواعد مشروعك تلقائياً.'),
     },
     {
-      name: t('Blocks risky commands', 'يمنع الأوامر الخطرة'),
-      text: t('Force pushes, pushes to main and reading secrets are refused.', 'الرفع القسري والرفع إلى main وقراءة الأسرار تُرفض.'),
+      name: t('It is built well', 'يُبنى بإتقان'),
+      text: t('Typed, clean code with performance, accessibility, security and RTL built in from the start.', 'شيفرة نظيفة ومحددة الأنواع، والأداء وسهولة الوصول والأمان ودعم العربية من البداية.'),
     },
     {
-      name: t('Checks before you commit', 'يفحص قبل الحفظ'),
-      text: t('Typecheck, tests and a second reviewer run. You approve the commit.', 'فحص الأنواع والاختبارات ومراجع ثانٍ. وأنت توافق على الحفظ.'),
+      name: t('It is checked', 'ويُفحص'),
+      text: t('Typecheck, tests and a second reviewer run, and risky commands are blocked. You approve the commit.', 'فحص الأنواع والاختبارات ومراجع ثانٍ، والأوامر الخطرة ممنوعة. وأنت توافق على الحفظ.'),
     },
   ],
   see: t('See one request, step by step', 'شاهد طلباً واحداً خطوة بخطوة'),
