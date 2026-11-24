@@ -84,3 +84,76 @@
 .start-cases li {
   border-radius: 0;
 }
+
+/* ---- The rest of the site ---- */
+.skip {
+  border-radius: var(--radius-sm);
+}
+
+:not(pre) > code {
+  border-radius: 0.375rem;
+}
+
+.finder,
+.finder input,
+.tree-search input {
+  border-radius: var(--radius-sm);
+}
+
+/* The files you can open: a rounded box each. */
+.file {
+  padding-inline: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgb(5 6 7 / 0.5);
+}
+
+.file[open] {
+  padding-block-end: 1rem;
+}
+
+.file summary {
+  min-height: 44px;
+}
+
+/* Tables sit in a rounded frame. */
+.wide {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.detail-say,
+.card-say,
+.glance {
+  border-radius: var(--radius-sm);
+}
+
+.caret {
+  border-radius: 1px;
+}
+
+/* The steps of the one-request section: a rounded card each, the one being read in orange. */
+.run {
+  display: grid;
+  gap: 0.75rem;
+  border-inline-start: 0;
+}
+
+.run > li {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding-inline: 1.25rem;
+  background: rgb(5 6 7 / 0.55);
+  transition:
+    border-color 0.4s,
+    background-color 0.4s;
+}
+
+.run > li[aria-current] {
+  border-color: rgb(217 119 87 / 0.55);
+  background: rgb(217 119 87 / 0.07);
+}
+
+.run > li::before {
+  display: none;
+}
