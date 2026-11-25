@@ -1,7 +1,6 @@
 ---
 import { projects } from '../../content/guide/projects.ts'
 import { rulePurpose } from '../../content/guide/purpose.ts'
-import { ruleGuides } from '../../content/guide/rules.ts'
 import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import { content } from '../../content/index.ts'
@@ -22,7 +21,7 @@ const key = `${group}/${name}`
 const { paths } = ruleFiles[group]!.find((rule) => rule.key === key)!
 const file = `plugins/wajiha-kit/templates/${group}/rules/${name}`
 const words = {
-  says: t('What it says', 'ماذا تقول'),
+  exact: t('The exact paths', 'المسارات بالتفصيل'),
   load: t('When the assistant reads it', 'متى يقرأها المساعد'),
   loadLead: t('Only while it works on a file that matches one of these paths.', 'فقط عندما يعمل على ملف يطابق أحد هذه المسارات.'),
   always: t('In every session, whatever file is open.', 'في كل جلسة، مهما كان الملف المفتوح.'),
@@ -42,10 +41,18 @@ const types =
   <div><dt>{words.installed[locale]}</dt><dd>{types}</dd></div>
   <div><dt>{words.becomes[locale]}</dt><dd><code dir="ltr">.claude/rules/{name}</code></dd></div>
 </dl>
-<Block id="why" title={ui.why[locale]}><p class="big">{rulePurpose[key]![locale]}</p></Block>
-<Block id="says" title={words.says[locale]} lead={words.yours[locale]}><p class="big">{ruleGuides[key]![locale]}</p></Block>
+<Block id="why" title={ui.why[locale]} lead={words.yours[locale]}><p class="big">{rulePurpose[key]![locale]}</p></Block>
 <Block id="loads" title={words.load[locale]} lead={(paths.length ? words.loadLead : words.always)[locale]}>
-  {paths.length > 0 && <ul class="tags">{paths.map((path) => <li><code dir="ltr">{path}</code></li>)}</ul>}
+  {
+    paths.length > 0 && (
+      <div class="questions">
+        <details>
+          <summary>{words.exact[locale]}</summary>
+          <ul class="tags">{paths.map((path) => <li><code dir="ltr">{path}</code></li>)}</ul>
+        </details>
+      </div>
+    )
+  }
 </Block>
 <Block id="full" title={ui.fullRule[locale]} lead={ui.fullText[locale]}>
   <Source file={file} />

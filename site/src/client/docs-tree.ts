@@ -46,6 +46,7 @@ export function initTree(signal: AbortSignal): void {
     })
     empty.hidden = found > 0
     // A permanent status line: it says "3 pages found" or "Nothing matches" every time the words change.
+    tree.classList.toggle('is-filtering', words.length > 0)
     announce.textContent = words.length === 0 ? '' : found > 0 ? `${found} ${tree.dataset['found'] ?? ''}` : (empty.textContent ?? '')
   })
 }

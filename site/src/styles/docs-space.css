@@ -1379,3 +1379,17 @@ html[lang='ar'] .credits {
   }
 }
 
+
+/* While you search, each hit shows one line of what the page is about. */
+.tree .leaf-about {
+  display: none;
+  margin-block: 0.125rem 0.5rem;
+  padding-inline: 0.75rem;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.tree.is-filtering .leaf-about {
+  display: block;
+}

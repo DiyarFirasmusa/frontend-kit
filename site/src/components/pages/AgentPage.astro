@@ -1,6 +1,7 @@
 ---
 import { agentGuides } from '../../content/guide/agents.ts'
 import { agentPurpose } from '../../content/guide/purpose.ts'
+import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import type { Locale } from '../../content/types.ts'
 import { REPO_URL } from '../../lib/plugin.ts'
@@ -19,6 +20,7 @@ interface Props {
 
 const { name, locale } = Astro.props
 const guide = agentGuides[name]!
+const technical = t('Technical details', 'تفاصيل تقنية')
 const { model, edits } = agentFacts[name]!
 const { matches, effort, tools, skills } = agentReference[name]!
 ---
@@ -30,16 +32,25 @@ const { matches, effort, tools, skills } = agentReference[name]!
 </dl>
 <WhyWhen purpose={agentPurpose[name]!} locale={locale} masculine />
 
-<Block id="role" title={ui.agentIs[locale]}><p class="big">{guide.plain[locale]}</p></Block>
 <Block id="ask" title={ui.youType[locale]} lead={ui.anyWords[locale]}><Prompt text={guide.ask[locale]} /></Block>
 <Block id="does" title={ui.whatItChecks[locale]}><ol class="numbered">{guide.checks.map((check) => <li>{check[locale]}</li>)}</ol></Block>
 <Block id="returns" title={ui.reports[locale]}>
   <p class="big">{guide.returns[locale]}</p>
   <a class="source" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/agents/${name}.md`}>{ui.source[locale]}</a>
 </Block>
-<Block id="matches" title={ui.matches[locale]} lead={ui.matchesHe[locale]}><p class="quoted" lang="en" dir="ltr">{matches}</p></Block>
-<Block id="tools" title={ui.tools[locale]} lead={ui.toolsLead[locale]}>
-  <ul class="tags">{tools.map((tool) => <li><code class="breaks" dir="ltr">{tool}</code></li>)}</ul>
+<Block id="technical" title={technical[locale]}>
+  <div class="questions">
+    <details>
+      <summary>{ui.matches[locale]}</summary>
+      <p>{ui.matchesHe[locale]}</p>
+      <p class="quoted" lang="en" dir="ltr">{matches}</p>
+    </details>
+    <details>
+      <summary>{ui.tools[locale]}</summary>
+      <p>{ui.toolsLead[locale]}</p>
+      <ul class="tags">{tools.map((tool) => <li><code class="breaks" dir="ltr">{tool}</code></li>)}</ul>
+    </details>
+  </div>
 </Block>
 {
   skills.length > 0 && (

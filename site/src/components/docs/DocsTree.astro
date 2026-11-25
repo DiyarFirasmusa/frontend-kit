@@ -103,6 +103,7 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
                 <a href={leaf.href} class:list={{ 'is-name': kind !== 'page' }} aria-current={leaf.href === here ? 'page' : undefined}>
                   <bdi>{leaf.name}</bdi>
                 </a>
+                <span class="leaf-about">{leaf.about[locale]}</span>
               </li>
             ))}
           </ul>

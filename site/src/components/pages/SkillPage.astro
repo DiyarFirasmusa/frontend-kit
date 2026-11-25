@@ -3,6 +3,7 @@ import { skillGroups } from '../../content/catalogue.ts'
 import { projects } from '../../content/guide/projects.ts'
 import { skillPurpose } from '../../content/guide/purpose.ts'
 import { skillGuides } from '../../content/guide/skills/index.ts'
+import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import type { Locale } from '../../content/types.ts'
 import { agentUrl, skillUrl } from '../../lib/links.ts'
@@ -22,6 +23,7 @@ interface Props {
 const { name, locale } = Astro.props
 const { matches, argument, borrowed, files, mentionedBy } = skillReference[name]!
 const [playbook, ...others] = files
+const technical = t('Technical details', 'تفاصيل تقنية')
 const on = profilesOf(name)
 const group = skillGroups.find(({ skills }) => name in skills)!
 const types = on.length === projects.length ? ui.everyType[locale] : projects.filter(({ id }) => on.includes(id)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
@@ -36,9 +38,15 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
 <WhyWhen purpose={skillPurpose[name]!} locale={locale} />
 <SkillBody name={name} locale={locale} />
 
-<Block id="matches" title={ui.matches[locale]} lead={ui.matchesLead[locale]}>
-  <p class="quoted" lang="en" dir="ltr">{matches}</p>
-  {argument && <p class="muted">{ui.argument[locale]} <code dir="ltr">{argument}</code></p>}
+<Block id="matches" title={technical[locale]}>
+  <div class="questions">
+    <details>
+      <summary>{ui.matches[locale]}</summary>
+      <p>{ui.matchesLead[locale]}</p>
+      <p class="quoted" lang="en" dir="ltr">{matches}</p>
+      {argument && <p class="muted">{ui.argument[locale]} <code dir="ltr">{argument}</code></p>}
+    </details>
+  </div>
 </Block>
 {
   mentionedBy.length > 0 && (
