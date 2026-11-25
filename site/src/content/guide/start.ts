@@ -11,15 +11,15 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. Claude checks both for you. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check all three first; jq matters most, because without it the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. ويتحقق ⁦Claude⁩ من الاثنين عنك. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق منها كلها أولا؛ و⁦jq⁩ أهمها، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. Claude checks both for you. In the usual case you install nothing yourself: if one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check all three first; jq matters most, because without it the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. ويتحقق ⁦Claude⁩ من الاثنين عنك. وفي الحالة المعتادة لا تثبّت شيئا بنفسك: إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق منها كلها أولا؛ و⁦jq⁩ أهمها، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
     ),
   },
   {
     name: t('On Windows', 'على ويندوز'),
     why: t(
-      'On Windows, go on as usual. The safety checks are scripts that were only tried by hand on Windows, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
-      'على ويندوز تابع كالمعتاد. فحوص الأمان سكربتات جُرّبت يدويا على ويندوز فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
+      'You can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
+      'تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
     ),
   },
 ]
@@ -45,7 +45,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
 
 export const questionsLead = t(
   'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The setup is being improved, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
-  'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
+  'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
 )
 
 export const questions = [

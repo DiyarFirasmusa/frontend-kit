@@ -31,8 +31,8 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
     tab: t('Dashboard', 'لوحة تحكم'),
     title: t('A private place to run things', 'مكان خاص تدير فيه عملك'),
     text: t(
-      'Orders, customers, products and reports, for you and your team. People sign in, and each one sees only what they are allowed to. If you do not have a backend yet, it starts with sample data so you can click through it.',
-      'الطلبات والعملاء والمنتجات والتقارير، لك ولفريقك. يسجل الناس الدخول، ويرى كل شخص ما يُسمح له به فقط. وإن لم يكن عندك خادم خلفي بعد، تبدأ ببيانات تجريبية لتتصفحها.',
+      'Orders, customers, products and reports, for you and your team. People sign in, and each one sees only what they are allowed to. If you do not have a backend yet, it starts with sample data so you can click through it. A backend is the program online that stores your real data; someone has to build it.',
+      'الطلبات والعملاء والمنتجات والتقارير، لك ولفريقك. يسجل الناس الدخول، ويرى كل شخص ما يُسمح له به فقط. وإن لم يكن عندك خادم خلفي بعد، تبدأ ببيانات تجريبية لتتصفحها. والخادم الخلفي برنامج على الإنترنت يحفظ بياناتك الحقيقية، ويبنيه مبرمج.',
     ),
     features: [
       { name: t('Tables with search', 'جداول مع بحث'), text: t('Sort, search and filter, even with thousands of rows.', 'ترتيب وبحث وتصفية، حتى مع آلاف الصفوف.') },
@@ -73,7 +73,7 @@ export const journeyWords = {
     t('Claude checks it', 'يفحصه Claude'),
     t('You decide', 'القرار لك'),
   ],
-  lead: t('This is how the kit works, from the first message to a project you can open. You do not need to write code. The setup is being improved, so it may ask a little differently today.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تحتاج إلى كتابة أي كود. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
+  lead: t('This is how the kit works, from the first message to a project you can open. You do not need to write code. The setup is being improved, so it may ask a little differently today.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تحتاج إلى كتابة أي كود. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا.'),
   /** What happens at each stop, one sentence each. */
   details: [
     t('In the Claude app you send one message. Claude installs the kit and starts the setup.', 'في تطبيق Claude ترسل رسالة واحدة. فيثبت Claude الإضافة ويبدأ الإعداد.'),
@@ -101,9 +101,9 @@ export const installWords = {
   lead: t('Wajiha Kit is free. You send one message, and Claude installs the kit for you.', '«واجهة» مجانية. ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة بنفسه.'),
   needsTitle: t('What you need', 'ما تحتاجه'),
   needsList: [
-    t('A Claude account (an AI assistant like ChatGPT). Claude Code is not part of every plan. After you sign in to the Claude app, look for the Code tab: if it is there, you can use the kit; if not, your plan does not include it yet, and that is Claude’s rule, not ours.', 'حساب في ⁦Claude⁩ (مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩). و⁦Claude Code⁩ ليس في كل الخطط. وبعد تسجيل الدخول إلى التطبيق ابحث عن تبويب ⁦Code⁩: إن وجدته فتستطيع استخدام الإضافة، وإن لم تجده فخطتك لا تشملها بعد، وهذه قاعدة ⁦Claude⁩ لا قاعدتنا.'),
+    t('A Claude account (an AI assistant like ChatGPT). Claude’s plans and prices are set by Anthropic, not by this kit. Claude Code is not part of every plan. After you sign in to the Claude app, look for the Code tab: if it is there, you can use the kit; if not, your plan does not include it yet, and that is Claude’s rule, not ours.', 'حساب في ⁦Claude⁩ (مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩). وخطط ⁦Claude⁩ وأسعارها تحددها ⁦Anthropic⁩ لا الإضافة. و⁦Claude Code⁩ ليس في كل الخطط. وبعد تسجيل الدخول إلى التطبيق ابحث عن تبويب ⁦Code⁩: إن وجدته فتستطيع استخدام الإضافة، وإن لم تجده فخطتك لا تشملها بعد، وهذه قاعدة ⁦Claude⁩ لا قاعدتنا.'),
     t('A computer. A phone is not enough. Claude checks that jq, Node and git are on it, and helps you install them if they are not.', 'حاسوب. الهاتف لا يكفي. ويتأكد ⁦Claude⁩ أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ عليه، ويساعدك في تثبيتهما إن لم يكونا.'),
-    t('On Windows, go on as usual. The safety checks are scripts that were only tried by hand on Windows, so some may not work as expected: keep a copy of any important file.', 'على ويندوز تابع كالمعتاد. فحوص الأمان سكربتات جُرّبت يدويا على ويندوز فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم.'),
+    t('You can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file.', 'تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم.'),
   ],
   reopen: t('If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),
   tonight: t('At the end you will see your site on your own computer only. Putting it online is a separate step, and a hosting service may charge for it. To let other people see it, ask Claude later: “What are my options to publish my site, and what does each one involve?”', 'وفي النهاية سترى موقعك على حاسوبك وحده. ونشره على الإنترنت خطوة منفصلة، وقد تأخذ خدمة الاستضافة مقابلا عنها. ولكي يراه الناس اطلب لاحقا من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»'),

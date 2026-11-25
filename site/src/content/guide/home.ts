@@ -36,7 +36,7 @@ export const home = {
   docs: t('Read the guide', 'اقرأ الدليل'),
 
   example: t('From an idea to a working project', 'من فكرة إلى مشروع يعمل'),
-  exampleLead: t('You say what you want. This is what happens next, in plain words. The setup is being improved, so it may ask a little differently today. Answer in your own words.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا. أجب بكلماتك.'),
+  exampleLead: t('You say what you want. This is what happens next, in plain words. The setup is being improved, so it may ask a little differently today. Answer in your own words.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا. أجب بكلماتك.'),
   prompt: t('I want a dashboard to manage my shop orders', 'أريد لوحة تحكم لإدارة طلبات متجري'),
   steps: {
     install: {

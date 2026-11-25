@@ -20,7 +20,7 @@ export const beginnerQuestions = [
   ],
   [
     t('What if I do not know my backend’s API description?', 'ماذا لو لم أكن أعرف وصف الـ ⁦API⁩ لخادمي؟'),
-    t('That is fine. This is a file or page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it, and save it in your project as docs/api/openapi.json. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later. The setup is being improved, so it may ask a little differently today.', 'لا مشكلة. هذا ملف أو صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم، واحفظه في مشروعك باسم ⁦docs/api/openapi.json⁩. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
+    t('That is fine. This is a file or page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it, and save it in your project as docs/api/openapi.json. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later. The setup is being improved, so it may ask a little differently today.', 'لا مشكلة. هذا ملف أو صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم، واحفظه في مشروعك باسم ⁦docs/api/openapi.json⁩. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا.'),
   ],
   [
     t('What if I have no design?', 'ماذا لو لم يكن عندي تصميم؟'),
@@ -52,11 +52,11 @@ export const beginnerQuestions = [
   ],
   [
     t('Does it put my site online?', 'هل تنشر لي الموقع على الإنترنت؟'),
-    t('No. It builds the project and runs it on your computer so you can see it. To put it online you need a place that hosts it. You can ask Claude: “What are my options to publish my site, and what does each one involve?”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج مكانا يستضيفه. ويمكنك أن تطلب من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»، وسيسألك قبل كل خطوة.'),
+    t('No. It builds the project and runs it on your computer so you can see it. To put it online you usually need a hosting service and a domain name (an address such as my-shop.com). You buy these from other companies, and they may charge for them; the kit itself charges nothing. You can ask Claude: “What are my options to publish my site, and what does each one involve?”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج غالبا إلى خدمة استضافة واسم موقع (عنوان مثل ⁦my-shop.com⁩). وتشتريهما من شركات أخرى، وقد يكون لهما مقابل؛ أما الإضافة نفسها فلا تأخذ شيئا. ويمكنك أن تطلب من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»، وسيسألك قبل كل خطوة.'),
   ],
   [
     t('Does it work on Windows?', 'هل تعمل الإضافة على ويندوز؟'),
-    t('Mostly yes. On Windows, go on as usual. The safety checks are scripts that were only tried by hand on Windows, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'نعم في الغالب. على ويندوز تابع كالمعتاد. فحوص الأمان سكربتات جُرّبت يدويا على ويندوز فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
+    t('Yes, you can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'نعم، تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const
 
