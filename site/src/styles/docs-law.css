@@ -1038,3 +1038,22 @@ html[data-theme='light'] .doc .hub-kinds [data-kind='agent'] a {
   border-radius: 1px;
   background: rgb(var(--ink-rgb) / 0.45);
 }
+
+/* ---------------------------------------------------------------------------------------------
+   ONE RADIUS FOR ACTIONS: every button and pill is a soft square (0.5rem), the same as the
+   header's settings squares and a step below the boards (0.7rem to 0.9rem). No fully round pills.
+   --------------------------------------------------------------------------------------------- */
+.top .top-install,
+.top-install,
+.hero-start,
+.hero-audience a,
+.board-note a,
+.board-note a:not(.hero-start),
+.doc .pager .pager-next,
+.command button,
+.start-copy,
+.show-tabs,
+.show-tabs button,
+.copy-pill {
+  border-radius: 0.5rem;
+}
