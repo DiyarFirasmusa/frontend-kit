@@ -57,7 +57,7 @@ const message = installMessage[locale]
             <i class="chat-send">↑</i>
           </p>
         </div>
-        <button type="button" class="start-copy" data-copy={message} data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]}>
+        <button type="button" class="start-copy" data-copy={message} data-copy-from=".start-text" data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]}>
           <span aria-live="polite" data-status>{w.copy[locale]}</span>
         </button>
         <p class="start-hint">{w.send[locale]}</p>
