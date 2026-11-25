@@ -392,3 +392,75 @@ html[data-theme='light'] .board-main input:focus-visible {
     display: none;
   }
 }
+
+/* Round 6: prompts and code windows run the full column even where the reading text is capped at 68ch. */
+.doc-article .block .prompt,
+.doc-article .block .command,
+.doc-article .block > .command {
+  max-width: none !important;
+  width: 100%;
+}
+
+/* One row name size and weight; the small meta line is 13px; prose inside a code window is regular weight. */
+.doc .rows dt,
+.doc .rows dt a {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.doc .rows dd small {
+  font-size: 0.8125rem;
+}
+
+.doc-article .command :is(p, .msg-line, span:not(.msg-command)) {
+  font-weight: 400;
+}
+
+/* The disclosure over a long list has a row's padding. */
+.doc-article .fold-all > summary {
+  padding-block: 0.75rem;
+  font-weight: 600;
+}
+
+/* The note bar's go-there pill: ink border, turquoise words, so the side column's edge is the one turquoise outline. */
+html .board-note a:not(.hero-start) {
+  border-color: rgb(241 237 231 / 0.4);
+}
+
+html[data-theme='light'] .board-note a:not(.hero-start) {
+  border-color: rgb(20 20 19 / 0.4);
+}
+
+/* Round 6: the hero board's side column is as wide as the others' minimum; copy buttons are one weight and ink; the code window's edge is on the start side in Arabic; commands wrap at spaces on a phone so the whole command can be read. */
+@media (min-width: 62rem) {
+  .hero-side .board {
+    grid-template-columns: minmax(0, 1fr) 15.5rem;
+  }
+}
+
+.command button,
+.start-copy,
+.copy-pill {
+  font-weight: 600;
+  color: #141413;
+}
+
+[dir='rtl'] .doc-article .command {
+  direction: rtl;
+}
+
+[dir='rtl'] .doc-article .command :is(.msg-command, code) {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+}
+
+@media (max-width: 40rem) {
+  .doc-article .command .msg-command,
+  #install .start-text .msg-command {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    overflow-x: visible;
+    mask-image: none;
+  }
+}

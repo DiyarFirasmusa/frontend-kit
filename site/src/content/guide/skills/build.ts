@@ -20,7 +20,7 @@ export const build: Record<string, SkillGuide> = {
       t('A test (an automatic check) when the piece does something and does not only sit there', 'اختبار (فحص تلقائي) إذا كان الجزء يفعل شيئا ولا يكتفي بالظهور'),
     ],
     limits: [
-      t('The piece does not load data by itself. That job belongs to a hook, a small reusable piece of logic.', 'الجزء لا يجلب البيانات بنفسه. هذه مهمة الـ hook، وهو قطعة صغيرة من المنطق يمكن إعادة استخدامها.'),
+      t('The piece does not load data by itself. That job belongs to a hook, a small reusable piece of logic.', 'الجزء لا يجلب البيانات بنفسه. هذه مهمة الـ hook، وهو قطعة صغيرة من المنطق يمكن إعادة استخدامها.'),
       t('No colours typed straight into the code. They come from your design tokens.', 'لا ألوان مكتوبة مباشرة في الكود. الألوان تأتي من رموز تصميمك.'),
     ],
     related: ['figma-match', 'create-hook', 'create-form'],

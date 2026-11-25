@@ -243,7 +243,7 @@ export const rulePurpose: Record<string, Bilingual> = {
   'shared/naming.md': t('So the next person guesses a file’s name correctly the first time.', 'ليخمن من يأتي بعدك اسم الملف صحيحا من أول مرة.'),
   'shared/project.md': t('So facts only your team knows are not rediscovered or guessed in every session.', 'حتى لا يكتشف المساعد في كل جلسة ما يعرفه فريقك وحده، ولا يخمنه.'),
   'shared/quality-bar.md': t('So “done” means the same thing every time, with proof.', 'لتعني «انتهيت» الشيء نفسه في كل مرة، مع دليل.'),
-  'shared/react.md': t('So screen pieces stay small, hooks (small reusable pieces of logic) stay correct and any session writes React the same way.', 'لتبقى أجزاء الشاشة صغيرة والـ hooks (قطع منطق صغيرة يعاد استخدامها) صحيحة، وتكتب كل جلسة React بالطريقة نفسها.'),
+  'shared/react.md': t('So screen pieces stay small, hooks (small reusable pieces of logic) stay correct and any session writes React the same way.', 'لتبقى أجزاء الشاشة صغيرة والـ hooks (قطع منطق صغيرة يعاد استخدامها) صحيحة، وتكتب كل جلسة React بالطريقة نفسها.'),
   'shared/rtl.md': t('So Arabic (right-to-left) and English are both right from the start, not patched afterwards.', 'ليعمل كل شيء صحيحا بالعربية (من اليمين إلى اليسار) والإنجليزية من أول البناء، لا بترقيع بعده.'),
   'shared/scope.md': t('So the assistant neither stops halfway nor changes what you never asked for.', 'حتى لا يتوقف المساعد في منتصف العمل، ولا يغير ما لم تطلبه.'),
   'shared/security.md': t('So what a user types cannot become a script, a redirect or a leaked token (a secret that proves who someone is).', 'حتى لا يتحول ما يكتبه المستخدم إلى سكربت أو تحويل أو token مسرب (سر يثبت من هو الشخص).'),
