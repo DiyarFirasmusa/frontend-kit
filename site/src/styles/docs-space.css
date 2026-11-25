@@ -1179,3 +1179,86 @@ html:not([dir='rtl']) {
 .language {
   font-family: system-ui, sans-serif;
 }
+
+/* The message to copy: the two commands are lines of code, always left to right, apart from the words around them. */
+.start-text {
+  white-space: normal;
+}
+
+.start-text .msg-line {
+  display: block;
+}
+
+.start-text .msg-command {
+  display: block;
+  margin-block: 0.375rem;
+  padding: 0;
+  background: none;
+  color: var(--ivory);
+  font: 500 0.8125rem / 1.6 var(--code);
+  text-align: left;
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+/* The pause between the first and second part of the message. */
+.start-text .msg-line + .msg-line {
+  margin-block-start: 0.5rem;
+}
+
+/* One reading size for the words of every guide page, and room between a heading and the one under it. */
+.doc-article p {
+  font-weight: 400;
+}
+
+.doc-article h2 + h3,
+.doc-article .block > h3:first-of-type {
+  margin-block-start: 0.75rem;
+}
+
+/* The footer's links stay on one line each. */
+.foot-columns a {
+  white-space: nowrap;
+}
+
+.foot-columns {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: space-between;
+}
+
+@media (max-width: 1100px) {
+  .foot-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  .foot-columns a {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 620px) {
+  .foot-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The reasons under the slider line up on the start side on small screens. */
+@media (max-width: 700px) {
+  .ba-results {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
+
+/* On a phone the page list sits above the words, so the words start close below it. */
+@media (max-width: 900px) {
+  .doc .column {
+    padding-block-start: 1rem;
+  }
+
+  .doc-head {
+    padding-block-start: 1rem;
+  }
+}
+
