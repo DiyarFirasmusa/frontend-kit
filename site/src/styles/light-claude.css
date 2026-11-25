@@ -691,3 +691,26 @@ html[data-theme='light'] .prompt > span {
 :lang(ar) .board-top span {
   text-transform: none;
 }
+
+/* Round 8: the rows of a side column sit at the top with an even rhythm instead of stretching to the block's height. */
+html .board .board-list {
+  flex: 0 0 auto;
+  grid-auto-rows: auto;
+  align-content: start;
+}
+
+html .board .board-list li {
+  justify-content: flex-start;
+  padding-block: 1rem;
+}
+
+/* Captions are regular weight and muted; the broken side of the comparison is not letter-spaced. */
+.board-note p,
+.hub-kind-about {
+  font-weight: 400;
+}
+
+.ba .dash-table span,
+.ba .dash-table p {
+  letter-spacing: 0;
+}
