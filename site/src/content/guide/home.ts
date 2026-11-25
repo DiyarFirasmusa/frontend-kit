@@ -5,8 +5,8 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
   lead: t(
-    'Answer a few simple questions in the Claude app. Get a website or dashboard you can open and click through, in Arabic and English, checked before you see it.',
-    'أجب عن بضعة أسئلة بسيطة داخل تطبيق ⁦Claude⁩، فتحصل على موقع أو لوحة تحكم تفتحها وتتصفحها، بالعربية والإنجليزية، وتُفحص قبل أن تراها.',
+    'Answer a few plain questions in the Claude app. It builds a website or dashboard, checks it, and shows it to you in Arabic and English.',
+    'أجب عن بضعة أسئلة بسيطة داخل تطبيق ⁦Claude⁩. يبني لك موقعا أو لوحة تحكم، ويفحصها، ويعرضها عليك بالعربية والإنجليزية.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
@@ -24,8 +24,11 @@ export const home = {
     },
   ],
   start: t('Start building', 'ابدأ البناء'),
-  trust: t('Free · Needs the Claude app with the Code tab · Nothing is saved or published without your yes', 'مجاني · يحتاج تطبيق ⁦Claude⁩ فيه تبويب ⁦Code⁩ · ولا يُحفظ ولا يُنشر شيء دون موافقتك'),
-  audienceLabel: t('Who it is for', 'لمن هي'),
+  trust: t('Free · Needs a Claude plan with the Code tab, on a computer · Nothing is saved or published without your yes', 'مجاني · يحتاج خطة ⁦Claude⁩ فيها تبويب ⁦Code⁩، على حاسوب · ولا يُحفظ ولا يُنشر شيء دون موافقتك'),
+  audienceLabel: t('Which one are you?', 'أيّ هذه أنت؟'),
+  phoneTitle: t('Setup needs a computer. Send yourself this page.', 'الإعداد يحتاج حاسوبا. أرسل هذه الصفحة إلى نفسك.'),
+  phoneCopy: t('Copy the link for my computer', 'انسخ الرابط لحاسوبي'),
+  phoneDone: t('Copied. Open it on your computer.', 'نُسخ. افتحه على حاسوبك.'),
   audience: [
     { label: t('I do not code', 'لا أبرمج'), to: '#example' },
     { label: t('I build with AI', 'أبني بالذكاء الاصطناعي'), to: 'developers#who' },

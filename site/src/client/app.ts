@@ -6,6 +6,7 @@ import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
 import { initBeforeAfter } from './before-after.ts'
 import { initChrome } from './page-chrome.ts'
+import { initShareLink } from './share-link.ts'
 import { initTabs } from './tabs.ts'
 import { initToc } from './toc.ts'
 import { initTopSearch } from './top-search.ts'
@@ -30,6 +31,7 @@ document.addEventListener('astro:page-load', () => {
     ['toc', () => initToc(signal)],
     ['search', () => initTopSearch(signal)],
     ['slider', () => initBeforeAfter(signal)],
+    ['share', () => initShareLink(signal)],
   ]
   for (const [name, start] of starters) {
     try {

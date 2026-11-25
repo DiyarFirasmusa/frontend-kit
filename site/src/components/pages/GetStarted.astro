@@ -15,7 +15,13 @@ const { locale } = Astro.props
 const { install } = content[locale]
 const words = {
   before: t('What you need first', 'ما تحتاجه أولا'),
-  beforeLead: t('Three things, once. Claude can help you with the helper programs.', 'ثلاثة أشياء، مرة واحدة. ويستطيع ⁦Claude⁩ مساعدتك في البرامج المساعدة.'),
+  beforeLead: t('Three things, once.', 'ثلاثة أشياء، مرة واحدة.'),
+  plain: [
+    t('The Claude app, with a plan that includes the Code tab.', 'تطبيق ⁦Claude⁩ بخطة تتضمن تبويب ⁦Code⁩.'),
+    t('A computer.', 'حاسوب.'),
+    t('Claude installs the small helper programs for you, after you say yes.', 'يثبّت ⁦Claude⁩ البرامج المساعدة الصغيرة لك بعد موافقتك.'),
+  ],
+  details: t('Technical details (versions, Windows notes)', 'تفاصيل تقنية (الإصدارات وملاحظات ويندوز)'),
   install: t('1. Install the kit', '1. ثبّت الإضافة'),
   answer: t('2. Answer a few questions', '2. أجب عن بضعة أسئلة'),
   approve: t('3. Say yes to the summary', '3. وافق على الملخص'),
@@ -33,13 +39,19 @@ const words = {
 
 <Block id="before" title={words.before[locale]} lead={words.beforeLead[locale]}>
   <ul class="ticks">
-    {needs.map(({ name, why, link, linkLabel }) => (
-      <li>
-        <strong>{name[locale]}.</strong> {why[locale]}
-        {link && linkLabel && <> <a href={link} rel="noopener"><bdi>{linkLabel[locale]}</bdi></a></>}
-      </li>
-    ))}
+    {words.plain.map((line) => <li>{line[locale]}</li>)}
   </ul>
+  <details class="fold-all">
+    <summary>{words.details[locale]}</summary>
+    <ul class="ticks">
+      {needs.map(({ name, why, link, linkLabel }) => (
+        <li>
+          <strong>{name[locale]}.</strong> {why[locale]}
+          {link && linkLabel && <> <a href={link} rel="noopener"><bdi>{linkLabel[locale]}</bdi></a></>}
+        </li>
+      ))}
+    </ul>
+  </details>
 </Block>
 <Block id="install" title={words.install[locale]}>
   <ol class="explained">
