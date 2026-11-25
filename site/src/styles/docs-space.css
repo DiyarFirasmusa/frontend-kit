@@ -1637,3 +1637,49 @@ html[lang='ar'] .credits {
     min-height: 2.75rem;
   }
 }
+
+/* ---------- Less to read on the home page: the notes are folded away, not removed ---------- */
+.start-more {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.start-more summary {
+  min-height: 2.75rem;
+  padding-block: 0.6rem;
+  color: var(--ivory);
+  cursor: pointer;
+}
+
+.start-more p + p {
+  margin-block-start: 0.5rem;
+}
+
+:lang(ar) .start-more {
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* A long list the reader may not need: one line to open it. */
+.fold-all {
+  margin-block-start: 0.75rem;
+  border-block-end: 1px solid var(--line);
+}
+
+.fold-all > summary {
+  min-height: 2.75rem;
+  padding-block: 0.75rem;
+  color: var(--ivory);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fold-all[open] > summary {
+  color: var(--turq);
+}
+
+.fold-all > :not(summary) {
+  margin-block-end: 1rem;
+}

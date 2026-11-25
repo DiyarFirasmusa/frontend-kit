@@ -83,9 +83,13 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
         </button>
         <span class="sr-only" role="status" data-announce></span>
         <p class="start-hint">{w.send[locale]}</p>
-        <p class="start-hint">{w.phone[locale]}</p>
-        <p class="start-hint">{w.reopen[locale]}</p>
         <p class="start-hint">{w.tonight[locale]}</p>
+        <details class="start-more">
+          <summary>{w.moreTitle[locale]}</summary>
+          <p>{w.phone[locale]}</p>
+          <p>{w.reopen[locale]}</p>
+          <p>{w.windows[locale]}</p>
+        </details>
       </div>
     </figure>
   </div>

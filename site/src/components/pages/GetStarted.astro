@@ -27,6 +27,7 @@ const words = {
   examples: t('See what you can say', 'شاهد ما يمكنك أن تقوله'),
   limits: t('What to keep in mind', 'ما يجب أن تتذكره'),
   keep: t('Update, share and remove', 'التحديث والمشاركة والإزالة'),
+  seeQuestions: t('See every question the setup asks', 'شاهد كل سؤال يسأله الإعداد'),
 }
 ---
 
@@ -52,12 +53,15 @@ const words = {
   </ol>
 </Block>
 <Block id="questions" title={words.answer[locale]} lead={questionsLead[locale]}>
-  {questions.map(({ question, answers }) => (
-    <div class="question">
-      <h3>{question[locale]}</h3>
-      <ul class="plain">{answers.map((answer) => <li>{answer[locale]}</li>)}</ul>
-    </div>
-  ))}
+  <details class="fold-all">
+    <summary>{words.seeQuestions[locale]}</summary>
+    {questions.map(({ question, answers }) => (
+      <div class="question">
+        <h3>{question[locale]}</h3>
+        <ul class="plain">{answers.map((answer) => <li>{answer[locale]}</li>)}</ul>
+      </div>
+    ))}
+  </details>
 </Block>
 <Block id="approve" title={words.approve[locale]}>
   <h3>{summary.title[locale]}</h3>
@@ -73,10 +77,10 @@ const words = {
 <Block id="limits" title={words.limits[locale]}><ul class="ticks">{limits.map((item) => <li>{item[locale]}</li>)}</ul></Block>
 <Block id="keep" title={words.keep[locale]}>
   {maintenance.map(({ title, text, command }) => (
-    <div class="question">
-      <h3>{title[locale]}</h3>
+    <details class="fold-all">
+      <summary>{title[locale]}</summary>
       <p class="muted">{text[locale]}</p>
       <CommandBox command={command} install={install} />
-    </div>
+    </details>
   ))}
 </Block>

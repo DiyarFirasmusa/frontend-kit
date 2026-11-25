@@ -14,8 +14,8 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
     tab: t('Website', 'موقع'),
     title: t('Pages your visitors open', 'صفحات يفتحها زوارك'),
     text: t(
-      'A portfolio, a menu, a services page, a shop, a company site, a blog or a list of your products. You choose the colours, fonts and logo: describe them, or send a Figma link or a site you like. Once it is online, anyone can open it from a link or a search, on a phone or a computer.',
-      'معرض أعمال، أو قائمة طعام، أو صفحة خدمات، أو متجر، أو موقع شركة، أو مدونة، أو قائمة بمنتجاتك. وتختار الألوان والخطوط والشعار: صفها بجملة، أو أرسل رابط ⁦Figma⁩ أو موقعا يعجبك. وبعد أن يصبح على الإنترنت، يفتحه أي شخص من رابط أو من البحث، على الهاتف أو الحاسوب.',
+      'A portfolio, a menu, a shop, a company site or a blog. You choose the colours and the logo, and anyone can open it from a link or a search, on a phone or a computer.',
+      'معرض أعمال، أو قائمة طعام، أو متجر، أو موقع شركة، أو مدونة. تختار الألوان والشعار، ويفتحه أي شخص من رابط أو من البحث، على الهاتف أو الحاسوب.',
     ),
     features: [
       { name: t('Fast on phones', 'سريع على الهاتف'), text: t('Pages are built to a speed budget for slow phones.', 'تُبنى الصفحات وفق حدود سرعة للهواتف البطيئة.') },
@@ -31,8 +31,8 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
     tab: t('Dashboard', 'لوحة تحكم'),
     title: t('A private place to run things', 'مكان خاص تدير فيه عملك'),
     text: t(
-      'Orders, customers, products and reports, for you and your team. People sign in, and each one sees only what they are allowed to. If you do not have a backend yet, it starts with sample data so you can click through it. A backend is the program online that stores your real data; someone has to build it.',
-      'الطلبات والعملاء والمنتجات والتقارير، لك ولفريقك. يسجل الناس الدخول، ويرى كل شخص ما يُسمح له به فقط. وإن لم يكن عندك خادم خلفي بعد، تبدأ ببيانات تجريبية لتتصفحها. والخادم الخلفي برنامج على الإنترنت يحفظ بياناتك الحقيقية، ويبنيه مبرمج.',
+      'Orders, customers, products and reports, for you and your team. Each person sees only what they are allowed to. Without a backend (the program that stores your real data) it starts with sample data.',
+      'الطلبات والعملاء والمنتجات والتقارير، لك ولفريقك. ويرى كل شخص ما يُسمح له به فقط. وبلا خادم خلفي (البرنامج الذي يحفظ بياناتك الحقيقية) تبدأ ببيانات تجريبية.',
     ),
     features: [
       { name: t('Tables with search', 'جداول مع بحث'), text: t('Sort, search and filter, even with thousands of rows.', 'ترتيب وبحث وتصفية، حتى مع آلاف الصفوف.') },
@@ -48,8 +48,8 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
     tab: t('Both', 'الاثنان'),
     title: t('Your website and its dashboard', 'موقعك ولوحة التحكم الخاصة به'),
     text: t(
-      'The public pages and the place where you run them, in one project. What you change in the dashboard shows on the site. To keep what you write, it needs a backend that stores it; without one it starts with sample data.',
-      'الصفحات العامة والمكان الذي تديرها منه، في مشروع واحد. ما تغيّره في اللوحة يظهر في الموقع. ولحفظ ما تكتبه تحتاج خادما خلفيا يخزّنه؛ وبدونه تبدأ ببيانات تجريبية.',
+      'The public pages and the place where you run them, in one project: what you change in the dashboard shows on the site. Without a backend it starts with sample data.',
+      'الصفحات العامة والمكان الذي تديرها منه في مشروع واحد: ما تغيّره في اللوحة يظهر في الموقع. وبلا خادم خلفي تبدأ ببيانات تجريبية.',
     ),
     features: [
       { name: t('Everything from both', 'كل ما في الاثنين'), text: t('All the website gets, and all the dashboard gets.', 'كل ما يحصل عليه الموقع، وكل ما تحصل عليه اللوحة.') },
@@ -101,12 +101,13 @@ export const installWords = {
   lead: t('Wajiha Kit is free. You send one message, and Claude installs the kit for you.', '«واجهة» مجانية. ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة بنفسه.'),
   needsTitle: t('What you need', 'ما تحتاجه'),
   needsList: [
-    t('A Claude account (an AI assistant like ChatGPT). Claude’s plans and prices are set by Anthropic, not by this kit. Claude Code is not part of every plan. After you sign in to the Claude app, look for the Code tab: if it is there, you can use the kit; if not, your plan does not include it yet, and that is Claude’s rule, not ours.', 'حساب في ⁦Claude⁩ (مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩). وخطط ⁦Claude⁩ وأسعارها تحددها ⁦Anthropic⁩ لا الإضافة. و⁦Claude Code⁩ ليس في كل الخطط. وبعد تسجيل الدخول إلى التطبيق ابحث عن تبويب ⁦Code⁩: إن وجدته فتستطيع استخدام الإضافة، وإن لم تجده فخطتك لا تشملها بعد، وهذه قاعدة ⁦Claude⁩ لا قاعدتنا.'),
-    t('A computer. A phone is not enough. Claude checks that jq, Node and git are on it, and helps you install them if they are not.', 'حاسوب. الهاتف لا يكفي. ويتأكد ⁦Claude⁩ أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ عليه، ويساعدك في تثبيتهما إن لم يكونا.'),
-    t('You can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file.', 'تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم.'),
+    t('A Claude account with the Code tab. Not every Claude plan includes it, and Anthropic sets the plans.', 'حساب في ⁦Claude⁩ فيه تبويب ⁦Code⁩. وليست كل خطط ⁦Claude⁩ تشمله، و⁦Anthropic⁩ هي التي تحدد الخطط.'),
+    t('A computer, not a phone. Claude checks jq, Node and git and helps you install them.', 'حاسوب وليس هاتفا. ويتأكد ⁦Claude⁩ من ⁦jq⁩ و⁦Node⁩ و⁦git⁩ ويساعدك في تثبيتها.'),
   ],
+  moreTitle: t('Notes before you start', 'ملاحظات قبل أن تبدأ'),
+  windows: t('You can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file.', 'تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم.'),
   reopen: t('If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),
-  tonight: t('At the end you will see your site on your own computer only. Putting it online is a separate step, and a hosting service may charge for it. To let other people see it, ask Claude later: “What are my options to publish my site, and what does each one involve?”', 'وفي النهاية سترى موقعك على حاسوبك وحده. ونشره على الإنترنت خطوة منفصلة، وقد تأخذ خدمة الاستضافة مقابلا عنها. ولكي يراه الناس اطلب لاحقا من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»'),
+  tonight: t('At the end you will see your site on your own computer only. Putting it online is a separate step, and a hosting service may charge for it.', 'وفي النهاية سترى موقعك على حاسوبك وحده. ونشره على الإنترنت خطوة منفصلة، وقد تأخذ خدمة الاستضافة مقابلا عنها.'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),
   failed: t('Select it and copy', 'حدّدها وانسخها'),
