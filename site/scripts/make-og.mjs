@@ -2,7 +2,7 @@
 // Run it from site/ after `npm run build` (the page images read each page's title from dist/):
 //   node scripts/make-og.mjs
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -70,3 +70,11 @@ for (const id of PAGES) {
   }
 }
 rmSync(dir, { recursive: true, force: true })
+
+// The visual identity keeps the covers too (brand/wajiha-identity.html shows them).
+const covers = resolve('../brand/cover')
+mkdirSync(covers, { recursive: true })
+for (const [from, to] of [['og.jpg', 'cover.jpg'], ['og-ar.jpg', 'cover-ar.jpg'], ['og/skills.jpg', 'cover-page.jpg'], ['og/questions-ar.jpg', 'cover-page-ar.jpg']]) {
+  copyFileSync(resolve('public', from), join(covers, to))
+  console.log(`brand/cover/${to}`)
+}

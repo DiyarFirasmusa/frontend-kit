@@ -181,19 +181,25 @@ td{color:var(--muted)}
 <section>
   <div class="label">04</div>
   <h2>Where it appears</h2>
-  <div style="position:relative;aspect-ratio:2/1;border-radius:18px;overflow:hidden;border:1px solid rgb(241 237 231 / .28);background:var(--void)">
-    <div style="position:absolute;inset:0;background:radial-gradient(45% 60% at 95% -5%, rgb(25 171 171 / .26), transparent 66%),radial-gradient(40% 55% at 70% 110%, rgb(217 119 87 / .18), transparent 66%)"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(rgb(241 237 231 / .05) 1px, transparent 1px) 0 0/5.5% 11%,linear-gradient(90deg, rgb(241 237 231 / .05) 1px, transparent 1px) 0 0/5.5% 11%"></div>
-    <div class="row" style="position:absolute;left:6%;top:10%;gap:3%">
-      <svg class="mark" style="width:clamp(36px,6vw,72px);height:clamp(36px,6vw,72px)" aria-hidden="true"><use href="#mark"/></svg>
-      <span style="font-size:clamp(28px,5vw,60px);font-weight:600;letter-spacing:-.025em">wajiha<span style="color:var(--faint);font-weight:500"> kit</span></span>
-    </div>
-    <div style="position:absolute;left:6%;bottom:11%;width:70%">
-      <div style="font-size:clamp(24px,5.6vw,66px);font-weight:600;letter-spacing:-.03em;line-height:1.05">Say what you want.<br>Your assistant builds it.</div>
-      <div class="ar" dir="rtl" style="font-size:clamp(14px,2vw,24px);color:var(--muted);margin-top:2%;width:fit-content">قل ما تريد، ويبنيه مساعدك.</div>
-    </div>
+  <figure style="margin:0">
+    <img src="cover/cover.jpg" width="1200" height="630" alt="The cover: the mark large, with Wajiha Kit and the headline" style="display:block;width:100%;height:auto;border-radius:18px">
+    <figcaption class="mono" style="font-size:13px;margin:10px 0 20px;color:var(--faint)">Cover · 1200 × 630 · the picture when a link to the site is shared, and the GitHub social preview</figcaption>
+  </figure>
+  <div class="grid g3" style="margin-bottom:20px">
+    <figure style="margin:0">
+      <img src="cover/cover-ar.jpg" width="1200" height="630" alt="The Arabic cover" style="display:block;width:100%;height:auto;border-radius:12px">
+      <figcaption class="mono" style="font-size:13px;margin-top:10px;color:var(--faint)">Arabic: the mark moves to the other side</figcaption>
+    </figure>
+    <figure style="margin:0">
+      <img src="cover/cover-page.jpg" width="1200" height="630" alt="A page of the guide: its title and words, with its section's colour" style="display:block;width:100%;height:auto;border-radius:12px">
+      <figcaption class="mono" style="font-size:13px;margin-top:10px;color:var(--faint)">Each page of the guide: its title, its words, its section's colour</figcaption>
+    </figure>
+    <figure style="margin:0">
+      <img src="cover/cover-page-ar.jpg" width="1200" height="630" alt="A page of the guide in Arabic" style="display:block;width:100%;height:auto;border-radius:12px">
+      <figcaption class="mono" style="font-size:13px;margin-top:10px;color:var(--faint)">The same in Arabic</figcaption>
+    </figure>
   </div>
-  <p class="mono" style="font-size:13px;margin:10px 0 20px;color:var(--faint)">GitHub social card · 1280 × 640</p>
+  <p style="font-size:15px;margin-bottom:20px">The covers are made from <span class="mono" style="color:var(--ivory)">site/design/og/og.html</span> by <span class="mono" style="color:var(--ivory)">node scripts/make-og.mjs</span> in <span class="mono" style="color:var(--ivory)">site/</span>, so the words always match the site. The mark keeps its own colours and no glow; the section colours are orange for skills, light orange for rules and turquoise for the rest.</p>
   <div class="grid g3">
     <div class="card mono" style="font-size:14px;line-height:1.8">
       <div class="label" style="margin-bottom:8px">Terminal</div>
@@ -266,6 +272,8 @@ td{color:var(--muted)}
     <tr><td class="mono">mark-on-light.svg</td><td>The mark on ivory or white</td></tr>
     <tr><td class="mono">mark-mono.svg</td><td>The mark on an orange or turquoise ground</td></tr>
     <tr><td class="mono">tile.svg</td><td>Favicon, app icon, GitHub avatar: works on light and dark</td></tr>
+    <tr><td class="mono">../cover/cover.jpg</td><td>The cover in English: link previews and the GitHub social preview</td></tr>
+    <tr><td class="mono">../cover/cover-ar.jpg</td><td>The cover in Arabic</td></tr>
   </table>
   <p style="font-size:15px;margin-top:14px">The name next to the mark is set in Familjen Grotesk (English) and IBM Plex Sans Arabic (Arabic), both free on Google Fonts. It is typed, not drawn, so it stays sharp and editable.</p>
 </section>
