@@ -28,7 +28,7 @@ export const home = {
   caption: t('Illustration of the chat. At the end you get a project folder on your computer, a short report of what Claude checked, and a page that opens in your browser.', 'رسم توضيحي للمحادثة. في النهاية تحصل على مجلد مشروع على حاسوبك، وتقريرا قصيرا بما فحصه ⁦Claude⁩، وصفحة تُفتح في المتصفح.'),
   madeUp: t('Made-up sample, to show the idea.', 'نموذج متخيَّل لتوضيح الفكرة.'),
   board: {
-    top: t('Wajiha Kit · a free kit for the Claude app', 'واجهة · إضافة مجانية لتطبيق ⁦Claude⁩'),
+    top: t('Wajiha Kit · a free kit', 'واجهة · إضافة مجانية لتطبيق ⁦Claude⁩'),
     getTitle: t('You get', 'تحصل على'),
     get: [
       t('A project folder on your computer', 'مجلد مشروع على حاسوبك'),
