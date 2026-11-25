@@ -80,3 +80,14 @@ Plain words for someone who does not code; each technical word is explained wher
 ## 8. Review log
 
 Designer critic rounds with the scores they gave are in the repository history (`feat(site)` and `fix(site)` commits from 2026-11-25). A new part is accepted when professional critics score it at least 8.5 on identity, UI, marketing clarity, Arabic and mobile.
+
+## 9. The law in the words of a page (added after the whole-site audit)
+
+- Every guide and legal page **ends in a note bar**: where to go next at the start, one pill at the end (a ghost pill for previous/next).
+- **Steps keep their meaning everywhere:** orange squares and an orange edge are steps *you* take (get started); turquoise are steps *the kit* takes (what the assistant then does). Ticks and "what you get" lists have a turquoise edge.
+- A small block before each section title says which kind of section it is: orange where you act, turquoise where you get, plain where you look.
+- A **prompt** (what you can say) is a flat row with an orange edge. **Code you copy** is one dark window with an orange edge and an orange copy pill.
+- One disclosure: a turquoise plus, no native triangle.
+- The header's two settings (theme, language) are quiet ink squares, not turquoise: turquoise means "go there".
+- The **404** is an empty board (bar "404", a block with the message, a side column of nearby pages, a note bar with the one pill).
+- No tinted light anywhere behind titles or drawings; the ground is plain black (or paper in light mode).

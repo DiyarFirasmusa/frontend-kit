@@ -3505,3 +3505,66 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   color: var(--accent);
 }
+
+/* The law is readable from the headings alone: a small block before each title, orange where you act,
+   turquoise where you get, plain where you look. */
+.doc .block > h2::before {
+  content: '';
+  display: inline-block;
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: 0;
+  align-self: center;
+  border-radius: 2px;
+  background: rgb(var(--ink-rgb) / 0.35);
+}
+
+#ask > h2::before,
+#install > h2::before,
+#questions > h2::before,
+#approve > h2::before,
+#after > h2::before {
+  background: var(--accent);
+}
+
+#steps > h2::before,
+#result > h2::before,
+#build > h2::before,
+#matches > h2::before {
+  background: var(--turq);
+}
+
+/* The page that is not there is an empty board. */
+.missing {
+  padding-block: calc(var(--bar) + 3rem) 4rem;
+}
+
+.missing-board {
+  max-width: 62rem;
+  margin-inline: auto;
+}
+
+.missing-board .board-main h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+}
+
+.missing-board .board-main > p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.missing-board .board-list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.missing-board .board-list a:hover {
+  color: var(--turq);
+}
+
+.missing-board .board-main {
+  justify-content: flex-start;
+  min-height: 14rem;
+}
