@@ -3239,3 +3239,25 @@ body:has(main.doc) .top.is-scrolled,
 .ticks li .rest {
   color: var(--muted);
 }
+
+/* =====================================================================================================
+   The colour law in the words of a page: what you do has an orange edge, what you get has a turquoise one.
+   ===================================================================================================== */
+.doc-article ol.explained,
+.doc-article ol.numbered {
+  padding-inline-start: 1.25rem;
+  border-inline-start: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.doc-article ul.ticks {
+  padding-inline-start: 1.25rem;
+  border-inline-start: 2px solid color-mix(in srgb, var(--turq) 60%, transparent);
+}
+
+/* The footer opens with the same dark bar as every board: the mark, the name, what it is. */
+.foot-top {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: rgb(var(--ink-rgb) / 0.04);
+}
