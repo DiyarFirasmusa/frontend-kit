@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      tanstack:
+        patterns: ['@tanstack/*', 'nitro']
+      tooling:
+        patterns:
+          [
+            'oxlint',
+            'oxfmt',
+            'vitest',
+            '@vitest/*',
+            '@playwright/*',
+            '@axe-core/*',
+            'husky',
+            'lint-staged',
+            '@commitlint/*',
+          ]
+      react:
+        patterns: ['react', 'react-dom', '@types/react', '@types/react-dom']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
