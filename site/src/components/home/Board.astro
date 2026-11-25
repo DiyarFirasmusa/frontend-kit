@@ -11,7 +11,7 @@ interface Props {
   label: string
   tone?: 'orange' | 'ink'
   /** The side column's colour; turquoise unless the main block is turquoise. */
-  side?: 'turq'
+  side?: 'turq' | 'ink'
 }
 
 const { part, label, tone = 'orange', side } = Astro.props

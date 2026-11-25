@@ -28,7 +28,7 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
     <p class="start-lead">{w.lead[locale]}</p>
   </div>
   <div class="column" data-alive>
-    <Board locale={locale} part={3} label={locale === 'ar' ? 'ابدأ' : 'Start'} tone="orange">
+    <Board locale={locale} part={3} label={locale === 'ar' ? 'ابدأ' : 'Start'} tone="orange" side="ink">
       <div class="start-main">
           <ol class="start-line">
             <li class="start-line-track" role="presentation" aria-hidden="true"><i></i></li>

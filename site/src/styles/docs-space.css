@@ -3261,3 +3261,247 @@ body:has(main.doc) .top.is-scrolled,
   border-radius: 0.9rem;
   background: rgb(var(--ink-rgb) / 0.04);
 }
+
+
+/* =====================================================================================================
+   ROUND 22: the law reaches the end of every page, its steps, its code and its controls
+   ===================================================================================================== */
+/* No tinted light anywhere: the ground is plain black (or paper). */
+body::before,
+[dir='rtl'] body::before {
+  content: none;
+}
+
+/* Titles are plain ivory: colour lives in blocks. */
+.section-head h2,
+.home h2,
+[dir='rtl'] .section-head h2 {
+  background: none;
+  color: var(--ivory);
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Every page ends in the board's note bar: the words of where to go next at the start, the one action at the end. */
+.doc .pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-block-start: 3rem;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-radius: 0.7rem;
+  background: #171715;
+  color: #f1ede7;
+}
+
+.doc .pager a {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: auto;
+  padding: 0.25rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  text-decoration: none;
+}
+
+.doc .pager a span {
+  color: #96938d;
+  font: 500 0.8125rem/1.4 var(--code);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc .pager a span {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.doc .pager a:hover bdi {
+  color: var(--turq);
+}
+
+.doc .pager .pager-next {
+  min-height: 2.25rem;
+  margin-inline-start: auto;
+  padding: 0.25rem 1rem;
+  border: 1px solid rgb(241 237 231 / 0.4);
+  border-radius: 999px;
+  justify-self: auto;
+}
+
+/* The steps of a page keep the home page's meaning: orange squares are steps you take, turquoise are steps the kit takes. */
+.doc ol.explained li::before {
+  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
+  background: color-mix(in srgb, var(--turq) 10%, transparent);
+  color: var(--turq);
+}
+
+main[data-section='get-started'] .doc-article ol.numbered li::before,
+main[data-section='get-started'] ol.explained li::before {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+/* One disclosure: a turquoise plus, no native triangle. */
+.doc-article details:not(.questions details) > summary,
+.fold-all > summary,
+.toc-mini > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+}
+
+.doc-article details:not(.questions details) > summary::-webkit-details-marker,
+.fold-all > summary::-webkit-details-marker,
+.toc-mini > summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-article details:not(.questions details) > summary::after,
+.fold-all > summary::after,
+.toc-mini > summary::after {
+  content: '+';
+  color: var(--turq);
+  font: 600 1.25rem/1 var(--code);
+}
+
+.doc-article details[open]:not(.questions details) > summary::after,
+.fold-all[open] > summary::after,
+.toc-mini[open] > summary::after {
+  content: '\2013';
+}
+
+/* A prompt is the clearest thing you do: a flat row with an orange edge. */
+.prompt {
+  border: 0;
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgb(var(--ink-rgb) / 0.05);
+}
+
+[dir='rtl'] .prompt {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.prompt > span {
+  color: var(--accent);
+}
+
+/* Code and copy: one window - a dark body with an orange edge, the copy action an orange pill at its end. */
+.command {
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.25rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 0.7rem;
+  background: #131312;
+  color: #f1ede7;
+}
+
+.command button {
+  min-width: 0;
+  min-height: 2.25rem;
+  padding-inline: 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #141413;
+  font-weight: 600;
+}
+
+.command button:hover {
+  background: var(--amber);
+  color: #141413;
+}
+
+/* The header's two controls are settings, not places to go: quiet squares in ink. */
+.theme-toggle,
+.language {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--ivory);
+}
+
+.theme-toggle:hover,
+.language:hover {
+  border-color: var(--turq);
+  background: transparent;
+  color: var(--turq);
+}
+
+/* The footer ends in a bar too. */
+.foot-bottom {
+  padding: 0.75rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: rgb(var(--ink-rgb) / 0.04);
+}
+
+/* A side column of what you need is neutral: it is not what you get. */
+.board.side-ink {
+  --side: #f1ede7;
+}
+
+.board.side-ink .board-side {
+  background: #131312;
+  box-shadow: inset 0 0 0 1px rgb(241 237 231 / 0.22);
+}
+
+.board.side-ink .board-side-title {
+  border-block-end-color: rgb(241 237 231 / 0.3);
+  color: #f1ede7;
+}
+
+.board.side-ink .board-list li::before {
+  background: #f1ede7;
+}
+
+.board.side-ink .board-list li {
+  border-block-start-color: rgb(241 237 231 / 0.16);
+}
+
+.command button,
+.command button * {
+  color: #141413;
+}
+
+.command.is-message button {
+  align-self: center;
+  min-width: 5rem;
+}
+
+/* The assistant's steps (what it then does) are turquoise: you get them. Only get-started lists steps you take. */
+.doc-article ol.numbered {
+  border-inline-start-color: color-mix(in srgb, var(--turq) 60%, transparent);
+}
+
+.doc-article ol.numbered > li::before {
+  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
+  background: color-mix(in srgb, var(--turq) 10%, transparent);
+  color: var(--turq);
+}
+
+main[data-section='get-started'] .doc-article ol.numbered {
+  border-inline-start-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+main[data-section='get-started'] .doc-article ol.numbered > li::before {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
