@@ -24,6 +24,12 @@ export const home = {
     },
   ],
   start: t('Start now', 'ابدأ الآن'),
+  builds: {
+    title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
+    lead: t('Pick one when Claude asks. You do not choose any tools: each kind comes ready, set up the way a good team would.', 'اختر واحدا عندما يسألك Claude. لن تختار أي أدوات: كل نوع يأتي جاهزا، مرتبا كما يرتبه فريق جيد.'),
+    say: t('You could say', 'يمكنك أن تقول'),
+    more: t('More about each kind', 'المزيد عن كل نوع'),
+  },
   see: t('See how it goes, step by step', 'شاهد كيف تسير الأمور خطوة بخطوة'),
   docs: t('Read the guide', 'اقرأ الدليل'),
 
@@ -33,7 +39,7 @@ export const home = {
   steps: {
     install: {
       name: t('You add the kit to Claude', 'تضيف الإضافة إلى Claude'),
-      text: t('In the Claude app, you type three short lines. They add the kit and start setting up your project.', 'في تطبيق Claude تكتب ثلاثة أسطر قصيرة. تضيف الإضافة، وتبدأ تجهيز مشروعك.'),
+      text: t('In the Claude app, you send one message. Claude installs the kit for you, then starts setting up your project.', 'في تطبيق Claude ترسل رسالة واحدة. يثبت Claude الإضافة بنفسه، ثم يبدأ تجهيز مشروعك.'),
     },
     skills: {
       name: t('It asks what you want', 'تسألك ماذا تريد'),
@@ -122,6 +128,6 @@ export const home = {
   type: t('You type', 'تكتب'),
   open: t('Read the full page', 'اقرأ صفحته كاملة'),
 
-  install: t('Get it in three steps.', 'ثبّتها بثلاث خطوات.'),
+  install: t('Start in three steps.', 'ابدأ بثلاث خطوات.'),
   types: t('What you can build', 'ماذا تستطيع أن تبني'),
 }

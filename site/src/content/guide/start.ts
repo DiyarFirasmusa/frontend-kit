@@ -17,24 +17,28 @@ export const needs = [
   },
 ]
 
-/** The sentence before the three commands: where to be, and how to start Claude Code. */
-export const openStep = t(
-  'Make an empty folder for your project. Open the Claude app, choose Code at the top, and pick your folder with the folder button next to the message box. Then copy each line below, paste it into the message box and send it, like a normal message. You do not need to understand them.',
-  'أنشئ مجلدا فارغا لمشروعك. افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩ في الأعلى، واختر مجلدك من زر المجلد بجانب خانة الرسائل. ثم انسخ كل سطر من الأسطر التالية، والصقه في خانة الرسائل وأرسله، كأي رسالة. لا تحتاج أن تفهمها.',
+/** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
+export const installMessage = t(
+  'Please install the Wajiha Kit plugin for this project. Run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first.',
+  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا.',
 )
 
-/** One short title for each of the three lines: what you do. */
-export const installTitles = [
-  t('Send this to Claude', 'أرسل هذا إلى ⁦Claude⁩'),
-  t('Then send this', 'ثم أرسل هذا'),
-  t('And last, this one', 'وأخيرا هذا'),
-]
-
-/** What each line does, in a few words. */
-export const installSteps = [
-  t('It tells Claude where to find the kit.', 'يخبر ⁦Claude⁩ أين يجد الإضافة.'),
-  t('It adds the kit to Claude.', 'يضيف الإضافة إلى ⁦Claude⁩.'),
-  t('Claude starts asking about your project. When it asks what you are doing, choose “New project”.', 'يبدأ ⁦Claude⁩ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
+/** Three steps, all inside the Claude app. `copy` is what the step asks you to send. */
+export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof t>; copy?: ReturnType<typeof t> | string }[] = [
+  {
+    title: t('Open a folder in the Claude app', 'افتح مجلدا في تطبيق Claude'),
+    text: t('Make an empty folder for your project. Open the Claude app, choose Code, and pick the folder with the folder button next to the message box.', 'أنشئ مجلدا فارغا لمشروعك. افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد بجانب خانة الرسائل.'),
+  },
+  {
+    title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
+    text: t('Copy it, paste it into the message box and send it. Claude installs the kit for you and asks before each step.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يثبت ⁦Claude⁩ الإضافة بنفسه، ويسألك قبل كل خطوة.'),
+    copy: installMessage,
+  },
+  {
+    title: t('Start a new chat and type /wajiha-kit:setup', 'ابدأ محادثة جديدة واكتب ‎/wajiha-kit:setup'),
+    text: t('Open a new session in the same folder, so Claude sees the kit. Type / and pick wajiha-kit:setup from the list. Claude starts asking about your project.', 'افتح جلسة جديدة في المجلد نفسه، حتى يرى ⁦Claude⁩ الإضافة. اكتب / واختر ⁦wajiha-kit:setup⁩ من القائمة. يبدأ ⁦Claude⁩ بسؤالك عن مشروعك.'),
+    copy: '/wajiha-kit:setup',
+  },
 ]
 
 export const questionsLead = t(

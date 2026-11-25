@@ -132,7 +132,7 @@ export const en: Copy = {
     title: 'Install it in three steps.',
     lead: 'Open the Claude app, choose Code, pick a folder for your project, then type these one by one in the message box.',
     steps: ['Send this to Claude. It tells Claude where to find the kit.', 'Then send this. It adds the kit.', 'And last, this one. Claude starts asking about your project.'],
-    needs: 'Open the Claude app, choose Code and pick a folder for your project. Then copy each line, paste it into the message box and send it, like a normal message. You do not need to understand them.',
+    needs: 'Everything happens in the Claude app. You send one message, and Claude does the installing for you.',
     copy: 'Copy',
     copied: 'Copied',
     failed: 'Press copy',

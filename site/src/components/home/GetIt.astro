@@ -1,10 +1,9 @@
 ---
 import { home } from '../../content/guide/home.ts'
-import { projects } from '../../content/guide/projects.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
-import { INSTALL_COMMANDS } from '../../lib/plugin.ts'
+import { installFlow } from '../../content/guide/start.ts'
 import CommandBox from '../CommandBox.astro'
 
 interface Props {
@@ -23,29 +22,20 @@ const { install } = content[locale]
   <div class="column">
     <ol class="install-steps">
       {
-        INSTALL_COMMANDS.map((command, i) => (
+        installFlow.map(({ title, text, copy }, i) => (
           <li>
             <span class="step-number" dir="ltr">
               {i + 1}
             </span>
-            <p>{install.steps[i]}</p>
-            <CommandBox command={command} install={install} />
+            <p>
+              <strong>{title[locale]}</strong> {text[locale]}
+            </p>
+            {copy && <CommandBox command={typeof copy === 'string' ? copy : copy[locale]} install={install} message={typeof copy !== 'string'} />}
           </li>
         ))
       }
     </ol>
 
-    <h3 class="get-it-title">{home.types[locale]}</h3>
-    <ul class="works-for">
-      {
-        projects.slice(0, 3).map(({ name, fits }) => (
-          <li>
-            <strong>{name[locale]}</strong>
-            <span>{fits[locale]}</span>
-          </li>
-        ))
-      }
-    </ul>
 
     <p class="hero-ways">
       <a href={pageUrl(locale, 'get-started')}>{locale === 'ar' ? 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه' : 'Already have a project, or an old one? Read how to start from it'}</a>

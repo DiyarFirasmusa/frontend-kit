@@ -1,5 +1,4 @@
 import { initCopy } from './copy-button.ts'
-import { initExample } from './example.ts'
 import { initTree } from './docs-tree.ts'
 import { initExplorer } from './explorer.ts'
 import { initFinder } from './finder.ts'
@@ -23,5 +22,4 @@ document.addEventListener('astro:page-load', () => {
   initReveal(page.signal)
   initGate()
   initLife(page.signal)
-  initExample(page.signal)
 })

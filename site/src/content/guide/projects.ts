@@ -53,8 +53,8 @@ export const projects: Project[] = [
     fits: t('A public website and the dashboard that manages it, together in one project. For example a shop and the pages where you run it.', 'موقع عام ولوحة التحكم التي تديره، معا في مشروع واحد. مثلا متجر والصفحات التي تدير بها المتجر.'),
     example: t('“A blog on the website, and a page in the dashboard where I write the posts.”', '«مدونة في الموقع، وصفحة في لوحة التحكم أكتب فيها المقالات».'),
     gets: [
-      t('Each part follows its own rules, so website habits do not leak into the dashboard.', 'يتبع كل جزء قواعده الخاصة، فلا تختلط عادات الموقع بلوحة التحكم.'),
-      t('The skills for both parts are switched on.', 'مهارات الجزأين كلها مفعّلة.'),
+      t('Everything the website gets, and everything the dashboard gets.', 'كل ما يحصل عليه الموقع، وكل ما تحصل عليه لوحة التحكم.'),
+      t('The public pages and the private dashboard live in one project, so they stay in step.', 'الصفحات العامة ولوحة التحكم الخاصة في مشروع واحد، فتبقيان متوافقتين.'),
       t('If you have two backends, each part talks to its own.', 'إن كان عندك backend لكل جزء، فيتصل كل جزء بالخاص به.'),
     ],
     stack: ['TanStack Start', 'src/admin', 'src/routes/admin'],

@@ -22,8 +22,9 @@ export const chatWords = {
 
 /** The opening screen: from installing the kit to a working project, as it really goes. */
 export const firstRun: ChatEvent[] = [
-  { kind: 'user', text: '/plugin install wajiha-kit@wajiha-kit', command: true },
-  { kind: 'tool', text: t('Installed Wajiha Kit', 'ثُبّتت واجهة'), mark: 'ok' },
+  { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع.') },
+  { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
+  { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
   { kind: 'user', text: '/wajiha-kit:setup', command: true },
   { kind: 'claude', text: t('Let’s set up your project. A few quick questions, nothing technical.', 'لنجهز مشروعك. بضعة أسئلة سريعة، ولا شيء تقني.') },
   {
@@ -63,9 +64,9 @@ export const firstRun: ChatEvent[] = [
 /** The section of steps: what the window shows at each one. */
 export const stepChat: ChatEvent[][] = [
   [
-    { kind: 'user', text: '/plugin marketplace add DiyarFirasmusa/wajiha-kit', command: true },
-    { kind: 'user', text: '/plugin install wajiha-kit@wajiha-kit', command: true },
-    { kind: 'tool', text: t('Installed Wajiha Kit', 'ثُبّتت واجهة'), mark: 'ok' },
+    { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع.') },
+    { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
+    { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
     { kind: 'user', text: '/wajiha-kit:setup', command: true },
   ],
   [

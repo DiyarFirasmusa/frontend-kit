@@ -1,9 +1,8 @@
 ---
-import { stepChat } from '../../content/guide/chat.ts'
+import { chatWords, stepChat } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
 import ChatEvent from './ChatEvent.astro'
-import ChatWindow from './ChatWindow.astro'
 
 interface Props {
   locale: Locale
@@ -14,40 +13,37 @@ const { install, skills, rules, guard, gate, done } = home.steps
 const steps = [install, skills, rules, guard, gate, done]
 ---
 
-<section id="example" class="example" data-example>
+<section id="example" class="example">
   <div class="column example-head">
     <h2>{home.example[locale]}</h2>
     <p>{home.exampleLead[locale]}</p>
   </div>
-  <div class="column example-body">
-    <ol class="run">
-      {
-        steps.map(({ name, text }, i) => (
-          <li data-step={i}>
-            <button type="button" class="run-pick" data-jump={i}>
-              <span class="run-number" dir="ltr">
-                {i + 1}
-              </span>
-              <span class="run-text">
-                <strong>{name[locale]}</strong>
-                <span>{text[locale]}</span>
-              </span>
-            </button>
-            <span class="run-bar" aria-hidden="true"></span>
-          </li>
-        ))
-      }
-    </ol>
-    <ChatWindow locale={locale} label={home.example[locale]}>
-      <div class="session-lines">
-        {
-          stepChat.map((events, i) => (
-            <div class="session-group" data-shows={i}>
-              <div class="group-inner">{events.map((event) => <ChatEvent locale={locale} event={event} />)}</div>
+  <ol class="column flow">
+    {
+      steps.map(({ name, text }, i) => (
+        <li class="flow-step">
+          <div class="flow-words">
+            <span class="run-number" dir="ltr">
+              {i + 1}
+            </span>
+            <h3>{name[locale]}</h3>
+            <p>{text[locale]}</p>
+          </div>
+          <figure class="chat flow-chat" aria-label={name[locale]}>
+            <div class="chat-bar" aria-hidden="true">
+              <span class="chat-lights"><i></i><i></i><i></i></span>
+              <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
             </div>
-          ))
-        }
-      </div>
-    </ChatWindow>
-  </div>
+            <div class="chat-body">
+              {stepChat[i]!.map((event, n) => (
+                <div class="flow-message" style={`--n:${n}`}>
+                  <ChatEvent locale={locale} event={event} />
+                </div>
+              ))}
+            </div>
+          </figure>
+        </li>
+      ))
+    }
+  </ol>
 </section>

@@ -4,12 +4,14 @@ import type { Copy } from '../content/types.ts'
 interface Props {
   command: string
   install: Copy['install']
+  /** A message in words rather than a command: it wraps and follows the page's language. */
+  message?: boolean
 }
 
-const { command, install } = Astro.props
+const { command, install, message = false } = Astro.props
 ---
 
-<div class="command" dir="ltr">
+<div class:list={['command', { 'is-message': message }]} dir={message ? 'auto' : 'ltr'}>
   <code>{command}</code>
   <button type="button" data-copy={command} data-label={install.copy} data-done={install.copied} data-failed={install.failed}>
     <span aria-live="polite" data-status>{install.copy}</span>

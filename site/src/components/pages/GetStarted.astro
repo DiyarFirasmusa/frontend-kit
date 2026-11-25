@@ -1,10 +1,9 @@
 ---
-import { after, build, installSteps, installTitles, limits, maintenance, needs, openStep, questions, questionsLead, summary } from '../../content/guide/start.ts'
+import { after, build, installFlow, limits, maintenance, needs, questions, questionsLead, summary } from '../../content/guide/start.ts'
 import { t } from '../../content/guide/text.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
-import { INSTALL_COMMANDS } from '../../lib/plugin.ts'
 import CommandBox from '../CommandBox.astro'
 import Block from '../guide/Block.astro'
 
@@ -41,13 +40,13 @@ const words = {
     ))}
   </ul>
 </Block>
-<Block id="install" title={words.install[locale]} lead={openStep[locale]}>
+<Block id="install" title={words.install[locale]}>
   <ol class="explained">
-    {INSTALL_COMMANDS.map((command, i) => (
+    {installFlow.map(({ title, text, copy }) => (
       <li>
-        <h3>{installTitles[i]?.[locale]}</h3>
-        <CommandBox command={command} install={install} />
-        <p>{installSteps[i]?.[locale]}</p>
+        <h3>{title[locale]}</h3>
+        <p>{text[locale]}</p>
+        {copy && <CommandBox command={typeof copy === 'string' ? copy : copy[locale]} install={install} message={typeof copy !== 'string'} />}
       </li>
     ))}
   </ol>

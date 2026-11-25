@@ -10,6 +10,8 @@ const ARRIVING = [
   '.doc-article .source-doc > *',
   '.section-head > *',
   '.example-head > *',
+  '.flow-step',
+  '.build-card',
   '.points li',
   '.start-cases li',
   '.kinds',
