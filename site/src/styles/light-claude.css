@@ -445,8 +445,18 @@ html[data-theme='light'] .board-note a:not(.hero-start) {
   color: #141413;
 }
 
-[dir='rtl'] .doc-article .command {
+[dir='rtl'] .doc-article .command.is-message {
   direction: rtl;
+}
+
+.doc-article .command:not(.is-message) {
+  direction: ltr;
+}
+
+.doc-article .command code {
+  align-self: stretch;
+  min-width: 0;
+  max-width: 100%;
 }
 
 [dir='rtl'] .doc-article .command .msg-command {
@@ -723,4 +733,11 @@ html[data-theme='light'] .board .board-main :is(a, button, input):focus-visible:
 
 html .board-list li small {
   opacity: 1;
+}
+
+/* In Arabic a plain command runs left to right inside, but its orange edge stays on the page's start side (right). */
+[dir='rtl'] .doc-article .command:not(.is-message) {
+  border-left-width: 1px;
+  border-left-color: rgb(var(--ink-rgb) / 0.16);
+  border-right: 3px solid var(--accent);
 }

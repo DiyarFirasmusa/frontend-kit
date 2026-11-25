@@ -35,12 +35,12 @@ const sample = skillGuides['create-form']!
   </div>
 </Block>
 
-<div class="finder" id="all" data-finder>
+<div class="finder" id="all" data-finder data-found={locale === 'ar' ? 'مهارة' : 'skills'}>
   <label>
     <span class="sr-only">{ui.search[locale]}</span>
     <input type="search" placeholder={ui.search[locale]} autocomplete="off" data-finder-input />
   </label>
-  <p role="status" class="muted" data-finder-empty hidden>{ui.noMatch[locale]}</p>
+  <p class="muted" data-finder-empty hidden>{ui.noMatch[locale]}</p>
 </div>
 
 {

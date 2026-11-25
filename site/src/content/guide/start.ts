@@ -34,7 +34,7 @@ export const installMessage = t(
 export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof t>; copy?: ReturnType<typeof t> | string }[] = [
   {
     title: t('Open a folder in the Claude app', 'افتح مجلدا في تطبيق Claude'),
-    text: t('Make a new empty folder on your computer, for example “my-⁠shop”. Open the Claude app, choose Code, and pick the folder with the folder button.', 'أنشئ مجلدا جديدا فارغا على حاسوبك، مثل «متجري». افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد.'),
+    text: t('Make a new empty folder on your computer, for example “my-shop”. Open the Claude app, choose Code, and pick the folder with the folder button.', 'أنشئ مجلدا جديدا فارغا على حاسوبك، مثل «⁦my-shop⁩». افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد.'),
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
