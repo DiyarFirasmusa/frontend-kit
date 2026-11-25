@@ -85,6 +85,9 @@ const product = JSON.stringify({
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={locale === 'ar' ? 'ar_IQ' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta property="og:image:type" content="image/jpeg" />
     <link rel="preload" as="font" type="font/woff2" href={grotesk} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={mono} crossorigin />
     {locale === 'ar' && <link rel="preload" as="font" type="font/woff2" href={arabic400} crossorigin />}

@@ -360,6 +360,78 @@
       body.docs .only-home {
         display: none;
       }
+      /* The home image: the mark large on one side, the words on the other. */
+      body.home .brand {
+        display: none;
+      }
+
+      .lockup {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        gap: 64px;
+        padding: 0 88px;
+      }
+
+      .big-mark {
+        flex: none;
+        width: 300px;
+        height: 300px;
+        filter: drop-shadow(0 30px 60px rgb(0 0 0 / 0.5)) drop-shadow(0 0 80px rgb(217 119 87 / 0.25));
+      }
+
+      .big-mark rect {
+        fill: #f1ede7;
+      }
+
+      .big-mark .block {
+        fill: var(--accent);
+      }
+
+      .big-mark .menu {
+        fill: #19abab;
+      }
+
+      .lockup-words {
+        display: grid;
+        gap: 18px;
+      }
+
+      .lockup-name {
+        margin: 0;
+        color: #fff;
+        font: 600 44px/1 'Grotesk';
+        letter-spacing: -0.02em;
+      }
+
+      .lockup h1 {
+        position: static;
+        width: auto;
+        margin: 0;
+        font: 600 58px/1.06 'Grotesk';
+        letter-spacing: -0.025em;
+      }
+
+      [dir='rtl'] .lockup h1 {
+        font: 500 52px/1.35 'Arabic', 'Grotesk', sans-serif;
+        letter-spacing: 0;
+      }
+
+      .lockup-sub {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font: 400 24px/1.3 'Grotesk', 'Arabic';
+      }
+
+      [dir='rtl'] .lockup-sub {
+        font-family: 'Arabic', 'Grotesk';
+      }
+
+      .lockup-sub b {
+        color: var(--ivory);
+        font: 500 22px/1 'Mono';
+      }
     </style>
   </head>
   <body>
@@ -380,20 +452,18 @@
       </div>
 
       <!-- HOME -->
-      <h1 class="only-home" id="title"><span></span><span class="hot"></span></h1>
-      <div class="sub only-home" id="sub"><span></span><small>wajiha-kit.vercel.app</small></div>
-      <div class="console only-home" dir="ltr">
-        <div class="welcome"><i>✻</i> Welcome to <b>Claude Code</b>!<br />/help for help, /status for your current setup</div>
-        <div class="user"><i>&gt;</i><span id="prompt"></span></div>
-        <div class="lines">
-          <div class="call">Skill<em>(dash-create-table)</em></div>
-          <div class="call">Rule<em>(dashboard/data-tables.md)</em></div>
-          <div>
-            <div class="call">Stop hook</div>
-            <div class="note"><b style="color: #f1ede7">✓</b> typecheck and related tests passed</div>
-          </div>
+      <div class="lockup only-home">
+        <svg class="big-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="5" y="5" width="54" height="12" rx="4"></rect>
+          <rect class="menu" x="45" y="21" width="14" height="38" rx="4"></rect>
+          <rect class="block" x="5" y="21" width="36" height="20" rx="4"></rect>
+          <rect x="5" y="45" width="36" height="14" rx="4"></rect>
+        </svg>
+        <div class="lockup-words">
+          <p class="lockup-name">Wajiha Kit</p>
+          <h1 id="title"><span></span><span class="hot"></span></h1>
+          <p class="lockup-sub"><span id="sub"></span> · <b><bdi>wajihakit.com</bdi></b></p>
         </div>
-        <div class="box"><i>&gt;</i> Try “fix lint errors”</div>
       </div>
 
       <!-- DOCUMENTATION -->
@@ -406,27 +476,25 @@
       const looks = {
         en: {
           dir: 'ltr',
-          title: ['Build any frontend project.', 'Get the best result.'],
+          title: ['Build your own website', 'or dashboard. No coding.'],
           sub: 'A Claude Code plugin',
-          prompt: 'Add an orders page with a table and a status filter',
         },
         ar: {
           dir: 'rtl',
-          title: ['ابدأ بأي مشروع واجهات.', 'واحصل على أفضل نتيجة.'],
-          sub: 'إضافة لـ Claude Code',
-          prompt: 'أنشئ صفحة طلبات فيها جدول وفلتر للحالة',
+          title: ['اصنع موقعك أو لوحة التحكم', 'بنفسك، دون برمجة.'],
+          sub: 'إضافة لـ ⁦Claude Code⁩',
         },
         docs: {
           dir: 'ltr',
-          docs: ['Documentation'],
-          lead: 'Every skill, agent, rule and hook, explained in plain words.',
-          kinds: ['Skills', 'Agents', 'Rules', 'Hooks'],
+          docs: ['The guide'],
+          lead: 'From your first idea to a working project, in plain words.',
+          kinds: ['Skills', 'Specialists', 'Rules', 'Safety checks'],
         },
         'docs-ar': {
           dir: 'rtl',
-          docs: ['التوثيق'],
-          lead: 'كل مهارة ووكيل وقاعدة وحارس، بكلمات بسيطة.',
-          kinds: ['المهارات', 'الوكلاء', 'القواعد', 'الحراس'],
+          docs: ['الدليل'],
+          lead: 'من فكرتك الأولى إلى مشروع يعمل، بكلمات بسيطة.',
+          kinds: ['المهارات', 'المختصون', 'القواعد', 'فحوص الأمان'],
         },
       }
       const key = location.hash.slice(1) || 'en'
@@ -438,8 +506,7 @@
         const [one, two] = document.querySelectorAll('#title span')
         one.textContent = look.title[0]
         two.textContent = look.title[1]
-        document.querySelector('#sub span').textContent = look.sub
-        document.querySelector('#prompt').textContent = look.prompt
+        document.querySelector('#sub').textContent = look.sub
       } else {
         document.querySelector('#docs-title span').textContent = look.docs[0]
         document.querySelector('#docs-lead').textContent = look.lead

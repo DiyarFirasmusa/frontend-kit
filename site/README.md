@@ -16,7 +16,7 @@ Building needs `bash`, `git` and `jq`: the gate demo runs the plugin's real `gua
 
 ## Deploy (Vercel)
 
-Live: https://wajiha-kit.vercel.app (project `wajiha-kit`, connected to `main`).
+Live: https://www.wajihakit.com (Vercel project `wajiha-kit`, connected to `main`; wajihakit.com and wajiha-kit.vercel.app lead there too).
 
 Import the repository with **Root Directory** set to `site`, and keep "Include source files outside of the Root Directory"
 on: the build reads `../plugins` and `../examples`. `vercel.json` holds the rest. Pushes to `main` then publish.

@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config'
 
-// The public origin, for canonical links and the share image. Vercel provides it during its builds.
-const host = process.env.VERCEL_PROJECT_PRODUCTION_URL
-const site = process.env.SITE_URL ?? (host ? `https://${host}` : 'http://localhost:4321')
+// The public origin, for canonical links and the share image. On Vercel it is the site's own address:
+// www.wajihakit.com (wajihakit.com and the .vercel.app address both redirect there).
+const site = process.env.SITE_URL ?? (process.env.VERCEL ? 'https://www.wajihakit.com' : 'http://localhost:4321')
 
 export default defineConfig({
   site,

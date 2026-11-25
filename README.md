@@ -2,7 +2,7 @@
 
 **A plugin that makes your coding assistant work like a frontend team.**
 
-[Website](https://wajiha-kit.vercel.app) · [العربية](https://wajiha-kit.vercel.app/ar/) · [Documentation](https://wajiha-kit.vercel.app/docs/)
+[Website](https://www.wajihakit.com) · [العربية](https://www.wajihakit.com/ar/) · [Documentation](https://www.wajihakit.com/docs/)
 
 - **What is it?** A Claude Code plugin for frontend projects in any stack, React and TypeScript first-class: written
   know-how, standards, reviewers and automatic guards.
