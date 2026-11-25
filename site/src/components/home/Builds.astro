@@ -17,19 +17,20 @@ const { locale } = Astro.props
     <h2>{home.builds.title[locale]}</h2>
     <p>{home.builds.lead[locale]}</p>
   </div>
-  <div class="column show">
-    <nav class="show-tabs" aria-label={home.builds.title[locale]}>
+  <div class="column show" data-alive>
+    <div class="show-tabs" role="tablist" aria-label={home.builds.title[locale]}>
       {
         showcase.map(({ id, tab }, i) => (
-          <a href={`#kind-${id}`} data-kind-link={i} aria-current={i === 0 ? 'true' : undefined}>
+          <button type="button" role="tab" id={`tab-${id}`} aria-controls={`kind-${id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-kind-tab={i}>
             {tab[locale]}
-          </a>
+            <i class="tab-fill" aria-hidden="true"></i>
+          </button>
         ))
       }
-    </nav>
+    </div>
     {
       showcase.map(({ id, title, text, chips, say, url }, i) => (
-        <article class="show-panel" id={`kind-${id}`} data-kind={i} data-alive>
+        <div class="show-panel" role="tabpanel" id={`kind-${id}`} aria-labelledby={`tab-${id}`} data-kind={i} data-hidden={i > 0 ? '' : undefined}>
           <div class="show-words">
             <h3>{title[locale]}</h3>
             <p>{text[locale]}</p>
@@ -50,7 +51,7 @@ const { locale } = Astro.props
               </div>
             </div>
           </div>
-        </article>
+        </div>
       ))
     }
   </div>

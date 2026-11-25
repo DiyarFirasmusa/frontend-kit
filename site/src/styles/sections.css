@@ -14,47 +14,78 @@
 }
 
 .show-tabs {
-  position: sticky;
-  inset-block-start: calc(var(--bar, 4rem) + 0.75rem);
-  z-index: 5;
   display: flex;
   gap: 0.25rem;
   width: max-content;
   max-width: 100%;
-  margin-block-end: 1rem;
   padding: 0.3125rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: #0b0c0d;
-  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.45);
 }
 
-.show-tabs a {
+.show-tabs button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 2.5rem;
   padding: 0 1.25rem;
+  overflow: hidden;
+  border: 0;
   border-radius: 999px;
+  background: none;
   color: var(--muted);
+  font: inherit;
   font-weight: 500;
-  text-decoration: none;
+  cursor: pointer;
   transition:
     background-color 0.3s,
     color 0.3s;
 }
 
-.show-tabs a:hover {
+.show-tabs button:hover {
   color: var(--ivory);
 }
 
-.show-tabs a[aria-current] {
+.show-tabs button[aria-selected='true'] {
   background: var(--accent);
   color: #141413;
 }
 
-.show-tabs a:focus-visible {
+.show-tabs button:focus-visible {
   outline: 2px solid var(--turq, #19abab);
   outline-offset: 2px;
+}
+
+/* The time left before the next kind, under the chosen tab. */
+.tab-fill {
+  position: absolute;
+  inset-inline: 1rem;
+  inset-block-end: 0.3rem;
+  height: 2px;
+  border-radius: 2px;
+  background: rgb(20 20 19 / 0.5);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+[dir='rtl'] .tab-fill {
+  transform-origin: right;
+}
+
+.builds.is-turning.is-ticking .show-tabs button[aria-selected='true'] .tab-fill {
+  animation: tab-time 6s linear forwards;
+}
+
+.builds.is-held .tab-fill,
+.builds.is-held-away .tab-fill {
+  animation-play-state: paused !important;
+}
+
+@keyframes tab-time {
+  to {
+    transform: none;
+  }
 }
 
 .show-panel {
@@ -62,16 +93,11 @@
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
-  padding-block: clamp(2.5rem, 6vw, 4.5rem);
-  scroll-margin-block-start: calc(var(--bar, 4rem) + 4.5rem);
+  margin-block-start: 2rem;
 }
 
-.show-panel + .show-panel {
-  border-block-start: 1px solid var(--line);
-}
-
-.show-panel:nth-of-type(even) .show-picture {
-  order: -1;
+.js .show-panel[data-hidden] {
+  display: none;
 }
 
 @keyframes show-in {
@@ -949,8 +975,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .show-picture,
-  .show-panel:nth-of-type(even) .show-picture {
+  .show-picture {
     order: -1;
   }
 }
@@ -965,52 +990,46 @@
     width: auto;
   }
 
-  .show-tabs a {
+  .show-tabs button {
     flex: 1;
     justify-content: center;
     padding-inline: 0.5rem;
   }
 }
 
-/* When a kind is reached: the words slide in, the window settles, and the drawing's pieces arrive one after another. */
+/* Each change: the words slide in, the window settles, and the drawing's pieces arrive one after another. */
 @media (prefers-reduced-motion: no-preference) {
-  .builds.is-live .show-panel:not(.is-seen) :is(.show-words > *, .browser) {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .builds.is-live .show-panel.is-seen .show-words > * {
+  .builds.is-live .show-panel:not([data-hidden]) .show-words > * {
     animation: show-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .builds.is-live .show-panel.is-seen .show-words > :nth-child(2) { animation-delay: 0.06s; }
-  .builds.is-live .show-panel.is-seen .show-words > :nth-child(3) { animation-delay: 0.12s; }
-  .builds.is-live .show-panel.is-seen .show-words > :nth-child(4) { animation-delay: 0.18s; }
+  .builds.is-live .show-panel:not([data-hidden]) .show-words > :nth-child(2) { animation-delay: 0.06s; }
+  .builds.is-live .show-panel:not([data-hidden]) .show-words > :nth-child(3) { animation-delay: 0.12s; }
+  .builds.is-live .show-panel:not([data-hidden]) .show-words > :nth-child(4) { animation-delay: 0.18s; }
 
-  .builds.is-live .show-panel.is-seen .browser {
+  .builds.is-live .show-panel:not([data-hidden]) .browser {
     animation: show-window 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .builds.is-live .show-panel.is-seen :is(.mock-nav, .mock-hero, .mock-products > span, .mock-side, .mock-stats > span, .mock-chart i, .mock-table > span) {
+  .builds.is-live .show-panel:not([data-hidden]) :is(.mock-nav, .mock-hero, .mock-products > span, .mock-side, .mock-stats > span, .mock-chart i, .mock-table > span) {
     animation: show-piece 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .builds.is-live .show-panel.is-seen :is(.mock-hero, .mock-stats > span:nth-child(1), .mock-chart i:nth-child(1), .mock-table > span:nth-child(1)) { animation-delay: 0.12s; }
-  .builds.is-live .show-panel.is-seen :is(.mock-products > span:nth-child(1), .mock-stats > span:nth-child(2), .mock-chart i:nth-child(2), .mock-table > span:nth-child(2)) { animation-delay: 0.2s; }
-  .builds.is-live .show-panel.is-seen :is(.mock-products > span:nth-child(2), .mock-stats > span:nth-child(3), .mock-chart i:nth-child(3), .mock-table > span:nth-child(3)) { animation-delay: 0.28s; }
-  .builds.is-live .show-panel.is-seen :is(.mock-products > span:nth-child(3), .mock-chart i:nth-child(4)) { animation-delay: 0.36s; }
-  .builds.is-live .show-panel.is-seen .mock-chart i:nth-child(5) { animation-delay: 0.42s; }
-  .builds.is-live .show-panel.is-seen .mock-chart i:nth-child(6) { animation-delay: 0.48s; }
-  .builds.is-live .show-panel.is-seen .mock-chart i:nth-child(7) { animation-delay: 0.54s; }
+  .builds.is-live .show-panel:not([data-hidden]) :is(.mock-hero, .mock-stats > span:nth-child(1), .mock-chart i:nth-child(1), .mock-table > span:nth-child(1)) { animation-delay: 0.12s; }
+  .builds.is-live .show-panel:not([data-hidden]) :is(.mock-products > span:nth-child(1), .mock-stats > span:nth-child(2), .mock-chart i:nth-child(2), .mock-table > span:nth-child(2)) { animation-delay: 0.2s; }
+  .builds.is-live .show-panel:not([data-hidden]) :is(.mock-products > span:nth-child(2), .mock-stats > span:nth-child(3), .mock-chart i:nth-child(3), .mock-table > span:nth-child(3)) { animation-delay: 0.28s; }
+  .builds.is-live .show-panel:not([data-hidden]) :is(.mock-products > span:nth-child(3), .mock-chart i:nth-child(4)) { animation-delay: 0.36s; }
+  .builds.is-live .show-panel:not([data-hidden]) .mock-chart i:nth-child(5) { animation-delay: 0.42s; }
+  .builds.is-live .show-panel:not([data-hidden]) .mock-chart i:nth-child(6) { animation-delay: 0.48s; }
+  .builds.is-live .show-panel:not([data-hidden]) .mock-chart i:nth-child(7) { animation-delay: 0.54s; }
 
   /* The bars of the chart grow from the bottom instead of sliding. */
-  .builds.is-live .show-panel.is-seen .mock-chart i {
+  .builds.is-live .show-panel:not([data-hidden]) .mock-chart i {
     animation-name: show-bar;
     transform-origin: bottom;
   }
 
-  .builds.is-live .show-panel.is-seen .mock-stage.is-fullstack .mock-dash {
+  .builds.is-live .show-panel:not([data-hidden]) .mock-stage.is-fullstack .mock-dash {
     animation: show-front 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
   }
 }
