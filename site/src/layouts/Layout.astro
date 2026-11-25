@@ -136,6 +136,7 @@ const trail =
       // A page swapped in without a reload brings its own <html>: mark it again, or the tabs show every panel.
       document.addEventListener('astro:after-swap', () => document.documentElement.classList.add('js'))
     </script>
+  {import.meta.env.PROD && <script is:inline defer src="/_vercel/speed-insights/script.js" />}
   </head>
   <body>
     <slot />

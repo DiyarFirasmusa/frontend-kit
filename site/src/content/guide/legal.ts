@@ -112,8 +112,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('This website', 'هذا الموقع'),
       text: [
         t(
-          'This website sets no cookies and uses no analytics, no advertising and no tracking. It has no accounts, forms or comments, so it asks you for nothing. Its fonts and files come from this website. The only other party is its host, Vercel.',
-          'هذا الموقع لا يضع ملفات تعريف الارتباط (كوكيز)، ولا يستخدم أي تحليلات أو إعلانات أو تتبع. وليس فيه حسابات ولا نماذج ولا تعليقات، فهو لا يطلب منك شيئا. وخطوطه وملفاته تأتي من هذا الموقع. والجهة الوحيدة الأخرى هي مستضيفه ⁦Vercel⁩.',
+          'This website sets no cookies, shows no advertising and does not follow you from one site to another. It measures how fast its pages load with Vercel Speed Insights, which uses no cookies and collects only things like the page address, the kind of device and browser, and the country. It has no accounts, forms or comments, so it asks you for nothing. Its fonts and files come from this website. The only other party is its host, Vercel.',
+          'هذا الموقع لا يضع ملفات تعريف الارتباط (كوكيز)، ولا يعرض إعلانات، ولا يتتبعك بين المواقع. ويقيس سرعة تحميل صفحاته بأداة ⁦Vercel Speed Insights⁩، وهي لا تستخدم كوكيز ولا تجمع إلا أشياء مثل عنوان الصفحة ونوع الجهاز والمتصفح والبلد. وليس فيه حسابات ولا نماذج ولا تعليقات، فهو لا يطلب منك شيئا. وخطوطه وملفاته تأتي من هذا الموقع. والجهة الوحيدة الأخرى هي مستضيفه ⁦Vercel⁩.',
         ),
       ],
     },
@@ -122,8 +122,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Hosting', 'الاستضافة'),
       text: [
         t(
-          'The website is hosted by Vercel. Like most hosts, Vercel keeps ordinary server records of each visit, such as the IP address, the time and the page asked for, to run and protect its service. This website adds no analytics of its own on top of that.',
-          'يُستضاف الموقع لدى ⁦Vercel⁩. وكأغلب شركات الاستضافة، تحتفظ ⁦Vercel⁩ بسجلات خادم عادية لكل زيارة، مثل عنوان ⁦IP⁩ والوقت والصفحة المطلوبة، لتشغيل خدمتها وحمايتها. ولا يضيف هذا الموقع أي تحليلات من تلقاء نفسه فوق ذلك.',
+          'The website is hosted by Vercel. Like most hosts, Vercel keeps ordinary server records of each visit, such as the IP address, the time and the page asked for, to run and protect its service. On top of that it adds only the speed measurement described above.',
+          'يُستضاف الموقع لدى ⁦Vercel⁩. وكأغلب شركات الاستضافة، تحتفظ ⁦Vercel⁩ بسجلات خادم عادية لكل زيارة، مثل عنوان ⁦IP⁩ والوقت والصفحة المطلوبة، لتشغيل خدمتها وحمايتها. ولا يضيف هذا الموقع فوق ذلك إلا قياس السرعة الموصوف أعلاه.',
         ),
       ],
       links: [{ label: t('Vercel’s privacy policy', 'سياسة الخصوصية لدى Vercel'), to: 'https://vercel.com/legal/privacy-notice', kind: 'outside' }],
