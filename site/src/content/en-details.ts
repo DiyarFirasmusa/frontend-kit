@@ -94,7 +94,7 @@ export const enDetails: Details = {
         title: 'It fits a team',
         items: [
           ['Lives in your project folder', 'CLAUDE.md, rules, settings and the kit’s settings file are plain files your team can read, review and save.'],
-          ['Easy to update', 'Setup turns on automatic updates. Where the updater is off, you update by hand from the command window.'],
+          ['Easy to update', 'Setup leaves automatic updates off, so nothing changes until you decide. You update by hand from the command window, after you read the changelog.'],
           ['Cleans up safely', 'Files from another setup are moved to a dated backup, never deleted.'],
           ['Worked examples', 'Reference projects for Next.js, React Router, Jest, several apps in one folder, a site plus an admin, and fixing an old project.'],
         ],

@@ -117,8 +117,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('The kit on your computer', 'الإضافة على جهازك'),
       text: [
         t(
-          'Wajiha Kit runs on your computer, and the kit itself does not collect anything or send anything to its maker. Other services are still involved when you use it: Claude sends the parts of your project that the assistant reads to Anthropic, under Anthropic’s terms and privacy policy. A documentation tool called Context7 receives documentation searches. Helper tools are downloaded from npm. A link you give, such as a design or a description of your backend, is opened from your computer. Two helper programs, Chrome DevTools and Playwright, can open web pages and read what is on them, so use them only on pages that are not private.',
-          'تعمل واجهة على جهازك، والإضافة نفسها لا تجمع شيئا ولا ترسل شيئا إلى صانعها. لكن تدخل خدمات أخرى في العمل عند استخدامها: يرسل ⁦Claude⁩ الأجزاء التي يقرؤها المساعد من مشروعك إلى ⁦Anthropic⁩، وفق شروطها وسياسة الخصوصية لديها. وتستقبل أداة التوثيق ⁦Context7⁩ عمليات البحث في التوثيق. وتُنزَّل الأدوات المساعدة من ⁦npm⁩. وأي رابط تعطيه، مثل تصميم أو وصف لخادمك، يُفتح من جهازك. وبرنامجان مساعدان، هما ⁦Chrome DevTools⁩ و⁦Playwright⁩، يستطيعان فتح صفحات الويب وقراءة ما فيها، فاستخدمهما فقط في صفحات ليست خاصة.',
+          'Wajiha Kit runs on your computer, and the kit itself does not collect anything or send anything to its maker. Other services are still involved when you use it: Claude sends the parts of your project that the assistant reads to Anthropic, under Anthropic’s terms and privacy policy. A documentation tool called Context7 receives documentation searches. Helper tools are downloaded from npm. A link you give, such as a design or a description of your backend, is opened from your computer. Setup asks once whether to add two helper programs, Chrome DevTools and Playwright. If you say yes, they can open web pages and read what is on them, so use them only on pages that are not private.',
+          'تعمل واجهة على جهازك، والإضافة نفسها لا تجمع شيئا ولا ترسل شيئا إلى صانعها. لكن تدخل خدمات أخرى في العمل عند استخدامها: يرسل ⁦Claude⁩ الأجزاء التي يقرؤها المساعد من مشروعك إلى ⁦Anthropic⁩، وفق شروطها وسياسة الخصوصية لديها. وتستقبل أداة التوثيق ⁦Context7⁩ عمليات البحث في التوثيق. وتُنزَّل الأدوات المساعدة من ⁦npm⁩. وأي رابط تعطيه، مثل تصميم أو وصف لخادمك، يُفتح من جهازك. ويسألك الإعداد مرة واحدة إن كنت تريد إضافة برنامجين مساعدين، هما ⁦Chrome DevTools⁩ و⁦Playwright⁩. وإن وافقت فيستطيعان فتح صفحات الويب وقراءة ما فيها، فاستخدمهما فقط في صفحات ليست خاصة.',
         ),
       ],
       links: [{ label: t('Anthropic’s privacy policy', 'سياسة الخصوصية لدى Anthropic'), to: 'https://www.anthropic.com/legal/privacy', kind: 'outside' }],
@@ -128,8 +128,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Updates', 'التحديثات'),
       text: [
         t(
-          'Setup turns on automatic updates from the kit’s GitHub repository, so a new version can reach your computer without you asking. To read each version before you take it, switch automatic updates off and update by hand after you have read the changelog.',
-          'يفعّل الإعداد التحديث التلقائي من مستودع الإضافة على ⁦GitHub⁩، فقد تصل نسخة جديدة إلى جهازك دون أن تطلبها. وإن أردت أن تقرأ كل نسخة قبل أن تأخذها، فأوقف التحديث التلقائي وحدّث يدويا بعد أن تقرأ سجل التغييرات.',
+          'Setup leaves automatic updates off, so a new version reaches your computer only when you update by hand. Updates come from the kit’s GitHub repository: read the changelog before you take one. If you switch automatic updates on yourself, new versions arrive without you asking.',
+          'يترك الإعداد التحديث التلقائي مطفأ، فلا تصل نسخة جديدة إلى جهازك إلا عندما تحدّث بنفسك. وتأتي التحديثات من مستودع الإضافة على ⁦GitHub⁩، فاقرأ سجل التغييرات قبل أن تأخذ أي نسخة. وإن شغّلت التحديث التلقائي بنفسك، فستصل النسخ الجديدة دون أن تطلبها.',
         ),
       ],
     },
