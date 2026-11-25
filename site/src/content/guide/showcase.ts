@@ -74,7 +74,7 @@ export const journeyWords = {
   lead: t('From the first message to a project you can open. You write no code.', 'من أول رسالة إلى مشروع تفتحه. ولا تكتب أي كود.'),
   /** What happens at each stop, one sentence each. */
   details: [
-    t('You send one message. Claude installs the kit.', 'ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة.'),
+    t('Claude installs the kit for you.', 'يثبّت ⁦Claude⁩ الإضافة لك.'),
     t('A few plain questions, then a short plan. Nothing starts before your yes.', 'أسئلة بسيطة، ثم خطة قصيرة. ولا يبدأ شيء قبل موافقتك.'),
     t('Pages, forms and sign-in, with sample data. It tests the work and fixes what fails.', 'صفحات ونماذج وتسجيل دخول، ببيانات تجريبية. ويختبر العمل ويصلح ما يفشل.'),
     t('You get a short report and decide what to keep.', 'يصلك تقرير قصير، وتقرر ما تحتفظ به.'),

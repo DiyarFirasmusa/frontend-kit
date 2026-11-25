@@ -317,3 +317,82 @@ html[data-theme='light'] .board-main input:focus-visible {
     min-height: 0;
   }
 }
+
+/* Round 5: one side-column width on every home board, so the main block's edge never moves from part to part. */
+@media (min-width: 48rem) {
+  html #builds .board.side-ink,
+  html #example .board.side-ink,
+  html #why .board.side-ink,
+  html #install .board.side-ink {
+    grid-template-columns: minmax(0, 1fr) 19rem;
+  }
+}
+
+/* Row names are not underlined; they underline on hover. */
+.doc :is(.index a, .rows dt a, .hub-path a) {
+  text-decoration: none;
+}
+
+.doc :is(.index a, .rows dt a, .hub-path a):hover {
+  text-decoration: underline;
+}
+
+.doc :is(.index p, .index span:last-child, .hub-path p) {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* In a copy window the command is a little smaller than the sentences around it. */
+.command .msg-command,
+.start-window .msg-command {
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.command .msg-line,
+.start-window .msg-line {
+  font-size: 0.875rem;
+}
+
+/* The specialists card keeps its names at the bottom. */
+.doc .hub-kinds [data-kind='agent'] .hub-kind-rows {
+  margin-block-start: auto;
+}
+
+/* Round 5 (Arabic, phone): code windows. Full column width, the same on every page, prose a step larger in Arabic,
+   and on a phone the copy pill sits under the text at full width. */
+.doc-article :is(.command, .prompt) {
+  max-width: none;
+  width: 100%;
+}
+
+:lang(ar) .doc-article .command :is(.msg-line, p, span:not(.msg-command)),
+:lang(ar) .start-window .msg-line {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+@media (max-width: 40rem) {
+  .doc-article .command {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .doc-article .command button {
+    align-self: stretch;
+    width: 100%;
+    margin-block-start: 0.25rem;
+  }
+
+  .doc-article .command .msg-command {
+    white-space: pre;
+    overflow-x: auto;
+    mask-image: linear-gradient(to right, #000 88%, transparent);
+  }
+
+  /* The comparison on a phone keeps the one stat and the table: the third card and the chips would not fit. */
+  .ba .dash-stats > :nth-child(n + 5),
+  .ba .dash-toast {
+    display: none;
+  }
+}
