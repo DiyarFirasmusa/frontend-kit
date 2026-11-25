@@ -1,5 +1,4 @@
 ---
-import { chatWords } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
 import { installWords as w } from '../../content/guide/showcase.ts'
 import { installFlow, installMessage } from '../../content/guide/start.ts'
@@ -12,59 +11,69 @@ interface Props {
 
 const { locale } = Astro.props
 const message = installMessage[locale]
+const [open, send, setup] = installFlow
 ---
 
 <section id="install" class="get-it">
-  <div class="column start-panel" data-alive>
-    <div class="start-steps">
-      <h2>{w.title[locale]}</h2>
-      <p class="start-lead">{w.lead[locale]}</p>
-      <ol>
-        {
-          installFlow.map(({ title, text }, i) => (
-            <li>
-              <span class="run-number" dir="ltr">
-                {i + 1}
-              </span>
-              <h3>{title[locale]}</h3>
-              <p>{text[locale]}</p>
-            </li>
-          ))
-        }
-      </ol>
-      <p class="hero-ways">
-        <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
-        <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
-      </p>
-    </div>
+  <div class="column section-head">
+    <h2>{w.title[locale]}</h2>
+    <p>{w.lead[locale]}</p>
+  </div>
 
-    <figure class="chat start-window" aria-label={w.title[locale]}>
-      <div class="chat-bar" aria-hidden="true">
-        <span class="chat-lights"><i></i><i></i><i></i></span>
-        <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
+  <ol class="column start-cards" data-alive>
+    <li class="start-card">
+      <div class="start-picture" aria-hidden="true">
+        <div class="sp-app">
+          <p class="sp-tabs" dir="ltr"><span>Chat</span><span class="is-on">Code</span></p>
+          <p class="sp-folder" dir="ltr"><i>▣</i> ~/my-shop</p>
+          <p class="sp-box"><span>{w.reply[locale]}</span><i class="chat-send">↑</i></p>
+        </div>
       </div>
-      <div class="start-body">
-        <p class="start-folder" aria-hidden="true">
-          <span class="start-folder-icon">▣</span>
-          <bdi dir="ltr">~/my-shop</bdi>
-        </p>
+      <div class="start-words">
+        <span class="run-number" dir="ltr">1</span>
+        <h3>{open!.title[locale]}</h3>
+        <p>{open!.text[locale]}</p>
+      </div>
+    </li>
+
+    <li class="start-card is-main">
+      <div class="start-picture" aria-hidden="true">
         <div class="start-message">
           <p class="start-text" dir="auto">{message}</p>
-          <p class="chat-tools" aria-hidden="true">
-            <i class="chat-plus">+</i>
-            <span class="chat-model" dir="ltr">{chatWords.model}</span>
-            <i class="chat-send">↑</i>
-          </p>
+          <i class="chat-send">↑</i>
         </div>
+      </div>
+      <div class="start-words">
+        <span class="run-number" dir="ltr">2</span>
+        <h3>{send!.title[locale]}</h3>
+        <p>{send!.text[locale]}</p>
         <button type="button" class="start-copy" data-copy={message} data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]}>
           <span aria-live="polite" data-status>{w.copy[locale]}</span>
         </button>
-        <p class="start-hint">{w.send[locale]}</p>
-        <div class="start-slash" aria-hidden="true">
-          <small>{w.slash[locale]}</small>
-          <p dir="ltr"><b>/wajiha-kit:setup</b></p>
+      </div>
+    </li>
+
+    <li class="start-card">
+      <div class="start-picture" aria-hidden="true">
+        <div class="sp-slash" dir="ltr">
+          <ul>
+            <li class="is-on"><b>/wajiha-kit:setup</b></li>
+            <li>/wajiha-kit:mode</li>
+            <li>/help</li>
+          </ul>
+          <p class="sp-box"><span class="sp-typed">/</span><b class="sp-caret"></b><i class="chat-send">↑</i></p>
         </div>
       </div>
-    </figure>
-  </div>
+      <div class="start-words">
+        <span class="run-number" dir="ltr">3</span>
+        <h3>{setup!.title[locale]}</h3>
+        <p>{setup!.text[locale]}</p>
+      </div>
+    </li>
+  </ol>
+
+  <p class="column hero-ways start-more">
+    <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
+    <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
+  </p>
 </section>

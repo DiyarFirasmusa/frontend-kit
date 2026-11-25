@@ -746,115 +746,138 @@
   text-align: center;
 }
 
-/* ---------- Install: the steps beside a big Claude window with the message ---------- */
-.get-it {
-  padding-block: clamp(4rem, 8vw, 7rem);
-}
-
-.start-panel {
+/* ---------- Install: three cards, each showing what you see on your screen at that step ---------- */
+.start-cards {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(2rem, 5vw, 4.5rem);
-  align-items: center;
-}
-
-.start-steps h2 {
-  font-size: var(--title, clamp(2rem, 1.2rem + 3vw, 3.25rem));
-}
-
-.start-lead {
-  margin-block: 1rem 2rem;
-  color: var(--muted);
-  font-size: var(--lead);
-}
-
-.start-steps ol {
-  position: relative;
-  display: grid;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-block: 0;
+  padding-block: 0;
   list-style: none;
 }
 
-/* The line that joins the three numbers. */
-.start-steps ol::before {
-  content: '';
-  position: absolute;
-  inset-block: 1rem 1rem;
-  inset-inline-start: 0.9rem;
-  width: 2px;
-  background: linear-gradient(180deg, var(--accent), var(--turq, #19abab));
-  opacity: 0.5;
+.start-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgb(241 237 231 / 0.035), rgb(241 237 231 / 0.01));
 }
 
-.start-steps li {
-  position: relative;
+.start-card.is-main {
+  border-color: rgb(217 119 87 / 0.45);
+  box-shadow: 0 0 3rem rgb(217 119 87 / 0.1);
+}
+
+.start-picture {
   display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr);
-  gap: 0.25rem 0.75rem;
+  place-items: center;
+  height: 13rem;
+  padding: 1rem;
+  border-block-end: 1px solid var(--line);
+  background:
+    radial-gradient(80% 90% at 50% 120%, rgb(217 119 87 / 0.16), transparent 70%),
+    #0b0c0d;
+  font-size: 0.8125rem;
 }
 
-.start-steps .run-number {
+.start-words {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.375rem 0.75rem;
+  align-content: start;
+  padding: 1.25rem 1.375rem 1.5rem;
+}
+
+.start-words .run-number {
   grid-row: span 2;
-  background: var(--void, #050607);
 }
 
-.start-steps h3 {
+.start-words h3 {
   color: #fff;
   font-size: var(--sub);
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-.start-steps li p {
+.start-words p {
+  margin: 0;
   color: var(--muted);
+  line-height: 1.7;
 }
 
-.start-steps .hero-ways {
-  margin-block-start: 1.75rem;
-}
-
-.start-window {
-  position: relative;
-}
-
-.start-window::before {
-  content: '';
-  position: absolute;
-  inset: -8% -6%;
-  z-index: -1;
-  background: radial-gradient(50% 60% at 50% 60%, rgb(217 119 87 / 0.22), transparent 70%);
-  pointer-events: none;
-}
-
-.start-body {
+/* 1: the app, Code chosen, the folder picked. */
+.sp-app {
   display: grid;
-  gap: 1rem;
-  padding: 1.25rem;
+  gap: 0.625rem;
+  width: 100%;
 }
 
-.start-folder {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-self: start;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid rgb(25 171 171 / 0.4);
+.sp-tabs {
+  display: flex;
+  gap: 0.25rem;
+  justify-self: center;
+  margin: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgb(25 171 171 / 0.08);
+}
+
+.sp-tabs span {
+  padding: 0.2rem 0.875rem;
+  border-radius: 999px;
+  color: var(--faint);
+}
+
+.sp-tabs .is-on {
+  background: var(--accent);
+  color: #141413;
+  font-weight: 600;
+}
+
+.sp-folder {
+  justify-self: start;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgb(25 171 171 / 0.45);
+  border-radius: 999px;
+  background: rgb(25 171 171 / 0.1);
   font: 500 0.8125rem / 1.6 var(--code);
 }
 
-.start-folder-icon {
+.sp-folder i {
   color: var(--turq, #19abab);
+  font-style: normal;
 }
 
+.sp-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding-block: 0.5rem;
+  padding-inline: 0.875rem 0.375rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-radius: 0.875rem;
+  background: #1f1f1d;
+  color: var(--faint);
+}
+
+.sp-box .chat-send {
+  width: 1.625rem;
+  height: 1.625rem;
+  margin-inline-start: auto;
+}
+
+/* 2: the message in the box. */
 .start-message {
-  display: grid;
-  gap: 0.75rem;
-  padding: 1rem 1rem 0.75rem;
+  position: relative;
+  width: 100%;
+  max-height: 100%;
+  padding: 0.75rem 0.875rem 2.5rem;
+  overflow: hidden;
   border: 1px solid rgb(217 119 87 / 0.55);
-  border-radius: 1.125rem;
+  border-radius: 1rem;
   background: #1f1f1d;
   box-shadow: 0 0 0 4px rgb(217 119 87 / 0.08);
 }
@@ -863,11 +886,22 @@
   margin: 0;
   white-space: pre-line;
   overflow-wrap: anywhere;
-  line-height: 1.7;
+  font-size: 0.75rem;
+  line-height: 1.65;
+}
+
+.start-message .chat-send {
+  position: absolute;
+  inset-block-end: 0.5rem;
+  inset-inline-end: 0.5rem;
+  width: 1.625rem;
+  height: 1.625rem;
 }
 
 .start-copy {
+  grid-column: 1 / -1;
   min-height: 3rem;
+  margin-block-start: 0.75rem;
   border: 0;
   border-radius: 999px;
   background: var(--accent);
@@ -888,38 +922,53 @@
   outline-offset: 3px;
 }
 
-.start-hint {
-  margin: -0.25rem 0 0;
-  color: var(--faint);
-  font-size: 0.875rem;
-  text-align: center;
-}
-
-.start-slash {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+/* 3: the slash list, with the setup chosen. */
+.sp-slash {
+  display: grid;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-block-start: 1px solid var(--line);
+  width: 100%;
 }
 
-.start-slash small {
+.sp-slash ul {
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0.375rem;
+  list-style: none;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 0.75rem;
+  background: #1c1c1a;
+  font: 500 0.8125rem / 1.6 var(--code);
   color: var(--faint);
 }
 
-.start-slash p {
-  margin: 0;
-  padding: 0.25rem 0.75rem;
+.sp-slash li {
+  padding: 0.25rem 0.625rem;
   border-radius: 0.5rem;
-  background: rgb(241 237 231 / 0.08);
-  font: 500 0.875rem / 1.6 var(--code);
 }
 
-.start-slash b {
+.sp-slash li.is-on {
+  background: rgb(217 119 87 / 0.16);
+  color: var(--ivory);
+}
+
+.sp-slash li.is-on b {
   color: var(--amber, #f2a183);
   font-weight: 500;
+}
+
+.sp-typed {
+  color: var(--ivory);
+}
+
+.sp-caret {
+  width: 2px;
+  height: 1.1em;
+  background: var(--accent);
+}
+
+.start-more {
+  margin-block-start: 2rem;
 }
 
 /* ---------- Small screens ---------- */
@@ -936,9 +985,13 @@
 }
 
 @media (max-width: 900px) {
-  .show-panel,
-  .start-panel {
+  .show-panel {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .start-cards {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
   }
 
   .show-picture {
@@ -1228,5 +1281,104 @@
 
   .path-label p {
     min-height: 0;
+  }
+}
+
+/* The road between the three cards: a dashed line that flows from one step to the next, with an arrow. */
+.start-cards {
+  gap: 3.5rem;
+}
+
+.start-card {
+  position: relative;
+  overflow: visible;
+}
+
+.start-picture {
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+
+.start-card + .start-card::before {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(6.5rem - 1px);
+  inset-inline-start: -3.1rem;
+  width: 2.4rem;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 0.4rem, transparent 0.4rem 0.7rem);
+  background-size: 0.7rem 2px;
+}
+
+.start-card + .start-card::after {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(6.5rem - 0.35rem);
+  inset-inline-start: -0.95rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+[dir='rtl'] .start-card + .start-card::after {
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.start-card.is-main + .start-card::before {
+  background-image: repeating-linear-gradient(90deg, var(--turq, #19abab) 0 0.4rem, transparent 0.4rem 0.7rem);
+}
+
+.start-card.is-main + .start-card::after {
+  background: var(--turq, #19abab);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .start-cards.is-alive .start-card + .start-card::before {
+    animation: road 0.9s linear infinite;
+  }
+
+  [dir='rtl'] .start-cards.is-alive .start-card + .start-card::before {
+    animation-direction: reverse;
+  }
+
+  .start-cards.is-alive .start-card + .start-card::after {
+    animation: road-arrow 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes road {
+  to {
+    background-position: 0.7rem 0;
+  }
+}
+
+@keyframes road-arrow {
+  50% {
+    translate: 0.2rem 0;
+    opacity: 0.6;
+  }
+}
+
+/* On one column the road turns downward. */
+@media (max-width: 900px) {
+  .start-cards {
+    gap: 3rem;
+  }
+
+  .start-card + .start-card::before {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + 0.5rem);
+    inset-inline: 50% auto;
+    width: 2px;
+    height: 2rem;
+    background: repeating-linear-gradient(180deg, var(--accent) 0 0.4rem, transparent 0.4rem 0.7rem);
+  }
+
+  .start-card + .start-card::after {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + 0.2rem);
+    inset-inline: calc(50% - 0.35rem) auto;
+    clip-path: polygon(0 0, 100% 0, 50% 100%) !important;
   }
 }

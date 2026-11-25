@@ -150,33 +150,12 @@
   }
 
   /* ---------- Install ---------- */
-  .start-steps .run-number {
-    transition:
-      background-color 0.4s,
-      border-color 0.4s,
-      color 0.4s;
+  .has-started .sp-tabs .is-on {
+    animation: press 6s ease 0.5s infinite;
   }
 
-  .has-started .start-steps li .run-number {
-    animation: light 6s ease infinite;
-  }
-
-  .has-started .start-steps li:nth-child(2) .run-number {
-    animation-delay: 1.2s;
-  }
-
-  .has-started .start-steps li:nth-child(3) .run-number {
-    animation-delay: 2.4s;
-  }
-
-  .start-steps ol::before {
-    transform-origin: top;
-    scale: 1 0;
-    transition: scale 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.2s;
-  }
-
-  .has-started .start-steps ol::before {
-    scale: 1 1;
+  .has-started .sp-folder {
+    animation: line-in 6s ease 0.9s infinite;
   }
 
   .has-started .start-message {
@@ -202,6 +181,14 @@
 
   .has-started .start-message .chat-send {
     animation: send 4.5s ease 1s infinite;
+  }
+
+  .has-started .sp-caret {
+    animation: blink 1s steps(1) infinite;
+  }
+
+  .has-started .sp-slash li.is-on {
+    animation: pick 6s ease infinite;
   }
 }
 

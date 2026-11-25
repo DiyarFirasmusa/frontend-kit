@@ -104,6 +104,7 @@ export const installWords = {
   failed: t('Select it and copy', 'حدده وانسخه'),
   send: t('Paste it in the message box and press Enter.', 'الصقها في خانة الرسائل واضغط Enter.'),
   folder: t('Choose folder', 'اختر مجلدا'),
+  reply: t('Reply to Claude…', 'رد على Claude…'),
   slash: t('Then type / and pick', 'ثم اكتب / واختر'),
   other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),
 }
