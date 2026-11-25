@@ -7,7 +7,7 @@ import { agentNames, PLUGIN_DIR, skillNames } from './plugin.ts'
 const read = (...path: string[]): string => readFileSync(join(PLUGIN_DIR, ...path), 'utf8')
 
 function frontmatter(source: string): Record<string, string> {
-  const head = /^---\n([\s\S]*?)\n---/.exec(source)?.[1] ?? ''
+  const head = /^---\r?\n([\s\S]*?)\r?\n---/.exec(source)?.[1] ?? ''
   return Object.fromEntries([...head.matchAll(/^([\w-]+):[ \t]*(.+)$/gm)].map(([, key, value]) => [key, value!.replace(/^"(.*)"$/, '$1').replaceAll('\\"', '"')]))
 }
 

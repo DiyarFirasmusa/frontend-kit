@@ -37,7 +37,21 @@ const words = {
   ],
 }
 // The first few globs say enough.
-const PATHS_SHOWN = 3
+// The paths in plain words: a reader sees "screen files", not a pattern like **/*.{jsx,tsx}. The exact paths are on each rule's page.
+const KINDS = [
+  [/\.(tsx|jsx|vue|svelte)|components|pages|routes/, t('screen files', 'ملفات الشاشات')],
+  [/test|spec|e2e/, t('test files', 'ملفات الاختبار')],
+  [/\.(css|scss)|styles?/, t('style files', 'ملفات التنسيق')],
+  [/api|services?|auth|query|queries|hooks?/, t('data and service files', 'ملفات البيانات والخدمات')],
+  [/\.(json|ya?ml)|config/, t('settings files', 'ملفات الإعدادات')],
+  [/\.mdx?|docs/, t('documents', 'المستندات')],
+  [/\.(ts|js|mjs)/, t('code files', 'ملفات الكود')],
+] as const
+const plain = (paths: string[]): string => {
+  const text = paths.join(' ')
+  const found = KINDS.filter(([pattern]) => pattern.test(text)).map(([, name]) => name[locale])
+  return (found.length > 0 ? found.slice(0, 3) : [t('matching files', 'الملفات المطابقة')[locale]]).join(locale === 'ar' ? '، ' : ', ')
+}
 ---
 
 <Block id="what" title={words.what[locale]} lead={words.whatText[locale]} />
@@ -57,10 +71,7 @@ const PATHS_SHOWN = 3
             <dd>
               {ruleGuides[key]?.[locale]}
               <small>
-                {paths.length > 0 ? `${ui.loadsFor[locale]}: ` : ui.always[locale]}
-                {paths.slice(0, PATHS_SHOWN).map((path) => (
-                  <code dir="ltr">{path}</code>
-                ))}
+                {paths.length > 0 ? `${ui.loadsFor[locale]}: ${plain(paths)}` : ui.always[locale]}
               </small>
             </dd>
           </div>

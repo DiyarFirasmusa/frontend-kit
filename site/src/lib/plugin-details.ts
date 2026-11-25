@@ -21,7 +21,7 @@ export const ruleFiles: Record<string, RuleFile[]> = Object.fromEntries(
   ruleGroups.map(({ group, names }) => [
     group,
     names.map((name) => {
-      const front = /^---\n([\s\S]*?)\n---/.exec(read('templates', group, 'rules', name))?.[1] ?? ''
+      const front = /^---\r?\n([\s\S]*?)\r?\n---/.exec(read('templates', group, 'rules', name))?.[1] ?? ''
       const paths = [...front.matchAll(/^\s+-\s+"([^"]+)"/gm)].map((match) => match[1]!)
       return { key: `${group}/${name}`, name, paths }
     }),
