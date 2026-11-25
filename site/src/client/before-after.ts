@@ -28,7 +28,8 @@ export function initBeforeAfter(signal: AbortSignal): void {
         if (!entry?.isIntersecting) return
         watcher.disconnect()
         frame.classList.add('is-hinting')
-        setTimeout(() => frame.classList.remove('is-hinting'), 4800)
+        const timer = setTimeout(() => frame.classList.remove('is-hinting'), 4800)
+        signal.addEventListener('abort', () => clearTimeout(timer), { once: true })
       },
       { threshold: 0.5 },
     )

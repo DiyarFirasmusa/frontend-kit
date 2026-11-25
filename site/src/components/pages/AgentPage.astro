@@ -20,10 +20,15 @@ interface Props {
 }
 
 const { name, locale } = Astro.props
-const guide = agentGuides[name]!
-const purpose = agentPurpose[name]!
-const { model, edits } = agentFacts[name]!
-const { matches, effort, tools, skills } = agentReference[name]!
+/** An agent page needs its entry in every list below; a missing one stops the build with the list it is missing from. */
+function need<T>(value: T | undefined, where: string): T {
+  if (value === undefined) throw new Error(`AgentPage: agent "${name}" (page /agents/${name}) is missing from ${where}.`)
+  return value
+}
+const guide = need(agentGuides[name], 'agentGuides (content/guide/agents.ts)')
+const purpose = need(agentPurpose[name], 'agentPurpose (content/guide/purpose.ts)')
+const { model, edits } = need(agentFacts[name], 'agentFacts (lib/plugin-details.ts)')
+const { matches, effort, tools, skills } = need(agentReference[name], 'agentReference (lib/reference.ts)')
 const describe = (skill: string) => skillGroups.find(({ skills: all }) => skill in all)?.skills[skill]?.[locale]
 ---
 

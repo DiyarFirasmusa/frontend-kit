@@ -24,12 +24,17 @@ interface Props {
 }
 
 const { name, locale } = Astro.props
-const { matches, argument, borrowed, files, mentionedBy } = skillReference[name]!
+/** A skill page needs its entry in every list below; a missing one stops the build with the list it is missing from. */
+function need<T>(value: T | undefined, where: string): T {
+  if (value === undefined) throw new Error(`SkillPage: skill "${name}" (page /skills/${name}) is missing from ${where}.`)
+  return value
+}
+const { matches, argument, borrowed, files, mentionedBy } = need(skillReference[name], 'skillReference (lib/reference.ts)')
 const [playbook, ...others] = files
-const guide = skillGuides[name]!
-const purpose = skillPurpose[name]!
+const guide = need(skillGuides[name], 'skillGuides (content/guide/skills)')
+const purpose = need(skillPurpose[name], 'skillPurpose (content/guide/purpose.ts)')
 const on = profilesOf(name)
-const group = skillGroups.find(({ skills }) => name in skills)!
+const group = need(skillGroups.find(({ skills }) => name in skills), 'skillGroups (content/catalogue.ts)')
 const types = on.length === projects.length ? ui.everyType[locale] : projects.filter(({ id }) => on.includes(id)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
 const describe = (skill: string) => skillGroups.find(({ skills }) => skill in skills)?.skills[skill]?.[locale]
 ---

@@ -19,7 +19,11 @@ interface Props {
 
 const { group, name, locale } = Astro.props
 const key = `${group}/${name}`
-const { paths } = ruleFiles[group]!.find((rule) => rule.key === key)!
+const rule = ruleFiles[group]?.find((candidate) => candidate.key === key)
+if (!rule) throw new Error(`RulePage: no rule file "${key}" in the plugin's rule groups (page /rules/${key}).`)
+const { paths } = rule
+const purpose = rulePurpose[key]
+if (!purpose) throw new Error(`RulePage: rule "${key}" (page /rules/${key}) has no entry in rulePurpose (content/guide/purpose.ts).`)
 const file = `plugins/wajiha-kit/templates/${group}/rules/${name}`
 const words = {
   exact: t('The exact paths', 'المسارات بالتفصيل'),
@@ -46,7 +50,7 @@ const types =
   locale={locale}
   lead={words.yours[locale]}
   rows={[
-    [ui.why[locale], rulePurpose[key]![locale]],
+    [ui.why[locale], purpose[locale]],
     [words.load[locale], (paths.length ? words.loadLead : words.always)[locale]],
   ]}
 />

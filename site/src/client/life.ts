@@ -3,6 +3,11 @@ import { all } from './dom.ts'
 const calm = (): boolean => matchMedia('(prefers-reduced-motion: reduce)').matches
 const wait = (ms: number, signal: AbortSignal): Promise<void> =>
   new Promise((resolve) => {
+    // Already stopped: nothing to wait for.
+    if (signal.aborted) {
+      resolve()
+      return
+    }
     const stop = (): void => {
       clearTimeout(timer)
       resolve()

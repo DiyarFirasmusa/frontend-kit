@@ -26,7 +26,9 @@ async function copy(words: string): Promise<boolean> {
     box.select()
     let done = false
     try {
-      done = document.execCommand('copy')
+      // The old copy command, kept only for pages where the clipboard API is refused (plain http, older
+      // browsers). It is called through a narrow type of its own: same call, without the editor's deprecation note.
+      done = (document as { execCommand(command: 'copy'): boolean }).execCommand('copy')
     } catch {
       done = false
     }

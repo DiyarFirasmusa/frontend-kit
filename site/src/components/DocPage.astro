@@ -53,7 +53,11 @@ switch (route.kind) {
         name,
         among: copy.rules.groups[group] ?? group,
         href: ruleUrl(locale, group, name),
-        about: ruleGuides[`${group}/${name}`]![locale],
+        about: (() => {
+          const guide = ruleGuides[`${group}/${name}`]
+          if (!guide) throw new Error(`DocPage: rule "${group}/${name}" has no entry in ruleGuides (content/guide/rules.ts).`)
+          return guide[locale]
+        })(),
       })),
     )
     break
@@ -64,7 +68,8 @@ switch (route.kind) {
 }
 const key = route.kind === 'page' ? route.id : route.kind === 'rule' ? `${route.group}/${route.name}` : route.kind === 'hook' ? route.event : route.name
 const at = siblings.findIndex((sibling) => sibling.key === key)
-const here = siblings[at]!
+const here = siblings[at]
+if (!here) throw new Error(`DocPage: no ${route.kind} named "${key}" in the list of ${parent} pages (locale ${locale}).`)
 const before = siblings[at - 1]
 const after = siblings[at + 1]
 const detail = route.kind !== 'page'

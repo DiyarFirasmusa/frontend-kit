@@ -29,6 +29,24 @@ export function initToc(signal: AbortSignal): void {
   }
   const links = all<HTMLAnchorElement>('a', list)
 
+  // A skill group the finder hides takes its line in the list with it, so no link jumps to a hidden part.
+  const groups = parts.filter((part) => part.hasAttribute('data-finder-group'))
+  if (groups.length) {
+    const lists = [list, ...(miniList ? [miniList] : [])]
+    const match = (): void => {
+      parts.forEach((part, i) => {
+        for (const each of lists) {
+          const item = each.children[i] as HTMLElement | undefined
+          if (item) item.hidden = part.hidden
+        }
+      })
+    }
+    const groupWatcher = new MutationObserver(match)
+    for (const group of groups) groupWatcher.observe(group, { attributes: true, attributeFilter: ['hidden'] })
+    signal.addEventListener('abort', () => groupWatcher.disconnect())
+    match()
+  }
+
   const watcher = new IntersectionObserver(
     (entries) => {
       for (const { target, isIntersecting } of entries) {
