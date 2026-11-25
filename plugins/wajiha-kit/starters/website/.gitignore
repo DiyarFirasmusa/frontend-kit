@@ -1,0 +1,18 @@
+node_modules/
+.output/
+.nitro/
+.tanstack/
+dist/
+coverage/
+playwright-report/
+test-results/
+blob-report/
+*.tsbuildinfo
+
+# Environment files: only .env.example is committed.
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Thumbs.db

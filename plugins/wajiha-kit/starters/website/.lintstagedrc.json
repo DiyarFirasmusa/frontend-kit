@@ -1,0 +1,4 @@
+{
+  "*.{ts,tsx,js,mjs,json,css,yml}": ["oxfmt --no-error-on-unmatched-pattern"],
+  "*.{ts,tsx}": ["oxlint --fix", "vitest related --run --passWithNoTests"]
+}

@@ -1,0 +1,33 @@
+{
+  "include": ["src", "e2e", "scripts", "*.ts"],
+  "exclude": [
+    "node_modules",
+    ".output",
+    "coverage",
+    "playwright-report",
+    "test-results",
+    ".nitro",
+    ".tanstack"
+  ],
+  "compilerOptions": {
+    "target": "ES2023",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client", "node"],
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "noUncheckedIndexedAccess": true,
+    "erasableSyntaxOnly": true,
+    "paths": { "@/*": ["./src/*"] }
+  }
+}
