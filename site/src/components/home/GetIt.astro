@@ -90,11 +90,8 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
         </ul>
       </Fragment>
       <div slot="note">
-        <p>{w.source[locale]} <a href={REPO_URL} dir="ltr">GitHub</a> · {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a></p>
-        <p class="hero-ways">
-          <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
-          <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
-        </p>
+        <p>{w.source[locale]} <a href={REPO_URL} dir="ltr">github.com/DiyarFirasmusa/wajiha-kit</a> · {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a></p>
+        <a class="note-cta" href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
       </div>
     </Board>
   </div>

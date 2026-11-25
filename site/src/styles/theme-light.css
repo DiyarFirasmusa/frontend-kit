@@ -276,3 +276,14 @@ html[data-theme='light'] .hero-audience a {
 html[data-theme='light'] .toc a[data-passed] {
   color: rgb(20 20 19 / 0.5);
 }
+
+/* The grid is quieter behind the words you read. */
+html[data-theme='light'] body:has(main.doc)::after {
+  opacity: 0.2;
+}
+
+/* Claude's steps stay turquoise in light mode too. */
+html[data-theme='light'] .board.tone-orange .path-stop:nth-child(n + 5) .path-dot {
+  background: var(--turq) !important;
+  color: #fff !important;
+}

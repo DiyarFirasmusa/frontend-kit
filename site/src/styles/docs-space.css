@@ -3187,3 +3187,50 @@ body:has(main.doc) .top.is-scrolled,
     display: none;
   }
 }
+
+
+/* =====================================================================================================
+   Round 20
+   ===================================================================================================== */
+/* A "+" that opens something is "you go / you get": turquoise everywhere. The small labels of a page are quiet, not orange. */
+.questions summary::after,
+.questions [open] summary::after {
+  color: var(--turq);
+}
+
+.glance dt {
+  color: var(--faint);
+}
+
+/* In the file table the names are code, not links: ivory. */
+.rows dt code,
+.rows dt {
+  color: var(--ivory);
+}
+
+/* A command is one line you can scroll, never broken in the middle of a flag. */
+.msg-command,
+.command.is-message .msg-command {
+  display: block;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* The steps on a phone use the whole width. */
+@media (max-width: 47.99rem) {
+  .path-label p {
+    max-width: 40rem;
+  }
+}
+
+/* Links inside the words of a note are links in a sentence; only the end of the bar holds a pill. */
+.board-note p a:not(.hero-start) {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
