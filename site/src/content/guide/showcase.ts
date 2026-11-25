@@ -73,7 +73,7 @@ export const journeyWords = {
     t('Claude checks it', 'يفحصه Claude'),
     t('You decide', 'القرار لك'),
   ],
-  lead: t('This is how the kit works, from the first message to a project you can open. You never write code. The setup is being improved, so it may ask a little differently today.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تكتب أي كود. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
+  lead: t('This is how the kit works, from the first message to a project you can open. You do not need to write code. The setup is being improved, so it may ask a little differently today.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تحتاج أن تكتب أي كود. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
   /** What happens at each stop, one sentence each. */
   details: [
     t('In the Claude app you send one message. Claude installs the kit and starts the setup.', 'في تطبيق Claude ترسل رسالة واحدة. فيثبت Claude الإضافة ويبدأ الإعداد.'),

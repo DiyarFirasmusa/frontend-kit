@@ -9,10 +9,24 @@ interface Props {
 }
 
 const { command, install, message = false } = Astro.props
+// A message is words and then commands: each command is a line of code, left to right.
+const isolates = new RegExp('[\u2066\u2069]', 'g')
+const lines = message
+  ? command.split(String.fromCharCode(10)).map((line) => {
+      const text = line.replace(isolates, '')
+      return { text: text.startsWith('claude plugin') ? text : line, command: text.startsWith('claude plugin') }
+    })
+  : []
 ---
 
 <div class:list={['command', { 'is-message': message }]} dir={message ? 'auto' : 'ltr'}>
-  <code>{command}</code>
+  {
+    message ? (
+      <code>{lines.map(({ text, command: isCommand }) => (isCommand ? <span class="msg-command" dir="ltr">{text}</span> : <span class="msg-line">{text}</span>))}</code>
+    ) : (
+      <code>{command}</code>
+    )
+  }
   <button type="button" data-copy={command} data-label={install.copy} data-done={install.copied} data-failed={install.failed} aria-label={`${install.copy}: ${command.length > 48 ? `${command.slice(0, 48)}…` : command}`}>
     <span aria-hidden="true" data-status>{install.copy}</span>
   </button>

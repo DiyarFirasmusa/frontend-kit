@@ -23,6 +23,8 @@ export interface LegalSection {
   title: Bilingual
   text: Bilingual[]
   links?: LegalLink[]
+  /** Lines in English that stay left to right, such as a copyright notice. */
+  credits?: string[]
 }
 
 export const legal: Record<LegalId, LegalSection[]> = {
@@ -72,11 +74,20 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Other people’s work', 'أعمال الآخرين'),
       text: [
         t(
-          'Some skills in the kit come from other projects and keep their own licences. They are listed in the third-party notices. The fonts of this website (Familjen Grotesk, IBM Plex Sans Arabic and IBM Plex Mono) are free fonts, used under the SIL Open Font Licence. Familjen Grotesk © 2021 The Familjen Grotesk Project Authors; IBM Plex Sans Arabic and IBM Plex Mono © IBM Corp. The licence text is at openfontlicense.org. This website is built with Astro (MIT licence).',
-          'بعض المهارات في الإضافة أتت من مشاريع أخرى وتحتفظ برخصها. وهي مذكورة في ملف إشعارات الأطراف الثالثة. أما خطوط هذا الموقع (⁦Familjen Grotesk⁩ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩) فخطوط مجانية، تُستخدم برخصة ⁦SIL Open Font License⁩. ⁦Familjen Grotesk⁩ © 2021 ⁦The Familjen Grotesk Project Authors⁩؛ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩ © ⁦IBM Corp.⁩ ونص الرخصة في ⁦openfontlicense.org⁩. وبُني هذا الموقع بـ ⁦Astro⁩ (رخصة ⁦MIT⁩).',
+          'Some skills in the kit come from other projects and keep their own licences. They are listed in the third-party notices. The fonts of this website (Familjen Grotesk, IBM Plex Sans Arabic and IBM Plex Mono) are free fonts, used under the SIL Open Font Licence. The credits are below.',
+          'بعض المهارات في الإضافة أتت من مشاريع أخرى وتحتفظ برخصها. وهي مذكورة في ملف إشعارات الأطراف الثالثة. أما خطوط هذا الموقع (⁦Familjen Grotesk⁩ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩) فخطوط مجانية، تُستخدم برخصة ⁦SIL Open Font License⁩. والأسماء أدناه.',
         ),
       ],
-      links: [{ label: t('Third-party notices', 'إشعارات الأطراف الثالثة'), to: 'blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md', kind: 'repo' }],
+      credits: [
+        'Familjen Grotesk © 2021 The Familjen Grotesk Project Authors, SIL Open Font License 1.1',
+        'IBM Plex Sans Arabic © IBM Corp., SIL Open Font License 1.1',
+        'IBM Plex Mono © IBM Corp., SIL Open Font License 1.1',
+        'Astro, MIT licence',
+      ],
+      links: [
+        { label: t('Third-party notices', 'إشعارات الأطراف الثالثة'), to: 'blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md', kind: 'repo' },
+        { label: t('Open Font Licence text', 'نص رخصة الخطوط المفتوحة'), to: 'https://openfontlicense.org', kind: 'outside' },
+      ],
     },
     {
       id: 'anthropic',

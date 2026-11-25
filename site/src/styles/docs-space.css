@@ -1262,3 +1262,110 @@ html:not([dir='rtl']) {
   }
 }
 
+
+/* ---------- Art director's pass ---------- */
+/* The credits on the rights page: one line each, left to right. */
+.credits {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font: 400 0.875rem / 1.6 var(--code);
+  text-align: left;
+}
+
+/* The commands in a message, on every page. */
+.msg-command {
+  display: block;
+  margin-block: 0.375rem;
+  color: var(--ivory);
+  font: 500 0.8125rem / 1.6 var(--code);
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+.msg-line {
+  display: block;
+}
+
+/* One reading colour for the guide's words: strong words, links and code are the bright ones. */
+main.doc .doc-article :is(p, li) {
+  color: var(--muted);
+}
+
+main.doc .doc-article :is(p, li) :is(strong, b, a, code) {
+  color: var(--ivory);
+}
+
+main.doc .doc-article h3 {
+  line-height: 1.3;
+}
+
+/* Section titles on the guide's front page are as big as every other section title. */
+.hub-title {
+  font-size: 1.75rem;
+}
+
+/* The front page's cards are flat, like its list of other pages: words only, no boxes. */
+.hub-start a,
+.hub-kinds a {
+  padding: 0.25rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.hub-start a:hover,
+.hub-kinds a:hover {
+  translate: none;
+}
+
+.hub-start a:hover strong,
+.hub-kinds a:hover strong {
+  color: var(--accent);
+}
+
+/* No half-drawn outlines: rows are plain, and the small facts row has no frame. */
+.questions details,
+.questions summary,
+.glance,
+.card-say {
+  border-radius: 0;
+}
+
+main.doc .glance dt {
+  font-size: 0.8125rem;
+}
+
+/* Arabic: the small descriptions are a readable size, and lines end on a whole word. */
+:lang(ar) .show-features span {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Phones: the headline is clearly bigger than the section titles under it. */
+@media (max-width: 600px) {
+  .hero h1,
+  [dir='rtl'] .hero h1 {
+    font-size: clamp(2.25rem, 10vw, 2.75rem);
+  }
+
+  .home h2 {
+    font-size: 1.625rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+  }
+}

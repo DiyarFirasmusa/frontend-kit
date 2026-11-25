@@ -16,9 +16,10 @@ const href = (kind: 'repo' | 'outside' | 'site', to: string): string => (kind ==
 
 <p class="legal-date">{updated[locale]}</p>
 {
-  legal[id].map(({ id: section, title, text, links }) => (
+  legal[id].map(({ id: section, title, text, links, credits }) => (
     <Block id={section} title={title[locale]}>
       {text.map((paragraph) => <p>{paragraph[locale]}</p>)}
+      {credits && <ul class="credits" dir="ltr">{credits.map((line) => <li>{line}</li>)}</ul>}
       {
         links && (
           <p class="links">
