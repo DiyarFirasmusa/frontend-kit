@@ -1709,3 +1709,31 @@
   background: rgb(25 171 171 / 0.1);
   color: #7ad9d9;
 }
+
+/* The two trees follow one pattern: ▸ for a folder, · for a file, the same steps in and the same colours.
+   Only the wrong files on the AI-alone side differ, in red with a warning. */
+.vs-tree li,
+.vs-tree.is-messy li {
+  color: var(--muted);
+}
+
+.vs-tree li.is-folder,
+.vs-tree.is-messy li.is-folder {
+  color: var(--ivory);
+}
+
+.vs-tree li::before,
+.vs-tree.is-messy li::before {
+  content: '·  ';
+  color: var(--faint);
+}
+
+.vs-tree li.is-folder::before,
+.vs-tree.is-messy li.is-folder::before {
+  content: '▸ ';
+  color: var(--turq, #19abab);
+}
+
+.vs-tree.is-messy li.is-wrong {
+  color: rgb(224 119 107 / 0.9);
+}
