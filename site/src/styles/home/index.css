@@ -9,3 +9,6 @@
 @import './home-fit.css';
 @import './theme-light.css';
 @import './docs-law.css';
+
+/* Loaded again last on this page kind: in production the shared light-mode file is bundled before the page's own CSS, and it must win. */
+@import '../light-claude.css';

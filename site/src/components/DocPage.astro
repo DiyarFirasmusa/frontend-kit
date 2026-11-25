@@ -1,4 +1,8 @@
 ---
+// The guide's styles, imported from the component (like Home.astro) so the built page loads the shared styles first and these after.
+import '../styles/site.css'
+import '../styles/docs/index.css'
+import '../styles/light-claude.css'
 import { agents, skillGroups } from '../content/catalogue.ts'
 import { PAGES, SECTIONS, type PageId } from '../content/guide/pages.ts'
 import { ui } from '../content/guide/ui.ts'
