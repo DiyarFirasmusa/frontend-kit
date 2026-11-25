@@ -7,6 +7,7 @@ import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
 import { initChrome } from './page-chrome.ts'
 import { initTabs } from './tabs.ts'
+import { initToc } from './toc.ts'
 import { warmPages } from './warm.ts'
 import { initWords } from './words.ts'
 
@@ -26,4 +27,5 @@ document.addEventListener('astro:page-load', () => {
   initTabs(page.signal)
   initAlive(page.signal)
   warmPages(page.signal)
+  initToc(page.signal)
 })

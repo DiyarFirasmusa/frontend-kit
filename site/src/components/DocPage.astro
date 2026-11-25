@@ -79,6 +79,7 @@ const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${he
     <DocsTree locale={locale} route={route} />
     <div class="column" transition:name="page">
       <header class="doc-head">
+        <p class="doc-eyebrow"><i aria-hidden="true"></i>{PAGES[parent].name[locale]}</p>
         <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
           {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
           {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
@@ -104,6 +105,10 @@ const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${he
         </nav>
       </article>
     </div>
+    <aside class="toc" aria-label={ui.onThisPage[locale]} data-toc hidden>
+      <p>{ui.onThisPage[locale]}</p>
+      <ol data-toc-list></ol>
+    </aside>
   </main>
   <SiteFooter locale={locale} />
 </Layout>

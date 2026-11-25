@@ -9,7 +9,10 @@ const { title, id, lead } = Astro.props
 ---
 
 <section {id} class="block">
-  <h2>{title}</h2>
+  <h2>
+    {title}
+    {id && <a class="heading-link" href={`#${id}`} aria-hidden="true" tabindex="-1">#</a>}
+  </h2>
   {lead && <p class="block-lead">{lead}</p>}
   <slot />
 </section>

@@ -26,6 +26,7 @@ export const ui = {
   seeInTour: t('See it in the full tour', 'شاهدها في الجولة الكاملة'),
   home: t('Home', 'الرئيسية'),
   allPages: t('All pages', 'كل الصفحات'),
+  onThisPage: t('On this page', 'في هذه الصفحة'),
   whereYouAre: t('Where you are', 'أنت هنا'),
   learnMore: t('Read more', 'اقرأ المزيد'),
   next: t('Next', 'التالي'),

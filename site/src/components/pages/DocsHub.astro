@@ -6,7 +6,7 @@ import { t } from '../../content/guide/text.ts'
 import { content } from '../../content/index.ts'
 import type { HookEvent, Locale } from '../../content/types.ts'
 import { agentUrl, hookUrl, pageUrl, ruleUrl, skillUrl } from '../../lib/links.ts'
-import { hookEvents, ruleGroups } from '../../lib/plugin.ts'
+import { facts, hookEvents, ruleGroups } from '../../lib/plugin.ts'
 
 interface Props {
   locale: Locale
@@ -77,8 +77,58 @@ const groups: { id: string; title: string; entries: Entry[]; more?: boolean }[] 
       .map((event) => ({ name: event, href: hookUrl(locale, event), about: hookPurpose[event], fixed: true })),
   },
 ]
+// The landing cards: the pages to start with, then the four parts of the kit with their counts.
+const startCards = (['guide', 'get-started', 'project-types', 'examples', 'questions'] as const).map((id, i) => ({
+  id,
+  mark: ['?', '1', '▦', '“', '!'][i]!,
+  name: PAGES[id].name[locale],
+  about: PAGES[id].lead[locale],
+  href: pageUrl(locale, id),
+}))
+const kindCards = [
+  { kind: 'skill', id: 'skills', count: facts.skills },
+  { kind: 'agent', id: 'agents', count: facts.agents },
+  { kind: 'rule', id: 'rules', count: facts.rules },
+  { kind: 'hook', id: 'checks', count: facts.events },
+].map(({ kind, id, count }) => ({ kind, count, name: PAGES[id as 'skills'].name[locale], about: PAGES[id as 'skills'].lead[locale], href: pageUrl(locale, id as 'skills') }))
+const hubWords = {
+  start: t('Start here', 'ابدأ من هنا'),
+  behind: t('Behind the scenes', 'خلف الستار'),
+  behindLead: t('You do not need these to start. They show what works for you.', 'لا تحتاجها لتبدأ. تشرح ما يعمل لأجلك.'),
+}
 ---
 
+<section class="hub-cards" aria-label={hubWords.start[locale]}>
+  <h2 class="hub-title">{hubWords.start[locale]}</h2>
+  <ul class="hub-start">
+    {
+      startCards.map(({ mark, name, about, href }) => (
+        <li>
+          <a href={href}>
+            <span class="hub-mark" aria-hidden="true">{mark}</span>
+            <strong>{name}</strong>
+            <span>{about}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <h2 class="hub-title">{hubWords.behind[locale]}</h2>
+  <p class="hub-lead">{hubWords.behindLead[locale]}</p>
+  <ul class="hub-kinds">
+    {
+      kindCards.map(({ kind, count, name, about, href }) => (
+        <li data-kind={kind}>
+          <a href={href}>
+            <b dir="ltr">{count}</b>
+            <strong>{name}</strong>
+            <span>{about}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
 <div class="finder" data-finder>
   <label>
     <span class="sr-only">{words.search[locale]}</span>

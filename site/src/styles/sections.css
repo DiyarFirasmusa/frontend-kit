@@ -1415,10 +1415,8 @@
   display: grid;
   align-content: start;
   gap: 0.25rem;
-  box-sizing: border-box;
-  height: 15rem;
   margin: 0;
-  padding: 0.875rem 1.5rem;
+  padding: 0.875rem 1.5rem 1.125rem;
   list-style: none;
   font: 500 0.875rem / 1.55 var(--code);
 }
@@ -2173,3 +2171,16 @@
 
 
 
+
+/* Both trees have the same number of lines, so every line sits level with the one opposite. */
+.vs-tree li {
+  min-height: 1.55em;
+}
+
+.vs-tree li:not(.is-folder) {
+  color: var(--muted);
+}
+
+.vs-tree.is-messy li:not(.is-folder):not(.is-wrong) {
+  color: var(--faint);
+}

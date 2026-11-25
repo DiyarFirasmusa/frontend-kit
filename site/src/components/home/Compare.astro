@@ -19,12 +19,15 @@ const messy: [string, number, boolean?][] = [
   ['utils/helpers2.js', 1, true],
   ['page-final-v3.tsx', 1, true],
 ]
-const tidy: [string, number, string?][] = [
+const tidy: [string, number][] = [
   ['src/', 0],
-  ['pages/', 1, 'orders · customers'],
-  ['components/', 1, 'Button.tsx'],
+  ['pages/', 1],
+  ['orders.tsx', 2],
+  ['customers.tsx', 2],
+  ['components/', 1],
+  ['Button.tsx', 2],
   ['features/orders/', 1],
-  ['i18n/', 1, 'ar · en'],
+  ['i18n/ ar · en', 1],
 ]
 ---
 
@@ -66,9 +69,9 @@ const tidy: [string, number, string?][] = [
         <div class="vs-half is-with">
           <p class="vs-label"><i aria-hidden="true">✻</i>{compare.with[locale]}</p>
           <ul class="vs-tree" dir="ltr" aria-hidden="true">
-            {tidy.map(([name, depth, inside]) => (
-              <li class="is-folder" style={`--d:${depth}`}>
-                {name} {inside && <span>{inside}</span>}
+            {tidy.map(([name, depth]) => (
+              <li class:list={{ 'is-folder': name.includes('/') }} style={`--d:${depth}`}>
+                {name}
               </li>
             ))}
           </ul>
