@@ -89,7 +89,7 @@ claude plugin marketplace update wajiha-kit && claude plugin update wajiha-kit@w
 
 On its own only when all of these hold:
 
-- `autoUpdate` is true for the kit's marketplace (`/wajiha-kit:setup` writes it; it is off by default);
+- `autoUpdate` is true for the kit's marketplace (`/wajiha-kit:setup` writes it as false, so it is off unless the user turns it on);
 - the session is interactive (the update runs up to ten minutes after the first message);
 - none of `DISABLE_AUTOUPDATER`, `DISABLE_UPDATES` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is set, or
   `FORCE_AUTOUPDATE_PLUGINS=1` is too. The Claude desktop app sets `DISABLE_AUTOUPDATER`, so there update by hand.

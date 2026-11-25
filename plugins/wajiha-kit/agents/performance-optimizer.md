@@ -4,7 +4,7 @@ description: Finds measured performance problems — bundle size, loading, Core 
 model: sonnet
 effort: medium
 color: orange
-tools: Read, Grep, Glob, Bash, Skill, mcp__plugin_wajiha-kit_chrome-devtools__new_page, mcp__plugin_wajiha-kit_chrome-devtools__navigate_page, mcp__plugin_wajiha-kit_chrome-devtools__emulate, mcp__plugin_wajiha-kit_chrome-devtools__performance_start_trace, mcp__plugin_wajiha-kit_chrome-devtools__performance_stop_trace, mcp__plugin_wajiha-kit_chrome-devtools__performance_analyze_insight, mcp__plugin_wajiha-kit_chrome-devtools__list_network_requests, mcp__plugin_wajiha-kit_chrome-devtools__close_page, mcp__chrome-devtools__new_page, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__emulate, mcp__chrome-devtools__performance_start_trace, mcp__chrome-devtools__performance_stop_trace, mcp__chrome-devtools__performance_analyze_insight, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__close_page
+tools: Read, Grep, Glob, Bash, Skill, mcp__chrome-devtools__new_page, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__emulate, mcp__chrome-devtools__performance_start_trace, mcp__chrome-devtools__performance_stop_trace, mcp__chrome-devtools__performance_analyze_insight, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__close_page, mcp__chrome-devtools__new_page, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__emulate, mcp__chrome-devtools__performance_start_trace, mcp__chrome-devtools__performance_stop_trace, mcp__chrome-devtools__performance_analyze_insight, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__close_page
 disallowedTools: Write, Edit, NotebookEdit
 ---
 

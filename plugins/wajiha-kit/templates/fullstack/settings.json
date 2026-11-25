@@ -132,7 +132,7 @@
         "source": "github",
         "repo": "DiyarFirasmusa/wajiha-kit"
       },
-      "autoUpdate": true
+      "autoUpdate": false
     }
   },
   "enabledPlugins": {

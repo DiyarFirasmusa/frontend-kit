@@ -2,7 +2,7 @@
   "name": "wajiha-kit",
   "version": "1.16.0",
   "description": "A complete Claude Code setup for frontends in any stack (React + TypeScript first-class), in four profiles: website (TanStack Start), dashboard (Vite, Next.js or TanStack Start), react (any other stack: React, Vue, Svelte, Angular, plain) and fullstack (site + admin in one tree). Skills, agents, git and live-site guards, format/lint on edit, quality gates, MCP servers, and project templates installed by /wajiha-kit:setup. Arabic RTL + English first-class.",
-  "author": { "name": "diyarfirasmusa" },
+  "author": { "name": "Diyar Firas" },
   "license": "MIT",
   "keywords": ["react", "typescript", "tanstack", "frontend", "rtl", "i18n", "dashboard", "website", "quality-gates"],
   "userConfig": {

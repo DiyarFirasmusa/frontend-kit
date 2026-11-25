@@ -240,10 +240,10 @@ Merging:
   - Keys only the template has (`$schema`, …) are added.
   - The template never adds `hooks`: the plugin provides them. If the user's settings already define the
     same guard hooks (an older copy of this setup), say so and offer to remove the duplicates.
-  - `extraKnownMarketplaces.wajiha-kit` (with `autoUpdate: true`) and `enabledPlugins["wajiha-kit@wajiha-kit"]` are
+  - `extraKnownMarketplaces.wajiha-kit` (with `autoUpdate: false`: the user updates on purpose with `claude plugin update wajiha-kit@wajiha-kit`; turn it on only if they ask) and `enabledPlugins["wajiha-kit@wajiha-kit"]` are
     added when missing. They let Claude Code update the plugin, in interactive sessions and only where updates aren't
-    disabled: never promise automatic updates (step 7 checks). Keep the user's value if they already set `autoUpdate` to
-    `false`. A teammate's clone still runs
+    disabled: never promise automatic updates (step 7 checks). Keep the user's value if they already set `autoUpdate`.
+    A teammate's clone still runs
     `claude plugin install wajiha-kit@wajiha-kit --scope project` once.
   - Show the merged result's diff before writing it.
 - `wajiha-kit.json` — keep existing values, add missing keys. The user's answer to question 1 wins for `mode` when the
@@ -270,6 +270,12 @@ Only what the user approved in the proposal:
   if neither file exists; `.env.example` stays editable.
 - Add to `.gitignore` if missing (ask once): `.claude/state/`, `.claude/settings.local.json`, and `.vitest/` with Vitest 5.
 - Check `jq` is installed (`command -v jq`): every hook needs it. If missing, give the command for the user's system before anything else (Mac `brew install jq`, Windows `winget install jqlang.jq`, Linux `sudo apt install jq`), and say to reopen Claude Code after it.
+- Browser checks (ask once, default no): the kit does not start the two browser tools (chrome-devtools, playwright) by
+  itself, because they can read any page or local file Claude points them at. Ask: "Do you want Claude to open your app
+  in a browser to check it? It can then read pages and files on this computer." On yes, merge
+  `${CLAUDE_PLUGIN_ROOT}/templates/shared/mcp/browser.mcp.json` into the project's `.mcp.json` (create it if missing,
+  keep other servers), show the diff first, and tell the user Claude Code asks them to approve the servers once after a
+  restart. On no, write nothing; `qa-engineer`, `test-engineer` and `performance-optimizer` then work without a browser.
 - Updates: run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-update-check.sh"` and pass on what it prints. When it says `off`,
   say plainly that new kit releases won't arrive here by themselves and give the command to update by hand. Don't change
   the user's environment or settings to turn updates on.
