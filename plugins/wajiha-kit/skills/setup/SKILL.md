@@ -276,6 +276,12 @@ Only what the user approved in the proposal:
   `${CLAUDE_PLUGIN_ROOT}/templates/shared/mcp/browser.mcp.json` into the project's `.mcp.json` (create it if missing,
   keep other servers), show the diff first, and tell the user Claude Code asks them to approve the servers once after a
   restart. On no, write nothing; `qa-engineer`, `test-engineer` and `performance-optimizer` then work without a browser.
+- Library docs lookup (ask once, default no): the kit does not start context7 either. It sends the search text Claude
+  uses to look up library docs to Upstash (and the key, if there is one). Ask: "Do you want Claude to look up library
+  docs online while it works? The search text goes to Upstash." On yes, merge
+  `${CLAUDE_PLUGIN_ROOT}/templates/shared/mcp/context7.mcp.json` into the project's `.mcp.json` the same way, and say an
+  optional key goes in the `CONTEXT7_API_KEY` environment variable, never in a file. On no, write nothing; the agents
+  fall back to the project's own files and the user's answers.
 - Updates: run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-update-check.sh"` and pass on what it prints. When it says `off`,
   say plainly that new kit releases won't arrive here by themselves and give the command to update by hand. Don't change
   the user's environment or settings to turn updates on.
