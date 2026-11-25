@@ -80,8 +80,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     name: t('Get started', 'ابدأ'),
     title: t('Get started, step by step.', 'ابدأ خطوة بخطوة.'),
     lead: t(
-      'What to install, what to type, what you will be asked and what you get. Every step shows what you will see.',
-      'ماذا تثبت، وماذا تكتب، وماذا ستُسأل، وماذا تحصل عليه. كل خطوة تريك ما ستراه على الشاشة.',
+      'What to install, what to type, what you will be asked and what you get. Each step says what you will see.',
+      'ماذا تثبت، وماذا تكتب، وماذا ستُسأل، وماذا تحصل عليه. وكل خطوة تقول ما ستراه على الشاشة.',
     ),
   },
   skills: {

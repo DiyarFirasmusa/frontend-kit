@@ -2323,3 +2323,35 @@ body:has(main.doc)::after {
 body:has(main.doc)::after {
   opacity: 0.35;
 }
+
+/* ---------- Round 13 ---------- */
+/* The first command of the install is within reach at the top of the developers page. */
+.dev-quick {
+  display: grid;
+  gap: 0.25rem;
+  margin-block: 0 1.5rem;
+}
+
+.dev-quick a {
+  padding-block: 0.6rem;
+  color: var(--ivory);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Reading width for guide paragraphs, and related pages in one column. */
+.doc .block > p {
+  max-width: 68ch;
+}
+
+.doc .cards {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Who it is for: three buttons you can read. */
+.hero-audience a {
+  min-height: 2.75rem;
+  border-color: rgb(241 237 231 / 0.35);
+  color: var(--ivory);
+  font-size: 1rem;
+}

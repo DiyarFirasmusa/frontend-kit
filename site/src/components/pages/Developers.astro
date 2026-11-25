@@ -22,9 +22,14 @@ const words = {
   changelog: t('The changelog', 'سجل التغييرات'),
   checks: t('Every safety check', 'كل فحوص الأمان'),
   examples: t('Example projects it built', 'مشاريع نموذجية بنتها'),
+  jump: t('All the install steps', 'كل خطوات التثبيت'),
 }
 ---
 
+<div class="dev-quick">
+  <CommandBox command="/plugin marketplace add DiyarFirasmusa/wajiha-kit" install={install} />
+  <a href="#install">{words.jump[locale]}</a>
+</div>
 <Block id="who" title={d.who.title[locale]} lead={d.who.lead[locale]}>
   <ul class="plain">
     {d.who.items.map((item) => <li><strong>{item.name[locale]}.</strong> {item.text[locale]}</li>)}
