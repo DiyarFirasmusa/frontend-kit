@@ -73,12 +73,17 @@ const { locale } = Astro.props
               </div>
             )}
           </div>
-          <p class="path-label">
+          <div class="path-label">
             <span class="path-dot" dir="ltr">{i + 1}</span>
             <strong>{stop[locale]}</strong>
-          </p>
+            <p>{w.details[i]![locale]}</p>
+          </div>
         </li>
       ))
     }
   </ol>
+  <div class="column path-after">
+    <p>{w.after[locale]}</p>
+    <ul>{w.asks.map((ask) => <li>{ask[locale]}</li>)}</ul>
+  </div>
 </section>
