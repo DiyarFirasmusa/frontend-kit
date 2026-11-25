@@ -115,6 +115,10 @@ export const legal: Record<LegalId, LegalSection[]> = {
           'This website sets no cookies, shows no advertising and does not follow you from one site to another. It measures how fast its pages load with Vercel Speed Insights, which uses no cookies and collects only things like the page address, the kind of device and browser, and the country. It has no accounts, forms or comments, so it asks you for nothing. Its fonts and files come from this website. The only other party is its host, Vercel.',
           'هذا الموقع لا يضع ملفات تعريف الارتباط (كوكيز)، ولا يعرض إعلانات، ولا يتتبعك بين المواقع. ويقيس سرعة تحميل صفحاته بأداة ⁦Vercel Speed Insights⁩، وهي لا تستخدم كوكيز ولا تجمع إلا أشياء مثل عنوان الصفحة ونوع الجهاز والمتصفح والبلد. وليس فيه حسابات ولا نماذج ولا تعليقات، فهو لا يطلب منك شيئا. وخطوطه وملفاته تأتي من هذا الموقع. والجهة الوحيدة الأخرى هي مستضيفه ⁦Vercel⁩.',
         ),
+        t(
+          'If you pick the light or dark look, your browser remembers that choice on your own device. Nothing about it is sent anywhere.',
+          'وإن اخترت المظهر الفاتح أو الداكن، يتذكر متصفحك اختيارك على جهازك أنت. ولا يُرسل شيء من ذلك إلى أي مكان.',
+        ),
       ],
     },
     {

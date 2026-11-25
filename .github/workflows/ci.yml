@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -33,3 +36,26 @@ jobs:
         run: bash plugins/wajiha-kit/scripts/mode-test.sh
       - name: Hook self-test
         run: bash plugins/wajiha-kit/scripts/test-hooks.sh
+
+  site:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      # The build runs the plugin's guard script on throwaway `git init` repos,
+      # so it needs bash, git and jq but not the repository's history.
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install jq
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq jq
+      - name: Install dependencies
+        run: npm ci --no-fund --no-audit
+      - name: Type and template check
+        run: npx astro check
+      - name: Build
+        run: npm run build
