@@ -197,3 +197,58 @@
     transform: none;
   }
 }
+
+/* ---------------------------------------------------------------------------------------------
+   What can you build: the tabs, one line of words, a short board - about one screen in all.
+   --------------------------------------------------------------------------------------------- */
+.show-tabs {
+  margin-block-end: 0.75rem;
+}
+
+@media (min-width: 62rem) {
+  .show-panel .show-words {
+    display: grid;
+    grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-block-end: 0.75rem;
+  }
+
+  .show-panel .show-words h3,
+  .show-panel .show-words p {
+    margin: 0;
+  }
+
+  .builds .board-main > .browser {
+    width: min(100%, 29rem);
+  }
+}
+
+@media (min-width: 62rem) {
+  .show-panel .show-words {
+    grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.72fr);
+  }
+
+  /* A wider side column: four features sit in four short rows, so the board is as tall as the picture. */
+  .builds .board {
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.38fr);
+  }
+
+  .builds .board-list li {
+    padding-block: 0.45rem;
+  }
+
+  .builds .board-main > .browser {
+    width: min(100%, 31rem);
+  }
+}
+
+@media (min-width: 62rem) {
+  .builds .board-main > .browser {
+    width: min(100%, 27rem);
+  }
+
+  .builds.builds {
+    padding-block: 2.5rem;
+  }
+}
