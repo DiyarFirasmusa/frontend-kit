@@ -13,7 +13,7 @@ interface Props {
 const { locale } = Astro.props
 const { answers } = content[locale]
 const trouble = t('When something does not work', 'عندما لا يعمل شيء')
-const stuck = t('Still stuck? Open a report on GitHub with the error text and what you typed.', 'ما زلت عالقا؟ افتح بلاغا على GitHub وألصق نص الخطأ وما كتبته.')
+const stuck = t('Still stuck? First ask Claude in the same chat: “Explain this error in plain words and fix it.” If that does not work, open a report on GitHub (a free account is needed) with the error text and what you did.', 'ما زلت عالقا؟ اطلب أولا من ⁦Claude⁩ في المحادثة نفسها: «اشرح لي هذا الخطأ بكلمات بسيطة وأصلحه». وإن لم ينجح فافتح بلاغا على ⁦GitHub⁩ (يلزمك حساب مجاني) وألصق نص الخطأ وما فعلته.')
 const report = t('Report a problem', 'أبلغ عن مشكلة')
 const first = t('Before you start', 'قبل أن تبدأ')
 const firstLead = t('The questions most people ask first, answered plainly.', 'الأسئلة التي يسألها أغلب الناس أولا، مع إجابات واضحة.')

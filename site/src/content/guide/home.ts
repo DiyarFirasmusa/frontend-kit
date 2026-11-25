@@ -57,7 +57,7 @@ export const home = {
     },
     gate: {
       name: t('It checks its own work', 'تفحص عملها بنفسها'),
-      text: t('It looks for mistakes, runs tests, and a reviewer reads the work. If something fails, it tries to fix it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجع العمل. وإذا فشل شيء حاولت إصلاحه قبل أن تراه.'),
+      text: t('It looks for mistakes, runs tests, and a reviewer reads the work. If something fails, it tries to fix it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجِعٌ العمل. وإذا فشل شيء حاولت إصلاحه قبل أن تراه.'),
     },
     review: {
       name: t('A reviewer reads it', 'يقرؤها مراجع'),
@@ -120,7 +120,7 @@ export const home = {
   },
   kindIs: {
     skills: t('A skill is a ready set of instructions for one job, like building a table.', 'المهارة تعليمات جاهزة لمهمة واحدة، مثل بناء جدول.'),
-    agents: t('A specialist is a separate helper with one job, like a reviewer or a tester.', 'المختص مساعد مستقل له مهمة واحدة، مثل المراجع أو المختبِر.'),
+    agents: t('A specialist is a separate helper with one job, like a reviewer or a tester.', 'المختص مساعد مستقل له مهمة واحدة، مثل المراجِع أو المختبِر.'),
     rules: t('A rule is a written standard the assistant follows while it works.', 'القاعدة معيار مكتوب يتبعه المساعد أثناء العمل.'),
     checks: t('A safety check runs by itself at a fixed moment, so nothing depends on the assistant remembering.', 'فحص الأمان يعمل وحده في لحظة محددة، فلا يعتمد شيء على تذكر المساعد.'),
   },

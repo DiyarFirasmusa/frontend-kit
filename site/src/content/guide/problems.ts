@@ -4,7 +4,7 @@ import { t } from './text.ts'
 export const beginnerQuestions = [
   [
     t('Does it cost money?', 'هل تكلف مالا؟'),
-    t('The kit is completely free. Claude has its own account and plan, and Claude Code, which the kit works inside, is not part of every plan: check yours on Claude’s website before you start. The kit makes the assistant check its own work, so it uses a little more of your Claude allowance than a plain chat.', '«واجهة» مجانية تماما. أما ⁦Claude⁩ فله حساب وخطة خاصة به، و⁦Claude Code⁩، الذي تعمل الإضافة داخله، ليس في كل الخطط: تأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. والإضافة تجعل المساعد يفحص عمله بنفسه، فتستهلك من رصيدك في ⁦Claude⁩ أكثر قليلا من محادثة عادية.'),
+    t('The kit is completely free. Claude has its own account and plan, and Claude Code, which the kit works inside, is not part of every plan: check yours on Claude’s website before you start. The kit makes the assistant check its own work, so it uses a little more of your daily Claude usage limit than a plain chat.', '«واجهة» مجانية تماما. أما ⁦Claude⁩ فله حساب وخطة خاصة به، و⁦Claude Code⁩، الذي تعمل الإضافة داخله، ليس في كل الخطط: تأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. والإضافة تجعل المساعد يفحص عمله بنفسه، فتستهلك من حدّ استخدامك اليومي في ⁦Claude⁩ أكثر قليلا من محادثة عادية.'),
   ],
   [
     t('Do I need to know how to code?', 'هل يجب أن أعرف البرمجة؟'),
@@ -12,7 +12,7 @@ export const beginnerQuestions = [
   ],
   [
     t('Is my data safe?', 'هل بياناتي آمنة؟'),
-    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. If you add the documentation tool Context7 at setup, it sends documentation searches to its own service. Helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env. The kit tells the assistant not to open it and blocks the usual ways, but this is not a lock. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وإن أضفت أداة التوثيق ⁦Context7⁩ عند الإعداد فإنها ترسل عمليات البحث في التوثيق إلى خدمتها. وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩. تطلب الإضافة من المساعد ألا يفتحه وتسد الطرق المعتادة، لكن هذا ليس قفلا. وفحوص الأمان حاجز أمان، وليست بيئة معزولة.'),
+    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. If you add the documentation tool Context7 at setup, it sends documentation searches to its own service. Helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env. The kit tells the assistant not to open it and blocks the usual ways, but this is not a lock. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وإن أضفت أداة التوثيق ⁦Context7⁩ عند الإعداد فإنها ترسل عمليات البحث في التوثيق إلى خدمتها. وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩. تطلب الإضافة من المساعد ألا يفتحه وتسد الطرق المعتادة، لكن هذا ليس قفلا. وفحوص الأمان حاجز يقلل الخطر، وليست خزنة مقفلة.'),
   ],
   [
     t('What if it breaks something?', 'ماذا لو أفسد شيئا؟'),
@@ -56,7 +56,7 @@ export const beginnerQuestions = [
   ],
   [
     t('Does it work on Windows?', 'هل تعمل الإضافة على ويندوز؟'),
-    t('On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'وعلى ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
+    t('Mostly yes. On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'نعم في الغالب. على ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const
 
@@ -78,7 +78,7 @@ export const problems = [
     t('It runs the commands listed in wajiha-kit.json, the kit’s settings file. Run those commands yourself to see which one fails. A check that points at a command that does not exist will not pass.', 'يشغل الأوامر المكتوبة في ⁦wajiha-kit.json⁩، وهو ملف إعدادات الإضافة. شغّل هذه الأوامر بنفسك لترى أيها يفشل. وإذا كان الفحص يشير إلى أمر غير موجود، فلن ينجح.'),
   ],
   [
-    t('It is slow, or uses too much of my Claude allowance, for small edits.', 'الإضافة بطيئة، أو تستهلك كثيرا من رصيدي في ⁦Claude⁩، في التعديلات الصغيرة.'),
+    t('It is slow, or uses too much of my Claude usage limit, for small edits.', 'الإضافة بطيئة، أو تستهلك كثيرا من حدّ استخدامي في ⁦Claude⁩، في التعديلات الصغيرة.'),
     t('Set stopGate.review to false in the settings file. The final check still looks for mistakes in the code and runs the tests that relate to your change.', 'اضبط ⁦stopGate.review⁩ على ⁦false⁩ في ملف الإعدادات. يبقى الفحص الأخير يبحث عن أخطاء في الكود ويشغل الاختبارات المرتبطة بتغييرك.'),
   ],
   [

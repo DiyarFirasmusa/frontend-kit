@@ -10,7 +10,7 @@ export const basics = {
   answer: t('What the kit does about it', 'ماذا تفعل الإضافة'),
   answerText: t(
     'Wajiha Kit is a free kit for Claude Code, an AI assistant that works inside your project folder. You answer a few plain questions. The kit builds a complete, tidy project with a fixed setup. You do not need to know libraries or tools. Then it checks the result before you see it. The setup is being improved, so it may ask a little differently today. Answer in your own words.',
-    '«واجهة» إضافة تعمل داخل ⁦Claude Code⁩، وهو مساعد ذكاء اصطناعي يعمل داخل مجلد مشروعك. تجيب عن بضعة أسئلة بسيطة، فتبني الإضافة مشروعا كاملا ومرتبا بإعداد ثابت. ولا تحتاج أن تعرف المكتبات أو الأدوات. ثم تفحص النتيجة قبل أن تراها. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا. أجب بكلماتك.',
+    '«واجهة» إضافة تعمل داخل ⁦Claude Code⁩، وهو مساعد ذكاء اصطناعي يعمل داخل مجلد مشروعك. تجيب عن بضعة أسئلة بسيطة، فتبني الإضافة مشروعا كاملا ومرتبا بإعداد ثابت. ولا تحتاج إلى معرفة المكتبات أو الأدوات. ثم تفحص النتيجة قبل أن تراها. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا. أجب بكلماتك.',
   ),
   youDo: t('What you do', 'ماذا تفعل أنت'),
   youDoLead: t('Five steps. A few words may be new, and each one is explained where it appears.', 'خمس خطوات. وقد تمر بكلمات جديدة، ويُشرح كل منها عند ظهوره.'),
@@ -51,6 +51,6 @@ export const basics = {
   expect: t('What to expect', 'ما الذي تتوقعه'),
   expectText: t(
     'It is a helper, not magic. You still look at the result and approve it. Putting your project online comes later, as a separate step.',
-    'هي مساعد وليست سحرا. يبقى عليك أن تنظر إلى النتيجة ويوافق عليها. ونشر مشروعك على الإنترنت يأتي لاحقا، كخطوة منفصلة.',
+    'الإضافة مساعد وليست سحرا. يبقى عليك أن تنظر إلى النتيجة ويوافق عليها. ونشر مشروعك على الإنترنت يأتي لاحقا، كخطوة منفصلة.',
   ),
 }

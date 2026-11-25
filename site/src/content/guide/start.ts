@@ -11,15 +11,15 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. To check, type claude --version and node --version in the command window. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check all three first; jq matters most, because without it the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. وللتأكد اكتب ⁦claude --version⁩ و⁦node --version⁩ في نافذة الأوامر. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق منها كلها أولا؛ و⁦jq⁩ أهمها، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. Claude checks both for you. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check all three first; jq matters most, because without it the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. ويتحقق ⁦Claude⁩ من الاثنين عنك. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق منها كلها أولا؛ و⁦jq⁩ أهمها، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
     ),
   },
   {
     name: t('On Windows', 'على ويندوز'),
     why: t(
       'On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
-      'وعلى ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
+      'على ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
     ),
   },
 ]
@@ -73,7 +73,7 @@ export const questions = [
     ],
   },
   {
-    question: t('Do you already have a backend?', 'هل عندك خادم خلفي (backend)؟'),
+    question: t('Do you already have a backend (the part behind the screens that stores your data)?', 'هل عندك خادم خلفي (backend)، وهو الجزء الذي يخزّن بياناتك خلف الشاشات؟'),
     answers: [
       t('Yes: save its description in your project as docs/api/openapi.json. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: احفظ وصفه في مشروعك باسم ⁦docs/api/openapi.json⁩. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك.'),
       t('Not sure, or no: say no, and connect one later. It asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'إن لم تكن متأكدا أو لم يكن عندك: قل لا، وتستطيع ربط خادم لاحقا. تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
@@ -99,7 +99,7 @@ export const build = {
   title: t('It builds your project', 'تبني مشروعك'),
   text: t(
     'It builds a complete project on a fixed setup chosen for these kinds of project. You do not need to know libraries or tools: the kit picks them, and may ask you about the framework. The kit also decides light and dark mode, who may open which page, and how the files are organised. Then it runs its checks and shows you the result.',
-    'تبني مشروعا كاملا على إعداد ثابت اختير لهذه الأنواع من المشاريع. ولا تحتاج أن تعرف المكتبات أو الأدوات: تختارها الإضافة، وقد تسألك عن الإطار. وتقرر الإضافة أيضا الوضع الفاتح والداكن، ومن يحق له فتح أي صفحة، وكيف تُرتب الملفات. ثم تشغل فحوصها وتعرض عليك النتيجة.',
+    'تبني مشروعا كاملا على إعداد ثابت اختير لهذه الأنواع من المشاريع. ولا تحتاج إلى معرفة المكتبات أو الأدوات: تختارها الإضافة، وقد تسألك عن الإطار. وتقرر الإضافة أيضا الوضع الفاتح والداكن، ومن يحق له فتح أي صفحة، وكيف تُرتب الملفات. ثم تشغل فحوصها وتعرض عليك النتيجة.',
   ),
 }
 
@@ -113,13 +113,13 @@ export const written = [
 
 export const after = [
   t('Something went wrong? See Questions: “When something does not work”.', 'حدث خطأ؟ راجع «الأسئلة»: «عندما لا يعمل شيء».'),
-  t('Look at the result and tell it what to change, in plain sentences.', 'انظر إلى النتيجة، وقل لها ما تريد تغييره بجمل بسيطة.'),
+  t('Look at the result and tell it what to change, in plain sentences.', 'انظر إلى النتيجة، وقل لـ ⁦Claude⁩ ما تريد تغييره بجمل بسيطة.'),
   t('Each change runs through the same safety checks. They run by themselves, so nothing depends on the assistant remembering.', 'يمر كل تغيير بفحوص الأمان نفسها. وهي تعمل وحدها، فلا يعتمد شيء على أن يتذكر المساعد.'),
-  t('When you are happy, ask it to save a version. You can go back to it.', 'عندما ترضى عن النتيجة، اطلب منها حفظ نسخة. وتستطيع الرجوع إليها.'),
+  t('When you are happy, ask it to save a version. You can go back to it.', 'عندما ترضى عن النتيجة، اطلب من ⁦Claude⁩ حفظ نسخة. وتستطيع الرجوع إليها.'),
 ]
 
 export const limits = [
-  t('It is a helper, not magic. It can make mistakes.', 'هي مساعد وليست سحرا. وقد تخطئ.'),
+  t('It is a helper, not magic. It can make mistakes.', 'الإضافة مساعد وليست سحرا. وقد تخطئ.'),
   t('You still look at what it made and say yes or no.', 'يبقى عليك أن تنظر إلى ما صنعته وتقول نعم أو لا.'),
   t('Putting your project on the internet is a separate step after this, and you can ask Claude to guide you.', 'نشر مشروعك على الإنترنت خطوة منفصلة بعد هذا، وتستطيع أن تطلب من Claude أن يرشدك إليها.'),
 ]

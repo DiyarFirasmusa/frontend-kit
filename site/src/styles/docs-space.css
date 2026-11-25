@@ -1575,3 +1575,39 @@ html[lang='ar'] .credits {
   font-weight: 600;
 }
 
+
+/* ---------- Round 8: designer's list ---------- */
+/* The link under the hero text is its own line, not the tail of the sentence. */
+.hero-for a {
+  display: block;
+  margin-block-start: 0.5rem;
+  padding-block: 0.5rem;
+}
+
+/* The pause button is small to look at and still 44px to press. */
+.chat-pause {
+  width: 1.75rem;
+  height: 1.75rem;
+  inset-block-start: 0.5rem;
+}
+
+.chat-pause::after {
+  content: '';
+  position: absolute;
+  inset: -0.5rem;
+}
+
+/* Links inside a line of text are easy to press: the padding adds to the area that answers, not to the line. */
+.start-side a,
+.doc-article p a,
+.foot-bottom a {
+  padding-block: 0.4rem;
+}
+
+/* Search fields: 16px so a phone does not zoom in, and tall enough to press. */
+@media (max-width: 900px) {
+  input[type='search'] {
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+}

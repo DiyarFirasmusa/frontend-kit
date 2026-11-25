@@ -71,7 +71,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     title: t('What is Wajiha Kit?', 'ما هي «واجهة»؟'),
     lead: t(
       'A kit for Claude Code that builds your website or dashboard for you, the way a good team would, and checks the work before you see it. You do not need to know how to code.',
-      'إضافة لـ Claude Code تبني لك موقعك أو لوحة تحكمك كما يفعل فريق جيد، وتفحص العمل قبل أن تراه. لا تحتاج أن تعرف البرمجة.',
+      'إضافة لـ Claude Code تبني لك موقعك أو لوحة تحكمك كما يفعل فريق جيد، وتفحص العمل قبل أن تراه. لا تحتاج إلى معرفة البرمجة.',
     ),
   },
   'get-started': {
@@ -101,7 +101,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     title: t('Specialists: a team behind the assistant.', 'المختصون: فريق خلف المساعد.'),
     lead: t(
       'A specialist is a separate helper with one job, like a reviewer or a tester. The main assistant gives it a task and gets a report back.',
-      'المختص مساعد مستقل له مهمة واحدة، مثل المراجع أو المختبِر. يعطيه المساعد الرئيسي مهمة، ثم يستلم منه تقريرا.',
+      'المختص مساعد مستقل له مهمة واحدة، مثل المراجِع أو المختبِر. يعطيه المساعد الرئيسي مهمة، ثم يستلم منه تقريرا.',
     ),
   },
   features: {
