@@ -149,3 +149,18 @@
 .run > li::before {
   display: none;
 }
+
+/* The long list behind the scenes stays closed until it is wanted or searched. */
+.more-details {
+  margin-top: 2rem;
+}
+.more-details > summary {
+  cursor: pointer;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.14));
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+.more-details[open] > summary {
+  margin-bottom: 1.5rem;
+}

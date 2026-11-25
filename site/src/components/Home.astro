@@ -5,12 +5,9 @@ import Layout from '../layouts/Layout.astro'
 import type { Route } from '../lib/routes.ts'
 import Header from './Header.astro'
 import Example from './home/Example.astro'
-import Explorer from './home/Explorer.astro'
 import GetIt from './home/GetIt.astro'
 import Hero from './home/Hero.astro'
-import Marquee from './home/Marquee.astro'
 import Points from './home/Points.astro'
-import Starts from './home/Starts.astro'
 import SiteFooter from './SiteFooter.astro'
 
 interface Props {
@@ -27,11 +24,8 @@ const route: Route = { kind: 'home' }
   <main id="content" class="home" tabindex="-1" transition:name="page">
     <Hero locale={locale} />
     <Points locale={locale} />
-    <Marquee locale={locale} />
     <Example locale={locale} />
-    <Starts locale={locale} />
     <GetIt locale={locale} />
-    <Explorer locale={locale} />
   </main>
   <SiteFooter locale={locale} />
 </Layout>

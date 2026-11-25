@@ -21,5 +21,7 @@ export function initFinder(): void {
       found += shown
     }
     empty.hidden = found > 0
+    const more = document.querySelector<HTMLDetailsElement>('[data-finder-more]')
+    if (more && words.length) more.open = true
   })
 }

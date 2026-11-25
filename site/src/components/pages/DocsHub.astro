@@ -23,7 +23,9 @@ interface Entry {
 const { locale } = Astro.props
 const copy = content[locale]
 const words = {
-  guides: t('Guides', 'الأدلة'),
+  guides: t('Start here', 'ابدأ من هنا'),
+  advanced: t('Advanced pages', 'صفحات متقدمة'),
+  behind: t('Behind the scenes: every part of the kit (you can skip this)', 'خلف الستار: كل أجزاء الإضافة (يمكنك تجاوزه)'),
   skills: t('Skills', 'المهارات'),
   agents: t('Specialists', 'المختصون'),
   rules: t('Rules', 'القواعد'),
@@ -31,31 +33,44 @@ const words = {
   search: t('Search everything: table, Arabic, upload…', 'ابحث في كل شيء: جدول، عربي، رفع…'),
   none: t('Nothing matches. Try another word.', 'لا توجد نتائج. جرّب كلمة أخرى.'),
 }
-const groups: { id: string; title: string; entries: Entry[] }[] = [
+const groups: { id: string; title: string; entries: Entry[]; more?: boolean }[] = [
   {
     id: 'guides',
     title: words.guides[locale],
-    entries: SECTIONS.flatMap(({ pages }) => pages)
+    entries: SECTIONS.slice(0, 2)
+      .flatMap(({ pages }) => pages)
       .filter((id) => id !== 'docs')
+      .map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
+  },
+  {
+    id: 'advanced',
+    title: words.advanced[locale],
+    more: true,
+    entries: SECTIONS.slice(2)
+      .flatMap(({ pages }) => pages)
       .map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
   },
   ...skillGroups.map(({ title, skills }, i) => ({
     id: i === 0 ? 'all-skills' : `skills-${i}`,
+    more: true,
     title: `${words.skills[locale]}: ${title[locale]}`,
     entries: Object.keys(skills).map((name) => ({ name, href: skillUrl(locale, name), about: skillPurpose[name]!.why, fixed: true })),
   })),
   {
     id: 'all-agents',
+    more: true,
     title: words.agents[locale],
     entries: Object.keys(agents).map((name) => ({ name, href: agentUrl(locale, name), about: agentPurpose[name]!.why, fixed: true })),
   },
   ...ruleGroups.map(({ group, names }) => ({
     id: `rules-${group.replaceAll('/', '-')}`,
+    more: true,
     title: `${words.rules[locale]}: ${copy.rules.groups[group]}`,
     entries: names.map((name) => ({ name, href: ruleUrl(locale, group, name), about: rulePurpose[`${group}/${name}`]!, fixed: true })),
   })),
   {
     id: 'all-hooks',
+    more: true,
     title: words.hooks[locale],
     entries: (Object.keys(copy.session.events) as HookEvent[])
       .filter((event) => hookEvents.includes(event))
@@ -72,7 +87,7 @@ const groups: { id: string; title: string; entries: Entry[] }[] = [
   <p role="status" class="muted" data-finder-empty hidden>{words.none[locale]}</p>
 </div>
 {
-  groups.map(({ id, title, entries }) => (
+  groups.filter((g) => !g.more).map(({ id, title, entries }) => (
     <section id={id} class="block" data-finder-group>
       <h2>{title}</h2>
       <ul class="index">
@@ -88,3 +103,23 @@ const groups: { id: string; title: string; entries: Entry[] }[] = [
     </section>
   ))
 }
+<details class="more-details" data-finder-more>
+  <summary>{words.behind[locale]}</summary>
+  {
+    groups.filter((g) => g.more).map(({ id, title, entries }) => (
+      <section id={id} class="block" data-finder-group>
+        <h2>{title}</h2>
+        <ul class="index">
+          {entries.map(({ name, href, about, fixed }) => (
+            <li data-finder-item data-search={[name, title, about.en, about.ar].join(' ').toLowerCase()}>
+              <a href={href} class:list={{ 'is-name': fixed }}>
+                {fixed ? <bdi>{name}</bdi> : name}
+              </a>
+              <p>{about[locale]}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</details>

@@ -21,7 +21,6 @@ const PARENT = { home: undefined, skill: 'skills', agent: 'agents', rule: 'rules
 const current: PageId | undefined = route.kind === 'page' ? route.id : PARENT[route.kind]
 const places = [
   ['example', t('How it works', 'كيف تعمل')],
-  ['inside', t('What is inside', 'ما بداخلها')],
 ] as const
 ---
 

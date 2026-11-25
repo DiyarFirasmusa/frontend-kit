@@ -4,7 +4,6 @@ import { home } from '../../content/guide/home.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
-import { facts } from '../../lib/plugin.ts'
 import { verdicts } from '../../lib/verdicts.ts'
 import Commands from '../Commands.astro'
 import CcLine from './CcLine.astro'
@@ -21,14 +20,6 @@ interface Line {
 }
 
 const { locale } = Astro.props
-const { kinds } = home
-const counts = [
-  [kinds.skills, facts.skills, 'skills'],
-  [kinds.agents, facts.agents, 'agents'],
-  [kinds.rules, facts.rules, 'rules'],
-  [kinds.checks, facts.events, 'checks'],
-] as const
-
 const main = verdicts.find(({ id }) => id === 'main')!
 const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
 const checked: Bilingual = { en: 'no mistakes found, tests passed', ar: 'لا أخطاء، ونجحت الاختبارات' }
@@ -105,17 +96,5 @@ const demos: { prompt: Bilingual; lines: Line[] }[] = [
         <ol class="demo-dots">{demos.map((_, i) => <li data-dot={i} class:list={{ 'is-on': i === 0 }}></li>)}</ol>
       </div>
     </figure>
-    <ul class="counts">
-      {
-        counts.map(([name, count, page]) => (
-          <li class="enter">
-            <a href={pageUrl(locale, page)}>
-              <b dir="ltr" data-count={count}>{count}</b>
-              <span>{name[locale]}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
   </div>
 </section>

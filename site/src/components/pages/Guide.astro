@@ -6,8 +6,6 @@ import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
 import Block from '../guide/Block.astro'
-import Concepts from '../guide/Concepts.astro'
-import Journey from '../guide/Journey.astro'
 
 interface Props {
   locale: Locale
@@ -37,13 +35,4 @@ const words = {
   <ul class="ticks">{words.gets.map((item) => <li>{item[locale]}</li>)}</ul>
 </Block>
 <Block id="expect" title={words.expect[locale]}><p class="big">{words.expectText[locale]}</p></Block>
-<Block id="words" title={words.parts[locale]} lead={words.partsLead[locale]}><Concepts locale={locale} /></Block>
-<Block id="journey" title={words.journey[locale]} lead={words.journeyLead[locale]}><Journey locale={locale} /></Block>
-<Block id="compare" title={words.compare[locale]}>
-  <table class="compare">
-    <thead><tr><th scope="col">{why.without}</th><th scope="col">{why.with}</th></tr></thead>
-    <tbody>{why.pairs.map(([without, withKit]) => <tr><td>{without}</td><td>{withKit}</td></tr>)}</tbody>
-  </table>
-</Block>
 <Block id="fit" title={why.fit.title}><ul class="ticks">{why.fit.items.map((item) => <li>{item}</li>)}</ul></Block>
-<Block id="skip" title={why.skip.title}><ul class="crosses">{why.skip.items.map((item) => <li>{item}</li>)}</ul></Block>

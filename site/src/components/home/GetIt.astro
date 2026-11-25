@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const { install, why } = content[locale]
+const { install } = content[locale]
 ---
 
 <section id="install" class="get-it">
@@ -38,7 +38,7 @@ const { install, why } = content[locale]
     <h3 class="get-it-title">{home.types[locale]}</h3>
     <ul class="works-for">
       {
-        projects.map(({ name, fits }) => (
+        projects.slice(0, 3).map(({ name, fits }) => (
           <li>
             <strong>{name[locale]}</strong>
             <span>{fits[locale]}</span>
@@ -47,16 +47,9 @@ const { install, why } = content[locale]
       }
     </ul>
 
-    <div class="fit">
-      <div>
-        <h3>{why.fit.title}</h3>
-        <ul class="ticks">{why.fit.items.map((item) => <li>{item}</li>)}</ul>
-      </div>
-      <div>
-        <h3>{why.skip.title}</h3>
-        <ul class="crosses">{why.skip.items.map((item) => <li>{item}</li>)}</ul>
-      </div>
-    </div>
+    <p class="hero-ways">
+      <a href={pageUrl(locale, 'get-started')}>{locale === 'ar' ? 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه' : 'Already have a project, or an old one? Read how to start from it'}</a>
+    </p>
     <p class="hero-ways"><a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a></p>
   </div>
 </section>
