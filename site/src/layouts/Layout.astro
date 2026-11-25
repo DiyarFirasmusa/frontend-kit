@@ -36,9 +36,11 @@ interface Props {
   title: string
   description: string
   indexable?: boolean
+  /** The trail shown on a guide page, for search engines: the guide, the section, this page. */
+  crumbs?: { name: string; href: string }[]
 }
 
-const { locale, route, title, description, indexable = true } = Astro.props
+const { locale, route, title, description, indexable = true, crumbs = [] } = Astro.props
 const home = route.kind === 'home' && indexable
 const copy = content[locale]
 const absolute = (path: string) => new URL(path, Astro.site).href
@@ -47,18 +49,42 @@ const absolute = (path: string) => new URL(path, Astro.site).href
 const SECTION = { skill: 'skills', agent: 'agents', rule: 'rules', hook: 'checks' } as const
 const lang = locale === 'ar' ? '-ar' : ''
 const share = route.kind === 'home' ? `og${lang}.jpg` : `og/${route.kind === 'page' ? route.id : SECTION[route.kind]}${lang}.jpg`
+// What a search engine learns about the site: the program (free, made by Diyar Firas, from GitHub) and the site's own name in both scripts.
 const product = JSON.stringify({
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Wajiha Kit',
-  applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'macOS, Linux',
-  softwareVersion: version,
-  description: copy.meta.description,
-  inLanguage: locale,
-  url: absolute(routeUrl(locale, route)),
-  sameAs: REPO_URL,
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Wajiha Kit',
+      alternateName: 'واجهة',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'macOS, Linux',
+      softwareVersion: version,
+      description: copy.meta.description,
+      inLanguage: locale,
+      url: absolute(routeUrl(locale, route)),
+      sameAs: REPO_URL,
+      downloadUrl: REPO_URL,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      author: { '@type': 'Person', name: 'Diyar Firas', url: 'https://github.com/DiyarFirasmusa' },
+    },
+    {
+      '@type': 'WebSite',
+      name: 'Wajiha Kit',
+      alternateName: ['واجهة', 'Wajiha'],
+      url: absolute('/'),
+      inLanguage: ['en', 'ar'],
+    },
+  ],
 })
+const trail =
+  crumbs.length > 0
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: crumbs.map(({ name, href }, i) => ({ '@type': 'ListItem', position: i + 1, name, item: absolute(href) })),
+      })
+    : ''
 ---
 
 <!doctype html>
@@ -82,7 +108,7 @@ const product = JSON.stringify({
     }
     <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
     <link rel="sitemap" href={asset('sitemap.xml')} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={route.kind === 'home' ? 'website' : 'article'} />
     <meta property="og:site_name" content="Wajiha Kit" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -93,6 +119,7 @@ const product = JSON.stringify({
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={locale === 'ar' ? 'ar_IQ' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'ar' ? 'en_US' : 'ar_IQ'} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -103,6 +130,7 @@ const product = JSON.stringify({
     {locale === 'ar' && <link rel="preload" as="font" type="font/woff2" href={arabic500} crossorigin />}
     <ClientRouter fallback="swap" />
     {home && <script type="application/ld+json" set:html={product} />}
+    {trail && <script type="application/ld+json" set:html={trail} />}
     <script is:inline>
       document.documentElement.classList.add('js')
       // A page swapped in without a reload brings its own <html>: mark it again, or the tabs show every panel.

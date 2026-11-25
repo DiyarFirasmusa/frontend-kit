@@ -101,7 +101,7 @@ export const agentGuides: Record<string, AgentGuide> = {
   },
   'qa-engineer': {
     plain: t('The last gate. It runs the tests, walks through the pages and says pass or fail.', 'البوابة الأخيرة. يشغل الاختبارات ويتصفح الصفحات ويعلن النجاح أو الفشل.'),
-    ask: t('run final QA on this change', 'اعمل فحص QA الأخير لهذا التغيير'),
+    ask: t('run final QA on this change', 'أجرِ فحص الجودة الأخير لهذا التغيير'),
     checks: [
       t('Every automatic check, and the build (turning the code into the real app).', 'كل الفحوص الآلية، والبناء (تحويل الكود إلى التطبيق الحقيقي).'),
       t('The changes compared with the rules.', 'يقارن التغييرات بالقواعد.'),

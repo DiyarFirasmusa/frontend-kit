@@ -917,3 +917,144 @@ body::after {
   content: none;
 }
 
+
+/* ---------- The footer: who made it, where everything is, and the legal pages ----------
+   Plain words on the page's own ground: no boxes and no lines, only space between the groups. */
+.foot {
+  display: block;
+  max-width: none;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--edge) 2rem;
+  color: var(--muted);
+}
+
+.foot-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.foot-brand {
+  display: grid;
+  gap: 1rem;
+  max-width: 22rem;
+}
+
+.foot-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  color: #fff;
+  font: 600 1.25rem / 1 var(--latin);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.foot-logo svg {
+  width: 2rem;
+  height: 2rem;
+  fill: var(--ivory);
+}
+
+.foot-logo svg .brand-block {
+  fill: var(--accent);
+}
+
+.foot-logo svg .brand-menu {
+  fill: var(--turq, #19abab);
+}
+
+.foot .foot-brand p {
+  margin: 0;
+  color: var(--muted);
+  font-family: inherit;
+  line-height: 1.65;
+}
+
+.foot-columns {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+}
+
+.foot-columns h2 {
+  margin: 0 0 0.75rem;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.foot-columns ul {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot-columns a {
+  display: flex;
+  align-items: center;
+  min-height: 2.25rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.foot-columns a:hover,
+.foot-bottom a:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.foot-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin-block-start: clamp(2.5rem, 5vw, 4rem);
+  color: var(--faint);
+  font-size: 0.875rem;
+}
+
+.foot .foot-bottom p {
+  margin: 0;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.foot-bottom a {
+  display: inline;
+  min-height: 0;
+  color: var(--muted);
+}
+
+.foot-version {
+  font-family: var(--latin);
+}
+
+@media (max-width: 1100px) {
+  .foot-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .foot-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .foot-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The date at the top of a legal page. */
+.legal-date {
+  margin-block: 0 1.5rem;
+  color: var(--faint);
+  font-size: 0.875rem;
+}
+

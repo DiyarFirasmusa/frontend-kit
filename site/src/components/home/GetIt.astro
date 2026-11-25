@@ -5,6 +5,7 @@ import { installWords as w } from '../../content/guide/showcase.ts'
 import { installFlow, installMessage } from '../../content/guide/start.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
 
 interface Props {
   locale: Locale
@@ -33,6 +34,12 @@ const message = installMessage[locale]
           ))
         }
       </ol>
+      <p class="start-trust">
+        {w.source[locale]} <a href={REPO_URL} dir="ltr">GitHub</a>
+      </p>
+      <p class="start-trust">
+        {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a>
+      </p>
       <p class="hero-ways">
         <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
         <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
@@ -49,6 +56,7 @@ const message = installMessage[locale]
           <span class="start-folder-icon">▣</span>
           <bdi dir="ltr">~/my-shop</bdi>
         </p>
+        <p class="start-skip">{w.hint[locale]}</p>
         <div class="start-message">
           <p class="start-text" dir="auto">{message}</p>
           <p class="chat-tools" aria-hidden="true">

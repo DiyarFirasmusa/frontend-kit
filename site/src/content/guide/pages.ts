@@ -17,6 +17,9 @@ export type PageId =
   | 'refactor'
   | 'examples'
   | 'questions'
+  | 'licence'
+  | 'privacy'
+  | 'terms'
 
 export interface PageInfo {
   id: PageId
@@ -47,7 +50,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'modes',
     still: 'layers',
     name: t('Ways of working', 'طرق العمل'),
-    title: t('Ways of working: how careful the assistant is.', 'طرق العمل: إلى أي حد يتحفظ المساعد.'),
+    title: t('Ways of working: how careful the assistant is.', 'طرق العمل: كم يحتاط المساعد.'),
     lead: t(
       'Nine modes, from building something new to freezing a release. You switch with one command, and you can skip this page at the start.',
       'تسعة أنماط، من بناء شيء جديد إلى تجميد الإصدار. تنتقل بينها بأمر واحد، ويمكنك تجاوز هذه الصفحة في البداية.',
@@ -110,8 +113,8 @@ export const PAGES: Record<PageId, PageInfo> = {
   'project-types': {
     id: 'project-types',
     still: 'both',
-    name: t('What can I build?', 'ماذا أستطيع أن أبني؟'),
-    title: t('What can I build?', 'ماذا أستطيع أن أبني؟'),
+    name: t('What can I build?', 'ماذا تستطيع أن تبني؟'),
+    title: t('What can I build?', 'ماذا تستطيع أن تبني؟'),
     lead: t('A website, a dashboard, or both in one project. Pick what fits your idea and the kit prepares the rest.', 'موقع أو لوحة تحكم أو الاثنان في مشروع واحد. اختر ما يناسب فكرتك، وتجهز الإضافة الباقي.'),
   },
   rules: {
@@ -139,7 +142,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     still: 'website',
     name: t('Settings', 'الإعدادات'),
     title: t('One file for the settings.', 'ملف واحد للإعدادات.'),
-    lead: t('Setup writes .claude/wajiha-kit.json. Change a value there and the skills, specialists and safety checks follow.', 'يكتب الإعداد الملف ‎.claude/wajiha-kit.json. غير قيمة فيه، فتتبعها المهارات والمختصون وفحوص الأمان.'),
+    lead: t('Setup writes .claude/wajiha-kit.json. Change a value there and the skills, specialists and safety checks follow.', 'يكتب الإعداد الملف ‎.claude/wajiha-kit.json. غيّر قيمة فيه، فتتبعها المهارات والمختصون وفحوص الأمان.'),
   },
   refactor: {
     id: 'refactor',
@@ -162,6 +165,27 @@ export const PAGES: Record<PageId, PageInfo> = {
     title: t('Questions and problems.', 'أسئلة ومشاكل.'),
     lead: t('Honest answers about cost, safety and limits, and what to do when something does not work.', 'إجابات صريحة عن التكلفة والأمان والحدود، وماذا تفعل عندما لا يعمل شيء.'),
   },
+  licence: {
+    id: 'licence',
+    still: 'skills',
+    name: t('Rights and licence', 'الحقوق والترخيص'),
+    title: t('Rights and licence.', 'الحقوق والترخيص.'),
+    lead: t('Who made Wajiha Kit, what you may do with it, and whose names are whose.', 'من صنع واجهة، وماذا يحق لك أن تفعل بها، ولمن تعود الأسماء.'),
+  },
+  privacy: {
+    id: 'privacy',
+    still: 'skills',
+    name: t('Privacy', 'الخصوصية'),
+    title: t('Privacy.', 'الخصوصية.'),
+    lead: t('What this website and the kit do with your information, in plain words.', 'ماذا يفعل هذا الموقع والإضافة بمعلوماتك، بكلمات بسيطة.'),
+  },
+  terms: {
+    id: 'terms',
+    still: 'skills',
+    name: t('Terms of use', 'شروط الاستخدام'),
+    title: t('Terms of use.', 'شروط الاستخدام.'),
+    lead: t('The simple rules for using this website and the kit.', 'القواعد البسيطة لاستخدام هذا الموقع والإضافة.'),
+  },
 }
 
 export const SECTIONS: PageSection[] = [
@@ -169,6 +193,7 @@ export const SECTIONS: PageSection[] = [
   { title: t('Help', 'مساعدة'), pages: ['questions', 'changelog'] },
   { title: t('Behind the scenes', 'خلف الستار'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
   { title: t('For your project', 'لمشروعك'), pages: ['modes', 'configuration', 'refactor'] },
+  { title: t('About', 'عن واجهة'), pages: ['licence', 'privacy', 'terms'] },
 ]
 
 /** The links in the header. */

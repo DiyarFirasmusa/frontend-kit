@@ -50,7 +50,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('Advanced typing: types that depend on other types (generic, conditional or mapped types), or a reusable type helper.', 'كتابة أنواع متقدمة: أنواع تعتمد على أنواع أخرى (generic وconditional وmapped)، أو أداة أنواع تعيد استخدامها.'),
   },
   'dash-create-route': {
-    why: t('An admin page is more than one file: a page address, a guard (a check on who may enter), a description of the search values it accepts, a data loader and a menu entry. If you forget one, data can leak or a link can break.', 'صفحة الإدارة أكثر من ملف واحد: عنوان للصفحة، وحارس (فحص لمن يحق له الدخول)، ووصف لقيم البحث التي تقبلها، ومحمل للبيانات، وعنصر في القائمة. إذا نسيت واحدا منها قد تتسرب البيانات أو ينكسر رابط.'),
+    why: t('An admin page is more than one file: a page address, a guard (a check on who may enter), a description of the search values it accepts, a data loader and a menu entry. If you forget one, data can leak or a link can break.', 'صفحة في لوحة التحكم أكثر من ملف واحد: عنوان للصفحة، وحارس (فحص لمن يحق له الدخول)، ووصف لقيم البحث التي تقبلها، ومحمل للبيانات، وعنصر في القائمة. إذا نسيت واحدا منها قد تتسرب البيانات أو ينكسر رابط.'),
     when: t('A new page, address, protected section or side menu entry in a dashboard.', 'صفحة جديدة أو عنوان جديد أو قسم محمي أو عنصر في القائمة الجانبية في لوحة التحكم.'),
   },
   'dash-create-table': {
@@ -146,12 +146,12 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('You say commit, push (upload), or yes to the question at the end of a task.', 'تقول «احفظ» (commit) أو «ارفع» (push)، أو توافق على السؤال في نهاية المهمة.'),
   },
   'pr-link': {
-    why: t('Opening the pull request (a request to merge your changes into the main work) is your decision. This skill prepares everything up to the click.', 'فتح الـ pull request (طلب دمج تغييراتك في العمل الرئيسي) قرارك أنت. تجهز هذه المهارة كل شيء حتى لحظة الضغط.'),
+    why: t('Opening the pull request (a request to merge your changes into the main work) is your decision. This skill prepares everything up to the click.', 'فتح الـ pull request (طلب دمج تغييراتك في النسخة الرئيسية) قرارك أنت. تجهز هذه المهارة كل شيء حتى لحظة الضغط.'),
     when: t('You ask for the link or a ready description to paste.', 'تطلب الرابط، أو وصفا جاهزا تلصقه.'),
   },
   'sync-main': {
     why: t('Rebasing (moving your work on top of the latest main version) blindly creates conflicts you did not expect. This skill shows what is coming before it touches anything.', 'عمل rebase (نقل عملك فوق آخر نسخة رئيسية) دون معرفة ما ينتظرك يسبب تعارضات لم تتوقعها. تريك هذه المهارة ما سيحدث قبل أن تغير أي شيء.'),
-    when: t('The main branch has moved on, or you ask to update from it.', 'الفرع الرئيسي تغير، أو تطلب التحديث منه.'),
+    when: t('The main branch has moved on, or you ask to update from it.', 'النسخة الرئيسية تغير، أو تطلب التحديث منه.'),
   },
   'branch-status': {
     why: t('You should know where your work stands without reading git output. This skill answers in plain words and changes nothing.', 'يجب أن تعرف أين وصل عملك دون قراءة مخرجات git. تجيبك هذه المهارة بكلمات بسيطة ولا تغير شيئا.'),
@@ -268,7 +268,7 @@ export const rulePurpose: Record<string, Bilingual> = {
   'dashboard/variants/next/error-monitoring.md': t('So monitoring is right for both halves of a Next.js app: the server part and the browser part.', 'لتعمل المراقبة بشكل صحيح في جزئي تطبيق Next.js: جزء الخادم وجزء المتصفح.'),
   'dashboard/variants/next/routing.md': t('So guards and data loading follow Next.js, which has no beforeLoad.', 'لتتبع الحماية وتحميل البيانات طريقة Next.js، التي ليس فيها beforeLoad.'),
   'dashboard/variants/next/structure.md': t('So every shared rule knows where things live in a Next.js app.', 'لتعرف كل قاعدة مشتركة أين توجد الأشياء في تطبيق Next.js.'),
-  'dashboard/variants/tanstack-start/framework.md': t('So the admin runs as a client app (it works inside the browser) on Start without hydration errors.', 'لتعمل لوحة الإدارة كتطبيق يعمل في المتصفح على Start دون أخطاء hydration (عدم تطابق ما يعرضه الخادم مع ما يعرضه المتصفح).'),
+  'dashboard/variants/tanstack-start/framework.md': t('So the admin runs as a client app (it works inside the browser) on Start without hydration errors.', 'لتعمل لوحة التحكم كتطبيق يعمل في المتصفح على Start دون أخطاء hydration (عدم تطابق ما يعرضه الخادم مع ما يعرضه المتصفح).'),
   'dashboard/variants/tanstack-start/structure.md': t('So every shared rule knows where things live on TanStack Start.', 'لتعرف كل قاعدة مشتركة أين توجد الأشياء في TanStack Start.'),
 
   'react/auth.md': t('So tokens (secrets that prove who is signed in), protection and sign-out are handled one way in any set of tools.', 'لتعالج الـ tokens (أسرار تثبت من سجل دخوله) والحماية وتسجيل الخروج بطريقة واحدة في أي مجموعة أدوات.'),

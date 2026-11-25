@@ -71,9 +71,17 @@ const detail = route.kind !== 'page'
 const summary = here.about
 const heading = detail ? here.name : info.title[locale]
 const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${here.among})` : ''}` : info.name[locale]
----
+// The site's name in the language of the page, so an Arabic title never starts or ends with a Latin brand.
+const brand = locale === 'ar' ? 'واجهة' : 'Wajiha Kit'
+// A short description is padded with the page's place in the guide, so it is never a bare tagline.
+const described = summary && summary.length < 70 ? `${summary} ${info.name[locale]}: ${PAGES.docs.name[locale]} ${brand}.` : (summary ?? '')
+const crumbs = [
+  ...(parent !== 'docs' ? [{ name: PAGES.docs.name[locale], href: pageUrl(locale, 'docs') }] : []),
+  ...(detail ? [{ name: info.name[locale], href: pageUrl(locale, parent) }] : []),
+  { name: detail ? here.name : info.name[locale], href: here.href },
+]---
 
-<Layout locale={locale} route={route} title={`${label} | Wajiha Kit`} description={summary ?? ''}>
+<Layout locale={locale} route={route} title={`${label} | ${brand}`} description={described} crumbs={crumbs}>
   <Header locale={locale} route={route} />
   <main class="doc" data-section={parent}>
     <DocsTree locale={locale} route={route} />

@@ -3,15 +3,15 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'Wajiha Kit: build your own website or dashboard, no coding needed',
+    title: 'Wajiha Kit: build a website or dashboard with Claude, no coding needed',
     description:
-      'A Claude Code plugin for people who do not code. Answer a few simple questions and get a complete website or dashboard, checked and reviewed before you see it.',
+      'A free kit for the Claude app. Answer a few simple questions and Claude builds your website or dashboard in Arabic and English, then checks it before you see it.',
   },
   chrome: {
     skip: 'Skip to content',
     sections: 'Sections',
     menu: 'Menu',
-    install: 'Install',
+    install: 'Start',
     switchLanguage: 'العربية',
     pause: 'Pause motion',
     play: 'Play motion',

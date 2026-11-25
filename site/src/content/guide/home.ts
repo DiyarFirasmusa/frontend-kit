@@ -3,10 +3,10 @@ import { t } from './text.ts'
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
-  title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة التحكم بنفسك. دون أي خبرة في البرمجة.'),
+  title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
   lead: t(
-    'Wajiha Kit works inside Claude Code. You answer a few simple questions, and it builds a complete, working project for you, with the latest proven methods and clean, well-organised code. Then it checks the result before you see it.',
-    'واجهة إضافة تعمل داخل \u2066Claude Code\u2069. تجيب عن بضعة أسئلة بسيطة، فتبني لك مشروعا كاملا يعمل، بأحدث الطرق المجربة وبكود نظيف ومرتب. ثم تفحص النتيجة قبل أن تراها.',
+    'A free kit for the Claude app on your computer. You answer a few simple questions, and it builds a working website or dashboard in Arabic and English. Then it checks the result before you see it.',
+    'واجهة إضافة مجانية لتطبيق \u2066Claude\u2069 على حاسوبك. تجيب عن بضعة أسئلة بسيطة، فتبني لك موقعا أو لوحة تحكم تعمل، بالعربية والإنجليزية. ثم تفحص النتيجة قبل أن تراها.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
@@ -19,14 +19,14 @@ export const home = {
       text: t('Pages, forms, tables, light and dark mode, Arabic and English. All of it is set up in a proven way.', 'الصفحات والنماذج والجداول والوضع الفاتح والداكن والعربية والإنجليزية. كلها مرتبة بطريقة مجربة.'),
     },
     {
-      name: t('It checks before showing you', 'تفحص قبل أن تعرض عليك'),
-      text: t('It looks for mistakes, runs tests and asks a second reviewer. Risky actions are stopped. You decide what to keep.', 'تبحث عن الأخطاء، وتجري الاختبارات، وتسأل مراجعا ثانيا. وتوقف أي خطوة خطرة. وأنت تقرر ما تحتفظ به.'),
+      name: t('It checks before showing you', 'تفحص العمل قبل أن تعرضه عليك'),
+      text: t('It looks for mistakes, runs tests and asks a second reviewer. Known risky commands are stopped. You decide what to keep.', 'تبحث عن الأخطاء، وتجري الاختبارات، وتسأل مراجعا ثانيا. وتوقف الأوامر الخطرة المعروفة. وأنت تقرر ما تحتفظ به.'),
     },
   ],
   start: t('Start now', 'ابدأ الآن'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
-    lead: t('Pick one when Claude asks. You do not choose any tools: each kind comes ready, set up the way a good team would.', 'اختر واحدا عندما يسألك Claude. لن تختار أي أدوات: كل نوع يأتي جاهزا، مرتبا كما يرتبه فريق جيد.'),
+    lead: t('Pick one when Claude asks. You do not choose any tools: each kind comes ready.', 'اختر واحدا عندما يسألك Claude. ولن تختار أي أدوات: كل نوع يأتي جاهزا.'),
     say: t('You could say', 'يمكنك أن تقول'),
     more: t('More about each kind', 'المزيد عن كل نوع'),
   },
@@ -63,7 +63,7 @@ export const home = {
     },
     done: {
       name: t('You decide', 'القرار لك'),
-      text: t('You get a short report and one question: save this version? Nothing leaves your computer without your yes.', 'يصلك تقرير قصير وسؤال واحد: هل أحفظ هذه النسخة؟ ولا يخرج شيء من جهازك دون موافقتك.'),
+      text: t('You get a short report and one question: save this version? Nothing is saved or published without your yes.', 'يصلك تقرير قصير وسؤال واحد: هل أحفظ هذه النسخة؟ ولا يُحفظ ولا يُنشر شيء دون موافقتك.'),
     },
   },
   /** The words of the session panel. */
@@ -81,7 +81,7 @@ export const home = {
   // Where a project stands when the kit arrives: new, already running, or a mess.
   starts: {
     title: t('Start from where you are', 'ابدأ من حيث أنت'),
-    lead: t('Most people start with an idea and nothing else. If you already have a project, the kit can join it or clean it up.', 'أغلب الناس يبدأون بفكرة فقط. وإن كان عندك مشروع، تستطيع الإضافة أن تنضم إليه أو أن ترتبه.'),
+    lead: t('Most people start with an idea and nothing else. If you already have a project, the kit can join it or clean it up.', 'أغلب الناس يبدؤون بفكرة فقط. وإن كان عندك مشروع، تستطيع الإضافة أن تنضم إليه أو أن ترتبه.'),
     cases: [
       {
         mode: 'new',
@@ -93,7 +93,7 @@ export const home = {
       {
         mode: 'existing',
         name: t('I already have a project', 'عندي مشروع جاهز'),
-        text: t('The kit reads your project and follows how it is built. Nothing is rewritten.', 'تقرأ الإضافة مشروعك وتتبع طريقة بنائه. ولا يعاد كتابة شيء.'),
+        text: t('The kit reads your project and follows how it is built. Nothing is rewritten.', 'تقرأ الإضافة مشروعك وتتبع طريقة بنائه. ولا تُعاد كتابة شيء.'),
         command: '/wajiha-kit:setup',
         page: 'get-started',
       },

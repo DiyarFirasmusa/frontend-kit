@@ -1,0 +1,35 @@
+---
+import { legal, updated, type LegalId } from '../../content/guide/legal.ts'
+import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import Block from '../guide/Block.astro'
+
+interface Props {
+  locale: Locale
+  id: LegalId
+}
+
+const { locale, id } = Astro.props
+const href = (kind: 'repo' | 'outside' | 'site', to: string): string => (kind === 'repo' ? `${REPO_URL}/${to}` : kind === 'site' ? pageUrl(locale, to as LegalId) : to)
+---
+
+<p class="legal-date">{updated[locale]}</p>
+{
+  legal[id].map(({ id: section, title, text, links }) => (
+    <Block id={section} title={title[locale]}>
+      {text.map((paragraph) => <p>{paragraph[locale]}</p>)}
+      {
+        links && (
+          <p class="links">
+            {links.map(({ label, to, kind }) => (
+              <a class="source" href={href(kind, to)}>
+                {label[locale]}
+              </a>
+            ))}
+          </p>
+        )
+      }
+    </Block>
+  ))
+}

@@ -5,13 +5,13 @@ import { t } from './text.ts'
 export const hookEffects: Record<HookEvent, Bilingual> = {
   SessionStart: t('Adds background information', 'يضيف معلومات خلفية'),
   UserPromptSubmit: t('Adds background information', 'يضيف معلومات خلفية'),
-  PreToolUse: t('Can refuse the action', 'يقدر أن يرفض الإجراء'),
+  PreToolUse: t('Can refuse the action', 'يستطيع أن يرفض الإجراء'),
   PostToolUse: t('Sends errors back to the assistant', 'يرجع الأخطاء إلى المساعد'),
   PostToolUseFailure: t('Writes a log', 'يكتب سجلا'),
   SubagentStart: t('Adds background information', 'يضيف معلومات خلفية'),
-  SubagentStop: t('Can send the work back', 'يقدر أن يعيده للعمل'),
+  SubagentStop: t('Can send the work back', 'يستطيع أن يعيده إلى العمل'),
   Notification: t('Alerts you', 'ينبهك'),
-  Stop: t('Can send the work back', 'يقدر أن يعيده للعمل'),
+  Stop: t('Can send the work back', 'يستطيع أن يعيده إلى العمل'),
   SessionEnd: t('Cleans up', 'ينظف'),
 }
 

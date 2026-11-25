@@ -4,7 +4,7 @@ import { t } from './text.ts'
 export const beginnerQuestions = [
   [
     t('Does it cost money?', 'هل تكلف مالا؟'),
-    t('The cost comes from Claude Code, not from the kit. Claude Code needs a Claude plan or credit from Anthropic. The kit makes the assistant check its own work, and that uses somewhat more of your allowance. On two small test tasks it cost about 1.5 times as much. That is a small sample, so treat it as a rough guide.', 'التكلفة تأتي من ⁦Claude Code⁩ وليس من الإضافة. فهو يحتاج إلى اشتراك Claude أو رصيد من Anthropic. والإضافة تجعل المساعد يفحص عمله بنفسه، وهذا يستهلك من رصيدك أكثر قليلا. في اختبار صغير على عدد قليل من المهام كلفت نحو مرة ونصف. هذه عينة صغيرة، فاعتبرها تقديرا تقريبيا.'),
+    t('The kit is free. Claude Code, which the kit works inside, needs a Claude account from Anthropic that includes it. The kit makes the assistant check its own work, so it uses somewhat more of your Claude allowance than a plain request.', 'الإضافة مجانية. أما ⁦Claude Code⁩، الذي تعمل الإضافة داخله، فيحتاج إلى حساب في ⁦Claude⁩ من ⁦Anthropic⁩ يشمله. والإضافة تجعل المساعد يفحص عمله بنفسه، فتستهلك من رصيدك في ⁦Claude⁩ أكثر قليلا من طلب عادي.'),
   ],
   [
     t('Do I need to know how to code?', 'هل يجب أن أعرف البرمجة؟'),
@@ -12,14 +12,14 @@ export const beginnerQuestions = [
   ],
   [
     t('Is my data safe?', 'هل بياناتي آمنة؟'),
-    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. One tool the kit uses, Context7, sends documentation searches to its own service. Never type a password or a key into the chat. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وأداة واحدة تستخدمها الإضافة، وهي ⁦Context7⁩، ترسل عمليات البحث في التوثيق إلى خدمتها. لا تكتب كلمة مرور ولا مفتاحا في المحادثة. وفحوص الأمان حاجز يحميك، وليست خزنة مغلقة.'),
+    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. One tool the kit uses, Context7, sends documentation searches to its own service, and helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env, which the kit stops the assistant from opening. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وأداة تستخدمها الإضافة، وهي ⁦Context7⁩، ترسل عمليات البحث في التوثيق إلى خدمتها، وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩، وتمنع الإضافة المساعد من فتحه. وفحوص الأمان حاجز يحميك، وليست خزنة مغلقة.'),
   ],
   [
     t('What if it breaks something?', 'ماذا لو أفسد شيئا؟'),
-    t('Two things protect you. First, it asks before it starts, and the safety checks stop dangerous actions such as deleting folders or touching your live website. Second, the same checks run after the work and send mistakes back to the assistant to fix. Still, nothing is perfect. Keep a copy of anything you cannot lose, and ask it to undo the last change if you do not like it.', 'تحميك الإضافة بعدة طرق. أولها أنها تسألك قبل أن تبدأ، وفحوص الأمان توقف الأعمال الخطرة مثل حذف المجلدات أو لمس موقعك الحي. وثانيها أن الفحوص نفسها تعمل بعد انتهاء العمل وترجع الأخطاء إلى المساعد ليصلحها. ومع ذلك لا شيء كامل. احتفظ بنسخة من كل ما لا تحتمل خسارته، واطلب منه أن يتراجع عن آخر تغيير إذا لم يعجبك.'),
+    t('Two things protect you. First, it asks before it starts, and the safety checks stop known risky commands, such as force pushes or deleting top-level folders. They cannot see inside scripts. Second, the same checks run after the work and send mistakes back to the assistant to fix. Still, nothing is perfect. Keep a copy of anything you cannot lose, and ask it to undo the last change if you do not like it.', 'تحميك الإضافة بعدة طرق. أولها أنها تسألك قبل أن تبدأ، وفحوص الأمان توقف الأوامر الخطرة المعروفة، مثل الرفع بالقوة أو حذف المجلدات الرئيسية. ولا ترى ما داخل السكربتات. وثانيها أن الفحوص نفسها تعمل بعد انتهاء العمل وترجع الأخطاء إلى المساعد ليصلحها. ومع ذلك لا شيء كامل. احتفظ بنسخة من كل ما لا تحتمل خسارته، واطلب منه أن يتراجع عن آخر تغيير إذا لم يعجبك.'),
   ],
   [
-    t('What if I do not know my backend’s API link?', 'ماذا لو لا أعرف رابط وصف الـ API لخادمي؟'),
+    t('What if I do not know my backend’s API link?', 'ماذا لو لم أكن أعرف رابط وصف خادمي (API)؟'),
     t('That is fine. This link is a page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later.', 'لا مشكلة. هذا الرابط صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا.'),
   ],
   [
@@ -28,14 +28,14 @@ export const beginnerQuestions = [
   ],
   [
     t('Does it put my site online?', 'هل تنشر لي الموقع على الإنترنت؟'),
-    t('Not yet. It builds a complete project and runs it on your computer so you can see it. Putting it online comes later, and you will decide when.', 'ليس بعد. تبني لك مشروعا كاملا وتشغله على جهازك لترى النتيجة. أما النشر على الإنترنت فيأتي لاحقا، وأنت تقرر متى.'),
+    t('No. It builds the project and runs it on your computer so you can see it. Putting it online is a separate step after that, and you can ask Claude to guide you.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. أما النشر على الإنترنت فخطوة منفصلة بعدها، وتستطيع أن تطلب من Claude أن يرشدك إليها.'),
   ],
 ] as const
 
 export const problems = [
   [
     t('Every command is refused after installing.', 'تُرفض كل الأوامر بعد التثبيت.'),
-    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it (on macOS: brew install jq), then close Claude Code and open it again.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها (على macOS: ⁦brew install jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد.'),
+    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it (on macOS: brew install jq; on Windows: winget install jqlang.jq), then close Claude Code and open it again.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها (على macOS: ⁦brew install jq⁩، وعلى Windows: ⁦winget install jqlang.jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد.'),
   ],
   [
     t('The rules do not seem to load.', 'القواعد لا تعمل على ما يبدو.'),

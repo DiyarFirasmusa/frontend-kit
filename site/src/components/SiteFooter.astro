@@ -1,22 +1,77 @@
 ---
+import { PAGES } from '../content/guide/pages.ts'
+import { MAKER, YEAR } from '../content/guide/legal.ts'
+import { t } from '../content/guide/text.ts'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
+import { pageUrl, routeUrl } from '../lib/links.ts'
 import { REPO_URL, version } from '../lib/plugin.ts'
 
 interface Props {
   locale: Locale
 }
 
-const { footer } = content[Astro.props.locale]
-const links = [
-  [REPO_URL, footer.source],
-  [`${REPO_URL}/blob/main/CHANGELOG.md`, footer.changelog],
-  [`${REPO_URL}/tree/main/examples`, footer.examples],
-  [`${REPO_URL}/blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
+const { locale } = Astro.props
+const { footer } = content[locale]
+const words = {
+  about: t('A free kit for the Claude app. You answer a few simple questions, and it builds your website or dashboard.', 'إضافة مجانية لتطبيق ⁦Claude⁩. تجيب عن بضعة أسئلة بسيطة، فتبني موقعك أو لوحة تحكمك.'),
+  start: t('Start', 'ابدأ'),
+  kit: t('The kit', 'الإضافة'),
+  help: t('Help', 'مساعدة'),
+  project: t('The project', 'المشروع'),
+  legal: t('Legal', 'قانوني'),
+  by: t('Made by', 'صنعها'),
+  rights: t('The code is released under the MIT licence.', 'الكود منشور برخصة ⁦MIT⁩.'),
+  independent: t('An independent project, not made or endorsed by Anthropic. Claude is a name of Anthropic.', 'مشروع مستقل، لم تصنعه ⁦Anthropic⁩ ولم تزكّه. و⁦Claude⁩ اسم تملكه ⁦Anthropic⁩.'),
+}
+const home = routeUrl(locale, { kind: 'home' })
+const page = (id: Parameters<typeof pageUrl>[1]) => [pageUrl(locale, id), PAGES[id].name[locale]] as const
+const columns = [
+  { title: words.start, links: [[`${home}#install`, t('Start in two steps', 'ابدأ بخطوتين')[locale]], page('get-started'), page('project-types'), page('examples')] },
+  { title: words.kit, links: [page('docs'), page('skills'), page('agents'), page('rules'), page('checks')] },
+  { title: words.help, links: [page('questions'), page('changelog'), page('configuration'), page('modes')] },
+  {
+    title: words.project,
+    links: [
+      [REPO_URL, footer.source],
+      [`${REPO_URL}/blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md`, footer.notices],
+      [`${REPO_URL}/issues`, t('Report a problem', 'أبلغ عن مشكلة')[locale]],
+    ],
+  },
+  { title: words.legal, links: [page('licence'), page('privacy'), page('terms')] },
 ] as const
 ---
 
 <footer class="foot">
-  <p dir="ltr">Wajiha Kit <span>v{version}</span></p>
-  <ul>{links.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <a class="foot-logo" href={home}>
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="4" y="4" width="56" height="12" rx="3"></rect>
+          <rect class="brand-menu" x="46" y="23" width="14" height="37" rx="3"></rect>
+          <rect class="brand-block" x="4" y="23" width="35" height="17" rx="3"></rect>
+          <rect x="4" y="47" width="35" height="13" rx="3"></rect>
+        </svg>
+        <bdi>Wajiha Kit</bdi>
+      </a>
+      <p>{words.about[locale]}</p>
+    </div>
+    <nav class="foot-columns" aria-label={words.legal[locale]}>
+      {
+        columns.map(({ title, links }) => (
+          <div>
+            <h2>{title[locale]}</h2>
+            <ul>{links.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+  <div class="foot-bottom">
+    <p>
+      © {YEAR} <a href={MAKER.href}>{MAKER.name}</a>. {words.rights[locale]}
+    </p>
+    <p>{words.independent[locale]}</p>
+    <p class="foot-version" dir="ltr">Wajiha Kit v{version}</p>
+  </div>
 </footer>

@@ -130,6 +130,9 @@ const pageSigns: Record<PageId, SignName> = {
   refactor: 'rescue',
   questions: 'question',
   changelog: 'clock',
+  licence: 'key',
+  privacy: 'guard',
+  terms: 'ruler',
 }
 
 const named = (signs: Record<string, SignName>, name: string): SignName => {

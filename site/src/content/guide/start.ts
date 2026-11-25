@@ -27,7 +27,7 @@ export const installMessage = t(
 export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof t>; copy?: ReturnType<typeof t> | string }[] = [
   {
     title: t('Open a folder in the Claude app', 'افتح مجلدا في تطبيق Claude'),
-    text: t('Make an empty folder for your project. Open the Claude app, choose Code, and pick the folder with the folder button next to the message box.', 'أنشئ مجلدا فارغا لمشروعك. افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد بجانب خانة الرسائل.'),
+    text: t('Make a new empty folder on your computer for your project, for example “my-shop”. Open the Claude app, choose Code, and pick the folder with the folder button next to the message box.', 'أنشئ مجلدا جديدا فارغا على حاسوبك لمشروعك، مثل «متجري». افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد بجانب خانة الرسائل.'),
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
@@ -38,7 +38,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
 
 export const questionsLead = t(
   'The setup asks the same few questions of everyone. None of them is technical. Answer in your own words.',
-  'يسأل الإعداد الجميع الأسئلة القليلة نفسها. ليس فيها سؤال تقني. أجب بكلماتك أنت.',
+  'يسأل Claude الجميع الأسئلة القليلة نفسها. ليس فيها سؤال تقني. أجب بكلماتك أنت.',
 )
 
 export const questions = [
@@ -66,10 +66,10 @@ export const questions = [
     ],
   },
   {
-    question: t('Do you have a backend?', 'هل عندك خلفية برمجية (backend)؟'),
+    question: t('Do you already have a backend?', 'هل عندك خادم خلفي (backend)؟'),
     answers: [
-      t('Yes: send the link to its description. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: أرسل رابط وصفها. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه الـ backend عندك.'),
-      t('No: it asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'لا: تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
+      t('Yes: send the link to its description, or the file. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: أرسل رابط وصفه أو ملفه. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك.'),
+      t('Not sure, or no: say no, and connect one later. It asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'لست متأكدا أو لا: قل لا، وتستطيع ربط خادم لاحقا. تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
     ],
   },
   {
@@ -113,13 +113,13 @@ export const after = [
 export const limits = [
   t('It is a helper, not magic. It can make mistakes.', 'هي مساعد وليست سحرا. وقد تخطئ.'),
   t('You still look at what it made and say yes or no.', 'يبقى عليك أن تنظر إلى ما صنعته وتقول نعم أو لا.'),
-  t('Putting your project on the internet comes later. It is not part of this setup.', 'نشر مشروعك على الإنترنت يأتي لاحقا. وليس جزءا من هذا الإعداد.'),
+  t('Putting your project on the internet is a separate step after this, and you can ask Claude to guide you.', 'نشر مشروعك على الإنترنت خطوة منفصلة بعد هذا، وتستطيع أن تطلب من Claude أن يرشدك إليها.'),
 ]
 
 export const maintenance = [
   {
     title: t('Update', 'التحديث'),
-    text: t('Setup turns automatic updates on, but they do not run where the updater is switched off, as it can be in the desktop app. To update by hand, run this in the command window, inside your project folder, then restart Claude Code. Rules already copied into your project do not change by themselves: run setup again to see what is new.', 'يفعل الإعداد التحديث التلقائي، لكنه لا يعمل إذا كان المحدّث معطلا، كما قد يحدث في تطبيق سطح المكتب. للتحديث يدويا، شغّل هذا الأمر في نافذة الأوامر داخل مجلد مشروعك، ثم أعد تشغيل ⁦Claude Code⁩. القواعد المنسوخة إلى مشروعك لا تتغير وحدها. شغّل الإعداد مرة أخرى لترى الجديد.'),
+    text: t('Setup turns automatic updates on, but they do not run where the updater is switched off, as it can be in the desktop app. To update by hand, run this in the command window, inside your project folder, then restart Claude Code. Rules already copied into your project do not change by themselves: run setup again to see what is new.', 'يفعّل الإعداد التحديث التلقائي، لكنه لا يعمل إذا كان المحدّث معطلا، كما قد يحدث في تطبيق سطح المكتب. للتحديث يدويا، شغّل هذا الأمر في نافذة الأوامر داخل مجلد مشروعك، ثم أعد تشغيل ⁦Claude Code⁩. القواعد المنسوخة إلى مشروعك لا تتغير وحدها. شغّل الإعداد مرة أخرى لترى الجديد.'),
     // The first command only refreshes the listing. The installed version moves with the second.
     command: 'claude plugin marketplace update wajiha-kit && claude plugin update wajiha-kit@wajiha-kit',
   },

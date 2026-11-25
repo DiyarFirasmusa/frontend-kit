@@ -5,7 +5,7 @@ export const dashboard: Record<string, SkillGuide> = {
   'dash-create-route': {
     plain: t(
       'Adds a screen to your admin dashboard: the address people use to reach it, who is allowed to open it, and its place in the side menu.',
-      'يضيف شاشة إلى لوحة الإدارة عندك: العنوان الذي يصل به الناس إليها، ومن يحق له فتحها، ومكانها في القائمة الجانبية.',
+      'يضيف شاشة إلى لوحة التحكم عندك: العنوان الذي يصل به الناس إليها، ومن يحق له فتحها، ومكانها في القائمة الجانبية.',
     ),
     ask: [t('add an orders page to the dashboard', 'أضف صفحة طلبات إلى لوحة التحكم'), t('only admins can open the reports page', 'اجعل صفحة التقارير للمشرفين فقط')],
     steps: [

@@ -2233,3 +2233,23 @@
 .home > section {
   overflow-x: clip;
 }
+
+/* A quiet line of trust under the steps, and the reassurance above the message to copy. */
+.start-trust {
+  max-width: 34rem;
+  margin: 0.75rem 0 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.start-trust a {
+  color: var(--muted);
+}
+
+.start-skip {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+

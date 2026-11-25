@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro'
 import DocPage from '../components/DocPage.astro'
 import Home from '../components/Home.astro'
+import Legal from '../components/pages/Legal.astro'
 import AgentList from '../components/pages/AgentList.astro'
 import AgentPage from '../components/pages/AgentPage.astro'
 import Changelog from '../components/pages/Changelog.astro'
@@ -22,6 +23,7 @@ import Rules from '../components/pages/Rules.astro'
 import SkillList from '../components/pages/SkillList.astro'
 import SkillPage from '../components/pages/SkillPage.astro'
 import type { PageId } from '../content/guide/pages.ts'
+import type { LegalId } from '../content/guide/legal.ts'
 import type { Locale } from '../content/types.ts'
 import { allRoutes, LOCALES, routePath, type Route } from '../lib/routes.ts'
 
@@ -56,9 +58,10 @@ const BODIES = {
   refactor: Refactor,
   examples: Examples,
   questions: Questions,
-} satisfies Record<PageId, unknown>
+} satisfies Record<Exclude<PageId, LegalId>, unknown>
+const LEGAL: PageId[] = ['licence', 'privacy', 'terms']
 
-const Body = route.kind === 'page' ? BODIES[route.id] : undefined
+const Body = route.kind === 'page' && !LEGAL.includes(route.id) ? BODIES[route.id as Exclude<PageId, LegalId>] : undefined
 ---
 
 {
@@ -67,6 +70,7 @@ const Body = route.kind === 'page' ? BODIES[route.id] : undefined
   ) : (
     <DocPage locale={locale} route={route}>
       {Body && <Body locale={locale} />}
+      {route.kind === 'page' && LEGAL.includes(route.id) && <Legal locale={locale} id={route.id as LegalId} />}
       {route.kind === 'skill' && <SkillPage name={route.name} locale={locale} />}
       {route.kind === 'agent' && <AgentPage name={route.name} locale={locale} />}
       {route.kind === 'rule' && <RulePage group={route.group} name={route.name} locale={locale} />}
