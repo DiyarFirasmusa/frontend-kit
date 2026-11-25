@@ -1,0 +1,24 @@
+# dependencies
+node_modules
+
+# environment files (keep .env.example)
+.env
+.env.*
+!.env.example
+!.env.development
+
+# build & test output
+dist
+coverage
+playwright-report
+test-results
+.tanstack
+
+# local machine files
+.DS_Store
+*.local
+
+
+# bundle analysis output (npm run build:analyze)
+stats*.html
+
