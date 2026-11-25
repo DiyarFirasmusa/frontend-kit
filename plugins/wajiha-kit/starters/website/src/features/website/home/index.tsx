@@ -91,7 +91,7 @@ export function HomePage() {
 
       <section className="pt-section">
         <Container>
-          <div className="bg-primary text-on-primary rounded-lg p-8 md:p-12">
+          <div className="surface-primary rounded-lg p-8 md:p-12" data-testid="home-cta">
             <h2 className="text-3xl">{t('home.ctaTitle')}</h2>
             <p className="mt-3 max-w-prose text-lg">{t('home.ctaText')}</p>
             <Link

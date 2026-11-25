@@ -1,6 +1,8 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buttonPrimary, buttonSecondary } from '@/shared/components/button-styles';
 import { cx } from '@/shared/utils/cx';
+import { useHydrated } from '@/shared/utils/use-hydrated';
 import { useContactForm } from '../hooks/use-contact-form';
 import type { ContactInput } from '../validations/contact-schema';
 
@@ -16,13 +18,31 @@ export function ContactForm({ submit }: Props) {
   const { form, status, onSubmit, reset } = useContactForm(submit);
   const {
     register,
+    setFocus,
     formState: { errors, isSubmitting },
   } = form;
+  // Until React is running, a tap on Send would do a plain browser submit and lose the message.
+  const hydrated = useHydrated();
+  const successHeading = useRef<HTMLHeadingElement>(null);
+  const previous = useRef(status);
+
+  // Keyboard and screen reader users land on what changed: the success heading after sending, the first
+  // field after "send another". The form unmounts on success, so focus would otherwise drop to <body>.
+  useEffect(() => {
+    if (status === 'sent') {
+      successHeading.current?.focus();
+    } else if (status === 'idle' && previous.current === 'sent') {
+      setFocus('name');
+    }
+    previous.current = status;
+  }, [status, setFocus]);
 
   if (status === 'sent') {
     return (
       <output className="border-border bg-surface block rounded-lg border p-6">
-        <h2 className="text-success text-2xl">{t('contact.successTitle')}</h2>
+        <h2 ref={successHeading} tabIndex={-1} className="text-success text-2xl">
+          {t('contact.successTitle')}
+        </h2>
         <p className="text-muted mt-2">{t('contact.successText')}</p>
         <button type="button" onClick={reset} className={cx(buttonSecondary, 'mt-6')}>
           {t('contact.sendAnother')}
@@ -39,11 +59,14 @@ export function ContactForm({ submit }: Props) {
     );
 
   return (
+    // method="post": if the script has not run yet, the browser must never put the message in the URL.
     <form
+      method="post"
       onSubmit={onSubmit}
       noValidate
       className="space-y-5"
-      aria-describedby="contact-form-error"
+      aria-label={t('contact.formLabel')}
+      aria-describedby={status === 'failed' ? 'contact-form-error' : undefined}
     >
       <div>
         <label htmlFor="contact-name" className="font-semibold">
@@ -114,13 +137,17 @@ export function ContactForm({ submit }: Props) {
 
       {/* Honeypot: off-screen, skipped by keyboards and screen readers; simple bots fill it in. */}
       <div aria-hidden="true" className="absolute start-[-9999px] h-px w-px overflow-hidden">
-        <label htmlFor="contact-website">{t('contact.honeypotLabel')}</label>
+        <label htmlFor="contact-ref">{t('contact.honeypotLabel')}</label>
         <input
-          id="contact-website"
+          id="contact-ref"
           type="text"
           tabIndex={-1}
           autoComplete="off"
-          {...register('website')}
+          data-lpignore="true"
+          data-1p-ignore="true"
+          data-bwignore="true"
+          data-form-type="other"
+          {...register('contactRef')}
         />
       </div>
 
@@ -128,7 +155,7 @@ export function ContactForm({ submit }: Props) {
         {status === 'failed' ? t('contact.serverError') : ''}
       </p>
 
-      <button type="submit" disabled={isSubmitting} className={buttonPrimary}>
+      <button type="submit" disabled={!hydrated || isSubmitting} className={buttonPrimary}>
         {isSubmitting ? t('contact.sending') : t('contact.submit')}
       </button>
     </form>

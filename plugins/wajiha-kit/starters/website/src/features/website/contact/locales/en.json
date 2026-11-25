@@ -8,6 +8,7 @@
     "emailLabel": "Email",
     "phoneLabel": "Phone (optional)",
     "messageLabel": "Your message",
+    "formLabel": "Contact form",
     "honeypotLabel": "Leave this field empty",
     "submit": "Send message",
     "sending": "Sending...",

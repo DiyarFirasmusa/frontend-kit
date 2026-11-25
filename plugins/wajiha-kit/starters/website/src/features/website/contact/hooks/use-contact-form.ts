@@ -20,6 +20,8 @@ export function useContactForm(submit: Submit) {
 
   const onSubmit = form.handleSubmit((values) =>
     singleFlight(async () => {
+      // A new try starts clean: the error of the last try must not stay on screen while this one runs.
+      setStatus('idle');
       try {
         const result = await submit(values);
         setStatus(result.ok ? 'sent' : 'failed');

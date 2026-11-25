@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  bodySizeProblem,
   canonicalRedirect,
+  MAX_SERVER_FN_BODY_BYTES,
   contentSecurityPolicy,
   createNonce,
   nonceFor,
@@ -113,6 +115,31 @@ describe('canonicalRedirect', () => {
     expect(target('/assets/Styles-AbC123.css')).toBeUndefined();
     expect(target('/_serverFn/AbCdEf')).toBeUndefined();
     expect(target('/Favicon.SVG')).toBeUndefined();
+  });
+
+  it('never answers with a protocol-relative Location (another host)', () => {
+    expect(target('//evil.example/')).toBe('/evil.example');
+    expect(target('///Evil/x')).toBe('/evil/x');
+    expect(target('//')).toBe('/');
+    expect(target('/ar//x')).toBeUndefined();
+  });
+});
+
+describe('bodySizeProblem', () => {
+  const post = (path: string, headers: Record<string, string>) =>
+    new Request(`https://example.test${path}`, { method: 'POST', headers });
+
+  it('lets small server function bodies and every other request through', () => {
+    expect(bodySizeProblem(post('/_serverFn/abc', { 'content-length': '900' }))).toBeUndefined();
+    expect(bodySizeProblem(new Request('https://example.test/_serverFn/abc'))).toBeUndefined();
+    expect(bodySizeProblem(post('/ar/contact', {}))).toBeUndefined();
+  });
+
+  it('refuses a body over the limit (413) or without a length (411)', () => {
+    const tooBig = String(MAX_SERVER_FN_BODY_BYTES + 1);
+    expect(bodySizeProblem(post('/_serverFn/abc', { 'content-length': tooBig }))).toBe(413);
+    expect(bodySizeProblem(post('/_serverFn/abc', { 'content-length': 'lots' }))).toBe(413);
+    expect(bodySizeProblem(post('/_serverFn/abc', {}))).toBe(411);
   });
 });
 

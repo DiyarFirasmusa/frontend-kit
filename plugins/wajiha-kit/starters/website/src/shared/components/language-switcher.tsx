@@ -14,7 +14,9 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const target = otherLocale(locale);
   const remember = () => {
-    document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`;
+    // Set from script, so it cannot be HttpOnly; Secure whenever the page itself is on HTTPS.
+    const secure = window.location.protocol === 'https:' ? '; secure' : '';
+    document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax${secure}`;
   };
   return (
     <a

@@ -1,5 +1,6 @@
 import { Outlet } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
+import { RouteAnnouncer } from '@/shared/components/route-announcer';
 import { SiteFooter } from '@/shared/components/site-footer';
 import { SiteHeader } from '@/shared/components/site-header';
 import type { Locale } from '@/shared/lib/i18n/languages';
@@ -20,6 +21,7 @@ export function LocaleLayout({ locale }: { locale: Locale }) {
         <Outlet />
       </main>
       <SiteFooter locale={locale} />
+      <RouteAnnouncer />
     </>
   );
 }

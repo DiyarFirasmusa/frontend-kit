@@ -114,12 +114,51 @@ export function canonicalRedirect(url: URL): string | undefined {
   if (!isPage) {
     return undefined;
   }
-  let target = pathname.toLowerCase();
+  // Collapse leading slashes first: a Location of "//evil.example" would be read as another host.
+  let target = pathname.toLowerCase().replace(/^\/{2,}/, '/');
   if (target.length > 1) {
     target = target.replace(/\/+$/, '');
   }
   return target === pathname ? undefined : `${target}${search}`;
 }
+
+/** Largest server function request body the app reads (the contact form sends about 3 KB at most). */
+export const MAX_SERVER_FN_BODY_BYTES = 16 * 1024;
+
+/**
+ * Refuses an oversized server function request before its body is read: 413 when Content-Length is too
+ * big, 411 when it is missing (browsers always send it for these requests). nginx has its own limit, but
+ * the image can run without nginx. Returns undefined when the request may go on.
+ */
+export function bodySizeProblem(request: Request): 411 | 413 | undefined {
+  const isServerFn = new URL(request.url).pathname.toLowerCase().startsWith('/_serverfn');
+  if (!isServerFn || request.method === 'GET' || request.method === 'HEAD') {
+    return undefined;
+  }
+  const length = request.headers.get('content-length');
+  if (length === null) {
+    return 411;
+  }
+  const bytes = Number(length);
+  return Number.isFinite(bytes) && bytes <= MAX_SERVER_FN_BODY_BYTES ? undefined : 413;
+}
+
+/**
+ * Headers for files served straight from public/ and the build (they never reach the request middleware
+ * above). Used by the Nitro route rules in vite.config.ts. Images get a CSP that blocks scripts, so an SVG
+ * opened on its own cannot run code. Never serve files uploaded by visitors from this origin.
+ */
+export const STATIC_FILE_HEADERS: Record<string, string> = {
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+};
+
+export const STATIC_IMAGE_HEADERS: Record<string, string> = {
+  ...STATIC_FILE_HEADERS,
+  'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+  // Not hashed, so a short cache: a replaced image shows up within the hour.
+  'Cache-Control': 'public, max-age=3600',
+};
 
 /**
  * X-Robots-Tag: a copy of the page's robots meta for crawlers that read headers, and the only signal

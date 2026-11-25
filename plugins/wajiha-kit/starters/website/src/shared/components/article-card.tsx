@@ -13,6 +13,8 @@ export type ArticleCardProps = {
   date: string;
   cover: string;
   coverAlt: string;
+  /** h2 when the cards sit right under the page's h1 (the news list), h3 under a section h2 (default). */
+  headingLevel?: 'h2' | 'h3';
 };
 
 /** Takes plain values, not a news record, so any feature can show an article without importing the news feature. */
@@ -24,6 +26,7 @@ export function ArticleCard({
   date,
   cover,
   coverAlt,
+  headingLevel: Heading = 'h3',
 }: ArticleCardProps) {
   const { t } = useTranslation();
   return (
@@ -39,7 +42,7 @@ export function ArticleCard({
         <time dateTime={date} className="text-muted text-sm">
           {formatDate(locale, date)}
         </time>
-        <h3 className="mt-2 text-xl">
+        <Heading className="mt-2 text-xl">
           <Link
             to="/$locale/news/$slug"
             params={{ locale, slug }}
@@ -47,7 +50,7 @@ export function ArticleCard({
           >
             {title}
           </Link>
-        </h3>
+        </Heading>
         <p className="text-muted mt-2 flex-1">{summary}</p>
         <Link
           to="/$locale/news/$slug"

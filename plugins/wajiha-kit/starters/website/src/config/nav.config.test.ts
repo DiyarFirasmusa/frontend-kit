@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { NAV } from './nav.config';
+import { NAV, navItem } from './nav.config';
 
 describe('NAV', () => {
-  it('keeps path and route id in step', () => {
-    for (const item of NAV) {
-      expect(item.to).toBe(item.path === '' ? '/$locale' : `/$locale${item.path}`);
-    }
+  it('works out the language-free path and the id from the route', () => {
+    expect(
+      navItem({ to: '/$locale/about', labelKey: 'nav.about', changefreq: 'yearly', priority: 0.5 }),
+    ).toMatchObject({ id: 'about', path: '/about' });
+    expect(
+      navItem({ to: '/$locale', labelKey: 'nav.home', changefreq: 'yearly', priority: 1 }),
+    ).toMatchObject({ id: 'home', path: '' });
   });
 
   it('uses lowercase kebab-case paths and unique ids', () => {

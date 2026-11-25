@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAV } from '@/config/nav.config';
 import { siteName } from '@/config/site.config';
@@ -18,6 +19,22 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   const open = useMenuStore((state) => state.open);
   const toggle = useMenuStore((state) => state.toggle);
   const setOpen = useMenuStore((state) => state.setOpen);
+  const toggleButton = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the open phone menu and puts focus back on its button.
+  useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        toggleButton.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, setOpen]);
 
   return (
     <header className="border-border bg-bg sticky top-0 z-40 border-b">
@@ -58,6 +75,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <LanguageSwitcher locale={locale} />
           <ThemeToggle />
           <button
+            ref={toggleButton}
             type="button"
             onClick={toggle}
             aria-expanded={open}

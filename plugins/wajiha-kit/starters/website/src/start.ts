@@ -2,12 +2,22 @@ import { createCsrfMiddleware, createMiddleware, createStart } from '@tanstack/r
 import { publicEnv } from '@/shared/env/public-env';
 import { getServerEnv } from '@/shared/server/env.server';
 import {
+  bodySizeProblem,
   canonicalRedirect,
   createNonce,
   rememberNonce,
   robotsHeader,
   securityHeaders,
 } from '@/shared/server/security-headers';
+
+/** Refuses oversized server function bodies before anything reads them. Runs first. */
+const bodyLimitMiddleware = createMiddleware().server(async ({ next, request }) => {
+  const problem = bodySizeProblem(request);
+  if (problem !== undefined) {
+    return new Response(null, { status: problem });
+  }
+  return next();
+});
 
 /** Applies the canonical URL redirect and the security headers to every response. */
 const securityMiddleware = createMiddleware().server(async ({ next, request }) => {
@@ -45,6 +55,7 @@ const securityMiddleware = createMiddleware().server(async ({ next, request }) =
 
 export const startInstance = createStart(() => ({
   requestMiddleware: [
+    bodyLimitMiddleware,
     createCsrfMiddleware({ filter: (ctx) => ctx.handlerType === 'serverFn' }),
     securityMiddleware,
   ],

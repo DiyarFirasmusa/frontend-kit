@@ -8,6 +8,7 @@
     "emailLabel": "البريد الإلكتروني",
     "phoneLabel": "الهاتف (اختياري)",
     "messageLabel": "رسالتك",
+    "formLabel": "نموذج التواصل",
     "honeypotLabel": "اترك هذا الحقل فارغاً",
     "submit": "إرسال الرسالة",
     "sending": "جارٍ الإرسال...",

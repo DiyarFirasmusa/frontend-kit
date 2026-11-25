@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { ENV_KEYS, validateEnv, validateProductionEnv } from './schema';
+import {
+  ENV_KEYS,
+  validateEnv,
+  validateProductionEnv,
+  validateServerEnv,
+  WEBHOOK_REQUIRED,
+} from './schema';
 
 describe('validateEnv', () => {
   it('accepts an empty environment and fills safe defaults', () => {
@@ -53,6 +59,29 @@ describe('validateProductionEnv', () => {
     expect(validateProductionEnv({})).toHaveLength(1);
     expect(validateProductionEnv({ VITE_SITE_URL: ' ' })).toHaveLength(1);
     expect(validateProductionEnv({ VITE_SITE_URL: 'https://example.com' })).toHaveLength(0);
+  });
+});
+
+describe('validateServerEnv', () => {
+  const staging = { productionSite: false };
+  const real = { productionSite: true };
+
+  it('allows demo mode (no webhook) only on a site that is not the real one', () => {
+    expect(validateServerEnv({}, staging)).toEqual([]);
+    expect(validateServerEnv({ CONTACT_WEBHOOK_URL: '' }, real)).toEqual([WEBHOOK_REQUIRED]);
+    expect(
+      validateServerEnv({ CONTACT_WEBHOOK_URL: 'https://hooks.example.test/x' }, real),
+    ).toEqual([]);
+  });
+
+  it('reports a bad value instead of quietly replacing it', () => {
+    const problems = validateServerEnv(
+      { CSP_MODE: 'Enforce', CONTACT_WEBHOOK_URL: 'https://hooks.example.test/x' },
+      real,
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toMatch(/^CSP_MODE:/);
+    expect(validateServerEnv({ CONTACT_WEBHOOK_URL: 'not a url' }, staging)).toHaveLength(1);
   });
 });
 

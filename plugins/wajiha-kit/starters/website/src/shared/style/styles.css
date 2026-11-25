@@ -2,6 +2,16 @@
 @import '@fontsource-variable/cairo/wght.css';
 @import './tokens.css';
 
+/* Never look for class names in build output or reports. .gitignore lists these folders, but when the
+   project is not its own git repository Tailwind can still scan them: the server build then picks up
+   class names from the last browser build, and the page links a CSS file that does not exist. */
+@source not '../../../.output';
+@source not '../../../.nitro';
+@source not '../../../.tanstack';
+@source not '../../../coverage';
+@source not '../../../playwright-report';
+@source not '../../../test-results';
+
 @layer base {
   html {
     background-color: var(--color-bg);
@@ -30,10 +40,20 @@
     text-wrap: pretty;
   }
 
+  /* An offset ring: it is drawn on the surface around the control, not on the control itself, so it shows
+     on every button style. --focus is read here directly (not through --color-focus) so a surface can
+     change it for its children: see surface-primary below. */
   :focus-visible {
-    outline: 3px solid var(--color-focus);
+    outline: 3px solid var(--focus);
     outline-offset: 3px;
     border-radius: var(--radius-sm);
+  }
+
+  /* Headings and <main> only receive focus from code (after a page change or a sent form), so a screen
+     reader starts there. They are not controls, so they draw no ring. */
+  main:focus-visible,
+  [tabindex='-1']:is(h1, h2):focus-visible {
+    outline: none;
   }
 
   ::selection {
@@ -74,6 +94,15 @@
   :root:not([data-theme='light']) .theme-icon-dark {
     display: inline;
   }
+}
+
+/* A block in the primary colour. Its children get a focus ring in the on-primary colour, because a ring in
+   the primary colour would vanish on it. Use this class (not bg-primary) for any coloured block that holds
+   links or buttons. */
+@utility surface-primary {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  --focus: var(--on-primary);
 }
 
 /* Directional icons mirror in RTL (arrows, chevrons). */

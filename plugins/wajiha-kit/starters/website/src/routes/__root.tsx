@@ -7,7 +7,7 @@ import {
   Scripts,
   useRouter,
 } from '@tanstack/react-router';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { SITE } from '@/config/site.config';
 import type { RouterContext } from '@/router';
@@ -79,6 +79,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 
 function RootComponent() {
   const { i18n } = Route.useRouteContext();
+  // Marks the page as interactive. The e2e tests wait for it before they click, so a click never lands on
+  // server HTML that React has not taken over yet.
+  useEffect(() => {
+    document.documentElement.dataset['hydrated'] = 'true';
+  }, []);
   return (
     <I18nextProvider i18n={i18n}>
       <Outlet />

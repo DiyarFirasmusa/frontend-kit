@@ -64,11 +64,53 @@ describe('ContactForm', () => {
       email: 'sara@example.com',
       phone: '',
       message: 'Hello, I would like to ask about training.',
-      website: '',
+      contactRef: '',
     });
+
+    // Focus follows the change, so a screen reader reads the result.
+    expect(screen.getByRole('heading', { name: 'We got your message' })).toHaveFocus();
 
     await user.click(screen.getByRole('button', { name: 'Send another message' }));
     expect(screen.getByLabelText('Name')).toHaveValue('');
+    expect(screen.getByLabelText('Name')).toHaveFocus();
+  });
+
+  it('accepts a phone number typed with Arabic digits and sends it as 0-9', async () => {
+    const submit = vi.fn().mockResolvedValue({ ok: true });
+    const user = userEvent.setup();
+    renderWithI18n(<ContactForm submit={submit} />, 'en');
+
+    await fill(user, { 'Phone (optional)': '٠٧٧٠١٢٣٤٥٦٧' });
+    await user.click(screen.getByRole('button', { name: 'Send message' }));
+
+    expect(await screen.findByText('We got your message')).toBeInTheDocument();
+    expect(submit).toHaveBeenCalledWith(expect.objectContaining({ phone: '07701234567' }));
+  });
+
+  it('clears the old error as soon as the visitor tries again', async () => {
+    let finish: (value: { ok: boolean }) => void = () => undefined;
+    const submit = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false })
+      .mockImplementationOnce(() => new Promise<{ ok: boolean }>((resolve) => (finish = resolve)));
+    const user = userEvent.setup();
+    renderWithI18n(<ContactForm submit={submit} />, 'en');
+
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: 'Send message' }));
+    expect(await screen.findByText(/could not be sent/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Send message' }));
+    await waitFor(() => expect(submit).toHaveBeenCalledTimes(2));
+    expect(screen.queryByText(/could not be sent/)).not.toBeInTheDocument();
+
+    finish({ ok: true });
+    expect(await screen.findByText('We got your message')).toBeInTheDocument();
+  });
+
+  it('posts with method="post", so a submit before the script runs never puts the message in the URL', () => {
+    renderWithI18n(<ContactForm submit={vi.fn()} />, 'en');
+    expect(screen.getByRole('form', { name: 'Contact form' })).toHaveAttribute('method', 'post');
   });
 
   it('a second tap while the request is running does not send twice', async () => {

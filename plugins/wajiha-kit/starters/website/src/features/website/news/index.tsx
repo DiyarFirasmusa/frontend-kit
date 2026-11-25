@@ -13,7 +13,7 @@ export function NewsListPage() {
       <Container className="pt-section">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => (
-            <ArticleCard key={card.slug} locale={locale} {...card} />
+            <ArticleCard key={card.slug} locale={locale} headingLevel="h2" {...card} />
           ))}
         </div>
       </Container>
