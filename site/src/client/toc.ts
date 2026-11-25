@@ -27,7 +27,8 @@ export function initToc(signal: AbortSignal): void {
         if (!isIntersecting) continue
         const at = links.findIndex((link) => link.hash === `#${target.id}`)
         links.forEach((link, i) => {
-          link.toggleAttribute('aria-current', i === at)
+          if (i === at) link.setAttribute('aria-current', 'location')
+          else link.removeAttribute('aria-current')
           link.toggleAttribute('data-passed', i < at)
         })
         toc.style.setProperty('--reached', String((at + 0.5) / links.length))

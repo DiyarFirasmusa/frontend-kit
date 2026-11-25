@@ -9,7 +9,7 @@ export function initBeforeAfter(signal: AbortSignal): void {
     // What a screen reader says as the line moves: how much of each result is showing.
     const set = (value: number): void => {
       frame.style.setProperty('--pos', `${rtl ? 100 - value : value}%`)
-      range.setAttribute('aria-valuetext', `${range.dataset['bad']} ${value}%, ${range.dataset['good']} ${100 - value}%`)
+      range.setAttribute('aria-valuetext', `${range.dataset['bad']} ${value}%${rtl ? '، ' : ', '}${range.dataset['good']} ${100 - value}%`)
     }
     range.addEventListener('input', () => set(Number(range.value)), { signal })
     set(Number(range.value))

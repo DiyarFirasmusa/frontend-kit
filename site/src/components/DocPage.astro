@@ -74,7 +74,8 @@ const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${he
 // The site's name in the language of the page, so an Arabic title never starts or ends with a Latin brand.
 const brand = locale === 'ar' ? 'واجهة' : 'Wajiha Kit'
 // A short description is padded with the page's place in the guide, so it is never a bare tagline.
-const described = summary && summary.length < 70 ? `${summary} ${info.name[locale]}: ${PAGES.docs.name[locale]} ${brand}.` : (summary ?? '')
+const padded = summary && summary.length < 70 ? `${summary} ${info.name[locale]}: ${PAGES.docs.name[locale]} ${brand}.` : (summary ?? '')
+const described = padded.length > 160 ? `${padded.slice(0, 157).replace(/\s+\S*$/, '')}…` : padded
 const crumbs = [
   ...(parent !== 'docs' ? [{ name: PAGES.docs.name[locale], href: pageUrl(locale, 'docs') }] : []),
   ...(detail ? [{ name: info.name[locale], href: pageUrl(locale, parent) }] : []),

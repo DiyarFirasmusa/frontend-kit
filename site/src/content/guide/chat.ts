@@ -18,7 +18,7 @@ export const chatWords = {
   reply: t('Reply to Claude…', 'رد على Claude…'),
   working: t('Working…', 'يعمل…'),
   model: 'Opus 5.5',
-  pause: t('Pause the demo', 'أوقف العرض مؤقتا'),
+  pause: t('Pause animations', 'أوقف الحركة'),
   play: t('Play the demo', 'شغّل العرض'),
   /** What a screen reader hears instead of the moving chat. */
   summary: t(

@@ -14,6 +14,24 @@ const route: Route = { kind: 'home' }
     <h1>This page does not exist.</h1>
     <p lang="ar" dir="rtl">هذه الصفحة غير موجودة.</p>
     <PageIndex locale="en" />
+    <script is:inline>
+      // One static 404 serves both languages: under /ar/ the Arabic sentence leads and the page turns right to left.
+      if (location.pathname.indexOf('/ar/') === 0) {
+        document.documentElement.lang = 'ar'
+        document.documentElement.dir = 'rtl'
+        document.title = 'الصفحة غير موجودة | واجهة'
+        var h = document.querySelector('.missing h1')
+        var p = document.querySelector('.missing > p')
+        var english = h.textContent
+        h.textContent = p.textContent
+        p.textContent = english
+        p.lang = 'en'
+        p.dir = 'ltr'
+        var home = document.createElement('p')
+        home.innerHTML = '<a href="/ar/">الرئيسية</a>'
+        p.after(home)
+      }
+    </script>
   </main>
   <SiteFooter locale="en" />
 </Layout>

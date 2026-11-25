@@ -47,8 +47,8 @@ function playChat(signal: AbortSignal): void {
       () => {
         paused = !paused
         button.setAttribute('aria-pressed', String(paused))
-        button.setAttribute('aria-label', (paused ? button.dataset['playLabel'] : button.dataset['pauseLabel']) ?? '')
         chat.classList.toggle('is-paused', paused)
+        document.documentElement.classList.toggle('is-paused', paused)
         wake()
       },
       { signal },

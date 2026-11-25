@@ -110,7 +110,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
           'يُستضاف الموقع لدى ⁦Vercel⁩. وكأغلب شركات الاستضافة، تحتفظ ⁦Vercel⁩ بسجلات خادم عادية لكل زيارة، مثل عنوان ⁦IP⁩ والوقت والصفحة المطلوبة، لتشغيل خدمتها وحمايتها. ولا يضيف هذا الموقع أي تحليلات من تلقاء نفسه فوق ذلك.',
         ),
       ],
-      links: [{ label: t('Vercel’s privacy policy', 'سياسة الخصوصية لدى Vercel'), to: 'https://vercel.com/legal/privacy-policy', kind: 'outside' }],
+      links: [{ label: t('Vercel’s privacy policy', 'سياسة الخصوصية لدى Vercel'), to: 'https://vercel.com/legal/privacy-notice', kind: 'outside' }],
     },
     {
       id: 'kit',

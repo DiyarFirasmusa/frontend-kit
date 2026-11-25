@@ -13,7 +13,8 @@ const { command, install, message = false } = Astro.props
 
 <div class:list={['command', { 'is-message': message }]} dir={message ? 'auto' : 'ltr'}>
   <code>{command}</code>
-  <button type="button" data-copy={command} data-label={install.copy} data-done={install.copied} data-failed={install.failed}>
-    <span aria-live="polite" data-status>{install.copy}</span>
+  <button type="button" data-copy={command} data-label={install.copy} data-done={install.copied} data-failed={install.failed} aria-label={`${install.copy}: ${command.length > 48 ? `${command.slice(0, 48)}…` : command}`}>
+    <span aria-hidden="true" data-status>{install.copy}</span>
   </button>
+  <span class="sr-only" role="status" data-announce></span>
 </div>

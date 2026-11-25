@@ -5,7 +5,7 @@ export const needs = [
   {
     name: t('The Claude app', 'تطبيق ⁦Claude⁩'),
     why: t('This is where you talk to Claude. Sign in with your Claude account. Its Code tab works on a folder on your computer and makes your project there.', 'هنا تتحدث مع ⁦Claude⁩. سجّل الدخول بحسابك في ⁦Claude⁩. قسم ⁦Code⁩ فيه يعمل على مجلد في جهازك ويصنع مشروعك هناك.'),
-    link: 'https://claude.ai/download',
+    link: 'https://claude.com/download',
     linkLabel: t('Download the Claude app', 'نزّل تطبيق ⁦Claude⁩'),
   },
   {

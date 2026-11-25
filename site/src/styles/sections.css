@@ -116,6 +116,7 @@
 
 .show-chips li::before {
   content: '✓';
+  content: '✓' / '';
   color: var(--turq, #19abab);
   font-size: 0.8125rem;
 }
@@ -1165,6 +1166,7 @@
 
 .show-features strong::before {
   content: '✓';
+  content: '✓' / '';
   color: var(--turq, #19abab);
   font-size: 0.8125rem;
 }

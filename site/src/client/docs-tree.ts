@@ -15,6 +15,10 @@ export function initTree(signal: AbortSignal): void {
   const input = required<HTMLInputElement>('[data-tree-input]', tree)
   const empty = required<HTMLElement>('[data-tree-empty]', tree)
   const groups = all<HTMLDetailsElement>('[data-tree-group]', tree)
+  const announce = document.createElement('p')
+  announce.className = 'sr-only'
+  announce.setAttribute('role', 'status')
+  tree.append(announce)
   const openAtFirst = groups.map((group) => group.open)
   const items = groups.map((group) => all<HTMLElement>('[data-tree-item]', group))
 
@@ -41,5 +45,7 @@ export function initTree(signal: AbortSignal): void {
       found += shown
     })
     empty.hidden = found > 0
+    // A permanent status line: it says "3 pages found" or "Nothing matches" every time the words change.
+    announce.textContent = words.length === 0 ? '' : found > 0 ? `${found} ${tree.dataset['found'] ?? ''}` : (empty.textContent ?? '')
   })
 }

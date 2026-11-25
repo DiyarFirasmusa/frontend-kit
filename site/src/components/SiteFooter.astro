@@ -62,7 +62,7 @@ const columns = [
       {
         columns.map(({ title, links }) => (
           <div>
-            <h2>{title[locale]}</h2>
+            <p class="foot-title">{title[locale]}</p>
             <ul>{links.map(([href, label]) => <li><a href={href}>{label}</a></li>)}</ul>
           </div>
         ))

@@ -32,6 +32,7 @@ const words = {
   guides: t('Start here', 'ابدأ من هنا'),
   hooks: t('Safety checks', 'فحوص الأمان'),
   search: t('Search: table, Arabic, upload…', 'ابحث: جدول، عربي، رفع…'),
+  found: t('pages found', 'صفحات وُجدت'),
   none: t('Nothing matches.', 'لا توجد نتائج.'),
 }
 const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
@@ -77,7 +78,7 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
 ]
 ---
 
-<details class="tree" data-tree>
+<details class="tree" data-tree data-found={words.found[locale]}>
   <summary>{ui.allPages[locale]}</summary>
   <label class="tree-search">
     <span class="sr-only">{words.search[locale]}</span>
