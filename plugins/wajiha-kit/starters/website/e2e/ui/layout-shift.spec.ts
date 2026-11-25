@@ -23,6 +23,7 @@ test.describe('layout shift', () => {
         }).observe({ type: 'layout-shift', buffered: true });
       });
       await page.goto(localized(target.path), { waitUntil: 'networkidle' });
+      await expect(page.locator('html')).toHaveAttribute('data-hydrated', 'true');
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       // Two more seconds of life: late shifts count too.
       await page.waitForTimeout(2000);

@@ -23,15 +23,14 @@ test.describe('every page renders in the project language and fits the screen', 
 
   test('the 404 page keeps the header and offers a way home', async ({
     page,
-    localized,
+    open,
     language,
+    t,
   }) => {
-    const response = await page.goto(localized(NOT_FOUND_PATH));
+    const response = await open(NOT_FOUND_PATH);
     expect(response?.status()).toBe(404);
     await expect(page.getByRole('banner')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      language === 'ar' ? 'الصفحة غير موجودة' : 'Page not found',
-    );
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t('error.notFoundTitle'));
     await page.getByRole('main').getByRole('link').first().click();
     await expect(page).toHaveURL(new RegExp(`/${language}$`));
   });
@@ -46,10 +45,11 @@ test.describe('every page renders in the project language and fits the screen', 
     page,
     localized,
     language,
+    t,
   }) => {
     await page.goto(localized(''));
     const header = page.getByRole('banner');
-    const switcher = header.getByRole('link', { name: language === 'ar' ? 'English' : 'العربية' });
+    const switcher = header.getByRole('link', { name: t('common.switchLanguage') });
     const logo = header.getByRole('link').first();
     const [logoBox, switcherBox] = await Promise.all([logo.boundingBox(), switcher.boundingBox()]);
     expect(logoBox).not.toBeNull();

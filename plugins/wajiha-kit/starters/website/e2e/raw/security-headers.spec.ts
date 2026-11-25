@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { ARTICLE } from '../fixtures/app';
 import { tags } from '../fixtures/html';
 
 const HTML_PATHS = [
   '/ar',
   '/en/about',
   '/en/contact',
-  '/ar/news/plan-your-first-quarter',
+  `/ar/news/${ARTICLE.slug}`,
   '/en/nope',
   '/zz',
 ];

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { ARTICLE } from '../fixtures/app';
 import { metaContent, titles } from '../fixtures/html';
 
 // A missing thing is a real 404, a moved thing is a 301, and "/" is a temporary redirect.
@@ -32,7 +33,7 @@ test.describe('redirects', () => {
     for (const [from, to] of [
       ['/AR/About', '/ar/about'],
       ['/en/', '/en'],
-      ['/en/news/Plan-Your-First-Quarter/', '/en/news/plan-your-first-quarter'],
+      [`/en/news/${ARTICLE.slug.toUpperCase()}/`, `/en/news/${ARTICLE.slug}`],
       ['/en/news/?page=2', '/en/news?page=2'],
     ] as const) {
       const response = await request.get(from, { maxRedirects: 0 });

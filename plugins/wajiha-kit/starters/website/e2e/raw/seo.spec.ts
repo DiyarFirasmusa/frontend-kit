@@ -1,7 +1,7 @@
 // What a crawler or a chat app receives: the server HTML, with no JavaScript. A page that only looks right
 // after hydration would pass a browser test and still fail here.
 import { expect, test } from '@playwright/test';
-import { PAGES } from '../fixtures/app';
+import { ARTICLE, PAGES } from '../fixtures/app';
 import {
   alternates,
   allMeta,
@@ -107,11 +107,11 @@ test.describe('across pages', () => {
   test('the article carries Article and BreadcrumbList data and its publish date', async ({
     request,
   }) => {
-    const html = await (await request.get('/en/news/plan-your-first-quarter')).text();
+    const html = await (await request.get(`/en/news/${ARTICLE.slug}`)).text();
     const types = jsonLd(html).map((block) => block['@type']);
     expect(types).toEqual(expect.arrayContaining(['Article', 'BreadcrumbList']));
     expect(metaContent(html, 'property', 'og:type')).toBe('article');
-    expect(metaContent(html, 'property', 'article:published_time')).toBe('2026-09-14');
+    expect(metaContent(html, 'property', 'article:published_time')).toBe(ARTICLE.date);
   });
 
   test('the home page carries Organization and WebSite data', async ({ request }) => {

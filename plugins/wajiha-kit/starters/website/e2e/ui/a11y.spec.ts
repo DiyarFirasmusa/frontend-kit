@@ -10,8 +10,8 @@ const TARGETS = [
 
 test.describe('accessibility (axe, WCAG 2.2 AA)', () => {
   for (const target of TARGETS) {
-    test(`${target.name}`, async ({ page, localized }) => {
-      await page.goto(localized(target.path));
+    test(`${target.name}`, async ({ page, open }) => {
+      await open(target.path);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
       const results = await new AxeBuilder({ page })
@@ -31,17 +31,10 @@ test.describe('accessibility (axe, WCAG 2.2 AA)', () => {
     });
   }
 
-  test('the phone menu is accessible when open', async ({
-    page,
-    localized,
-    isMobile,
-    language,
-  }) => {
+  test('the phone menu is accessible when open', async ({ page, open, isMobile, t }) => {
     test.skip(!isMobile, 'phone only');
-    await page.goto(localized(''));
-    await page
-      .getByRole('button', { name: language === 'ar' ? 'فتح القائمة' : 'Open menu' })
-      .click();
+    await open('');
+    await page.getByRole('button', { name: t('nav.openMenu') }).click();
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
@@ -52,13 +45,11 @@ test.describe('accessibility (axe, WCAG 2.2 AA)', () => {
 
   test('the contact form is accessible with its error messages showing', async ({
     page,
-    localized,
-    language,
+    open,
+    t,
   }) => {
-    await page.goto(localized('/contact'));
-    await page
-      .getByRole('button', { name: language === 'ar' ? 'إرسال الرسالة' : 'Send message' })
-      .click();
+    await open('/contact');
+    await page.getByRole('button', { name: t('contact.submit') }).click();
     await expect(page.getByRole('alert').filter({ hasText: /\S/ }).first()).toBeVisible();
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])

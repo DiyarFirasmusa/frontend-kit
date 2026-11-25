@@ -16,7 +16,10 @@ function decode(value: string): string {
 }
 
 /** All tags of one name, as attribute maps. */
-export function tags(html: string, name: 'meta' | 'link' | 'script' | 'html' | 'a'): Tag[] {
+export function tags(
+  html: string,
+  name: 'meta' | 'link' | 'script' | 'html' | 'a' | 'form' | 'button',
+): Tag[] {
   const found: Tag[] = [];
   const pattern = new RegExp(`<${name}\\b([^>]*)>`, 'gi');
   for (const match of html.matchAll(pattern)) {

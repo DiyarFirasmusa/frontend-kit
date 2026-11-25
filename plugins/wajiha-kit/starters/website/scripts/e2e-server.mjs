@@ -1,6 +1,27 @@
 // Builds the site and serves the production build for Playwright. Cross-platform (no shell syntax).
 // E2E_SKIP_BUILD=1 reuses the existing .output (only when you know it was built for this port and settings).
+//
+// The site is built as the real site (indexing on), and the real site refuses to start without a contact
+// webhook. So this script also runs a tiny local webhook receiver on a free port: it answers 200, or 500
+// when the message contains the marker below (the e2e failure-path test uses it).
 import { spawn } from 'node:child_process';
+import { createServer } from 'node:http';
+
+/** Keep in step with WEBHOOK_FAIL_MARKER in e2e/fixtures/app.ts. */
+const FAIL_MARKER = 'e2e-webhook-fail';
+
+const receiver = createServer((request, response) => {
+  let body = '';
+  request.on('data', (chunk) => {
+    body += chunk;
+  });
+  request.on('end', () => {
+    response.writeHead(body.includes(FAIL_MARKER) ? 500 : 200).end();
+  });
+});
+await new Promise((resolve) => receiver.listen(0, '127.0.0.1', () => resolve(undefined)));
+const address = receiver.address();
+const receiverPort = typeof address === 'object' && address !== null ? address.port : 0;
 
 const port = process.env.E2E_PORT ?? '5191';
 const env = {
@@ -11,7 +32,7 @@ const env = {
   VITE_SITE_URL: `http://localhost:${port}`,
   VITE_ALLOW_INDEXING: 'true',
   CSP_MODE: 'enforce',
-  CONTACT_WEBHOOK_URL: '',
+  CONTACT_WEBHOOK_URL: `http://127.0.0.1:${receiverPort}/contact`,
 };
 
 if (process.env.E2E_SKIP_BUILD !== '1') {
@@ -23,7 +44,10 @@ if (process.env.E2E_SKIP_BUILD !== '1') {
 }
 
 const server = spawn(process.execPath, ['.output/server/index.mjs'], { stdio: 'inherit', env });
-server.on('exit', (code) => process.exit(code ?? 0));
+server.on('exit', (code) => {
+  receiver.close();
+  process.exit(code ?? 0);
+});
 for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, () => server.kill(signal));
 }
