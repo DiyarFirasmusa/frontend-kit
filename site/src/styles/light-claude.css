@@ -714,3 +714,13 @@ html .board .board-list li {
 .ba .dash-table p {
   letter-spacing: 0;
 }
+
+/* Round 8 (light): focus rings on links and buttons inside a black block are light; side descriptions at full opacity. */
+html[data-theme='light'] .board .board-main :is(a, button, input):focus-visible:not(:is(.chat, .browser, .ba, .path-picture, .start-window, .dash, .mock, .command) *) {
+  outline-color: #f4f0ea;
+  box-shadow: 0 0 0 2px #0c0c0c;
+}
+
+html .board-list li small {
+  opacity: 1;
+}
