@@ -746,64 +746,173 @@
   text-align: center;
 }
 
-/* ---------- Install: three cards, each showing what you see on your screen at that step ---------- */
-.start-cards {
+/* ---------- Install: the steps on one side, joined by moving arrows; a Claude window on the other ---------- */
+.start-split {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin-block: 0;
-  padding-block: 0;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.start-steps {
+  display: grid;
+  gap: 3rem;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 
-.start-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.start-steps > li {
+  position: relative;
+}
+
+/* The arrow from one step down to the next. */
+.start-steps > li + li::before {
+  content: '';
+  position: absolute;
+  inset-block-end: calc(100% + 0.5rem);
+  inset-inline-start: 2.1rem;
+  width: 2px;
+  height: 2rem;
+  background: repeating-linear-gradient(180deg, var(--accent) 0 0.4rem, transparent 0.4rem 0.7rem);
+  background-size: 2px 0.7rem;
+}
+
+.start-steps > li + li::after {
+  content: '';
+  position: absolute;
+  inset-block-end: calc(100% + 0.15rem);
+  inset-inline-start: calc(2.1rem - 0.35rem + 1px);
+  width: 0.7rem;
+  height: 0.55rem;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.start-steps > li:nth-child(3)::before {
+  background-image: repeating-linear-gradient(180deg, var(--turq, #19abab) 0 0.4rem, transparent 0.4rem 0.7rem);
+}
+
+.start-steps > li:nth-child(3)::after {
+  background: var(--turq, #19abab);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .start-split.is-alive .start-steps > li + li::before {
+    animation: road-down 0.9s linear infinite;
+  }
+
+  .start-split.is-alive .start-steps > li + li::after {
+    animation: road-arrow-down 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes road-down {
+  to {
+    background-position: 0 0.7rem;
+  }
+}
+
+@keyframes road-arrow-down {
+  50% {
+    translate: 0 0.2rem;
+    opacity: 0.6;
+  }
+}
+
+.start-step {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: linear-gradient(180deg, rgb(241 237 231 / 0.035), rgb(241 237 231 / 0.01));
+  background: rgb(241 237 231 / 0.02);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
 }
 
-.start-card.is-main {
-  border-color: rgb(217 119 87 / 0.45);
-  box-shadow: 0 0 3rem rgb(217 119 87 / 0.1);
+.start-step:hover,
+.start-step[aria-pressed='true'] {
+  border-color: rgb(217 119 87 / 0.55);
+  background: rgb(217 119 87 / 0.07);
 }
 
-.start-picture {
+.start-step:focus-visible {
+  outline: 2px solid var(--turq, #19abab);
+  outline-offset: 3px;
+}
+
+.start-step[aria-pressed='true'] .run-number {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #141413;
+}
+
+.start-step-words {
   display: grid;
-  place-items: center;
-  height: 13rem;
-  padding: 1rem;
-  border-block-end: 1px solid var(--line);
-  background:
-    radial-gradient(80% 90% at 50% 120%, rgb(217 119 87 / 0.16), transparent 70%),
-    #0b0c0d;
-  font-size: 0.8125rem;
+  gap: 0.25rem;
 }
 
-.start-words {
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  gap: 0.375rem 0.75rem;
-  align-content: start;
-  padding: 1.25rem 1.375rem 1.5rem;
-}
-
-.start-words .run-number {
-  grid-row: span 2;
-}
-
-.start-words h3 {
+.start-step-words strong {
   color: #fff;
   font-size: var(--sub);
+  font-weight: 500;
   line-height: 1.35;
 }
 
-.start-words p {
-  margin: 0;
+.start-step-words span {
   color: var(--muted);
   line-height: 1.7;
+}
+
+/* The window: one screen at a time. */
+.start-window {
+  position: relative;
+}
+
+.start-window::before {
+  content: '';
+  position: absolute;
+  inset: -8% -6%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(217 119 87 / 0.2), transparent);
+  pointer-events: none;
+}
+
+.start-screens {
+  display: grid;
+  min-height: 20rem;
+  padding: 1.5rem;
+  background: radial-gradient(80% 90% at 50% 120%, rgb(217 119 87 / 0.1), transparent 70%);
+}
+
+.start-screen {
+  display: grid;
+  gap: 1rem;
+  align-content: center;
+  grid-area: 1 / 1;
+}
+
+.js .start-screen[data-hidden] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.js .start-screen {
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s;
+}
+
+.start-screen .start-text {
+  font-size: 0.875rem;
 }
 
 /* 1: the app, Code chosen, the folder picked. */
@@ -989,9 +1098,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .start-cards {
+  .start-split {
     grid-template-columns: minmax(0, 1fr);
-    max-width: 34rem;
   }
 
   .show-picture {
@@ -1284,101 +1392,3 @@
   }
 }
 
-/* The road between the three cards: a dashed line that flows from one step to the next, with an arrow. */
-.start-cards {
-  gap: 3.5rem;
-}
-
-.start-card {
-  position: relative;
-  overflow: visible;
-}
-
-.start-picture {
-  border-start-start-radius: inherit;
-  border-start-end-radius: inherit;
-}
-
-.start-card + .start-card::before {
-  content: '';
-  position: absolute;
-  inset-block-start: calc(6.5rem - 1px);
-  inset-inline-start: -3.1rem;
-  width: 2.4rem;
-  height: 2px;
-  background: repeating-linear-gradient(90deg, var(--accent) 0 0.4rem, transparent 0.4rem 0.7rem);
-  background-size: 0.7rem 2px;
-}
-
-.start-card + .start-card::after {
-  content: '';
-  position: absolute;
-  inset-block-start: calc(6.5rem - 0.35rem);
-  inset-inline-start: -0.95rem;
-  width: 0.7rem;
-  height: 0.7rem;
-  background: var(--accent);
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-
-[dir='rtl'] .start-card + .start-card::after {
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
-}
-
-.start-card.is-main + .start-card::before {
-  background-image: repeating-linear-gradient(90deg, var(--turq, #19abab) 0 0.4rem, transparent 0.4rem 0.7rem);
-}
-
-.start-card.is-main + .start-card::after {
-  background: var(--turq, #19abab);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .start-cards.is-alive .start-card + .start-card::before {
-    animation: road 0.9s linear infinite;
-  }
-
-  [dir='rtl'] .start-cards.is-alive .start-card + .start-card::before {
-    animation-direction: reverse;
-  }
-
-  .start-cards.is-alive .start-card + .start-card::after {
-    animation: road-arrow 1.8s ease-in-out infinite;
-  }
-}
-
-@keyframes road {
-  to {
-    background-position: 0.7rem 0;
-  }
-}
-
-@keyframes road-arrow {
-  50% {
-    translate: 0.2rem 0;
-    opacity: 0.6;
-  }
-}
-
-/* On one column the road turns downward. */
-@media (max-width: 900px) {
-  .start-cards {
-    gap: 3rem;
-  }
-
-  .start-card + .start-card::before {
-    inset-block-start: auto;
-    inset-block-end: calc(100% + 0.5rem);
-    inset-inline: 50% auto;
-    width: 2px;
-    height: 2rem;
-    background: repeating-linear-gradient(180deg, var(--accent) 0 0.4rem, transparent 0.4rem 0.7rem);
-  }
-
-  .start-card + .start-card::after {
-    inset-block-start: auto;
-    inset-block-end: calc(100% + 0.2rem);
-    inset-inline: calc(50% - 0.35rem) auto;
-    clip-path: polygon(0 0, 100% 0, 50% 100%) !important;
-  }
-}
