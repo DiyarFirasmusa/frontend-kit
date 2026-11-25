@@ -77,7 +77,7 @@ export const journeyWords = {
   /** What happens at each stop, one sentence each. */
   details: [
     t('In the Claude app you send one message. Claude installs the kit and starts the setup.', 'في تطبيق Claude ترسل رسالة واحدة. فيثبت Claude الإضافة ويبدأ الإعداد.'),
-    t('What you are building, one sentence about it, the design, your backend link if you have one, and the languages.', 'ماذا تبني، وجملة عنه، والتصميم، ورابط الخادم إن كان عندك، واللغات.'),
+    t('What you are building, a few lines about your project, the design, your backend link if you have one, and the languages.', 'ماذا تبني، وأسطر قليلة عن مشروعك، والتصميم، ورابط الخادم إن كان عندك، واللغات.'),
     t('A short summary of the pages and the look. Nothing starts before your yes.', 'ملخص قصير بالصفحات والشكل. ولا يبدأ شيء قبل موافقتك.'),
     t('Pages, forms, tables and sign-in, with sample data so you can click through at once.', 'صفحات ونماذج وجداول وتسجيل دخول، ببيانات تجريبية لتتصفحها فورا.'),
     t('It looks for mistakes, runs tests, and a second reviewer reads the work. What fails is fixed first.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجع ثان العمل. وما يفشل يُصلَح أولا.'),

@@ -56,9 +56,12 @@ export const questions = [
     ],
   },
   {
-    question: t('Describe it in one sentence.', 'صف المشروع في جملة واحدة.'),
+    question: t('Tell me about your project.', 'حدثني عن مشروعك.'),
     answers: [
-      t('For example: “A shop for handmade soap, with a page where I manage orders.”', 'مثلا: «متجر لصابون يدوي الصنع، مع صفحة أدير فيها الطلبات».'),
+      t('What is it, and who is it for?', 'ما هو، ولمن هو؟'),
+      t('What do you already have? A backend, data, content, a logo, an old version…', 'ماذا عندك الآن؟ خادم خلفي (backend)، أو بيانات، أو محتوى، أو شعار، أو نسخة قديمة…'),
+      t('What should it contain? The main pages and what they do.', 'ماذا تريد أن يحتوي؟ الصفحات الرئيسية وما تفعله.'),
+      t('Write it your way, in a few lines. The project name is suggested from your answer, and you can change it.', 'اكتبه بطريقتك، في أسطر قليلة. ويُقترح اسم المشروع من جوابك، وتستطيع تغييره.'),
     ],
   },
   {
@@ -72,7 +75,7 @@ export const questions = [
     question: t('Do you have a backend?', 'هل عندك خلفية برمجية (backend)؟'),
     answers: [
       t('Yes: send the link to its description. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: أرسل رابط وصفها. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه الـ backend عندك.'),
-      t('No: it asks whether people sign in, and what the main things are that your project manages (orders, customers, products and so on).', 'لا: تسألك إن كان الناس يسجلون الدخول، وما الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات وغيرها).'),
+      t('No: it asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'لا: تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
     ],
   },
   {

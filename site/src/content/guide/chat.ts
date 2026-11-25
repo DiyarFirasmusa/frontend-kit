@@ -33,8 +33,8 @@ export const firstRun: ChatEvent[] = [
     options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
     picked: 0,
   },
-  { kind: 'claude', text: t('Describe it in one sentence.', 'صفه بجملة واحدة.') },
-  { kind: 'user', text: t('A dashboard to manage my shop orders', 'لوحة لإدارة طلبات متجري') },
+  { kind: 'claude', text: t('Tell me about your project: what it is, what you have, what it should contain.', 'حدثني عن مشروعك: ما هو، وماذا عندك، وماذا يحتوي.') },
+  { kind: 'user', text: t('A dashboard for my shop team. I have a backend. Pages: orders, customers, products.', 'لوحة لفريق متجري. عندي backend. الصفحات: الطلبات والعملاء والمنتجات.') },
   {
     kind: 'ask',
     question: t('Do you have a design?', 'هل عندك تصميم؟'),
@@ -77,8 +77,8 @@ export const stepChat: ChatEvent[][] = [
       options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
       picked: 0,
     },
-    { kind: 'claude', text: t('Describe it in one sentence.', 'صفه بجملة واحدة.') },
-    { kind: 'user', text: t('A dashboard to manage my shop orders', 'لوحة لإدارة طلبات متجري') },
+    { kind: 'claude', text: t('Tell me about your project: what it is, what you have, what it should contain.', 'حدثني عن مشروعك: ما هو، وماذا عندك، وماذا يحتوي.') },
+    { kind: 'user', text: t('A dashboard for my shop team. I have a backend. Pages: orders, customers, products.', 'لوحة لفريق متجري. عندي backend. الصفحات: الطلبات والعملاء والمنتجات.') },
   ],
   [
     {

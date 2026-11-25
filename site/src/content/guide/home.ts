@@ -12,7 +12,7 @@ export const home = {
   points: [
     {
       name: t('You answer five questions', 'تجيب عن خمسة أسئلة'),
-      text: t('What you want to build, a sentence about it, the look you like, your backend link and the languages. No technical choices.', 'ماذا تريد أن تبني، وجملة عنه، والشكل الذي يعجبك، ورابط الخادم، واللغات. دون أي قرار تقني.'),
+      text: t('What you want to build, a few lines about it, the look you like, your backend link and the languages. No technical choices.', 'ماذا تريد أن تبني، وأسطر قليلة عنه، والشكل الذي يعجبك، ورابط الخادم، واللغات. دون أي قرار تقني.'),
     },
     {
       name: t('It builds the whole project', 'تبني المشروع كاملا'),
@@ -43,7 +43,7 @@ export const home = {
     },
     skills: {
       name: t('It asks what you want', 'تسألك ماذا تريد'),
-      text: t('Dashboard, website or both. One sentence about it. Do you have a design, or a site you like? Your backend link. Arabic, English or both.', 'لوحة تحكم أو موقع أو الاثنان. جملة عنه. هل عندك تصميم، أو موقع يعجبك؟ رابط الخادم. عربي أو إنجليزي أو الاثنان.'),
+      text: t('Dashboard, website or both. A few lines about your project: what it is, what you have, what it should contain. Your design or a site you like. Your backend link. The languages.', 'لوحة تحكم أو موقع أو الاثنان. أسطر قليلة عن مشروعك: ما هو، وماذا عندك، وماذا يحتوي. تصميمك أو موقع يعجبك. رابط الخادم. واللغات.'),
     },
     rules: {
       name: t('It tells you the plan', 'تعرض عليك الخطة'),
