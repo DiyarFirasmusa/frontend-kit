@@ -1,10 +1,12 @@
 :root {
+  --ink-rgb: 241 237 231;
+  --void-rgb: 5 6 7;
   --void: #050607;
   --raised: #0d0e10;
   --ivory: #f1ede7;
   --muted: #bcb8b1;
   --faint: #96938d;
-  --line: rgb(241 237 231 / 0.18);
+  --line: rgb(var(--ink-rgb) / 0.18);
   --bad: #e0776b;
   /* Claude's own orange, used in touches only: the star, the bullets, the line you have read, the focus. */
   --accent: #d97757;

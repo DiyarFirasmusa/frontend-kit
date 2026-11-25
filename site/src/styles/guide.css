@@ -12,7 +12,7 @@
   height: 100%;
   padding: 1.375rem;
   border: 1px solid var(--line);
-  background: linear-gradient(160deg, rgb(241 237 231 / 0.045), transparent 55%);
+  background: linear-gradient(160deg, rgb(var(--ink-rgb) / 0.045), transparent 55%);
   color: var(--muted);
   font-size: var(--small);
   text-decoration: none;
@@ -20,7 +20,7 @@
 }
 
 .card:hover {
-  border-color: rgb(241 237 231 / 0.6);
+  border-color: rgb(var(--ink-rgb) / 0.6);
   background-color: var(--raised);
 }
 

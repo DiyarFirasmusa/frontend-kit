@@ -83,9 +83,9 @@
   width: 100%;
   min-height: 2.5rem;
   padding-inline: 2.5rem 1rem;
-  border: 1px solid rgb(241 237 231 / 0.12);
+  border: 1px solid rgb(var(--ink-rgb) / 0.12);
   border-radius: 0.75rem;
-  background: rgb(241 237 231 / 0.04);
+  background: rgb(var(--ink-rgb) / 0.04);
   font-size: 0.875rem;
   transition:
     border-color 0.2s,
@@ -94,7 +94,7 @@
 
 .tree-search input:focus {
   border-color: rgb(217 119 87 / 0.6);
-  background: rgb(241 237 231 / 0.06);
+  background: rgb(var(--ink-rgb) / 0.06);
   outline: none;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .tree nav summary:hover {
-  background: rgb(241 237 231 / 0.04);
+  background: rgb(var(--ink-rgb) / 0.04);
 }
 
 .tree nav summary::before {
@@ -161,7 +161,7 @@
   margin-inline-start: 0.75rem;
   padding: 0;
   padding-inline-start: 0.5rem;
-  border-inline-start: 1px solid rgb(241 237 231 / 0.1);
+  border-inline-start: 1px solid rgb(var(--ink-rgb) / 0.1);
   list-style: none;
 }
 
@@ -178,7 +178,7 @@
   margin-block: 1px;
   padding-inline: 0.75rem;
   border-radius: 0.5rem;
-  color: rgb(241 237 231 / 0.66);
+  color: rgb(var(--ink-rgb) / 0.66);
   font-size: 0.9375rem;
   transition:
     background-color 0.2s,
@@ -186,7 +186,7 @@
 }
 
 .tree [data-tree-group] a:hover {
-  background: rgb(241 237 231 / 0.05);
+  background: rgb(var(--ink-rgb) / 0.05);
   color: var(--ivory);
 }
 
@@ -216,7 +216,7 @@
 .doc-head {
   padding-block: 3rem 2rem;
   padding-inline: 0;
-  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+  border-block-end: 1px solid rgb(var(--ink-rgb) / 0.08);
 }
 
 .doc-eyebrow {
@@ -417,7 +417,7 @@
 }
 
 .toc ol::before {
-  background: rgb(241 237 231 / 0.1);
+  background: rgb(var(--ink-rgb) / 0.1);
 }
 
 .toc ol::after {
@@ -448,7 +448,7 @@
   inset-inline-start: 0.05rem;
   width: 0.55rem;
   height: 0.55rem;
-  border: 2px solid rgb(241 237 231 / 0.25);
+  border: 2px solid rgb(var(--ink-rgb) / 0.25);
   border-radius: 50%;
   background: #0b0c0d;
   transition:
@@ -462,7 +462,7 @@
 }
 
 .toc a[data-passed] {
-  color: rgb(241 237 231 / 0.5);
+  color: rgb(var(--ink-rgb) / 0.5);
 }
 
 .toc a[data-passed]::before {
@@ -616,7 +616,7 @@ body .top.is-scrolled::before {
 /* Once the page moves, the header takes the page's own colour, flat: words pass under it unseen,
    with no shade, no line and no box. */
 .top.is-scrolled {
-  background: #050607;
+  background: var(--void);
 }
 
 /* ---------- The header on a guide page ----------
@@ -660,9 +660,9 @@ body .top.is-scrolled::before {
     width: 100%;
     min-height: 2.5rem;
     padding-inline: 2.5rem 2.75rem;
-    border: 1px solid rgb(241 237 231 / 0.12);
+    border: 1px solid rgb(var(--ink-rgb) / 0.12);
     border-radius: 0.75rem;
-    background: rgb(241 237 231 / 0.04);
+    background: rgb(var(--ink-rgb) / 0.04);
     color: inherit;
     font: inherit;
     font-size: 0.875rem;
@@ -673,7 +673,7 @@ body .top.is-scrolled::before {
 
   .top-search input:focus {
     border-color: rgb(217 119 87 / 0.6);
-    background: rgb(241 237 231 / 0.06);
+    background: rgb(var(--ink-rgb) / 0.06);
     outline: none;
   }
 
@@ -729,8 +729,8 @@ body .top.is-scrolled::before {
   background:
     radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
     radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
-    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
+    linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
   mask-image: radial-gradient(ellipse 90% 80% at 60% 20%, #000 35%, transparent 85%);
   pointer-events: none;
 }
@@ -739,8 +739,8 @@ body .top.is-scrolled::before {
   background:
     radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
     radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
-    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
+    linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
   mask-image: radial-gradient(ellipse 90% 80% at 40% 20%, #000 35%, transparent 85%);
 }
 
@@ -761,9 +761,9 @@ body:has(main.doc) .top.is-scrolled {
   background:
     radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
     radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
-    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    #050607;
+    linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    var(--void);
   background-attachment: fixed;
 }
 
@@ -771,9 +771,9 @@ body:has(main.doc) .top.is-scrolled {
   background:
     radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
     radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
-    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    #050607;
+    linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    var(--void);
   background-attachment: fixed;
 }
 
@@ -782,16 +782,16 @@ body:has(main.doc) .top.is-scrolled {
    so together they wrap the middle like an arch; the grid and the light show only where you read. */
 @media (min-width: 901px) {
   .doc .tree {
-    background: #08090a;
-    border-inline-end: 1px solid rgb(241 237 231 / 0.1);
+    background: var(--void);
+    border-inline-end: 1px solid rgb(var(--ink-rgb) / 0.1);
   }
 
   body:has(main.doc) .top,
   body:has(main.doc) .top.is-scrolled,
   [dir='rtl'] body:has(main.doc) .top.is-scrolled {
-    background: #08090a;
+    background: var(--void);
     background-attachment: scroll;
-    border-block-end: 1px solid rgb(241 237 231 / 0.1);
+    border-block-end: 1px solid rgb(var(--ink-rgb) / 0.1);
   }
 }
 
@@ -803,8 +803,8 @@ body:has(main.doc) .top.is-scrolled {
     height: 100svh;
     margin: 0 !important;
     padding: calc(var(--bar) + 2.5rem) 1.5rem 2rem !important;
-    background: #08090a !important;
-    border-inline-start: 1px solid rgb(241 237 231 / 0.1) !important;
+    background: var(--void) !important;
+    border-inline-start: 1px solid rgb(var(--ink-rgb) / 0.1) !important;
   }
 }
 
@@ -841,8 +841,8 @@ body::after {
 
 body::after {
   background:
-    linear-gradient(rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem;
+    linear-gradient(rgb(var(--ink-rgb) / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem;
   mask-image: none;
 }
 
@@ -1296,7 +1296,7 @@ li {
 /* ---------- Art director's second pass ---------- */
 /* The header never lets scrolled words show through it. */
 body .top.is-scrolled {
-  background: rgb(5 6 7 / 0.97);
+  background: rgb(var(--void-rgb) / 0.97);
 }
 
 /* One colour for the small headings inside lists too. */
@@ -1740,7 +1740,7 @@ html[lang='ar'] .credits {
 .browser,
 .ba,
 .path-picture {
-  border: 1px solid rgb(241 237 231 / 0.16);
+  border: 1px solid rgb(var(--ink-rgb) / 0.16);
 }
 
 .chat,
@@ -1767,7 +1767,7 @@ html[lang='ar'] .credits {
   inset-block-start: 0;
   inset-inline: 0;
   height: 1.5rem;
-  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+  border-block-end: 1px solid rgb(var(--ink-rgb) / 0.08);
   background: #1a1a18 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='5' width='54' height='12' rx='4' fill='%23f1ede7'/%3E%3Crect x='45' y='21' width='14' height='38' rx='4' fill='%2319abab'/%3E%3Crect x='5' y='21' width='36' height='20' rx='4' fill='%23d97757'/%3E%3Crect x='5' y='45' width='36' height='14' rx='4' fill='%23f1ede7'/%3E%3C/svg%3E") no-repeat calc(100% - 0.6rem) center / 0.8rem;
 }
 
@@ -1785,14 +1785,14 @@ html[lang='ar'] .credits {
   border-radius: 50%;
   background: var(--accent);
   box-shadow:
-    0.8rem 0 0 rgb(241 237 231 / 0.16),
-    1.6rem 0 0 rgb(241 237 231 / 0.16);
+    0.8rem 0 0 rgb(var(--ink-rgb) / 0.16),
+    1.6rem 0 0 rgb(var(--ink-rgb) / 0.16);
 }
 
 [dir='rtl'] .path-picture::after {
   box-shadow:
-    -0.8rem 0 0 rgb(241 237 231 / 0.16),
-    -1.6rem 0 0 rgb(241 237 231 / 0.16);
+    -0.8rem 0 0 rgb(var(--ink-rgb) / 0.16),
+    -1.6rem 0 0 rgb(var(--ink-rgb) / 0.16);
 }
 
 /* The comparison keeps its tags on top; it gets the stamp and the same bar line so it sits in the family. */
@@ -1868,7 +1868,7 @@ html[lang='ar'] .credits {
   align-items: center;
   min-height: 2.75rem;
   padding-inline: 1rem;
-  border: 1px solid rgb(241 237 231 / 0.22);
+  border: 1px solid rgb(var(--ink-rgb) / 0.22);
   border-radius: 999px;
   color: var(--ivory);
   font-size: 0.9375rem;
@@ -2053,11 +2053,11 @@ html[lang='ar'] .credits {
   inset: 0 0 auto;
   z-index: 3;
   height: 1.75rem;
-  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+  border-block-end: 1px solid rgb(var(--ink-rgb) / 0.08);
   background:
     radial-gradient(circle at 0.95rem 50%, var(--accent) 0.25rem, transparent 0.27rem),
-    radial-gradient(circle at 1.75rem 50%, rgb(241 237 231 / 0.16) 0.25rem, transparent 0.27rem),
-    radial-gradient(circle at 2.55rem 50%, rgb(241 237 231 / 0.16) 0.25rem, transparent 0.27rem),
+    radial-gradient(circle at 1.75rem 50%, rgb(var(--ink-rgb) / 0.16) 0.25rem, transparent 0.27rem),
+    radial-gradient(circle at 2.55rem 50%, rgb(var(--ink-rgb) / 0.16) 0.25rem, transparent 0.27rem),
     #1a1a18;
   pointer-events: none;
 }
@@ -2065,8 +2065,8 @@ html[lang='ar'] .credits {
 [dir='rtl'] .ba::before {
   background:
     radial-gradient(circle at calc(100% - 0.95rem) 50%, var(--accent) 0.25rem, transparent 0.27rem),
-    radial-gradient(circle at calc(100% - 1.75rem) 50%, rgb(241 237 231 / 0.16) 0.25rem, transparent 0.27rem),
-    radial-gradient(circle at calc(100% - 2.55rem) 50%, rgb(241 237 231 / 0.16) 0.25rem, transparent 0.27rem),
+    radial-gradient(circle at calc(100% - 1.75rem) 50%, rgb(var(--ink-rgb) / 0.16) 0.25rem, transparent 0.27rem),
+    radial-gradient(circle at calc(100% - 2.55rem) 50%, rgb(var(--ink-rgb) / 0.16) 0.25rem, transparent 0.27rem),
     #1a1a18;
 }
 
@@ -2211,7 +2211,7 @@ body:has(main.doc)::after {
 }
 
 .ba .ba-tag.is-bad {
-  border: 1px solid rgb(241 237 231 / 0.4);
+  border: 1px solid rgb(var(--ink-rgb) / 0.4);
   background: rgb(20 20 19 / 0.9);
   color: var(--ivory);
 }
@@ -2321,7 +2321,7 @@ body:has(main.doc)::after {
 /* Who it is for: three buttons you can read. */
 .hero-audience a {
   min-height: 2.75rem;
-  border-color: rgb(241 237 231 / 0.35);
+  border-color: rgb(var(--ink-rgb) / 0.35);
   color: var(--ivory);
   font-size: 1rem;
 }
@@ -2347,11 +2347,15 @@ body:has(main.doc)::after {
 }
 
 .board.tone-ivory {
-  --tone: var(--ivory);
+  --tone: #2a2823;
 }
 
 .board.side-ivory {
-  --side: var(--ivory);
+  --side: #2a2823;
+}
+
+.board.side-ivory .board-side {
+  color: #f1ede7;
 }
 
 .board.side-orange {
@@ -2370,9 +2374,10 @@ body:has(main.doc)::after {
   align-items: center;
   gap: 0.5rem 0.75rem;
   padding: 0.65rem 1.1rem;
+  border: 1px solid rgb(var(--ink-rgb) / 0.16);
   border-radius: 0.9rem;
-  background: var(--ivory);
-  color: #141413;
+  background: #171715;
+  color: #f1ede7;
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -2399,7 +2404,7 @@ body:has(main.doc)::after {
 }
 
 .board-note a {
-  color: #141413;
+  color: inherit;
 }
 
 .board-main {
@@ -2539,4 +2544,82 @@ body:has(main.doc)::after {
 .board.tone-orange .path-track i {
   background: #141413;
   opacity: 0.5;
+}
+
+/* ---------- The board, tightened after the design review ---------- */
+.board {
+  gap: 0.5rem;
+}
+
+.board-main,
+.board-side {
+  border-radius: 0.9rem;
+}
+
+.board-top,
+.board-note {
+  border-radius: 0.7rem;
+}
+
+/* The side column is never an empty slab: its points share the whole height, each in its own row. */
+.board-side {
+  padding: 1rem 1.1rem;
+}
+
+.board-side-title {
+  padding-block-end: 0.25rem;
+}
+
+.board-list {
+  flex: 1;
+  grid-auto-rows: 1fr;
+  gap: 0;
+}
+
+.board-list li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 0.9rem;
+  border-block-start: 1px solid rgb(16 16 16 / 0.2);
+}
+
+.board.side-ivory .board-list li {
+  border-block-start-color: rgb(var(--ink-rgb) / 0.18);
+}
+
+.board-list li:first-child {
+  border-block-start: 0;
+}
+
+/* On orange, the words are as dark and as big as they need to be, and the numbers keep their dark dots. */
+.board.tone-orange .path-label p {
+  color: #141413;
+  font-size: 0.9375rem;
+}
+
+.board.tone-orange .path-dot {
+  background: #141413 !important;
+  color: var(--accent) !important;
+  border-color: #141413 !important;
+}
+
+/* The words of a part sit at the top of their column, not in the middle of nowhere. */
+.show-panel {
+  align-items: start;
+}
+
+/* In Arabic the journey keeps its left-to-right order inside the board, like the board itself, so step 1 is never beside the end column. */
+[dir='rtl'] .board .path {
+  direction: ltr;
+}
+
+[dir='rtl'] .board .path-label {
+  direction: rtl;
+}
+
+@media (max-width: 768px) {
+  .hero-actions {
+    display: none;
+  }
 }

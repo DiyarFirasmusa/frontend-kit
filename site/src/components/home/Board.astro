@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { part, label, tone = 'orange', side } = Astro.props
-const sideTone = side ?? (tone === 'turq' ? 'ivory' : 'turq')
+const sideTone = side ?? 'turq'
 const blocks = [
   { x: 5, y: 5, w: 54, h: 12, fill: '#f1ede7' },
   { x: 5, y: 21, w: 36, h: 20, fill: '#d97757' },
@@ -26,8 +26,8 @@ const blocks = [
 
 <div class:list={['board', `tone-${tone}`, `side-${sideTone}`]}>
   <p class="board-top">
-    <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
-      {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={part === -1 || i === part ? b.fill : 'rgb(20 20 19 / 0.22)'} stroke="rgb(20 20 19 / 0.35)" stroke-width={part === -1 || i === part ? 0 : 0} />)}
+    <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
+      {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={part === -1 || i === part ? b.fill : 'rgb(241 237 231 / 0.28)'} />)}
     </svg>
     {part >= 0 && <span class="board-count" dir="ltr">{part + 1}/4</span>}
     <span>{label}</span>

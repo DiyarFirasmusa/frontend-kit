@@ -3,7 +3,7 @@
    skills orange, agents amber, rules teal, hooks sand.
    --------------------------------------------------------------------------------------------- */
 .home {
-  --grid-line: rgb(241 237 231 / 0.11);
+  --grid-line: rgb(var(--ink-rgb) / 0.11);
 }
 
 /* The light behind the page: it stays put while the page moves over it. */
@@ -104,7 +104,7 @@ body::after {
 
 /* THE HEADER: glass over the glow, an orange mark, the version, and an orange line under the place you are. */
 .top {
-  background: rgb(5 6 7 / 0.62);
+  background: rgb(var(--void-rgb) / 0.62);
   transition:
     background-color 0.3s,
     box-shadow 0.3s;
@@ -170,7 +170,7 @@ body::after {
 .top.is-scrolled {
   background: transparent;
   box-shadow: none;
-  text-shadow: 0 0 0.75rem rgb(5 6 7 / 0.95), 0 0 0.25rem rgb(5 6 7 / 0.9);
+  text-shadow: 0 0 0.75rem rgb(var(--void-rgb) / 0.95), 0 0 0.25rem rgb(var(--void-rgb) / 0.9);
 }
 
 .top .top-install {
@@ -195,7 +195,7 @@ body::after {
     translate: -50% -50%;
     gap: 0.125rem;
     padding: 0.1875rem;
-    border: 1px solid rgb(241 237 231 / 0.16);
+    border: 1px solid rgb(var(--ink-rgb) / 0.16);
     border-radius: 999px;
   }
 
@@ -215,7 +215,7 @@ body::after {
   }
 
   .top-nav a:hover {
-    background: rgb(241 237 231 / 0.08);
+    background: rgb(var(--ink-rgb) / 0.08);
     color: #fff;
   }
 
@@ -234,7 +234,7 @@ body::after {
 
 .language {
   padding-inline: 0.875rem;
-  border: 1px solid rgb(241 237 231 / 0.16);
+  border: 1px solid rgb(var(--ink-rgb) / 0.16);
   font-size: 0.875rem;
 }
 
@@ -271,7 +271,7 @@ body::after {
 /* The pill and the chip carry a little ground of their own, so they stay readable over whatever scrolls beneath. */
 @media (min-width: 1280px) {
   .top-nav {
-    background: rgb(5 6 7 / 0.85);
+    background: rgb(var(--void-rgb) / 0.85);
   }
 }
 
@@ -395,7 +395,7 @@ body .top::before {
   position: absolute;
   inset: 0 0 -1.25rem;
   z-index: -1;
-  background: linear-gradient(rgb(5 6 7 / 0.88), rgb(5 6 7 / 0.5) 60%, transparent);
+  background: linear-gradient(rgb(var(--void-rgb) / 0.88), rgb(var(--void-rgb) / 0.5) 60%, transparent);
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;

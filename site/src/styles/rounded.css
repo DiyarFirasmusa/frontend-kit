@@ -75,7 +75,7 @@
   padding-inline: 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgb(5 6 7 / 0.5);
+  background: rgb(var(--void-rgb) / 0.5);
 }
 
 .file[open] {

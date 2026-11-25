@@ -59,7 +59,7 @@ body > .foot {
   padding-block-start: var(--bar);
   overflow: hidden;
   border-inline-end: 1px solid var(--line);
-  background: rgb(5 6 7 / 0.9);
+  background: rgb(var(--void-rgb) / 0.9);
   pointer-events: auto;
 }
 
@@ -146,7 +146,7 @@ body > .foot {
     margin-block-start: var(--bar);
     padding-block-start: 0;
     border: 0;
-    background: rgb(5 6 7 / 0.72);
+    background: rgb(var(--void-rgb) / 0.72);
   }
 
   .tree > summary {

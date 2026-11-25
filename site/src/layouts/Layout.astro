@@ -23,6 +23,7 @@ import '../styles/chat.css'
 import '../styles/sections.css'
 import '../styles/loops.css'
 import '../styles/docs-space.css'
+import '../styles/theme-light.css'
 import { ClientRouter } from 'astro:transitions'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
@@ -96,6 +97,19 @@ const trail =
     <meta name="description" content={description} />
     {!indexable && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#050607" />
+    <script is:inline>
+      // The chosen mode is put on the page before it is painted, so there is no flash; dark is the default.
+      ;(function () {
+        try {
+          if (localStorage.getItem('wajiha-theme') === 'light') document.documentElement.dataset.theme = 'light'
+        } catch (e) {}
+        document.addEventListener('astro:before-swap', function (event) {
+          var now = document.documentElement.dataset.theme
+          if (now) event.newDocument.documentElement.dataset.theme = now
+          else delete event.newDocument.documentElement.dataset.theme
+        })
+      })()
+    </script>
     {
       indexable && (
         <>

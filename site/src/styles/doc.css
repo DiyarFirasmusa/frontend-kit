@@ -124,7 +124,7 @@
   place-items: center;
   width: 2.125rem;
   height: 2.125rem;
-  border: 1px solid rgb(241 237 231 / 0.5);
+  border: 1px solid rgb(var(--ink-rgb) / 0.5);
   font-family: var(--latin);
 }
 
@@ -342,7 +342,7 @@
   width: 100%;
   min-height: 56px;
   padding-inline: 1.125rem;
-  border: 1px solid rgb(241 237 231 / 0.4);
+  border: 1px solid rgb(var(--ink-rgb) / 0.4);
   border-radius: 0;
   background: var(--raised);
   color: var(--ivory);

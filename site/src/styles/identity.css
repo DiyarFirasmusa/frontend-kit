@@ -91,13 +91,13 @@ body::before {
   background:
     radial-gradient(52rem 38rem at 88% -6%, rgb(25 171 171 / 0.2), transparent 62%),
     radial-gradient(44rem 34rem at -8% 38%, rgb(217 119 87 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 96% 108%, rgb(241 237 231 / 0.14), transparent 62%);
+    radial-gradient(56rem 36rem at 96% 108%, rgb(var(--ink-rgb) / 0.14), transparent 62%);
 }
 [dir='rtl'] body::before {
   background:
     radial-gradient(52rem 38rem at 12% -6%, rgb(25 171 171 / 0.2), transparent 62%),
     radial-gradient(44rem 34rem at 108% 38%, rgb(217 119 87 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 4% 108%, rgb(241 237 231 / 0.14), transparent 62%);
+    radial-gradient(56rem 36rem at 4% 108%, rgb(var(--ink-rgb) / 0.14), transparent 62%);
 }
 
 /* ---------------------------------------------------------------------------------------------

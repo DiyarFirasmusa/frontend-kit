@@ -1,0 +1,174 @@
+/* ---------------------------------------------------------------------------------------------
+   LIGHT MODE. The site is dark; this is the other way to read it, chosen with the button in the header.
+   The page turns ivory and the words turn ink. The drawings of the Claude app (chat, browser, comparison,
+   journey windows) and the bars of the boards stay dark, as the app itself is: on a light page they read as
+   screens. Orange and turquoise are a little deeper so they hold on ivory. Everything is a token, so there is
+   no second stylesheet to keep in step with the first.
+   --------------------------------------------------------------------------------------------- */
+html[data-theme='light'] {
+  color-scheme: light;
+  --ink-rgb: 20 20 19;
+  --void: #f4f0ea;
+  --void-rgb: 244 240 234;
+  --raised: #ebe6de;
+  --ivory: #141413;
+  --muted: #46433e;
+  --faint: #69655e;
+  --line: rgb(20 20 19 / 0.2);
+  --accent: #c4623a;
+  --accent-soft: rgb(196 98 58 / 0.14);
+  --amber: #b5502b;
+  --turq: #0c8a8a;
+  --turq-deep: #006c6d;
+  --turq-soft: rgb(12 138 138 / 0.14);
+  --bad: #b8483c;
+}
+
+/* The drawings and the board bars keep the dark of the Claude app, with the bright brand colours. */
+html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .board-top, .board-note, .dash, .mock, .start-window, .tree-hint) {
+  --ink-rgb: 241 237 231;
+  --ivory: #f1ede7;
+  --muted: #bcb8b1;
+  --faint: #96938d;
+  --line: rgb(241 237 231 / 0.18);
+  --accent: #d97757;
+  --turq: #19abab;
+  color: #f1ede7;
+}
+
+/* The side column holds ink on turquoise or orange: its words stay dark in both modes. */
+html[data-theme='light'] .board-side {
+  --ivory: #101010;
+  --muted: #101010;
+  color: #101010;
+}
+
+html[data-theme='light'] .board.side-ivory .board-side {
+  --ivory: #f1ede7;
+  color: #f1ede7;
+}
+
+/* Headings and strong words are ink, whatever gradient or white they had. */
+html[data-theme='light'] :is(h1, h2, h3, h4, strong, th):not(.board *):not(.chat *):not(.browser *):not(.ba *) {
+  color: var(--ivory);
+  -webkit-text-fill-color: currentColor;
+}
+
+html[data-theme='light'] .section-head h2,
+html[data-theme='light'] .home h2 {
+  background: none;
+  color: var(--ivory);
+  -webkit-text-fill-color: currentColor;
+}
+
+html[data-theme='light'] .hero h1 span:last-child,
+html[data-theme='light'] .doc-head h1 em {
+  background-image: linear-gradient(90deg, var(--accent), var(--turq));
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme='light'] .hero h1,
+html[data-theme='light'] .hero h1 span {
+  color: var(--ivory);
+}
+
+/* The bar at the top of every page, the side lists and the search stay light and clear. */
+html[data-theme='light'] .top,
+html[data-theme='light'] .top.is-scrolled,
+html[data-theme='light'] body .top.is-scrolled {
+  background: rgb(244 240 234 / 0.86);
+}
+
+html[data-theme='light'] body .top::before {
+  background: linear-gradient(rgb(244 240 234 / 0.9), rgb(244 240 234 / 0.5) 60%, transparent);
+}
+
+html[data-theme='light'] .tree,
+html[data-theme='light'] .doc .tree,
+html[data-theme='light'] .toc:not([hidden]) {
+  background: rgb(244 240 234 / 0.94) !important;
+}
+
+html[data-theme='light'] .show-tabs {
+  background: rgb(20 20 19 / 0.06);
+}
+
+html[data-theme='light'] .toc a::before {
+  background: var(--void);
+}
+
+html[data-theme='light'] .command,
+html[data-theme='light'] .file {
+  background: rgb(20 20 19 / 0.05);
+}
+
+html[data-theme='light'] .top-install,
+html[data-theme='light'] .hero-start {
+  color: #141413;
+}
+
+html[data-theme='light'] .top-install {
+  background: var(--accent);
+}
+
+/* The grid under the page is a quiet ink grid. */
+html[data-theme='light'] body::before,
+html[data-theme='light'] body::after {
+  filter: none;
+}
+
+/* The button that switches. */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgb(25 171 171 / 0.45);
+  border-radius: 50%;
+  background: rgb(25 171 171 / 0.08);
+  color: var(--ivory);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--turq);
+  color: var(--turq);
+}
+
+.theme-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+html[data-theme='light'] .theme-toggle .icon-sun {
+  display: block;
+}
+
+html[data-theme='light'] .theme-toggle .icon-moon {
+  display: none;
+}
+
+/* The header's glow was dark ink behind light words; on ivory it is none. */
+html[data-theme='light'] .top,
+html[data-theme='light'] .top.is-scrolled {
+  text-shadow: none;
+}
+
+html[data-theme='light'] .language {
+  color: var(--ivory);
+}
+
+html[data-theme='light'] .command button:hover,
+html[data-theme='light'] .start-copy {
+  color: #141413;
+}

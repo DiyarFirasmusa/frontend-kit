@@ -120,8 +120,8 @@ main:focus,
 .command {
   display: flex;
   max-width: 40rem;
-  border: 1px solid rgb(241 237 231 / 0.32);
-  background: rgb(5 6 7 / 0.65);
+  border: 1px solid rgb(var(--ink-rgb) / 0.32);
+  background: rgb(var(--void-rgb) / 0.65);
   /* WebKit keeps the page's direction here unless told. */
   text-align: left;
 }
@@ -141,7 +141,7 @@ main:focus,
   min-width: 4.75rem;
   min-height: 44px;
   padding-inline: 0.875rem;
-  border-inline-start: 1px solid rgb(241 237 231 / 0.32);
+  border-inline-start: 1px solid rgb(var(--ink-rgb) / 0.32);
   text-align: center;
   outline-offset: -5px;
   transition: background-color 0.25s, color 0.25s;
