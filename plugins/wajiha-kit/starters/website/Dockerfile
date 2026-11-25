@@ -1,10 +1,12 @@
 # syntax=docker/dockerfile:1
 # Production image: build stage, then a small runtime with only the built server (.output).
 # Build:  docker build --build-arg VITE_SITE_URL=https://example.com --build-arg VITE_ALLOW_INDEXING=true -t website .
-# Run:    docker run --rm -p 3000:3000 -e CSP_MODE=enforce website
+# Run:    docker run --rm -p 3000:3000 -e CONTACT_WEBHOOK_URL=https://hooks.example.com/contact website
 #
 # VITE_* values are baked into the browser bundle at build time, so they are build arguments, not run-time
-# variables. Server-only values (CSP_MODE, CONTACT_WEBHOOK_URL) are read when the container starts.
+# variables. Server-only values (CSP_MODE, CONTACT_WEBHOOK_URL) are read when the container starts, and a
+# bad value stops it with one clear line. With VITE_ALLOW_INDEXING=true (the real site) the container
+# refuses to start without CONTACT_WEBHOOK_URL, so contact messages are never silently dropped.
 
 FROM node:24-alpine AS deps
 WORKDIR /app
