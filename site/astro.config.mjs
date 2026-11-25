@@ -8,6 +8,8 @@ export default defineConfig({
   site,
   trailingSlash: 'always',
   devToolbar: { enabled: false },
+  // Links are fetched ahead: on hover, and the main pages while the home page sits idle (client/warm.ts).
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   // The documentation shows source in the site's own two tones.
   markdown: { syntaxHighlight: false },
   vite: { build: { target: 'es2022', chunkSizeWarningLimit: 700 } },

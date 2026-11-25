@@ -3,19 +3,6 @@
   display: inline-block;
 }
 
-.arrives {
-  opacity: 0;
-  translate: 0 1rem;
-}
-
-.arrives.has-arrived {
-  opacity: 1;
-  translate: none;
-  transition:
-    opacity 0.6s ease-out var(--arrive-after, 0s),
-    translate 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--arrive-after, 0s);
-}
-
 @media (prefers-reduced-motion: no-preference) {
   :root {
     interpolate-size: allow-keywords;

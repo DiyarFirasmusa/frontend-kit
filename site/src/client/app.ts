@@ -6,8 +6,8 @@ import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
 import { initChrome } from './page-chrome.ts'
-import { initReveal } from './reveal.ts'
 import { initTabs } from './tabs.ts'
+import { warmPages } from './warm.ts'
 import { initWords } from './words.ts'
 
 let page = new AbortController()
@@ -21,9 +21,9 @@ document.addEventListener('astro:page-load', () => {
   initCopy()
   initFinder()
   initTree()
-  initReveal(page.signal)
   initGate()
   initLife(page.signal)
   initTabs(page.signal)
   initAlive(page.signal)
+  warmPages(page.signal)
 })
