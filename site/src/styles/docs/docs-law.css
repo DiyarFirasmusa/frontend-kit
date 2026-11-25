@@ -1190,3 +1190,20 @@ body:has(main.doc) .top.is-scrolled,
   background: var(--void);
   background-attachment: scroll;
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Final review: one body size in every row, code windows as wide as the column and wrapping at spaces.
+   --------------------------------------------------------------------------------------------- */
+.doc-article :is(.rows dd, .rows dd p, #related li p, #related p, #source li, #source p:not(.block-lead)) {
+  font-size: 1rem;
+}
+
+.doc-article .command {
+  max-width: none;
+}
+
+@media (min-width: 48rem) {
+  .doc-article .command .msg-command {
+    overflow-wrap: break-word;
+  }
+}

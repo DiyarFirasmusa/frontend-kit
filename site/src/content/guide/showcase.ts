@@ -111,7 +111,7 @@ export const installWords = {
   needsList: [
     t('The Claude app, with a plan that includes the Code tab.', 'تطبيق ⁦Claude⁩، بخطة تتضمن تبويب ⁦Code⁩.'),
     t('A computer.', 'حاسوب.'),
-    t('Claude installs the small helper programs for you, after you say yes.', 'يثبّت ⁦Claude⁩ البرامج المساعدة الصغيرة لك بعد موافقتك.'),
+    t('Claude installs the small helper programs for you, after you say yes.', 'يثبّت ⁦Claude⁩ البرامج الصغيرة بعد موافقتك.'),
   ],
   helpers: t('Claude checks that jq, Node and git are on your computer and helps you install them if they are not. Claude’s plans and prices are set by Anthropic, not by this kit.', 'يتأكد ⁦Claude⁩ أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ على حاسوبك ويساعدك في تثبيتها إن لم تكن. وخطط ⁦Claude⁩ وأسعارها تحددها ⁦Anthropic⁩ لا الإضافة.'),
   needsDetail: [

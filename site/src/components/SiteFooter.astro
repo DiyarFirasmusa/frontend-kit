@@ -28,7 +28,7 @@ const siteLinks = t('Site links', 'روابط الموقع')
 const home = routeUrl(locale, { kind: 'home' })
 const page = (id: Parameters<typeof pageUrl>[1]) => [pageUrl(locale, id), PAGES[id].name[locale]] as const
 const columns = [
-  { title: words.start, links: [[`${home}#install`, t('Start in two steps', 'ابدأ بخطوتين')[locale]], page('get-started'), page('project-types'), page('examples'), page('developers')] },
+  { title: words.start, links: [[`${home}#install`, t('Start in two steps', 'ابدأ بخطوتين')[locale]], [pageUrl(locale, 'get-started'), t('Step-by-step guide', 'دليل خطوة بخطوة')[locale]] as const, page('project-types'), page('examples'), page('developers')] },
   { title: words.kit, links: [page('docs'), page('skills'), page('agents'), page('rules'), page('checks')] },
   { title: words.help, links: [page('questions'), page('changelog'), page('configuration'), page('modes')] },
   {

@@ -175,3 +175,76 @@ html[data-theme='light'] .jp-build li {
 html[data-theme='light'] .jp-bar {
   background: rgb(20 20 19 / 0.1);
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Final review: light drawings read at 4.5:1 or better, light code windows, 44px targets.
+   --------------------------------------------------------------------------------------------- */
+html[data-theme='light'] .ba b,
+html[data-theme='light'] .ba .is-on {
+  color: #141413;
+}
+
+html[data-theme='light'] .ba .is-broken b {
+  color: #a63a2f;
+}
+
+html[data-theme='light'] .ba .dash-pill {
+  color: #4a4741;
+}
+
+html[data-theme='light'] .ba .dash-pill.is-done {
+  background: #d6eeee;
+  color: #0a5f5f;
+}
+
+html[data-theme='light'] .ba .dash-pill.is-wait {
+  background: #f9dccf;
+  color: #8a3a1c;
+}
+
+html[data-theme='light'] .ba .dash-toast {
+  background: #d6eeee;
+  color: #0a5f5f;
+}
+
+html[data-theme='light'] .ba .dash-error {
+  background: #f8dcd8;
+  color: #8f2a21;
+}
+
+html[data-theme='light'] .ba-tag.is-good {
+  background: #0c8a8a;
+  color: #fff;
+}
+
+/* Code windows are paper too, with the orange edge and the brighter orange pill. */
+html[data-theme='light'] .command {
+  --ink-rgb: 20 20 19;
+  --ivory: #141413;
+  --muted: #4a4741;
+  border-color: rgb(20 20 19 / 0.2);
+  background: #fffdf9;
+  color: #141413;
+}
+
+html[data-theme='light'] .command :is(code, span, pre) {
+  color: #141413;
+}
+
+html[data-theme='light'] .command button {
+  background: #e8643a;
+  color: #141413;
+}
+
+/* Tabs, chips and pills are at least 44px high. */
+.show-tabs button,
+.hero-audience a,
+.board-note a {
+  min-height: 2.75rem;
+}
+
+html[data-theme='light'] .ba .ba-tag.is-good,
+html[data-theme='light'] .ba .ba-tag.is-good span {
+  background: #0c7a7a !important;
+  color: #fff !important;
+}
