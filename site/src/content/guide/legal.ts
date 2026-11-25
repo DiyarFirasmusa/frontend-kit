@@ -151,8 +151,11 @@ export const legal: Record<LegalId, LegalSection[]> = {
     {
       id: 'questions',
       title: t('Questions', 'أسئلة'),
-      text: [t('If something here is unclear or wrong, write to Diyar Firas on GitHub. If you found a security problem, please do not post the details in a public place.', 'إن كان شيء هنا غير واضح أو غير صحيح، فاكتب إلى ديار فراس على ⁦GitHub⁩. وإن وجدت مشكلة أمنية، فلا تنشر تفاصيلها في مكان عام.')],
-      links: [{ label: t('Diyar Firas on GitHub', 'ديار فراس على GitHub'), to: MAKER.href, kind: 'outside' }],
+      text: [t('If something here is unclear or wrong, write to Diyar Firas on GitHub. If you found a security problem, report it privately on GitHub (the Security tab of the repository, then Report a vulnerability) and do not post the details in a public place.', 'إن كان شيء هنا غير واضح أو غير صحيح، فاكتب إلى ديار فراس على ⁦GitHub⁩. وإن وجدت مشكلة أمنية، فأبلغ عنها بشكل خاص على ⁦GitHub⁩ (تبويب ⁦Security⁩ في المستودع، ثم ⁦Report a vulnerability⁩) ولا تنشر تفاصيلها في مكان عام.')],
+      links: [
+        { label: t('Diyar Firas on GitHub', 'ديار فراس على GitHub'), to: MAKER.href, kind: 'outside' },
+        { label: t('Report a security problem privately', 'أبلغ عن مشكلة أمنية بشكل خاص'), to: 'security/advisories/new', kind: 'repo' },
+      ],
     },
   ],
 
