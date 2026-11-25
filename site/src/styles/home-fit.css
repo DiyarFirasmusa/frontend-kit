@@ -252,3 +252,68 @@
     padding-block: 2.5rem;
   }
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Start in two steps: the two steps and the window share one short row; the note under the
+   window says one thing (the step already said "paste it and send it").
+   --------------------------------------------------------------------------------------------- */
+.start-lead {
+  margin-block: 0.5rem 0;
+}
+
+@media (min-width: 901px) {
+  #install .start-main {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 1.25rem;
+  }
+}
+
+#install .start-line {
+  gap: 1.25rem;
+  margin: 0;
+}
+
+#install .start-line p {
+  line-height: 1.55;
+}
+
+#install .start-window .start-body {
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+}
+
+#install .start-window .start-message {
+  padding: 0.7rem 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+#install .start-copy {
+  min-height: 2.5rem;
+}
+
+#install .start-more {
+  margin-block-start: 0.25rem;
+}
+
+#install .start-text .msg-command {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow-x: visible;
+  font-size: 0.75rem;
+}
+
+#install .start-folder {
+  display: none;
+}
+
+@media (min-width: 901px) {
+  #install .start-main {
+    align-items: center;
+  }
+
+  #install .start-line {
+    align-self: stretch;
+    align-content: space-evenly;
+  }
+}
