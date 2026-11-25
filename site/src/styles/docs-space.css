@@ -896,3 +896,24 @@ body:has(main.doc) .top.is-scrolled {
     border: 0 !important;
   }
 }
+
+/* ---------- One grid under the whole site ----------
+   The grid stays on the screen while the page moves, from the top of the page to its end and on every page,
+   under the words, never over them. The hero no longer draws a second grid that scrolls away with it. */
+body::before,
+body::after {
+  z-index: -1;
+}
+
+body::after {
+  background:
+    linear-gradient(rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem;
+  mask-image: none;
+}
+
+.hero::before,
+[dir='rtl'] .hero::before {
+  content: none;
+}
+
