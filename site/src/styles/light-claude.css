@@ -666,3 +666,28 @@ html:not([data-theme='light']) .doc .hub-kinds a {
   font-size: 0.9375rem;
   font-weight: 700;
 }
+
+/* Round 7 (light mode): some heads paint their words with -webkit-text-fill-color, which beats `color`:
+   the fill follows the colour on every black block, and the hero's orange line is the deeper orange. */
+html[data-theme='light'] .board-main :is(h1, h1 *, h2, h2 *, .doc-summary, .crumbs, .crumbs *) {
+  -webkit-text-fill-color: currentColor !important;
+}
+
+html[data-theme='light'] .hero h1 > span + span {
+  -webkit-text-fill-color: #b8461f !important;
+  color: #b8461f !important;
+}
+
+html[data-theme='light'] .prompt > span {
+  color: #a63f1b;
+}
+
+.board-top,
+.board-top span {
+  text-transform: uppercase;
+}
+
+:lang(ar) .board-top,
+:lang(ar) .board-top span {
+  text-transform: none;
+}
