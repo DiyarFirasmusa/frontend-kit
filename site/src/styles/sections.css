@@ -1069,3 +1069,59 @@
     width: 92%;
   }
 }
+
+/* Four things you get, each with a short line: two by two beside the picture. */
+.show-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.show-features li {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  padding: 0.875rem 1rem;
+  border: 1px solid rgb(25 171 171 / 0.25);
+  border-radius: 0.875rem;
+  background: rgb(25 171 171 / 0.05);
+}
+
+.show-features strong {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.show-features strong::before {
+  content: '✓';
+  color: var(--turq, #19abab);
+  font-size: 0.8125rem;
+}
+
+.show-features span {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .builds.is-live .show-panel:not([data-hidden]) .show-features li {
+    animation: show-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .builds.is-live .show-panel:not([data-hidden]) .show-features li:nth-child(2) { animation-delay: 0.08s; }
+  .builds.is-live .show-panel:not([data-hidden]) .show-features li:nth-child(3) { animation-delay: 0.16s; }
+  .builds.is-live .show-panel:not([data-hidden]) .show-features li:nth-child(4) { animation-delay: 0.24s; }
+}
+
+@media (max-width: 620px) {
+  .show-features {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
