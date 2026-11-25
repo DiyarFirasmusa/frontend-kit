@@ -19,6 +19,14 @@ export function initToc(signal: AbortSignal): void {
     }),
   )
   toc.hidden = false
+  // On a phone or a tablet the rail is not there: the same list opens from one line under the title.
+  const mini = document.querySelector<HTMLDetailsElement>('[data-toc-mini]')
+  const miniList = mini?.querySelector<HTMLOListElement>('[data-toc-mini-list]')
+  if (mini && miniList) {
+    miniList.replaceChildren(...[...list.children].map((item) => item.cloneNode(true)))
+    mini.hidden = false
+    miniList.addEventListener('click', () => (mini.open = false), { signal })
+  }
   const links = all<HTMLAnchorElement>('a', list)
 
   const watcher = new IntersectionObserver(

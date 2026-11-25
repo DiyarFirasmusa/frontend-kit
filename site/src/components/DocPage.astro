@@ -118,6 +118,10 @@ const crumbs = [
           <p class="doc-summary">{summary}</p>
         </div>
       </header>
+      <details class="toc-mini" data-toc-mini hidden>
+        <summary>{ui.onThisPage[locale]}</summary>
+        <ol data-toc-mini-list></ol>
+      </details>
       <article class="doc-article">
         <slot />
         <nav class="pager" aria-label={`${ui.previous[locale]} / ${ui.next[locale]}`}>

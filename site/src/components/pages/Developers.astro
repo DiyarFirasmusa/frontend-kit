@@ -25,6 +25,13 @@ const words = {
   jump: t('All the install steps', 'كل خطوات التثبيت'),
 }
 const esc = (x: string): string => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+// A long paragraph is read as short ones: one to two sentences each.
+const parts = (x: string): string[] => {
+  const sentences = x.split(/(?<=[.؟!])\s+/)
+  const out: string[] = []
+  for (let i = 0; i < sentences.length; i += 2) out.push(sentences.slice(i, i + 2).join(' '))
+  return out
+}
 const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
 ---
 
@@ -60,8 +67,8 @@ const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
   <p><Fragment set:html={f(d.terminal.note[locale])} /></p>
 </Block>
 <Block id="safe" title={d.safe.title[locale]}>
-  <p><Fragment set:html={f(d.safe.text[locale])} /></p>
-  <p><Fragment set:html={f(d.safe.undo[locale])} /></p>
+  {parts(d.safe.text[locale]).map((x) => <p><Fragment set:html={f(x)} /></p>)}
+  {parts(d.safe.undo[locale]).map((x) => <p><Fragment set:html={f(x)} /></p>)}
   <ol class="explained">
     {d.safe.commands.map((command) => <li><CommandBox command={command} install={install} /></li>)}
   </ol>
@@ -83,7 +90,7 @@ const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
       ))
     }
   </dl>
-  <p><Fragment set:html={f(d.setup.approval[locale])} /></p>
+  {parts(d.setup.approval[locale]).map((x) => <p><Fragment set:html={f(x)} /></p>)}
   <p><Fragment set:html={f(d.setup.own[locale])} /></p>
 </Block>
 <Block id="backend" title={d.backend.title[locale]}>
@@ -98,7 +105,7 @@ const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
   <p class="links"><a class="source" href={pageUrl(locale, 'checks')}>{words.checks[locale]}</a></p>
 </Block>
 <Block id="more" title={d.more.title[locale]}>
-  <p><Fragment set:html={f(d.more.text[locale])} /></p>
+  {parts(d.more.text[locale]).map((x) => <p><Fragment set:html={f(x)} /></p>)}
   <p class="links">
     <a class="source" href={pageUrl(locale, 'modes')}>{words.modes[locale]}</a>
     <a class="source" href={pageUrl(locale, 'configuration')}>{words.settings[locale]}</a>
