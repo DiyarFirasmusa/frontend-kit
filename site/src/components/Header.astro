@@ -29,6 +29,7 @@ const guideLinks = [
   [pageUrl(locale, 'get-started'), PAGES['get-started'].name],
   [pageUrl(locale, 'questions'), PAGES.questions.name],
 ] as const
+const allPages = t('All pages of the guide', 'كل صفحات الدليل')
 const searchWords = {
   label: t('Search the guide', 'ابحث في الدليل'),
   hint: t('Search the guide: table, Arabic, upload…', 'ابحث في الدليل: جدول، عربي، رفع…'),
@@ -44,7 +45,7 @@ const searchWords = {
       <rect class="brand-block" x="4" y="23" width="35" height="17" rx="3"></rect>
       <rect x="4" y="47" width="35" height="13" rx="3"></rect>
     </svg>
-    <bdi>Wajiha Kit</bdi>
+    <bdi>{locale === 'ar' ? 'واجهة' : 'Wajiha Kit'}</bdi>
     <small class="brand-version" dir="ltr">v{version}</small>
   </a>
   {
@@ -78,7 +79,7 @@ const searchWords = {
         {places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)}
       </div>
       {
-        SECTIONS.map(({ title, pages }) => (
+        SECTIONS.slice(0, 2).map(({ title, pages }) => (
           <div>
             <p>{title[locale]}</p>
             {pages.map((id) => (
@@ -89,6 +90,9 @@ const searchWords = {
           </div>
         ))
       }
+      <div>
+        <a href={pageUrl(locale, 'docs')}>{allPages[locale]}</a>
+      </div>
     </nav>
   </details>
   <span class="progress" aria-hidden="true" data-progress></span>

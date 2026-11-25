@@ -67,14 +67,18 @@ function playChat(signal: AbortSignal): void {
   }
 
   void (async () => {
+    // The first time through, the opening message is already sent, so the window is never an empty box.
+    let opening = true
     while (!signal.aborted) {
       for (const event of events) event.classList.remove('is-in', 'is-picked')
       body.scrollTop = 0
+      if (opening) events[0]?.classList.add('is-in')
       await pace(600)
 
       for (const event of events) {
         if (signal.aborted) return
         const kind = event.dataset['ev']
+        if (opening && event === events[0]) continue
         if (kind === 'user') {
           // Typed into the box at the bottom, one key at a time, then sent.
           const words = event.querySelector('[data-say]')?.textContent?.trim() ?? ''
@@ -102,6 +106,7 @@ function playChat(signal: AbortSignal): void {
           await pace(kind === 'ready' ? 5200 : 450)
         }
       }
+      opening = false
     }
   })()
 }

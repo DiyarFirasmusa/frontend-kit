@@ -13,6 +13,18 @@ export function initTopSearch(signal: AbortSignal): void {
     { signal },
   )
 
+  top.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.key !== 'Enter') return
+      const first = document.querySelector<HTMLAnchorElement>('[data-tree-item]:not([hidden]) a')
+      if (!first) return
+      event.preventDefault()
+      first.click()
+    },
+    { signal },
+  )
+
   addEventListener(
     'keydown',
     (event) => {

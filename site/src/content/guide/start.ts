@@ -31,7 +31,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude installs the kit, asks before each step, and then starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يثبت ⁦Claude⁩ الإضافة، ويسألك قبل كل خطوة، ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
+    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs, unless you have switched that off. Read each one and press Allow only if it matches this page. Then it starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه، ما لم تكن قد عطّلت ذلك. اقرأ كل أمر، ولا تضغط «السماح» إلا إذا طابق ما في هذه الصفحة. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
     copy: installMessage,
   },
 ]
@@ -119,7 +119,7 @@ export const limits = [
 export const maintenance = [
   {
     title: t('Update', 'التحديث'),
-    text: t('Setup turns automatic updates on, but they do not run where the updater is switched off, as it can be in the desktop app. To update by hand, run this in the command window, inside your project folder, then restart Claude Code. Rules already copied into your project do not change by themselves: run setup again to see what is new.', 'يفعّل الإعداد التحديث التلقائي، لكنه لا يعمل إذا كان المحدّث معطلا، كما قد يحدث في تطبيق سطح المكتب. للتحديث يدويا، شغّل هذا الأمر في نافذة الأوامر داخل مجلد مشروعك، ثم أعد تشغيل ⁦Claude Code⁩. القواعد المنسوخة إلى مشروعك لا تتغير وحدها. شغّل الإعداد مرة أخرى لترى الجديد.'),
+    text: t('Setup turns automatic updates on, but they do not run where the updater is switched off, as it can be in the desktop app. To update by hand, run this in the command window, inside your project folder, then restart Claude Code. Updates come straight from the GitHub repository. If you want to read each version before you take it, switch automatic updates off. Rules already copied into your project do not change by themselves: run setup again to see what is new.', 'يفعّل الإعداد التحديث التلقائي، لكنه لا يعمل إذا كان المحدّث معطلا، كما قد يحدث في تطبيق سطح المكتب. للتحديث يدويا، شغّل هذا الأمر في نافذة الأوامر داخل مجلد مشروعك، ثم أعد تشغيل ⁦Claude Code⁩. تأتي التحديثات مباشرة من مستودع ⁦GitHub⁩. وإن أردت أن تقرأ كل نسخة قبل أن تأخذها، فأوقف التحديث التلقائي. القواعد المنسوخة إلى مشروعك لا تتغير وحدها. شغّل الإعداد مرة أخرى لترى الجديد.'),
     // The first command only refreshes the listing. The installed version moves with the second.
     command: 'claude plugin marketplace update wajiha-kit && claude plugin update wajiha-kit@wajiha-kit',
   },
@@ -130,7 +130,7 @@ export const maintenance = [
   },
   {
     title: t('Remove', 'الإزالة'),
-    text: t('Uninstall it in the command window, in the same place you installed it. The files setup wrote are yours: keep them or delete them.', 'احذف الإضافة من نافذة الأوامر، في المكان نفسه الذي ثبّتها فيه. الملفات التي كتبها الإعداد ملكك: احتفظ بها أو احذفها.'),
-    command: 'claude plugin uninstall wajiha-kit@wajiha-kit',
+    text: t('You can also tell Claude: “Remove Wajiha Kit from this project.” Or run these in the command window, in the same place you installed it. Node, git and jq stay installed, like any other program. The files setup wrote are yours: keep them or delete them.', 'ويمكنك أن تقول لـ ⁦Claude⁩: «أزل واجهة من هذا المشروع». أو شغّل هذين الأمرين في نافذة الأوامر، في المكان نفسه الذي ثبّتها فيه. وتبقى ⁦Node⁩ و⁦git⁩ و⁦jq⁩ مثبتة، كأي برنامج آخر. الملفات التي كتبها الإعداد ملكك: احتفظ بها أو احذفها.'),
+    command: 'claude plugin uninstall wajiha-kit@wajiha-kit --scope project && claude plugin marketplace remove wajiha-kit',
   },
 ]

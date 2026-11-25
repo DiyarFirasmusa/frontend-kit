@@ -556,12 +556,12 @@
         en: {
           dir: 'ltr',
           title: ['Build your own website', 'or dashboard. No coding.'],
-          sub: 'A Claude Code plugin',
+          sub: 'A free kit for the Claude app',
         },
         ar: {
           dir: 'rtl',
           title: ['اصنع موقعك أو لوحة التحكم', 'بنفسك، دون برمجة.'],
-          sub: 'إضافة لـ ⁦Claude Code⁩',
+          sub: 'إضافة مجانية لتطبيق ⁦Claude⁩',
         },
         docs: {
           dir: 'ltr',
@@ -580,6 +580,8 @@
       const look = key.startsWith('page=') ? JSON.parse(decodeURIComponent(key.slice(5))) : looks[key]
       document.documentElement.dir = look.dir
       document.documentElement.lang = look.dir === 'rtl' ? 'ar' : 'en'
+      // In Arabic the name is «واجهة», as the identity guide says.
+      if (look.dir === 'rtl') document.querySelectorAll('.lockup-name, .brand span:not(.pill)').forEach((el) => { if (el.textContent.trim() === 'Wajiha Kit') el.textContent = 'واجهة' })
       document.body.classList.add(key.startsWith('docs') || key.startsWith('page=') ? 'docs' : 'home')
       if (key.startsWith('page=')) {
         document.body.classList.add('page')

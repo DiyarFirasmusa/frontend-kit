@@ -1058,3 +1058,49 @@ body::after {
   font-size: 0.875rem;
 }
 
+
+/* ---------- Wide screens, touch and no script ---------- */
+/* Past 1920px the page keeps a 110rem column in the middle instead of stretching to the edges. */
+@media (min-width: 120rem) {
+  :root {
+    --edge: calc((100vw - 110rem) / 2);
+  }
+}
+
+/* Fingers: the buttons people press are at least 44px tall, and the small "#" next to headings is only for a mouse. */
+@media (hover: none) {
+  .heading-link {
+    display: none;
+  }
+}
+
+.top .top-install,
+.language {
+  min-height: 2.75rem;
+}
+
+.language {
+  min-width: 2.75rem;
+}
+
+.hero-actions a,
+.hero-ways a {
+  padding-block: 0.5rem;
+}
+
+@media (max-width: 360px) {
+  .show-tabs {
+    gap: 0.25rem;
+  }
+
+  .show-tabs button {
+    padding-inline: 0.75rem;
+  }
+}
+
+/* Without script, the tabs and the copy button have nothing to do, so they are not shown; every panel is. */
+html:not(.js) .show-tabs,
+html:not(.js) .start-copy {
+  display: none;
+}
+

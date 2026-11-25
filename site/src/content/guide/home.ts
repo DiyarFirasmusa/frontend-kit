@@ -55,7 +55,7 @@ export const home = {
     },
     gate: {
       name: t('It checks its own work', 'تفحص عملها بنفسها'),
-      text: t('It looks for mistakes, runs tests, and a second reviewer reads the work. If something fails, it fixes it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجع ثان العمل. وإذا فشل شيء أصلحته قبل أن تراه.'),
+      text: t('It looks for mistakes, runs tests, and a second reviewer reads the work. If something fails, it tries to fix it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجع ثان العمل. وإذا فشل شيء حاولت إصلاحه قبل أن تراه.'),
     },
     review: {
       name: t('A second reviewer reads it', 'يقرؤها مراجع ثان'),

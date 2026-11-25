@@ -27,6 +27,10 @@ export const beginnerQuestions = [
     t('Send a picture of a style you like, or a link to a site you want yours to feel like. The kit takes the colours, the fonts and the general feel. It never copies the site. If you have a logo, send it too.', 'أرسل صورة لأسلوب يعجبك، أو رابط موقع تريد أن يشبه موقعك في إحساسه. تأخذ الإضافة الألوان والخطوط والإحساس العام. ولا تنسخ الموقع أبدا. وإذا كان عندك شعار، أرسله أيضا.'),
   ],
   [
+    t('Does it work on a phone?', 'هل تعمل على الهاتف؟'),
+    t('No. You need the Claude app on a computer. The sites and dashboards it builds do work on phones, but you build them on a computer.', 'لا. تحتاج تطبيق ⁦Claude⁩ على حاسوب. أما المواقع ولوحات التحكم التي تبنيها فتعمل على الهاتف، لكنك تبنيها من حاسوب.'),
+  ],
+  [
     t('Does it put my site online?', 'هل تنشر لي الموقع على الإنترنت؟'),
     t('No. It builds the project and runs it on your computer so you can see it. Putting it online is a separate step after that, and you can ask Claude to guide you.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. أما النشر على الإنترنت فخطوة منفصلة بعدها، وتستطيع أن تطلب من Claude أن يرشدك إليها.'),
   ],

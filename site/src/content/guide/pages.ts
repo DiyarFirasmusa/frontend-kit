@@ -190,10 +190,10 @@ export const PAGES: Record<PageId, PageInfo> = {
 
 export const SECTIONS: PageSection[] = [
   { title: t('Start here', 'ابدأ من هنا'), pages: ['docs', 'guide', 'get-started', 'project-types', 'examples'] },
-  { title: t('Help', 'مساعدة'), pages: ['questions', 'changelog'] },
+  { title: t('Help', 'مساعدة'), pages: ['questions'] },
   { title: t('Behind the scenes', 'خلف الستار'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
   { title: t('For your project', 'لمشروعك'), pages: ['modes', 'configuration', 'refactor'] },
-  { title: t('About', 'عن واجهة'), pages: ['licence', 'privacy', 'terms'] },
+  { title: t('About', 'عن واجهة'), pages: ['changelog', 'licence', 'privacy', 'terms'] },
 ]
 
 /** The links in the header. */

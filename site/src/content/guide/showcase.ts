@@ -80,7 +80,7 @@ export const journeyWords = {
     t('What you are building, your project in your own words, the design, your backend link if you have one, and the languages.', 'ماذا تبني، ومشروعك بكلماتك، والتصميم، ورابط الخادم إن كان عندك، واللغات.'),
     t('A short summary of the pages and the look. Nothing starts before your yes.', 'ملخص قصير بالصفحات والشكل. ولا يبدأ شيء قبل موافقتك.'),
     t('Pages, forms, tables and sign-in, with sample data so you can click through at once.', 'صفحات ونماذج وجداول وتسجيل دخول، ببيانات تجريبية لتتصفحها فورا.'),
-    t('It looks for mistakes, runs tests, and a second reviewer reads the work. What fails is fixed before you see it.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجع ثان العمل. وما يفشل يُصلَح قبل أن تراه.'),
+    t('It looks for mistakes, runs tests, and a second reviewer reads the work. It tries to fix what fails before you see it.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجع ثان العمل. ويحاول إصلاح ما يفشل قبل أن تراه.'),
     t('A short report and one question: save this version? Nothing is saved or published without your yes.', 'تقرير قصير وسؤال واحد: هل أحفظ هذه النسخة؟ ولا يُحفظ ولا يُنشر شيء دون موافقتك.'),
   ],
   install: t('Please install Wajiha Kit…', 'من فضلك ثبّت واجهة…'),
@@ -157,9 +157,10 @@ export const compare = {
     error: t('Error: could not load the data', 'خطأ: تعذر تحميل البيانات'),
     broken: t('Orders Page (copy)', 'Orders Page (copy)'),
     results: [
-      t('Mistakes are fixed before you see them', 'تُصلَح الأخطاء قبل أن تراها'),
+      t('Mistakes are looked for before you see them', 'يُبحث عن الأخطاء قبل أن تراها'),
       t('Arabic and phones are right', 'العربية والهاتف مضبوطان'),
       t('Checked before you see it', 'مفحوص قبل أن تراه'),
+      t('Every file is yours, on your computer', 'كل ملف ملكك، على حاسوبك'),
     ],
   },
   gains: <Gain[]>[
