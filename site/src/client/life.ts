@@ -22,10 +22,47 @@ function playChat(signal: AbortSignal): void {
   if (!body || !box || !input || !status) return
   chat.classList.add('is-playing')
 
+  // It plays only while it is on screen, the tab is open and the visitor has not paused it.
+  let seen = false
+  let paused = false
+  let resume: (() => void) | undefined
+  const free = (): boolean => seen && !paused && !document.hidden
+  const wake = (): void => {
+    if (free()) resume?.()
+  }
+  const ready = (): Promise<void> =>
+    free() || signal.aborted ? Promise.resolve() : new Promise<void>((done) => (resume = done))
+  const watcher = new IntersectionObserver(([entry]) => {
+    seen = Boolean(entry?.isIntersecting)
+    wake()
+  })
+  watcher.observe(chat)
+  document.addEventListener('visibilitychange', wake, { signal })
+  signal.addEventListener('abort', () => (watcher.disconnect(), resume?.()))
+  const button = chat.querySelector<HTMLButtonElement>('[data-pause]')
+  if (button) {
+    button.hidden = false
+    button.addEventListener(
+      'click',
+      () => {
+        paused = !paused
+        button.setAttribute('aria-pressed', String(paused))
+        button.setAttribute('aria-label', (paused ? button.dataset['playLabel'] : button.dataset['pauseLabel']) ?? '')
+        chat.classList.toggle('is-paused', paused)
+        wake()
+      },
+      { signal },
+    )
+  }
+  const pace = async (ms: number): Promise<void> => {
+    await ready()
+    await wait(ms, signal)
+  }
+
   const think = async (ms: number): Promise<void> => {
     status.hidden = false
     follow(body)
-    await wait(ms, signal)
+    await pace(ms)
     status.hidden = true
   }
 
@@ -33,7 +70,7 @@ function playChat(signal: AbortSignal): void {
     while (!signal.aborted) {
       for (const event of events) event.classList.remove('is-in', 'is-picked')
       body.scrollTop = 0
-      await wait(600, signal)
+      await pace(600)
 
       for (const event of events) {
         if (signal.aborted) return
@@ -44,9 +81,9 @@ function playChat(signal: AbortSignal): void {
           box.classList.add('is-typing')
           for (let n = 1; n <= words.length && !signal.aborted; n++) {
             input.textContent = words.slice(0, n)
-            await wait(32, signal)
+            await pace(32)
           }
-          await wait(380, signal)
+          await pace(380)
           input.textContent = ''
           box.classList.remove('is-typing')
         } else if (kind === 'claude' || kind === 'ready') {
@@ -58,11 +95,11 @@ function playChat(signal: AbortSignal): void {
         follow(body)
         if (kind === 'ask') {
           // The question waits a moment, then your answer is picked.
-          await wait(1300, signal)
+          await pace(1300)
           event.classList.add('is-picked')
-          await wait(800, signal)
+          await pace(800)
         } else {
-          await wait(kind === 'ready' ? 5200 : 450, signal)
+          await pace(kind === 'ready' ? 5200 : 450)
         }
       }
     }

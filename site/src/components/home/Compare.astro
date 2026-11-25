@@ -91,7 +91,7 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
       <span class="ba-tag is-bad">✕ {compare.without[locale]}</span>
       <span class="ba-tag is-good">✓ {compare.with[locale]}</span>
       <span class="ba-handle" aria-hidden="true"><i>⟷</i></span>
-      <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range />
+      <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range data-bad={compare.without[locale]} data-good={compare.with[locale]} />
     </div>
 
     <ul class="ba-results">

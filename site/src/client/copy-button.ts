@@ -6,11 +6,17 @@ const RESET_AFTER_MS = 2200
  * Copies the button's text. Where the clipboard API is not allowed (a plain-http address, an older browser),
  * it copies through a hidden text box instead; only if that fails too does it select the words for the visitor.
  */
-async function copy(text: string): Promise<boolean> {
+async function copy(words: string): Promise<boolean> {
+  // The marks that keep English words in order inside Arabic text are invisible, and a command that starts
+  // with one fails, so they never go to the clipboard.
+  const marks = new RegExp('[\\u200e\\u200f\\u2066-\\u2069\\u202a-\\u202e]', 'g')
+  const text = words.replace(marks, '')
   try {
     await navigator.clipboard.writeText(text)
     return true
   } catch {
+    // The hidden box takes the focus while it copies; it goes back to the button afterwards.
+    const focused = document.activeElement as HTMLElement | null
     const box = document.createElement('textarea')
     box.value = text
     box.setAttribute('readonly', '')
@@ -25,6 +31,7 @@ async function copy(text: string): Promise<boolean> {
       done = false
     }
     box.remove()
+    focused?.focus()
     return done
   }
 }

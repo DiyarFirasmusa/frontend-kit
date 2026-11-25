@@ -11,19 +11,17 @@ import { initTabs } from './tabs.ts'
 import { initToc } from './toc.ts'
 import { initTopSearch } from './top-search.ts'
 import { warmPages } from './warm.ts'
-import { initWords } from './words.ts'
 
 let page = new AbortController()
 
 document.addEventListener('astro:page-load', () => {
   page.abort()
   page = new AbortController()
-  initWords()
   initChrome(page.signal)
   initExplorer()
   initCopy()
   initFinder()
-  initTree()
+  initTree(page.signal)
   initGate()
   initLife(page.signal)
   initTabs(page.signal)

@@ -1,7 +1,7 @@
 import { prefetch } from 'astro:prefetch'
 
 /** How many pages the home page prepares ahead, so a slow phone is not kept busy. */
-const MOST = 24
+const MOST = 4
 
 type Deadline = { timeRemaining: () => number; didTimeout?: boolean }
 type Idle = (callback: (deadline: Deadline) => void, options?: { timeout: number }) => number
@@ -17,7 +17,8 @@ const whenIdle: Idle =
 export function warmPages(signal: AbortSignal): void {
   if (!document.querySelector('main.home')) return
   const connection = (navigator as { connection?: { saveData?: boolean; effectiveType?: string } }).connection
-  if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType ?? '')) return
+  // Only on a fast connection: a phone on 3G keeps its data, and hover still prepares a page before a click.
+  if (connection?.saveData || (connection?.effectiveType && connection.effectiveType !== '4g')) return
 
   const here = location.pathname
   const seen = new Set<string>()
@@ -29,8 +30,9 @@ export function warmPages(signal: AbortSignal): void {
     seen.add(url.pathname)
     queue.push(url.pathname)
   }
-  // The guide and getting started are the likely next pages.
-  queue.sort((a, b) => Number(/\/(docs|get-started)\//.test(b)) - Number(/\/(docs|get-started)\//.test(a)))
+  // Only the likely next pages: the guide, getting started and the questions.
+  const likely = /\/(docs|get-started|questions)\/$/
+  queue.splice(0, queue.length, ...queue.filter((path) => likely.test(path)))
   queue.splice(MOST)
 
   const next = (): void => {

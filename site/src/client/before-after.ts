@@ -6,7 +6,11 @@ export function initBeforeAfter(signal: AbortSignal): void {
     const range = frame.querySelector<HTMLInputElement>('[data-ba-range]')
     if (!range) continue
     const rtl = getComputedStyle(frame).direction === 'rtl'
-    const set = (value: number): void => frame.style.setProperty('--pos', `${rtl ? 100 - value : value}%`)
+    // What a screen reader says as the line moves: how much of each result is showing.
+    const set = (value: number): void => {
+      frame.style.setProperty('--pos', `${rtl ? 100 - value : value}%`)
+      range.setAttribute('aria-valuetext', `${range.dataset['bad']} ${value}%, ${range.dataset['good']} ${100 - value}%`)
+    }
     range.addEventListener('input', () => set(Number(range.value)), { signal })
     set(Number(range.value))
 

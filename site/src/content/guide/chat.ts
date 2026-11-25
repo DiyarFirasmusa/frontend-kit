@@ -18,6 +18,13 @@ export const chatWords = {
   reply: t('Reply to Claude…', 'رد على Claude…'),
   working: t('Working…', 'يعمل…'),
   model: 'Opus 5.5',
+  pause: t('Pause the demo', 'أوقف العرض مؤقتًا'),
+  play: t('Play the demo', 'شغّل العرض'),
+  /** What a screen reader hears instead of the moving chat. */
+  summary: t(
+    'A short demo of the Claude app: you send one message, Claude installs Wajiha Kit, asks you a few plain questions, then builds your project and checks it.',
+    'عرض قصير من تطبيق Claude: ترسل رسالة واحدة، فيثبّت Claude إضافة واجهة، ويسألك بضعة أسئلة بسيطة، ثم يبني مشروعك ويفحصه.',
+  ),
 }
 
 /** The opening screen: from installing the kit to a working project, as it really goes. */

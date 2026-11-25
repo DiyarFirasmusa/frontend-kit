@@ -77,7 +77,7 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
 ]
 ---
 
-<details class="tree" open data-tree>
+<details class="tree" data-tree>
   <summary>{ui.allPages[locale]}</summary>
   <label class="tree-search">
     <span class="sr-only">{words.search[locale]}</span>
@@ -106,3 +106,7 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
     }
   </nav>
 </details>
+<!-- Open beside the page on a wide screen, folded above it on a narrow one: decided before the page is drawn, so nothing jumps. -->
+<script is:inline>
+  document.currentScript.previousElementSibling.open = matchMedia('(min-width: 901px)').matches
+</script>

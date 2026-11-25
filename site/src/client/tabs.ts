@@ -22,6 +22,11 @@ export function initTabs(signal: AbortSignal): void {
         'keydown',
         (event) => {
           const rtl = getComputedStyle(root).direction === 'rtl'
+          if (event.key === 'Home' || event.key === 'End') {
+            event.preventDefault()
+            pick(event.key === 'Home' ? 0 : tabs.length - 1, true)
+            return
+          }
           const next = { ArrowRight: rtl ? -1 : 1, ArrowLeft: rtl ? 1 : -1 }[event.key]
           if (next === undefined) return
           event.preventDefault()

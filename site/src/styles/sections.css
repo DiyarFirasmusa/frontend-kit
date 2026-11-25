@@ -85,7 +85,7 @@
 
 .show-words h3 {
   color: #fff;
-  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  font-size: clamp(1.375rem, 1rem + 0.9vw, 1.875rem);
   line-height: 1.15;
 }
 
@@ -159,9 +159,6 @@
   border: 1px solid rgb(241 237 231 / 0.14);
   border-radius: 1rem;
   background: #141413;
-  box-shadow:
-    0 0 0 1px rgb(217 119 87 / 0.06),
-    0 2rem 4rem rgb(0 0 0 / 0.55);
 }
 
 .browser-bar {
@@ -501,6 +498,7 @@
 
 .path-stop {
   display: grid;
+  align-content: start;
   gap: 1.25rem;
   justify-items: center;
   text-align: center;
@@ -513,11 +511,8 @@
   height: 10.5rem;
   padding: 0.75rem;
   overflow: hidden;
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background:
-    radial-gradient(80% 90% at 50% 120%, rgb(217 119 87 / 0.16), transparent 70%),
-    #0b0c0d;
+  background: #0b0c0d;
   font-size: 0.75rem;
   text-align: start;
   transition:
@@ -529,9 +524,6 @@
   translate: 0 -0.25rem;
 }
 
-.path .path-picture {
-  border-color: rgb(217 119 87 / 0.35);
-}
 
 .path-label {
   display: grid;
@@ -755,7 +747,6 @@
 }
 
 .start-side h2 {
-  font-size: var(--title);
   line-height: 1.15;
 }
 
@@ -999,10 +990,39 @@
   }
 }
 
+/* On a phone the stops are one list: the small picture on one side, the number, title and sentence beside it. */
 @media (max-width: 620px) {
   .path {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem 0.75rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+
+  .path-stop {
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    justify-items: stretch;
+    text-align: start;
+  }
+
+  .path-picture {
+    height: 7.5rem;
+    padding: 0.5rem;
+    font-size: 0.625rem;
+  }
+
+  .path-picture > *,
+  .jp-input {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .path-label {
+    justify-items: start;
+  }
+
+  .path-label p {
+    max-width: none;
   }
 
   .show-tabs {
@@ -1123,7 +1143,7 @@
 .show-features {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 1.25rem 1.5rem;
   margin: 0.5rem 0 0;
   padding: 0;
   list-style: none;
@@ -1133,10 +1153,6 @@
   display: grid;
   gap: 0.25rem;
   align-content: start;
-  padding: 0.875rem 1rem;
-  border: 1px solid rgb(25 171 171 / 0.25);
-  border-radius: 0.875rem;
-  background: rgb(25 171 171 / 0.05);
 }
 
 .show-features strong {
@@ -2171,8 +2187,19 @@
 /* As wide as the other sections; kept short so it does not take the whole screen. */
 .ba {
   max-width: none;
-  aspect-ratio: 16 / 6.6;
   font-size: clamp(0.6rem, 0.2rem + 0.8vw, 1rem);
+}
+
+@media (min-width: 721px) {
+  .ba {
+    aspect-ratio: 16 / 6.6;
+  }
+}
+
+@media (max-width: 720px) {
+  .ba {
+    font-size: 0.75rem;
+  }
 }
 
 .ba-ask span {
@@ -2185,20 +2212,16 @@
 
 
 
-/* The Arabic headline keeps its two lines but never runs under the chat beside it:
-   its size follows the width of its own column. On narrow screens it may wrap. */
+/* The Arabic headline is the biggest words on the page, like the English one: it wraps inside its own column,
+   balanced, so it never runs under the chat beside it. */
 [dir='rtl'] .hero h1 {
-  font-size: clamp(1.625rem, 0.35rem + 2.15vw, 3.25rem);
+  max-width: none;
+  font-size: clamp(2rem, 0.9rem + 3vw, 3.875rem);
+  text-wrap: balance;
 }
 
-@media (max-width: 1100px) {
-  [dir='rtl'] .hero h1 {
-    font-size: clamp(1.75rem, 1rem + 3.6vw, 3rem);
-  }
-
-  [dir='rtl'] .hero h1 span {
-    white-space: normal;
-  }
+[dir='rtl'] .hero h1 span {
+  white-space: normal;
 }
 
 /* The phone menu's panel is out of the page while it is closed, so it can never push the page sideways. */

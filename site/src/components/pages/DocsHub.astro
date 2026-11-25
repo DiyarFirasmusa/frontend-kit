@@ -1,82 +1,15 @@
 ---
-import { agents, skillGroups, type Bilingual } from '../../content/catalogue.ts'
-import { PAGES, SECTIONS } from '../../content/guide/pages.ts'
-import { agentPurpose, hookPurpose, rulePurpose, skillPurpose } from '../../content/guide/purpose.ts'
+import { PAGES } from '../../content/guide/pages.ts'
 import { t } from '../../content/guide/text.ts'
-import { content } from '../../content/index.ts'
-import type { HookEvent, Locale } from '../../content/types.ts'
-import { agentUrl, hookUrl, pageUrl, ruleUrl, skillUrl } from '../../lib/links.ts'
-import { facts, hookEvents, ruleGroups } from '../../lib/plugin.ts'
+import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
+import { facts } from '../../lib/plugin.ts'
 
 interface Props {
   locale: Locale
 }
 
-interface Entry {
-  name: string
-  href: string
-  about: Bilingual
-  /** A name that never translates. */
-  fixed?: boolean
-}
-
 const { locale } = Astro.props
-const copy = content[locale]
-const words = {
-  guides: t('Start here', 'ابدأ من هنا'),
-  advanced: t('Advanced pages', 'صفحات متقدمة'),
-  behind: t('Behind the scenes: every part of the kit (you can skip this)', 'خلف الستار: كل أجزاء الإضافة (يمكنك تجاوزه)'),
-  skills: t('Skills', 'المهارات'),
-  agents: t('Specialists', 'المختصون'),
-  rules: t('Rules', 'القواعد'),
-  hooks: t('Safety checks', 'فحوص الأمان'),
-  search: t('Search everything: table, Arabic, upload…', 'ابحث في كل شيء: جدول، عربي، رفع…'),
-  none: t('Nothing matches. Try another word.', 'لا توجد نتائج. جرّب كلمة أخرى.'),
-}
-const groups: { id: string; title: string; entries: Entry[]; more?: boolean }[] = [
-  {
-    id: 'guides',
-    title: words.guides[locale],
-    entries: SECTIONS.slice(0, 2)
-      .flatMap(({ pages }) => pages)
-      .filter((id) => id !== 'docs')
-      .map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
-  },
-  {
-    id: 'advanced',
-    title: words.advanced[locale],
-    more: true,
-    entries: SECTIONS.slice(2)
-      .flatMap(({ pages }) => pages)
-      .map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
-  },
-  ...skillGroups.map(({ title, skills }, i) => ({
-    id: i === 0 ? 'all-skills' : `skills-${i}`,
-    more: true,
-    title: `${words.skills[locale]}: ${title[locale]}`,
-    entries: Object.keys(skills).map((name) => ({ name, href: skillUrl(locale, name), about: skillPurpose[name]!.why, fixed: true })),
-  })),
-  {
-    id: 'all-agents',
-    more: true,
-    title: words.agents[locale],
-    entries: Object.keys(agents).map((name) => ({ name, href: agentUrl(locale, name), about: agentPurpose[name]!.why, fixed: true })),
-  },
-  ...ruleGroups.map(({ group, names }) => ({
-    id: `rules-${group.replaceAll('/', '-')}`,
-    more: true,
-    title: `${words.rules[locale]}: ${copy.rules.groups[group]}`,
-    entries: names.map((name) => ({ name, href: ruleUrl(locale, group, name), about: rulePurpose[`${group}/${name}`]!, fixed: true })),
-  })),
-  {
-    id: 'all-hooks',
-    more: true,
-    title: words.hooks[locale],
-    entries: (Object.keys(copy.session.events) as HookEvent[])
-      .filter((event) => hookEvents.includes(event))
-      .map((event) => ({ name: event, href: hookUrl(locale, event), about: hookPurpose[event], fixed: true })),
-  },
-]
 // The landing cards: the pages to start with, then the four parts of the kit with their counts.
 const startCards = (['guide', 'get-started', 'project-types', 'examples', 'questions'] as const).map((id, i) => ({
   id,
@@ -95,7 +28,15 @@ const hubWords = {
   start: t('Start here', 'ابدأ من هنا'),
   behind: t('Behind the scenes', 'خلف الستار'),
   behindLead: t('You do not need these to start. They show what works for you.', 'لا تحتاجها لتبدأ. تشرح ما يعمل لأجلك.'),
+  more: t('More pages', 'صفحات أخرى'),
 }
+// The pages that are not on a card. Every single skill, specialist, rule and check is one click away in the page list
+// and its search, so they are not listed here a second time.
+const morePages = (['features', 'modes', 'configuration', 'refactor', 'changelog'] as const).map((id) => ({
+  name: PAGES[id].name[locale],
+  about: PAGES[id].lead[locale],
+  href: pageUrl(locale, id),
+}))
 ---
 
 <section class="hub-cards" aria-label={hubWords.start[locale]}>
@@ -129,47 +70,16 @@ const hubWords = {
     }
   </ul>
 </section>
-<div class="finder" data-finder>
-  <label>
-    <span class="sr-only">{words.search[locale]}</span>
-    <input type="search" placeholder={words.search[locale]} autocomplete="off" data-finder-input />
-  </label>
-  <p role="status" class="muted" data-finder-empty hidden>{words.none[locale]}</p>
-</div>
-{
-  groups.filter((g) => !g.more).map(({ id, title, entries }) => (
-    <section id={id} class="block" data-finder-group>
-      <h2>{title}</h2>
-      <ul class="index">
-        {entries.map(({ name, href, about, fixed }) => (
-          <li data-finder-item data-search={[name, title, about.en, about.ar].join(' ').toLowerCase()}>
-            <a href={href} class:list={{ 'is-name': fixed }}>
-              {fixed ? <bdi>{name}</bdi> : name}
-            </a>
-            <p>{about[locale]}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))
-}
-<details class="more-details" data-finder-more>
-  <summary>{words.behind[locale]}</summary>
-  {
-    groups.filter((g) => g.more).map(({ id, title, entries }) => (
-      <section id={id} class="block" data-finder-group>
-        <h2>{title}</h2>
-        <ul class="index">
-          {entries.map(({ name, href, about, fixed }) => (
-            <li data-finder-item data-search={[name, title, about.en, about.ar].join(' ').toLowerCase()}>
-              <a href={href} class:list={{ 'is-name': fixed }}>
-                {fixed ? <bdi>{name}</bdi> : name}
-              </a>
-              <p>{about[locale]}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))
-  }
-</details>
+<section id="more" class="block">
+  <h2>{hubWords.more[locale]}</h2>
+  <ul class="index">
+    {
+      morePages.map(({ name, about, href }) => (
+        <li>
+          <a href={href}>{name}</a>
+          <p>{about}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

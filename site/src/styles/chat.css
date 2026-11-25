@@ -9,10 +9,6 @@
   border: 1px solid rgb(217 119 87 / 0.32);
   border-radius: 1.25rem;
   background: #141413;
-  box-shadow:
-    0 0 0 1px rgb(217 119 87 / 0.06),
-    0 0 4rem rgb(217 119 87 / 0.14),
-    0 2rem 4rem rgb(0 0 0 / 0.5);
   color: var(--ivory);
   font-size: 0.9375rem;
   line-height: 1.6;
@@ -393,7 +389,7 @@
 
 @media (max-width: 620px) {
   .chat.live {
-    height: 34rem;
+    height: 27rem;
   }
 
   .chat {
@@ -453,3 +449,49 @@
   white-space: pre-line;
 }
 
+
+/* The small pause button in the corner of the playing chat. */
+.chat.live {
+  position: relative;
+}
+
+.chat-pause {
+  position: absolute;
+  inset-block-start: 0.4rem;
+  inset-inline-end: 0.6rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(241 237 231 / 0.08);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.chat-pause:hover {
+  background: rgb(241 237 231 / 0.16);
+  color: var(--ivory);
+}
+
+/* Two bars while it plays; a triangle while it waits. */
+.chat-pause i {
+  width: 0.625rem;
+  height: 0.75rem;
+  border-inline: 3px solid currentColor;
+}
+
+.chat.is-paused .chat-pause i {
+  width: 0;
+  height: 0;
+  border-block: 0.375rem solid transparent;
+  border-inline: 0.625rem solid currentColor;
+  border-inline-end: 0;
+}
+
+[dir='rtl'] .chat.is-paused .chat-pause i {
+  scale: -1 1;
+}

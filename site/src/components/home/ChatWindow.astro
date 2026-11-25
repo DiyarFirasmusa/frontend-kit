@@ -17,7 +17,17 @@ const { locale, label, live = false } = Astro.props
     <span class="chat-lights"><i></i><i></i><i></i></span>
     <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
   </div>
-  <div class="chat-body" data-body>
+  {
+    live && (
+      <>
+        <p class="sr-only">{chatWords.summary[locale]}</p>
+        <button type="button" class="chat-pause" aria-pressed="false" aria-label={chatWords.pause[locale]} data-pause data-pause-label={chatWords.pause[locale]} data-play-label={chatWords.play[locale]} hidden>
+          <i aria-hidden="true"></i>
+        </button>
+      </>
+    )
+  }
+  <div class="chat-body" data-body aria-hidden={live ? 'true' : undefined}>
     <slot />
     <p class="chat-status" data-status hidden aria-hidden="true">
       <i class="ce-spark is-busy">✻</i>

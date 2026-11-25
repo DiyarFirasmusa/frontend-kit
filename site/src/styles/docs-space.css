@@ -325,11 +325,11 @@
   color: var(--muted);
 }
 
-/* Steps and questions keep a quiet frame; nothing else is boxed. */
+/* Steps and questions are not boxed: plain words on the page's own ground. */
 .doc .explained li,
 .doc .question {
-  border-color: rgb(241 237 231 / 0.08);
-  background: rgb(241 237 231 / 0.025);
+  border-color: transparent;
+  background: none;
 }
 
 /* Previous and next. */
