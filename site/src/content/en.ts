@@ -27,7 +27,7 @@ export const en: Copy = {
       [events, 'session events watched by hooks'],
       [4, 'project types (three for beginners, plus one for other stacks), each with its own setup'],
       [servers, 'MCP server for documentation (two browser helpers are optional)'],
-      [denied, 'deny rules in the ready settings file'],
+      [denied, 'deny rules in the biggest ready settings file'],
       [examples, 'example projects to read'],
     ],
   },
@@ -52,8 +52,7 @@ export const en: Copy = {
   },
   install: {
     title: 'Start in two steps.',
-    lead: 'Open the Claude app, choose Code, pick a folder for your project, then type these one by one in the message box.',
-    steps: ['Send this to Claude. It tells Claude where to find the kit.', 'Then send this. It adds the kit.', 'And last, this one. Claude starts asking about your project.'],
+    lead: 'Open the Claude app, choose Code, pick a folder for your project, then send this message.',
     needs: 'Everything happens in the Claude app. You send one message, and Claude does the installing for you.',
     copy: 'Copy',
     copied: 'Copied',

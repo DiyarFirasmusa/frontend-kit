@@ -28,7 +28,7 @@ export const enDetails: Details = {
       items: [
         'Your project is not built with React (a popular tool for building screens). The kit is made for it.',
         'It is a throwaway prototype, and checks would only slow you down.',
-        'You want the assistant to upload to main or ask for a merge by itself. It always waits for you.',
+        'You want the assistant to upload to main or ask for a merge by itself. By default it waits for you.',
       ],
     },
   },
@@ -151,7 +151,7 @@ export const enDetails: Details = {
       ['Are the safety checks a real security sandbox?', 'No. They are small scripts that catch known patterns, so a command written in a different way can get past them. Keep the branch protection of your code host and your normal access rules.'],
       ['Can I turn parts off or change the rules?', 'Yes. The rules are files in your project folder. The automatic review and the skill hints have switches in the settings file.'],
       ['Will it delete my rules?', 'No. Setup shows what would change before it touches an existing file, and clean-up moves files to a backup folder.'],
-      ['Does it send my code anywhere?', 'The safety checks are local scripts. The bundled MCP servers (helper programs) are downloaded through npx (a tool that fetches and runs them), and Context7 sends documentation questions to its service.'],
+      ['Does it send my code anywhere?', 'The safety checks are local scripts. Claude sends the files it reads to Anthropic. The only bundled helper, Context7, is downloaded through npx (a tool that fetches and runs it) and sends documentation searches to its service. The browser helpers are optional.'],
       ['Does it only speak Arabic and English?', 'Those two are fully supported. With one left-to-right language, setup leaves out the right-to-left and translation rules.'],
     ],
   },

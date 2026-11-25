@@ -150,8 +150,3 @@ main:focus,
 .js .command button {
   display: block;
 }
-
-.command button:hover {
-  background: var(--ivory);
-  color: var(--void);
-}

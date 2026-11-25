@@ -147,13 +147,10 @@
 }
 
 .foot {
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem 2rem;
-  padding: 1.5rem var(--edge);
-  color: var(--muted);
   font-size: var(--small);
 }
 

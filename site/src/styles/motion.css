@@ -18,7 +18,6 @@
 
   /* Every control answers a hand. */
   .top a,
-  .choices a,
   .command button,
   .tree a,
   .tree summary,

@@ -13,17 +13,6 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(52rem 38rem at 88% -6%, rgb(217 119 87 / 0.26), transparent 62%),
-    radial-gradient(44rem 34rem at -8% 38%, rgb(242 161 131 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 96% 108%, rgb(241 237 231 / 0.14), transparent 62%);
-}
-
-[dir='rtl'] body::before {
-  background:
-    radial-gradient(52rem 38rem at 12% -6%, rgb(217 119 87 / 0.26), transparent 62%),
-    radial-gradient(44rem 34rem at 108% 38%, rgb(242 161 131 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 4% 108%, rgb(241 237 231 / 0.14), transparent 62%);
 }
 
 /* The grid over the whole page, fading towards the edges. */
@@ -33,9 +22,6 @@ body::after {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    linear-gradient(rgb(241 237 231 / 0.05) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.05) 1px, transparent 1px) 0 0 / 4rem 4rem;
 }
 
 .hero::before {
@@ -75,58 +61,12 @@ body::after {
 }
 
 /* Each cell wears the colour of what it is. */
-.start-cases li {
-  border-block-start: 2px solid var(--c, var(--accent));
-}
-
-.start-cases li:nth-child(1) {
-  --c: var(--accent);
-}
-
-.start-cases li:nth-child(2) {
-  --c: var(--amber);
-}
-
-.start-cases li:nth-child(3) {
-  --c: var(--teal);
-}
-
-.start-cases li:hover {
-  background: color-mix(in srgb, var(--c, var(--accent)) 9%, var(--void));
-}
 
 /* The four numbers and the four kinds. */
 
 /* The name you picked takes its kind's colour. */
 .inside {
   --pick: var(--accent);
-}
-
-.inside:has([data-kind='agents'][aria-pressed='true']) {
-  --pick: var(--amber);
-}
-
-.inside:has([data-kind='rules'][aria-pressed='true']) {
-  --pick: var(--teal);
-}
-
-.inside:has([data-kind='checks'][aria-pressed='true']) {
-  --pick: var(--sand);
-}
-
-.js .choices [aria-current='true'] {
-  background: var(--pick);
-  color: var(--void);
-  box-shadow: none;
-}
-
-[dir='rtl'] .js .choices [aria-current='true'] {
-  box-shadow: none;
-}
-
-.choices a:hover {
-  background: color-mix(in srgb, var(--pick) 14%, var(--void));
-  color: #fff;
 }
 
 /* Chips drifting past take the four colours in turn. */
@@ -137,13 +77,7 @@ body::after {
 .inside,
 .get-it {
   border-block-start: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, var(--accent), transparent) 1;
   background: linear-gradient(180deg, rgb(217 119 87 / 0.06), transparent 28rem);
-}
-
-.starts,
-.get-it {
-  background: linear-gradient(180deg, rgb(241 237 231 / 0.06), transparent 28rem);
 }
 
 .section-head h2 {
@@ -160,60 +94,13 @@ body::after {
 }
 
 /* Install: the numbered rows and who it is for. */
-.install-steps li:hover {
-  background: rgb(217 119 87 / 0.08);
-}
 
 .command button:hover {
   background: var(--accent);
   color: var(--void);
 }
 
-.works-for strong::before {
-  content: '';
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  margin-inline-end: 0.5rem;
-  background: var(--accent);
-}
-
-.works-for li:nth-child(4n + 2) strong::before {
-  background: var(--amber);
-}
-
-.works-for li:nth-child(4n + 3) strong::before {
-  background: var(--teal);
-}
-
-.works-for li:nth-child(4n) strong::before {
-  background: var(--sand);
-}
-
-.fit .ticks li::before {
-  background: var(--teal);
-}
-
-.fit .crosses li::before {
-  background: var(--rose);
-}
-
-.fit > div:first-child {
-  border-block-start: 2px solid var(--teal);
-}
-
-.fit > div:last-child {
-  border-block-start: 2px solid var(--rose);
-}
-
 /* The cells are a little see-through, so the glow and the grid behind the page show in them. */
-.start-cases li,
-.install-steps li,
-.works-for li,
-.fit > div,
-.choices li {
-  background-color: rgb(5 6 7 / 0.7);
-}
 
 /* THE HEADER: glass over the glow, an orange mark, the version, and an orange line under the place you are. */
 .top {
@@ -221,11 +108,6 @@ body::after {
   transition:
     background-color 0.3s,
     box-shadow 0.3s;
-}
-
-.top.is-scrolled {
-  background: rgb(5 6 7 / 0.84);
-  box-shadow: 0 1px 0 rgb(217 119 87 / 0.28), 0 0.75rem 2rem rgb(0 0 0 / 0.35);
 }
 
 .brand-mark {
@@ -244,8 +126,6 @@ body::after {
   padding: 0.0625rem 0.4rem;
   border: 1px solid rgb(217 119 87 / 0.4);
   border-radius: 999px;
-  background: rgb(217 119 87 / 0.1);
-  color: var(--accent);
   font: 500 0.6875rem / 1.5 var(--code);
 }
 
@@ -262,12 +142,10 @@ body::after {
 .top-nav a[aria-current],
 .menu nav [aria-current] {
   color: #fff;
-  text-decoration-color: var(--accent);
   text-decoration-thickness: 2px;
 }
 
 .top-docs {
-  border-color: rgb(217 119 87 / 0.55);
   transition:
     background-color 0.3s,
     color 0.3s,
@@ -276,8 +154,6 @@ body::after {
 
 .top-docs:hover,
 .top-docs[aria-current] {
-  border-color: var(--accent);
-  background: rgb(217 119 87 / 0.14);
   color: #fff;
 }
 
@@ -287,10 +163,6 @@ body::after {
 
 .menu summary:hover {
   color: var(--accent);
-}
-
-.menu nav {
-  border-color: rgb(217 119 87 / 0.3);
 }
 
 /* THE HEADER: no ground at all. The words and marks sit straight over the glow. */
@@ -307,13 +179,7 @@ body::after {
 
 /* The Arabic headline is two lines, one sentence each. */
 [dir='rtl'] .hero h1 {
-  max-width: none;
-  font-size: clamp(1.625rem, 0.5rem + 3.2vw, 3.75rem);
   line-height: 1.35;
-}
-
-[dir='rtl'] .hero h1 span {
-  white-space: nowrap;
 }
 
 /* THE HEADER'S LINKS, redone: one centred pill of places, a small language chip, and a round orange Install. */
@@ -367,18 +233,9 @@ body::after {
 }
 
 .language {
-  min-height: 36px;
   padding-inline: 0.875rem;
   border: 1px solid rgb(241 237 231 / 0.16);
-  border-radius: 999px;
   font-size: 0.875rem;
-  transition:
-    border-color 0.3s,
-    color 0.3s;
-}
-
-.language:hover {
-  border-color: var(--accent);
 }
 
 .top-install {
@@ -418,10 +275,6 @@ body::after {
   }
 }
 
-.language {
-  background: rgb(5 6 7 / 0.6);
-}
-
 /* THE HEADER'S LINKS, third version: plain numbered words with an orange line that slides in. No pill, no box. */
 @media (min-width: 1280px) {
   .top-nav,
@@ -452,12 +305,7 @@ body::after {
   }
 
   .top-nav a::before {
-    counter-increment: place;
-    content: counter(place, decimal-leading-zero);
     color: var(--accent);
-    font: 500 0.6875rem / 1 var(--code);
-    opacity: 0.7;
-    transition: opacity 0.3s;
   }
 
   .top-nav a::after {
@@ -479,11 +327,6 @@ body::after {
   .top-nav a:hover,
   .top-nav a[aria-current] {
     color: #fff;
-  }
-
-  .top-nav a:hover::before,
-  .top-nav a[aria-current]::before {
-    opacity: 1;
   }
 
   .top-nav a:hover::after,
@@ -528,17 +371,10 @@ body::after {
 
 /* The globe wears the system's orange, like the rest of the header. */
 .language {
-  border-color: rgb(217 119 87 / 0.45);
-  background: rgb(217 119 87 / 0.08);
   color: #fff;
   transition:
     background-color 0.3s,
     border-color 0.3s;
-}
-
-.language:hover {
-  border-color: var(--accent);
-  background: rgb(217 119 87 / 0.22);
 }
 
 .language-icon circle,
@@ -570,11 +406,6 @@ body .top.is-scrolled::before {
 }
 
 /* On doc pages the logo lines up with the side menu: both start the same distance from the edge. */
-@media (min-width: 901px) {
-  body:has(main.doc) .top {
-    padding-inline-start: 0.75rem;
-  }
-}
 
 /* Links to a place on the same page, like the ones in the header, glide there instead of jumping. */
 @media (prefers-reduced-motion: no-preference) {

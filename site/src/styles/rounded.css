@@ -9,14 +9,6 @@
 }
 
 /* Grids of cells: one rounded frame. */
-.start-cases,
-.install-steps,
-.works-for,
-.fit,
-.choices {
-  border-radius: var(--radius);
-  overflow: hidden;
-}
 
 /* Boxes. */
 .command,
@@ -59,8 +51,7 @@
 }
 
 /* Cells sit inside a rounded frame: they stay square, the frame clips them. */
-.command button,
-.start-cases li {
+.command button {
   border-radius: 0;
 }
 

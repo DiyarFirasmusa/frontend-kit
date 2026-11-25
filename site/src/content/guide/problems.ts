@@ -20,11 +20,11 @@ export const beginnerQuestions = [
   ],
   [
     t('What if I do not know my backend’s API link?', 'ماذا لو لم أكن أعرف رابط وصف خادمي (API)؟'),
-    t('That is fine. This is a file or page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it, and save it in your project as docs/api/openapi.json. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later.', 'لا مشكلة. هذا ملف أو صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم، واحفظه في مشروعك باسم ⁦docs/api/openapi.json⁩. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا.'),
+    t('That is fine. This is a file or page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it, and save it in your project as docs/api/openapi.json. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later. The setup is being improved, so it may ask a little differently today.', 'لا مشكلة. هذا ملف أو صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم، واحفظه في مشروعك باسم ⁦docs/api/openapi.json⁩. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
   ],
   [
     t('What if I have no design?', 'ماذا لو لم يكن عندي تصميم؟'),
-    t('Send a picture of a style you like, or a link to a site you want yours to feel like. The kit takes the colours, the fonts and the general feel. It never copies the site. If you have a logo, send it too.', 'أرسل صورة لأسلوب يعجبك، أو رابط موقع تريد أن يشبه موقعك في إحساسه. تأخذ الإضافة الألوان والخطوط والإحساس العام. ولا تنسخ الموقع أبدا. وإذا كان عندك شعار، أرسله أيضا.'),
+    t('Send a picture of a style you like, or a link to a site you want yours to feel like. The kit takes the colours, the fonts and the general feel. It does not copy the site. If you have a logo, send it too.', 'أرسل صورة لأسلوب يعجبك، أو رابط موقع تريد أن يشبه موقعك في إحساسه. تأخذ الإضافة الألوان والخطوط والإحساس العام. ولا تنسخ الموقع. وإذا كان عندك شعار، أرسله أيضا.'),
   ],
   [
     t('Does it work on a phone?', 'هل تعمل على الهاتف؟'),
@@ -44,7 +44,11 @@ export const beginnerQuestions = [
   ],
   [
     t('Does it put my site online?', 'هل تنشر لي الموقع على الإنترنت؟'),
-    t('No. It builds the project and runs it on your computer so you can see it. To put it online you need hosting and a domain name. You can ask Claude: “Explain how to publish this site”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج استضافة واسم نطاق (دومين). ويمكنك أن تطلب من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع»، وسيسألك قبل كل خطوة.'),
+    t('No. It builds the project and runs it on your computer so you can see it. To put it online you need a place that hosts it. You can ask Claude: “What are my options to publish my site, and what does each one involve?”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج مكانا يستضيفه. ويمكنك أن تطلب من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»، وسيسألك قبل كل خطوة.'),
+  ],
+  [
+    t('Does it work on Windows?', 'هل تعمل الإضافة على Windows؟'),
+    t('The project builds and runs normally. The safety checks were tested only on macOS, so on Windows they may skip some checks. If every command is refused after the install, see “Every command is refused after installing”.', 'يُبنى المشروع ويعمل بشكل عادي. وفحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد تتخطى بعض الفحوص على ⁦Windows⁩. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const
 
@@ -76,9 +80,5 @@ export const problems = [
   [
     t('Setup stopped while writing into .claude.', 'توقف الإعداد أثناء الكتابة في ‎.claude.'),
     t('Claude Code asks your permission to write in that folder. Approve it and run setup again. It skips what is already done.', 'يطلب ⁦Claude Code⁩ إذنك للكتابة في هذا المجلد. وافق، ثم شغّل الإعداد مرة أخرى. سيتخطى ما أنجزه سابقا.'),
-  ],
-  [
-    t('Does it work on Windows?', 'هل تعمل الإضافة على Windows؟'),
-    t('The safety checks were built and tested on macOS. On Windows they may not work fully. If every command is refused, see “Every command is refused after installing”.', 'بُنيت فحوص الأمان واختُبرت على ⁦macOS⁩. وقد لا تعمل على ⁦Windows⁩ كاملة. وإذا رُفضت كل الأوامر، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const

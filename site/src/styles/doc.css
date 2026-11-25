@@ -147,7 +147,6 @@
 }
 
 .ticks li::before {
-  color: var(--accent);
   inset-block-start: calc(0.4rem + 0.8em - 6px);
   width: 16px;
   height: 12px;
@@ -534,7 +533,6 @@
 
 .source-doc blockquote {
   padding-inline-start: 1rem;
-  border-inline-start: 1px solid var(--line);
 }
 
 .source-doc :not(pre) > code {
@@ -589,7 +587,6 @@
 }
 
 .source-doc th {
-  color: var(--ivory);
   font-weight: 560;
 }
 

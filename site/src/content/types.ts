@@ -64,6 +64,6 @@ export interface Copy {
     notes: Record<VerdictId, string>
     after: string
   }
-  install: { title: string; lead: string; steps: string[]; needs: string; copy: string; copied: string; failed: string }
+  install: { title: string; lead: string; needs: string; copy: string; copied: string; failed: string }
   footer: { source: string; changelog: string; examples: string; notices: string }
 }

@@ -8,7 +8,6 @@
   gap: clamp(0.5rem, 1.2vw, 1.25rem);
   height: var(--bar);
   padding-inline: var(--edge);
-  background: var(--void);
 }
 
 /* Over the film the bar is only a fade. */
@@ -45,7 +44,6 @@
 }
 
 .motion {
-  display: none;
   flex: none;
   place-items: center;
   width: 44px;
@@ -77,16 +75,7 @@
   white-space: nowrap;
 }
 
-.language {
-  color: var(--muted);
-}
-
-.language:hover {
-  color: var(--ivory);
-}
-
 .top-install {
-  padding-inline: 1.375rem;
   background: var(--accent);
   color: var(--void);
   font-weight: 600;
@@ -143,7 +132,6 @@
   position: absolute;
   inset: auto var(--edge) 0;
   height: 2px;
-  background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
   pointer-events: none;
@@ -229,7 +217,6 @@
   flex: none;
   width: 30px;
   height: 30px;
-  fill: currentColor;
 }
 
 @media (max-width: 359px) {

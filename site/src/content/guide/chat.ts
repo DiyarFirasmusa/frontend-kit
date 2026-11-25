@@ -61,7 +61,7 @@ export const firstRun: ChatEvent[] = [
     ),
   },
   { kind: 'user', text: yesStart },
-  { kind: 'tool', text: t('Made 5 pages and the sign-in screen', 'أنشأت 5 صفحات وشاشة الدخول'), mark: 'ok' },
+  { kind: 'tool', text: t('Made the pages and the sign-in screen', 'أنشأت الصفحات وشاشة الدخول'), mark: 'ok' },
   { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
   { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
   { kind: 'ready', title: t('Your dashboard is ready', 'لوحتك جاهزة'), text: t('Open it in your browser and click around.', 'افتحها في المتصفح وتصفحها.') },

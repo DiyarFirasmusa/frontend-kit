@@ -30,9 +30,6 @@
 .progress {
   background: var(--turq);
 }
-.top.is-scrolled {
-  box-shadow: 0 1px 0 rgb(25 171 171 / 0.28), 0 0.75rem 2rem rgb(0 0 0 / 0.35);
-}
 
 /* Where you are, and the way around. */
 .top-nav a:hover,
@@ -80,23 +77,13 @@
 .hero-ways a:hover {
   color: var(--turq);
 }
-.js .choices [aria-current='true'] {
-  box-shadow: inset 3px 0 0 var(--turq);
-}
-[dir='rtl'] .js .choices [aria-current='true'] {
-  box-shadow: inset -3px 0 0 var(--turq);
-}
 
 /* Step numbers. */
 
 /* The result: every check. */
-.ticks li::before,
-.fit .ticks li::before {
+.ticks li::before {
   color: var(--turq);
   background: var(--turq);
-}
-.fit > div:first-child {
-  border-block-start-color: var(--turq);
 }
 
 /* The light behind the page: turquoise from the top, orange from below. */
@@ -139,21 +126,6 @@ body::before {
 }
 
 /* Home: the three cells take orange, turquoise, light orange. */
-.start-cases li:nth-child(2) {
-  --c: var(--turq);
-}
-.start-cases li:nth-child(3) {
-  --c: var(--k-rule);
-}
-.works-for li:nth-child(4n + 2) strong::before {
-  background: var(--turq);
-}
-.works-for li:nth-child(4n + 3) strong::before {
-  background: var(--k-rule);
-}
-.works-for li:nth-child(4n) strong::before {
-  background: var(--k-agent);
-}
 
 /* Home: chips drifting past alternate the two families. */
 
@@ -202,36 +174,14 @@ body::before {
 }
 .tree nav summary {
   justify-content: flex-start;
-  gap: 0.625rem;
 }
 .tree nav summary::before {
   content: '';
   flex: none;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 2px;
   background: var(--gc);
-}
-.tree nav summary span {
-  margin-inline-start: auto;
-  color: var(--gc);
-}
-.tree [data-tree-group] a:hover {
-  color: var(--gc);
-}
-.tree [data-tree-group] a[aria-current] {
-  background: color-mix(in srgb, var(--gc) 16%, transparent);
-  color: var(--ivory);
-  box-shadow: inset 3px 0 0 var(--gc);
-}
-[dir='rtl'] .tree [data-tree-group] a[aria-current] {
-  box-shadow: inset -3px 0 0 var(--gc);
 }
 
 /* The page: a faint light of its colour at the top, and the colour on what you scan for. */
-.doc .column {
-  background: radial-gradient(52rem 24rem at 100% 0, color-mix(in srgb, var(--kc) 17%, transparent), transparent 70%) no-repeat;
-}
 [dir='rtl'] .doc .column {
   background: radial-gradient(52rem 24rem at 0 0, color-mix(in srgb, var(--kc) 17%, transparent), transparent 70%) no-repeat;
 }

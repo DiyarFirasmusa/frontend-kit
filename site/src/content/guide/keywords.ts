@@ -7,7 +7,7 @@ export const KEYWORDS: Record<PageId, string> = {
   'get-started': 'install update upgrade remove uninstall delete windows mac jq node git download start تثبيت ثبّت تحديث حدّث ترقية إزالة حذف ويندوز ماك تنزيل ابدأ بدء',
   'project-types': 'website dashboard shop store blog portfolio موقع لوحة تحكم متجر مدونة معرض أعمال أنواع',
   examples: 'say prompt example create build form table page أمثلة أقول اكتب أنشئ إنشاء انشاء بناء نموذج جدول صفحة',
-  questions: 'faq free cost price money safe data privacy windows phone publish online stuck problem error fix jq أسئلة مجاني تكلفة سعر أمان خصوصية ويندوز هاتف نشر مشكلة خطأ إصلاح تعطل',
+  questions: 'not working broken help refused powershell fail failed faq free cost price money safe data privacy windows phone publish online stuck problem error fix jq مساعدة كيف أبدأ فشل لا يعمل أسئلة مجاني تكلفة سعر أمان خصوصية ويندوز هاتف نشر مشكلة خطأ إصلاح تعطل',
   changelog: 'versions release history what changed تغييرات إصدارات سجل جديد',
   skills: 'skill commands slash مهارات أوامر',
   agents: 'specialist agent reviewer tester مختص مختصون مراجع مختبر وكيل',

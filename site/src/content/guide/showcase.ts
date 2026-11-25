@@ -98,7 +98,7 @@ export const journeyWords = {
 /** The install panel. */
 export const installWords = {
   title: t('Start in two steps', 'ابدأ بخطوتين'),
-  lead: t('Wajiha Kit is free. Claude is an AI assistant like ChatGPT, made by Anthropic: sign in to it first. Claude Code, which the kit works inside, is not part of every Claude plan, so check yours on Claude’s website before you start. On Windows the safety checks may not fully work yet. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “Explain how to publish this site”.', '«واجهة» مجانية. و⁦Claude⁩ مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩، من شركة ⁦Anthropic⁩: سجّل فيه بحسابك أولا. أما ⁦Claude Code⁩، الذي تعمل داخله الإضافة، فليس في كل خطط ⁦Claude⁩، فتأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس، اطلب لاحقا من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع».'),
+  lead: t('Wajiha Kit is free. Claude is an AI assistant like ChatGPT, made by Anthropic: sign in to it first. Claude Code, which the kit works inside, is not part of every Claude plan, so check yours on Claude’s website before you start. After you sign in to the Claude app, look for the Code tab: if it does not open for you, your plan does not include Claude Code yet. On Windows, go on as usual: only the safety checks may differ, and Questions explains what to do if every command is refused. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “Explain how to publish this site”.', '«واجهة» مجانية. و⁦Claude⁩ مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩، من شركة ⁦Anthropic⁩: سجّل فيه بحسابك أولا. أما ⁦Claude Code⁩، الذي تعمل داخله الإضافة، فليس في كل خطط ⁦Claude⁩، فتأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. وبعد أن تسجّل الدخول في تطبيق ⁦Claude⁩ ابحث عن تبويب ⁦Code⁩: إن لم يفتح لك فخطتك لا تشمل ⁦Claude Code⁩ بعد. وعلى ⁦Windows⁩ تابع كالمعتاد: الذي قد يختلف هو فحوص الأمان فقط، وصفحة «الأسئلة» تشرح ما تفعله إن رُفضت كل الأوامر. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس، اطلب لاحقا من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع».'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),
   failed: t('Select it and copy', 'حدّدها وانسخها'),
@@ -208,12 +208,12 @@ export const compare = {
       good: '/ar ✓ · /en ✓ · phone ✓',
     },
     {
-      name: t('Asks before known risky steps', 'تسأل قبل الخطوات الخطرة المعروفة'),
-      text: t('Known risky steps, like deleting work or publishing, wait for your yes.', 'الخطوات الخطرة المعروفة، مثل حذف العمل أو النشر، تنتظر موافقتك.'),
+      name: t('Stops known risky steps', 'توقف الخطوات الخطرة المعروفة'),
+      text: t('Known risky steps, like force pushes or publishing, are refused.', 'الخطوات الخطرة المعروفة، مثل الرفع القسري والنشر، تُرفض.'),
       instead: t('a risky step run without asking', 'خطوة خطرة تُنفذ دون سؤال'),
       short: t('Risky steps', 'خطوات خطرة'),
       bad: 'git push --force',
-      good: 'git push --force → asks you',
+      good: 'git push --force → blocked',
     },
   ],
 }

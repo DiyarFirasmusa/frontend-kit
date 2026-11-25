@@ -11,8 +11,15 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). On Windows the safety checks may not fully work yet (see Questions). Claude Code must be version 2.1.295 or later, and Node version 20 or later. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check jq first, because without jq the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد (راجع «الأسئلة»). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق من ⁦jq⁩ أولا، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. To check, type claude --version and node --version in the command window. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check jq first, because without jq the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. وللتأكد اكتب ⁦claude --version⁩ و⁦node --version⁩ في نافذة الأوامر. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق من ⁦jq⁩ أولا، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
+    ),
+  },
+  {
+    name: t('On Windows', 'على ويندوز'),
+    why: t(
+      'The project builds and runs normally. The safety checks were tested only on macOS, so they may skip some checks. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
+      'يُبنى المشروع ويعمل بشكل عادي. وفحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد تتخطى بعض الفحوص. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
     ),
   },
 ]
@@ -31,7 +38,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs: a box appears asking whether to allow it. For the commands in this message, which contain claude plugin or install jq, press Allow. If a command you do not recognise appears, do not press Allow: ask Claude why it needs it. Then it starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه: يظهر مربع يسأل هل تسمح به. والأوامر التي في هذه الرسالة، وفيها ⁦claude plugin⁩ أو تثبيت ⁦jq⁩، اضغط عليها «السماح». وإن ظهر أمر لا تعرفه فلا تضغط «السماح»، واسأل ⁦Claude⁩ لماذا يحتاجه. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
+    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs: a box appears asking whether to allow it. For the commands in this message, which contain claude plugin or install jq, press Allow. If a command you do not recognise appears, do not press Allow: ask Claude why it needs it. Then it starts asking about your project. When it asks what you are doing, choose “New project”. If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه: يظهر مربع يسأل هل تسمح به. والأوامر التي في هذه الرسالة، وفيها ⁦claude plugin⁩ أو تثبيت ⁦jq⁩، اضغط عليها «السماح». وإن ظهر أمر لا تعرفه فلا تضغط «السماح»، واسأل ⁦Claude⁩ لماذا يحتاجه. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد». وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),
     copy: installMessage,
   },
 ]
@@ -62,7 +69,7 @@ export const questions = [
     question: t('Do you have a design?', 'هل عندك تصميم؟'),
     answers: [
       t('Yes: send a Figma link or pictures of the screens. Send your logo too, if you have one.', 'نعم: أرسل رابط ⁦Figma⁩ أو صورا للشاشات. وأرسل شعارك أيضا إن كان عندك.'),
-      t('No: send a picture of a style you like, or a link to a site you want yours to feel like. The kit takes the colours, the fonts and the general feel. It never copies the site.', 'لا: أرسل صورة لأسلوب يعجبك، أو رابط موقع تريد أن يشبهه موقعك. تأخذ الإضافة الألوان والخطوط والإحساس العام. ولا تنسخ الموقع أبدا.'),
+      t('No: send a picture of a style you like, or a link to a site you want yours to feel like. The kit takes the colours, the fonts and the general feel. It does not copy the site.', 'لا: أرسل صورة لأسلوب يعجبك، أو رابط موقع تريد أن يشبهه موقعك. تأخذ الإضافة الألوان والخطوط والإحساس العام. ولا تنسخ الموقع.'),
     ],
   },
   {
@@ -105,6 +112,7 @@ export const written = [
 ]
 
 export const after = [
+  t('Something went wrong? See Questions: “When something does not work”.', 'حدث خطأ؟ راجع «الأسئلة»: «عندما لا يعمل شيء».'),
   t('Look at the result and tell it what to change, in plain sentences.', 'انظر إلى النتيجة، وقل لها ما تريد تغييره بجمل بسيطة.'),
   t('Each change runs through the same safety checks. They run by themselves, so nothing depends on the assistant remembering.', 'يمر كل تغيير بفحوص الأمان نفسها. وهي تعمل وحدها، فلا يعتمد شيء على أن يتذكر المساعد.'),
   t('When you are happy, ask it to save a version. You can always go back to it.', 'عندما ترضى عن النتيجة، اطلب منها حفظ نسخة. وتستطيع الرجوع إليها دائما.'),
@@ -119,7 +127,7 @@ export const limits = [
 export const maintenance = [
   {
     title: t('Update', 'التحديث'),
-    text: t('Setup leaves automatic updates off, so nothing changes until you decide. To update by hand, run this in the command window (on Windows, open PowerShell from the Start menu), inside your project folder, then restart Claude Code. Or just tell Claude: “Update Wajiha Kit.” Updates come straight from the GitHub repository, so read the changelog first. If you switch automatic updates on yourself, they do not run where the updater is switched off, as it can be in the desktop app. Rules already copied into your project do not change by themselves: run setup again to see what is new.', 'يترك الإعداد التحديث التلقائي مطفأ، فلا يتغير شيء حتى تقرر أنت. للتحديث يدويا، شغّل هذا الأمر في نافذة الأوامر (على ويندوز افتح ⁦PowerShell⁩ من قائمة ابدأ) داخل مجلد مشروعك، ثم أعد تشغيل ⁦Claude Code⁩. أو قل لـ ⁦Claude⁩ فقط: «حدّث واجهة». تأتي التحديثات مباشرة من مستودع ⁦GitHub⁩، فاقرأ سجل التغييرات أولا. وإن شغّلت التحديث التلقائي بنفسك، فلا يعمل إذا كان المحدّث معطلا، كما قد يحدث في تطبيق سطح المكتب. القواعد المنسوخة إلى مشروعك لا تتغير وحدها. شغّل الإعداد مرة أخرى لترى الجديد.'),
+    text: t('Setup leaves automatic updates off, so nothing changes until you decide. To update by hand, run this in the command window (on Windows, open PowerShell from the Start menu), inside your project folder, then restart Claude Code. Or just tell Claude: “Update Wajiha Kit.” Updates come straight from the GitHub repository, so read the changelog first. If you switch automatic updates on yourself, they do not run where the updater is switched off, as it can be in the desktop app. Rules already copied into your project do not change by themselves: run setup again to see what is new.', 'يترك الإعداد التحديث التلقائي مطفأ، فلا يتغير شيء حتى تقرر أنت. للتحديث يدويا، شغّل هذا الأمر في نافذة الأوامر (على ويندوز افتح ⁦PowerShell⁩ من قائمة ابدأ) داخل مجلد مشروعك، ثم أعد تشغيل ⁦Claude Code⁩. أو قل لـ ⁦Claude⁩ فقط: «حدّث ⁦Wajiha Kit⁩». تأتي التحديثات مباشرة من مستودع ⁦GitHub⁩، فاقرأ سجل التغييرات أولا. وإن شغّلت التحديث التلقائي بنفسك، فلا يعمل إذا كان المحدّث معطلا، كما قد يحدث في تطبيق سطح المكتب. القواعد المنسوخة إلى مشروعك لا تتغير وحدها. شغّل الإعداد مرة أخرى لترى الجديد.'),
     // The first command only refreshes the listing. The installed version moves with the second.
     command: 'claude plugin marketplace update wajiha-kit && claude plugin update wajiha-kit@wajiha-kit',
   },
@@ -130,7 +138,7 @@ export const maintenance = [
   },
   {
     title: t('Remove', 'الإزالة'),
-    text: t('You can also tell Claude: “Remove Wajiha Kit from this project.” Or run these in the command window, in the same place you installed it. Node, git and jq stay installed, like any other program. The files setup wrote are yours: keep them or delete them.', 'ويمكنك أن تقول لـ ⁦Claude⁩: «أزل واجهة من هذا المشروع». أو شغّل هذين الأمرين في نافذة الأوامر، في المكان نفسه الذي ثبّتها فيه. وتبقى ⁦Node⁩ و⁦git⁩ و⁦jq⁩ مثبتة، كأي برنامج آخر. الملفات التي كتبها الإعداد ملكك: احتفظ بها أو احذفها.'),
+    text: t('You can also tell Claude: “Remove Wajiha Kit from this project.” Or run these in the command window, in the same place you installed it. Node, git and jq stay installed, like any other program. The files setup wrote are yours: keep them or delete them.', 'ويمكنك أن تقول لـ ⁦Claude⁩: «أزل ⁦Wajiha Kit⁩ من هذا المشروع». أو شغّل هذين الأمرين في نافذة الأوامر، في المكان نفسه الذي ثبّتها فيه. وتبقى ⁦Node⁩ و⁦git⁩ و⁦jq⁩ مثبتة، كأي برنامج آخر. الملفات التي كتبها الإعداد ملكك: احتفظ بها أو احذفها.'),
     command: 'claude plugin uninstall wajiha-kit@wajiha-kit --scope project && claude plugin marketplace remove wajiha-kit',
   },
 ]
