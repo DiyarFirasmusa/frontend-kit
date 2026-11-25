@@ -1865,3 +1865,138 @@ html[lang='ar'] .credits {
 .doc-eyebrow svg {
   flex: none;
 }
+
+/* ---------- Marketing pass: who it is for as three small buttons, one quiet line of what it needs, a button after each part ---------- */
+.hero-audience {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-audience a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 1rem;
+  border: 1px solid rgb(241 237 231 / 0.22);
+  border-radius: 999px;
+  color: var(--ivory);
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.hero-audience a:hover {
+  border-color: var(--turq);
+  color: var(--turq);
+}
+
+.hero-trust {
+  max-width: 36rem;
+  margin: 1rem 0 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+:lang(ar) .hero-trust,
+:lang(ar) .hero-audience a {
+  font-size: 1rem;
+}
+
+.section-cta {
+  margin-block: 2.5rem 0;
+}
+
+.section-cta .hero-start {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+}
+
+/* ---------- Identity: one thread, orange into turquoise, over the first line of every page and every part ---------- */
+:root {
+  --thread: linear-gradient(90deg, var(--accent), var(--turq));
+  --thread: linear-gradient(in oklab 90deg, var(--accent), var(--ivory) 50%, var(--turq));
+}
+
+[dir='rtl'] {
+  --thread: linear-gradient(270deg, var(--accent), var(--turq));
+  --thread: linear-gradient(in oklab 270deg, var(--accent), var(--ivory) 50%, var(--turq));
+}
+
+.doc-head::before,
+.hero-copy::before,
+.section-head::before,
+.start-side::before {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 4px;
+  margin-block-end: 1.25rem;
+  border-radius: 2px;
+  background: var(--thread);
+}
+
+/* One small line above every title, on the home page and in the guide: the mark with the part's block lit, then its name. */
+.doc-eyebrow {
+  gap: 0.75rem;
+  color: var(--muted);
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc-eyebrow {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.eyebrow svg,
+.doc-eyebrow svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.eyebrow-count {
+  color: var(--sec, var(--turq));
+  font-weight: 600;
+}
+
+/* ---------- Round 10 fixes from the UI audit ---------- */
+/* The label above a title is the same size everywhere: the paragraph rule of the section head no longer enlarges it. */
+.section-head p.eyebrow,
+.start-side p.eyebrow {
+  max-width: none;
+  margin-block: 0 1.25rem;
+  color: var(--muted);
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+:lang(ar) .section-head p.eyebrow,
+:lang(ar) .start-side p.eyebrow {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+}
+
+/* One ink on every orange button. */
+.top-install,
+.hero-start,
+.start-copy,
+.show-tabs button[aria-selected='true'] {
+  color: #141413;
+}
+
+/* Orange is for what you do. Where a card or a link only takes you somewhere, the hover is turquoise. */
+.card:hover,
+.pager a:hover {
+  border-color: color-mix(in srgb, var(--turq) 60%, transparent);
+}

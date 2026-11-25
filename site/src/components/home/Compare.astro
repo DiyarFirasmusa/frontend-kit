@@ -1,5 +1,6 @@
 ---
 import SectionMark from './SectionMark.astro'
+import { home } from '../../content/guide/home.ts'
 import { compare, installWords as words } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
 
@@ -110,4 +111,5 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
     </ul>
     <p class="ba-note ba-differs">{words.differs[locale]}</p>
   </div>
+  <p class="column section-cta"><a class="hero-start" href="#install">{home.start[locale]}</a></p>
 </section>

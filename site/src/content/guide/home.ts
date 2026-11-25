@@ -5,8 +5,8 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
   lead: t(
-    'A free kit for the Claude app on your computer. You answer a few simple questions, and it builds a website or dashboard you can open and click through, in Arabic and English. Then it checks the result before you see it. It asks before risky steps.',
-    '«واجهة» إضافة مجانية لتطبيق \u2066Claude\u2069 على حاسوبك. تجيب عن بضعة أسئلة بسيطة، فتبني لك موقعا أو لوحة تحكم تفتحها وتتصفحها، بالعربية والإنجليزية. ثم تفحص النتيجة قبل أن تراها. ويسألك قبل الخطوات الخطرة.',
+    'Answer a few simple questions in the Claude app. Get a website or dashboard you can open and click through, in Arabic and English, checked before you see it.',
+    'أجب عن بضعة أسئلة بسيطة داخل تطبيق ⁦Claude⁩، فتحصل على موقع أو لوحة تحكم تفتحها وتتصفحها، بالعربية والإنجليزية، وتُفحص قبل أن تراها.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
@@ -23,7 +23,14 @@ export const home = {
       text: t('It looks for mistakes, runs tests and asks a reviewer. Known risky commands are stopped. You decide what to keep.', 'تبحث عن الأخطاء، وتجري الاختبارات، وتسأل مراجعا. وتوقف الأوامر الخطرة المعروفة. وأنت تقرر ما تحتفظ به.'),
     },
   ],
-  start: t('Install the kit', 'ثبّت الإضافة'),
+  start: t('Start building', 'ابدأ البناء'),
+  trust: t('Free · Needs the Claude app with the Code tab · Nothing is saved or published without your yes', 'مجاني · يحتاج تطبيق ⁦Claude⁩ فيه تبويب ⁦Code⁩ · ولا يُحفظ ولا يُنشر شيء دون موافقتك'),
+  audienceLabel: t('Who it is for', 'لمن هي'),
+  audience: [
+    { label: t('I do not code', 'لا أبرمج'), to: '#example' },
+    { label: t('I build with AI', 'أبني بالذكاء الاصطناعي'), to: 'developers#who' },
+    { label: t('I am a backend developer', 'أنا مطوّر باك إند'), to: 'developers#backend' },
+  ],
   for: t('For people who do not code, for people who build with AI, and for developers who have a backend and need screens.', 'لمن لا يبرمج، ولمن يبني مع الذكاء الاصطناعي، وللمطورين الذين عندهم خادم ويحتاجون شاشات.'),
   forLink: t('Build with AI and want it kept tidy? For developers', 'تبني بالذكاء الاصطناعي وتريد أن يبقى مشروعك مرتبا؟ للمطورين'),
   builds: {
@@ -36,7 +43,7 @@ export const home = {
   docs: t('Read the guide', 'اقرأ الدليل'),
 
   example: t('From an idea to a working project', 'من فكرة إلى مشروع يعمل'),
-  exampleLead: t('You say what you want. This is what happens next, in plain words. The setup is being improved, so it may ask a little differently today. Answer in your own words.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا. أجب بكلماتك.'),
+  exampleLead: t('You say what you want. This is what happens next, in plain words. Questions may appear in a slightly different order. Answer in your own words.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة. وقد يختلف ترتيب الأسئلة قليلا. أجب بكلماتك.'),
   prompt: t('I want a dashboard to manage my shop orders', 'أريد لوحة تحكم لإدارة طلبات متجري'),
   steps: {
     install: {
