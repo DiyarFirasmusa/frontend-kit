@@ -358,3 +358,33 @@
     margin-block-end: 1.25rem;
   }
 }
+
+/* The same air between every part of the home page: 6rem from the end of one board to the next title,
+   the same as between the opening screen and the first part. */
+@media (min-width: 62rem) {
+  .builds.builds,
+  .home .example,
+  .home .get-it,
+  .compare-section {
+    padding-block: 3rem;
+  }
+
+  .home .intro,
+  .home .hero {
+    padding-block-end: 3rem;
+  }
+}
+
+@media (max-width: 61.99rem) {
+  .builds,
+  .home .example,
+  .home .get-it,
+  .compare-section {
+    padding-block: 2.5rem;
+  }
+
+  .home .intro,
+  .home .hero {
+    padding-block-end: 2.5rem;
+  }
+}
