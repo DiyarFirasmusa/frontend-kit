@@ -1737,3 +1737,49 @@
 .vs-tree.is-messy li.is-wrong {
   color: rgb(224 119 107 / 0.9);
 }
+
+/* Each point on two lines: a few words with the mark, then the example under them, set in like a tree line. */
+.vs-log li {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 0.125rem 0.625rem;
+  align-items: center;
+  padding: 0.5rem 0.625rem;
+}
+
+.vs-log li > span {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.vs-log li > i {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.vs-log li > code {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: start;
+  margin: 0;
+  padding: 0;
+  background: none;
+  font: 500 0.8125rem / 1.5 var(--code);
+}
+
+[dir='rtl'] .vs-log li > code {
+  justify-self: start;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.vs-log.is-bad li > code {
+  background: none;
+  color: rgb(224 119 107 / 0.8);
+}
+
+.vs-log.is-good li > code {
+  background: none;
+  color: #7ad9d9;
+}
+
