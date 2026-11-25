@@ -5,8 +5,8 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة التحكم بنفسك. دون أي خبرة في البرمجة.'),
   lead: t(
-    'Wajiha Kit works inside Claude Code. You answer a few simple questions, and it builds a complete, working project for you. Then it checks the result before you see it.',
-    'واجهة إضافة تعمل داخل \u2066Claude Code\u2069. تجيب عن بضعة أسئلة بسيطة، فتبني لك مشروعا كاملا يعمل. ثم تفحص النتيجة قبل أن تراها.',
+    'Wajiha Kit works inside Claude Code. You answer a few simple questions, and it builds a complete, working project for you, with the latest proven methods and clean, well-organised code. Then it checks the result before you see it.',
+    'واجهة إضافة تعمل داخل \u2066Claude Code\u2069. تجيب عن بضعة أسئلة بسيطة، فتبني لك مشروعا كاملا يعمل، بأحدث الطرق المجربة وبكود نظيف ومرتب. ثم تفحص النتيجة قبل أن تراها.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
