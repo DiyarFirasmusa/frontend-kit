@@ -25,8 +25,22 @@ fi
 # shellcheck source=jq-compat.sh
 . "$(dirname "${BASH_SOURCE[0]}")/jq-compat.sh"
 
+# A Windows path (C:\proj\src or C:/proj/src) as the bash on Windows writes it (/c/proj/src), so every path the hooks compare
+# has one spelling. Anything else stays as it is.
+hook_unix_path() {
+  case "$1" in
+    [A-Za-z]:[\\/]* | [A-Za-z]:)
+      # cygpath knows the mounts too (/tmp is a Windows temp folder); without it, the drive letter becomes /c.
+      if command -v cygpath >/dev/null 2>&1; then cygpath -u "$1" 2>/dev/null && return 0; fi
+      local rest="${1#?:}" drive="${1%%:*}"
+      rest="${rest//\\//}"
+      printf "/%s%s" "$(printf %s "$drive" | tr A-Z a-z)" "$rest" ;;
+    *) printf %s "$1" ;;
+  esac
+}
+
 # The project root. Claude Code exports CLAUDE_PROJECT_DIR to hooks; tests set it too.
-HOOK_ROOT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+HOOK_ROOT="$(hook_unix_path "${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}")"
 # A trailing or doubled slash would make every "inside the project" comparison below fail.
 while case "$HOOK_ROOT" in *//*) true ;; *) false ;; esac; do HOOK_ROOT="${HOOK_ROOT%%//*}/${HOOK_ROOT#*//}"; done
 [ "${#HOOK_ROOT}" -gt 1 ] && HOOK_ROOT="${HOOK_ROOT%/}"
@@ -393,7 +407,8 @@ hook_rel_path() {
 # Lexically normalises a path: resolves . and .. (no symlinks); a relative path is taken from the
 # project root. src/../.github/x → <root>/.github/x
 hook_normalise_path() {
-  local path="$1" out="" part
+  local path out="" part
+  path="$(hook_unix_path "$1")"
   case "$path" in
     /*) ;;
     *) path="$HOOK_ROOT/$path" ;;

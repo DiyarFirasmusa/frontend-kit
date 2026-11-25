@@ -11,7 +11,7 @@ convention, then the kit's example.
 
 | Plugin | What it gives a project |
 | ------ | ----------------------- |
-| `wajiha-kit` | Skills, agents, hooks (git + live-site + secrets guards, format/lint on edit, quality gates), MCP servers (Chrome DevTools, Playwright, context7), and `/wajiha-kit:setup`, which installs `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/wajiha-kit.json` |
+| `wajiha-kit` | Skills, agents, hooks (git + live-site + secrets guards, format/lint on edit, quality gates), optional browser and library-docs tools (Chrome DevTools, Playwright, context7), added to your project only if you say yes, and `/wajiha-kit:setup`, which installs `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/wajiha-kit.json` |
 
 `/wajiha-kit:setup` asks two things first, and you answer both:
 
