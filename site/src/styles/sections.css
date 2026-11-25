@@ -1499,69 +1499,113 @@
   text-transform: uppercase;
 }
 
-/* The six gains. */
+/* The six gains: rows that continue the two windows, the problem under "AI on its own",
+   the answer under "With Wajiha Kit", an arrow where the "vs" sits. */
 .gains {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-block: 3rem 0;
+  margin-block: 2rem 0;
   padding-block: 0;
   list-style: none;
 }
 
 .gain {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 0.5rem;
-  padding: 1.375rem 1.5rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, rgb(25 171 171 / 0.05), rgb(241 237 231 / 0.01));
-  transition:
-    border-color 0.3s,
-    translate 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  grid-template-columns: minmax(0, 1fr) 3rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding-block: 1.125rem;
+  border-block-end: 1px solid rgb(241 237 231 / 0.07);
+  transition: background-color 0.3s;
+}
+
+.gain:first-child {
+  border-block-start: 1px solid rgb(241 237 231 / 0.07);
 }
 
 .gain:hover {
-  border-color: rgb(25 171 171 / 0.5);
-  translate: 0 -0.25rem;
+  background: linear-gradient(90deg, transparent, rgb(25 171 171 / 0.05) 50%, transparent);
 }
 
-.gain-mark {
+/* Same order as the windows above: the problem first, the arrow, then the answer. */
+.gain-without {
+  order: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding-inline: 1.25rem;
+  color: var(--faint);
+}
+
+.gain-with {
+  order: 3;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-inline: 1.25rem;
+}
+
+.gain-arrow {
+  order: 2;
+  justify-self: center;
   display: grid;
   place-items: center;
   width: 2rem;
   height: 2rem;
-  margin-block-end: 0.25rem;
-  border-radius: 0.625rem;
-  background: rgb(25 171 171 / 0.15);
-  color: var(--turq, #19abab);
-  font-style: normal;
-  font-weight: 700;
-}
-
-.gain h3 {
-  color: #fff;
-  font-size: 1.1875rem;
-  line-height: 1.35;
-}
-
-.gain p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-.gain .gain-instead {
-  padding-block-start: 0.75rem;
-  border-block-start: 1px dashed rgb(241 237 231 / 0.1);
+  border: 1px solid var(--line);
+  border-radius: 50%;
   color: var(--faint);
   font-size: 0.875rem;
 }
 
-.gain-instead s {
-  text-decoration-color: rgb(224 119 107 / 0.8);
-  text-decoration-thickness: 1.5px;
+/* The arrow points from the problem to the answer. */
+[dir='rtl'] .gain-arrow {
+  rotate: 180deg;
+}
+
+.gain-without i,
+.gain-with i {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-style: normal;
+}
+
+.gain-without i {
+  background: rgb(224 119 107 / 0.15);
+  color: var(--bad);
+}
+
+.gain-with i {
+  margin-block-start: 0.2rem;
+  background: var(--turq, #19abab);
+  color: #141413;
+}
+
+.gain-with p {
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+}
+
+.gain-with strong {
+  color: #fff;
+  font-weight: 500;
+}
+
+.gain-with p > span:not(.sr-only) {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.gain:hover .gain-arrow {
+  border-color: rgb(25 171 171 / 0.5);
+  color: var(--turq, #19abab);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1617,14 +1661,21 @@
     margin: 0;
   }
 
-  .gains {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 620px) {
-  .gains {
+  .gain {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .gain-with {
+    order: 2;
+  }
+
+  .gain-without {
+    order: 1;
+  }
+
+  .gain-arrow {
+    display: none;
   }
 }
 
@@ -1796,3 +1847,12 @@
   }
 }
 
+
+/* The header has no line under it while scrolling: no edge and no reading bar. */
+.top.is-scrolled {
+  box-shadow: none;
+}
+
+.progress {
+  display: none;
+}

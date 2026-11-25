@@ -48,12 +48,20 @@ const messy = ['Button.tsx', 'Button2.tsx', 'button-new.tsx', 'helpers.js', 'hel
     {
       compare.gains.map(({ name, text, instead }) => (
         <li class="gain">
-          <i class="gain-mark" aria-hidden="true">✓</i>
-          <h3>{name[locale]}</h3>
-          <p>{text[locale]}</p>
-          <p class="gain-instead">
-            <span>{compare.instead[locale]}</span> <s>{instead[locale]}</s>
+          <p class="gain-without">
+            <i aria-hidden="true">✕</i>
+            <span class="sr-only">{compare.without[locale]}: </span>
+            {instead[locale]}
           </p>
+          <span class="gain-arrow" aria-hidden="true">→</span>
+          <div class="gain-with">
+            <i aria-hidden="true">✓</i>
+            <p>
+              <span class="sr-only">{compare.with[locale]}: </span>
+              <strong>{name[locale]}</strong>
+              <span>{text[locale]}</span>
+            </p>
+          </div>
         </li>
       ))
     }
