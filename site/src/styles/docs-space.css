@@ -760,3 +760,11 @@ body .top.is-scrolled::before {
     display: none;
   }
 }
+
+/* "On this page" never has a ground or a frame, at any width. */
+.toc,
+.toc:not([hidden]) {
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}

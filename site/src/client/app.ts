@@ -5,6 +5,7 @@ import { initExplorer } from './explorer.ts'
 import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
+import { initBeforeAfter } from './before-after.ts'
 import { initChrome } from './page-chrome.ts'
 import { initTabs } from './tabs.ts'
 import { initToc } from './toc.ts'
@@ -30,4 +31,5 @@ document.addEventListener('astro:page-load', () => {
   warmPages(page.signal)
   initToc(page.signal)
   initTopSearch(page.signal)
+  initBeforeAfter(page.signal)
 })

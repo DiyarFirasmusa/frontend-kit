@@ -1,5 +1,4 @@
 ---
-import { chatWords } from '../../content/guide/chat.ts'
 import { compare } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
 
@@ -8,86 +7,102 @@ interface Props {
 }
 
 const { locale } = Astro.props
-// The same project, twice: once as an AI alone leaves it, once as the kit builds it.
-const messy: [string, number, boolean?][] = [
-  ['src/', 0],
-  ['Button.tsx', 1],
-  ['Button2.tsx', 1, true],
-  ['components/', 1],
-  ['button-new.tsx', 2, true],
-  ['helpers.js', 1],
-  ['utils/helpers2.js', 1, true],
-  ['page-final-v3.tsx', 1, true],
-]
-const tidy: [string, number][] = [
-  ['src/', 0],
-  ['pages/', 1],
-  ['orders.tsx', 2],
-  ['customers.tsx', 2],
-  ['components/', 1],
-  ['Button.tsx', 2],
-  ['features/orders/', 1],
-  ['i18n/ ar · en', 1],
-]
+const w = compare.slider
+const rows = [w.row1, w.row2, w.row3, w.row4]
 ---
 
 <section id="why" class="compare-section">
   <div class="column section-head">
     <h2>{compare.title[locale]}</h2>
-    <p>{compare.lead[locale]}</p>
+    <p>{w.lead[locale]}</p>
   </div>
 
   <div class="column">
-    <figure class="vs-box" data-alive>
-      <div class="chat-bar" aria-hidden="true">
-        <span class="chat-lights"><i></i><i></i><i></i></span>
-        <span class="chat-title"><i>✻</i> <bdi>{chatWords.title[locale]}</bdi></span>
-      </div>
-      <div class="vs-halves">
-        <div class="vs-half is-without">
-          <p class="vs-label">{compare.without[locale]}</p>
-          <ul class="vs-tree is-messy" dir="ltr" aria-hidden="true">
-            {messy.map(([name, depth, wrong], i) => (
-              <li class:list={{ 'is-wrong': wrong, 'is-folder': name.endsWith('/') }} style={`--d:${depth};--n:${i}`}>
-                {name}
-              </li>
-            ))}
-          </ul>
-          <ul class="vs-log is-bad">
-            {compare.gains.map(({ short, bad }, i) => (
-              <li style={`--n:${i}`}>
-                <i aria-hidden="true">✕</i>
-                <span>{short[locale]}</span>
-                <code dir="ltr">{bad}</code>
-              </li>
-            ))}
-          </ul>
-          <p class="vs-status is-bad"><i aria-hidden="true">✕</i>{compare.broken[locale]}</p>
-        </div>
+    <p class="ba-ask"><span>{w.ask[locale]}</span></p>
 
-        <span class="vs-badge" aria-hidden="true">vs</span>
-
-        <div class="vs-half is-with">
-          <p class="vs-label"><i aria-hidden="true">✻</i>{compare.with[locale]}</p>
-          <ul class="vs-tree" dir="ltr" aria-hidden="true">
-            {tidy.map(([name, depth]) => (
-              <li class:list={{ 'is-folder': name.includes('/') }} style={`--d:${depth}`}>
-                {name}
-              </li>
-            ))}
-          </ul>
-          <ul class="vs-log is-good">
-            {compare.gains.map(({ name, good }, i) => (
-              <li style={`--n:${i}`}>
-                <i aria-hidden="true">✓</i>
-                <span>{name[locale]}</span>
-                <code dir="ltr">{good}</code>
-              </li>
-            ))}
-          </ul>
-          <p class="vs-status is-good"><i aria-hidden="true">✓</i>{compare.fine[locale]}</p>
+    <div class="ba" data-ba style="--pos: 50%">
+      <div class="ba-layer ba-good" aria-label={compare.with[locale]} role="img">
+        <div class="dash" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+          <div class="dash-side">
+            <b class="dash-logo">▣ my-shop</b>
+            <span class="is-on">{w.orders[locale]}</span>
+            <span>{w.customers[locale]}</span>
+            <span>{w.products[locale]}</span>
+          </div>
+          <div class="dash-main">
+            <div class="dash-top">
+              <strong>{w.orders[locale]}</strong>
+              <span class="dash-search">{w.search[locale]}</span>
+              <span class="dash-button">{w.newOrder[locale]}</span>
+            </div>
+            <div class="dash-stats">
+              <span><b>128</b>{w.statAll[locale]}</span>
+              <span><b>24</b>{w.statWait[locale]}</span>
+              <span><b>96%</b>{w.statDone[locale]}</span>
+            </div>
+            <div class="dash-table">
+              {
+                rows.map((row, i) => (
+                  <p>
+                    <span>{row[locale]}</span>
+                    <i class:list={['dash-pill', i === 1 ? 'is-wait' : 'is-done']}>{i === 1 ? w.wait[locale] : w.done[locale]}</i>
+                  </p>
+                ))
+              }
+            </div>
+            <p class="dash-toast">✓ {w.saved[locale]}</p>
+          </div>
         </div>
       </div>
-    </figure>
+
+      <div class="ba-layer ba-bad" aria-label={compare.without[locale]} role="img">
+        <div class="dash is-broken" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+          <div class="dash-side">
+            <b class="dash-logo">▣ my-shop</b>
+            <span>{w.orders[locale]}</span>
+            <span>Customers</span>
+            <span>{w.products[locale]}</span>
+          </div>
+          <div class="dash-main">
+            <p class="dash-error">✕ {w.error[locale]}</p>
+            <div class="dash-top">
+              <strong dir="ltr">{w.broken[locale]}</strong>
+              <span class="dash-button">{w.newOrder[locale]}</span>
+            </div>
+            <div class="dash-stats">
+              <span><b>NaN</b>{w.statAll[locale]}</span>
+              <span><b>undefined</b></span>
+              <span><b>0%</b>{w.statDone[locale]}</span>
+            </div>
+            <div class="dash-table">
+              {
+                rows.map((row, i) => (
+                  <p style={`--n:${i}`}>
+                    <span>{row[locale]}</span>
+                    <i class="dash-pill">{i % 2 ? 'status' : '...'}</i>
+                  </p>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <span class="ba-tag is-bad">✕ {compare.without[locale]}</span>
+      <span class="ba-tag is-good">✓ {compare.with[locale]}</span>
+      <span class="ba-handle" aria-hidden="true"><i>⟷</i></span>
+      <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range />
+    </div>
+
+    <ul class="ba-results">
+      {
+        w.results.map((result) => (
+          <li>
+            <i aria-hidden="true">✓</i>
+            {result[locale]}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
