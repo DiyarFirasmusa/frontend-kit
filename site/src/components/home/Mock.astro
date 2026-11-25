@@ -10,6 +10,7 @@ const { kind } = Astro.props
 ---
 
 <div class:list={['mock-stage', `is-${kind}`]} dir="ltr">
+  <i class="mock-cursor"></i>
   {
     kind !== 'dashboard' && (
       <div class="mock mock-site">

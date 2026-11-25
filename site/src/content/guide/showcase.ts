@@ -35,6 +35,16 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
 
 /** The small live pictures on the six cards of the journey. */
 export const journeyWords = {
+  /** The six stops, two or three words each. */
+  stops: [
+    t('You send one message', 'ترسل رسالة'),
+    t('You answer a few questions', 'تجيب عن أسئلة'),
+    t('You say yes to the plan', 'توافق على الخطة'),
+    t('Your project is built', 'يُبنى مشروعك'),
+    t('It is checked', 'يُفحص كله'),
+    t('You decide', 'القرار لك'),
+  ],
+  lead: t('Six stops, a few minutes, no code from you.', 'ست محطات، ودقائق قليلة، ولا تكتب أي كود.'),
   install: t('Please install Wajiha Kit…', 'من فضلك ثبّت واجهة…'),
   ask: t('What are we building?', 'ماذا سنبني؟'),
   options: [t('Dashboard', 'لوحة تحكم'), t('Website', 'موقع'), t('Both', 'الاثنان')],

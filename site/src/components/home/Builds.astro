@@ -29,7 +29,7 @@ const { locale } = Astro.props
     </nav>
     {
       showcase.map(({ id, title, text, chips, say, url }, i) => (
-        <article class="show-panel" id={`kind-${id}`} data-kind={i}>
+        <article class="show-panel" id={`kind-${id}`} data-kind={i} data-alive>
           <div class="show-words">
             <h3>{title[locale]}</h3>
             <p>{text[locale]}</p>

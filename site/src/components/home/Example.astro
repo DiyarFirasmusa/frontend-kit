@@ -8,24 +8,21 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const { install, skills, rules, guard, gate, done } = home.steps
-const steps = [install, skills, rules, guard, gate, done]
 ---
 
 <section id="example" class="example">
   <div class="column section-head">
     <h2>{home.example[locale]}</h2>
-    <p>{home.exampleLead[locale]}</p>
+    <p>{w.lead[locale]}</p>
   </div>
-  <ol class="column idea-steps">
+  <ol class="column path" data-alive>
     {
-      steps.map(({ name, text }, i) => (
-        <li class="journey-card" style={`--n:${i}`}>
-          <div class="journey-picture" aria-hidden="true">
+      w.stops.map((stop, i) => (
+        <li class="path-stop" style={`--n:${i}`}>
+          <div class="path-picture" aria-hidden="true">
             {i === 0 && (
               <div class="jp-input">
-                <span>{w.install[locale]}</span>
-                <b class="jp-caret"></b>
+                <span class="jp-typed">{w.install[locale]}</span>
                 <i class="chat-send">↑</i>
               </div>
             )}
@@ -34,7 +31,7 @@ const steps = [install, skills, rules, guard, gate, done]
                 <p>{w.ask[locale]}</p>
                 <ul>
                   {w.options.map((option, n) => (
-                    <li class:list={{ 'is-pick': n === 0 }}>
+                    <li class:list={{ 'is-pick': n === 0 }} style={`--o:${n}`}>
                       <span class="ce-key" dir="ltr">{n + 1}</span>
                       {option[locale]}
                     </li>
@@ -44,14 +41,14 @@ const steps = [install, skills, rules, guard, gate, done]
             )}
             {i === 2 && (
               <div class="jp-plan">
-                <ul>{w.plan.map((line) => <li>{line[locale]}</li>)}</ul>
-                <span class="jp-pill">{w.start[locale]}</span>
+                <ul>{w.plan.map((line, n) => <li style={`--o:${n}`}>{line[locale]}</li>)}</ul>
+                <span class="jp-pill jp-go">{w.start[locale]}</span>
               </div>
             )}
             {i === 3 && (
               <ul class="jp-build">
                 {w.pages.map((page, n) => (
-                  <li style={`--n:${n}`}>
+                  <li style={`--o:${n}`}>
                     <span>{page[locale]}</span>
                     <i class="jp-bar"><b></b></i>
                   </li>
@@ -61,7 +58,7 @@ const steps = [install, skills, rules, guard, gate, done]
             {i === 4 && (
               <ul class="jp-checks">
                 {w.checks.map((check, n) => (
-                  <li style={`--n:${n}`}>
+                  <li style={`--o:${n}`}>
                     <i class="ce-tool-icon">✓</i>
                     {check[locale]}
                   </li>
@@ -71,18 +68,15 @@ const steps = [install, skills, rules, guard, gate, done]
             {i === 5 && (
               <div class="jp-save">
                 <p>{w.save[locale]}</p>
-                <span class="jp-pill">{w.yes[locale]}</span>
+                <span class="jp-pill jp-yes">{w.yes[locale]}</span>
                 <span class="jp-pill is-quiet">{w.no[locale]}</span>
               </div>
             )}
           </div>
-          <div class="journey-words">
-            <span class="run-number" dir="ltr">
-              {i + 1}
-            </span>
-            <h3>{name[locale]}</h3>
-            <p>{text[locale]}</p>
-          </div>
+          <p class="path-label">
+            <span class="path-dot" dir="ltr">{i + 1}</span>
+            <strong>{stop[locale]}</strong>
+          </p>
         </li>
       ))
     }

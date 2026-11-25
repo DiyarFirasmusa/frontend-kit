@@ -1,0 +1,140 @@
+/* ROOM IN THE GUIDE: more air between the parts of a page, so a beginner reads one thing at a time.
+   Loaded last; it only loosens spacing and sizes, the look stays the same. */
+
+.doc-article {
+  padding-block: 1.5rem 4rem;
+  padding-inline: clamp(1.25rem, 4vw, 4.5rem);
+}
+
+.doc-head {
+  padding-block-end: 1.5rem;
+}
+
+.doc-head h1 {
+  margin-block: 0.75rem 1rem;
+  line-height: 1.2;
+}
+
+.doc .doc-summary {
+  max-width: 44rem;
+  color: var(--muted);
+  font-size: var(--lead);
+  line-height: 1.75;
+}
+
+.doc .block {
+  padding-block: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.doc .block > h2 {
+  margin-block-end: 0.875rem;
+  font-size: clamp(1.375rem, 1.05rem + 0.9vw, 1.875rem);
+  line-height: 1.3;
+}
+
+.doc .block-lead {
+  max-width: 44rem;
+  margin-block: 0 1.75rem;
+  line-height: 1.75;
+}
+
+.doc .block h3 {
+  margin-block: 2rem 0.625rem;
+  line-height: 1.4;
+}
+
+.doc .block p + p {
+  margin-block-start: 1rem;
+}
+
+.doc .big {
+  line-height: 1.8;
+}
+
+/* Lists: each line has room around it. */
+.doc .ticks li,
+.doc .crosses li,
+.doc .plain li {
+  padding-block: 0.625rem;
+  line-height: 1.75;
+}
+
+.doc .ticks li::before {
+  inset-block-start: calc(0.625rem + 0.8em - 6px);
+}
+
+.doc .crosses li::before {
+  inset-block-start: calc(0.625rem + 0.8em);
+}
+
+.doc .plain li::before {
+  inset-block-start: calc(0.625rem + 0.8em - 2px);
+}
+
+.doc .ticks li + li,
+.doc .crosses li + li {
+  border-block-start: 1px solid rgb(241 237 231 / 0.06);
+}
+
+.doc .numbered > li {
+  margin-block-end: 1.25rem;
+  line-height: 1.75;
+}
+
+/* Steps you follow, such as the install: each one its own card. */
+.doc .explained {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.doc .explained li {
+  padding: 1.25rem 1.5rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgb(241 237 231 / 0.025);
+}
+
+.doc .explained li + li {
+  margin-block-start: 0;
+}
+
+.doc .explained h3 {
+  margin-block: 0 0.5rem;
+}
+
+.doc .explained p {
+  margin-block-start: 0;
+  line-height: 1.75;
+}
+
+.doc .explained .command {
+  margin-block-start: 1rem;
+}
+
+/* Questions with their answers, apart from each other. */
+.doc .question {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.doc .question + .question {
+  margin-block-start: 1rem;
+}
+
+.doc .question h3 {
+  margin-block: 0 0.5rem;
+}
+
+/* Rows of names and what they are. */
+.doc .rows > div {
+  padding-block: 1rem;
+}
+
+@media (max-width: 900px) {
+  .doc-article {
+    padding-inline: var(--edge, 1.25rem);
+  }
+}

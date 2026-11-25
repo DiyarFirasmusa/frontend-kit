@@ -1,3 +1,4 @@
+import { initAlive } from './alive.ts'
 import { initCopy } from './copy-button.ts'
 import { initTree } from './docs-tree.ts'
 import { initExplorer } from './explorer.ts'
@@ -24,4 +25,5 @@ document.addEventListener('astro:page-load', () => {
   initGate()
   initLife(page.signal)
   initTabs(page.signal)
+  initAlive(page.signal)
 })
