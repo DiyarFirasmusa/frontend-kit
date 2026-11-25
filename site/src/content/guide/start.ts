@@ -11,23 +11,23 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. To check, type claude --version and node --version in the command window. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check jq first, because without jq the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. وللتأكد اكتب ⁦claude --version⁩ و⁦node --version⁩ في نافذة الأوامر. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق من ⁦jq⁩ أولا، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). Claude Code must be version 2.1.295 or later, and Node version 20 or later. To check, type claude --version and node --version in the command window. You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check all three first; jq matters most, because without it the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). ويجب أن يكون ⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث، و⁦Node⁩ بالإصدار 20 أو أحدث. وللتأكد اكتب ⁦claude --version⁩ و⁦node --version⁩ في نافذة الأوامر. ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق منها كلها أولا؛ و⁦jq⁩ أهمها، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
     ),
   },
   {
     name: t('On Windows', 'على ويندوز'),
     why: t(
-      'The project builds and runs normally. The safety checks were tested only on macOS, so they may skip some checks. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
-      'يُبنى المشروع ويعمل بشكل عادي. وفحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد تتخطى بعض الفحوص. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
+      'On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
+      'وعلى ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
     ),
   },
 ]
 
 /** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
 export const installMessage = t(
-  'Please install the Wajiha Kit plugin for this project. First check that jq is installed. If it is missing, help me install it (brew install jq on a Mac, winget install jqlang.jq on Windows, sudo apt install jq on Linux; explain Homebrew to me if it is missing). Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
-  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ مثبّت. وإن لم يكن موجودا فساعدني في تثبيته (⁦brew install jq⁩ على ماك، و⁦winget install jqlang.jq⁩ على ويندوز، و⁦sudo apt install jq⁩ على لينكس؛ واشرح لي ⁦Homebrew⁩ إن لم يكن مثبتا). ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي باستخدام ⁦Wajiha Kit⁩.',
+  'Please install the Wajiha Kit plugin for this project. First check that jq, Node and git are installed. If something is missing, help me install it the right way for my computer, and explain each step I do not know. Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
+  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ مثبّتة. وإن نقص شيء فساعدني في تثبيته بالطريقة المناسبة لحاسوبي، واشرح لي كل خطوة لا أعرفها. ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي باستخدام ⁦Wajiha Kit⁩.',
 )
 
 /** Three steps, all inside the Claude app. `copy` is what the step asks you to send. */
@@ -38,7 +38,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude Code asks permission before each command: allow the ones in this message. If a command you do not recognise appears, press Deny and ask Claude why. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر: اسمح بالأوامر التي في هذه الرسالة. وإن ظهر أمر لا تعرفه فاضغط «رفض» واسأل ⁦Claude⁩ لماذا يحتاجه. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
+    text: t('Copy it, paste it into the message box and send it. Claude Code asks permission before each command: allow the ones in this message and the jq, Node or git installs Claude proposes. If a command you do not recognise appears, press Deny and ask Claude why. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر: اسمح بالأوامر التي في هذه الرسالة وبأوامر تثبيت ⁦jq⁩ أو ⁦Node⁩ أو ⁦git⁩ التي يقترحها ⁦Claude⁩. وإن ظهر أمر لا تعرفه فاضغط «رفض» واسأل ⁦Claude⁩ لماذا يحتاجه. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
     copy: installMessage,
   },
 ]
@@ -75,7 +75,7 @@ export const questions = [
   {
     question: t('Do you already have a backend?', 'هل عندك خادم خلفي (backend)؟'),
     answers: [
-      t('Yes: save its description in your project as docs/api/openapi.json. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers. Sending a link instead comes in the next version.', 'نعم: احفظ وصفه في مشروعك باسم ⁦docs/api/openapi.json⁩. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك. وإرسال رابطه بدل ذلك يأتي في النسخة القادمة.'),
+      t('Yes: save its description in your project as docs/api/openapi.json. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: احفظ وصفه في مشروعك باسم ⁦docs/api/openapi.json⁩. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك.'),
       t('Not sure, or no: say no, and connect one later. It asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'إن لم تكن متأكدا أو لم يكن عندك: قل لا، وتستطيع ربط خادم لاحقا. تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
     ],
   },

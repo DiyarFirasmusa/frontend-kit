@@ -67,7 +67,7 @@ export const gate = [
 export const limits = [
   t('It reads commands from the command window the way the window itself does, but not what is inside a script file, a package script or a program in another language.', 'يقرأ أوامر نافذة الأوامر كما تقرؤها النافذة نفسها، لكنه لا يرى ما داخل ملف سكربت، أو سكربت في package.json، أو برنامج بلغة أخرى.'),
   t('Before Claude Code 2.1.295, a safety check that timed out or could not start let the action through.', 'قبل Claude Code 2.1.295، كان فحص الأمان الذي تنتهي مهلته أو لا يبدأ يسمح للإجراء بالمرور.'),
-  t('Files you @-mention and tools the safety checks do not name are outside them. Keep the deny rules and use the sandbox (a closed space where the assistant cannot touch the rest of your computer).', 'الملفات التي تذكرها بـ @ والأدوات التي لا تسميها فحوص الأمان خارج نطاقها. أبق قواعد المنع، واستخدم الـ sandbox (مساحة مغلقة لا يستطيع المساعد فيها لمس بقية جهازك).'),
+  t('Files you @-mention and tools the safety checks do not name are outside them. Keep the deny rules and use the sandbox (a closed space where the assistant cannot touch the rest of your computer).', 'الملفات التي تذكرها بـ @ والأدوات التي لا تسميها فحوص الأمان خارج نطاقها. أبق قواعد المنع، واستخدم بيئة معزولة (مساحة مغلقة لا يستطيع المساعد فيها لمس بقية جهازك).'),
   t('It asks you before the assistant loosens one of the kit’s protections, and refuses where nobody can be asked. You can still switch parts off yourself.', 'يسألك قبل أن يخفف المساعد أي حماية من حمايات الإضافة، ويرفض إذا لم يوجد من يسأله. ويمكنك إيقاف بعضها بنفسك.'),
-  t('It is a guard rail and not a sandbox. Keep branch protection and access control on.', 'هو حاجز أمان وليس sandbox. أبق حماية الفروع وضوابط الوصول مفعلة.'),
+  t('It is a guard rail and not a sandbox. Keep branch protection and access control on.', 'هو حاجز أمان وليس بيئة معزولة. أبق حماية الفروع وضوابط الوصول مفعلة.'),
 ]

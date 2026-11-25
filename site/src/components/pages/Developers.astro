@@ -3,6 +3,7 @@ import { developers as d } from '../../content/guide/developers.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
+import { ruleUrl } from '../../lib/links.ts'
 import { REPO_URL } from '../../lib/plugin.ts'
 import { t } from '../../content/guide/text.ts'
 import CommandBox from '../CommandBox.astro'
@@ -34,9 +35,15 @@ const words = {
     {d.tidy.items.map((item) => <li>{item[locale]}</li>)}
   </ul>
   <p>{d.tidy.limits[locale]}</p>
+  <p class="links">
+    <span>{d.tidy.see[locale]}</span>
+    <a class="source" href={ruleUrl(locale, 'shared', 'naming.md')}>naming.md</a>
+    <a class="source" href={ruleUrl(locale, 'shared', 'quality-bar.md')}>quality-bar.md</a>
+  </p>
 </Block>
 <Block id="existing" title={d.existing.title[locale]}>
   <p>{d.existing.text[locale]}</p>
+  <p>{d.existing.messy[locale]} <a href={pageUrl(locale, 'refactor')}>{d.existing.messyLink[locale]}</a></p>
 </Block>
 <Block id="install" title={d.terminal.title[locale]} lead={d.terminal.lead[locale]}>
   <ol class="explained">
@@ -56,6 +63,7 @@ const words = {
   <ul class="plain">
     {d.setup.kinds.map((kind) => <li>{kind[locale]}</li>)}
   </ul>
+  <p>{d.setup.scope[locale]}</p>
   <p>{d.setup.keep[locale]}</p>
   <p>{d.setup.detects[locale]}</p>
   <dl class="rows">

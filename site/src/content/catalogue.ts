@@ -94,7 +94,7 @@ export const agents: Record<string, Bilingual> = {
   'accessibility-auditor': { en: 'Checks that everyone can use it (WCAG 2.2 AA)', ar: 'يفحص أن الجميع يستطيع استخدامه (WCAG 2.2 AA)' },
   'performance-optimizer': { en: 'Finds what makes it slow', ar: 'يجد ما يبطئه' },
   'refactor-architect': { en: 'Leads the fixing of an old project', ar: 'يقود إصلاح المشروع القديم' },
-  'qa-engineer': { en: 'Runs the final check', ar: 'يشغل الفحص الأخير' },
+  'qa-engineer': { en: 'Runs a final QA pass', ar: 'يجري فحص جودة أخيرا' },
   'frontend-security-reviewer': { en: 'Checks for security problems', ar: 'يفحص مشكلات الأمان' },
   'i18n-rtl-reviewer': { en: 'Checks languages and right-to-left', ar: 'يفحص اللغات والكتابة من اليمين إلى اليسار' },
   'upgrade-analyst': { en: 'Plans big upgrades', ar: 'يخطط للترقيات الكبيرة' },

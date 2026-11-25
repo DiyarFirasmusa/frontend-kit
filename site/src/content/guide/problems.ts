@@ -12,7 +12,7 @@ export const beginnerQuestions = [
   ],
   [
     t('Is my data safe?', 'هل بياناتي آمنة؟'),
-    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. One tool the kit uses, Context7, sends documentation searches to its own service, and helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env. The kit tells the assistant not to open it and blocks the usual ways, but this is not a lock. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وأداة تستخدمها الإضافة، وهي ⁦Context7⁩، ترسل عمليات البحث في التوثيق إلى خدمتها، وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩. تطلب الإضافة من المساعد ألا يفتحه وتسد الطرق المعتادة، لكن هذا ليس قفلا. وفحوص الأمان حاجز أمان، وليست خزنة مغلقة.'),
+    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. One tool the kit uses, Context7, sends documentation searches to its own service, and helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env. The kit tells the assistant not to open it and blocks the usual ways, but this is not a lock. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وأداة تستخدمها الإضافة، وهي ⁦Context7⁩، ترسل عمليات البحث في التوثيق إلى خدمتها، وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩. تطلب الإضافة من المساعد ألا يفتحه وتسد الطرق المعتادة، لكن هذا ليس قفلا. وفحوص الأمان حاجز أمان، وليست بيئة معزولة.'),
   ],
   [
     t('What if it breaks something?', 'ماذا لو أفسد شيئا؟'),
@@ -44,7 +44,7 @@ export const beginnerQuestions = [
   ],
   [
     t('Does it work with Cursor or Lovable?', 'هل تعمل مع ⁦Cursor⁩ أو ⁦Lovable⁩؟'),
-    t('No. It is a plugin for Claude Code only: the Claude app, a terminal, or an editor that runs Claude Code. What it builds is a normal project made of files, which you can open with any tool afterwards.', 'لا. هي إضافة لـ ⁦Claude Code⁩ فقط: تطبيق ⁦Claude⁩ أو الطرفية أو محرر يشغّله. وما تبنيه مشروع عادي من ملفات، تستطيع أن تفتحه بأي أداة بعد ذلك.'),
+    t('No. It is a plugin for Claude Code only: the Claude app, a terminal, or an editor that runs Claude Code. What it builds is a normal project made of files, which you can open with any tool afterwards. If you already have a project as files, open its folder in Claude Code and choose “existing project” at setup.', 'لا. هي إضافة لـ ⁦Claude Code⁩ فقط: تطبيق ⁦Claude⁩ أو الطرفية أو محرر يشغّله. وما تبنيه مشروع عادي من ملفات، تستطيع أن تفتحه بأي أداة بعد ذلك. وإن كان عندك مشروع جاهز كملفات، فافتح مجلده في Claude Code واختر «مشروع موجود» عند الإعداد.'),
   ],
   [
     t('Will a contact form send me the messages?', 'هل يرسل نموذج التواصل الرسائل إلي؟'),
@@ -55,15 +55,15 @@ export const beginnerQuestions = [
     t('No. It builds the project and runs it on your computer so you can see it. To put it online you need a place that hosts it. You can ask Claude: “What are my options to publish my site, and what does each one involve?”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج مكانا يستضيفه. ويمكنك أن تطلب من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»، وسيسألك قبل كل خطوة.'),
   ],
   [
-    t('Does it work on Windows?', 'هل تعمل الإضافة على Windows؟'),
-    t('The project builds and runs normally. The safety checks were tested only on macOS, so on Windows they may skip some checks. If every command is refused after the install, see “Every command is refused after installing”.', 'يُبنى المشروع ويعمل بشكل عادي. وفحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد تتخطى بعض الفحوص على ويندوز. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
+    t('Does it work on Windows?', 'هل تعمل الإضافة على ويندوز؟'),
+    t('On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'وعلى ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const
 
 export const problems = [
   [
     t('Every command is refused after installing.', 'تُرفض كل الأوامر بعد التثبيت.'),
-    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it yourself (on macOS: brew install jq; on Windows: winget install jqlang.jq; on Linux: sudo apt install jq), then close Claude Code and open it again. Claude cannot install it for you here, because the checks refuse the command.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها بنفسك (على macOS: ⁦brew install jq⁩، وعلى Windows: ⁦winget install jqlang.jq⁩، وعلى Linux: ⁦sudo apt install jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد. ولا يستطيع ⁦Claude⁩ تثبيتها لك هنا، لأن فحوص الأمان ترفض الأمر.'),
+    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it yourself (on macOS: brew install jq; on Windows: winget install jqlang.jq; on Linux: sudo apt install jq), then close Claude Code and open it again. Claude cannot install it for you here, because the checks refuse the command.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها بنفسك (على macOS: ⁦brew install jq⁩، وعلى ويندوز: ⁦winget install jqlang.jq⁩، وعلى Linux: ⁦sudo apt install jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد. ولا يستطيع ⁦Claude⁩ تثبيتها لك هنا، لأن فحوص الأمان ترفض الأمر.'),
   ],
   [
     t('The rules do not seem to load.', 'القواعد لا تعمل على ما يبدو.'),
@@ -74,7 +74,7 @@ export const problems = [
     t('Ask for it by name: type /wajiha-kit: and then the skill’s name. Skills for other kinds of projects are switched off on purpose.', 'اطلبها باسمها: اكتب ⁦/wajiha-kit:⁩ ثم اسم المهارة. وتُعطَّل مهارات أنواع المشاريع الأخرى عمدا.'),
   ],
   [
-    t('The final check keeps failing.', 'الفحص الأخير يفشل دائما.'),
+    t('The final check keeps failing.', 'الفحص الأخير يستمر في الفشل.'),
     t('It runs the commands listed in wajiha-kit.json, the kit’s settings file. Run those commands yourself to see which one fails. A check that points at a command that does not exist will not pass.', 'يشغل الأوامر المكتوبة في ⁦wajiha-kit.json⁩، وهو ملف إعدادات الإضافة. شغّل هذه الأوامر بنفسك لترى أيها يفشل. وإذا كان الفحص يشير إلى أمر غير موجود، فلن ينجح.'),
   ],
   [

@@ -11,7 +11,7 @@ export const enDetails: Details = {
       ['Only the case where everything goes well', 'Loading, errors, empty lists and success are all part of done'],
       ['Uploading straight to main, or reading your .env file of secrets', 'Safety checks that catch the common ways of doing this before they run'],
       ['Arabic pages that break', 'Layout rules that work right-to-left, and a checker for translations'],
-      ['The assistant forgets everything after /clear', 'Your branch, the last check result and the hard rules are given back every time'],
+      ['The assistant forgets everything after /clear', 'Your branch, the final check result and the hard rules are given back every time'],
       ['Typing the same long instructions again and again', 'A short request is enough, and the right skill is named for the assistant'],
     ],
     fit: {

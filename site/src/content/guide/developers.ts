@@ -37,13 +37,16 @@ export const developers = {
       t('When you say “task”, it works on its own branch from your default branch, so a change is easy to review or drop.', 'وعندما تقول «مهمة» يعمل على فرع خاص من فرعك الافتراضي، فيسهل أن تراجع التغيير أو تتخلى عنه.'),
       t('Before it says it is done, the final check runs your typecheck and the related tests, and a reviewer specialist reads the change.', 'وقبل أن يقول إنه انتهى يشغل الفحص الأخير فحص الأنواع والاختبارات المرتبطة، ويقرأ مختص مراجعة التغيير.'),
     ],
+    see: t('See two of the rules it follows:', 'شاهد قاعدتين من التي يتبعها:'),
     limits: t('This lowers the mess. It does not promise there will be none.', 'هذا يقلل الفوضى، ولا يعد بألا تكون هناك فوضى.'),
   },
   existing: {
     title: t('I already have a project', 'عندي مشروع جاهز'),
+    messy: t('If your project is already a mess, read how a refactor works: it measures the mess, writes a plan in phases you approve, and restructures one phase at a time.', 'وإن كان مشروعك مبعثرا أصلا، فاقرأ كيف تعمل إعادة الهيكلة: تقيس الفوضى، وتكتب خطة بمراحل توافق عليها، وتعيد الهيكلة مرحلة مرحلة.'),
+    messyLink: t('Fix an old project', 'إصلاح مشروع قديم'),
     text: t(
-      'Choose “existing project” at setup. The kit keeps your structure and follows your stack. For every file it would touch that already exists, it shows you the difference and asks: overwrite, merge or skip. It never overwrites without your answer. Permission lists are merged, not replaced, and the values you already set stay. If you later remove the kit, its files move to .claude/kit-backup/ instead of being deleted.',
-      'اختر «مشروع موجود» عند الإعداد. تبقي الإضافة هيكلك وتتبع تقنياتك. ولكل ملف موجود تريد أن تلمسه تريك الفرق وتسألك: استبدال أو دمج أو تخطٍّ. ولا تستبدل شيئا دون جوابك. وتُدمج قوائم الصلاحيات ولا تُستبدل، وتبقى القيم التي ضبطتها. وإن أزلت الإضافة لاحقا فتنتقل ملفاتها إلى ⁦.claude/kit-backup/⁩ ولا تُحذف.',
+      'Choose “existing project” at setup. The kit keeps your structure and follows your stack. For every file it would touch that already exists, it shows you the difference and asks: overwrite, merge or skip. It never overwrites without your answer. Permission lists are merged, not replaced, and the values you already set stay.',
+      'اختر «مشروع موجود» عند الإعداد. تبقي الإضافة هيكلك وتتبع تقنياتك. ولكل ملف موجود تريد أن تلمسه تريك الفرق وتسألك: استبدال أو دمج أو تخطٍّ. ولا تستبدل شيئا دون جوابك. وتُدمج قوائم الصلاحيات ولا تُستبدل، وتبقى القيم التي ضبطتها.',
     ),
   },
   terminal: {
@@ -65,12 +68,12 @@ export const developers = {
   safe: {
     title: t('Try it safely', 'جرّبها بأمان'),
     text: t(
-      'Install it at project scope (--scope project, or choose project when /plugin install asks): the checks come from the plugin, not from the branch, so a user-scope install would guard every project on your computer. Run setup on a new branch and commit nothing until you have read the differences.',
-      'ثبّتها على مستوى المشروع (⁦--scope project⁩، أو اختر المشروع عندما يسألك ⁦/plugin install⁩): فالفحوص تأتي من الإضافة لا من الفرع، والتثبيت على مستوى المستخدم يحرس كل مشاريع حاسوبك. وشغّل الإعداد على فرع جديد ولا تعمل ⁦commit⁩ حتى تقرأ الفروق.',
+      'Install it at project scope (--scope project, or choose project when /plugin install asks): the checks come from the plugin, not from the branch, so a user-scope install would guard every project on your computer. Make a trial branch first (git switch -c try-wajiha; if the project is not a git repository, copy the whole folder), run setup there, and commit nothing until you have read the differences.',
+      'ثبّتها على مستوى المشروع (⁦--scope project⁩، أو اختر المشروع عندما يسألك ⁦/plugin install⁩): فالفحوص تأتي من الإضافة لا من الفرع، والتثبيت على مستوى المستخدم يحرس كل مشاريع حاسوبك. أنشئ فرع تجربة أولا (⁦git switch -c try-wajiha⁩؛ وإن لم يكن المشروع مستودع ⁦git⁩ فانسخ المجلد كله)، وشغّل الإعداد هناك، ولا تعمل ⁦commit⁩ حتى تقرأ الفروق.',
     ),
     undo: t(
-      'To undo: switch back to your branch and delete the trial branch, then run the two commands below. Removing the kit does not delete the files setup wrote: they are yours to keep or remove.',
-      'وللتراجع: ارجع إلى فرعك واحذف فرع التجربة، ثم شغّل الأمرين أدناه. وإزالة الإضافة لا تحذف الملفات التي كتبها الإعداد: هي لك، احتفظ بها أو احذفها.',
+      'To undo: commit the setup on the trial branch, switch back to your branch and delete the trial branch. Setup also adds the kit to .claude/settings.json, so teammates are asked to install it: deleting the branch removes that too. Then run the two commands below. If you remove the kit without a trial branch, the files setup wrote stay: delete .claude/rules/, .claude/wajiha-kit.json, .claude/state/, and the kit’s parts of CLAUDE.md and .claude/settings.json (it still names skills that no longer exist).',
+      'وللتراجع: اعمل ⁦commit⁩ للإعداد على فرع التجربة، ثم ارجع إلى فرعك واحذف فرع التجربة. ويضيف الإعداد الإضافة أيضا إلى ⁦.claude/settings.json⁩ فيُطلب من زملائك تثبيتها: وحذف الفرع يزيل ذلك أيضا. ثم شغّل الأمرين أدناه. وإن أزلت الإضافة دون فرع تجربة فتبقى الملفات التي كتبها الإعداد: احذف ⁦.claude/rules/⁩ و⁦.claude/wajiha-kit.json⁩ و⁦.claude/state/⁩، وأجزاء الإضافة من ⁦CLAUDE.md⁩ و⁦.claude/settings.json⁩ (فهي ما زالت تذكر مهارات لم تعد موجودة).',
     ),
     commands: ['claude plugin uninstall wajiha-kit@wajiha-kit --scope project', 'claude plugin marketplace remove wajiha-kit'],
   },
@@ -86,8 +89,12 @@ export const developers = {
       t('website and dashboard in one project: a site and an admin in one tree, each with its own rules, skills and checks.', 'موقع ولوحة تحكم في مشروع واحد: موقع ولوحة إدارة في شجرة واحدة، لكل منهما قواعده ومهاراته وفحوصه.'),
       t('any other frontend: Next.js, React Router, Vue, Nuxt, Svelte, Angular or plain. The profile is called react for historical reasons.', 'أي واجهة أخرى: ⁦Next.js⁩ أو ⁦React Router⁩ أو ⁦Vue⁩ أو ⁦Nuxt⁩ أو ⁦Svelte⁩ أو ⁦Angular⁩ أو عادية. واسم النوع ⁦react⁩ لأسباب تاريخية.'),
     ],
+    scope: t(
+      'The table, form and permissions skills (dash-*) and TanStack Table and Query are for React. Other frameworks get the neutral rules without them.',
+      'مهارات الجداول والنماذج والصلاحيات (⁦dash-*⁩) و⁦TanStack Table⁩ و⁦Query⁩ لـ ⁦React⁩. أما الأطر الأخرى فتأخذ القواعد المحايدة بدونها.',
+    ),
     keep: t(
-      'The kit does not force tools on you. It reads package.json and follows your package manager, framework, formatter and tests. TanStack Start is only for the “website” kind: for any other framework, choose “any other frontend”.',
+      'The kit does not force tools on you. It reads package.json and follows your package manager, framework, formatter and tests. The “website” kind is TanStack Start only. A dashboard can also run on TanStack Start; for any other framework, choose “any other frontend”.',
       'لا تفرض الإضافة أدوات عليك. تقرأ ⁦package.json⁩ وتتبع مدير الحزم والإطار والمنسّق والاختبارات عندك. و⁦TanStack Start⁩ خاص بنوع «موقع» فقط: ولأي إطار آخر اختر «أي واجهة أخرى».',
     ),
     detects: t(
@@ -101,43 +108,44 @@ export const developers = {
       ['.claude/wajiha-kit.json', t('The values the skills and the checks read: protected branches, ports, hosts, commands and the working mode.', 'القيم التي تقرؤها المهارات والفحوص: الفروع المحمية والمنافذ والمضيفون والأوامر ونمط العمل.')],
     ] as const,
     approval: t(
-      'Before it writes anything, setup shows one list of every file and package.json script it will add or change, and waits for your yes. It does not commit. Files it moves are kept in .claude/kit-backup/. It also adds scripts such as check, lint and fmt to package.json; the i18n:validate script needs Node 22.18 or later.',
-      'قبل أن يكتب أي شيء، يعرض الإعداد قائمة واحدة بكل ملف وسكربت في ⁦package.json⁩ سيضيفه أو يغيّره، وينتظر موافقتك. ولا يعمل ⁦commit⁩. وما ينقله يُحفظ في ⁦.claude/kit-backup/⁩. ويضيف أيضا سكربتات مثل ⁦check⁩ و⁦lint⁩ و⁦fmt⁩ إلى ⁦package.json⁩؛ وسكربت ⁦i18n:validate⁩ يحتاج ⁦Node⁩ 22.18 أو أحدث.',
+      'Setup shows a list before it writes the kit files and waits for your yes. It asks separately about .gitignore, .env.example and the browser tools, and Claude Code may ask you to approve writes inside .claude/. It does not commit. Rules left over from another project type are moved to .claude/kit-backup/. It adds scripts such as check, lint and fmt to package.json; the i18n:validate script needs Node 22.18 or later.',
+      'يعرض الإعداد قائمة قبل أن يكتب ملفات الإضافة وينتظر موافقتك. ويسأل بشكل منفصل عن ⁦.gitignore⁩ و⁦.env.example⁩ وأدوات المتصفح، وقد يطلب منك ⁦Claude Code⁩ أن توافق على الكتابة داخل ⁦.claude/⁩. ولا يعمل ⁦commit⁩. وتنتقل القواعد المتبقية من نوع مشروع آخر إلى ⁦.claude/kit-backup/⁩. ويضيف سكربتات مثل ⁦check⁩ و⁦lint⁩ و⁦fmt⁩ إلى ⁦package.json⁩؛ وسكربت ⁦i18n:validate⁩ يحتاج ⁦Node⁩ 22.18 أو أحدث.',
     ),
     own: t('These files are copies that belong to your project. Edit them, and review them in a pull request like any other file.', 'هذه الملفات نسخ تخص مشروعك. عدّلها وراجعها في طلب دمج مثل أي ملف آخر.'),
   },
   backend: {
     title: t('Your backend', 'خادمك الخلفي'),
     text: t(
-      'If you have an OpenAPI description of your API, save it in the project as docs/api/openapi.json (as JSON: save a YAML file as JSON for now). Claude reads it when you ask for a table or a form, and copies its field names, paging and enums. It does not validate the file or generate a typed client: add one yourself if you want it.',
-      'إن كان عندك وصف ⁦OpenAPI⁩ لخادمك، فاحفظه في المشروع باسم ⁦docs/api/openapi.json⁩ (بصيغة ⁦JSON⁩: احفظ ملف ⁦YAML⁩ بصيغة ⁦JSON⁩ حاليا). يقرؤه ⁦Claude⁩ عندما تطلب جدولا أو نموذجا، وينقل منه أسماء الحقول والترقيم والقيم. ولا يتحقق من الملف ولا يولّد عميلا مكتوب الأنواع: أضف واحدا بنفسك إن أردت.',
+      'If you have an OpenAPI description of your API, save it in the project as docs/api/openapi.json (as JSON: convert a YAML file to JSON yourself). Claude reads it when you ask for a table or a form, and copies its field names, paging and enums. It does not validate the file or generate a typed client: add one yourself if you want it. A very large file costs context.',
+      'إن كان عندك وصف ⁦OpenAPI⁩ لخادمك، فاحفظه في المشروع باسم ⁦docs/api/openapi.json⁩ (بصيغة ⁦JSON⁩: حوّل ملف ⁦YAML⁩ إلى ⁦JSON⁩ بنفسك). يقرؤه ⁦Claude⁩ عندما تطلب جدولا أو نموذجا، وينقل منه أسماء الحقول والترقيم والقيم. ولا يتحقق من الملف ولا يولّد عميلا مكتوب الأنواع: أضف واحدا بنفسك إن أردت. والملف الكبير جدا يستهلك من السياق.',
     ),
     auth: t(
-      'Dashboards assume a bearer access token held in memory and refreshed once on a 401. If your backend uses cookies or OIDC, change that rule in .claude/rules/. Also assumed by default: a response envelope, a toast after each mutation and an Accept-Language header. Change them in the api-layer rule.',
-      'تفترض لوحات التحكم رمز وصول يُرسل في الترويسة ويُحفظ في الذاكرة ويُجدَّد مرة واحدة عند الخطأ 401. وإن كان خادمك يستخدم كوكيز أو ⁦OIDC⁩ فغيّر هذه القاعدة في ⁦.claude/rules/⁩. ويُفترض أيضا افتراضيا غلاف للاستجابة، وإشعار بعد كل تعديل، وترويسة ⁦Accept-Language⁩. وتغيّرها في قاعدة ⁦api-layer⁩.',
+      'Dashboards assume a bearer access token held in memory and refreshed once on a 401. If your backend uses cookies or OIDC, change that rule in .claude/rules/. If your backend wraps responses in an envelope, the kit unwraps it. A toast after each mutation and an Accept-Language header are also assumed: change them in the api-layer rule.',
+      'تفترض لوحات التحكم رمز وصول يُرسل في الترويسة ويُحفظ في الذاكرة ويُجدَّد مرة واحدة عند الخطأ 401. وإن كان خادمك يستخدم كوكيز أو ⁦OIDC⁩ فغيّر هذه القاعدة في ⁦.claude/rules/⁩. وإن كان خادمك يغلّف الاستجابات فتفتح الإضافة الغلاف. ويُفترض أيضا إشعار بعد كل تعديل وترويسة ⁦Accept-Language⁩: وتغيّرها في قاعدة ⁦api-layer⁩.',
     ),
   },
   checks: {
     title: t('What the checks do', 'ماذا تفعل الفحوص'),
     lead: t('They are scripts that run on your computer, at fixed moments, with your permissions.', 'هي سكربتات تعمل على جهازك، في لحظات محددة، بصلاحياتك.'),
     items: [
-      t('Before Claude says it is done, the final check runs your typecheck and the unit tests related to the changed files. It stops blocking after three failed tries in a row, and when a tool is not installed it skips it without printing anything, so run npm run check yourself when it matters.', 'قبل أن يقول ⁦Claude⁩ إنه انتهى، يشغل الفحص الأخير فحص الأنواع والاختبارات المرتبطة بالملفات التي تغيرت. ويتوقف عن المنع بعد ثلاث محاولات فاشلة متتالية، ويتخطى أي أداة غير مثبتة دون أن يطبع شيئا، فشغّل ⁦npm run check⁩ بنفسك عندما يهم الأمر.'),
-      t('After a pass it asks Claude for one review by a reviewer specialist. Setting stopGate.review to false in .claude/wajiha-kit.json turns that off.', 'وبعد النجاح يطلب من ⁦Claude⁩ مراجعة واحدة من مختص المراجعة. وضبط ⁦stopGate.review⁩ على ⁦false⁩ في ⁦.claude/wajiha-kit.json⁩ يوقفها.'),
+      t('Before Claude says it is done, the final check runs your typecheck and the unit tests related to the changed files. It stops blocking after three failed tries in a row, and a check whose tool is not installed may be skipped quietly, so run npm run check yourself when it matters.', 'قبل أن يقول ⁦Claude⁩ إنه انتهى، يشغل الفحص الأخير فحص الأنواع والاختبارات المرتبطة بالملفات التي تغيرت. ويتوقف عن المنع بعد ثلاث محاولات فاشلة متتالية، وقد يُتخطى فحص أداته غير مثبتة بصمت، فشغّل ⁦npm run check⁩ بنفسك عندما يهم الأمر.'),
+      t('The final check and the review add to your Claude usage on every task. After a pass it asks Claude for one review by a reviewer specialist. Setting stopGate.review to false in .claude/wajiha-kit.json turns that off.', 'والفحص الأخير والمراجعة يزيدان استهلاكك في ⁦Claude⁩ في كل مهمة. وبعد النجاح يطلب من ⁦Claude⁩ مراجعة واحدة من مختص المراجعة. وضبط ⁦stopGate.review⁩ على ⁦false⁩ في ⁦.claude/wajiha-kit.json⁩ يوقفها.'),
+      t('The formatter rewrites each edited file, so an unformatted existing codebase can show noisy differences at first. A check that runs for more than 120 seconds is stopped.', 'يعيد المنسّق كتابة كل ملف يُعدَّل، فقد يُظهر مشروع غير منسّق فروقا كثيرة في البداية. ويُوقف أي فحص يعمل أكثر من 120 ثانية.'),
       t('Format and lint run on each edited file, with the tools your project already uses.', 'يعمل التنسيق والتدقيق على كل ملف يُعدَّل، بالأدوات التي يستخدمها مشروعك أصلا.'),
       t('No commit, merge, cherry-pick or push on protected branches. No force push, --no-verify, reset --hard, clean -f or checkout -f.', 'لا حفظ نسخة (⁦commit⁩) ولا دمج ولا cherry-pick ولا رفع على الفروع المحمية. ولا رفع بالقوة ولا ⁦--no-verify⁩ ولا ⁦reset --hard⁩ ولا ⁦clean -f⁩ ولا ⁦checkout -f⁩.'),
       t('Claude cannot open or merge a pull request, and cannot edit .github/.', 'لا يستطيع ⁦Claude⁩ أن يفتح طلب دمج أو يدمجه، ولا أن يعدّل ⁦.github/⁩.'),
       t('The usual routes to files named .env are blocked, and requests to hosts you list as live are refused.', 'تُسدّ الطرق المعتادة إلى ملفات ⁦.env⁩، وتُرفض الطلبات إلى المضيفين الذين تعدّهم حيّين.'),
     ],
     limits: t(
-      'They run only inside Claude Code and do not replace CI: setup adds npm run check, so call it from your pipeline. They are a guard rail, not a sandbox. They read commands, but not what a script or a program does inside. Files you @-mention and MCP tools the matchers do not name are outside them. Keep branch protection on in your repository. On Windows some safety checks may be skipped, so keep your work in Git.',
-      'وهي تعمل داخل ⁦Claude Code⁩ فقط ولا تغني عن ⁦CI⁩: يضيف الإعداد ⁦npm run check⁩، فاستدعِه من خط البناء. وهي حاجز أمان وليست بيئة معزولة. تقرأ الأوامر لكنها لا ترى ما يفعله سكربت أو برنامج من الداخل. والملفات التي تذكرها بـ ⁦@⁩ وأدوات ⁦MCP⁩ التي لا تسميها المطابقات خارجها. أبقِ حماية الفروع مفعّلة في مستودعك. وعلى ويندوز قد تُتخطى بعض فحوص الأمان، فاحتفظ بعملك في ⁦Git⁩.',
+      'They run only inside Claude Code and do not replace CI: setup adds npm run check (typecheck, lint and unit tests; check:full adds more), so call it from your pipeline. They are a guard rail, not a sandbox. They read commands, but not what a script or a program does inside. Files you @-mention and MCP tools the matchers do not name are outside them. Keep branch protection on in your repository. On Windows the safety checks were tested only on macOS and some may not work as expected, so keep your work in Git.',
+      'وهي تعمل داخل ⁦Claude Code⁩ فقط ولا تغني عن ⁦CI⁩: يضيف الإعداد ⁦npm run check⁩ (فحص الأنواع والتدقيق والاختبارات الوحدوية، و⁦check:full⁩ يضيف أكثر)، فاستدعِه من خط البناء. وهي حاجز أمان وليست بيئة معزولة. تقرأ الأوامر لكنها لا ترى ما يفعله سكربت أو برنامج من الداخل. والملفات التي تذكرها بـ ⁦@⁩ وأدوات ⁦MCP⁩ التي لا تسميها المطابقات خارجها. أبقِ حماية الفروع مفعّلة في مستودعك. وعلى ويندوز جُرّبت فحوص الأمان على ⁦macOS⁩ فقط وقد لا يعمل بعضها كما هو متوقع، فاحتفظ بعملك في ⁦Git⁩.',
     ),
   },
   more: {
     title: t('Modes, settings and the source', 'الأنماط والإعدادات والمصدر'),
     text: t(
-      'Nine working modes (new, existing, maintenance, refactor, upgrade, freeze, hotfix, read-only and prototype) change how careful the assistant is. Refactor mode audits a project, writes a phased plan you approve, and restructures one phase at a time with behaviour frozen. After setup, updates are off: you update by hand after reading the changelog. The code is under the MIT licence.',
-      'تسعة أنماط عمل (جديد، وموجود، وصيانة، وإعادة هيكلة، وترقية، وتجميد، وإصلاح عاجل، وقراءة فقط، ونموذج أولي) تغيّر درجة حذر المساعد. ونمط إعادة الهيكلة يقيّم المشروع ويكتب خطة بمراحل توافق عليها ويعيد الهيكلة مرحلة مرحلة بسلوك مثبت. وبعد الإعداد يكون التحديث مطفأ: تحدّث بنفسك بعد أن تقرأ سجل التغييرات. والكود برخصة ⁦MIT⁩.',
+      'Nine working modes (new, existing, maintenance, refactor, upgrade, freeze, hotfix, read-only and prototype) change how careful the assistant is. Refactor mode audits a project, writes a phased plan you approve, and restructures one phase at a time with behaviour frozen. After setup, updates are off: you update by hand after reading the changelog. The kit ships a test-hooks.sh script that tests the guards on your machine; the README says how to run it. The plugin also starts one documentation helper, Context7, through npx at a pinned version. The code is under the MIT licence.',
+      'تسعة أنماط عمل (جديد، وموجود، وصيانة، وإعادة هيكلة، وترقية، وتجميد، وإصلاح عاجل، وقراءة فقط، ونموذج أولي) تغيّر درجة حذر المساعد. ونمط إعادة الهيكلة يقيّم المشروع ويكتب خطة بمراحل توافق عليها ويعيد الهيكلة مرحلة مرحلة بسلوك مثبت. وبعد الإعداد يكون التحديث مطفأ: تحدّث بنفسك بعد أن تقرأ سجل التغييرات. وتأتي الإضافة بسكربت ⁦test-hooks.sh⁩ يختبر الحواجز على جهازك؛ ويشرح ملف ⁦README⁩ كيف تشغله. وتشغّل الإضافة أيضا مساعد توثيق واحدا، هو ⁦Context7⁩، عبر ⁦npx⁩ بإصدار مثبّت. والكود برخصة ⁦MIT⁩.',
     ),
   },
 }

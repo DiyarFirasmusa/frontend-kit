@@ -42,7 +42,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('Any change to visible text, a translation file or a translation call.', 'أي تغيير في نص ظاهر أو ملف ترجمة أو استدعاء ترجمة.'),
   },
   'tanstack-query-key-conventions': {
-    why: t('TanStack Query keeps saved copies of data from your backend, and finds each copy by a key. A key written by hand in each place is a mistake waiting to happen. One factory (a single place that makes all the keys) lets you mark a whole family of copies as outdated, so they reload, and it always works.', 'تحتفظ TanStack Query بنسخ محفوظة من بيانات الخادم الخلفي، وتجد كل نسخة بمفتاح. كتابة المفتاح يدويا في كل مكان خطأ ينتظر أن يقع. مصنع واحد (مكان واحد يصنع كل المفاتيح) يجعل تعليم مجموعة كاملة من النسخ على أنها قديمة، حتى تعاد تحميلها، يعمل.'),
+    why: t('TanStack Query keeps saved copies of data from your backend, and finds each copy by a key. A key written by hand in each place is a mistake waiting to happen. One factory (a single place that makes all the keys) lets you mark a whole family of copies as outdated, so they reload, and the whole family is marked.', 'تحتفظ TanStack Query بنسخ محفوظة من بيانات الخادم الخلفي، وتجد كل نسخة بمفتاح. كتابة المفتاح يدويا في كل مكان خطأ ينتظر أن يقع. مصنع واحد (مكان واحد يصنع كل المفاتيح) يجعل تعليم مجموعة كاملة من النسخ على أنها قديمة، حتى تعاد تحميلها، يعمل.'),
     when: t('Writing or reviewing anything that loads, changes, preloads or refreshes data with TanStack Query.', 'عند كتابة أو مراجعة أي كود يحمل البيانات أو يعدلها أو يجلبها مسبقا أو يحدّثها باستخدام TanStack Query.'),
   },
   'typescript-advanced-types': {
@@ -110,7 +110,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('An old project that is far from the standards. Only you can start it, by name.', 'مشروع قديم بعيد عن المعايير. وأنت وحدك تشغلها، باسمها.'),
   },
   'fix-everywhere': {
-    why: t('The assistant fixes the one case you showed and leaves the rest. This skill finds them all and proves with a search that none are left.', 'يصلح المساعد الحالة الوحيدة التي أريتها له ويترك الباقي. تجد هذه المهارة كل الحالات، وتثبت بالبحث أنه لم تبق أي حالة.'),
+    why: t('The assistant fixes the one case you showed and leaves the rest. This skill finds them all and searches again at the end to check that none are left.', 'يصلح المساعد الحالة الوحيدة التي أريتها له ويترك الباقي. تجد هذه المهارة كل الحالات، وتبحث مرة أخيرة لتتأكد أنه لم تبق أي حالة.'),
     when: t('You say all, every or other pages, or a bug turns out to be a pattern that repeats.', 'تقول «الكل» أو «كل الصفحات» أو «باقي الصفحات»، أو يتضح أن الخلل نمط يتكرر.'),
   },
   performance: {
