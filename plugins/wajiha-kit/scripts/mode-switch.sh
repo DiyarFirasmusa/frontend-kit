@@ -27,7 +27,7 @@ if ! command -v jq >/dev/null 2>&1; then
   if [ "$FIRST" = off ] && [ -f "${PROJECT%/}/.claude/state/task-mode.json" ]; then
     printf '%s\n' '{"mode":"off"}' >"${PROJECT%/}/.claude/state/task-mode.json" && echo "The task mode is off. A project mode was not touched (that needs jq)."
   else
-    echo "Modes need jq (brew install jq). Nothing changed."
+    echo "Modes need jq. Nothing changed. Install it, then try again: Mac: brew install jq. Windows: winget install jqlang.jq. Linux: sudo apt install jq."
   fi
   echo "$BY_HAND"
   exit 0

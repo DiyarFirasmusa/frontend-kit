@@ -47,7 +47,7 @@ A status line can show the mode: `bash <plugin>/scripts/mode-status.sh <project>
 /wajiha-kit:setup                               # asks the profile and the project values
 ```
 
-Restart Claude Code after setup. Requirements: `jq` (`brew install jq`), Node 20+, git. The guards need Claude Code 2.1.295
+Restart Claude Code after setup. Requirements: `jq` (Mac `brew install jq`, Windows `winget install jqlang.jq`, Linux `sudo apt install jq`), Node 20+, git. The guards need Claude Code 2.1.295
 or later: earlier versions let a call through when a guard times out or cannot start.
 Files you @-mention, MCP tools the matchers don't name, and what a script does are outside the hooks: keep the deny rules
 and use the sandbox.

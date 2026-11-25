@@ -10,6 +10,7 @@ PROJECT="${1:-$PWD}"
 PKG="$PROJECT/package.json"
 [ -f "$PKG" ] || { echo "no package.json in $PROJECT" >&2; exit 1; }
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
+. "$(dirname "$0")/jq-compat.sh"
 
 # Monorepo: the workspace packages (pnpm-workspace.yaml "packages:" or package.json "workspaces") count as part of the project.
 WS_GLOBS="$({ [ -f "$PROJECT/pnpm-workspace.yaml" ] && sed -n "s/^[[:space:]]*-[[:space:]]*['\"]\{0,1\}\([^'\"#]*\)['\"]\{0,1\}[[:space:]]*\$/\1/p" "$PROJECT/pnpm-workspace.yaml"; jq -r '(.workspaces // []) | (if type == "object" then .packages else . end)[]?' "$PKG" 2>/dev/null; } | sed 's#/$##')"

@@ -9,6 +9,7 @@ PROJECT="${1:-$PWD}"
 PKG="$PROJECT/package.json"
 [ -f "$PKG" ] || { echo "no package.json in $PROJECT" >&2; exit 1; }
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
+. "$(dirname "$0")/jq-compat.sh"
 
 has() { jq -e --arg n "$1" '((.dependencies // {}) + (.devDependencies // {})) | has($n)' "$PKG" >/dev/null 2>&1; }
 script_exists() { jq -e --arg n "$1" '(.scripts // {}) | has($n)' "$PKG" >/dev/null 2>&1; }

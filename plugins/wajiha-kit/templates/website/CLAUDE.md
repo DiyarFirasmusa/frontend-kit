@@ -120,7 +120,7 @@ src/
 - Task branches come from `origin/{{DEFAULT_BRANCH}}`; protected:
   {{PROTECTED_BRANCHES}}. The user opens PRs from
   `https://github.com/{{GITHUB_REPO}}/compare/{{DEFAULT_BRANCH}}...<branch>?expand=1`.
-- Conventional commits (`fix(cart): …`, types incl. `ui`), no AI attribution,
+- Conventional commits (`fix(cart): …`, types incl. `ui`),
   never `--no-verify`. Details: `.claude/rules/git.md`.
 - Live: {{LIVE_HOST}} (never tested against). UAT: {{UAT_HOST}}. Dev
   :{{DEV_PORT}}, e2e :{{E2E_PORT}}. API base: `{{API_BASE_ENV}}`.

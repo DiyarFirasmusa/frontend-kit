@@ -237,7 +237,7 @@ Merging:
 - `settings.json` — a JSON merge, never a text merge:
   - `permissions.allow`, `.ask`, `.deny`: the union, existing order first, no duplicates.
   - Every other key the user has (`env`, `model`, `statusLine`, `hooks`, …) is kept as is.
-  - Keys only the template has (`attribution`, `$schema`, …) are added.
+  - Keys only the template has (`$schema`, …) are added.
   - The template never adds `hooks`: the plugin provides them. If the user's settings already define the
     same guard hooks (an older copy of this setup), say so and offer to remove the duplicates.
   - `extraKnownMarketplaces.wajiha-kit` (with `autoUpdate: true`) and `enabledPlugins["wajiha-kit@wajiha-kit"]` are
@@ -269,7 +269,7 @@ Only what the user approved in the proposal:
   denies Claude reading or editing `.env`, so the user creates it). Write `.env.example` from `{{API_BASE_ENV}}`
   if neither file exists; `.env.example` stays editable.
 - Add to `.gitignore` if missing (ask once): `.claude/state/`, `.claude/settings.local.json`, and `.vitest/` with Vitest 5.
-- Check `jq` is installed (`command -v jq`): every hook needs it. If missing, say `brew install jq`.
+- Check `jq` is installed (`command -v jq`): every hook needs it. If missing, give the command for the user's system before anything else (Mac `brew install jq`, Windows `winget install jqlang.jq`, Linux `sudo apt install jq`), and say to reopen Claude Code after it.
 - Updates: run `"${CLAUDE_PLUGIN_ROOT}/scripts/kit-update-check.sh"` and pass on what it prints. When it says `off`,
   say plainly that new kit releases won't arrive here by themselves and give the command to update by hand. Don't change
   the user's environment or settings to turn updates on.

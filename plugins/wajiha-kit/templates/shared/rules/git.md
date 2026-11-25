@@ -21,8 +21,9 @@ answer, not an obstacle: don't look for another spelling.
 - Only after the user's yes **for this change**. A bare "commit", "commit push",
   "commmit" or "yes" is that yes, and it means commit **and** push. An earlier
   yes doesn't cover new changes.
-- The author is the user's own git identity (`git config user.name`); no AI
-  attribution, no "Claude" in messages, branch names or ticket comments.
+- The author is the user's own git identity (`git config user.name`). The
+  co-author line follows the project's `attribution` setting (Claude Code adds it by
+  default); no other mention of Claude in messages, branch names or ticket comments.
 - Conventional commits, enforced by commitlint: `<type>(<area>): <what changed>`
   with type `feat | fix | ui | refactor | perf | test | docs | style | chore | build | ci | revert`.
   Body (optional): 1–4 plain lines on what changed for users.

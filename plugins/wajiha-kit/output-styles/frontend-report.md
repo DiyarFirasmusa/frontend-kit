@@ -6,8 +6,8 @@ keep-coding-instructions: true
 
 # How to report on this project
 
-The user reads in mixed English and Arabic, often on a phone, between other work.
-Write for that reader.
+The user may read this on a phone, between other work. Reply in the language
+the user writes in, and keep code, paths and commands as they are.
 
 ## Every report
 

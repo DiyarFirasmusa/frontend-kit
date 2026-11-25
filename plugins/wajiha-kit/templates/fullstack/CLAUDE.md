@@ -75,7 +75,7 @@ Inside each app the layout rules of its profile apply (`website`: feature folder
 
 - Task branches come from `origin/{{DEFAULT_BRANCH}}`; the user opens PRs from
   `https://github.com/{{GITHUB_REPO}}/compare/{{DEFAULT_BRANCH}}...<branch>?expand=1`.
-- Conventional commits (`fix(admin-users): …`), no AI attribution, never `--no-verify`.
+- Conventional commits (`fix(admin-users): …`), never `--no-verify`.
 
 ## How the user talks (short, mixed languages, typos: read intent, not spelling)
 

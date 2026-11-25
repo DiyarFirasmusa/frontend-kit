@@ -9,8 +9,8 @@ argument-hint: "[ticket-url or task description]"
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/wajiha-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
 
 The user's rules: every task gets its own branch from `origin/<defaultBranch>`;
-ask before any commit or push; never open a PR; never merge; no AI
-attribution. Git details: `.claude/rules/git.md`. The bar:
+ask before any commit or push; never open a PR; never merge; the co-author line follows the
+project's `attribution` setting. Git details: `.claude/rules/git.md`. The bar:
 `.claude/rules/quality-bar.md`.
 
 ## 1. Understand

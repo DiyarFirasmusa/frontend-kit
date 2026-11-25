@@ -105,7 +105,7 @@ A feature folder: `index.tsx` (list container, one `useListPage()`), `components
 
 - Task branches come from `origin/{{DEFAULT_BRANCH}}`; the user opens PRs from
   `https://github.com/{{GITHUB_REPO}}/compare/{{DEFAULT_BRANCH}}...<branch>?expand=1`.
-- Conventional commits (`fix(users): …`), no AI attribution, never `--no-verify`.
+- Conventional commits (`fix(users): …`), never `--no-verify`.
 
 ## How the user talks (short, mixed languages, typos: read intent, not spelling)
 

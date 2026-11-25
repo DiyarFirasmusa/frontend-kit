@@ -2,6 +2,7 @@
 
 These skills are bundled from other projects under their own licences. Each keeps its licence; the
 wajiha-kit notes added at the top of some of them (stack context) are the only changes.
+Wajiha Kit itself is MIT, see the `LICENSE` file at the repository root.
 
 | Skill | Origin | Licence |
 | ----- | ------ | ------- |

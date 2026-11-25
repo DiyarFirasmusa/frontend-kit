@@ -32,6 +32,7 @@ case "${FORCE_AUTOUPDATE_PLUGINS:-}" in
 esac
 
 command -v jq >/dev/null 2>&1 || report unknown "jq is missing, so the settings can't be read"
+. "$(dirname "$0")/jq-compat.sh"
 
 # auto_update <file> <jq path to the marketplace's entry> → true, false, or nothing when the file doesn't say.
 # Not `//`: jq takes false for a missing value.

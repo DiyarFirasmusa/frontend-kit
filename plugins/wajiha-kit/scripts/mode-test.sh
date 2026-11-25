@@ -6,6 +6,8 @@
 # An allow means exit 0 with no output. A crashed guard also blocks, so it never counts as an allow or as a deny.
 set -u
 HOOKS="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=jq-compat.sh
+. "$HOOKS/jq-compat.sh"
 # Started from a git hook, GIT_DIR and the like point every fixture's git command at the caller's repository.
 unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_CONFIG GIT_CONFIG_PARAMETERS GIT_CONFIG_COUNT
 no_work_folder() {

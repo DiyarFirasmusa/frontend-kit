@@ -9,6 +9,8 @@ set -u
 
 HOOKS="$(cd "$(dirname "$0")" && pwd)" || exit 1
 PLUGIN="$(cd "$HOOKS/.." && pwd)" || exit 1
+# shellcheck source=jq-compat.sh
+. "$HOOKS/jq-compat.sh"
 REPO="${KIT_TEST_PROJECT:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 if [ -z "$REPO" ] || [ ! -d "$REPO/node_modules/.bin" ]; then
   echo "test-hooks: set KIT_TEST_PROJECT to a project with node_modules installed (tsc, vitest, oxlint, oxfmt)." >&2

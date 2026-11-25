@@ -15,11 +15,15 @@ fi
 
 if ! command -v jq >/dev/null 2>&1; then
   if [ "${HOOK_KIND:-}" = guard ]; then
-    echo "Claude hooks need jq (brew install jq)" >&2
+    echo "Wajiha Kit's safety hooks need jq, so this call is refused. Install it yourself in a terminal, then try again: Mac: brew install jq. Windows: winget install jqlang.jq (then reopen Claude). Linux: sudo apt install jq (or your package manager)." >&2
     exit 2
   fi
   exit 0
 fi
+
+# Windows jq ends lines with \r; see jq-compat.sh.
+# shellcheck source=jq-compat.sh
+. "$(dirname "${BASH_SOURCE[0]}")/jq-compat.sh"
 
 # The project root. Claude Code exports CLAUDE_PROJECT_DIR to hooks; tests set it too.
 HOOK_ROOT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"

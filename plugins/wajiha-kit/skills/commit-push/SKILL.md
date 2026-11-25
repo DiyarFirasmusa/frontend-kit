@@ -1,6 +1,6 @@
 ---
 name: commit-push
-description: Commit and push the current task branch after the user's explicit yes ("commit", "commit push", "commmit", "yes commit push", "yes" to "Commit and push?"), then print the GitHub compare link. Commits as the user with no AI attribution, pushes only the task branch, never opens a PR, never merges.
+description: Commit and push the current task branch after the user's explicit yes ("commit", "commit push", "commmit", "yes commit push", "yes" to "Commit and push?"), then print the GitHub compare link. Commits as the user (the co-author line follows the project's attribution setting), pushes only the task branch, never opens a PR, never merges.
 ---
 
 # Commit & push
@@ -28,7 +28,8 @@ Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `
    - header `<type>(<area>): <what changed>`, type one of `feat fix ui refactor
      perf test docs style chore build ci revert`, e.g. `fix(nav): profile pill follows Figma`
    - optional body: 1–4 plain lines on what changed for users
-   - no "Claude", "AI", "Co-Authored-By" or session links
+   - the co-author line follows the project's `attribution` setting (Claude Code adds it
+     by default); nothing else about Claude or AI, and no session links
    Use `git commit -F - <<'EOF' … EOF` for a multi-line message.
 4. A pre-commit hook fails (lint-staged, commitlint): read the error, fix the
    cause, stage again and commit again. Never `--no-verify`, `-n` or `HUSKY=0`.
