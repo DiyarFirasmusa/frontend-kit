@@ -39,7 +39,7 @@ export const inspect: Record<string, SkillGuide> = {
       t('Reports the steps, the console errors (messages the browser hides from visitors) and the requests that failed.', 'يذكر الخطوات وأخطاء الـ console (رسائل يخفيها المتصفح عن الزوار) والطلبات الفاشلة.'),
     ],
     result: [t('Pass or fail per step, with screenshots', 'نجاح أو فشل لكل خطوة، مع لقطات شاشة')],
-    limits: [t('Never types your password or tests on your live site.', 'لا يكتب كلمة مرورك أبدا، ولا يختبر على موقعك الحي.')],
+    limits: [t('Does not type your password, and tests only on your computer or the test environment. The safety checks refuse the live hosts you list in the settings.', 'لا يكتب كلمة مرورك، ويختبر على جهازك أو في بيئة الاختبار فقط. وترفض فحوص الأمان المواقع الحية التي تحددها في الإعدادات.')],
     related: ['dev', 'figma-match'],
     needs: t('A browser tool: Claude in Chrome or the optional Chrome DevTools server (setup asks once).', 'أداة متصفح: ⁦Claude in Chrome⁩ أو خادم Chrome DevTools الاختياري (يسألك الإعداد مرة).'),
   },
@@ -52,7 +52,7 @@ export const inspect: Record<string, SkillGuide> = {
       t('Measures again.', 'يقيس مرة أخرى.'),
     ],
     result: [t('Before and after numbers for each change', 'أرقام قبل التعديل وبعده لكل تغيير')],
-    limits: [t('Never stress-tests your live site (sending it lots of traffic).', 'لا يجري اختبار ضغط على موقعك الحي أبدا (أي إرسال حركة كثيفة إليه).')],
+    limits: [t('Does not stress-test your live site (sending it lots of traffic): tests only on your computer or the test environment. The safety checks refuse the live hosts you list in the settings.', 'لا يجري اختبار ضغط على موقعك الحي (أي إرسال حركة كثيفة إليه)، ويختبر على جهازك أو في بيئة الاختبار فقط. وترفض فحوص الأمان المواقع الحية التي تحددها في الإعدادات.')],
     related: ['vercel-react-best-practices', 'web-seo-page'],
   },
   'playwright-best-practices': {

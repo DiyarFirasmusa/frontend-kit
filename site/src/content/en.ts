@@ -23,7 +23,7 @@ export const en: Copy = {
     contents: ({ skills, agents, events, rules, servers, denied, examples }) => [
       [skills, 'skills, from one component to a whole feature'],
       [agents, 'specialists that plan, build, test and review'],
-      [rules, 'rule files that load by path'],
+      [rules, 'rule files, most of them loaded by path'],
       [events, 'session events watched by hooks'],
       [4, 'project types (three for beginners, plus one for other stacks), each with its own setup'],
       [servers, 'Optional MCP servers: two browser helpers and documentation lookup (setup asks first)'],

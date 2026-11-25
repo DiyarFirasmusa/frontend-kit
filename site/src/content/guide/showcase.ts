@@ -18,7 +18,7 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
       'معرض أعمال، أو قائمة طعام، أو صفحة خدمات، أو متجر، أو موقع شركة، أو مدونة، أو قائمة بمنتجاتك. وتختار الألوان والخطوط والشعار: صفها بجملة، أو أرسل رابط ⁦Figma⁩ أو موقعا يعجبك. وبعد أن يصبح على الإنترنت، يفتحه أي شخص من رابط أو من البحث، على الهاتف أو الحاسوب.',
     ),
     features: [
-      { name: t('Fast on phones', 'سريع على الهاتف'), text: t('Pages open quickly, even on a slow connection.', 'الصفحات تفتح بسرعة، حتى مع اتصال ضعيف.') },
+      { name: t('Fast on phones', 'سريع على الهاتف'), text: t('Pages are built to a speed budget for slow phones.', 'تُبنى الصفحات وفق حدود سرعة للهواتف البطيئة.') },
       { name: t('Found in search', 'يظهر في البحث'), text: t('Search engines are able to read your pages and show them.', 'تستطيع محركات البحث قراءة صفحاتك وعرضها.') },
       { name: t('Links share with a picture', 'الروابط تظهر بصورة'), text: t('A shared link shows a title and an image in chat apps.', 'الرابط المشارك يظهر بعنوان وصورة في تطبيقات المحادثة.') },
       { name: t('Arabic and English', 'العربية والإنجليزية'), text: t('Both languages, with right-to-left done properly.', 'اللغتان معا، والكتابة من اليمين إلى اليسار مضبوطة.') },
@@ -169,7 +169,7 @@ export const compare = {
     broken: t('Orders Page (copy)', 'صفحة الطلبات (نسخة)'),
     results: [
       t('Claude looks for mistakes before you see the project', 'يبحث Claude عن الأخطاء قبل أن ترى المشروع'),
-      t('Arabic and phones are checked', 'العربية والهاتف مفحوصان'),
+      t('Arabic and phones follow written rules', 'العربية والهاتف تتبعان قواعد مكتوبة'),
       t('Checked before you see it', 'مفحوص قبل أن تراه'),
       t('Every file is yours, on your computer', 'كل ملف ملكك، على حاسوبك'),
     ],

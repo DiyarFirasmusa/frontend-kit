@@ -134,8 +134,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     name: t('Safety checks', 'فحوص الأمان'),
     title: t('Safety checks: they work even when the assistant forgets.', 'فحوص الأمان: تعمل حتى لو نسي المساعد.'),
     lead: t(
-      'Small programs that run by themselves at fixed moments. They stop risky actions and check the work, so nothing depends on the assistant remembering.',
-      'برامج صغيرة تعمل وحدها في لحظات محددة. توقف الأفعال الخطرة وتفحص العمل، فلا يعتمد شيء على تذكر المساعد.',
+      'Small programs that run by themselves at fixed moments. They stop risky actions and check the work, so the checks themselves do not depend on the assistant remembering.',
+      'برامج صغيرة تعمل وحدها في لحظات محددة. توقف الأفعال الخطرة وتفحص العمل، فلا تعتمد الفحوص نفسها على أن يتذكر المساعد.',
     ),
   },
   configuration: {

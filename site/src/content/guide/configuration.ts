@@ -16,7 +16,7 @@ export const settings = [
     title: t('Protection', 'الحماية'),
     keys: [
       ['defaultBranch', t('The main version of your project, where each new task starts from.', 'النسخة الرئيسية من مشروعك، وتبدأ منها كل مهمة جديدة.')],
-      ['protectedBranches', t('Versions of the project that the safety checks defend, so the checks refuse known ways of saving or uploading straight into them. Default: main and master.', 'نسخ المشروع التي تحميها فحوص الأمان، فلا تُحفظ فيها التغييرات ولا تُرفع إليها مباشرة. الافتراضي: main وmaster.')],
+      ['protectedBranches', t('Versions of the project that the safety checks defend, so the checks refuse known ways of saving or uploading straight into them. Default: main and master.', 'نسخ المشروع التي تحميها فحوص الأمان، فترفض الطرق المعروفة لحفظ التغييرات فيها أو رفعها إليها مباشرة. الافتراضي: main وmaster.')],
       ['liveHosts', t('The addresses of your live website. The assistant may not request or open them.', 'عناوين موقعك المنشور. ممنوع على المساعد أن يطلبها أو يفتحها.')],
       ['uatHost', t('The address of your test copy. The assistant may use it.', 'عنوان النسخة التجريبية من موقعك. يستطيع المساعد استخدامه.')],
       ['protectedPaths', t('Files the assistant may not edit, such as the files that publish your site.', 'ملفات ممنوع على المساعد تعديلها، مثل الملفات التي تنشر موقعك.')],

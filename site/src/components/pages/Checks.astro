@@ -21,8 +21,8 @@ const moments = (Object.keys(session.events) as HookEvent[]).filter((event) => h
 const words = {
   what: t('What a safety check is', 'ما هو فحص الأمان'),
   whatText: t(
-    'A safety check is a small script that runs by itself at a fixed moment, for example just before the assistant runs a command, or when it says it is finished. Nothing depends on the assistant remembering to do it. The kit also calls them hooks, which is the name you will see in file names.',
-    'فحص الأمان سكربت صغير يعمل من تلقاء نفسه في لحظة محددة، مثل لحظة قبل أن ينفذ المساعد أمرا، أو عندما يقول إنه أنهى عمله. لا شيء يعتمد على أن يتذكر المساعد ذلك. وتسميها الإضافة أيضا hooks، وهو الاسم الذي سترى في أسماء الملفات.',
+    'A safety check is a small script that runs by itself at a fixed moment, for example just before the assistant runs a command, or when it says it is finished. The check itself does not depend on the assistant remembering to do it. The kit also calls them hooks, which is the name you will see in file names.',
+    'فحص الأمان سكربت صغير يعمل من تلقاء نفسه في لحظة محددة، مثل لحظة قبل أن ينفذ المساعد أمرا، أو عندما يقول إنه أنهى عمله. والفحص نفسه لا يعتمد على أن يتذكر المساعد ذلك. وتسميها الإضافة أيضا hooks، وهو الاسم الذي سترى في أسماء الملفات.',
   ),
   timeline: t('A session, moment by moment', 'الجلسة لحظة بلحظة'),
   guards: t('What the safety checks refuse', 'ماذا ترفض فحوص الأمان'),

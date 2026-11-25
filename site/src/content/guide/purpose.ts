@@ -138,7 +138,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('Before saving a version of anything that is not trivial, or when you want another opinion.', 'قبل حفظ نسخة من أي تغيير ليس بسيطا، أو عندما تريد رأيا آخر.'),
   },
   'live-check': {
-    why: t('Some bugs only show with a real sign-in in a real browser. This skill tests there, and never on the live site.', 'بعض الأخطاء لا تظهر إلا بتسجيل دخول حقيقي في متصفح حقيقي. تختبر هذه المهارة هناك، وليس على الموقع المباشر أبدا.'),
+    why: t('Some bugs only show with a real sign-in in a real browser. This skill tests there, not on the live site: the safety checks refuse the live hosts you list.', 'بعض الأخطاء لا تظهر إلا بتسجيل دخول حقيقي في متصفح حقيقي. تختبر هذه المهارة هناك، لا على الموقع المباشر: فترفض فحوص الأمان المواقع الحية التي تحددها.'),
     when: t('A flow that needs a code, single sign-on (one login for many services) or a third party, on your own computer or on the test environment (a copy of the app used for testing).', 'مسار يحتاج إلى رمز، أو دخول موحد (تسجيل دخول واحد لعدة خدمات)، أو طرف ثالث، على جهازك أو في بيئة الاختبار (نسخة من التطبيق تستخدم للاختبار).'),
   },
   'commit-push': {
@@ -259,7 +259,7 @@ export const rulePurpose: Record<string, Bilingual> = {
   'website/seo-share.md': t('So each page can be found by search engines and looks right when shared.', 'ليسهل على محركات البحث إيجاد كل صفحة، وتظهر بشكل صحيح عند مشاركتها.'),
 
   'dashboard/api-layer.md': t('So one client owns tokens (secrets that prove who is signed in), errors and keys instead of every screen.', 'ليتولى عميل واحد الـ tokens (أسرار تثبت من سجل دخوله) والأخطاء والمفاتيح، بدل أن تتولاها كل شاشة.'),
-  'dashboard/data-tables.md': t('So tables still work with a hundred thousand rows and a keyboard.', 'لتبقى الجداول تعمل مع مئة ألف صف ومع لوحة المفاتيح.'),
+  'dashboard/data-tables.md': t('So tables are paged by the server and keep working with a keyboard.', 'لتُقسَّم الجداول إلى صفحات من الخادم وتبقى تعمل بلوحة المفاتيح.'),
   'dashboard/error-monitoring.md': t('So errors in the live app reach you without leaking personal data.', 'لتصلك أخطاء التطبيق المنشور دون تسريب بيانات شخصية.'),
   'dashboard/forms-crud.md': t('So two admins editing at once, or a double click, is less likely to lose data.', 'لتقل فرصة ضياع البيانات إذا عدّل أكثر من مدير في الوقت نفسه، أو ضغط أحدهم مرتين.'),
   'dashboard/permissions.md': t('So one list decides what each role sees and can do.', 'لتحدد قائمة واحدة ما يراه كل دور وما يقدر على فعله.'),

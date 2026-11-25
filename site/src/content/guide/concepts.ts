@@ -58,8 +58,8 @@ export const concepts: Concept[] = [
     count: 'events',
     like: t('An automatic checkpoint', 'نقطة فحص تلقائية'),
     text: t(
-      'It runs by itself at a fixed moment, so nothing depends on the assistant remembering. It can tidy the code, test it, warn you, or say no.',
-      'يعمل من تلقاء نفسه في لحظة محددة، فلا يعتمد شيء على أن يتذكر المساعد. يمكنه أن ينسق الكود أو يختبره أو ينبهك أو يرفض.',
+      'It runs by itself at a fixed moment, so the checks themselves do not depend on the assistant remembering. It can tidy the code, test it, warn you, or say no.',
+      'يعمل من تلقاء نفسه في لحظة محددة، فلا تعتمد الفحوص نفسها على أن يتذكر المساعد. يمكنه أن ينسق الكود أو يختبره أو ينبهك أو يرفض.',
     ),
     example: t('Uploading straight to the main version is refused before it happens.', 'يرفض فحص الأمان الرفع مباشرة إلى النسخة الرئيسية قبل أن يتم.'),
     page: 'checks',

@@ -114,7 +114,7 @@ export const written = [
 export const after = [
   t('Something went wrong? See Questions: “When something does not work”.', 'حدث خطأ؟ راجع «الأسئلة»: «عندما لا يعمل شيء».'),
   t('Look at the result and tell it what to change, in plain sentences.', 'انظر إلى النتيجة، وقل لـ ⁦Claude⁩ ما تريد تغييره بجمل بسيطة.'),
-  t('Each change runs through the same safety checks. They run by themselves, so nothing depends on the assistant remembering.', 'يمر كل تغيير بفحوص الأمان نفسها. وهي تعمل وحدها، فلا يعتمد شيء على أن يتذكر المساعد.'),
+  t('Each change runs through the same safety checks. They run by themselves, so the checks themselves do not depend on the assistant remembering.', 'يمر كل تغيير بفحوص الأمان نفسها. وهي تعمل وحدها، فلا تعتمد الفحوص نفسها على أن يتذكر المساعد.'),
   t('When you are happy, ask it to save a version. You can go back to it.', 'عندما ترضى عن النتيجة، اطلب من ⁦Claude⁩ حفظ نسخة. وتستطيع الرجوع إليها.'),
 ]
 

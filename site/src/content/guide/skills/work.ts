@@ -36,7 +36,7 @@ export const work: Record<string, SkillGuide> = {
       t('Checks it, asks for a review, then asks whether to save it and upload it.', 'يتحقق منها، ويطلب مراجعة، ثم يسألك هل يحفظ النسخة ويرفعها.'),
     ],
     result: [t('A checked task branch', 'فرع للمهمة بعد التحقق منه'), t('A short report that says what was not checked', 'تقرير قصير يذكر ما لم يفحصه')],
-    limits: [t('Never opens or merges a pull request (a request to merge your changes).', 'لا يفتح الـ pull request (طلب دمج تغييراتك) ولا يدمجه أبدا.'), t('Never saves a version without your yes.', 'لا يحفظ نسخة دون موافقتك.')],
+    limits: [t('Does not open or merge a pull request (a request to merge your changes): the safety checks refuse the common ways.', 'لا يفتح الـ pull request (طلب دمج تغييراتك) ولا يدمجه، وترفض فحوص الأمان الطرق المعتادة لذلك.'), t('Never saves a version without your yes.', 'لا يحفظ نسخة دون موافقتك.')],
     related: ['verify', 'commit-push', 'pr-link'],
   },
   dev: {

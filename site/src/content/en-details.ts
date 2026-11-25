@@ -7,12 +7,12 @@ export const enDetails: Details = {
     pairs: [
       ['The assistant arranges your files differently every time', 'One folder map and one naming rule, read before it touches your files'],
       ['A third copy of the same button', 'Skills that look for what you already have before they build anything'],
-      ['“Done”, but the app is broken', 'It checks the code for mistakes and runs related tests before it may say it is finished'],
+      ['“Done”, but the app is broken', 'It checks the code for mistakes and runs related tests before it finishes (it stays quiet in read-only mode, when nothing in your source folders changed, and after three failed tries)'],
       ['Only the case where everything goes well', 'Loading, errors, empty lists and success are all part of done'],
       ['Uploading straight to main, or reading your .env file of secrets', 'Safety checks that catch the common ways of doing this before they run'],
       ['Arabic pages that break', 'Layout rules that work right-to-left, and a checker for translations'],
       ['The assistant forgets everything after /clear', 'Your branch, the final check result and the hard rules are given back every time'],
-      ['Typing the same long instructions again and again', 'A short request is enough, and the right skill is named for the assistant'],
+      ['Typing the same long instructions again and again', 'A short request is enough, and a fitting skill is usually named for the assistant'],
     ],
     fit: {
       title: 'Use it when',
@@ -26,7 +26,7 @@ export const enDetails: Details = {
     skip: {
       title: 'Skip it when',
       items: [
-        'Your project is not built with React (a popular tool for building screens). The kit is made for it.',
+        'Your project is not a web frontend. The kit is built for React first: with Vue, Svelte, Angular or plain JavaScript you get its general rules, but not the table, form and permission skills.',
         'It is a throwaway prototype, and checks would only slow you down.',
         'You want the assistant to upload to main or ask for a merge by itself. By default it waits for you.',
       ],
@@ -138,7 +138,7 @@ export const enDetails: Details = {
     steps: [
       ['/wajiha-kit:refactor-mode on', 'Switch the project into fix-an-old-project mode.'],
       ['/wajiha-kit:refactor-mode audit', 'Measure structure, types, data, forms and tests without editing any code, then write a plan in phases.'],
-      ['/wajiha-kit:refactor-mode next', 'Carry out one phase you approved. The app behaves the same, and the checks must pass.'],
+      ['/wajiha-kit:refactor-mode next', 'Carry out one phase you approved. The aim is that the app behaves the same, and the checks must pass.'],
       ['/wajiha-kit:refactor-mode off', 'Return to normal work. Unfinished phases stay in the plan.'],
     ],
     note: 'Bugs found on the way are written down, not fixed in silence.',
@@ -151,8 +151,8 @@ export const enDetails: Details = {
       ['Are the safety checks a real security sandbox?', 'No. They are small scripts that catch known patterns, so a command written in a different way can get past them. Keep the branch protection of your code host and your normal access rules.'],
       ['Can I turn parts off or change the rules?', 'Yes. The rules are files in your project folder. The automatic review and the skill hints have switches in the settings file.'],
       ['Will it delete my rules?', 'No. Setup shows what would change before it touches an existing file, and clean-up moves files to a backup folder.'],
-      ['Does it send my code anywhere?', 'The safety checks are local scripts. Claude sends the files it reads to Anthropic. The helpers are optional and setup asks before adding each. They are downloaded through npx (a tool that fetches and runs them). If you add Context7, it sends documentation searches to its service.'],
-      ['Does it only speak Arabic and English?', 'Those two are fully supported. With one left-to-right language, setup leaves out the right-to-left and translation rules.'],
+      ['Does it send my code anywhere?', 'The safety checks are local scripts. Claude sends the files it reads to Anthropic. The helpers are optional and setup asks before adding them. They are downloaded through npx (a tool that fetches and runs them). If you add Context7, it sends documentation searches to its service.'],
+      ['Does it only speak Arabic and English?', 'Those two are fully supported. Setup does not ask about languages: if your project has one left-to-right language it drops the right-to-left rules (and the translation rules when there is no translation library), and you adjust the Arabic wording in CLAUDE.md.'],
     ],
   },
 }

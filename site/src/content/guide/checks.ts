@@ -10,7 +10,7 @@ export const hookEffects: Record<HookEvent, Bilingual> = {
   PostToolUseFailure: t('Writes a log', 'يكتب سجلا'),
   SubagentStart: t('Adds background information', 'يضيف معلومات خلفية'),
   SubagentStop: t('Can send the work back', 'يستطيع أن يعيده إلى العمل'),
-  Notification: t('Alerts you', 'ينبهك'),
+  Notification: t('Alerts you (on macOS)', 'ينبهك (على macOS)'),
   Stop: t('Can send the work back', 'يستطيع أن يعيده إلى العمل'),
   SessionEnd: t('Cleans up', 'ينظف'),
 }

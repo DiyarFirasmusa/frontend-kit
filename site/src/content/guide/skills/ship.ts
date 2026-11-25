@@ -39,7 +39,7 @@ export const ship: Record<string, SkillGuide> = {
       t('Uploads the task branch and shows a link to compare it with main.', 'يرفع فرع المهمة ويعرض رابطا لمقارنته مع main.'),
     ],
     result: [t('An uploaded branch and a link', 'فرع مرفوع ورابط')],
-    limits: [t('No AI credit in the message, no uploads to protected branches, no forced uploads, and no skipping of safety checks.', 'لا يذكر الذكاء الاصطناعي في الرسالة، ولا يرفع إلى فروع محمية، ولا يرفع بالقوة، ولا يتجاوز فحوص الأمان.')],
+    limits: [t('No AI mention in the message except the co-author line (it follows your Claude Code setting, on by default), no uploads to protected branches, no forced uploads, and no skipping of safety checks.', 'لا يذكر الذكاء الاصطناعي في الرسالة إلا سطر المؤلف المشارك (يتبع إعداد ⁦Claude Code⁩ عندك، وهو مفعّل افتراضيا)، ولا يرفع إلى فروع محمية، ولا يرفع بالقوة، ولا يتجاوز فحوص الأمان.')],
     related: ['verify', 'pr-link'],
   },
   'pr-link': {

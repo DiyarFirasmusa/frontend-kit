@@ -25,7 +25,7 @@ export const agentGuides: Record<string, AgentGuide> = {
     checks: [
       t('Reads every rule and the matching skills.', 'يقرأ كل القواعد والمهارات المناسبة.'),
       t('Builds only its own package of work.', 'ينفذ حزمة عمله فقط.'),
-      t('Must pass the code check (it looks for mistakes) before reporting back.', 'لا يرسل تقريره قبل أن ينجح فحص الكود (يبحث عن الأخطاء).'),
+      t('The code check (it looks for mistakes) runs before it reports back; if it fails, the specialist gets one more turn to fix it.', 'يعمل فحص الكود (يبحث عن الأخطاء) قبل أن يرسل تقريره، وإن فشل يأخذ المختص فرصة واحدة أخرى ليصلحه.'),
     ],
     returns: t('The files that changed, what the testers need, and anything where it left the plan.', 'الملفات التي تغيرت، وما يحتاجه المختبرون، وأي شيء خالف فيه الخطة.'),
   },
@@ -60,7 +60,7 @@ export const agentGuides: Record<string, AgentGuide> = {
     returns: t('The cause, the smallest fix and a test that would have caught the bug.', 'السبب، وأصغر إصلاح، واختبار كان سيكشف الخطأ.'),
   },
   'frontend-reviewer': {
-    plain: t('The experienced reviewer. It reads your changes like a colleague and starts by itself after the final checks pass.', 'المراجع الخبير. يقرأ تغييراتك مثل زميل، ويبدأ وحده بعد أن تنجح الفحوص الأخيرة.'),
+    plain: t('The experienced reviewer. It reads your changes like a colleague and is asked to start after the final checks pass.', 'المراجع الخبير. يقرأ تغييراتك مثل زميل، ويُطلب منه أن يبدأ بعد أن تنجح الفحوص الأخيرة.'),
     ask: t('review my branch', 'راجع فرعي'),
     checks: [
       t('Is the code correct, are the types right, does it follow your project’s patterns.', 'صحة الكود والأنواع واتباع أنماط مشروعك.'),

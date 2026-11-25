@@ -102,7 +102,7 @@ export const home = {
       {
         mode: 'refactor',
         name: t('My project is old and messy', 'مشروعي قديم وفوضوي'),
-        text: t('It measures the mess, makes a plan in seven phases and does them one by one. What your app does stays the same.', 'تقيس حجم الفوضى، وتضع خطة من سبع مراحل، وتنفذها واحدة بعد أخرى. وما يفعله تطبيقك لا يتغير.'),
+        text: t('It measures the mess, makes a plan in seven phases and does them one by one. The aim is that what your app does stays the same.', 'تقيس حجم الفوضى، وتضع خطة من سبع مراحل، وتنفذها واحدة بعد أخرى. والمقصود أن يبقى ما يفعله تطبيقك كما هو.'),
         command: '/wajiha-kit:refactor-mode on',
         page: 'refactor',
       },
@@ -122,7 +122,7 @@ export const home = {
     skills: t('A skill is a ready set of instructions for one job, like building a table.', 'المهارة تعليمات جاهزة لمهمة واحدة، مثل بناء جدول.'),
     agents: t('A specialist is a separate helper with one job, like a reviewer or a tester.', 'المختص مساعد مستقل له مهمة واحدة، مثل المراجِع أو المختبِر.'),
     rules: t('A rule is a written standard the assistant follows while it works.', 'القاعدة معيار مكتوب يتبعه المساعد أثناء العمل.'),
-    checks: t('A safety check runs by itself at a fixed moment, so nothing depends on the assistant remembering.', 'فحص الأمان يعمل وحده في لحظة محددة، فلا يعتمد شيء على تذكر المساعد.'),
+    checks: t('A safety check runs by itself at a fixed moment, so the checks themselves do not depend on the assistant remembering.', 'فحص الأمان يعمل وحده في لحظة محددة، فلا تعتمد الفحوص نفسها على أن يتذكر المساعد.'),
   },
   why: t('Why', 'لماذا'),
   when: t('When', 'متى'),

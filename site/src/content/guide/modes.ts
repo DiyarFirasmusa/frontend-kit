@@ -9,7 +9,7 @@ export const modeGroups = [
       ['new', t('Build to the kit’s standards from the first file.', 'ابنِ حسب معايير الإضافة من أول ملف.')],
       ['existing', t('The default. The assistant follows how your project already works and adds no extra limits.', 'الافتراضي. يتبع المساعد ما يفعله مشروعك الآن، ولا يضيف أي قيود.')],
       ['maintenance', t('Keep an old app running. Only fixes and security updates, and no new libraries (code written by others).', 'حافظ على تشغيل تطبيق قديم. إصلاحات وتحديثات أمان فقط، وبدون مكتبات جديدة (كود كتبه غيرك).')],
-      ['refactor', t('Fix an old project step by step. You approve each step, and what the app does stays the same.', 'إصلاح مشروع قديم خطوة بخطوة. توافق على كل خطوة، ويبقى ما يفعله التطبيق كما هو.')],
+      ['refactor', t('Fix an old project step by step. You approve each step, and the aim is that what the app does stays the same.', 'إصلاح مشروع قديم خطوة بخطوة. توافق على كل خطوة، والمقصود أن يبقى ما يفعله التطبيق كما هو.')],
       ['upgrade', t('Move one group of libraries to a newer version, step by step, with your approval at each step.', 'انقل مجموعة مكتبات واحدة إلى إصدار أحدث، خطوة بخطوة، وبموافقتك في كل خطوة.')],
       ['freeze', t('For the days before a release: only fixes. No change to libraries or tool settings.', 'لأيام ما قبل الإصدار: إصلاحات فقط، وبلا تغيير في المكتبات أو إعدادات الأدوات.')],
     ],
