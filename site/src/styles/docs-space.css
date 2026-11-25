@@ -805,3 +805,40 @@ body .top.is-scrolled::before {
     background: rgb(5 6 7 / 0.72);
   }
 }
+
+/* The ground covers the whole screen and stays while the page moves; the page list shows it through. */
+.doc::before,
+[dir='rtl'] .doc::before {
+  position: fixed;
+  inset: 0;
+  height: auto;
+  mask-image: radial-gradient(ellipse 120% 110% at 50% 30%, #000 55%, rgb(0 0 0 / 0.55) 100%);
+}
+
+@media (min-width: 901px) {
+  .doc .tree {
+    background: transparent;
+  }
+}
+
+/* On a guide page the header, once the page moves, wears the same fixed grid and light as the page,
+   so it covers the words passing under it without looking like a band. */
+body:has(main.doc) .top.is-scrolled {
+  background:
+    radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
+    radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
+    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    #050607;
+  background-attachment: fixed;
+}
+
+[dir='rtl'] body:has(main.doc) .top.is-scrolled {
+  background:
+    radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
+    radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
+    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    #050607;
+  background-attachment: fixed;
+}
