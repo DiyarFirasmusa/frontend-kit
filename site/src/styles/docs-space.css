@@ -878,3 +878,21 @@ body:has(main.doc) .top.is-scrolled {
 .doc .column {
   position: relative;
 }
+
+/* The frame is told by its darker colour alone: no lines on its edges. */
+@media (min-width: 901px) {
+  .doc .tree {
+    border: 0 !important;
+  }
+
+  body:has(main.doc) .top,
+  body:has(main.doc) .top.is-scrolled {
+    border: 0 !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .toc:not([hidden]) {
+    border: 0 !important;
+  }
+}
