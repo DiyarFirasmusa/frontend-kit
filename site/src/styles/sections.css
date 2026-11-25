@@ -569,7 +569,7 @@
   color: #141413;
 }
 
-.path.has-started .path-stop:nth-child(n + 4) .path-dot {
+.path.has-started .path-stop:nth-child(n + 5) .path-dot {
   border-color: var(--turq, #19abab);
   background: var(--turq, #19abab);
 }
@@ -1123,5 +1123,138 @@
 @media (max-width: 620px) {
   .show-features {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- The path, in order ----------
+   The line fills, and each stop comes in as the line reaches it: its card, then its number, its title,
+   and its sentence. Then a small light keeps travelling along the line while the path is on screen. */
+.path-track {
+  position: absolute;
+  inset-inline: calc(var(--edge, 3.36rem) + 8%);
+  inset-block-start: calc(10.5rem + 1.25rem + 0.9375rem - 3px);
+  height: 8px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.path-track i {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 14%;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.95), rgb(242 161 131 / 0.6) 45%, transparent);
+  opacity: 0;
+}
+
+.path-label {
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+}
+
+.path-label strong {
+  min-height: 1.4em;
+}
+
+.path-label p {
+  min-height: 4.95em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .path:not(.has-started) .path-stop :is(.path-picture, .path-dot, .path-label strong, .path-label p) {
+    opacity: 0;
+  }
+
+  .path.has-started .path-picture {
+    animation: stop-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.2s + var(--n) * 0.4s);
+  }
+
+  .path.has-started .path-dot {
+    animation: dot-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(0.3s + var(--n) * 0.4s);
+  }
+
+  .path.has-started .path-label strong {
+    animation: words-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.4s + var(--n) * 0.4s);
+  }
+
+  .path.has-started .path-label p {
+    animation: words-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.5s + var(--n) * 0.4s);
+  }
+
+  /* The light starts once the line is full. */
+  .path.has-started .path-track i {
+    animation: path-run 3.6s cubic-bezier(0.45, 0, 0.55, 1) 2.8s infinite;
+  }
+
+  [dir='rtl'] .path.has-started .path-track i {
+    animation-name: path-run-rtl;
+  }
+}
+
+@keyframes stop-in {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+    scale: 0.96;
+  }
+}
+
+@keyframes dot-in {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes words-in {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+    filter: blur(4px);
+  }
+}
+
+@keyframes path-run {
+  0% {
+    opacity: 0;
+    translate: -100% 0;
+  }
+  10%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 720% 0;
+  }
+}
+
+@keyframes path-run-rtl {
+  0% {
+    opacity: 0;
+    translate: 100% 0;
+  }
+  10%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: -720% 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .path-track {
+    display: none;
+  }
+
+  .path-label p {
+    min-height: 0;
   }
 }

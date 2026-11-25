@@ -16,6 +16,7 @@ const { locale } = Astro.props
     <p>{w.lead[locale]}</p>
   </div>
   <ol class="column path" data-alive>
+    <li class="path-track" role="presentation" aria-hidden="true"><i></i></li>
     {
       w.stops.map((stop, i) => (
         <li class="path-stop" style={`--n:${i}`}>
