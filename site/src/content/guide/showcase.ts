@@ -150,6 +150,7 @@ export const compare = {
     lead: t('The same request, two results. Drag the line to see the difference.', 'الطلب نفسه، ونتيجتان. اسحب الخط لترى الفرق.'),
     ask: t('“I want a dashboard to manage my shop orders”', '«أريد لوحة تحكم لإدارة طلبات متجري»'),
     drag: t('Move the line between the two results', 'حرّك الخط بين النتيجتين'),
+    cue: t('Drag to compare', 'اسحب لتقارن'),
     orders: t('Orders', 'الطلبات'),
     customers: t('Customers', 'العملاء'),
     products: t('Products', 'المنتجات'),

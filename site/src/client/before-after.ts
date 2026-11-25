@@ -11,7 +11,14 @@ export function initBeforeAfter(signal: AbortSignal): void {
       frame.style.setProperty('--pos', `${rtl ? 100 - value : value}%`)
       range.setAttribute('aria-valuetext', `${range.dataset['bad']} ${value}%${rtl ? '، ' : ', '}${range.dataset['good']} ${100 - value}%`)
     }
-    range.addEventListener('input', () => set(Number(range.value)), { signal })
+    // The first touch ends the hint: the sweep stops and the cue goes.
+    const touched = (): void => {
+      frame.classList.add('is-touched')
+      frame.classList.remove('is-hinting')
+    }
+    range.addEventListener('input', () => { touched(); set(Number(range.value)) }, { signal })
+    range.addEventListener('pointerdown', touched, { signal })
+    range.addEventListener('keydown', touched, { signal })
     set(Number(range.value))
 
     // Once, when it is first seen: the line moves a little each way, so people know they can drag it.
@@ -21,7 +28,7 @@ export function initBeforeAfter(signal: AbortSignal): void {
         if (!entry?.isIntersecting) return
         watcher.disconnect()
         frame.classList.add('is-hinting')
-        setTimeout(() => frame.classList.remove('is-hinting'), 2400)
+        setTimeout(() => frame.classList.remove('is-hinting'), 4800)
       },
       { threshold: 0.5 },
     )

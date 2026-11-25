@@ -1460,7 +1460,12 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .ba.is-hinting {
-    animation: ba-hint 2.4s cubic-bezier(0.45, 0, 0.55, 1);
+    animation: ba-hint 4.8s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  /* Until it is touched, the round handle pulses so it reads as something to hold. */
+  .ba:not(.is-touched) .ba-handle i {
+    animation: ba-pulse 1.8s ease-out infinite;
   }
 }
 
@@ -1469,12 +1474,61 @@
   100% {
     --pos: 50%;
   }
-  30% {
+  15% {
+    --pos: 28%;
+  }
+  35% {
+    --pos: 72%;
+  }
+  50% {
+    --pos: 50%;
+  }
+  62% {
     --pos: 34%;
   }
-  65% {
+  80% {
     --pos: 66%;
   }
+}
+
+@keyframes ba-pulse {
+  0% {
+    box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.45), 0 0 0 0 rgb(255 255 255 / 0.55);
+  }
+  100% {
+    box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.45), 0 0 0 1.25rem rgb(255 255 255 / 0);
+  }
+}
+
+/* A small label under the handle says what to do, until the first touch. */
+.ba-cue {
+  position: absolute;
+  z-index: 3;
+  inset-block-end: 1rem;
+  left: var(--pos);
+  translate: -50% 0;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 999px;
+  background: rgb(20 20 19 / 0.92);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.ba-cue::before {
+  content: '◂ ';
+}
+
+.ba-cue::after {
+  content: ' ▸';
+}
+
+.ba.is-touched .ba-cue {
+  opacity: 0;
 }
 
 /* The dashboard drawn twice. */
