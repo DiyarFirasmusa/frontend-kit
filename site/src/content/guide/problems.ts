@@ -39,6 +39,10 @@ export const beginnerQuestions = [
     t('Yes. The project is a normal folder of files, and it is yours. You can give the folder to anyone. Whoever takes it over does not need the kit to open the project, but the kit’s rules and checks only work on a computer where it is installed.', 'نعم. المشروع مجلد ملفات عادي، وهو ملكك. تستطيع أن تعطي المجلد لأي شخص. ومن يستلمه لا يحتاج الإضافة ليفتح المشروع، لكن قواعد الإضافة وفحوصها لا تعمل إلا على حاسوب مثبّتة عليه.'),
   ],
   [
+    t('Does it have a shopping cart and online payment?', 'هل فيها سلة شراء ودفع إلكتروني؟'),
+    t('The kit builds the pages and forms of a shop. It does not include a payment system: taking real payments needs a payment service and a backend, which you connect yourself.', 'تبني الإضافة صفحات المتجر ونماذجه. ولا تشمل نظام دفع: فقبول دفعات حقيقية يحتاج إلى خدمة دفع وخادم خلفي، وتربطهما أنت.'),
+  ],
+  [
     t('Does it put my site online?', 'هل تنشر لي الموقع على الإنترنت؟'),
     t('No. It builds the project and runs it on your computer so you can see it. To put it online you need hosting and a domain name. You can ask Claude: “Explain how to publish this site”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج استضافة واسم نطاق (دومين). ويمكنك أن تطلب من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع»، وسيسألك قبل كل خطوة.'),
   ],

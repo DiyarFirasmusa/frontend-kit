@@ -98,7 +98,7 @@ export const journeyWords = {
 /** The install panel. */
 export const installWords = {
   title: t('Start in two steps', 'ابدأ بخطوتين'),
-  lead: t('Wajiha Kit is free. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you.', '«واجهة» مجانية. تحتاج تطبيق Claude على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت Claude الإضافة بنفسه.'),
+  lead: t('Wajiha Kit is free. Claude Code, which it works inside, needs a Claude account that allows it, so check yours first. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. At the end you open the result in your browser, on your own computer.', '«واجهة» مجانية. و⁦Claude Code⁩، الذي تعمل داخله، يحتاج إلى حساب في ⁦Claude⁩ يسمح به، فتأكد من حسابك أولا. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. وفي النهاية تفتح النتيجة في متصفحك، على حاسوبك.'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),
   failed: t('Select it and copy', 'حدّدها وانسخها'),
@@ -109,7 +109,7 @@ export const installWords = {
   illustration: t('An illustration, not a measurement.', 'توضيح، وليس قياسا.'),
   differs: t('Site builders host and publish your site for you. Wajiha Kit builds the files on your computer, inside Claude, and publishes nothing.', 'منصات بناء المواقع تستضيف موقعك وتنشره لك. أما واجهة فتبني الملفات على حاسوبك داخل ⁦Claude⁩، ولا تنشر شيئا.'),
   hint: t('You do not need to understand it. Claude carries it out, and asks your permission before each command.', 'لا تحتاج أن تفهمها. ينفذها ⁦Claude⁩، ويسألك إذنك قبل كل أمر.'),
-  source: t('This installs code from github.com/DiyarFirasmusa/wajiha-kit, our only source. If a message names any other address, do not send it.', 'تثبّت هذه الرسالة كودا من github.com/DiyarFirasmusa/wajiha-kit، وهو مصدرنا الوحيد. وإن ذكرت رسالة أي عنوان آخر فلا ترسلها.'),
+  source: t('This installs code from github.com/DiyarFirasmusa/wajiha-kit, our only source.', 'تثبّت هذه الرسالة كودا من github.com/DiyarFirasmusa/wajiha-kit، وهو مصدرنا الوحيد.'),
   madeBy: t('Made by', 'صنعها'),
   other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),
 }
