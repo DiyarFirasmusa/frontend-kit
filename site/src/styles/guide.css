@@ -1,12 +1,10 @@
 /* Pieces that explain, used on the home page and on every detail page. */
-.concepts,
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   gap: 0.75rem;
 }
 
-.concepts a,
 .card {
   display: flex;
   flex-direction: column;
@@ -21,38 +19,9 @@
   transition: border-color 0.25s, background-color 0.25s;
 }
 
-.concepts a:hover,
 .card:hover {
   border-color: rgb(241 237 231 / 0.6);
   background-color: var(--raised);
-}
-
-.concept-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  color: var(--ivory);
-}
-
-.concept-top strong {
-  font-size: var(--sub);
-  font-weight: 560;
-}
-
-.concept-top span {
-  font-size: 1.75rem;
-}
-
-.concepts em {
-  color: var(--ivory);
-  font-style: normal;
-}
-
-.concept-example {
-  margin-block-start: auto;
-  padding-block-start: 0.75rem;
-  border-block-start: 1px solid var(--line);
 }
 
 .card strong {

@@ -27,35 +27,6 @@
   color: var(--muted);
 }
 
-.compare {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.compare th,
-.compare td {
-  padding: 0.875rem 0;
-  border-block-end: 1px solid var(--line);
-  text-align: start;
-  vertical-align: top;
-}
-
-.compare th {
-  font-size: var(--sub);
-  font-weight: 560;
-}
-
-.compare :is(th,
-td):first-child {
-  padding-inline-end: 1.5rem;
-  color: var(--muted);
-}
-
-.compare th:first-child {
-  color: var(--bad);
-}
-
 .tags {
   display: flex;
   flex-wrap: wrap;

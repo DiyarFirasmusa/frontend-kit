@@ -1,5 +1,6 @@
 ---
 import { agents, skillGroups } from '../../content/catalogue.ts'
+import { KEYWORDS } from '../../content/guide/keywords.ts'
 import { PAGES, SECTIONS } from '../../content/guide/pages.ts'
 import { hookPurpose } from '../../content/guide/purpose.ts'
 import { ruleGuides } from '../../content/guide/rules.ts'
@@ -22,6 +23,8 @@ interface Leaf {
   href: string
   about: Bilingual
   under?: string | undefined
+  /** Words people type that are not in the name. */
+  extra?: string | undefined
 }
 
 const { locale, route } = Astro.props
@@ -40,12 +43,12 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
   {
     name: words.guides[locale],
     kind: 'page',
-    leaves: SECTIONS.slice(0, 2).flatMap(({ pages }) => pages).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
+    leaves: SECTIONS.slice(0, 2).flatMap(({ pages }) => pages).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead, extra: KEYWORDS[id] })),
   },
   {
     name: t('Advanced pages', 'صفحات متقدمة')[locale],
     kind: 'page',
-    leaves: SECTIONS.slice(2).flatMap(({ pages }) => pages).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead })),
+    leaves: SECTIONS.slice(2).flatMap(({ pages }) => pages).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead, extra: KEYWORDS[id] })),
   },
   {
     name: PAGES.skills.name[locale],
@@ -95,7 +98,7 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
           </summary>
           <ul>
             {leaves.map((leaf) => (
-              <li data-tree-item data-search={[leaf.name, leaf.about.en, leaf.about.ar].join(' ').toLowerCase()}>
+              <li data-tree-item data-search={[leaf.name, leaf.about.en, leaf.about.ar, leaf.extra ?? ''].join(' ').toLowerCase()}>
                 {leaf.under && <small>{leaf.under}</small>}
                 <a href={leaf.href} class:list={{ 'is-name': kind !== 'page' }} aria-current={leaf.href === here ? 'page' : undefined}>
                   <bdi>{leaf.name}</bdi>

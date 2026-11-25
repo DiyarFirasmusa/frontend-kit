@@ -11,6 +11,7 @@ export const rescue = {
     t('Quality: how much code the tests cover, skipped tests, and passwords or keys saved in the project.', 'الجودة: مقدار الكود الذي تغطيه الاختبارات، والاختبارات المتخطاة، وكلمات المرور أو المفاتيح المحفوظة داخل المشروع.'),
   ],
   phaseList: [
+    t('A safety net: where code has no test, pin what it does today.', 'شبكة أمان: حيث لا يوجد اختبار، ثبّت ما يفعله الكود اليوم.'),
     t('A green start: make the checks pass first.', 'بداية سليمة: اجعل الفحوص تنجح أولا.'),
     t('Safe automatic clean-up: tidy layout, style fixes, better names and removing unused code.', 'تنظيف آلي آمن: ترتيب الشكل، وإصلاح الأسلوب، وأسماء أفضل، وحذف الكود غير المستخدم.'),
     t('Stricter types: no any.', 'أنواع أشد صرامة: بلا any.'),

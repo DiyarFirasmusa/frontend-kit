@@ -12,9 +12,6 @@
 }
 
 /* Over the film the bar is only a fade. */
-.film .top {
-  background: linear-gradient(rgb(5 6 7 / 0.85), rgb(5 6 7 / 0.45) 70%, transparent);
-}
 
 .brand {
   margin-inline-end: auto;

@@ -3,6 +3,7 @@ import { beginnerQuestions, problems } from '../../content/guide/problems.ts'
 import { t } from '../../content/guide/text.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
 import Block from '../guide/Block.astro'
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 const { locale } = Astro.props
 const { answers } = content[locale]
 const trouble = t('When something does not work', 'عندما لا يعمل شيء')
+const stuck = t('Still stuck? Open a report on GitHub with the error text and what you typed.', 'ما زلت عالقا؟ افتح بلاغا على GitHub وألصق نص الخطأ وما كتبته.')
+const report = t('Report a problem', 'أبلغ عن مشكلة')
 const first = t('Before you start', 'قبل أن تبدأ')
 const firstLead = t('The questions most people ask first, answered plainly.', 'الأسئلة التي يسألها أغلب الناس أولا، مع إجابات واضحة.')
 // The same questions, for search engines: plain text without the marks that keep Latin words in order.
@@ -42,4 +45,6 @@ const faq = JSON.stringify({
   <div class="questions">
     {problems.map(([problem, fix]) => <details><summary>{problem[locale]}</summary><p>{fix[locale]}</p></details>)}
   </div>
+  <p>{stuck[locale]}</p>
+  <p class="links"><a class="source" href={`${REPO_URL}/issues`}>{report[locale]}</a></p>
 </Block>

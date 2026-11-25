@@ -9,27 +9,22 @@
 }
 
 /* Grids of cells: one rounded frame. */
-.points,
-.counts,
 .start-cases,
 .install-steps,
 .works-for,
 .fit,
-.kinds,
 .choices {
   border-radius: var(--radius);
   overflow: hidden;
 }
 
 /* Boxes. */
-.detail,
 .command,
 .card,
 .prompt,
 .gate-output,
 .block pre,
 .file pre,
-.refusal,
 .call,
 .pair p,
 .source-doc,
@@ -44,7 +39,6 @@
   overflow: hidden;
 }
 
-.start-command,
 .pager a,
 .finder input,
 .tree-search input,
@@ -55,9 +49,7 @@
 
 /* Small things are pills. */
 .tags li,
-.start-mode,
-.top-docs,
-.marquee-track li {
+.top-docs {
   border-radius: var(--radius-pill);
 }
 
@@ -66,15 +58,8 @@
   border-radius: var(--radius-sm);
 }
 
-.marquee {
-  border-radius: var(--radius);
-  border-inline: 1px solid var(--line);
-}
-
 /* Cells sit inside a rounded frame: they stay square, the frame clips them. */
 .command button,
-.kinds button,
-.points li,
 .start-cases li {
   border-radius: 0;
 }
@@ -116,7 +101,6 @@
   border-radius: var(--radius);
 }
 
-.detail-say,
 .glance {
   border-radius: var(--radius-sm);
 }

@@ -1,55 +1,7 @@
-.banner {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: min(34rem, 72svh);
-  overflow: clip;
-  border-block-end: 1px solid var(--line);
-}
-
-.banner img {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-end: 0;
-  width: min(68rem, 78%);
-  height: 100%;
-  object-fit: cover;
-  mask-image: linear-gradient(to left, #000 42%, transparent 96%);
-}
-
-[dir='rtl'] .banner img {
-  mask-image: linear-gradient(to right, #000 42%, transparent 96%);
-}
-
 /* The words sit on a shade, however busy the frame behind them is. */
-.banner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgb(5 6 7 / 0.94) 30%, rgb(5 6 7 / 0.72) 52%, transparent 78%);
-  pointer-events: none;
-}
-
-[dir='rtl'] .banner::after {
-  background: linear-gradient(to left, rgb(5 6 7 / 0.94) 30%, rgb(5 6 7 / 0.72) 52%, transparent 78%);
-}
-
-.banner h1 {
-  font-size: clamp(2.25rem, 1rem + 3.6vw, 4.5rem);
-}
-
-.banner h1.is-name {
-  font: 560 clamp(1.875rem, 1rem + 2.8vw, 3.5rem) / 1.1 var(--latin);
-  overflow-wrap: anywhere;
-}
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll()) {
-    .banner img {
-      animation: banner-away linear both;
-      animation-timeline: scroll();
-      animation-range: 0 80vh;
-    }
 
     @keyframes banner-away {
       to {
@@ -73,44 +25,6 @@
   display: flex;
   align-items: center;
   min-height: 44px;
-}
-
-.side {
-  position: sticky;
-  top: var(--bar);
-  align-self: start;
-  max-height: calc(100svh - var(--bar));
-  padding-block: 2rem;
-  overflow-y: auto;
-}
-
-.side div + div {
-  margin-block-start: 1.25rem;
-}
-
-.side p {
-  padding-block-end: 0.25rem;
-  color: var(--faint);
-  font-size: 0.8125rem;
-}
-
-.side a {
-  display: flex;
-  align-items: center;
-  min-height: 36px;
-  color: var(--muted);
-  font-size: var(--small);
-  text-decoration: none;
-}
-
-.side a:hover {
-  color: var(--ivory);
-}
-
-.side a[aria-current] {
-  color: var(--ivory);
-  text-decoration: underline;
-  text-underline-offset: 6px;
 }
 
 .doc-article {
@@ -321,10 +235,6 @@
   color: var(--ivory);
 }
 
-.doc .compare + .block {
-  margin-block-start: 2rem;
-}
-
 .pair,
 .ways,
 .recipes,
@@ -501,32 +411,6 @@
 .missing > p {
   margin-block: 1rem 3rem;
   color: var(--muted);
-}
-
-@media (max-width: 900px) {
-
-  .side {
-    display: none;
-  }
-
-  .banner {
-    min-height: 0;
-  }
-
-  .banner img {
-    width: 100%;
-    height: 72%;
-    mask-image: linear-gradient(#000 25%, transparent);
-  }
-
-  [dir='rtl'] .banner img {
-    mask-image: linear-gradient(#000 25%, transparent);
-  }
-
-  .banner::after,
-  [dir='rtl'] .banner::after {
-    background: linear-gradient(transparent 12%, rgb(5 6 7 / 0.85) 48%, var(--void));
-  }
 }
 
 @media (max-width: 620px) {

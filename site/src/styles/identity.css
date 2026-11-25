@@ -74,14 +74,10 @@
     color: var(--turq);
   }
 }
-.hero-ways a,
-.detail-open {
+.hero-ways a {
   text-decoration-color: var(--turq);
 }
-.hero-ways a:hover,
-.detail-open:hover,
-.counts a:hover b,
-.kinds [aria-pressed='true'] b {
+.hero-ways a:hover {
   color: var(--turq);
 }
 .js .choices [aria-current='true'] {
@@ -132,24 +128,6 @@ body::before {
 }
 
 /* Home: the four numbers, the four kinds and the name you pick. */
-.counts li:nth-child(2) b {
-  color: var(--k-agent);
-}
-.counts li:nth-child(3) b {
-  color: var(--k-rule);
-}
-.counts li:nth-child(4) b {
-  color: var(--k-hook);
-}
-.kinds [data-kind='agents'] {
-  --kc: var(--k-agent);
-}
-.kinds [data-kind='rules'] {
-  --kc: var(--k-rule);
-}
-.kinds [data-kind='checks'] {
-  --kc: var(--k-hook);
-}
 .inside:has([data-kind='agents'][aria-pressed='true']) {
   --pick: var(--k-agent);
 }
@@ -161,11 +139,9 @@ body::before {
 }
 
 /* Home: the three cells take orange, turquoise, light orange. */
-.points li:nth-child(2),
 .start-cases li:nth-child(2) {
   --c: var(--turq);
 }
-.points li:nth-child(3),
 .start-cases li:nth-child(3) {
   --c: var(--k-rule);
 }
@@ -180,21 +156,6 @@ body::before {
 }
 
 /* Home: chips drifting past alternate the two families. */
-.marquee-track li:nth-child(4n + 2) {
-  border-color: rgb(25 171 171 / 0.5);
-  color: #a9e3e3;
-}
-.marquee-track li:nth-child(4n + 3) {
-  border-color: rgb(242 161 131 / 0.45);
-  color: #f4b9a0;
-}
-.marquee-track li:nth-child(4n) {
-  border-color: rgb(87 205 205 / 0.45);
-  color: #bfeaea;
-}
-.marquee {
-  background: linear-gradient(90deg, rgb(217 119 87 / 0.06), rgb(25 171 171 / 0.05), rgb(217 119 87 / 0.06));
-}
 
 /* Home: each section's hairline and wash alternate orange and turquoise. */
 .starts,

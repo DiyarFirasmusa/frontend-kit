@@ -19,14 +19,12 @@
   /* Every control answers a hand. */
   .top a,
   .choices a,
-  .kinds button,
   .command button,
   .tree a,
   .tree summary,
   .pager a,
   .tags li,
   .index a,
-  .detail-open,
   .hero-ways a {
     transition:
       color 0.3s,
@@ -58,52 +56,22 @@
   }
 
   .hero-ways a:hover,
-  .detail-open:hover,
   .index a:hover {
     text-underline-offset: 10px;
   }
 
   .rows > div,
-  .index li,
-  .answers > div {
+  .index li {
     background: linear-gradient(var(--ivory), var(--ivory)) no-repeat 0 0 / 0 1px;
     transition: background-size 0.55s var(--glide);
   }
 
   .rows > div:hover,
-  .index li:hover,
-  .answers > div:hover {
+  .index li:hover {
     background-size: 100% 1px;
   }
 
   /* A pick: its explanation is dealt out line by line. */
-  .detail article:not([hidden]) > *,
-  .detail article:not([hidden]) dl > div {
-    animation: dealt 0.7s var(--glide) both;
-  }
-
-  .detail article:not([hidden]) > :nth-child(2),
-  .detail article:not([hidden]) dl > :nth-child(1) {
-    animation-delay: 0.08s;
-  }
-
-  .detail article:not([hidden]) dl > :nth-child(2) {
-    animation-delay: 0.16s;
-  }
-
-  .detail article:not([hidden]) dl > :nth-child(3) {
-    animation-delay: 0.24s;
-  }
-
-  .detail article:not([hidden]) dl > :nth-child(4),
-  .detail article:not([hidden]) > .detail-open {
-    animation-delay: 0.32s;
-  }
-
-  .detail article:not([hidden]) .detail-say q {
-    display: inline-block;
-    animation: typed 1s steps(26) 0.45s both;
-  }
 
   @keyframes dealt {
     from {
@@ -116,10 +84,6 @@
     from {
       clip-path: inset(0 100% 0 0);
     }
-  }
-
-  [dir='rtl'] .detail article:not([hidden]) .detail-say q {
-    animation-name: typed-rtl;
   }
 
   @keyframes typed-rtl {
@@ -164,10 +128,6 @@
     from {
       opacity: 0;
     }
-  }
-
-  .refusal {
-    animation: refused 3.4s ease-in-out infinite;
   }
 
   @keyframes refused {

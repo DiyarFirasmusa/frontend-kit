@@ -62,10 +62,6 @@
   font-size: var(--lead);
 }
 
-.hero .commands {
-  max-width: 34rem;
-}
-
 .hero-ways {
   display: flex;
   flex-wrap: wrap;
@@ -73,8 +69,7 @@
   margin-block-start: 1rem;
 }
 
-.hero-ways a,
-.detail-open {
+.hero-ways a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -89,73 +84,7 @@
   margin-inline-end: var(--edge);
 }
 
-.counts {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-
-.counts li {
-  background: var(--void);
-}
-
-.counts a {
-  display: grid;
-  gap: 0.125rem;
-  padding: 1rem 1.25rem;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.counts a:hover {
-  background: var(--raised);
-}
-
-.counts b {
-  color: #fff;
-  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.25rem) / 1 var(--latin);
-  font-variant-numeric: tabular-nums;
-}
-
-.counts span {
-  color: var(--faint);
-  font-size: 0.8125rem;
-}
-
-.counts a:hover span {
-  color: var(--ivory);
-}
-
 /* Three plain promises, right under the opening screen. */
-
-.points {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-
-.points li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-content: start;
-  gap: 0.5rem;
-  padding: 2rem 1.75rem;
-  background: var(--void);
-}
-
-.home .points h2 {
-  color: #fff;
-  font-size: var(--sub);
-  line-height: 1.25;
-}
-
-.points p {
-  color: var(--muted);
-}
 
 /* The light that follows the pointer over a grid: each cell glows where the hand is. */
 .glow-grid,
@@ -164,7 +93,6 @@
 .install-steps,
 .works-for,
 .fit,
-.kinds,
 .choices {
   --mx: -50vmax;
   --my: -50vmax;
@@ -215,48 +143,8 @@
 }
 
 /* Two slow rows of the kit's own names. */
-.marquee {
-  display: grid;
-  gap: 0.75rem;
-  padding-block: 1.5rem;
-  border-block: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.marquee-row {
-  display: flex;
-  overflow: hidden;
-}
-
-.marquee-track {
-  display: flex;
-  flex-shrink: 0;
-  gap: 0.75rem;
-  padding-inline-end: 0.75rem;
-}
-
-.marquee-track li {
-  flex-shrink: 0;
-  padding: 0.375rem 0.875rem;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  font: 500 0.875rem / 1.4 var(--code);
-  white-space: nowrap;
-}
 
 @media (prefers-reduced-motion: no-preference) {
-  .marquee-track {
-    animation: drift 70s linear infinite;
-  }
-
-  .marquee-row.is-reverse .marquee-track {
-    animation-direction: reverse;
-    animation-duration: 90s;
-  }
-
-  .marquee:hover .marquee-track {
-    animation-play-state: paused;
-  }
 
   @keyframes drift {
     to {
@@ -308,11 +196,6 @@
     animation: enter 0.5s var(--glide, ease) both;
   }
 
-
-  .counts .enter {
-    animation-delay: 0.32s;
-  }
-
   /* The words never fade: they are there at once and only slide into place, so the first paint is not held back. */
   @keyframes enter {
     from {
@@ -330,17 +213,6 @@
   .hero-side {
     margin-inline: var(--edge);
   }
-}
-
-@media (max-width: 620px) {
-  .counts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .points li {
-    padding: 1.125rem 1rem;
-  }
-
 }
 
 .works-for li {
@@ -405,58 +277,6 @@
 }
 
 /* WHAT IS INSIDE: four kinds as cells, the names as a grid, the pick explained in a panel. */
-.kinds {
-  display: none;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-
-.js .kinds {
-  display: grid;
-}
-
-.kinds button {
-  display: grid;
-  gap: 0.125rem;
-  justify-items: start;
-  padding: 1rem 1.25rem;
-  background: var(--void);
-  color: var(--muted);
-  cursor: pointer;
-  text-align: start;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-}
-
-.kinds button b {
-  color: #fff;
-  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.25rem) / 1 var(--latin);
-  transition: color 0.3s;
-}
-
-.kinds button:hover {
-  background: var(--raised);
-}
-
-.kinds [aria-pressed='true'] {
-  background: var(--ivory);
-  color: var(--void);
-}
-
-.kinds [aria-pressed='true'] b {
-  color: var(--void);
-}
-
-.inside-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 2rem;
-  align-items: start;
-  margin-block-start: 2rem;
-}
 
 .choices {
   display: grid;
@@ -500,81 +320,8 @@
 }
 
 /* Without the script every list shows and each name is a link to its page. */
-.detail {
-  display: none;
-}
-
-.js .detail {
-  display: block;
-  position: sticky;
-  inset-block-start: calc(var(--bar) + 1.5rem);
-  border: 1px solid var(--line);
-  background: var(--raised);
-  scroll-margin-top: calc(var(--bar) + 1rem);
-}
-
-.detail article {
-  padding: 1.5rem;
-}
-
-.detail-kind {
-  color: var(--faint);
-  font-size: var(--small);
-}
-
-.detail h3 {
-  margin-block: 0.375rem 1rem;
-  color: #fff;
-  font: 600 clamp(1.5rem, 1rem + 1.2vw, 2.125rem) / 1.15 var(--code);
-  overflow-wrap: anywhere;
-}
-
-.detail dl > div {
-  display: grid;
-  grid-template-columns: 6rem minmax(0, 1fr);
-  gap: 0 1rem;
-  padding-block: 0.75rem;
-  border-block-start: 1px solid var(--line);
-}
-
-.detail dt {
-  color: var(--faint);
-  font-size: var(--small);
-}
-
-.detail dd {
-  color: var(--ivory);
-}
 
 /* What you would type, shown as you would type it. */
-.detail-say {
-  margin-block-start: 0.75rem;
-  padding: 0.875rem 1rem;
-  border: 1px dashed var(--line);
-  background: var(--void);
-}
-
-.detail-say p {
-  color: var(--faint);
-  font-size: 0.8125rem;
-}
-
-.detail-say q {
-  display: block;
-  margin-block-start: 0.25rem;
-  color: #fff;
-  quotes: none;
-}
-
-.detail-say q::before {
-  content: '> ';
-  color: var(--faint);
-  font-family: var(--code);
-}
-
-.detail-open {
-  margin-block-start: 1rem;
-}
 
 /* GET IT: three numbered commands in one grid, then who it is for. */
 .install-steps {
@@ -644,14 +391,6 @@
 }
 
 @media (max-width: 900px) {
-  .inside-body {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .js .detail {
-    position: static;
-    order: -1;
-  }
 
   .install-steps li {
     grid-template-columns: 2.5rem minmax(0, 1fr);
@@ -663,16 +402,9 @@
 }
 
 @media (max-width: 620px) {
-  .kinds {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .choices {
     grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  }
-
-  .detail dl > div {
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -698,14 +430,6 @@
   background: var(--void);
 }
 
-.start-mode {
-  justify-self: start;
-  padding: 0.125rem 0.5rem;
-  border: 1px solid var(--line);
-  color: var(--faint);
-  font: 500 0.75rem / 1.6 var(--code);
-}
-
 .home .start-cases h3 {
   color: #fff;
   font-size: var(--sub);
@@ -714,26 +438,6 @@
 
 .start-cases p {
   color: var(--muted);
-}
-
-.start-command {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding-inline: 0.875rem;
-  border: 1px solid var(--line);
-  background: var(--raised);
-  color: var(--ivory);
-  font: 500 0.8125rem var(--code);
-  text-decoration: none;
-  transition:
-    background-color 0.25s,
-    color 0.25s;
-}
-
-.start-command:hover {
-  background: var(--ivory);
-  color: var(--void);
 }
 
 @media (max-width: 900px) {
@@ -746,7 +450,6 @@
 .start-cases li,
 .works-for li,
 .fit > div,
-.points li,
 .install-steps li {
   transition: background-color 0.3s;
 }
@@ -754,49 +457,16 @@
 .start-cases li:hover,
 .works-for li:hover,
 .fit > div:hover,
-.points li:hover,
 .install-steps li:hover {
   background: var(--raised);
 }
 
-@media (max-width: 900px) {
-  .points {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-}
-
-.counts b {
-  transition: color 0.3s;
-}
-
-.counts a:hover b {
-  color: var(--accent);
-}
-
-.hero-ways a,
-.detail-open {
+.hero-ways a {
   text-decoration-color: var(--accent);
 }
 
-.hero-ways a:hover,
-.detail-open:hover {
+.hero-ways a:hover {
   color: var(--accent);
-}
-
-.start-mode {
-  border-color: var(--accent-soft);
-  color: var(--accent);
-}
-
-.start-command code::before {
-  content: '$ ';
-  color: var(--accent);
-}
-
-.marquee-track li:hover {
-  border-color: var(--accent);
-  color: var(--ivory);
 }
 
 @media (hover: hover) {
@@ -814,10 +484,6 @@
       linear-gradient(rgb(217 119 87 / 0.28) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
       linear-gradient(90deg, rgb(217 119 87 / 0.28) 1px, transparent 1px) 0 0 / var(--cell) var(--cell);
   }
-}
-
-.kinds [aria-pressed='true'] b {
-  color: var(--accent);
 }
 
 .js .choices [aria-current='true'] {

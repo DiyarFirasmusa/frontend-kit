@@ -75,116 +75,27 @@ body::after {
 }
 
 /* Each cell wears the colour of what it is. */
-.points li,
 .start-cases li {
   border-block-start: 2px solid var(--c, var(--accent));
 }
 
-.points li:nth-child(1),
 .start-cases li:nth-child(1) {
   --c: var(--accent);
 }
 
-.points li:nth-child(2),
 .start-cases li:nth-child(2) {
   --c: var(--amber);
 }
 
-.points li:nth-child(3),
 .start-cases li:nth-child(3) {
   --c: var(--teal);
 }
 
-.start-mode {
-  color: var(--c, var(--accent));
-}
-
-.start-mode {
-  border-color: color-mix(in srgb, var(--c, var(--accent)) 40%, transparent);
-  background: color-mix(in srgb, var(--c, var(--accent)) 10%, transparent);
-}
-
-.points li:hover,
 .start-cases li:hover {
   background: color-mix(in srgb, var(--c, var(--accent)) 9%, var(--void));
 }
 
-.start-command::before {
-  content: '$';
-  margin-inline-end: 0.5rem;
-  color: var(--c, var(--accent));
-}
-
-.start-command code::before {
-  content: none;
-}
-
-.start-command:hover {
-  background: var(--c, var(--accent));
-  color: var(--void);
-}
-
-.start-command:hover::before {
-  color: var(--void);
-}
-
 /* The four numbers and the four kinds. */
-.counts li:nth-child(1) b {
-  color: var(--accent);
-}
-
-.counts li:nth-child(2) b {
-  color: var(--amber);
-}
-
-.counts li:nth-child(3) b {
-  color: var(--teal);
-}
-
-.counts li:nth-child(4) b {
-  color: var(--sand);
-}
-
-.counts a:hover b {
-  color: #fff;
-}
-
-.kinds [data-kind='skills'] {
-  --kc: var(--accent);
-}
-
-.kinds [data-kind='agents'] {
-  --kc: var(--amber);
-}
-
-.kinds [data-kind='rules'] {
-  --kc: var(--teal);
-}
-
-.kinds [data-kind='checks'] {
-  --kc: var(--sand);
-}
-
-.kinds button {
-  border-block-start: 2px solid var(--kc);
-}
-
-.kinds button b {
-  color: var(--kc);
-}
-
-.kinds button:hover {
-  background: color-mix(in srgb, var(--kc) 12%, var(--void));
-}
-
-.kinds [aria-pressed='true'] {
-  background: var(--kc);
-  color: var(--void);
-}
-
-.kinds [aria-pressed='true'] b {
-  color: var(--void);
-}
 
 /* The name you picked takes its kind's colour. */
 .inside {
@@ -218,43 +129,7 @@ body::after {
   color: #fff;
 }
 
-.detail {
-  border-color: color-mix(in srgb, var(--pick) 45%, transparent);
-  box-shadow: 0 0 3rem color-mix(in srgb, var(--pick) 12%, transparent);
-}
-
-.detail-kind {
-  color: var(--pick);
-}
-
-.detail-say q::before {
-  color: var(--pick);
-}
-
 /* Chips drifting past take the four colours in turn. */
-.marquee-track li:nth-child(4n + 1) {
-  border-color: rgb(217 119 87 / 0.5);
-  color: #f0c4b2;
-}
-
-.marquee-track li:nth-child(4n + 2) {
-  border-color: rgb(242 161 131 / 0.45);
-  color: #f4b9a0;
-}
-
-.marquee-track li:nth-child(4n + 3) {
-  border-color: rgb(241 237 231 / 0.45);
-  color: #e8e4de;
-}
-
-.marquee-track li:nth-child(4n) {
-  border-color: rgb(184 95 63 / 0.45);
-  color: #f0c4b2;
-}
-
-.marquee {
-  background: linear-gradient(90deg, rgb(217 119 87 / 0.06), rgb(242 161 131 / 0.04), rgb(241 237 231 / 0.06));
-}
 
 /* Sections: a coloured hairline at the top and a faint wash under it. */
 .example,
@@ -332,19 +207,12 @@ body::after {
 }
 
 /* The cells are a little see-through, so the glow and the grid behind the page show in them. */
-.points li,
-.counts li,
 .start-cases li,
 .install-steps li,
 .works-for li,
 .fit > div,
-.choices li,
-.kinds button {
+.choices li {
   background-color: rgb(5 6 7 / 0.7);
-}
-
-.kinds [aria-pressed='true'] {
-  background-color: var(--kc);
 }
 
 /* THE HEADER: glass over the glow, an orange mark, the version, and an orange line under the place you are. */
@@ -676,38 +544,6 @@ body::after {
 .language-icon circle,
 .language-icon path {
   vector-effect: non-scaling-stroke;
-}
-
-.marquee {
-  mask-image: none;
-}
-
-.marquee::before,
-.marquee::after {
-  content: '';
-  position: absolute;
-  inset-block: 0;
-  z-index: 2;
-  width: 14%;
-  pointer-events: none;
-}
-
-.marquee {
-  position: relative;
-}
-
-.marquee::before {
-  inset-inline-start: 0;
-  background: linear-gradient(90deg, var(--void), transparent);
-}
-
-.marquee::after {
-  inset-inline-end: 0;
-  background: linear-gradient(270deg, var(--void), transparent);
-}
-
-.marquee-track {
-  will-change: transform;
 }
 
 /* The two fixed layers behind the page each get their own layer, so scrolling does not repaint them. */

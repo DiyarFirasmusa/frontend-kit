@@ -73,7 +73,7 @@ export const journeyWords = {
     t('Claude checks it', 'يفحصه Claude'),
     t('You decide', 'القرار لك'),
   ],
-  lead: t('This is how the kit works, from the first message to a project you can open. You never write code.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تكتب أي كود.'),
+  lead: t('This is how the kit works, from the first message to a project you can open. You never write code. The setup is being improved, so it may ask a little differently today.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تكتب أي كود. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
   /** What happens at each stop, one sentence each. */
   details: [
     t('In the Claude app you send one message. Claude installs the kit and starts the setup.', 'في تطبيق Claude ترسل رسالة واحدة. فيثبت Claude الإضافة ويبدأ الإعداد.'),
@@ -98,7 +98,7 @@ export const journeyWords = {
 /** The install panel. */
 export const installWords = {
   title: t('Start in two steps', 'ابدأ بخطوتين'),
-  lead: t('Wajiha Kit is free. Claude is an AI assistant like ChatGPT, made by Anthropic: sign in to it first. Claude Code, which the kit works inside, is not part of every Claude plan, so check yours on Claude’s website before you start. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “Explain how to publish this site”.', '«واجهة» مجانية. و⁦Claude⁩ مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩، من شركة ⁦Anthropic⁩: سجّل فيه بحسابك أولا. أما ⁦Claude Code⁩، الذي تعمل داخله الإضافة، فليس في كل خطط ⁦Claude⁩، فتأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس، اطلب لاحقا من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع».'),
+  lead: t('Wajiha Kit is free. Claude is an AI assistant like ChatGPT, made by Anthropic: sign in to it first. Claude Code, which the kit works inside, is not part of every Claude plan, so check yours on Claude’s website before you start. On Windows the safety checks may not fully work yet. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “Explain how to publish this site”.', '«واجهة» مجانية. و⁦Claude⁩ مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩، من شركة ⁦Anthropic⁩: سجّل فيه بحسابك أولا. أما ⁦Claude Code⁩، الذي تعمل داخله الإضافة، فليس في كل خطط ⁦Claude⁩، فتأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس، اطلب لاحقا من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع».'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),
   failed: t('Select it and copy', 'حدّدها وانسخها'),
@@ -168,7 +168,7 @@ export const compare = {
   },
   gains: <Gain[]>[
     {
-      name: t('Plain questions only', 'أسئلة بسيطة فقط'),
+      name: t('Plain questions', 'أسئلة بسيطة'),
       text: t('The kit picks the setup, the way a good team would.', 'تقترح الإضافة الإعداد، كما يقترحه فريق جيد.'),
       instead: t('questions about libraries and frameworks you do not know', 'أسئلة عن مكتبات وأطر عمل لا تعرفها'),
       short: t('Technical questions', 'أسئلة تقنية'),

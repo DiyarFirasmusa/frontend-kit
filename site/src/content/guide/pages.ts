@@ -149,7 +149,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     still: 'broken',
     name: t('Fix an old project', 'إصلاح مشروع قديم'),
     title: t('Fix an old, messy project.', 'أصلح مشروعا قديما وفوضويا.'),
-    lead: t('Refactor mode measures the mess, plans six phases and runs one at a time, without changing what the app does.', 'نمط إعادة الهيكلة يقيس حجم الفوضى، ثم يخطط ست مراحل وينفذها واحدة واحدة، دون أن يغير ما يفعله التطبيق.'),
+    lead: t('Refactor mode measures the mess, plans seven phases and runs one at a time, without changing what the app does.', 'نمط إعادة الهيكلة يقيس حجم الفوضى، ثم يخطط سبع مراحل وينفذها واحدة واحدة، دون أن يغير ما يفعله التطبيق.'),
   },
   examples: {
     id: 'examples',

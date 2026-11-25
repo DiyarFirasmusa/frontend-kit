@@ -82,7 +82,7 @@ export const work: Record<string, SkillGuide> = {
     ask: [t('/wajiha-kit:refactor-mode audit', '/wajiha-kit:refactor-mode audit'), t('/wajiha-kit:refactor-mode next', '/wajiha-kit:refactor-mode next')],
     steps: [
       t('on: switches the project into this mode.', 'on: ينقل المشروع إلى هذا النمط.'),
-      t('audit: measures everything without editing any code, and writes a plan with six phases.', 'audit: يقيس كل شيء دون تعديل أي كود، ويكتب خطة من ست مراحل.'),
+      t('audit: measures everything without editing any code, and writes a plan with seven phases.', 'audit: يقيس كل شيء دون تعديل أي كود، ويكتب خطة من سبع مراحل.'),
       t('next: carries out one phase you approved, and compares the result with the first measurement.', 'next: ينفذ مرحلة واحدة وافقت عليها، ويقارن النتيجة بالقياس الأول.'),
       t('status and off: status shows the progress, off returns to normal work.', 'status وoff: الأول يعرض التقدم، والثاني يعود إلى العمل العادي.'),
     ],

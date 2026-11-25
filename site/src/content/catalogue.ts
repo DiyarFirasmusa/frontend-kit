@@ -53,7 +53,7 @@ export const skillGroups: SkillGroup[] = [
       'refactor-mode': { en: 'Fixes an old project: measures it first, then improves it one phase at a time, each phase approved by you.', ar: 'تصلح مشروعا قديما: تقيسه أولا، ثم تحسنه مرحلة بمرحلة، وكل مرحلة توافق عليها.' },
       mode: { en: 'Sets how careful and how fast the assistant works: freeze, urgent fix, read-only and more. An advanced option.', ar: 'تحدد مقدار حذر المساعد وسرعته: تجميد، وإصلاح عاجل، وقراءة فقط، وغيرها. خيار متقدم.' },
       'upgrade-mode': { en: 'Moves a family of tools to a new version, one phase at a time.', ar: 'تنقل مجموعة أدوات إلى إصدار جديد، مرحلة بعد مرحلة.' },
-      'fix-everywhere': { en: 'Finds every copy of a problem, fixes each one and proves none is left.', ar: 'تجد كل نسخة من المشكلة، وتصلح كل واحدة، وتثبت أنه لم يبق شيء.' },
+      'fix-everywhere': { en: 'Finds every copy of a problem, fixes each one and checks that none is left.', ar: 'تجد كل نسخة من المشكلة، وتصلح كل واحدة، وتثبت أنه لم يبق شيء.' },
       'backend-request': { en: 'Writes down in plain words what your screens need from your backend.', ar: 'تكتب بكلمات بسيطة ما تحتاجه شاشاتك من الخادم.' },
     },
   },

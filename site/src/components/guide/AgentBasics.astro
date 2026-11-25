@@ -9,14 +9,14 @@ interface Props {
 
 const { locale } = Astro.props
 const words = {
-  difference: t('How is an agent different from a skill?', 'ما الفرق بين المختص والمهارة؟'),
+  difference: t('How is a specialist different from a skill?', 'ما الفرق بين المختص والمهارة؟'),
   skill: t('A skill is knowledge. The same assistant reads the steps and does the job itself.', 'المهارة معرفة. المساعد نفسه يقرأ الخطوات وينفذ العمل.'),
-  agent: t('An agent is a worker. A separate assistant does the job without seeing the conversation, which is why its review is honest.', 'الوكيل عامل مستقل. مساعد منفصل ينفذ العمل دون أن يرى المحادثة، ولهذا تكون مراجعته صادقة.'),
-  start: t('How an agent starts', 'كيف يبدأ المختص'),
+  agent: t('A specialist is a worker (Claude Code calls it an agent). A separate assistant does the job without seeing the conversation, which is why its review is honest.', 'المختص عامل مستقل (وتسميه ⁦Claude Code⁩ «وكيلا»). مساعد منفصل ينفذ العمل دون أن يرى المحادثة، ولهذا تكون مراجعته صادقة.'),
+  start: t('How a specialist starts', 'كيف يبدأ المختص'),
   ways: [
     t('By itself: frontend-reviewer runs after the quality gate passes.', 'تلقائيا: يعمل frontend-reviewer بعد أن تنجح بوابة الجودة.'),
     t('Through a skill: review starts a reviewer for you.', 'من مهارة: مهارة review تطلق مراجعا لك.'),
-    t('By asking: name the agent in your sentence.', 'بطلب منك: اذكر اسم المختص في جملتك.'),
+    t('By asking: name the specialist in your sentence.', 'بطلب منك: اذكر اسم المختص في جملتك.'),
   ],
 }
 ---

@@ -18,7 +18,7 @@ export const en: Copy = {
   },
   facts: { skills: 'skills', agents: 'specialists', rules: 'rules', events: 'safety-check events' },
   box: {
-    title: 'Everything the kit puts in your project.',
+    title: 'Everything the kit contains. Each project gets the part that fits it.',
     lead: 'Nothing below is a plan. All of it ships in the current version.',
     contents: ({ skills, agents, events, rules, servers, denied, examples }) => [
       [skills, 'skills, from one component to a whole feature'],

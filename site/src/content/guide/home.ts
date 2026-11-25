@@ -26,7 +26,7 @@ export const home = {
   start: t('Install the kit', 'ثبّت الإضافة'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
-    lead: t('Pick one when Claude asks. You do not need to choose tools: each kind comes ready.', 'اختر واحدا عندما يسألك Claude. ولا تحتاج أن تختار أدوات: كل نوع يأتي جاهزا.'),
+    lead: t('Pick one when Claude asks. The kit picks the tools, and may ask which framework.', 'اختر واحدا عندما يسألك Claude. تختار الإضافة الأدوات، وقد تسألك أي إطار.'),
     say: t('You could say', 'يمكنك أن تقول'),
     more: t('See the three kinds of project', 'شاهد الأنواع الثلاثة للمشاريع'),
   },
@@ -100,7 +100,7 @@ export const home = {
       {
         mode: 'refactor',
         name: t('My project is old and messy', 'مشروعي قديم وفوضوي'),
-        text: t('It measures the mess, makes a plan in six steps and does them one by one. What your app does stays the same.', 'تقيس حجم الفوضى، وتضع خطة من ست مراحل، وتنفذها واحدة بعد أخرى. وما يفعله تطبيقك لا يتغير.'),
+        text: t('It measures the mess, makes a plan in seven phases and does them one by one. What your app does stays the same.', 'تقيس حجم الفوضى، وتضع خطة من سبع مراحل، وتنفذها واحدة بعد أخرى. وما يفعله تطبيقك لا يتغير.'),
         command: '/wajiha-kit:refactor-mode on',
         page: 'refactor',
       },

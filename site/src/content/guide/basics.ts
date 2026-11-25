@@ -13,7 +13,7 @@ export const basics = {
     '«واجهة» إضافة تعمل داخل ⁦Claude Code⁩، وهو مساعد ذكاء اصطناعي يعمل داخل مجلد مشروعك. تجيب عن بضعة أسئلة بسيطة، فتبني الإضافة مشروعا كاملا ومرتبا بإعداد ثابت. ولا تحتاج أن تعرف المكتبات أو الأدوات. ثم تفحص النتيجة قبل أن تراها. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا. أجب بكلماتك.',
   ),
   youDo: t('What you do', 'ماذا تفعل أنت'),
-  youDoLead: t('Five steps, and you never need to know the technical words.', 'خمس خطوات، ولا تحتاج أن تعرف الكلمات التقنية.'),
+  youDoLead: t('Five steps. A few words may be new, and each one is explained where it appears.', 'خمس خطوات. وقد تمر بكلمات جديدة، ويُشرح كل منها عند ظهوره.'),
   steps: [
     {
       title: t('Install it', 'ثبّتها'),
@@ -26,7 +26,7 @@ export const basics = {
     {
       title: t('Answer a few questions', 'أجب عن بضعة أسئلة'),
       text: t(
-        'What are you building: a dashboard, a website, or both? Tell it about your project, in your own words: what it contains and what people can do in it. Send your design, or a picture or link of a style you like. Send the link that describes your backend, if you have one. Pick Arabic, English or both.',
+        'What are you building: a dashboard, a website, or both? Tell it about your project, in your own words: what it contains and what people can do in it. Send your design, or a picture or link of a style you like. If you have a file that describes your backend, save it as docs/api/openapi.json. Pick Arabic, English or both.',
         'ماذا تبني: لوحة تحكم أو موقعا أو الاثنين؟ حدّثها عن مشروعك بكلماتك: ماذا يحتوي وماذا يستطيع الناس أن يفعلوا فيه. أرسل تصميمك، أو صورة أو رابطا لأسلوب يعجبك. أرسل رابط وصف خادمك الخلفي إن كان عندك. واختر العربية أو الإنجليزية أو الاثنتين.',
       ),
     },

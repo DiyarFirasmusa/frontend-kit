@@ -79,6 +79,6 @@ export const problems = [
   ],
   [
     t('Does it work on Windows?', 'هل تعمل الإضافة على Windows؟'),
-    t('The safety checks were built and tested on macOS. On Windows they may not work fully. If every command is refused, see the first answer on this page.', 'بُنيت فحوص الأمان واختُبرت على ⁦macOS⁩. وقد لا تعمل على ⁦Windows⁩ كاملة. وإذا رُفضت كل الأوامر، فراجع أول إجابة في هذه الصفحة.'),
+    t('The safety checks were built and tested on macOS. On Windows they may not work fully. If every command is refused, see “Every command is refused after installing”.', 'بُنيت فحوص الأمان واختُبرت على ⁦macOS⁩. وقد لا تعمل على ⁦Windows⁩ كاملة. وإذا رُفضت كل الأوامر، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const

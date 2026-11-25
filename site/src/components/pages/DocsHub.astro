@@ -4,6 +4,7 @@ import { t } from '../../content/guide/text.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
 import { facts } from '../../lib/plugin.ts'
+import Block from '../guide/Block.astro'
 
 interface Props {
   locale: Locale
@@ -24,6 +25,15 @@ const kindCards = [
   { kind: 'rule', id: 'rules', count: facts.rules },
   { kind: 'hook', id: 'checks', count: facts.events },
 ].map(({ kind, id, count }) => ({ kind, count, name: PAGES[id as 'skills'].name[locale], about: PAGES[id as 'skills'].lead[locale], href: pageUrl(locale, id as 'skills') }))
+const glossary = {
+  title: t('Words used in this guide', 'كلمات تُستعمل في هذا الدليل'),
+  items: [
+    [t('Kit', 'الإضافة'), t('Wajiha Kit itself: what you install.', '«واجهة» نفسها: ما تثبّته.')],
+    [t('Claude', 'Claude'), t('The AI assistant you talk to, made by Anthropic.', 'المساعد الذكي الذي تحادثه، من شركة Anthropic.')],
+    [t('Specialist', 'المختص'), t('A helper with one job, like a reviewer or a tester. Claude Code calls it an agent.', 'مساعد له مهمة واحدة، مثل المراجع أو المختبِر. وتسميه Claude Code «وكيلا» (agent).')],
+    [t('Safety check', 'فحص الأمان'), t('A small script that runs by itself and can stop a risky command. Claude Code calls it a hook.', 'سكربت صغير يعمل وحده ويستطيع إيقاف أمر خطر. وتسميه Claude Code «خطّافا» (hook).')],
+  ] as const,
+}
 const hubWords = {
   start: t('Start here', 'ابدأ من هنا'),
   behind: t('Behind the scenes', 'في الخلفية'),
@@ -83,3 +93,8 @@ const morePages = (['features', 'modes', 'configuration', 'refactor', 'changelog
     }
   </ul>
 </section>
+<Block id="words" title={glossary.title[locale]}>
+  <ul class="index">
+    {glossary.items.map(([name, text]) => <li><b>{name[locale]}</b><p>{text[locale]}</p></li>)}
+  </ul>
+</Block>
