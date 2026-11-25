@@ -1,0 +1,44 @@
+---
+import { compare } from '../../content/guide/showcase.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<section id="why" class="compare-section">
+  <div class="column section-head">
+    <h2>{compare.title[locale]}</h2>
+    <p>{compare.lead[locale]}</p>
+  </div>
+  <div class="column versus" data-alive>
+    <p class="versus-head" aria-hidden="true">
+      <span class="is-without">{compare.without[locale]}</span>
+      <span class="is-with">
+        <i>✻</i>
+        {compare.with[locale]}
+      </span>
+    </p>
+    <ul class="versus-rows">
+      {
+        compare.rows.map(([without, withKit], i) => (
+          <li style={`--n:${i}`}>
+            <p class="versus-without">
+              <i aria-hidden="true">✕</i>
+              <span class="sr-only">{compare.without[locale]}: </span>
+              {without[locale]}
+            </p>
+            <p class="versus-with">
+              <i aria-hidden="true">✓</i>
+              <span class="sr-only">{compare.with[locale]}: </span>
+              {withKit[locale]}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

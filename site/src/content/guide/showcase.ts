@@ -108,3 +108,44 @@ export const installWords = {
   slash: t('Then type / and pick', 'ثم اكتب / واختر'),
   other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),
 }
+
+/** Why use the kit and not an AI on its own: what happens without it, and what you get with it. */
+export const compare = {
+  title: t('Why not just ask an AI?', 'لماذا لا تسأل الذكاء الاصطناعي وحده؟'),
+  lead: t(
+    'An AI on its own can write code. Wajiha Kit makes sure it is the right code, built the same good way every time.',
+    'الذكاء الاصطناعي وحده يستطيع كتابة الكود. وواجهة تضمن أن يكون الكود الصحيح، مبنيا بالطريقة الجيدة نفسها في كل مرة.',
+  ),
+  without: t('AI on its own', 'الذكاء الاصطناعي وحده'),
+  with: t('With Wajiha Kit', 'مع واجهة'),
+  rows: <[Bilingual, Bilingual][]>[
+    [
+      t('Asks you technical choices you do not know: which library, which framework.', 'يسألك عن خيارات تقنية لا تعرفها: أي مكتبة، وأي إطار عمل.'),
+      t('You answer plain questions. The setup is chosen for you, the way a good team would.', 'تجيب عن أسئلة بسيطة. ويُختار الإعداد لك، كما يختاره فريق جيد.'),
+    ],
+    [
+      t('A different structure every time you ask.', 'هيكل مختلف في كل مرة تطلب فيها شيئا.'),
+      t('One clear structure, the same every time.', 'هيكل واحد واضح، هو نفسه في كل مرة.'),
+    ],
+    [
+      t('Says “done” even when something is broken.', 'يقول «تم» حتى لو كان هناك شيء معطل.'),
+      t('Checks for mistakes and runs tests before it says done.', 'يفحص الأخطاء ويجري الاختبارات قبل أن يقول تم.'),
+    ],
+    [
+      t('Writes a new copy of the same button again and again.', 'يكتب نسخة جديدة من الزر نفسه مرة بعد مرة.'),
+      t('Finds what already exists and uses it again.', 'يجد ما هو موجود ويعيد استخدامه.'),
+    ],
+    [
+      t('Arabic and phones often come out broken.', 'العربية والهاتف يخرجان مكسورين في الغالب.'),
+      t('Arabic right to left and phones work from the start.', 'العربية من اليمين لليسار والهاتف يعملان من البداية.'),
+    ],
+    [
+      t('Can run a risky step, like deleting work or publishing.', 'قد ينفذ خطوة خطرة، مثل حذف العمل أو النشر.'),
+      t('Risky steps are stopped, and it asks you first.', 'تُوقف الخطوات الخطرة، ويسألك أولا.'),
+    ],
+    [
+      t('Code that is hard for anyone to read later.', 'كود يصعب على أي شخص قراءته لاحقا.'),
+      t('Clean, organised code a developer can pick up at any time.', 'كود نظيف ومرتب يستطيع أي مبرمج متابعته في أي وقت.'),
+    ],
+  ],
+}
