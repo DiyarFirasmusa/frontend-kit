@@ -18,8 +18,8 @@ export const needs = [
   {
     name: t('On Windows', 'على ويندوز'),
     why: t(
-      'On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
-      'على ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
+      'On Windows, go on as usual. The safety checks are scripts that were only tried by hand on Windows, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, install jq (winget install jqlang.jq) and restart Claude Code.',
+      'على ويندوز تابع كالمعتاد. فحوص الأمان سكربتات جُرّبت يدويا على ويندوز فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإن رُفض كل أمر بعد التثبيت فثبّت ⁦jq⁩ بالأمر ⁦winget install jqlang.jq⁩ ثم أعد تشغيل ⁦Claude Code⁩.',
     ),
   },
 ]

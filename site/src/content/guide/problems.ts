@@ -56,7 +56,7 @@ export const beginnerQuestions = [
   ],
   [
     t('Does it work on Windows?', 'هل تعمل الإضافة على ويندوز؟'),
-    t('Mostly yes. On Windows, go on as usual. The safety checks were tested only on macOS, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'نعم في الغالب. على ويندوز تابع كالمعتاد. فحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
+    t('Mostly yes. On Windows, go on as usual. The safety checks are scripts that were only tried by hand on Windows, so some may not work as expected: keep a copy of any important file. If every command is refused after the install, see “Every command is refused after installing”.', 'نعم في الغالب. على ويندوز تابع كالمعتاد. فحوص الأمان سكربتات جُرّبت يدويا على ويندوز فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const
 
