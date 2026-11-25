@@ -86,7 +86,7 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
       <Fragment slot="side">
         <p class="board-side-title">{w.needsTitle[locale]}</p>
         <ul class="board-list">
-          {w.needsList.map((item) => <li>{item[locale]}</li>)}
+          {w.needsList.map((item, i) => <li>{item[locale]}<small>{w.needsDetail[i]?.[locale]}</small></li>)}
         </ul>
       </Fragment>
       <div slot="note">

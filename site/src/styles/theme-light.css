@@ -93,9 +93,7 @@ html[data-theme='light'] .toc a::before {
 }
 
 html[data-theme='light'] .command,
-html[data-theme='light'] .file {
-  background: rgb(20 20 19 / 0.05);
-}
+
 
 html[data-theme='light'] .top-install,
 html[data-theme='light'] .hero-start {
@@ -331,4 +329,9 @@ html[data-theme='light'] .board.side-ink .board-list li::before {
 
 html[data-theme='light'] .board.side-ink .board-list li {
   border-block-start-color: rgb(20 20 19 / 0.16);
+}
+
+html[data-theme='light'] .board.tone-orange .path-stop:nth-child(7) .path-dot {
+  background: #141413 !important;
+  color: var(--accent) !important;
 }

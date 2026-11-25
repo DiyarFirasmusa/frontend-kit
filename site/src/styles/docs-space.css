@@ -3649,3 +3649,100 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   margin: 0.75rem 0 0;
   color: var(--muted);
 }
+
+
+/* =====================================================================================================
+   Round 24: from the sixth review
+   ===================================================================================================== */
+/* The install window never wider than its block, and its commands scroll inside it. */
+.start-body,
+.start-window .start-message,
+.start-main > *,
+.start-window {
+  min-width: 0;
+}
+
+.start-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* The notes before you start use the one disclosure too. */
+.start-more > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+}
+
+.start-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.start-more > summary::after {
+  content: '+';
+  color: var(--turq);
+  font: 600 1.25rem/1 var(--code);
+}
+
+.start-more[open] > summary::after {
+  content: '\2013';
+}
+
+/* The 404's arrows are arrows, not tiles. */
+.board.side-ink.missing-board .board-list li::before {
+  content: '\2192';
+  width: auto;
+  height: auto;
+  background: none;
+  color: var(--turq);
+  clip-path: none;
+  font-size: 1rem;
+}
+
+[dir='rtl'] .board.side-ink.missing-board .board-list li::before {
+  content: '\2190';
+}
+
+.missing-board .board-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.missing-other {
+  margin: auto 0 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+  text-align: start;
+}
+
+/* Steps are coloured by who takes them: step 6 (you decide) and the install steps are orange. */
+.board.tone-orange .path-stop:nth-child(7) .path-dot {
+  background: var(--accent);
+  color: #141413;
+}
+
+#install .start-line-track i {
+  background: var(--accent);
+}
+
+/* The saved toast has its own space in the comparison. */
+.ba .dash-toast {
+  inset-block-end: 0.5rem;
+  inset-inline-end: 0.75rem;
+}
+
+.ba .dash-main {
+  padding-block-end: 2.75rem;
+}
+
+/* Words in the six narrow columns of the journey start where you start reading. */
+.board .path-label p {
+  text-align: start;
+}
+
+/* The footer has its own ground: the grid never runs through it. */
+.foot {
+  background: var(--void);
+}

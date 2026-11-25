@@ -113,6 +113,11 @@ export const installWords = {
     t('Claude installs the small helper programs for you, after you say yes.', 'يثبّت ⁦Claude⁩ البرامج المساعدة الصغيرة لك بعد موافقتك.'),
   ],
   helpers: t('Claude checks that jq, Node and git are on your computer and helps you install them if they are not. Claude’s plans and prices are set by Anthropic, not by this kit.', 'يتأكد ⁦Claude⁩ أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ على حاسوبك ويساعدك في تثبيتها إن لم تكن. وخطط ⁦Claude⁩ وأسعارها تحددها ⁦Anthropic⁩ لا الإضافة.'),
+  needsDetail: [
+    t('The Code tab comes with some plans.', 'تبويب ⁦Code⁩ يأتي مع بعض الخطط.'),
+    t('Windows, Mac or Linux. A phone is not enough.', 'ويندوز أو ماك أو لينكس. الهاتف لا يكفي.'),
+    t('Claude checks them and asks first.', 'يتحقق ⁦Claude⁩ منها ويسألك أولا.'),
+  ],
   moreTitle: t('Notes before you start', 'ملاحظات قبل أن تبدأ'),
   windows: t('You can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file.', 'تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم.'),
   reopen: t('If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),
@@ -128,9 +133,9 @@ export const installWords = {
   illustration: t('An illustration, not a measurement. Wajiha Kit builds the files on your computer and publishes nothing.', 'رسم توضيحي وليس قياسا. تبني «واجهة» الملفات على حاسوبك ولا تنشر شيئا.'),
   differs: t('Site builders host and publish your site for you. Wajiha Kit builds the files on your computer, inside Claude, and publishes nothing.', 'منصات بناء المواقع تستضيف موقعك وتنشره لك. أما واجهة فتبني الملفات على حاسوبك داخل ⁦Claude⁩، ولا تنشر شيئا.'),
   hint: t('You do not need to understand it. Claude carries it out, and asks your permission before each command, including the jq, Node or git installs it proposes.', 'لا تحتاج إلى فهمها. ينفذها ⁦Claude⁩، ويسألك إذنك قبل كل أمر، ومنها أوامر تثبيت ⁦jq⁩ أو ⁦Node⁩ أو ⁦git⁩ التي يقترحها.'),
-  source: t('This installs code from github.com/DiyarFirasmusa/wajiha-kit, our only source.', 'تثبّت هذه الرسالة كودا من github.com/DiyarFirasmusa/wajiha-kit، وهو مصدرنا الوحيد.'),
+  source: t('This installs code from one source only:', 'يثبّت هذا الكود من مصدر واحد فقط:'),
   madeBy: t('Made by', 'صنعها'),
-  other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),
+  other: t('Have a project already?', 'لديك مشروع؟'),
 }
 
 /** Why use the kit and not an AI on its own: two pictures of the result, then six gains. */

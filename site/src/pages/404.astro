@@ -8,7 +8,8 @@ const route: Route = { kind: 'home' }
 ---
 
 <Layout locale="en" route={route} title="Page not found | Wajiha Kit" description="This page does not exist." indexable={false}>
-  <Header locale="en" route={{ kind: 'page', id: 'guide' }} />
+  <div data-chrome="en"><Header locale="en" route={{ kind: 'page', id: 'guide' }} /></div>
+  <div data-chrome="ar" hidden><Header locale="ar" route={{ kind: 'page', id: 'guide' }} /></div>
   <main id="content" class="missing" tabindex="-1">
     <!-- An empty board: the same layout as every part of the site, with nothing in it. -->
     <div class="board tone-ink side-ink missing-board">
@@ -24,8 +25,8 @@ const route: Route = { kind: 'home' }
       </p>
       <div class="board-main">
         <h1 data-missing-title>This page does not exist.</h1>
-        <p lang="ar" dir="rtl" data-missing-other>هذه الصفحة غير موجودة.</p>
         <p class="missing-help" data-missing-help>Check the address, or search the guide with Ctrl K.</p>
+        <p class="missing-other" lang="ar" dir="rtl" data-missing-other>هذه الصفحة غير موجودة.</p>
       </div>
       <div class="board-side">
         <p class="board-side-title" data-missing-near>Pages near here</p>
@@ -44,9 +45,10 @@ const route: Route = { kind: 'home' }
     <script is:inline>
       // One static 404 serves both languages: under /ar/ the Arabic sentence leads and the page turns right to left.
       if (location.pathname.indexOf('/ar/') === 0) {
-        var main = document.querySelector('main')
-        main.lang = 'ar'
-        main.dir = 'rtl'
+        document.documentElement.lang = 'ar'
+        document.documentElement.dir = 'rtl'
+        document.querySelectorAll('[data-chrome="en"]').forEach(function (e) { e.hidden = true })
+        document.querySelectorAll('[data-chrome="ar"]').forEach(function (e) { e.hidden = false })
         document.title = 'الصفحة غير موجودة | واجهة'
         var q = function (s) { return document.querySelector(s) }
         var title = q('[data-missing-title]')
@@ -72,5 +74,6 @@ const route: Route = { kind: 'home' }
       }
     </script>
   </main>
-  <SiteFooter locale="en" />
+  <div data-chrome="en"><SiteFooter locale="en" /></div>
+  <div data-chrome="ar" hidden><SiteFooter locale="ar" /></div>
 </Layout>

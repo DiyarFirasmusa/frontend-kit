@@ -77,7 +77,7 @@ const runs = hookRuns(event)
             </dd>
           </div>
         </dl>
-        <pre class="script-about" lang="en" dir="ltr" tabindex="0">{about.trim()}</pre>
+        <pre class="script-about" lang="en" dir="ltr" tabindex="0">{about.trim().replace(/([^\n])\n(?=[^\n])/g, '$1 ')}</pre>
         <a class="source" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/scripts/${script}`}>
           {ui.source[locale]}
           <span class="sr-only">: {script}</span>
