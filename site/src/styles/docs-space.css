@@ -1683,3 +1683,53 @@ html[lang='ar'] .credits {
 .fold-all > :not(summary) {
   margin-block-end: 1rem;
 }
+
+/* ---------- Identity: the mark, put together part by part down the home page ---------- */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 1.25rem;
+  color: var(--muted);
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow svg {
+  flex: none;
+}
+
+.eyebrow-count {
+  color: var(--turq);
+}
+
+:lang(ar) .eyebrow {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+}
+
+.start-side > .eyebrow {
+  margin-block-end: 1rem;
+}
+
+/* The kit's stamp: every window on the site carries the mark in the corner of its bar. */
+.chat-bar::after,
+.browser-bar::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 1rem;
+  width: 1.125rem;
+  margin-block: auto;
+  height: 1.125rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='5' width='54' height='12' rx='4' fill='%23f1ede7'/%3E%3Crect x='45' y='21' width='14' height='38' rx='4' fill='%2319abab'/%3E%3Crect x='5' y='21' width='36' height='20' rx='4' fill='%23d97757'/%3E%3Crect x='5' y='45' width='36' height='14' rx='4' fill='%23f1ede7'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0.85;
+}
+
+/* The pause button is in that corner on the live chat, so the stamp moves in beside it. */
+.chat.live .chat-bar::after {
+  inset-inline-end: 3.25rem;
+}

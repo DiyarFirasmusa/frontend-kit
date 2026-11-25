@@ -1,4 +1,5 @@
 ---
+import SectionMark from './SectionMark.astro'
 import { home } from '../../content/guide/home.ts'
 import { showcase } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
@@ -14,6 +15,7 @@ const { locale } = Astro.props
 
 <section id="builds" class="builds" data-kinds>
   <div class="column section-head">
+    <SectionMark locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} />
     <h2>{home.builds.title[locale]}</h2>
     <p>{home.builds.lead[locale]}</p>
   </div>

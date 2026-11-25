@@ -1,4 +1,5 @@
 ---
+import SectionMark from './SectionMark.astro'
 import { home } from '../../content/guide/home.ts'
 import { journeyWords as w } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
@@ -12,6 +13,7 @@ const { locale } = Astro.props
 
 <section id="example" class="example">
   <div class="column section-head">
+    <SectionMark locale={locale} part={1} label={locale === 'ar' ? 'كيف تعمل' : 'How it works'} />
     <h2>{home.example[locale]}</h2>
     <p>{w.lead[locale]}</p>
   </div>
