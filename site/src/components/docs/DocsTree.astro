@@ -48,7 +48,8 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
   {
     name: t('Advanced pages', 'صفحات متقدمة')[locale],
     kind: 'page',
-    leaves: SECTIONS.slice(2).flatMap(({ pages }) => pages).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead, extra: KEYWORDS[id] })),
+    // The four kinds of page (skills, specialists, rules, checks) have their own groups below.
+    leaves: SECTIONS.slice(2).flatMap(({ pages }) => pages).filter((id) => !['skills', 'agents', 'rules', 'checks'].includes(id)).map((id) => ({ name: PAGES[id].name[locale], href: pageUrl(locale, id), about: PAGES[id].lead, extra: KEYWORDS[id] })),
   },
   {
     name: PAGES.skills.name[locale],

@@ -42,7 +42,7 @@ const { locale } = Astro.props
       <Fragment slot="side">
         <p class="board-side-title">{home.board.getTitle[locale]}</p>
         <ul class="board-list">
-          {home.board.get.map((item) => <li>{item[locale]}</li>)}
+          {home.board.get.map((item, i) => <li>{item[locale]}<small>{home.board.getDetail[i]?.[locale]}</small></li>)}
         </ul>
       </Fragment>
       <p slot="note">{home.board.note[locale]}</p>

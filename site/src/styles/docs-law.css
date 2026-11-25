@@ -1057,3 +1057,126 @@ html[data-theme='light'] .doc .hub-kinds [data-kind='agent'] a {
 .copy-pill {
   border-radius: 0.5rem;
 }
+
+/* The note bar of a page always has words at its start: the previous page, or where you are. */
+.doc .pager .pager-here {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.25rem 0;
+  color: inherit;
+}
+
+.doc .pager .pager-here span {
+  color: #96938d;
+  font: 500 0.8125rem/1.4 var(--code);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc .pager .pager-here span {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-theme='light'] .doc .pager .pager-here span {
+  color: #46433e;
+}
+
+/* The journey: the steps are never faded (faded words fail contrast); the current one is marked by its edge and its lift. */
+.path-stop:not(.is-current):not(.is-done) .path-picture,
+.path-stop:not(.is-current):not(.is-done) .path-label {
+  opacity: 1;
+}
+
+.path-stop .path-picture {
+  box-shadow: 0 0 0 1px transparent;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Fixes after the ninth review (identity, Arabic, mobile, light)
+   --------------------------------------------------------------------------------------------- */
+/* The rows of a side column carry a small line under them, so the shared height reads as full. */
+.board-list li small {
+  display: block;
+  margin-block-start: 0.25rem;
+  color: inherit;
+  font-weight: 400;
+  opacity: 0.78;
+}
+
+/* The six steps are a sequence: in Arabic they run from the right. */
+[dir='rtl'] .board .path {
+  direction: rtl;
+}
+
+/* Arabic never goes below 15px. */
+:lang(ar) .board-list li small,
+:lang(ar) .path-label p,
+:lang(ar) .start-hint,
+:lang(ar) .start-skip,
+:lang(ar) .board-note p {
+  font-size: max(0.9375rem, 1em);
+  line-height: 1.7;
+}
+
+/* Commands never break at a hyphen: they scroll inside their own window. */
+@media (max-width: 47.99rem) {
+  #install .start-text .msg-command,
+  .command code,
+  .command pre {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+  }
+
+  /* The two header squares have air between them. */
+  .top .theme-toggle,
+  .top .language {
+    margin-inline: 0.125rem;
+  }
+
+  .top-actions,
+  .top .top-tools {
+    gap: 0.5rem;
+  }
+
+  /* The words of a step are never at the block's edge. */
+  .board .path-label,
+  #install .start-line > li:not(.start-line-track) {
+    padding-inline-end: 0.5rem;
+  }
+
+  /* The opening bar's label is one line: no capitals, the mark beside it. */
+  .board-top {
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Light mode: the lit block in a board bar is ink, the others a quiet 22%; the "look" block and the side column differ. */
+html[data-theme='light'] .board-top svg rect[fill*='241 237 231'] {
+  fill: #141413;
+}
+
+html[data-theme='light'] .board-top svg rect[fill*='/ 0.28'] {
+  fill: rgb(20 20 19 / 0.22);
+}
+
+html[data-theme='light'] .board.tone-ink .board-main {
+  background: #cfc7b8;
+}
+
+html[data-theme='light'] .board.side-ink .board-side {
+  background: #e6e0d4;
+}
+
+html[data-theme='light'] .hub-num,
+html[data-theme='light'] .doc ol.explained li::before,
+html[data-theme='light'] .block.is-orange .num {
+  color: #a8512b;
+}

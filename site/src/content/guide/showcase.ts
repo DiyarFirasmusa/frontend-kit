@@ -90,6 +90,11 @@ export const journeyWords = {
     t('It asks before risky steps.', 'يسألك قبل الخطوات الخطرة.'),
     t('You decide what to keep.', 'أنت تقرر ما تحتفظ به.'),
   ],
+  endDetail: [
+    t('Everything stays in a folder on your computer until you say so.', 'كل شيء يبقى في مجلد على حاسوبك حتى تقول.'),
+    t('Installing programs and deleting files need your permission.', 'تثبيت البرامج وحذف الملفات يحتاجان إذنك.'),
+    t('Keep this version, change it, or start over.', 'احتفظ بهذه النسخة أو عدّلها أو ابدأ من جديد.'),
+  ],
   install: t('Please install Wajiha Kit…', 'من فضلك ثبّت واجهة…'),
   ask: t('What are we building?', 'ماذا سنبني؟'),
   options: [t('Dashboard', 'لوحة تحكم'), t('Website', 'موقع'), t('Both', 'الاثنان')],

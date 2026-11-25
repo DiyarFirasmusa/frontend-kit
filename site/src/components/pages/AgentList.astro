@@ -21,11 +21,11 @@ const words = {
 <AgentBasics locale={locale} />
 <Block id="team" title={words.team[locale]}>
   <ul class="cards">
-    {Object.entries(agents).map(([name, job]) => (
+    {Object.entries(agents).map(([name]) => (
       <li>
         <a class="card" href={agentUrl(locale, name)}>
           <strong><bdi>{name}</bdi></strong>
-          <span>{job[locale]}. {agentGuides[name]!.plain[locale]}</span>
+          <span>{agentGuides[name]!.plain[locale]}</span>
           <span class="card-say">
             <em>{ui.say[locale]}</em>
             <q dir="auto">{agentGuides[name]!.ask[locale]}</q>

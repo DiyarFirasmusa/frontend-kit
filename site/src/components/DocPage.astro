@@ -126,11 +126,16 @@ const crumbs = [
       <article class="doc-article">
         <slot />
         <nav class="pager" aria-label={`${ui.previous[locale]} / ${ui.next[locale]}`}>
-          {before && (
+          {before ? (
             <a href={before.href}>
               <span>{ui.previous[locale]}</span>
               <bdi>{before.name}</bdi>
             </a>
+          ) : (
+            <p class="pager-here">
+              <span>{ui.whereYouAre[locale]}</span>
+              <bdi>{PAGES[parent].name[locale]}</bdi>
+            </p>
           )}
           {after && (
             <a class="pager-next" href={after.href}>

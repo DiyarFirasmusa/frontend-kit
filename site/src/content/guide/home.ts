@@ -24,7 +24,7 @@ export const home = {
     },
   ],
   start: t('Start building', 'ابدأ البناء'),
-  trust: t('Free · Needs a computer and a Claude plan with the Code tab · Nothing is saved or published without your yes', 'مجانية · تحتاج حاسوبا وخطة ⁦Claude⁩ فيها تبويب ⁦Code⁩ · ولا يُحفظ ولا يُنشر شيء دون موافقتك'),
+  trust: t('Free · Needs a computer and a Claude plan with the Code tab · Your files stay on your computer, and nothing is published without your yes', 'مجانية · تحتاج حاسوبا وخطة ⁦Claude⁩ فيها تبويب ⁦Code⁩ · ملفاتك تبقى على حاسوبك، ولا يُنشر شيء دون موافقتك'),
   caption: t('Illustration of the chat. At the end you get a project folder on your computer, a short report of what Claude checked, and a page that opens in your browser.', 'رسم توضيحي للمحادثة. في النهاية تحصل على مجلد مشروع على حاسوبك، وتقريرا قصيرا بما فحصه ⁦Claude⁩، وصفحة تُفتح في المتصفح.'),
   madeUp: t('Made-up sample, to show the idea.', 'نموذج متخيَّل لتوضيح الفكرة.'),
   board: {
@@ -34,6 +34,11 @@ export const home = {
       t('A project folder on your computer', 'مجلد مشروع على حاسوبك'),
       t('A short report of what Claude checked', 'تقريرا قصيرا بما فحصه ⁦Claude⁩'),
       t('A page that opens in your browser', 'صفحة تُفتح في المتصفح'),
+    ],
+    getDetail: [
+      t('Your files stay with you.', 'ملفاتك تبقى معك.'),
+      t('What it tested, and what it found.', 'ما اختبره وما وجده.'),
+      t('Open it and click through it.', 'افتحها وجرّب التنقل فيها.'),
     ],
     note: t('An illustration of the chat in the Claude app.', 'رسم توضيحي للمحادثة داخل تطبيق ⁦Claude⁩.'),
   },
