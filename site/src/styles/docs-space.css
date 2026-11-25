@@ -2000,3 +2000,68 @@ html[lang='ar'] .credits {
 .pager a:hover {
   border-color: color-mix(in srgb, var(--turq) 60%, transparent);
 }
+
+/* ---------- Round 10 fixes from the Arabic and phone review ---------- */
+/* The text gradient only paints inside the line, so the dots of a final yeh and the tail of a g were cut off: room below the line. */
+.hero h1 span:last-child,
+.section-head h2 {
+  padding-block: 0.08em 0.3em;
+  margin-block-end: -0.3em;
+}
+
+/* "Drag to compare": the arrows point outward in both directions of writing. */
+[dir='rtl'] .ba-cue::before {
+  content: '▸ ';
+}
+
+[dir='rtl'] .ba-cue::after {
+  content: ' ◂';
+}
+
+/* The broken example in Arabic moves toward the reading end, not off the frame. */
+[dir='rtl'] .is-broken .dash-button {
+  translate: -2em 0.4em;
+}
+
+[dir='rtl'] .ba::after {
+  translate: 50% 0;
+}
+
+/* Arabic is smaller than Latin at the same size: the labels above titles are a step larger and bolder. */
+:lang(ar) .eyebrow,
+:lang(ar) .doc-eyebrow,
+:lang(ar) .section-head p.eyebrow,
+:lang(ar) .start-side p.eyebrow {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hero-actions a,
+.hero-ways a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+@media (max-width: 620px) {
+  :lang(ar) .path-picture {
+    font-size: 0.75rem;
+  }
+
+  .eyebrow svg {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  #builds::before,
+  #example::before,
+  #why::before,
+  #install::before {
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 18%, transparent), transparent);
+  }
+
+  .ba-results {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
