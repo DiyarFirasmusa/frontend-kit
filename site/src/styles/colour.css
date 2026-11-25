@@ -95,7 +95,6 @@ body::after {
   --c: var(--teal);
 }
 
-.point-number,
 .start-mode {
   color: var(--c, var(--accent));
 }
@@ -108,10 +107,6 @@ body::after {
 .points li:hover,
 .start-cases li:hover {
   background: color-mix(in srgb, var(--c, var(--accent)) 9%, var(--void));
-}
-
-.points li:hover .point-number {
-  color: var(--c, var(--accent));
 }
 
 .start-command::before {
@@ -276,16 +271,14 @@ body::after {
   background: linear-gradient(180deg, rgb(241 237 231 / 0.06), transparent 28rem);
 }
 
-.section-head h2,
-.example-head h2 {
+.section-head h2 {
   background: linear-gradient(90deg, #fff 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-[dir='rtl'] .section-head h2,
-[dir='rtl'] .example-head h2 {
+[dir='rtl'] .section-head h2 {
   background: linear-gradient(270deg, #fff 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
@@ -755,35 +748,6 @@ body .top.is-scrolled::before {
 }
 
 /* NUMBERS: a small round badge with the digit, like the steps in the docs. No more 01, 02, 03. */
-.point-number,
-.run-number,
-.step-number {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 1.875rem;
-  height: 1.875rem;
-  padding: 0;
-  border: 1px solid rgb(217 119 87 / 0.55);
-  border-radius: 50%;
-  background: rgb(217 119 87 / 0.1);
-  color: var(--accent);
-  font: 600 0.875rem / 1 var(--latin);
-  letter-spacing: 0;
-  align-self: start;
-}
-
-.run-number {
-  margin-block-start: 0.2rem;
-}
-
-.run > li[aria-current] .run-number,
-.install-steps li:hover .step-number,
-.points li:hover .point-number {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--void);
-}
 
 /* The header's links lose the digits and get a small dot that lights for the place you are. */
 @media (min-width: 1280px) {

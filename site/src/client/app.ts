@@ -1,7 +1,6 @@
 import { initAlive } from './alive.ts'
 import { initCopy } from './copy-button.ts'
 import { initTree } from './docs-tree.ts'
-import { initExplorer } from './explorer.ts'
 import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
@@ -18,7 +17,6 @@ document.addEventListener('astro:page-load', () => {
   page.abort()
   page = new AbortController()
   initChrome(page.signal)
-  initExplorer()
   initCopy()
   initFinder()
   initTree(page.signal)

@@ -92,20 +92,6 @@
 }
 
 /* Step numbers. */
-.point-number,
-.run-number,
-.step-number {
-  border-color: rgb(25 171 171 / 0.55);
-  background: rgb(25 171 171 / 0.1);
-  color: var(--turq);
-}
-.run > li[aria-current] .run-number,
-.install-steps li:hover .step-number,
-.points li:hover .point-number {
-  border-color: var(--turq);
-  background: var(--turq);
-  color: var(--void);
-}
 
 /* The result: every check. */
 .ticks li::before,

@@ -1,7 +1,4 @@
 /* Motion is the rule here, never the exception. All of it waits for the visitor's own setting. */
-.rise {
-  display: inline-block;
-}
 
 @media (prefers-reduced-motion: no-preference) {
   :root {

@@ -150,13 +150,6 @@
   }
 
   /* ---------- Install ---------- */
-  .has-started .sp-tabs .is-on {
-    animation: press 6s ease 0.5s infinite;
-  }
-
-  .has-started .sp-folder {
-    animation: line-in 6s ease 0.9s infinite;
-  }
 
   .has-started .start-message {
     animation: glow 4s ease-in-out infinite alternate;
@@ -181,14 +174,6 @@
 
   .has-started .start-message .chat-send {
     animation: send 4.5s ease 1s infinite;
-  }
-
-  .has-started .sp-caret {
-    animation: blink 1s steps(1) infinite;
-  }
-
-  .has-started .sp-slash li.is-on {
-    animation: pick 6s ease infinite;
   }
 }
 

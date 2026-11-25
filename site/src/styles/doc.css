@@ -7,10 +7,6 @@
   border-block-end: 1px solid var(--line);
 }
 
-.banner-small {
-  min-height: min(23rem, 56svh);
-}
-
 .banner img {
   position: absolute;
   inset-block-start: 0;
@@ -38,13 +34,6 @@
   background: linear-gradient(to left, rgb(5 6 7 / 0.94) 30%, rgb(5 6 7 / 0.72) 52%, transparent 78%);
 }
 
-.banner-copy {
-  position: relative;
-  z-index: 1;
-  width: min(44rem, 100%);
-  padding: calc(var(--bar) + 2rem) var(--edge) 2.75rem;
-}
-
 .banner h1 {
   font-size: clamp(2.25rem, 1rem + 3.6vw, 4.5rem);
 }
@@ -52,12 +41,6 @@
 .banner h1.is-name {
   font: 560 clamp(1.875rem, 1rem + 2.8vw, 3.5rem) / 1.1 var(--latin);
   overflow-wrap: anywhere;
-}
-
-.banner-copy > p {
-  margin-block-start: 1.25rem;
-  color: var(--ivory);
-  font-size: var(--lead);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -90,13 +73,6 @@
   display: flex;
   align-items: center;
   min-height: 44px;
-}
-
-.doc-body {
-  display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
-  gap: var(--edge);
-  padding-inline: var(--edge);
 }
 
 .side {
@@ -528,16 +504,12 @@
 }
 
 @media (max-width: 900px) {
-  .doc-body {
-    grid-template-columns: minmax(0, 1fr);
-  }
 
   .side {
     display: none;
   }
 
-  .banner,
-  .banner-small {
+  .banner {
     min-height: 0;
   }
 
@@ -555,10 +527,6 @@
   [dir='rtl'] .banner::after {
     background: linear-gradient(transparent 12%, rgb(5 6 7 / 0.85) 48%, var(--void));
   }
-
-  .banner-copy {
-    padding-block-start: calc(var(--bar) + 7rem);
-  }
 }
 
 @media (max-width: 620px) {
@@ -567,27 +535,7 @@
   }
 }
 
-.in-tour {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-block-start: 0.75rem;
-  font-size: var(--small);
-  text-underline-offset: 6px;
-}
-
 /* The documentation. */
-.side-names {
-  margin-block-end: 0.5rem;
-  padding-inline-start: 0.75rem;
-  border-inline-start: 1px solid var(--line);
-}
-
-.side-names a {
-  min-height: 30px;
-  font: 500 0.8125rem / 1.35 var(--latin);
-  overflow-wrap: anywhere;
-}
 
 .index li {
   display: grid;

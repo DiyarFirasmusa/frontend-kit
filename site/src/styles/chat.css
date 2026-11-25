@@ -398,13 +398,6 @@
 }
 
 /* Inside the groups of the steps section the messages sit on a grid, so they line up by their own side. */
-.group-inner > .ce-user {
-  justify-self: end;
-}
-
-.group-inner > .ce-tool {
-  justify-self: start;
-}
 
 /* THE OPENING BUTTON: one clear way in, instead of a command a beginner cannot read. */
 .hero-actions {
@@ -495,3 +488,4 @@
 [dir='rtl'] .chat.is-paused .chat-pause i {
   scale: -1 1;
 }
+

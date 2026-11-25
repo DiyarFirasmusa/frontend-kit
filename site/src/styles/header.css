@@ -16,10 +16,6 @@
   background: linear-gradient(rgb(5 6 7 / 0.85), rgb(5 6 7 / 0.45) 70%, transparent);
 }
 
-.film.past-film .top {
-  background: var(--void);
-}
-
 .brand {
   margin-inline-end: auto;
   display: flex;

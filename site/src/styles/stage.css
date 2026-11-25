@@ -45,44 +45,6 @@ body > .foot {
   font-size: var(--lead);
 }
 
-.doc-map {
-  max-width: 100%;
-}
-
-.doc-map > summary {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  color: var(--muted);
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 6px;
-}
-
-.doc-map > summary span {
-  font-family: var(--latin);
-}
-
-.doc-map ul {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 1rem;
-}
-
-.doc-map a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--muted);
-  font-size: var(--small);
-  overflow-wrap: anywhere;
-}
-
-.doc-map [aria-current] {
-  color: var(--ivory);
-}
-
 /* The documentation: the tree, the words, and the thing itself. */
 .doc {
   display: grid;

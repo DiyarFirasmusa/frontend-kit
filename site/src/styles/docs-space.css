@@ -1166,3 +1166,16 @@ html.is-paused *::after {
     min-height: 2.75rem;
   }
 }
+
+/* English pages do not download the Arabic fonts: only Arabic pages, and text marked as Arabic, use them. */
+html:not([dir='rtl']) {
+  --type: 'Familjen Grotesk Variable', system-ui, sans-serif;
+}
+
+[lang='ar']:not(.language) {
+  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+}
+
+.language {
+  font-family: system-ui, sans-serif;
+}
