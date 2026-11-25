@@ -54,13 +54,6 @@ export const journeyWords = {
     t('It looks for mistakes, runs tests, and a second reviewer reads the work. What fails is fixed first.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجع ثان العمل. وما يفشل يُصلَح أولا.'),
     t('A short report and one question: save this version? Nothing leaves your computer without your yes.', 'تقرير قصير وسؤال واحد: هل أحفظ هذه النسخة؟ ولا يخرج شيء من جهازك دون موافقتك.'),
   ],
-  after: t('After that, you keep going in plain sentences:', 'بعدها تكمل بجمل بسيطة:'),
-  asks: [
-    t('Add a page for my customers', 'أضف صفحة لعملائي'),
-    t('Change the colours to green', 'غيّر الألوان إلى الأخضر'),
-    t('Make the product page faster', 'اجعل صفحة المنتج أسرع'),
-    t('Add Arabic next to English', 'أضف العربية بجانب الإنجليزية'),
-  ],
   install: t('Please install Wajiha Kit…', 'من فضلك ثبّت واجهة…'),
   ask: t('What are we building?', 'ماذا سنبني؟'),
   options: [t('Dashboard', 'لوحة تحكم'), t('Website', 'موقع'), t('Both', 'الاثنان')],
