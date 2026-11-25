@@ -38,7 +38,7 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
                     {i + 1}
                   </span>
                   <h3>{title[locale]}</h3>
-                  <p>{text[locale]}</p>
+                  <p>{w.stepsShort[i]?.[locale] ?? text[locale]}</p>
                   {i === 0 && needs[0]?.link && <p><a href={needs[0].link}>{needs[0].linkLabel[locale]}</a></p>}
                 </li>
               ))
@@ -73,6 +73,7 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
               <p class="start-hint">{w.tonight[locale]}</p>
               <details class="start-more">
                 <summary>{w.moreTitle[locale]}</summary>
+                <p>{w.caution[locale]}</p>
                 <p>{w.helpers[locale]}</p>
                 <p>{w.phone[locale]}</p>
                 <p>{w.reopen[locale]}</p>
