@@ -1,0 +1,161 @@
+/* Step numbers. */
+/* The result: every check. */
+.ticks li::before {
+  color: var(--turq);
+  background: var(--turq);
+}
+
+/* ---------------------------------------------------------------------------------------------
+   DOCS. Every page wears the colour of its section; the side list shows each section's colour.
+   --------------------------------------------------------------------------------------------- */
+.doc {
+  --kc: var(--k-page);
+}
+
+.doc[data-section='skills'] {
+  --kc: var(--k-skill);
+}
+
+.doc[data-section='rules'] {
+  --kc: var(--k-rule);
+}
+
+.doc[data-section='agents'] {
+  --kc: var(--k-agent);
+}
+
+.doc[data-section='checks'] {
+  --kc: var(--k-hook);
+}
+
+/* The side list: a colour square for each section, its count in that colour, and the page
+   you are on marked with a bar of it. */
+.tree [data-tree-group] {
+  --gc: var(--ivory);
+}
+
+.tree [data-kind='skill'] {
+  --gc: var(--k-skill);
+}
+
+.tree [data-kind='rule'] {
+  --gc: var(--k-rule);
+}
+
+.tree [data-kind='agent'] {
+  --gc: var(--k-agent);
+}
+
+.tree [data-kind='hook'] {
+  --gc: var(--k-hook);
+}
+
+.tree nav summary {
+  justify-content: flex-start;
+}
+
+.tree nav summary::before {
+  content: '';
+  flex: none;
+  background: var(--gc);
+}
+
+/* The page: a faint light of its colour at the top, and the colour on what you scan for. */
+.crumbs a {
+  color: var(--kc);
+  text-decoration-color: color-mix(in srgb, var(--kc) 50%, transparent);
+}
+
+.block > h2::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 3px;
+  margin-block-end: 0.75rem;
+  border-radius: 2px;
+  background: var(--kc);
+}
+
+.numbered > li::before {
+  border-color: color-mix(in srgb, var(--kc) 55%, transparent);
+  background: color-mix(in srgb, var(--kc) 12%, transparent);
+  color: var(--kc);
+}
+
+.rows dt,
+.timeline-head span,
+.pager span {
+  color: var(--kc);
+}
+
+.index a.is-name,
+.index a:hover {
+  color: var(--kc);
+}
+
+.card:hover,
+.pager a:hover,
+.doc .tags a:hover {
+  border-color: color-mix(in srgb, var(--kc) 60%, transparent);
+}
+
+.finder input:focus {
+  border-color: var(--kc);
+}
+
+.block pre {
+  border-inline-start: 2px solid color-mix(in srgb, var(--kc) 55%, transparent);
+}
+
+.journey li::before,
+.questions summary::after {
+  color: var(--kc);
+}
+
+/* The source of a skill, agent or rule: tables, quotes and links in colour. */
+.source-doc th {
+  background: color-mix(in srgb, var(--kc) 12%, transparent);
+  color: var(--ivory);
+}
+
+.source-doc a {
+  text-decoration-color: var(--turq);
+}
+
+.source-doc blockquote {
+  border-inline-start: 3px solid var(--kc);
+  background: color-mix(in srgb, var(--kc) 7%, transparent);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+[dir='rtl'] .source-doc blockquote {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.source-doc h3::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-inline-end: 0.5rem;
+  border-radius: 2px;
+  background: var(--kc);
+  vertical-align: 0.15em;
+}
+
+/* Notes: a turquoise tint, the colour of a pointer. */
+.note {
+  border-color: rgb(25 171 171 / 0.4);
+  background: rgb(25 171 171 / 0.07);
+}
+
+/* Above every page title, a bar in the section's colour, like the bars over each heading. */
+.doc-head::before {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 4px;
+  margin-block-end: 1.25rem;
+  border-radius: 2px;
+  background: var(--kc);
+}

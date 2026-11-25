@@ -13,7 +13,6 @@ html {
 }
 
 /* In film mode a section's top is exactly the frame it starts on. */
-
 body {
   margin: 0;
   overflow-x: clip;
@@ -115,38 +114,4 @@ main:focus,
 
 .skip:focus {
   translate: 0;
-}
-
-.command {
-  display: flex;
-  max-width: 40rem;
-  border: 1px solid rgb(var(--ink-rgb) / 0.32);
-  background: rgb(var(--void-rgb) / 0.65);
-  /* WebKit keeps the page's direction here unless told. */
-  text-align: left;
-}
-
-.command code {
-  flex: 1;
-  min-width: 0;
-  padding: 0.875rem 1rem;
-  font-size: clamp(0.71875rem, 0.4rem + 0.35vw, 0.8125rem);
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.command button {
-  display: none;
-  flex: none;
-  min-width: 4.75rem;
-  min-height: 44px;
-  padding-inline: 0.875rem;
-  border-inline-start: 1px solid rgb(var(--ink-rgb) / 0.32);
-  text-align: center;
-  outline-offset: -5px;
-  transition: background-color 0.25s, color 0.25s;
-}
-
-.js .command button {
-  display: block;
 }

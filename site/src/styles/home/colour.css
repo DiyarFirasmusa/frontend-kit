@@ -1,0 +1,59 @@
+/* ---------------------------------------------------------------------------------------------
+   COLOUR. A warm glow behind everything, a grid you can see, and one colour for each kind of thing:
+   skills orange, agents amber, rules teal, hooks sand.
+   --------------------------------------------------------------------------------------------- */
+.home {
+  --grid-line: rgb(var(--ink-rgb) / 0.11);
+}
+
+/* A glow right behind the console. */
+.hero-side {
+  position: relative;
+}
+
+.hero-side::before {
+  content: '';
+  position: absolute;
+  inset: -15% -10%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(217 119 87 / 0.32), rgb(242 161 131 / 0.08) 60%, transparent);
+  pointer-events: none;
+}
+
+/* The second sentence of the headline carries the colour. */
+.hero h1 span:last-child {
+  background: linear-gradient(90deg, var(--accent), var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[dir='rtl'] .hero h1 span:last-child {
+  background: linear-gradient(270deg, var(--accent), var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.example,
+.get-it {
+  border-block-start: 1px solid transparent;
+  background: linear-gradient(180deg, rgb(217 119 87 / 0.06), transparent 28rem);
+}
+
+.section-head h2 {
+  background: linear-gradient(90deg, #fff 60%, var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[dir='rtl'] .section-head h2 {
+  background: linear-gradient(270deg, #fff 60%, var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* The Arabic headline is two lines, one sentence each. */
+[dir='rtl'] .hero h1 {
+  line-height: 1.35;
+}

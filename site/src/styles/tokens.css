@@ -8,33 +8,34 @@
   --faint: #96938d;
   --line: rgb(var(--ink-rgb) / 0.18);
   --bad: #e0776b;
+
   /* Claude's own orange, used in touches only: the star, the bullets, the line you have read, the focus. */
   --accent: #d97757;
   --accent-soft: rgb(217 119 87 / 0.16);
+
   /* Only orange and black and white: its lighter and deeper tones, and white. */
   --amber: #f2a183;
   --sand: #b85f3f;
   --teal: #f1ede7;
   --rose: var(--bad);
+
   /* Wajiha's own turquoise, made at the orange's lightness and strength. Orange is the request and the action;
      turquoise is the way around and the result (links, where you are, focus, steps, progress, checks). */
   --turq: #19abab;
   --turq-deep: #006c6d;
   --turq-soft: rgb(25 171 171 / 0.16);
-
   --type: 'Familjen Grotesk Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --latin: 'Familjen Grotesk Variable', system-ui, sans-serif;
   --code: 'IBM Plex Mono', ui-monospace, monospace;
   --leading: 1.55;
-
   --small: 0.9375rem;
   --body: 1.0625rem;
   --lead: clamp(1.0625rem, 0.9rem + 0.45vw, 1.375rem);
   --sub: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
   --title: clamp(2.125rem, 0.5rem + min(3.9vw, 6.4vh), 4.75rem);
-
   --edge: clamp(1.25rem, 4.2vw, 4.75rem);
   --bar: 76px;
+
   /* The guide bar at the foot of the home page. */
   --guide: 52px;
   --check: polygon(0 52%, 13% 38%, 36% 64%, 87% 8%, 100% 21%, 37% 93%);

@@ -1,0 +1,79 @@
+/* Code you copy: one window on every page - a dark body with an orange edge, body-size text,
+   and the copy action an orange soft-square pill at the top end. */
+.command {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 40rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.25rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 0.7rem;
+  background: #131312;
+  color: #f1ede7;
+
+  /* WebKit keeps the page's direction here unless told. */
+  text-align: left;
+  overflow: hidden;
+}
+
+.command code {
+  flex: 1;
+  min-width: 0;
+  padding: 0.875rem 1rem;
+  overflow-wrap: anywhere;
+}
+
+.command code,
+.command pre,
+.command span {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* On a phone a long command scrolls sideways instead of breaking. */
+@media (max-width: 47.99rem) {
+  .command code,
+  .command pre {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+  }
+}
+
+.command button {
+  display: none;
+  flex: none;
+  align-self: flex-start;
+  min-width: 0;
+  min-height: 2.75rem;
+  margin-block: 0.15rem;
+  padding-inline: 1rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: #141413;
+  font-weight: 600;
+  text-align: center;
+  outline-offset: -5px;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.command button * {
+  color: #141413;
+}
+
+/* On the guide the button's own colour is orange (its words, in a span, stay dark). */
+.doc .command button {
+  color: var(--accent);
+}
+
+.command button:hover {
+  background: var(--amber);
+  color: #141413;
+}
+
+.js .command button {
+  display: block;
+}

@@ -1,0 +1,59 @@
+html[data-theme='light'] .tree,
+html[data-theme='light'] .doc .tree,
+html[data-theme='light'] .toc:not([hidden]) {
+  background: rgb(244 240 234 / 0.94) !important;
+}
+
+html[data-theme='light'] .toc a::before {
+  background: var(--void);
+}
+
+html[data-theme='light'] .doc-head h1 em {
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+
+html[data-theme='light'] .doc-head.board-head .board-top {
+  color: #141413;
+}
+
+html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1,
+html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1 em {
+  color: #141413;
+  -webkit-text-fill-color: #141413;
+}
+
+html[data-theme='light'] .doc-head.board-head.tone-ink .board-main .doc-summary {
+  color: #46433e;
+}
+
+html[data-theme='light'] .toc a[data-passed] {
+  color: rgb(20 20 19 / 0.5);
+}
+
+/* The grid is quieter behind the words you read. */
+html[data-theme='light'] body:has(main.doc)::after {
+  opacity: 0.2;
+}
+
+html[data-theme='light'] .doc .pager {
+  border-color: rgb(20 20 19 / 0.14);
+  background: #e8e2d8;
+  color: #141413;
+}
+
+html[data-theme='light'] .doc .pager a span {
+  color: #46433e;
+}
+
+html[data-theme='light'] .doc .pager .pager-next {
+  border-color: rgb(20 20 19 / 0.4);
+}
+
+html[data-theme='light'] .command {
+  --ink-rgb: 241 237 231;
+  --ivory: #f1ede7;
+  --muted: #bcb8b1;
+  --accent: #d97757;
+  color: #f1ede7;
+}

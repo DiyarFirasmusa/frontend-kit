@@ -1,6 +1,10 @@
 ---
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
+// The page's styles, in cascade order: every page's, the home page's own, then the light drawings last.
+import '../styles/site.css'
+import '../styles/home/index.css'
+import '../styles/light-claude.css'
 import Layout from '../layouts/Layout.astro'
 import type { Route } from '../lib/routes.ts'
 import Header from './Header.astro'

@@ -9,49 +9,14 @@
 }
 
 /* Grids of cells: one rounded frame. */
-
 /* Boxes. */
-.command,
-.card,
-.prompt,
-.gate-output,
-.block pre,
-.call,
-.pair p,
-.source-doc,
-.questions details,
 .menu nav {
   border-radius: var(--radius);
 }
 
-.command,
-.prompt,
-.gate-output {
-  overflow: hidden;
-}
-
-.pager a,
-.finder input,
-.tree-search input,
-.gate-commands button,
-.numbered > li::before {
-  border-radius: var(--radius-sm);
-}
-
 /* Small things are pills. */
-.tags li,
 .top-docs {
   border-radius: var(--radius-pill);
-}
-
-.tree a,
-.tree nav summary {
-  border-radius: var(--radius-sm);
-}
-
-/* Cells sit inside a rounded frame: they stay square, the frame clips them. */
-.command button {
-  border-radius: 0;
 }
 
 /* ---- The rest of the site ---- */
@@ -61,22 +26,6 @@
 
 :not(pre) > code {
   border-radius: 0.375rem;
-}
-
-.finder,
-.finder input,
-.tree-search input {
-  border-radius: var(--radius-sm);
-}
-
-/* Tables sit in a rounded frame. */
-.wide {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.glance {
-  border-radius: var(--radius-sm);
 }
 
 /* The steps of the one-request section: plain words, no frame. The one being read is bright, the rest are dim. */
@@ -96,5 +45,3 @@
 .run > li::before {
   display: none;
 }
-
-/* The long list behind the scenes stays closed until it is wanted or searched. */

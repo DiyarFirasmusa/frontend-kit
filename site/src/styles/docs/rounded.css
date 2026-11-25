@@ -1,0 +1,43 @@
+.card,
+.prompt,
+.gate-output,
+.block pre,
+.pair p,
+.source-doc,
+.questions details {
+  border-radius: var(--radius);
+}
+
+.prompt,
+.gate-output {
+  overflow: hidden;
+}
+
+.pager a,
+.finder input,
+.tree-search input,
+.gate-commands button,
+.numbered > li::before {
+  border-radius: var(--radius-sm);
+}
+
+.tags li {
+  border-radius: var(--radius-pill);
+}
+
+.tree a,
+.tree nav summary {
+  border-radius: var(--radius-sm);
+}
+
+.finder,
+.finder input,
+.tree-search input {
+  border-radius: var(--radius-sm);
+}
+
+/* Tables sit in a rounded frame. */
+.wide {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}

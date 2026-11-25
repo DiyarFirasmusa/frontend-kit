@@ -1,11 +1,3 @@
-/* ---------------------------------------------------------------------------------------------
-   COLOUR. A warm glow behind everything, a grid you can see, and one colour for each kind of thing:
-   skills orange, agents amber, rules teal, hooks sand.
-   --------------------------------------------------------------------------------------------- */
-.home {
-  --grid-line: rgb(var(--ink-rgb) / 0.11);
-}
-
 /* The light behind the page: it stays put while the page moves over it. */
 body::before {
   content: '';
@@ -24,84 +16,23 @@ body::after {
   pointer-events: none;
 }
 
-.hero::before {
-  mask-image: radial-gradient(ellipse 90% 80% at 70% 45%, #000 35%, transparent 90%);
-}
-
-[dir='rtl'] .hero::before {
-  mask-image: radial-gradient(ellipse 90% 80% at 30% 45%, #000 35%, transparent 90%);
-}
-
-/* A glow right behind the console. */
-.hero-side {
-  position: relative;
-}
-
-.hero-side::before {
-  content: '';
-  position: absolute;
-  inset: -15% -10%;
-  z-index: -1;
-  background: radial-gradient(closest-side, rgb(217 119 87 / 0.32), rgb(242 161 131 / 0.08) 60%, transparent);
-  pointer-events: none;
-}
-
-/* The second sentence of the headline carries the colour. */
-.hero h1 span:last-child {
-  background: linear-gradient(90deg, var(--accent), var(--amber));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-[dir='rtl'] .hero h1 span:last-child {
-  background: linear-gradient(270deg, var(--accent), var(--amber));
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
 /* Each cell wears the colour of what it is. */
-
 /* The four numbers and the four kinds. */
-
 /* The name you picked takes its kind's colour. */
 .inside {
   --pick: var(--accent);
 }
 
 /* Chips drifting past take the four colours in turn. */
-
 /* Sections: a coloured hairline at the top and a faint wash under it. */
-.example,
 .starts,
-.inside,
-.get-it {
+.inside {
   border-block-start: 1px solid transparent;
   background: linear-gradient(180deg, rgb(217 119 87 / 0.06), transparent 28rem);
 }
 
-.section-head h2 {
-  background: linear-gradient(90deg, #fff 60%, var(--amber));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-[dir='rtl'] .section-head h2 {
-  background: linear-gradient(270deg, #fff 60%, var(--amber));
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
 /* Install: the numbered rows and who it is for. */
-
-.command button:hover {
-  background: var(--accent);
-  color: var(--void);
-}
-
 /* The cells are a little see-through, so the glow and the grid behind the page show in them. */
-
 /* THE HEADER: glass over the glow, an orange mark, the version, and an orange line under the place you are. */
 .top {
   background: rgb(var(--void-rgb) / 0.62);
@@ -175,11 +106,6 @@ body::after {
 
 .top .top-install {
   text-shadow: none;
-}
-
-/* The Arabic headline is two lines, one sentence each. */
-[dir='rtl'] .hero h1 {
-  line-height: 1.35;
 }
 
 /* THE HEADER'S LINKS, redone: one centred pill of places, a small language chip, and a round orange Install. */
@@ -406,7 +332,6 @@ body .top.is-scrolled::before {
 }
 
 /* On doc pages the logo lines up with the side menu: both start the same distance from the edge. */
-
 /* Links to a place on the same page, like the ones in the header, glide there instead of jumping. */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -415,7 +340,6 @@ body .top.is-scrolled::before {
 }
 
 /* NUMBERS: a small round badge with the digit, like the steps in the docs. No more 01, 02, 03. */
-
 /* The header's links lose the digits and get a small dot that lights for the place you are. */
 @media (min-width: 1280px) {
   .top-nav a::before {
@@ -439,4 +363,3 @@ body .top.is-scrolled::before {
     transform: scale(1);
   }
 }
-

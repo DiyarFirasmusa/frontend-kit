@@ -11,7 +11,6 @@
 }
 
 /* Over the film the bar is only a fade. */
-
 .brand {
   margin-inline-end: auto;
   display: flex;
@@ -41,29 +40,6 @@
 .top-nav a:hover,
 .top-nav a[aria-current] {
   color: var(--ivory);
-}
-
-.motion {
-  flex: none;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-}
-
-.js:not(.no-film) .motion {
-  display: grid;
-}
-
-.motion i {
-  width: 11px;
-  height: 13px;
-  border-inline: 3px solid currentColor;
-}
-
-.motion.is-paused i {
-  border: 0;
-  background: currentColor;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .language,

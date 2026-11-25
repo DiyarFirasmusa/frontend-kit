@@ -1,7 +1,10 @@
 ---
 import type { GetStaticPaths } from 'astro'
+// The page's styles, in cascade order: every page's, the guide's own, then the light drawings last.
+import '../styles/site.css'
+import '../styles/docs/index.css'
+import '../styles/light-claude.css'
 import DocPage from '../components/DocPage.astro'
-import Home from '../components/Home.astro'
 import Legal from '../components/pages/Legal.astro'
 import AgentList from '../components/pages/AgentList.astro'
 import AgentPage from '../components/pages/AgentPage.astro'
@@ -30,15 +33,18 @@ import { allRoutes, LOCALES, routePath, type Route } from '../lib/routes.ts'
 
 export const getStaticPaths = (() =>
   LOCALES.flatMap((locale) =>
-    allRoutes().map((route) => {
-      const path = `${locale === 'en' ? '' : `${locale}/`}${routePath(route)}`.replace(/\/$/, '')
-      return { params: { path: path === '' ? undefined : path }, props: { locale: locale as Locale, route } }
-    }),
+    // The home page has its own pages (index.astro, ar/index.astro), so it loads only the home styles.
+    allRoutes()
+      .filter((route): route is Exclude<Route, { kind: 'home' }> => route.kind !== 'home')
+      .map((route) => {
+        const path = `${locale === 'en' ? '' : `${locale}/`}${routePath(route)}`.replace(/\/$/, '')
+        return { params: { path }, props: { locale: locale as Locale, route } }
+      }),
   )) satisfies GetStaticPaths
 
 interface Props {
   locale: Locale
-  route: Route
+  route: Exclude<Route, { kind: 'home' }>
 }
 
 const { locale, route } = Astro.props
@@ -66,17 +72,11 @@ const LEGAL: PageId[] = ['licence', 'privacy', 'terms']
 const Body = route.kind === 'page' && !LEGAL.includes(route.id) ? BODIES[route.id as Exclude<PageId, LegalId>] : undefined
 ---
 
-{
-  route.kind === 'home' ? (
-    <Home locale={locale} />
-  ) : (
-    <DocPage locale={locale} route={route}>
-      {Body && <Body locale={locale} />}
-      {route.kind === 'page' && LEGAL.includes(route.id) && <Legal locale={locale} id={route.id as LegalId} />}
-      {route.kind === 'skill' && <SkillPage name={route.name} locale={locale} />}
-      {route.kind === 'agent' && <AgentPage name={route.name} locale={locale} />}
-      {route.kind === 'rule' && <RulePage group={route.group} name={route.name} locale={locale} />}
-      {route.kind === 'hook' && <HookPage event={route.event} locale={locale} />}
-    </DocPage>
-  )
-}
+<DocPage locale={locale} route={route}>
+  {Body && <Body locale={locale} />}
+  {route.kind === 'page' && LEGAL.includes(route.id) && <Legal locale={locale} id={route.id as LegalId} />}
+  {route.kind === 'skill' && <SkillPage name={route.name} locale={locale} />}
+  {route.kind === 'agent' && <AgentPage name={route.name} locale={locale} />}
+  {route.kind === 'rule' && <RulePage group={route.group} name={route.name} locale={locale} />}
+  {route.kind === 'hook' && <HookPage event={route.event} locale={locale} />}
+</DocPage>

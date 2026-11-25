@@ -1,0 +1,16 @@
+/* A copy box that holds a sentence: it wraps, reads in the page's language and keeps the plain font. */
+.command.is-message {
+  text-align: start;
+}
+
+.command.is-message code {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.command.is-message button {
+  align-self: center;
+  min-width: 5rem;
+}

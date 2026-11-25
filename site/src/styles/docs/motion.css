@@ -1,0 +1,67 @@
+@media (prefers-reduced-motion: no-preference) {
+  .command button,
+  .tree a,
+  .tree summary,
+  .pager a,
+  .tags li,
+  .index a {
+    transition:
+      color 0.3s,
+      background-color 0.3s,
+      border-color 0.3s,
+      translate 0.45s var(--spring),
+      scale 0.3s var(--spring),
+      text-underline-offset 0.35s var(--glide);
+  }
+
+  .tags li:hover {
+    translate: 0 -4px;
+  }
+
+  .command button:active,
+  .tree a:active {
+    scale: 0.93;
+  }
+
+  .tree a:hover {
+    translate: 6px 0;
+  }
+
+  [dir='rtl'] .tree a:hover {
+    translate: -6px 0;
+  }
+
+  .index a:hover {
+    text-underline-offset: 10px;
+  }
+
+  .rows > div,
+  .index li {
+    background: linear-gradient(var(--ivory), var(--ivory)) no-repeat 0 0 / 0 1px;
+    transition: background-size 0.55s var(--glide);
+  }
+
+  [dir='rtl'] .rows > div,
+  [dir='rtl'] .index li {
+    background-position: 100% 0;
+  }
+
+  .rows > div:hover,
+  .index li:hover {
+    background-size: 100% 1px;
+  }
+
+  .tree a[aria-current] {
+    animation: lit 0.7s var(--glide);
+  }
+
+  .tree li:not([hidden]) {
+    animation: listed 0.45s var(--glide) both;
+  }
+}
+
+@keyframes listed {
+  from {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,1264 @@
+/* THE GUIDE, redrawn: three columns on a wide screen, the way the best documentation sites read.
+   The page list on one side, the words in the middle at a comfortable width, "On this page" on the other.
+   Loaded last; it replaces the older spacing and boxes. */
+/* ---------- The frame ---------- */
+.doc .column {
+  min-width: 0;
+  padding-inline: clamp(1.25rem, 4vw, 4rem);
+  background: none;
+}
+
+.doc-head,
+.doc .doc-article {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+/* ---------- The page list ----------
+   Clear section heads with their colour, the count beside the name, an arrow for open or closed;
+   the pages hang from a thin guide line, and the page you are on lights it in its section's colour. */
+@media (min-width: 901px) {
+  .doc {
+    grid-template-columns: 18rem minmax(0, 1fr);
+  }
+
+  .doc .tree {
+    inset-block-start: 0;
+    height: 100svh;
+    margin: 0;
+    padding-block-start: calc(var(--bar) + 1.25rem);
+    border-radius: 0;
+  }
+
+  .doc .tree nav {
+    padding: 0.25rem 1.25rem 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .doc {
+    grid-template-columns: 18rem minmax(0, 1fr) 15rem;
+  }
+}
+
+.tree-search {
+  position: relative;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.tree-search::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0.8rem;
+  inset-inline-start: 2.1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--faint);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.tree-search::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 1.55rem;
+  inset-inline-start: 2.75rem;
+  width: 0.4rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--faint);
+  rotate: 45deg;
+  pointer-events: none;
+}
+
+[dir='rtl'] .tree-search::after {
+  rotate: -45deg;
+}
+
+.tree-search input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding-inline: 2.5rem 1rem;
+  border: 1px solid rgb(var(--ink-rgb) / 0.12);
+  border-radius: 0.75rem;
+  background: rgb(var(--ink-rgb) / 0.04);
+  font-size: 0.875rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.tree-search input:focus {
+  border-color: rgb(217 119 87 / 0.6);
+  background: rgb(var(--ink-rgb) / 0.06);
+  outline: none;
+}
+
+.tree nav details + details {
+  margin-block-start: 0.5rem;
+}
+
+.tree nav summary {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.5rem;
+  padding-inline: 0.5rem;
+  border: 0;
+  border-radius: 0.625rem;
+  color: var(--ivory);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.tree nav summary:hover {
+  background: rgb(var(--ink-rgb) / 0.04);
+}
+
+.tree nav summary::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.tree nav summary span {
+  margin-inline-start: 0;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gc) 14%, transparent);
+  color: var(--gc);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tree nav summary::after {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-inline-start: auto;
+  border-block-end: 1.5px solid var(--faint);
+  border-inline-end: 1.5px solid var(--faint);
+  rotate: -45deg;
+  transition: rotate 0.25s;
+}
+
+[dir='rtl'] .tree nav summary::after {
+  rotate: 135deg;
+}
+
+.tree nav details[open] > summary::after {
+  rotate: 45deg;
+}
+
+/* The pages hang from a thin line. */
+.tree nav details > ul {
+  margin: 0.25rem 0 0.5rem;
+  margin-inline-start: 0.75rem;
+  padding: 0;
+  padding-inline-start: 0.5rem;
+  border-inline-start: 1px solid rgb(var(--ink-rgb) / 0.1);
+  list-style: none;
+}
+
+.tree small {
+  padding-inline: 0.75rem;
+  color: var(--faint);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tree a {
+  position: relative;
+  min-height: 2.125rem;
+  margin-block: 1px;
+  padding-inline: 0.75rem;
+  border-radius: 0.5rem;
+  color: rgb(var(--ink-rgb) / 0.66);
+  font-size: 0.9375rem;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.tree [data-tree-group] a:hover {
+  background: rgb(var(--ink-rgb) / 0.05);
+  color: var(--ivory);
+}
+
+.tree [data-tree-group] a[aria-current] {
+  background: color-mix(in srgb, var(--gc) 13%, transparent);
+  box-shadow: none;
+  color: #fff;
+  font-weight: 500;
+}
+
+[dir='rtl'] .tree [data-tree-group] a[aria-current] {
+  box-shadow: none;
+}
+
+/* The guide line lights beside the page you are on. */
+.tree [data-tree-group] a[aria-current]::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.35rem;
+  inset-inline-start: calc(-0.5rem - 1px);
+  width: 2px;
+  border-radius: 2px;
+  background: var(--gc);
+}
+
+/* ---------- The head of a page ---------- */
+.doc-head {
+  padding-block: 3rem 2rem;
+  padding-inline: 0;
+  border-block-end: 1px solid rgb(var(--ink-rgb) / 0.08);
+}
+
+.doc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  color: var(--kc, var(--accent));
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.doc-eyebrow i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 2px;
+  background: var(--kc, var(--accent));
+}
+
+.doc-head .crumbs {
+  display: none;
+}
+
+.doc-head h1 {
+  margin-block: 0 1rem;
+  font-size: clamp(2rem, 1.3rem + 2vw, 3rem);
+  line-height: 1.15;
+}
+
+.doc .doc-summary {
+  max-width: 40rem;
+  color: var(--muted);
+  font-size: var(--lead);
+  line-height: 1.7;
+}
+
+/* ---------- The words ---------- */
+.doc .doc-article {
+  padding-block: 0.5rem 5rem;
+  padding-inline: 0;
+}
+
+.doc .block {
+  padding-block: 2.5rem 1rem;
+  border: 0;
+  background: none;
+  scroll-margin-block-start: calc(var(--bar) + 1rem);
+}
+
+.doc .block + .block,
+.doc .finder + .block {
+  border-block-start: 0;
+}
+
+.doc .block::before {
+  content: none;
+}
+
+.doc .block > h2 {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-block-end: 0.75rem;
+  font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.75rem);
+  line-height: 1.3;
+}
+
+.doc .block > h2::before {
+  display: none;
+}
+
+.heading-link {
+  color: var(--faint);
+  font-size: 0.8em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.doc .block > h2:hover .heading-link {
+  opacity: 1;
+}
+
+.heading-link:hover {
+  color: var(--kc, var(--accent));
+}
+
+.doc .block-lead {
+  margin-block: 0 1.5rem;
+  color: var(--muted);
+}
+
+/* Steps and questions are not boxed: plain words on the page's own ground. */
+.doc .explained li,
+.doc .question {
+  border-color: transparent;
+  background: none;
+}
+
+/* Previous and next. */
+.doc .pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block-start: 3rem;
+  padding: 0;
+  border: 0;
+}
+
+.doc .pager a {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
+}
+
+.doc .pager a:hover {
+  border-color: color-mix(in srgb, var(--kc, var(--accent)) 55%, transparent);
+  background: color-mix(in srgb, var(--kc, var(--accent)) 6%, transparent);
+}
+
+.doc .pager a span {
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.doc .pager a bdi {
+  color: #fff;
+  font-weight: 500;
+}
+
+.doc .pager-next {
+  grid-column: 2;
+  text-align: end;
+}
+
+/* ---------- On this page: a small route ----------
+   A line with a dot for each part. Parts you have read are dimmed, the part you are reading is lit,
+   and the line fills down to it. It never has a frame or a shadow; on a wide screen it is a dark side
+   column, sticky beside the words. */
+.toc {
+  display: none;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+@media (min-width: 1280px) {
+  .toc:not([hidden]) {
+    position: sticky;
+    inset-block-start: 0;
+    align-self: start;
+    display: block;
+    height: 100svh;
+    margin: 0;
+    padding: calc(var(--bar) + 2.5rem) 1.5rem 2rem;
+    border-radius: var(--radius);
+    background: var(--void);
+  }
+}
+
+.toc p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  color: var(--ivory);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.toc p::before {
+  content: '';
+  width: 0.875rem;
+  height: 0.625rem;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 100% 2px no-repeat,
+    linear-gradient(currentColor 0 0) 0 50% / 70% 2px no-repeat,
+    linear-gradient(currentColor 0 0) 0 100% / 85% 2px no-repeat;
+  opacity: 0.7;
+}
+
+.toc ol {
+  position: relative;
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The route: a faint line, and the coloured part down to where you are. */
+.toc ol::before,
+.toc ol::after {
+  content: '';
+  position: absolute;
+  inset-block: 0.6rem;
+  inset-inline-start: 0.3rem;
+  width: 2px;
+  border-radius: 2px;
+}
+
+.toc ol::before {
+  background: rgb(var(--ink-rgb) / 0.1);
+}
+
+.toc ol::after {
+  background: linear-gradient(180deg, var(--kc, var(--accent)), var(--turq, #19abab));
+  transform: scaleY(var(--reached, 0));
+  transform-origin: top;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toc a {
+  position: relative;
+  display: block;
+  padding: 0.35rem 0;
+  padding-inline-start: 1.5rem;
+  border: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.toc a::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0.7rem;
+  inset-inline-start: 0.05rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 2px solid rgb(var(--ink-rgb) / 0.25);
+  border-radius: 50%;
+  background: #0b0c0d;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    scale 0.2s;
+}
+
+.toc a:hover {
+  color: var(--ivory);
+}
+
+.toc a[data-passed] {
+  color: rgb(var(--ink-rgb) / 0.5);
+}
+
+.toc a[data-passed]::before {
+  border-color: color-mix(in srgb, var(--kc, var(--accent)) 60%, transparent);
+  background: color-mix(in srgb, var(--kc, var(--accent)) 60%, transparent);
+}
+
+.toc a[aria-current] {
+  color: #fff;
+  font-weight: 500;
+}
+
+.toc a[aria-current]::before {
+  border-color: var(--kc, var(--accent));
+  background: var(--kc, var(--accent));
+  scale: 1.25;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--kc, var(--accent)) 20%, transparent);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+  .doc .column {
+    padding-inline: var(--edge, 1.25rem);
+  }
+}
+
+@media (min-width: 901px) {
+  body:has(main.doc) .top {
+    padding-inline-start: 1.25rem;
+  }
+
+  body:has(main.doc) .brand {
+    flex: none;
+    width: calc(18rem - 1.25rem);
+    margin-inline-end: 0;
+  }
+
+  /* The search lives in the header now, so the page list starts straight with its sections. */
+  .doc .tree-search {
+    display: none !important;
+  }
+
+  .doc .tree nav {
+    height: calc(100% - 1rem);
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  body:has(main.doc) .top-nav {
+    display: none;
+  }
+}
+
+/* ---------- The guide wears the home page's grid, quieter ----------
+   The grid is the ground of the head only: it stays at the top of the screen while the page moves and
+   fades out before the words, so no line ever crosses what you read. */
+.doc {
+  position: relative;
+  isolation: isolate;
+}
+
+.doc::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  height: 34rem;
+  background:
+    linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
+  mask-image: linear-gradient(#000 35%, transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ---------- A dark frame around the words ----------
+   The page list, the header and "On this page" share one darker colour, so together they wrap the middle
+   like an arch; the grid and the light show only where you read. The frame is told by its colour alone:
+   no lines on its edges. (The scrolled header's colour is set once, in docs-law.css.) */
+@media (min-width: 901px) {
+  .doc .tree {
+    background: var(--void);
+    border: 0 !important;
+  }
+
+  body:has(main.doc) .top {
+    background: var(--void);
+    border: 0 !important;
+  }
+}
+
+/* The middle keeps the ground; its corners meet the frame softly. */
+.doc .column {
+  position: relative;
+}
+
+/* The date at the top of a legal page. */
+.legal-date {
+  margin-block: 0 1.5rem;
+  color: var(--faint);
+  font-size: 0.875rem;
+}
+
+/* Fingers: the buttons people press are at least 44px tall, and the small "#" next to headings is only for a mouse. */
+@media (hover: none) {
+  .heading-link {
+    display: none;
+  }
+}
+
+.tree-search input:focus-visible,
+.finder input:focus-visible {
+  outline: 2px solid var(--turq, #19abab) !important;
+  outline-offset: 2px;
+}
+
+.tree-search input::placeholder,
+.finder input::placeholder {
+  color: var(--faint);
+  opacity: 1;
+}
+
+/* Phones and tablets: the page list, the footer links and the pause button are 44px to press. */
+@media (max-width: 900px) {
+  .tree a {
+    min-height: 2.75rem;
+  }
+}
+
+/* One reading size for the words of every guide page, and room between a heading and the one under it. */
+.doc-article p {
+  font-weight: 400;
+}
+
+.doc-article h2 + h3,
+.doc-article .block > h3:first-of-type {
+  margin-block-start: 0.75rem;
+}
+
+/* The reasons under the slider line up on the start side on small screens. */
+/* On a phone the page list sits above the words, so the words start close below it. */
+@media (max-width: 900px) {
+  .doc .column {
+    padding-block-start: 1rem;
+  }
+
+  .doc-head {
+    padding-block-start: 1rem;
+  }
+}
+
+/* ---------- Art director's pass ---------- */
+/* The credits on the rights page: one line each, left to right. */
+.credits {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font: 400 0.875rem / 1.6 var(--code);
+  text-align: left;
+}
+
+/* One reading colour for the guide's words: strong words, links and code are the bright ones. */
+main.doc .doc-article :is(p, li) {
+  color: var(--muted);
+}
+
+main.doc .doc-article :is(p, li) :is(strong, b, a, code) {
+  color: var(--ivory);
+}
+
+main.doc .doc-article h3 {
+  line-height: 1.3;
+}
+
+/* No half-drawn outlines: rows are plain, and the small facts row has no frame. */
+.questions details,
+.questions summary,
+.card-say {
+  border-radius: 0;
+}
+
+/* One colour for the small headings inside lists too. */
+main.doc .doc-article :is(h3, h4) {
+  color: var(--ivory);
+}
+
+/* The page intro has no line under it. */
+.doc-head {
+  border-block-end: 0;
+}
+
+/* Arabic reads a little larger, since its letters are smaller than Latin ones at the same size. */
+html[lang='ar'] .doc-article p,
+html[lang='ar'] .doc-article li {
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+html[lang='ar'] .legal-date {
+  font-size: 1rem;
+}
+
+html[lang='ar'] .credits {
+  font-size: 0.9375rem;
+}
+
+/* While you search, each hit shows one line of what the page is about. */
+.tree .leaf-about {
+  display: none;
+  margin-block: 0.125rem 0.5rem;
+  padding-inline: 0.75rem;
+  color: var(--faint);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.tree.is-filtering .leaf-about {
+  display: block;
+}
+
+/* ---------- Art director's third pass ---------- */
+/* Command boxes breathe, and what follows them is not glued to them. */
+.doc .command {
+  margin-block: 0 0.75rem;
+}
+
+.doc .command + p,
+.doc ol.explained + p {
+  margin-block-start: 1.25rem;
+}
+
+.doc .command code {
+  font-size: 0.875rem;
+}
+
+/* The line under the home headline is the audience statement, not a footnote. */
+/* Rule lists: labels you can read, and names you can press. */
+.rows small {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.rows dt a {
+  display: inline-block;
+  padding-block: 0.5rem;
+}
+
+.numbered {
+  margin-block-start: 1rem;
+}
+
+/* ---------- Art director's fourth pass ---------- */
+/* Rhythm: every paragraph, list and box in a guide block has room above it, so nothing touches. */
+.doc-article .block :is(p, ul, ol, dl, .questions) + :is(p, ul, ol, dl, .questions) {
+  margin-block-start: 0.75rem;
+}
+
+.doc-article .block :is(p, ul) + ol.explained,
+.doc-article .block ol.explained + :is(p, ul) {
+  margin-block-start: 1.25rem;
+}
+
+.doc-article p a {
+  padding-block: 0.4rem;
+}
+
+@media (max-width: 620px) {
+  /* A row of links never leaves one stranded at the far end. */
+  .doc .links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .questions summary {
+    min-height: 2.75rem;
+  }
+}
+
+.doc-eyebrow svg {
+  flex: none;
+}
+
+.doc-head::before {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 4px;
+  margin-block-end: 1.25rem;
+  border-radius: 2px;
+  background: var(--thread);
+}
+
+/* One small line above every title, on the home page and in the guide: the mark with the part's block lit, then its name. */
+.doc-eyebrow {
+  gap: 0.75rem;
+  color: var(--muted);
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc-eyebrow {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.doc-eyebrow svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+/* Orange is for what you do. Where a card or a link only takes you somewhere, the hover is turquoise. */
+.card:hover,
+.pager a:hover {
+  border-color: color-mix(in srgb, var(--turq) 60%, transparent);
+}
+
+:lang(ar) .doc-eyebrow {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.doc-head::before {
+  width: 4.5rem;
+  height: 5px;
+  border-radius: 3px;
+}
+
+/* Names of files and rules are code, not actions: ivory, and turquoise when you go to them. */
+.rows dt a {
+  color: var(--ivory);
+}
+
+.rows dt a:hover {
+  color: var(--turq);
+}
+
+/* The last word of a guide title carries the thread. */
+.doc-head h1 em {
+  display: inline-block;
+  padding-block-end: 0.2em;
+  margin-block-end: -0.2em;
+  background: var(--thread);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: normal;
+}
+
+/* On the guide the grid is calmer behind the words. */
+body:has(main.doc)::after {
+  opacity: 0.55;
+}
+
+/* The guide's related pages are rows, not boxes. */
+.doc .card {
+  gap: 0.25rem;
+  padding: 0.9rem 0;
+  border: 0;
+  border-block-start: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.doc .card:hover {
+  border-color: var(--turq);
+  background: none;
+}
+
+body:has(main.doc)::after {
+  opacity: 0.35;
+}
+
+/* ---------- Round 13 ---------- */
+/* The first command of the install is within reach at the top of the developers page. */
+.dev-quick {
+  display: grid;
+  gap: 0.25rem;
+  margin-block: 0 1.5rem;
+}
+
+.dev-quick a {
+  padding-block: 0.6rem;
+  color: var(--ivory);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Reading width for guide paragraphs, and related pages in one column. */
+.doc .block > p {
+  max-width: 68ch;
+}
+
+.doc .cards {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---------- The head of a guide or legal page is a board too: one bar and one block, at a lower volume ---------- */
+.doc-head.board-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  direction: inherit;
+  margin-block-end: 1.5rem;
+}
+
+.doc-head.board-head::before {
+  display: none;
+}
+
+.doc-head.board-head .board-top {
+  margin: 0;
+  gap: 0.75rem;
+  color: #f1ede7;
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc-head.board-head .board-top {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.doc-head.board-head .board-main {
+  grid-column: 1;
+  grid-row: 2;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main h1,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main .doc-summary,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main .crumbs a,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main .crumbs span {
+  color: #141413;
+  -webkit-text-fill-color: #141413;
+}
+
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main h1 em {
+  background: none;
+  color: #141413;
+  -webkit-text-fill-color: #141413;
+}
+
+.doc-head.board-head.tone-ink .board-main h1,
+.doc-head.board-head.tone-ink .board-main .doc-summary {
+  color: #f1ede7;
+}
+
+.doc-head.board-head.tone-ink .board-main .doc-summary {
+  color: #bcb8b1;
+}
+
+.doc-head.board-head .board-main h1 {
+  margin-block: 0 0.75rem;
+}
+
+.doc-head.board-head .board-main .doc-summary {
+  margin: 0;
+}
+
+.doc-head::before {
+  content: none;
+}
+
+.doc-head h1 em {
+  background: none;
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+
+.doc-head.board-head.tone-orange .board-main h1 em {
+  color: var(--accent);
+}
+
+/* The head of a dark page is a "look" head: the title stays ivory. */
+.doc-head.board-head.tone-ink .board-main h1 em {
+  color: #f1ede7;
+  -webkit-text-fill-color: #f1ede7;
+}
+
+/* Guide: the page list's arrows point the right way in Arabic. */
+[dir='rtl'] .tree nav summary::after {
+  rotate: 45deg;
+}
+
+[dir='rtl'] .tree nav details[open] > summary::after {
+  rotate: -45deg;
+}
+
+/* Previous and next are two equal boxes. */
+.doc .pager-next {
+  margin-inline-start: 0;
+  justify-self: stretch;
+  text-align: end;
+  align-items: flex-end;
+}
+
+/* Lists of rows: one hairline per row; the example you can say is a label on the row, not a row. */
+.doc .card-say {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-block-start: 0.375rem;
+  border-block-start: 0;
+}
+
+.doc .card-say q {
+  color: var(--muted);
+  font: 500 0.875rem/1.5 var(--code);
+}
+
+/* The two kinds of helper on the specialists page are not boxes: they are two lines of colour. */
+.doc .pair {
+  align-items: start;
+  gap: 2rem;
+}
+
+.doc .pair p {
+  margin: 0;
+  padding: 0.75rem 0 0;
+  border: 0;
+  border-block-start: 2px solid var(--accent);
+  border-radius: 0;
+  font-size: 1rem;
+}
+
+.doc .pair p + p {
+  border-block-start-color: var(--turq);
+}
+
+/* Rules, settings and modes: the name column is as wide as it needs to be, and names line up with their first line. */
+.rows > div {
+  grid-template-columns: minmax(9rem, 14rem) minmax(0, 1fr);
+  align-items: baseline;
+}
+
+.rows dt a {
+  padding-block: 0;
+}
+
+/* The steps of the guide: the bold lead is its own line. */
+.doc-article ol.explained li > strong,
+.explained li > strong {
+  display: block;
+  margin-block-end: 0.15rem;
+}
+
+/* Commands, files and settings read as code anywhere in the words of a page. */
+.doc-article :is(p, li, dd) > code {
+  padding: 0.12em 0.35em;
+  border-radius: 0.3rem;
+  background: rgb(var(--ink-rgb) / 0.07);
+  color: var(--turq);
+  font: 500 0.875em/1 var(--code);
+  direction: ltr;
+  unicode-bidi: isolate;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Below the width where the rail fits, "On this page" opens from one line under the title. */
+.toc-mini {
+  margin-block: 0 1.5rem;
+  border-block: 1px solid var(--line);
+}
+
+.toc-mini summary {
+  min-height: 2.75rem;
+  padding-block: 0.75rem;
+  color: var(--ivory);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toc-mini ol {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.toc-mini a {
+  display: block;
+  padding-block: 0.5rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.toc-mini a:hover {
+  color: var(--turq);
+}
+
+@media (min-width: 1280px) {
+  .toc-mini {
+    display: none;
+  }
+}
+
+/* =====================================================================================================
+   Round 20
+   ===================================================================================================== */
+/* A "+" that opens something is "you go / you get": turquoise everywhere. The small labels of a page are quiet, not orange. */
+.questions summary::after,
+.questions [open] summary::after {
+  color: var(--turq);
+}
+
+/* In the file table the names are code, not links: ivory. */
+.rows dt code,
+.rows dt {
+  color: var(--ivory);
+}
+
+.command.is-message .msg-command {
+  display: block;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Long points read in two layers: the sentence that matters, then the detail in a quieter tone. */
+.ticks li .rest {
+  color: var(--muted);
+}
+
+/* =====================================================================================================
+   The colour law in the words of a page: what you do has an orange edge, what you get has a turquoise one.
+   ===================================================================================================== */
+.doc-article ol.explained,
+.doc-article ol.numbered {
+  padding-inline-start: 1.25rem;
+  border-inline-start: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.doc-article ul.ticks {
+  padding-inline-start: 1.25rem;
+  border-inline-start: 2px solid color-mix(in srgb, var(--turq) 60%, transparent);
+}
+
+/* Every page ends in the board's note bar: the words of where to go next at the start, the one action at the end. */
+.doc .pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-block-start: 3rem;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-radius: 0.7rem;
+  background: #171715;
+  color: #f1ede7;
+}
+
+.doc .pager a {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: auto;
+  padding: 0.25rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  text-decoration: none;
+}
+
+.doc .pager a span {
+  color: #96938d;
+  font: 500 0.8125rem/1.4 var(--code);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc .pager a span {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.doc .pager a:hover bdi {
+  color: var(--turq);
+}
+
+.doc .pager .pager-next {
+  min-height: 2.25rem;
+  margin-inline-start: auto;
+  padding: 0.25rem 1rem;
+  border: 1px solid rgb(241 237 231 / 0.4);
+  border-radius: 999px;
+  justify-self: auto;
+}
+
+/* The steps of a page keep the home page's meaning: orange squares are steps you take, turquoise are steps the kit takes. */
+.doc ol.explained li::before {
+  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
+  background: color-mix(in srgb, var(--turq) 10%, transparent);
+  color: var(--turq);
+}
+
+main[data-section='get-started'] .doc-article ol.numbered li::before,
+main[data-section='get-started'] ol.explained li::before {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+/* A prompt is the clearest thing you do: a flat row with an orange edge. */
+.prompt {
+  border: 0;
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgb(var(--ink-rgb) / 0.05);
+}
+
+[dir='rtl'] .prompt {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.prompt > span {
+  color: var(--accent);
+}
+
+/* The assistant's steps (what it then does) are turquoise: you get them. Only get-started lists steps you take. */
+.doc-article ol.numbered {
+  border-inline-start-color: color-mix(in srgb, var(--turq) 60%, transparent);
+}
+
+.doc-article ol.numbered > li::before {
+  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
+  background: color-mix(in srgb, var(--turq) 10%, transparent);
+  color: var(--turq);
+}
+
+main[data-section='get-started'] .doc-article ol.numbered {
+  border-inline-start-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+main[data-section='get-started'] .doc-article ol.numbered > li::before {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+/* The law is readable from the headings alone: a small block before each title, orange where you act,
+   turquoise where you get, plain where you look. */
+.doc .block > h2::before {
+  content: '';
+  display: inline-block;
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: 0;
+  align-self: center;
+  border-radius: 2px;
+  background: rgb(var(--ink-rgb) / 0.35);
+}
+
+/* =====================================================================================================
+   Round 23: from the fifth review
+   ===================================================================================================== */
+/* The tinted light of Arabic guide pages is gone like everywhere else. */
+[dir='rtl'] .doc .column {
+  background: none;
+}
+
+/* A script you read is one quiet window: no colour edge, text left to right, no stray indent. */
+.script-about {
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: rgb(var(--ink-rgb) / 0.05);
+  text-indent: 0;
+}

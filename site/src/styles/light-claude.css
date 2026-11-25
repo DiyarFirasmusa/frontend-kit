@@ -1,0 +1,177 @@
+/* ---------------------------------------------------------------------------------------------
+   LIGHT MODE: the drawings of the Claude app are light too, and the orange is brighter.
+   (Loaded last. In dark mode nothing here applies.)
+   --------------------------------------------------------------------------------------------- */
+html[data-theme='light'] {
+  --accent: #e8643a;
+  --accent-text: #b5461f;
+}
+
+/* The windows: paper-white surfaces with ink words, like the app in its light theme. */
+html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint, .ce-shot) {
+  --ink-rgb: 20 20 19;
+  --ivory: #141413;
+  --muted: #4a4741;
+  --faint: #6b675f;
+  --line: rgb(20 20 19 / 0.16);
+  --accent: #e8643a;
+  --amber: #c9502a;
+  --turq: #0c8a8a;
+  --turq-deep: #006c6d;
+  color: #141413;
+}
+
+html[data-theme='light'] :is(.chat, .browser, .ba, .start-window) {
+  border-color: rgb(20 20 19 / 0.2);
+  background: #fffdf9;
+}
+
+html[data-theme='light'] :is(.path-picture, .ce-shot, .show-tabs, .dash, .mock) {
+  border-color: rgb(20 20 19 / 0.12);
+  background: #f4efe6;
+}
+
+html[data-theme='light'] :is(.chat-bar, .browser-bar) {
+  border-color: rgb(20 20 19 / 0.12);
+  background: #f4efe6;
+}
+
+/* Messages, inputs and chips inside the windows. */
+html[data-theme='light'] :is(.chat, .start-window) :is(.ce-user, .chat-input, .chat-tools, .msg-command, .start-message, .ce-ask, .ce-tool) {
+  border-color: rgb(20 20 19 / 0.16);
+  background: #f4efe6;
+  color: #141413;
+}
+
+html[data-theme='light'] .start-window .start-text .msg-command,
+html[data-theme='light'] .start-window code {
+  background: transparent;
+  color: #141413;
+}
+
+/* Orange on a light surface that carries small text uses the deeper orange. */
+html[data-theme='light'] :is(.chat, .start-window, .browser, .ba, .path-picture) :is(.ce-key, .jp-typed, .is-pick) {
+  color: #141413;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   TURQUOISE, A LITTLE MORE (dark and light): orange is "you act", turquoise is "you get / go there".
+   The mark has both, so each board carries a bit of turquoise: the frame of the "look" blocks, the
+   side column's edge, rule and ticks, the counter, and the pills that take you somewhere.
+   --------------------------------------------------------------------------------------------- */
+/* The main blocks of every board are orange (the "you look" ones too): a dark surface with an orange edge on dark,
+   the solid orange of the mark in light mode. Turquoise stays in the side column, the counter and the pills. */
+html .board.tone-ink .board-main {
+  background: color-mix(in srgb, var(--accent) 13%, #0c0c0b);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+html[data-theme='light'] .board.tone-ink .board-main {
+  background: #e8643a;
+  box-shadow: none;
+}
+
+/* The side column: a turquoise edge, rule and ticks. */
+html .board.side-ink .board-side {
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--turq) 70%, transparent);
+}
+
+html .board.side-ink .board-side-title {
+  border-block-end-color: var(--turq);
+}
+
+html .board.side-ink .board-list li::before {
+  background: var(--turq);
+}
+
+html[data-theme='light'] .board.side-ink .board-side {
+  box-shadow: inset 0 0 0 1.5px #0c8a8a;
+}
+
+html[data-theme='light'] .board.side-ink .board-side-title {
+  border-block-end-color: #0c8a8a;
+}
+
+html[data-theme='light'] .board.side-ink .board-list li::before {
+  background: #0c8a8a;
+}
+
+/* The counter in a board's bar, and the pills that take you somewhere. */
+html .board-count {
+  color: var(--turq);
+}
+
+html[data-theme='light'] .board-count {
+  color: #006c6d;
+}
+
+html .board-note a:not(.hero-start) {
+  border-color: var(--turq);
+  color: var(--turq);
+}
+
+html[data-theme='light'] .board-note a:not(.hero-start) {
+  border-color: #0c8a8a;
+  color: #006c6d;
+}
+
+/* The opening screen's second action, and the guide's links, underline in turquoise. */
+html .hero-actions a:not(.hero-start) {
+  text-decoration-color: var(--turq);
+}
+
+html[data-theme='light'] .hero-actions a:not(.hero-start) {
+  text-decoration-color: #0c8a8a;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Light drawings: the parts that were hard-coded dark.
+   --------------------------------------------------------------------------------------------- */
+html[data-theme='light'] .ba::before,
+html[data-theme='light'] [dir='rtl'] .ba::before {
+  border-block-end-color: rgb(20 20 19 / 0.12);
+  background-color: #f4efe6;
+}
+
+html[data-theme='light'] .dash-side,
+html[data-theme='light'] .is-broken .dash-side {
+  background: #ece6da;
+  color: #141413;
+}
+
+html[data-theme='light'] .ba-tag.is-bad,
+html[data-theme='light'] .ba-cue {
+  border-color: #141413;
+  background: #141413;
+  color: #f1ede7;
+}
+
+html[data-theme='light'] :is(.jp-input, .jp-ask, .jp-save, .jp-plan) {
+  border-color: rgb(20 20 19 / 0.16);
+  background: #fffdf9;
+  color: #141413;
+}
+
+html[data-theme='light'] :is(.jp-input, .jp-ask, .jp-save) :is(p, span, li, strong) {
+  color: #141413;
+}
+
+html[data-theme='light'] :is(.ce-ready, .ce-tool, .ce-user) {
+  background: #f4efe6;
+  color: #141413;
+}
+
+html[data-theme='light'] .path-picture::before,
+html[data-theme='light'] [dir='rtl'] .path-picture::before {
+  background-color: #f4efe6;
+  border-block-end-color: rgb(20 20 19 / 0.12);
+}
+
+html[data-theme='light'] .jp-build li > span,
+html[data-theme='light'] .jp-build li {
+  color: #141413;
+}
+
+html[data-theme='light'] .jp-bar {
+  background: rgb(20 20 19 / 0.1);
+}

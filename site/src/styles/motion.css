@@ -1,5 +1,4 @@
 /* Motion is the rule here, never the exception. All of it waits for the visitor's own setting. */
-
 @media (prefers-reduced-motion: no-preference) {
   :root {
     interpolate-size: allow-keywords;
@@ -7,24 +6,8 @@
     --glide: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  @keyframes rise {
-    from {
-      opacity: 0;
-      translate: 0 0.85em;
-      rotate: 5deg;
-      filter: blur(6px);
-    }
-  }
-
   /* Every control answers a hand. */
-  .top a,
-  .command button,
-  .tree a,
-  .tree summary,
-  .pager a,
-  .tags li,
-  .index a,
-  .hero-ways a {
+  .top a {
     transition:
       color 0.3s,
       background-color 0.3s,
@@ -34,65 +17,20 @@
       text-underline-offset 0.35s var(--glide);
   }
 
-  .tags li:hover,
   .top-docs:hover,
   .top-install:hover {
     translate: 0 -4px;
   }
 
-  .command button:active,
-  .top a:active,
-  .tree a:active {
+  .top a:active {
     scale: 0.93;
   }
 
-  .tree a:hover {
-    translate: 6px 0;
-  }
-
-  [dir='rtl'] .tree a:hover {
-    translate: -6px 0;
-  }
-
-  .hero-ways a:hover,
-  .index a:hover {
-    text-underline-offset: 10px;
-  }
-
-  .rows > div,
-  .index li {
-    background: linear-gradient(var(--ivory), var(--ivory)) no-repeat 0 0 / 0 1px;
-    transition: background-size 0.55s var(--glide);
-  }
-
-  [dir='rtl'] .rows > div,
-  [dir='rtl'] .index li {
-    background-position: 100% 0;
-  }
-
-  .rows > div:hover,
-  .index li:hover {
-    background-size: 100% 1px;
-  }
-
   /* A pick: its explanation is dealt out line by line. */
-
   @keyframes dealt {
     from {
       opacity: 0;
       translate: 0 0.5rem;
-    }
-  }
-
-  @keyframes typed {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-  }
-
-  @keyframes typed-rtl {
-    from {
-      clip-path: inset(0 0 0 100%);
     }
   }
 
@@ -113,24 +51,10 @@
     animation: dealt 0.5s var(--glide) both;
   }
 
-  .tree a[aria-current] {
-    animation: lit 0.7s var(--glide);
-  }
-
   @keyframes lit {
     from {
       background-size: 0 100%;
       opacity: 0.4;
-    }
-  }
-
-  .tree li:not([hidden]) {
-    animation: listed 0.45s var(--glide) both;
-  }
-
-  @keyframes listed {
-    from {
-      opacity: 0;
     }
   }
 

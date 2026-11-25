@@ -1,0 +1,11 @@
+/* The home page's own styles: the parts of each stylesheet that only the home page uses, in the same order. */
+@import './home.css';
+@import './colour.css';
+@import './identity.css';
+@import './chat.css';
+@import './sections.css';
+@import './loops.css';
+@import './docs-space.css';
+@import './home-fit.css';
+@import './theme-light.css';
+@import './docs-law.css';

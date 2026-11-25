@@ -1,0 +1,56 @@
+/* The drawings and the board bars keep the dark of the Claude app, with the bright brand colours. */
+html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint) {
+  --ink-rgb: 241 237 231;
+  --ivory: #f1ede7;
+  --muted: #bcb8b1;
+  --faint: #96938d;
+  --line: rgb(241 237 231 / 0.18);
+  --accent: #d97757;
+  --amber: #f2a183;
+  --turq: #19abab;
+  color: #f1ede7;
+}
+
+html[data-theme='light'] .section-head h2,
+html[data-theme='light'] .home h2 {
+  background: none;
+  color: var(--ivory);
+  -webkit-text-fill-color: currentColor;
+}
+
+html[data-theme='light'] .hero h1,
+html[data-theme='light'] .hero h1 span {
+  color: var(--ivory);
+}
+
+html[data-theme='light'] .show-tabs {
+  background: rgb(20 20 19 / 0.06);
+}
+
+html[data-theme='light'] .start-copy {
+  color: #141413;
+}
+
+html[data-theme='light'] .hero h1 span:last-child {
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+
+html[data-theme='light'] .board.tone-orange .path-label strong {
+  color: #141413;
+}
+
+html[data-theme='light'] .hero-phone {
+  border-color: rgb(20 20 19 / 0.16);
+  background: #e8e2d8;
+}
+
+html[data-theme='light'] .hero-audience a {
+  border-color: rgb(20 20 19 / 0.4);
+  color: #141413;
+}
+
+html[data-theme='light'] #install .start-line-track {
+  background: #141413;
+  opacity: 0.35;
+}

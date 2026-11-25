@@ -1,0 +1,535 @@
+.crumbs {
+  display: flex;
+  gap: 1.25rem;
+  margin-block-end: 1rem;
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+.crumbs > * {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.doc-article {
+  min-width: 0;
+  max-width: 64rem;
+  padding-block: 1rem 2rem;
+}
+
+.block {
+  padding-block: 2.5rem;
+  scroll-margin-top: var(--bar);
+}
+
+.block + .block,
+.finder + .block {
+  border-block-start: 1px solid var(--line);
+}
+
+.block > h2 {
+  margin-block-end: 1.25rem;
+  font-size: clamp(1.625rem, 1.2rem + 1.2vw, 2.375rem);
+}
+
+.block h3 {
+  margin-block: 1.5rem 0.625rem;
+  font-size: 1.1875rem;
+}
+
+.question h3,
+.anatomy h3,
+.ways h3,
+.recipes h3 {
+  margin-block-start: 0;
+}
+
+.block-lead,
+.muted,
+.by-name {
+  color: var(--muted);
+}
+
+.block-lead {
+  max-width: 42rem;
+  margin-block: -0.5rem 1.5rem;
+}
+
+.big {
+  max-width: 42rem;
+  font-size: var(--lead);
+}
+
+.by-name {
+  margin-block: 1.5rem 0.5rem;
+}
+
+.numbered {
+  counter-reset: step;
+}
+
+.numbered > li {
+  position: relative;
+  max-width: 44rem;
+  min-height: 2.25rem;
+  margin-block-end: 1rem;
+  padding-block-start: 0.2rem;
+  padding-inline-start: 3.25rem;
+  counter-increment: step;
+}
+
+.numbered > li::before {
+  content: counter(step);
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: grid;
+  place-items: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border: 1px solid rgb(var(--ink-rgb) / 0.5);
+  font-family: var(--latin);
+}
+
+.ticks li,
+.crosses li,
+.doc .plain li {
+  position: relative;
+  max-width: 44rem;
+  padding-block: 0.4rem;
+  padding-inline-start: 2rem;
+}
+
+.ticks li::before,
+.crosses li::before,
+.doc .plain li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  background: currentColor;
+}
+
+.ticks li::before {
+  inset-block-start: calc(0.4rem + 0.8em - 6px);
+  width: 16px;
+  height: 12px;
+  clip-path: var(--check);
+}
+
+.crosses li::before {
+  inset-block-start: calc(0.4rem + 0.8em);
+  width: 14px;
+  height: 2px;
+  background: var(--bad);
+}
+
+.doc .plain li::before {
+  inset-block-start: calc(0.4rem + 0.8em - 2px);
+  width: 5px;
+  height: 5px;
+}
+
+.question + .question {
+  margin-block-start: 2rem;
+}
+
+.question > .command,
+.explained p {
+  margin-block-start: 0.75rem;
+}
+
+.explained p {
+  color: var(--muted);
+}
+
+.explained li + li {
+  margin-block-start: 1.75rem;
+}
+
+.explained h3 {
+  margin-block-start: 0;
+}
+
+.rows > div {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 0.25rem 2rem;
+  padding-block: 1rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.rows dt {
+  font-weight: 560;
+  overflow-wrap: anywhere;
+}
+
+.rows dd {
+  color: var(--muted);
+}
+
+.rows small,
+.timeline small {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  margin-block-start: 0.5rem;
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.rows small code,
+.timeline small code {
+  max-width: 100%;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.doc .tags {
+  margin: 0;
+}
+
+.doc .tags a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--ivory);
+}
+
+.pair,
+.ways,
+.recipes,
+.anatomy {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 2rem;
+}
+
+.pair p {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  font-size: var(--lead);
+}
+
+.ways p:not(.prompt),
+.recipes p:not(.prompt) {
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+.recipes {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+}
+
+.recipes p:not(.prompt) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.75rem;
+}
+
+.recipes a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ivory);
+  text-underline-offset: 4px;
+}
+
+.timeline li {
+  padding-block: 1.25rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.timeline-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.timeline-head h3 {
+  margin: 0;
+}
+
+.timeline-head span {
+  color: var(--ivory);
+  font-size: var(--small);
+}
+
+.timeline p {
+  max-width: 44rem;
+  color: var(--muted);
+}
+
+.block pre {
+  max-width: 100%;
+  margin: 0;
+  padding: 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  line-height: 1.6;
+  text-align: left;
+}
+
+.finder {
+  display: none;
+  padding-block: 1.5rem 0;
+}
+
+.js .finder {
+  display: block;
+  position: sticky;
+  top: var(--bar);
+  z-index: 2;
+  background: var(--void);
+}
+
+.finder input {
+  width: 100%;
+  min-height: 56px;
+  padding-inline: 1.125rem;
+  border: 1px solid rgb(var(--ink-rgb) / 0.4);
+  border-radius: 0;
+  background: var(--raised);
+  color: var(--ivory);
+  font: inherit;
+}
+
+.finder input::placeholder {
+  color: var(--faint);
+  opacity: 1;
+}
+
+.finder p {
+  padding-block: 1rem;
+}
+
+.source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block-start: 1rem;
+  text-underline-offset: 6px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2rem;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 2rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.pager a {
+  display: flex;
+  flex-direction: column;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.pager span {
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.pager-next {
+  margin-inline-start: auto;
+  align-items: flex-end;
+}
+
+@media (max-width: 620px) {
+  .rows > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The documentation. */
+.index li {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 0 1.5rem;
+  align-items: baseline;
+  padding-block: 0.625rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.index li[hidden] {
+  display: none;
+}
+
+.index a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ivory);
+  font-weight: 560;
+  text-underline-offset: 6px;
+  overflow-wrap: anywhere;
+}
+
+.index a.is-name {
+  font-family: var(--latin);
+}
+
+.index p {
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+.quoted {
+  max-width: 46rem;
+  color: var(--muted);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.breaks {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.script-about {
+  margin-block: 0.75rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.source-doc {
+  min-width: 0;
+  color: var(--muted);
+  font-family: var(--latin);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.source-doc :is(h3, h4, h5) {
+  margin-block: 1.75rem 0.625rem;
+  color: var(--ivory);
+  font-weight: 560;
+  line-height: 1.3;
+}
+
+.source-doc h3 {
+  font-size: 1.375rem;
+}
+
+.source-doc h4 {
+  font-size: 1.125rem;
+}
+
+.source-doc h5 {
+  font-size: 1rem;
+}
+
+.source-doc :is(p, ul, ol, blockquote) {
+  max-width: 50rem;
+  margin-block: 0.75rem;
+}
+
+.source-doc :is(ul, ol) {
+  padding-inline-start: 1.375rem;
+}
+
+.source-doc ul {
+  list-style: disc;
+}
+
+.source-doc ol {
+  list-style: decimal;
+}
+
+.source-doc li {
+  padding-block: 0.15rem;
+}
+
+.source-doc blockquote {
+  padding-inline-start: 1rem;
+}
+
+.source-doc :not(pre) > code {
+  color: var(--ivory);
+  font-size: 0.8125em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.source-doc a {
+  color: var(--ivory);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.source-doc strong {
+  color: var(--ivory);
+  font-weight: 560;
+}
+
+.source-doc pre,
+.fold pre {
+  max-width: 100%;
+  margin-block: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre;
+}
+
+.source-doc .wide {
+  max-width: 100%;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.source-doc table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.source-doc :is(th, td) {
+  min-width: 8rem;
+  padding: 0.5rem 0.75rem;
+  border-block-end: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.source-doc th {
+  font-weight: 560;
+}
+
+@media (max-width: 600px) {
+  .index li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A path can be longer than a phone is wide. */
+.doc .tags li {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.doc .tags code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

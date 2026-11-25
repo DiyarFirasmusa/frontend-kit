@@ -24,19 +24,6 @@ html[data-theme='light'] {
   --bad: #b8483c;
 }
 
-/* The drawings and the board bars keep the dark of the Claude app, with the bright brand colours. */
-html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint) {
-  --ink-rgb: 241 237 231;
-  --ivory: #f1ede7;
-  --muted: #bcb8b1;
-  --faint: #96938d;
-  --line: rgb(241 237 231 / 0.18);
-  --accent: #d97757;
-  --amber: #f2a183;
-  --turq: #19abab;
-  color: #f1ede7;
-}
-
 /* The side column holds ink on turquoise or orange: its words stay dark in both modes. */
 html[data-theme='light'] .board-side {
   --ivory: #101010;
@@ -44,28 +31,10 @@ html[data-theme='light'] .board-side {
   color: #101010;
 }
 
-html[data-theme='light'] .board.side-ivory .board-side {
-  --ivory: #f1ede7;
-  color: #f1ede7;
-}
-
 /* Headings and strong words are ink, whatever gradient or white they had. */
 html[data-theme='light'] :is(h1, h2, h3, h4, strong, th):not(.board *):not(.chat *):not(.browser *):not(.ba *) {
   color: var(--ivory);
   -webkit-text-fill-color: currentColor;
-}
-
-html[data-theme='light'] .section-head h2,
-html[data-theme='light'] .home h2 {
-  background: none;
-  color: var(--ivory);
-  -webkit-text-fill-color: currentColor;
-}
-
-
-html[data-theme='light'] .hero h1,
-html[data-theme='light'] .hero h1 span {
-  color: var(--ivory);
 }
 
 /* The bar at the top of every page, the side lists and the search stay light and clear. */
@@ -78,23 +47,6 @@ html[data-theme='light'] body .top.is-scrolled {
 html[data-theme='light'] body .top::before {
   background: linear-gradient(rgb(244 240 234 / 0.9), rgb(244 240 234 / 0.5) 60%, transparent);
 }
-
-html[data-theme='light'] .tree,
-html[data-theme='light'] .doc .tree,
-html[data-theme='light'] .toc:not([hidden]) {
-  background: rgb(244 240 234 / 0.94) !important;
-}
-
-html[data-theme='light'] .show-tabs {
-  background: rgb(20 20 19 / 0.06);
-}
-
-html[data-theme='light'] .toc a::before {
-  background: var(--void);
-}
-
-html[data-theme='light'] .command,
-
 
 html[data-theme='light'] .top-install,
 html[data-theme='light'] .hero-start {
@@ -163,30 +115,16 @@ html[data-theme='light'] .language {
   color: var(--ivory);
 }
 
-html[data-theme='light'] .command button:hover,
-html[data-theme='light'] .start-copy {
-  color: #141413;
-}
-
 /* Active items and titles that were hard-coded white are ink on ivory. */
 html[data-theme='light'] :is(.top-nav a[aria-current], .menu nav [aria-current], .tree a[aria-current], .doc .pager a bdi, .toc a[aria-current], .foot-logo, .foot-title, .foot-logo bdi) {
   color: var(--ivory);
 }
-
-html[data-theme='light'] .hero h1 span:last-child,
-html[data-theme='light'] .doc-head h1 em {
-  color: var(--accent);
-  -webkit-text-fill-color: var(--accent);
-}
-
 
 /* In light mode the blocks are the solid colours of the mark, with dark words on them. */
 html[data-theme='light'] .board-main {
   background: var(--tone);
   box-shadow: none;
 }
-
-
 
 html[data-theme='light'] .board-side {
   background: var(--side);
@@ -206,17 +144,6 @@ html[data-theme='light'] .board-list li {
 html[data-theme='light'] .board-list li::before {
   background: currentColor;
 }
-
-html[data-theme='light'] .board.tone-orange .path-label strong {
-  color: #141413;
-}
-
-html[data-theme='light'] .board.tone-orange .path-dot,
-html[data-theme='light'] .start-main .start-line-dot {
-  background: #141413 !important;
-  color: var(--accent) !important;
-}
-
 
 /* =====================================================================================================
    LIGHT MODE, TUNED: airy paper with dark screens.
@@ -244,73 +171,16 @@ html[data-theme='light'] .board-top svg rect[fill*='241 237 231'] {
   fill: rgb(20 20 19 / 0.28);
 }
 
-html[data-theme='light'] .doc-head.board-head .board-top {
-  color: #141413;
-}
-
 html[data-theme='light'] .board.tone-ink .board-main {
   background: #dcd5c8;
   box-shadow: inset 0 0 0 1px rgb(20 20 19 / 0.16);
 }
 
-html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1,
-html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1 em {
-  color: #141413;
-  -webkit-text-fill-color: #141413;
-}
-
-html[data-theme='light'] .doc-head.board-head.tone-ink .board-main .doc-summary {
-  color: #46433e;
-}
-
-html[data-theme='light'] .hero-phone {
-  border-color: rgb(20 20 19 / 0.16);
-  background: #e8e2d8;
-}
-
-html[data-theme='light'] .hero-audience a {
-  border-color: rgb(20 20 19 / 0.4);
-  color: #141413;
-}
-
-html[data-theme='light'] .toc a[data-passed] {
-  color: rgb(20 20 19 / 0.5);
-}
-
-/* The grid is quieter behind the words you read. */
-html[data-theme='light'] body:has(main.doc)::after {
-  opacity: 0.2;
-}
-
-/* Claude's steps stay turquoise in light mode too. */
-html[data-theme='light'] .board.tone-orange .path-stop:nth-child(n + 5) .path-dot {
-  background: var(--turq) !important;
-  color: #fff !important;
-}
-
-
 /* Light mode: the end bar, the code windows and the side column of needs follow the paper bars. */
-html[data-theme='light'] .doc .pager,
 html[data-theme='light'] .foot-bottom {
   border-color: rgb(20 20 19 / 0.14);
   background: #e8e2d8;
   color: #141413;
-}
-
-html[data-theme='light'] .doc .pager a span {
-  color: #46433e;
-}
-
-html[data-theme='light'] .doc .pager .pager-next {
-  border-color: rgb(20 20 19 / 0.4);
-}
-
-html[data-theme='light'] .command {
-  --ink-rgb: 241 237 231;
-  --ivory: #f1ede7;
-  --muted: #bcb8b1;
-  --accent: #d97757;
-  color: #f1ede7;
 }
 
 html[data-theme='light'] .board.side-ink .board-side {
@@ -332,19 +202,9 @@ html[data-theme='light'] .board.side-ink .board-list li {
   border-block-start-color: rgb(20 20 19 / 0.16);
 }
 
-html[data-theme='light'] .board.tone-orange .path-stop:nth-child(7) .path-dot {
-  background: #141413 !important;
-  color: var(--accent) !important;
-}
-
 /* The header is solid paper over the page: titles never show through it. */
 html[data-theme='light'] .top,
 html[data-theme='light'] .top.is-scrolled,
 html[data-theme='light'] body .top.is-scrolled {
   background: #f4f0ea;
-}
-
-html[data-theme='light'] #install .start-line-track {
-  background: #141413;
-  opacity: 0.35;
 }

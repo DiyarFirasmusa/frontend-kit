@@ -1,0 +1,22 @@
+/* Every page's styles, in the order of the cascade. A page adds its own part after these:
+   home/index.css (the home page) or docs/index.css (the guide). Rules that tie with a later shared rule
+   stay here, so moving the page parts out never changes which rule wins. */
+@import './tokens.css';
+@import './base.css';
+@import './header.css';
+@import './details.css';
+@import './guide.css';
+@import './doc.css';
+@import './stage.css';
+@import './home.css';
+@import './colour.css';
+@import './rounded.css';
+@import './motion.css';
+@import './identity.css';
+@import './chat.css';
+@import './sections.css';
+@import './loops.css';
+@import './docs-space.css';
+@import './home-fit.css';
+@import './theme-light.css';
+@import './docs-law.css';
