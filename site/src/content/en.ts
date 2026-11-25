@@ -26,7 +26,7 @@ export const en: Copy = {
       [rules, 'rule files that load by path'],
       [events, 'session events watched by hooks'],
       [4, 'project types (three for beginners, plus one for other stacks), each with its own setup'],
-      [servers, 'MCP server for documentation (two browser helpers are optional)'],
+      [servers, 'Optional MCP servers: two browser helpers and documentation lookup (setup asks first)'],
       [denied, 'deny rules in the biggest ready settings file'],
       [examples, 'example projects to read'],
     ],

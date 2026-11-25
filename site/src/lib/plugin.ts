@@ -52,7 +52,7 @@ export const facts: Facts = {
   agents: agentNames.length,
   events: hookEvents.length,
   rules: ruleFiles.length,
-  servers: Object.keys(JSON.parse(read('.mcp.json')).mcpServers).length,
+  servers: readdirSync(resolve(PLUGIN_DIR, 'templates', 'shared', 'mcp')).reduce((n, f) => n + Object.keys(JSON.parse(read('templates', 'shared', 'mcp', f)).mcpServers).length, 0),
   denied: JSON.parse(read('templates', 'react', 'settings.json')).permissions.deny.length,
   examples: readdirSync(resolve(PLUGIN_DIR, '../../examples'), { withFileTypes: true }).filter((e) => e.isDirectory()).length,
 }
