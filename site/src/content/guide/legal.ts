@@ -3,6 +3,8 @@ import { t } from './text.ts'
 
 /** The owner's name and profile: the only credit on the site. */
 export const MAKER = { name: 'Diyar Firas', href: 'https://github.com/DiyarFirasmusa' }
+/** His professional profile: the one other place to write to him, given by him. */
+export const LINKEDIN = 'https://www.linkedin.com/in/diyar-firas-118187259/'
 export const YEAR = 2026
 
 /** When these pages were last written. */
@@ -35,7 +37,10 @@ export const legal: Record<LegalId, LegalSection[]> = {
       text: [
         t(`Wajiha Kit is made by ${MAKER.name}. Copyright © ${YEAR} ${MAKER.name}.`, `صنع «واجهة» ديار فراس. حقوق النشر © ${YEAR} ديار فراس.`),
       ],
-      links: [{ label: t('GitHub profile', 'الحساب على GitHub'), to: MAKER.href, kind: 'outside' }],
+      links: [
+        { label: t('GitHub profile', 'الحساب على GitHub'), to: MAKER.href, kind: 'outside' },
+        { label: t('LinkedIn profile', 'الحساب على LinkedIn'), to: LINKEDIN, kind: 'outside' },
+      ],
     },
     {
       id: 'licence',
@@ -162,9 +167,10 @@ export const legal: Record<LegalId, LegalSection[]> = {
     {
       id: 'questions',
       title: t('Questions', 'أسئلة'),
-      text: [t('If something here is unclear or wrong, write to Diyar Firas on GitHub. If you found a security problem, report it privately on GitHub (the Security tab of the repository, then Report a vulnerability) and do not post the details in a public place.', 'إن كان شيء هنا غير واضح أو غير صحيح، فاكتب إلى ديار فراس على ⁦GitHub⁩. وإن وجدت مشكلة أمنية، فأبلغ عنها بشكل خاص على ⁦GitHub⁩ (تبويب ⁦Security⁩ في المستودع، ثم ⁦Report a vulnerability⁩) ولا تنشر تفاصيلها في مكان عام.')],
+      text: [t('If something here is unclear or wrong, write to Diyar Firas on GitHub or LinkedIn. If you found a security problem, report it privately on GitHub (the Security tab of the repository, then Report a vulnerability) and do not post the details in a public place.', 'إن كان شيء هنا غير واضح أو غير صحيح، فاكتب إلى ديار فراس على ⁦GitHub⁩ أو ⁦LinkedIn⁩. وإن وجدت مشكلة أمنية، فأبلغ عنها بشكل خاص على ⁦GitHub⁩ (تبويب ⁦Security⁩ في المستودع، ثم ⁦Report a vulnerability⁩) ولا تنشر تفاصيلها في مكان عام.')],
       links: [
         { label: t('Diyar Firas on GitHub', 'ديار فراس على GitHub'), to: MAKER.href, kind: 'outside' },
+        { label: t('Diyar Firas on LinkedIn', 'ديار فراس على LinkedIn'), to: LINKEDIN, kind: 'outside' },
         { label: t('Report a security problem privately', 'أبلغ عن مشكلة أمنية بشكل خاص'), to: 'security/advisories/new', kind: 'repo' },
       ],
     },
