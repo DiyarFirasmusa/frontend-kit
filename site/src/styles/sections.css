@@ -1322,6 +1322,345 @@
 }
 
 
+/* ---------- Why not just ask an AI: one console, split down the middle ----------
+   The same project twice: on one side as an AI alone leaves it, on the other as the kit builds it.
+   Each half has its folder tree, its report, and its status line. */
+.compare-section {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.vs-box {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 1.25rem;
+  background: #111110;
+  box-shadow:
+    0 0 0 1px rgb(217 119 87 / 0.05),
+    0 2rem 4rem rgb(0 0 0 / 0.5),
+    0 0 4rem rgb(25 171 171 / 0.06);
+}
+
+.vs-halves {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.vs-half {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+.vs-half + .vs-half,
+.vs-badge + .vs-half {
+  border-inline-start: 1px solid var(--line);
+}
+
+.vs-half.is-without {
+  background: linear-gradient(180deg, rgb(224 119 107 / 0.04), transparent 40%);
+}
+
+.vs-half.is-with {
+  background: linear-gradient(180deg, rgb(25 171 171 / 0.06), transparent 40%);
+}
+
+/* The "vs" sits on the line between the halves. */
+.vs-badge {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 1.25rem;
+  inset-inline-start: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  translate: -50% 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #111110;
+  color: var(--faint);
+  font: 600 0.8125rem / 1 var(--latin);
+  text-transform: uppercase;
+}
+
+[dir='rtl'] .vs-badge {
+  translate: 50% 0;
+}
+
+.vs-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 1.125rem 1.5rem 0.25rem;
+  font-weight: 600;
+}
+
+.is-without .vs-label {
+  color: var(--faint);
+}
+
+.is-with .vs-label {
+  color: #fff;
+}
+
+.is-with .vs-label i {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* The folder trees: the same height on both sides, so the reports line up. */
+.vs-tree {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  box-sizing: border-box;
+  height: 15rem;
+  margin: 0;
+  padding: 0.875rem 1.5rem;
+  list-style: none;
+  font: 500 0.875rem / 1.55 var(--code);
+}
+
+.vs-tree li {
+  padding-inline-start: calc(var(--d, 0) * 1.25rem);
+  color: var(--ivory);
+}
+
+.vs-tree .is-folder::before {
+  content: '▸ ';
+  color: var(--turq, #19abab);
+}
+
+.vs-tree span {
+  color: var(--faint);
+}
+
+/* The mess: files where they should not be, copies of copies. */
+.vs-tree.is-messy li {
+  color: var(--faint);
+}
+
+.vs-tree.is-messy .is-folder::before {
+  color: var(--faint);
+}
+
+.vs-tree.is-messy .is-wrong {
+  color: rgb(224 119 107 / 0.9);
+}
+
+.vs-tree.is-messy .is-wrong::after {
+  content: '  ⚠';
+  color: var(--bad);
+}
+
+/* The reports. */
+.vs-log {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0.875rem 1rem;
+  border-block-start: 1px dashed rgb(241 237 231 / 0.1);
+  list-style: none;
+  font-size: 0.9375rem;
+}
+
+.vs-log li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.vs-log i {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-style: normal;
+}
+
+.vs-log.is-bad li {
+  color: rgb(241 237 231 / 0.55);
+}
+
+.vs-log.is-bad i {
+  background: rgb(224 119 107 / 0.15);
+  color: var(--bad);
+}
+
+.vs-log.is-good li {
+  color: var(--ivory);
+}
+
+.vs-log.is-good i {
+  background: var(--turq, #19abab);
+  color: #141413;
+}
+
+.vs-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.75rem 1.5rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+
+.vs-status i {
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-style: normal;
+}
+
+.vs-status.is-bad {
+  background: rgb(224 119 107 / 0.08);
+  color: rgb(224 119 107 / 0.95);
+}
+
+.vs-status.is-bad i {
+  background: var(--bad);
+  color: #141413;
+}
+
+.vs-status.is-good {
+  background: rgb(25 171 171 / 0.08);
+  color: var(--ivory);
+}
+
+.vs-status.is-good i {
+  background: var(--turq, #19abab);
+  color: #141413;
+}
+
+/* A soft light walks down both reports together, one point at a time; the wrong files flicker. */
+@media (prefers-reduced-motion: no-preference) {
+  .vs-box.is-alive .vs-log li {
+    animation: log-light 9s ease-in-out infinite;
+    animation-delay: calc(var(--n) * 1.5s);
+  }
+
+  .vs-box.is-alive .vs-log.is-bad li {
+    animation-name: log-light-bad;
+  }
+
+  .vs-box.is-alive .vs-tree.is-messy .is-wrong::after {
+    animation: blink 1.6s steps(1) infinite;
+  }
+
+  .vs-box.is-alive .vs-status.is-good i {
+    animation: tick-glow 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes log-light {
+  0%,
+  16%,
+  100% {
+    background: transparent;
+  }
+  4%,
+  12% {
+    background: rgb(25 171 171 / 0.12);
+  }
+}
+
+@keyframes log-light-bad {
+  0%,
+  16%,
+  100% {
+    background: transparent;
+  }
+  4%,
+  12% {
+    background: rgb(224 119 107 / 0.1);
+  }
+}
+
+@keyframes tick-glow {
+  0%,
+  70%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(25 171 171 / 0);
+  }
+  80% {
+    box-shadow: 0 0 0 0.35rem rgb(25 171 171 / 0.25);
+  }
+}
+
+/* On a narrow screen the halves stack: the kit's side first. */
+@media (max-width: 900px) {
+  .vs-halves {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vs-half.is-with {
+    order: -1;
+  }
+
+  .vs-badge {
+    display: none;
+  }
+
+  .vs-half + .vs-half,
+  .vs-badge + .vs-half {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .vs-tree {
+    height: auto;
+  }
+}
+
+/* The message box and the copy button in the install window. */
+.start-message {
+  border: 1px solid rgb(217 119 87 / 0.55);
+  border-radius: 1.125rem;
+  background: #1f1f1d;
+  box-shadow: 0 0 0 4px rgb(217 119 87 / 0.08);
+}
+
+.start-text {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.start-copy {
+  min-height: 3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #141413;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-copy:hover {
+  background: var(--amber, #f2a183);
+}
+
+.start-copy:focus-visible {
+  outline: 2px solid var(--turq, #19abab);
+  outline-offset: 3px;
+}
+
+
 /* ---------- Why not just ask an AI: two pictures of the result, then six gains ---------- */
 .compare-section {
   padding-block: clamp(4rem, 8vw, 7rem);
@@ -1831,5 +2170,6 @@
 .progress {
   display: none;
 }
+
 
 
