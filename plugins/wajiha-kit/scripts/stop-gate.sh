@@ -14,6 +14,8 @@ set -u
 . "$(dirname "$0")/lib.sh"
 
 MAX_BLOCKS_IN_A_ROW=3
+# One line for the user on stdout (exit 0): the gate skipped or gave up, and nothing else says so.
+hook_notice() { jq -nc --arg m "$1" '{systemMessage: $m}'; }
 OUTPUT_LINES=60
 
 hook_read_input
@@ -44,7 +46,10 @@ REVIEW_DONE="$(read_session '.reviewDone')"
 [ "$FINGERPRINT" = "$BASELINE" ] && exit 0
 [ "$FINGERPRINT" = "$LAST_GATED" ] && exit 0
 # A stop that a previous block forced may re-check a fix, but never more than the cap.
-[ "$ACTIVE" = "true" ] && [ "$BLOCKS" -ge "$MAX_BLOCKS_IN_A_ROW" ] && exit 0
+if [ "$ACTIVE" = "true" ] && [ "$BLOCKS" -ge "$MAX_BLOCKS_IN_A_ROW" ]; then
+  hook_notice "The quality gate stopped blocking after $MAX_BLOCKS_IN_A_ROW failed tries, so the checks may still be failing. Run npm run check yourself before you commit."
+  exit 0
+fi
 
 # Background agents edit src/ while the main session talks to the user. When this session made no
 # src/ edit of its own and src/ changed in the last few seconds, an agent is mid-edit: its half-done
@@ -172,7 +177,10 @@ $(printf '%s\n' "$I18N_OUT" | grep -vE '^\s*$' | tail -n "$OUTPUT_LINES")"
 fi
 
 # Nothing could run: no verdict to record.
-[ -z "$PASSED$FAILURES" ] && exit 0
+if [ -z "$PASSED$FAILURES" ]; then
+  hook_notice "The quality gate ran no check: no typecheck or test tool was found (is npm install done?). Nothing was verified. Run npm run check yourself."
+  exit 0
+fi
 
 mkdir -p "$HOOK_STATE_DIR/sessions"
 if [ -z "$FAILURES" ]; then
