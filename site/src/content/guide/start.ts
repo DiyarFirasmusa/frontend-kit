@@ -11,16 +11,16 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). On Windows the safety checks may not fully work yet (see Questions). You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. The message below makes Claude check jq first, because without jq the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد (راجع «الأسئلة»). ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق من ⁦jq⁩ أولا، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). On Windows the safety checks may not fully work yet (see Questions). You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK, before the kit is added. Your computer may ask to download helper tools: that is normal and can take a few minutes. The message below makes Claude check jq first, because without jq the safety checks refuse every command. If jq goes missing later, install it yourself (see Questions).',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد (راجع «الأسئلة»). ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وقد يطلب حاسوبك تنزيل أدوات مساعدة، وهذا طبيعي وقد يأخذ بضع دقائق. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق من ⁦jq⁩ أولا، لأن فحوص الأمان ترفض كل الأوامر بدونه. وإن اختفى ⁦jq⁩ لاحقا فثبّته بنفسك (راجع «الأسئلة»).',
     ),
   },
 ]
 
 /** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
 export const installMessage = t(
-  'Please install the Wajiha Kit plugin for this project. First check that jq is installed. If it is missing, help me install it (brew install jq on a Mac, winget install jqlang.jq on Windows, sudo apt install jq on Linux). Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
-  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ مثبّت. وإن لم يكن موجودا فساعدني في تثبيته (⁦brew install jq⁩ على ماك، و⁦winget install jqlang.jq⁩ على ويندوز، و⁦sudo apt install jq⁩ على لينكس). ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي بواجهة.',
+  'Please install the Wajiha Kit plugin for this project. First check that jq is installed. If it is missing, help me install it (brew install jq on a Mac, winget install jqlang.jq on Windows, sudo apt install jq on Linux). If Homebrew is missing on my Mac, explain it to me step by step. Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
+  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ مثبّت. وإن لم يكن موجودا فساعدني في تثبيته (⁦brew install jq⁩ على ماك، و⁦winget install jqlang.jq⁩ على ويندوز، و⁦sudo apt install jq⁩ على لينكس). وإن لم يكن ⁦Homebrew⁩ مثبتا على ماكي فاشرح لي ذلك خطوة بخطوة. ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي بواجهة.',
 )
 
 /** Three steps, all inside the Claude app. `copy` is what the step asks you to send. */
@@ -31,14 +31,14 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs. For the commands in this message, which contain claude plugin or install jq, press Allow. If a command you do not recognise appears, do not press Allow: ask Claude why it needs it. Then it starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه. والأوامر التي في هذه الرسالة، وفيها ⁦claude plugin⁩ أو تثبيت ⁦jq⁩، اضغط عليها «السماح». وإن ظهر أمر لا تعرفه فلا تضغط «السماح»، واسأل ⁦Claude⁩ لماذا يحتاجه. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
+    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs: a box appears asking whether to allow it. For the commands in this message, which contain claude plugin or install jq, press Allow. If a command you do not recognise appears, do not press Allow: ask Claude why it needs it. Then it starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه: يظهر مربع يسأل هل تسمح به. والأوامر التي في هذه الرسالة، وفيها ⁦claude plugin⁩ أو تثبيت ⁦jq⁩، اضغط عليها «السماح». وإن ظهر أمر لا تعرفه فلا تضغط «السماح»، واسأل ⁦Claude⁩ لماذا يحتاجه. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
     copy: installMessage,
   },
 ]
 
 export const questionsLead = t(
-  'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The setup is being updated, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
-  'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. والإعداد قيد التحديث، فقد يسأل اليوم بصيغة مختلفة قليلا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
+  'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The setup is being improved, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
+  'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
 )
 
 export const questions = [

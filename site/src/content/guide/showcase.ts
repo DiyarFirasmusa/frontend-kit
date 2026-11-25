@@ -98,15 +98,16 @@ export const journeyWords = {
 /** The install panel. */
 export const installWords = {
   title: t('Start in two steps', 'ابدأ بخطوتين'),
-  lead: t('Wajiha Kit is free. Claude Code, which it works inside, needs a Claude account that allows it, so check yours first. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. At the end you open the result in your browser, on your own computer.', '«واجهة» مجانية. و⁦Claude Code⁩، الذي تعمل داخله، يحتاج إلى حساب في ⁦Claude⁩ يسمح به، فتأكد من حسابك أولا. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. وفي النهاية تفتح النتيجة في متصفحك، على حاسوبك.'),
+  lead: t('Wajiha Kit is free. Claude is an AI assistant like ChatGPT, made by Anthropic: sign in to it first. Claude Code, which the kit works inside, is not part of every Claude plan, so check yours on Claude’s website before you start. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “Explain how to publish this site”.', '«واجهة» مجانية. و⁦Claude⁩ مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩، من شركة ⁦Anthropic⁩: سجّل فيه بحسابك أولا. أما ⁦Claude Code⁩، الذي تعمل داخله الإضافة، فليس في كل خطط ⁦Claude⁩، فتأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس، اطلب لاحقا من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع».'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),
   failed: t('Select it and copy', 'حدّدها وانسخها'),
   send: t('Paste it in the message box and press Enter.', 'الصقها في خانة الرسائل واضغط Enter.'),
+  phone: t('On your phone? Send yourself the link of this page, open it on your computer, and copy the message there.', 'أنت على الهاتف؟ أرسل رابط هذه الصفحة إلى نفسك، وافتحه على حاسوبك، ثم انسخ الرسالة من هناك.'),
   folder: t('Choose folder', 'اختر مجلدا'),
   reply: t('Reply to Claude…', 'رد على Claude…'),
   slash: t('Then type / and pick', 'ثم اكتب / واختر'),
-  illustration: t('An illustration, not a measurement.', 'توضيح، وليس قياسا.'),
+  illustration: t('An illustration of how unchecked pages can look, not a measurement.', 'توضيح لما قد تبدو عليه الصفحات غير المفحوصة، وليس قياسا.'),
   differs: t('Site builders host and publish your site for you. Wajiha Kit builds the files on your computer, inside Claude, and publishes nothing.', 'منصات بناء المواقع تستضيف موقعك وتنشره لك. أما واجهة فتبني الملفات على حاسوبك داخل ⁦Claude⁩، ولا تنشر شيئا.'),
   hint: t('You do not need to understand it. Claude carries it out, and asks your permission before the commands in this message.', 'لا تحتاج أن تفهمها. ينفذها ⁦Claude⁩، ويسألك إذنك قبل الأوامر التي فيها.'),
   source: t('This installs code from github.com/DiyarFirasmusa/wajiha-kit, our only source.', 'تثبّت هذه الرسالة كودا من github.com/DiyarFirasmusa/wajiha-kit، وهو مصدرنا الوحيد.'),

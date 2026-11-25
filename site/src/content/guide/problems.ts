@@ -4,7 +4,7 @@ import { t } from './text.ts'
 export const beginnerQuestions = [
   [
     t('Does it cost money?', 'هل تكلف مالا؟'),
-    t('The kit is free. Claude Code, which the kit works inside, needs a Claude account that allows Claude Code. Check your plan on Anthropic’s site. The kit makes the assistant check its own work, so it uses somewhat more of your Claude allowance than a plain request.', 'الإضافة مجانية. أما ⁦Claude Code⁩، الذي تعمل الإضافة داخله، فيحتاج إلى حساب في ⁦Claude⁩ يسمح باستخدامه. راجع خطتك في موقع ⁦Anthropic⁩. والإضافة تجعل المساعد يفحص عمله بنفسه، فتستهلك من رصيدك في ⁦Claude⁩ أكثر قليلا من طلب عادي.'),
+    t('The kit is completely free. Claude has its own account and plan, and Claude Code, which the kit works inside, is not part of every plan: check yours on Claude’s website before you start. The kit makes the assistant check its own work, so it uses a little more of your Claude allowance than a plain chat.', '«واجهة» مجانية تماما. أما ⁦Claude⁩ فله حساب وخطة خاصة به، و⁦Claude Code⁩، الذي تعمل الإضافة داخله، ليس في كل الخطط: تأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. والإضافة تجعل المساعد يفحص عمله بنفسه، فتستهلك من رصيدك في ⁦Claude⁩ أكثر قليلا من محادثة عادية.'),
   ],
   [
     t('Do I need to know how to code?', 'هل يجب أن أعرف البرمجة؟'),

@@ -148,7 +148,6 @@ export const enDetails: Details = {
     items: [
       ['Will it work on a project I already have?', 'Yes. Setup has a mode for existing projects: it finds out which tools you use, adapts to them and shows every change to existing files before it writes.'],
       ['Do I have to use TanStack (a set of tools for building web apps)?', 'No. The website kind is built on TanStack Start. Dashboards can use Vite, TanStack Start or Next.js, and the React kind adapts to other tools. For a new project the kit suggests a setup, and it may ask you which framework you want.'],
-      ['Does it cost more to run?', 'Yes, somewhat. Checks and reviews use tokens (the units of text the assistant is charged by) and time, so it uses somewhat more of your Claude allowance than a plain request. The kit itself is free.'],
       ['Are the safety checks a real security sandbox?', 'No. They are small scripts that catch known patterns, so a command written in a different way can get past them. Keep the branch protection of your code host and your normal access rules.'],
       ['Can I turn parts off or change the rules?', 'Yes. The rules are files in your project folder. The automatic review and the skill hints have switches in the settings file.'],
       ['Will it delete my rules?', 'No. Setup shows what would change before it touches an existing file, and clean-up moves files to a backup folder.'],
