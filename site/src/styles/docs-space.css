@@ -727,8 +727,6 @@ body .top.is-scrolled::before {
   z-index: -1;
   height: 110svh;
   background:
-    radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
-    radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
     linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
     linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
   mask-image: radial-gradient(ellipse 90% 80% at 60% 20%, #000 35%, transparent 85%);
@@ -737,8 +735,6 @@ body .top.is-scrolled::before {
 
 [dir='rtl'] .doc::before {
   background:
-    radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
-    radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
     linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
     linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
   mask-image: radial-gradient(ellipse 90% 80% at 40% 20%, #000 35%, transparent 85%);
@@ -759,8 +755,6 @@ body .top.is-scrolled::before {
    so it covers the words passing under it without looking like a band. */
 body:has(main.doc) .top.is-scrolled {
   background:
-    radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
-    radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
     linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
     linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
     var(--void);
@@ -769,8 +763,6 @@ body:has(main.doc) .top.is-scrolled {
 
 [dir='rtl'] body:has(main.doc) .top.is-scrolled {
   background:
-    radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
-    radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
     linear-gradient(rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
     linear-gradient(90deg, rgb(var(--ink-rgb) / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
     var(--void);
@@ -2328,9 +2320,11 @@ body:has(main.doc)::after {
 
 /* =====================================================================================================
    THE BOARD: the mark made big, and the one layout of the home page.
-   An ivory bar on top, a main block, a tall side column, an ivory bar below. Every part of the page is
-   this board, in the same places. Only what is inside changes, and the colour of the main block says what
-   the part is about: you act = orange, you get = turquoise, you look = ivory.
+   A dark bar on top, a main block, a tall turquoise side column, a dark note bar below. Every part of the page
+   is this board, under its title, as wide as the column. The main block says what the part is about: you act =
+   orange, you look = dark ink. The side column holds what you get. The action of a part is the pill at the end
+   of its note bar. On the dark theme each block is a dark surface with its colour as an edge and a tint; in
+   light mode (theme-light.css) the blocks are the solid colours of the mark.
    ===================================================================================================== */
 .board {
   --tone: var(--accent);
@@ -2917,4 +2911,104 @@ html[data-theme='light'] .start-main .start-line-track i {
 
 .doc-head.board-head.tone-orange .board-main h1 em {
   color: var(--accent);
+}
+
+
+/* =====================================================================================================
+   Round 18, after the third studio review
+   ===================================================================================================== */
+/* The side column is wide enough for its sentences. */
+.board {
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.3fr);
+}
+
+/* One action, one place: the end of the note bar. Links in a note bar are ghost pills; the main action is the orange pill. */
+.board-note a:not(.hero-start) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding-inline: 1rem;
+  border: 1px solid rgb(241 237 231 / 0.4);
+  border-radius: 999px;
+  color: #f1ede7;
+  text-decoration: none;
+}
+
+.board-note a:not(.hero-start):hover {
+  border-color: var(--turq);
+  color: var(--turq);
+}
+
+.board-note .hero-ways {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+/* The journey's rail is part of the old language: the boxes and numbers say the order. */
+.board .path-track {
+  display: none;
+}
+
+/* The head of a dark page is a "look" head: the title stays ivory. */
+.doc-head.board-head.tone-ink .board-main h1 em {
+  color: #f1ede7;
+  -webkit-text-fill-color: #f1ede7;
+}
+
+/* The setup card on a phone is a note bar of the board, not a card of its own. */
+.hero-phone {
+  border-color: rgb(241 237 231 / 0.16);
+  background: #171715;
+}
+
+.hero-phone button {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* The journey on a phone: ruled rows, number first, then the title and the words, the full width. */
+@media (max-width: 760px) {
+  .board .path {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .board .path-stop {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    column-gap: 0.75rem;
+    align-items: start;
+    width: 100%;
+    padding-block: 0.9rem;
+    border-block-start: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    text-align: start;
+  }
+
+  .board .path-stop:first-of-type {
+    border-block-start: 0;
+  }
+
+  .board .path-label {
+    display: contents;
+  }
+
+  .board .path-dot {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .board .path-label strong,
+  .board .path-label p {
+    grid-column: 2;
+    text-align: start;
+  }
+}
+
+@media (max-width: 760px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
