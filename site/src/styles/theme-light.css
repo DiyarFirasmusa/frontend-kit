@@ -25,7 +25,7 @@ html[data-theme='light'] {
 }
 
 /* The drawings and the board bars keep the dark of the Claude app, with the bright brand colours. */
-html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .board-top, .board-note, .dash, .mock, .start-window, .tree-hint) {
+html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint) {
   --ink-rgb: 241 237 231;
   --ivory: #f1ede7;
   --muted: #bcb8b1;
@@ -186,9 +186,7 @@ html[data-theme='light'] .board-main {
   box-shadow: none;
 }
 
-html[data-theme='light'] .board.tone-ink .board-main {
-  background: #1b1a18;
-}
+
 
 html[data-theme='light'] .board-side {
   background: var(--side);
@@ -217,4 +215,64 @@ html[data-theme='light'] .board.tone-orange .path-dot,
 html[data-theme='light'] .start-main .start-line-dot {
   background: #141413 !important;
   color: var(--accent) !important;
+}
+
+
+/* =====================================================================================================
+   LIGHT MODE, TUNED: airy paper with dark screens.
+   The bars of the boards are paper-dark (not black), the "look" block is a warm grey, the blocks of "you act"
+   and "you get" are the solid colours of the mark, and only the drawings of the Claude app stay dark.
+   ===================================================================================================== */
+html[data-theme='light'] .board-top,
+html[data-theme='light'] .board-note {
+  border-color: rgb(20 20 19 / 0.14);
+  background: #e8e2d8;
+  color: #141413;
+}
+
+html[data-theme='light'] .board-note a:not(.hero-start) {
+  border-color: rgb(20 20 19 / 0.4);
+  color: #141413;
+}
+
+html[data-theme='light'] .board-note a:not(.hero-start):hover {
+  border-color: var(--turq);
+  color: var(--turq);
+}
+
+html[data-theme='light'] .board-top svg rect[fill*='241 237 231'] {
+  fill: rgb(20 20 19 / 0.28);
+}
+
+html[data-theme='light'] .doc-head.board-head .board-top {
+  color: #141413;
+}
+
+html[data-theme='light'] .board.tone-ink .board-main {
+  background: #dcd5c8;
+  box-shadow: inset 0 0 0 1px rgb(20 20 19 / 0.16);
+}
+
+html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1,
+html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1 em {
+  color: #141413;
+  -webkit-text-fill-color: #141413;
+}
+
+html[data-theme='light'] .doc-head.board-head.tone-ink .board-main .doc-summary {
+  color: #46433e;
+}
+
+html[data-theme='light'] .hero-phone {
+  border-color: rgb(20 20 19 / 0.16);
+  background: #e8e2d8;
+}
+
+html[data-theme='light'] .hero-audience a {
+  border-color: rgb(20 20 19 / 0.4);
+  color: #141413;
+}
+
+html[data-theme='light'] .toc a[data-passed] {
+  color: rgb(20 20 19 / 0.5);
 }

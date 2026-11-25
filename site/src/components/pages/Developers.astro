@@ -24,6 +24,8 @@ const words = {
   examples: t('Example projects it built', 'مشاريع نموذجية بنتها'),
   jump: t('All the install steps', 'كل خطوات التثبيت'),
 }
+const esc = (x: string): string => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
 ---
 
 <div class="dev-quick">
@@ -32,71 +34,71 @@ const words = {
 </div>
 <Block id="who" title={d.who.title[locale]} lead={d.who.lead[locale]}>
   <ul class="plain">
-    {d.who.items.map((item) => <li><strong>{item.name[locale]}.</strong> {item.text[locale]}</li>)}
+    {d.who.items.map((item) => <li><strong><Fragment set:html={f(item.name[locale])} />.</strong> <Fragment set:html={f(item.text[locale])} /></li>)}
   </ul>
 </Block>
 <Block id="tidy" title={d.tidy.title[locale]}>
   <ul class="ticks">
-    {d.tidy.items.map((item) => <li>{item[locale]}</li>)}
+    {d.tidy.items.map((item) => <li><Fragment set:html={f(item[locale])} /></li>)}
   </ul>
-  <p>{d.tidy.limits[locale]}</p>
+  <p><Fragment set:html={f(d.tidy.limits[locale])} /></p>
   <p class="links">
-    <span>{d.tidy.see[locale]}</span>
+    <span><Fragment set:html={f(d.tidy.see[locale])} /></span>
     <a class="source" href={ruleUrl(locale, 'shared', 'naming.md')}>naming.md</a>
     <a class="source" href={ruleUrl(locale, 'shared', 'quality-bar.md')}>quality-bar.md</a>
   </p>
 </Block>
 <Block id="existing" title={d.existing.title[locale]}>
-  <p>{d.existing.text[locale]}</p>
-  <p>{d.existing.messy[locale]} <a href={pageUrl(locale, 'refactor')}>{d.existing.messyLink[locale]}</a></p>
+  <p><Fragment set:html={f(d.existing.text[locale])} /></p>
+  <p><Fragment set:html={f(d.existing.messy[locale])} /> <a href={pageUrl(locale, 'refactor')}><Fragment set:html={f(d.existing.messyLink[locale])} /></a></p>
 </Block>
 <Block id="install" title={d.terminal.title[locale]} lead={d.terminal.lead[locale]}>
   <ol class="explained">
     {d.terminal.commands.map((command) => <li><CommandBox command={command} install={install} /></li>)}
   </ol>
-  <p>{d.terminal.needs[locale]}</p>
-  <p>{d.terminal.note[locale]}</p>
+  <p><Fragment set:html={f(d.terminal.needs[locale])} /></p>
+  <p><Fragment set:html={f(d.terminal.note[locale])} /></p>
 </Block>
 <Block id="safe" title={d.safe.title[locale]}>
-  <p>{d.safe.text[locale]}</p>
-  <p>{d.safe.undo[locale]}</p>
+  <p><Fragment set:html={f(d.safe.text[locale])} /></p>
+  <p><Fragment set:html={f(d.safe.undo[locale])} /></p>
   <ol class="explained">
     {d.safe.commands.map((command) => <li><CommandBox command={command} install={install} /></li>)}
   </ol>
 </Block>
 <Block id="setup" title={d.setup.title[locale]} lead={d.setup.lead[locale]}>
   <ul class="plain">
-    {d.setup.kinds.map((kind) => <li>{kind[locale]}</li>)}
+    {d.setup.kinds.map((kind) => <li><Fragment set:html={f(kind[locale])} /></li>)}
   </ul>
-  <p>{d.setup.scope[locale]}</p>
-  <p>{d.setup.keep[locale]}</p>
-  <p>{d.setup.detects[locale]}</p>
+  <p><Fragment set:html={f(d.setup.scope[locale])} /></p>
+  <p><Fragment set:html={f(d.setup.keep[locale])} /></p>
+  <p><Fragment set:html={f(d.setup.detects[locale])} /></p>
   <dl class="rows">
     {
       d.setup.writes.map(([path, text]) => (
         <div>
           <dt><code dir="ltr">{path}</code></dt>
-          <dd>{text[locale]}</dd>
+          <dd><Fragment set:html={f(text[locale])} /></dd>
         </div>
       ))
     }
   </dl>
-  <p>{d.setup.approval[locale]}</p>
-  <p>{d.setup.own[locale]}</p>
+  <p><Fragment set:html={f(d.setup.approval[locale])} /></p>
+  <p><Fragment set:html={f(d.setup.own[locale])} /></p>
 </Block>
 <Block id="backend" title={d.backend.title[locale]}>
-  <p>{d.backend.text[locale]}</p>
-  <p>{d.backend.auth[locale]}</p>
+  <p><Fragment set:html={f(d.backend.text[locale])} /></p>
+  <p><Fragment set:html={f(d.backend.auth[locale])} /></p>
 </Block>
 <Block id="checks" title={d.checks.title[locale]} lead={d.checks.lead[locale]}>
   <ul class="ticks">
-    {d.checks.items.map((item) => <li>{item[locale]}</li>)}
+    {d.checks.items.map((item) => <li><Fragment set:html={f(item[locale])} /></li>)}
   </ul>
-  <p>{d.checks.limits[locale]}</p>
+  <p><Fragment set:html={f(d.checks.limits[locale])} /></p>
   <p class="links"><a class="source" href={pageUrl(locale, 'checks')}>{words.checks[locale]}</a></p>
 </Block>
 <Block id="more" title={d.more.title[locale]}>
-  <p>{d.more.text[locale]}</p>
+  <p><Fragment set:html={f(d.more.text[locale])} /></p>
   <p class="links">
     <a class="source" href={pageUrl(locale, 'modes')}>{words.modes[locale]}</a>
     <a class="source" href={pageUrl(locale, 'configuration')}>{words.settings[locale]}</a>

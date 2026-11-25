@@ -89,7 +89,7 @@ const markBlocks = [
   { x: 5, y: 45, w: 36, h: 14, fill: '#f1ede7' },
 ]
 // The head of a page is a board too: orange for the pages you read to act, a dark block for the reference pages.
-const tone = ({ rules: 'ink', skills: 'orange', agents: 'ink', checks: 'ink', licence: 'ink', privacy: 'ink', terms: 'ink' } as Record<string, string>)[parent] ?? 'orange'
+const tone = ({ rules: 'ink', skills: 'orange', agents: 'ink', checks: 'ink', licence: 'ink', privacy: 'ink', terms: 'ink', features: 'ink', configuration: 'ink', modes: 'ink', refactor: 'ink', changelog: 'ink' } as Record<string, string>)[parent] ?? 'orange'
 const lit = ({ rules: 0, skills: 1, agents: 2, checks: 3 } as Record<string, number | undefined>)[parent]
 const crumbs = [
   ...(parent !== 'docs' ? [{ name: PAGES.docs.name[locale], href: pageUrl(locale, 'docs') }] : []),

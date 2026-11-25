@@ -144,7 +144,7 @@ export const enDetails: Details = {
     note: 'Bugs found on the way are written down, not fixed in silence.',
   },
   answers: {
-    title: 'Fair questions.',
+    title: 'Fair questions',
     items: [
       ['Will it work on a project I already have?', 'Yes. Setup has a mode for existing projects: it finds out which tools you use, adapts to them and shows every change to existing files before it writes.'],
       ['Do I have to use TanStack (a set of tools for building web apps)?', 'No. The website kind is built on TanStack Start. Dashboards can use Vite, TanStack Start or Next.js, and the React kind adapts to other tools. For a new project the kit suggests a setup, and it may ask you which framework you want.'],

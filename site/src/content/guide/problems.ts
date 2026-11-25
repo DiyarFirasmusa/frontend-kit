@@ -86,7 +86,7 @@ export const problems = [
     t('They run this once in the command window: claude plugin install wajiha-kit@wajiha-kit --scope project', 'يشغل الزميل هذا الأمر مرة واحدة في نافذة الأوامر: ⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩'),
   ],
   [
-    t('Setup stopped while writing into .claude.', 'توقف الإعداد أثناء الكتابة في ‎.claude.'),
+    t('Setup stopped while writing into the .claude folder.', 'توقف الإعداد أثناء الكتابة في مجلد ⁦.claude⁩.'),
     t('Claude Code asks your permission to write in that folder. Approve it and run setup again. It skips what is already done.', 'يطلب ⁦Claude Code⁩ إذنك للكتابة في هذا المجلد. وافق، ثم شغّل الإعداد مرة أخرى. سيتخطى ما أنجزه سابقا.'),
   ],
 ] as const

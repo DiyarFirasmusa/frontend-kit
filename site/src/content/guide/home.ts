@@ -3,7 +3,7 @@ import { t } from './text.ts'
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
-  title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
+  title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
   lead: t(
     'Answer a few plain questions in the Claude app. It builds a website or dashboard, checks it, and shows it to you in Arabic and English.',
     'أجب عن بضعة أسئلة بسيطة داخل تطبيق ⁦Claude⁩. يبني لك موقعا أو لوحة تحكم، ويفحصها، ويعرضها عليك بالعربية والإنجليزية.',
@@ -24,7 +24,7 @@ export const home = {
     },
   ],
   start: t('Start building', 'ابدأ البناء'),
-  trust: t('The kit is free · The Code tab comes with some Claude plans, so check yours · Needs a computer · Nothing is saved or published without your yes', 'الإضافة مجانية · تبويب ⁦Code⁩ جزء من بعض خطط ⁦Claude⁩، فتحقّق من خطتك · تحتاج حاسوبا · ولا يُحفظ ولا يُنشر شيء دون موافقتك'),
+  trust: t('Free · Needs a computer and a Claude plan with the Code tab · Nothing is saved or published without your yes', 'مجانية · تحتاج حاسوبا وخطة ⁦Claude⁩ فيها تبويب ⁦Code⁩ · ولا يُحفظ ولا يُنشر شيء دون موافقتك'),
   caption: t('Illustration of the chat. At the end you get a project folder on your computer, a short report of what Claude checked, and a page that opens in your browser.', 'رسم توضيحي للمحادثة. في النهاية تحصل على مجلد مشروع على حاسوبك، وتقريرا قصيرا بما فحصه ⁦Claude⁩، وصفحة تُفتح في المتصفح.'),
   madeUp: t('Made-up sample, to show the idea.', 'نموذج متخيَّل لتوضيح الفكرة.'),
   board: {
@@ -37,7 +37,7 @@ export const home = {
     ],
     note: t('An illustration of the chat in the Claude app.', 'رسم توضيحي للمحادثة داخل تطبيق ⁦Claude⁩.'),
   },
-  audienceLabel: t('Which one are you?', 'أيّ هذه أنت؟'),
+  audienceLabel: t('Pick what fits you:', 'اختر ما يصفك:'),
   phoneTitle: t('Setup needs a computer.', 'الإعداد يحتاج حاسوبا.'),
   phoneBody: t('Send yourself this page and start there.', 'أرسل هذه الصفحة إلى نفسك وابدأ من هناك.'),
   phoneCopy: t('Send this page to my computer', 'أرسل هذه الصفحة إلى حاسوبي'),

@@ -29,7 +29,8 @@ const { locale } = Astro.props
       <a href="#example">{home.see[locale]}</a>
     </p>
     <p class="hero-trust enter">{home.trust[locale]}</p>
-    <ul class="hero-audience enter" aria-label={home.audienceLabel[locale]}>
+    <p class="hero-audience-label enter" id="hero-who">{home.audienceLabel[locale]}</p>
+    <ul class="hero-audience enter" aria-labelledby="hero-who">
       {home.audience.map(({ label, to }) => <li><a href={to.startsWith('#') ? to : pageUrl(locale, 'developers') + to.replace('developers', '')}>{label[locale]}</a></li>)}
     </ul>
   </div>
