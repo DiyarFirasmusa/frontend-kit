@@ -120,7 +120,7 @@ export const installWords = {
     t('Claude checks them and asks first.', 'يتحقق ⁦Claude⁩ منها ويسألك أولا.'),
   ],
   stepsShort: [
-    t('Make an empty folder, like “my-shop”. In the Claude app, choose Code and open it.', 'أنشئ مجلدا فارغا، مثل «متجري». في تطبيق ⁦Claude⁩ اختر ⁦Code⁩ وافتح المجلد.'),
+    t('Make an empty folder, like “my-⁠shop”. In the Claude app, choose Code and open it.', 'أنشئ مجلدا فارغا، مثل «متجري». في تطبيق ⁦Claude⁩ اختر ⁦Code⁩ وافتح المجلد.'),
     t('Copy the message, paste it and send it. Allow the commands in it when Claude asks.', 'انسخ الرسالة والصقها وأرسلها. واسمح بالأوامر التي فيها عندما يسألك ⁦Claude⁩.'),
   ],
   caution: t('If a command you do not recognise appears, press Deny and ask Claude why. When it asks what you are doing, choose “New project”.', 'وإن ظهر أمر لا تعرفه فاضغط «رفض» واسأل ⁦Claude⁩ لماذا يحتاجه. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),

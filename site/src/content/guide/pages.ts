@@ -143,7 +143,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     still: 'website',
     name: t('Settings', 'الإعدادات'),
     title: t('One file for the settings.', 'ملف واحد للإعدادات.'),
-    lead: t('Setup writes .claude/wajiha-kit.json. Change a value there and the skills, specialists and safety checks follow.', 'يكتب الإعداد الملف ⁦.claude/wajiha-kit.json⁩. غيّر قيمة فيه، فتتبعها المهارات والمختصون وفحوص الأمان.'),
+    lead: t('Setup writes .claude/wajiha-kit.json. Change a value there and the skills, specialists and safety checks follow.', 'الملف ⁦.claude/wajiha-kit.json⁩ يكتبه الإعداد. غيّر قيمة فيه، فتتبعها المهارات والمختصون وفحوص الأمان.'),
   },
   refactor: {
     id: 'refactor',

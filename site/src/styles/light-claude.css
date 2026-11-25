@@ -412,7 +412,7 @@ html[data-theme='light'] .board-main input:focus-visible {
   font-size: 0.8125rem;
 }
 
-.doc-article .command :is(p, .msg-line, span:not(.msg-command)) {
+.doc-article .command code :is(p, .msg-line, span:not(.msg-command)) {
   font-weight: 400;
 }
 
@@ -449,7 +449,7 @@ html[data-theme='light'] .board-note a:not(.hero-start) {
   direction: rtl;
 }
 
-[dir='rtl'] .doc-article .command :is(.msg-command, code) {
+[dir='rtl'] .doc-article .command .msg-command {
   direction: ltr;
   unicode-bidi: isolate;
   text-align: left;
