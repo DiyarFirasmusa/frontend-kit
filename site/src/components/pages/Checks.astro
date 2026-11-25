@@ -60,8 +60,8 @@ const words = {
     </div>
   ))}
 </Block>
-<Block id="try-guard" title={copy.gate.title} lead={copy.gate.lead}><GateDemo gate={copy.gate} /></Block>
-<Block id="gate" title={words.gate[locale]} lead={words.gateLead[locale]}>
+<Block id="try-guard" tone="act" title={copy.gate.title} lead={copy.gate.lead}><GateDemo gate={copy.gate} /></Block>
+<Block id="gate" tone="get" title={words.gate[locale]} lead={words.gateLead[locale]}>
   <ol class="numbered">{gate.map((step) => <li>{step[locale]}</li>)}</ol>
 </Block>
 <Block id="limits" title={words.limits[locale]}><ul class="crosses">{limits.map((limit) => <li>{limit[locale]}</li>)}</ul></Block>

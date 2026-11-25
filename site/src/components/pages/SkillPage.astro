@@ -1,19 +1,22 @@
 ---
-import { skillGroups } from '../../content/catalogue.ts'
+import { content } from '../../content/index.ts'
+import { agents, skillGroups } from '../../content/catalogue.ts'
+import { PAGES } from '../../content/guide/pages.ts'
 import { projects } from '../../content/guide/projects.ts'
 import { skillPurpose } from '../../content/guide/purpose.ts'
 import { skillGuides } from '../../content/guide/skills/index.ts'
-import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import type { Locale } from '../../content/types.ts'
 import { agentUrl, skillUrl } from '../../lib/links.ts'
 import { manualSkills, REPO_URL } from '../../lib/plugin.ts'
 import { profilesOf } from '../../lib/plugin-details.ts'
 import { skillReference } from '../../lib/reference.ts'
+import CommandBox from '../CommandBox.astro'
 import Block from '../guide/Block.astro'
-import SkillBody from '../guide/SkillBody.astro'
+import InShort from '../guide/InShort.astro'
+import Prompt from '../guide/Prompt.astro'
 import Source from '../guide/Source.astro'
-import WhyWhen from '../guide/WhyWhen.astro'
+import SourceBlock from '../guide/SourceBlock.astro'
 
 interface Props {
   name: string
@@ -23,10 +26,12 @@ interface Props {
 const { name, locale } = Astro.props
 const { matches, argument, borrowed, files, mentionedBy } = skillReference[name]!
 const [playbook, ...others] = files
-const technical = t('Technical details', 'تفاصيل تقنية')
+const guide = skillGuides[name]!
+const purpose = skillPurpose[name]!
 const on = profilesOf(name)
 const group = skillGroups.find(({ skills }) => name in skills)!
 const types = on.length === projects.length ? ui.everyType[locale] : projects.filter(({ id }) => on.includes(id)).map((project) => project.name[locale]).join(locale === 'ar' ? '، ' : ', ')
+const describe = (skill: string) => skillGroups.find(({ skills }) => skill in skills)?.skills[skill]?.[locale]
 ---
 
 <dl class="glance">
@@ -35,35 +40,71 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
   <div><dt>{ui.worksIn[locale]}</dt><dd>{types}</dd></div>
 </dl>
 
-<WhyWhen purpose={skillPurpose[name]!} locale={locale} />
-<SkillBody name={name} locale={locale} />
+<InShort
+  locale={locale}
+  rows={[
+    [ui.whatItIs[locale], guide.plain[locale]],
+    [ui.why[locale], purpose.why[locale]],
+    [ui.when[locale], purpose.when[locale]],
+    [ui.needs[locale], guide.needs?.[locale]],
+  ]}
+/>
 
-<Block id="matches" title={technical[locale]}>
-  <div class="questions">
-    <details>
-      <summary>{ui.matches[locale]}</summary>
-      <p>{ui.matchesLead[locale]}</p>
-      <p class="quoted" lang="en" dir="ltr">{matches}</p>
-      {argument && <p class="muted">{ui.argument[locale]} <code dir="ltr">{argument}</code></p>}
-    </details>
-  </div>
+<Block id="ask" tone="act" title={ui.youType[locale]} lead={ui.anyWords[locale]}>
+  {guide.ask.map((example) => <Prompt text={example[locale]} />)}
+  <p class="by-name">{ui.byName[locale]}</p>
+  <CommandBox command={`/wajiha-kit:${name}`} install={content[locale].install} />
 </Block>
-{
-  mentionedBy.length > 0 && (
-    <Block id="agents-using" title={ui.mentionedBy[locale]}>
-      <ul class="tags">
-        {mentionedBy.map((agent) => (
-          <li>
-            <a href={agentUrl(locale, agent)}>
-              <bdi>{agent}</bdi>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </Block>
-  )
-}
-<Block id="playbook" title={ui.playbook[locale]} lead={(borrowed ? ui.borrowed : ui.fullText)[locale]}>
+
+<Block id="steps" tone="get" title={ui.whatHappens[locale]}>
+  <ol class="numbered">{guide.steps.map((step) => <li>{step[locale]}</li>)}</ol>
+</Block>
+
+<Block id="result" tone="get" title={ui.youGet[locale]}>
+  <ul class="ticks">{guide.result.map((item) => <li>{item[locale]}</li>)}</ul>
+  <h3 class="sub">{ui.wont[locale]}</h3>
+  <ul class="crosses">{guide.limits.map((item) => <li>{item[locale]}</li>)}</ul>
+</Block>
+
+<Block id="related" title={ui.related[locale]}>
+  <ul class="index">
+    {
+      guide.related.map((other) => (
+        <li>
+          <a href={skillUrl(locale, other)}>
+            <bdi>{other}</bdi>
+          </a>
+          <p>{describe(other)}</p>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    mentionedBy.length > 0 && (
+      <>
+        <h3 class="sub">{PAGES.agents.name[locale]}</h3>
+        <ul class="index">
+          {mentionedBy.map((agent) => (
+            <li>
+              <a href={agentUrl(locale, agent)}>
+                <bdi>{agent}</bdi>
+              </a>
+              <p>{agents[agent]?.[locale]}</p>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+</Block>
+
+<SourceBlock locale={locale} href={`${REPO_URL}/blob/main/plugins/wajiha-kit/skills/${name}/SKILL.md`} lead={borrowed ? ui.borrowed[locale] : undefined}>
+  <details class="fold">
+    <summary><span>{ui.matches[locale]}</span></summary>
+    <p>{ui.matchesLead[locale]}</p>
+    <p class="quoted" lang="en" dir="ltr">{matches}</p>
+    {argument && <p class="muted">{ui.argument[locale]} <code dir="ltr">{argument}</code></p>}
+  </details>
   {
     borrowed ? (
       <dl class="rows">
@@ -77,35 +118,10 @@ const types = on.length === projects.length ? ui.everyType[locale] : projects.fi
         </div>
       </dl>
     ) : (
-      <Source file={`plugins/wajiha-kit/${playbook}`} />
+      <>
+        <Source file={`plugins/wajiha-kit/${playbook}`} label={ui.playbook[locale]} name="SKILL.md" />
+        {others.map((file) => <Source file={`plugins/wajiha-kit/${file}`} label={ui.referenceFile[locale]} name={file.replace(`skills/${name}/`, '')} />)}
+      </>
     )
   }
-</Block>
-{
-  !borrowed && others.length > 0 && (
-    <Block id="reference-files" title={ui.otherFiles[locale]}>
-      {others.map((file) => (
-        <details class="file">
-          <summary>
-            <bdi>{file.replace(`skills/${name}/`, '')}</bdi>
-          </summary>
-          <Source file={`plugins/wajiha-kit/${file}`} />
-        </details>
-      ))}
-    </Block>
-  )
-}
-
-<Block id="related" title={ui.related[locale]}>
-  <ul class="cards">
-    {skillGuides[name]!.related.map((other) => (
-      <li>
-        <a class="card" href={skillUrl(locale, other)}>
-          <strong><bdi>{other}</bdi></strong>
-          <span>{skillGroups.find(({ skills }) => other in skills)?.skills[other]?.[locale]}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
-  <a class="source" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/skills/${name}/SKILL.md`}>{ui.source[locale]}</a>
-</Block>
+</SourceBlock>

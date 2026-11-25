@@ -23,7 +23,7 @@ const words = {
 
 {
   recipes.map(({ title, items }) => (
-    <Block title={title[locale]}>
+    <Block tone="act" title={title[locale]}>
       <ul class="recipes">
         {items.map(({ want, say, skills }) => (
           <li>

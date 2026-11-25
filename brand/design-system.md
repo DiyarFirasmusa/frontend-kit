@@ -49,6 +49,10 @@ Guide and legal pages are the same law at a lower volume:
 - The head is a board: a dark bar (mark, the kind's block lit, the section name) and one block holding the H1 and the lead. Orange for pages you use to act (get started, skills), dark ink for reference and trust pages (rules, specialists, checks, legal).
 - The body is calm reading: 68ch paragraphs, hairline rules, flat rows (no boxed cards), the page list on the start side, "On this page" on the end side.
 - Orange step numbers (what you do), turquoise ticks (what you get).
+- One row for every list of names: a hairline above, the name at the start, the words after (page lists, glossaries, settings, rules, related skills).
+- A skill, specialist, rule or check page has one order: the facts row, **In short** (what, why, when), what you type, what the kit does, what you get, what works with it, and **The source** last: the files folded, then the one link "Read the original file on GitHub".
+- The guide's front page lays the four kinds out as the mark: rules the top bar, skills the orange block, specialists the column (it lists a few by name, so it is never empty), checks the bottom bar.
+- Orange and turquoise used as small text on paper are a step deeper (`--accent-text`, `--turq-text`) so they reach 4.5:1.
 
 ## 4. Type and spacing
 
@@ -74,6 +78,7 @@ Plain words for someone who does not code; each technical word is explained wher
 | The board styles | `site/src/styles/docs-space.css` (end of file) |
 | Light mode | `site/src/styles/theme-light.css`, `site/src/client/theme.ts` |
 | Page heads | `site/src/components/DocPage.astro` |
+| The documentation law (rows, disclosure, code, section blocks, hub) | `site/src/styles/docs-law.css` (loaded last) |
 | Share images | `site/design/og/og.html` |
 | The mark | `brand/logo/` |
 

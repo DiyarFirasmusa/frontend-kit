@@ -8,6 +8,7 @@ import type { HookEvent, Locale } from '../../content/types.ts'
 import { REPO_URL } from '../../lib/plugin.ts'
 import { hookRuns } from '../../lib/reference.ts'
 import Block from '../guide/Block.astro'
+import InShort from '../guide/InShort.astro'
 
 interface Props {
   event: HookEvent
@@ -35,8 +36,13 @@ const runs = hookRuns(event)
   <div><dt>{words.effect[locale]}</dt><dd>{hookEffects[event][locale]}</dd></div>
   <div><dt>{words.runs[locale]}</dt><dd>{runs.length}</dd></div>
 </dl>
-<Block id="why" title={ui.whyHe[locale]}><p class="big">{hookPurpose[event][locale]}</p></Block>
-<Block id="does" title={words.does[locale]}><p class="big">{content[locale].session.events[event][1]}</p></Block>
+<InShort
+  locale={locale}
+  rows={[
+    [ui.whyHe[locale], hookPurpose[event][locale]],
+    [words.does[locale], content[locale].session.events[event][1]],
+  ]}
+/>
 {
   event === 'PreToolUse' && (
     <Block id="refuses" title={words.refuses[locale]}>
@@ -53,19 +59,19 @@ const runs = hookRuns(event)
 }
 {
   event === 'Stop' && (
-    <Block id="gate" title={words.gate[locale]}>
+    <Block id="gate" tone="get" title={words.gate[locale]}>
       <ol class="numbered">{gate.map((step) => <li>{step[locale]}</li>)}</ol>
     </Block>
   )
 }
-<Block id="scripts" title={words.exact[locale]} lead={words.exactLead[locale]}>
+<Block id="source" title={words.exact[locale]} lead={words.exactLead[locale]}>
   {
     runs.map(({ script, matcher, timeout, about }) => (
-      <div class="question">
+      <div class="script">
         <h3>
           <code dir="ltr">{script}</code>
         </h3>
-        <dl class="rows">
+        <dl class="glance">
           <div>
             <dt>{words.matcher[locale]}</dt>
             <dd>{matcher ? <code class="breaks" dir="ltr">{matcher}</code> : words.any[locale]}</dd>
@@ -77,9 +83,9 @@ const runs = hookRuns(event)
             </dd>
           </div>
         </dl>
-        <pre class="script-about" lang="en" dir="ltr" tabindex="0">{about.trim().replace(/([^\n])\n[ \t]*(?=[^\n])/g, '$1 ').replace(/^[ \t]+/gm, '')}</pre>
-        <a class="source" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/scripts/${script}`}>
-          {ui.source[locale]}
+        <pre class="script-about" lang="en" dir="ltr" tabindex="0">{about.replace(/\r/g, '').trim().replace(/([^\n])\n[ \t]*(?=[^\n])/g, '$1 ').replace(/^[ \t]+/gm, '')}</pre>
+        <a class="source-link" href={`${REPO_URL}/blob/main/plugins/wajiha-kit/scripts/${script}`}>
+          {ui.onGitHub[locale]}
           <span class="sr-only">: {script}</span>
         </a>
       </div>

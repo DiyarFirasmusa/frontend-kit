@@ -43,12 +43,14 @@ const words = {
   ))
 }
 <Block id="shipped" title={words.shipped[locale]} lead={words.shippedLead[locale]}>
+  <div class="folds">
   {
     projects.flatMap(({ id, name }) =>
       (['wajiha-kit.json', 'settings.json'] as const).map((file) => (
-        <details class="file">
+        <details class="fold">
           <summary>
-            {name[locale]}: <bdi>{file}</bdi>
+            <span>{name[locale]}</span>
+            <code dir="ltr">{file}</code>
           </summary>
           <pre dir="ltr" tabindex="0">
             <code>{templateJson(id, file)}</code>
@@ -57,4 +59,5 @@ const words = {
       )),
     )
   }
+  </div>
 </Block>

@@ -16,7 +16,6 @@
 .prompt,
 .gate-output,
 .block pre,
-.file pre,
 .call,
 .pair p,
 .source-doc,
@@ -68,22 +67,6 @@
 .finder input,
 .tree-search input {
   border-radius: var(--radius-sm);
-}
-
-/* The files you can open: a rounded box each. */
-.file {
-  padding-inline: 1rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgb(var(--void-rgb) / 0.5);
-}
-
-.file[open] {
-  padding-block-end: 1rem;
-}
-
-.file summary {
-  min-height: 44px;
 }
 
 /* Tables sit in a rounded frame. */

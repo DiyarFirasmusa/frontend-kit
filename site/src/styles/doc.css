@@ -464,15 +464,6 @@
   overflow-wrap: anywhere;
 }
 
-.file {
-  border-block-start: 1px solid var(--line);
-}
-
-.file > summary {
-  padding-block: 0.75rem;
-  cursor: pointer;
-}
-
 .script-about {
   margin-block: 0.75rem;
   color: var(--muted);
@@ -554,7 +545,7 @@
 }
 
 .source-doc pre,
-.file pre {
+.fold pre {
   max-width: 100%;
   margin-block: 1rem;
   padding: 1rem;

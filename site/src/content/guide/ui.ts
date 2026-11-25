@@ -61,6 +61,11 @@ export const ui = {
   always: t('Read in every session', 'يقرؤها المساعد في كل جلسة'),
   loadsFor: t('Read when working on', 'يقرؤها عند العمل على'),
   scripts: t('Scripts', 'السكربتات'),
+  referenceFile: t('A reference file', 'ملف مرجعي'),
+  inShort: t('In short', 'باختصار'),
+  theSource: t('The source', 'النص الأصلي'),
+  sourceLead: t('What the assistant reads, exactly as written, in English.', 'ما يقرؤه المساعد كما هو مكتوب، بالإنجليزية.'),
+  onGitHub: t('Read the original file on GitHub', 'اقرأ الملف الأصلي على GitHub'),
 }
 
 export const skillUse = {

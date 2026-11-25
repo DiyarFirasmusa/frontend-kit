@@ -5,15 +5,23 @@ import { t } from '../../content/guide/text.ts'
 interface Props {
   /** A path in the repository. */
   file: string
+  /** What the fold is called; without it, "Show the whole file". */
+  label?: string | undefined
+  /** The file's name, shown as code at the end of the row. */
+  name?: string | undefined
 }
 
-const { file } = Astro.props
+const { file, label, name } = Astro.props
 const open = t('Show the whole file', 'اعرض الملف كله')
+const arabic = Astro.url.pathname.startsWith(`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}ar`)
 const entry = await getEntry('reference', file)
 if (!entry?.rendered) throw new Error(`The documentation has no text for ${file}`)
 ---
 
-<details class="file">
-  <summary>{(Astro.url.pathname.startsWith(`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}ar`) ? open.ar : open.en)}</summary>
+<details class="fold">
+  <summary>
+    <span>{label ?? (arabic ? open.ar : open.en)}</span>
+    {name && <code dir="ltr">{name}</code>}
+  </summary>
   <div class="source-doc" lang="en" dir="ltr" set:html={entry.rendered.html} />
 </details>

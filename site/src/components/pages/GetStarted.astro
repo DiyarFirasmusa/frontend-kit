@@ -41,7 +41,7 @@ const words = {
   <ul class="ticks">
     {words.plain.map((line) => <li>{line[locale]}</li>)}
   </ul>
-  <details class="fold-all">
+  <details class="fold">
     <summary>{words.details[locale]}</summary>
     <ul class="ticks">
       {needs.map(({ name, why, link, linkLabel }) => (
@@ -53,7 +53,7 @@ const words = {
     </ul>
   </details>
 </Block>
-<Block id="install" title={words.install[locale]}>
+<Block id="install" tone="act" title={words.install[locale]}>
   <ol class="explained">
     {installFlow.map(({ title, text, copy }) => (
       <li>
@@ -64,8 +64,8 @@ const words = {
     ))}
   </ol>
 </Block>
-<Block id="questions" title={words.answer[locale]} lead={questionsLead[locale]}>
-  <details class="fold-all">
+<Block id="questions" tone="act" title={words.answer[locale]} lead={questionsLead[locale]}>
+  <details class="fold">
     <summary>{words.seeQuestions[locale]}</summary>
     {questions.map(({ question, answers }) => (
       <div class="question">
@@ -75,24 +75,26 @@ const words = {
     ))}
   </details>
 </Block>
-<Block id="approve" title={words.approve[locale]}>
+<Block id="approve" tone="act" title={words.approve[locale]}>
   <h3>{summary.title[locale]}</h3>
   <p class="big">{summary.text[locale]}</p>
 </Block>
-<Block id="build" title={words.built[locale]}>
+<Block id="build" tone="get" title={words.built[locale]}>
   <p class="big">{build.text[locale]}</p>
 </Block>
-<Block id="after" title={words.next[locale]} lead={words.nextLead[locale]}>
+<Block id="after" tone="act" title={words.next[locale]} lead={words.nextLead[locale]}>
   <ol class="numbered">{after.map((step) => <li>{step[locale]}</li>)}</ol>
   <p><a href={pageUrl(locale, 'examples')}>{words.examples[locale]}</a></p>
 </Block>
-<Block id="limits" title={words.limits[locale]}><ul class="ticks">{limits.map((item) => <li>{item[locale]}</li>)}</ul></Block>
+<Block id="limits" title={words.limits[locale]}><ul class="plain">{limits.map((item) => <li>{item[locale]}</li>)}</ul></Block>
 <Block id="keep" title={words.keep[locale]}>
+  <div class="folds">
   {maintenance.map(({ title, text, command }) => (
-    <details class="fold-all">
+    <details class="fold">
       <summary>{title[locale]}</summary>
       <p class="muted">{text[locale]}</p>
       <CommandBox command={command} install={install} />
     </details>
   ))}
+  </div>
 </Block>

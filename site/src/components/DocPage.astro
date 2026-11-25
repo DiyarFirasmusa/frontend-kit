@@ -82,11 +82,12 @@ const brand = locale === 'ar' ? 'واجهة' : 'Wajiha Kit'
 const padded = summary && summary.length < 70 ? `${summary} ${info.name[locale]}: ${PAGES.docs.name[locale]} ${brand}.` : (summary ?? '')
 const described = padded.length > 160 ? `${padded.slice(0, 157).replace(/\s+\S*$/, '')}…` : padded
 // The same mark as the home page: on a kind's pages its own block shows in the kind's colour, on the other pages all four.
+// The colours of the blocks are in docs-law.css (the documentation law), so light mode can deepen them.
 const markBlocks = [
-  { x: 5, y: 5, w: 54, h: 12, fill: '#f1ede7' },
-  { x: 5, y: 21, w: 36, h: 20, fill: '#d97757' },
-  { x: 45, y: 21, w: 14, h: 38, fill: '#19abab' },
-  { x: 5, y: 45, w: 36, h: 14, fill: '#f1ede7' },
+  { x: 5, y: 5, w: 54, h: 12 },
+  { x: 5, y: 21, w: 36, h: 20 },
+  { x: 45, y: 21, w: 14, h: 38 },
+  { x: 5, y: 45, w: 36, h: 14 },
 ]
 // The head of a page is a board too: orange for the pages you read to act, a dark block for the reference pages.
 const tone = ({ rules: 'ink', skills: 'orange', agents: 'ink', checks: 'ink', licence: 'ink', privacy: 'ink', terms: 'ink', features: 'ink', questions: 'ink', configuration: 'ink', modes: 'ink', refactor: 'ink', changelog: 'ink' } as Record<string, string>)[parent] ?? 'orange'
@@ -104,8 +105,8 @@ const crumbs = [
     <div class="column" id="content" tabindex="-1" transition:name="page">
       <header class:list={['doc-head', 'board', 'board-head', `tone-${tone}`]}>
         <p class="board-top doc-eyebrow">
-          <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
-            {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={lit === undefined ? b.fill : i === lit ? 'var(--kc, #d97757)' : 'rgb(241 237 231 / 0.3)'} />)}
+          <svg class="doc-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
+            {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" class:list={[`b${i}`, { dim: lit !== undefined && i !== lit }]} />)}
           </svg>
           <span>{PAGES[parent].name[locale]}</span>
         </p>

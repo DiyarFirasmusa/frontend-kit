@@ -65,7 +65,7 @@ const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
   <p><Fragment set:html={f(d.existing.text[locale])} /></p>
   <p><Fragment set:html={f(d.existing.messy[locale])} /> <a href={pageUrl(locale, 'refactor')}><Fragment set:html={f(d.existing.messyLink[locale])} /></a></p>
 </Block>
-<Block id="install" title={d.terminal.title[locale]} lead={d.terminal.lead[locale]}>
+<Block id="install" tone="act" title={d.terminal.title[locale]} lead={d.terminal.lead[locale]}>
   <ol class="explained">
     {d.terminal.commands.map((command) => <li><CommandBox command={command} install={install} /></li>)}
   </ol>

@@ -1,0 +1,1040 @@
+/* =====================================================================================================
+   THE DOCUMENTATION LAW, in one place (brand/design-system.md, sections 3 and 9).
+   Every page made by DocPage.astro reads through these rules. The file is loaded last and replaces the
+   earlier rounds (docs-space.css, doc.css, details.css, guide.css) for every piece named here: change a
+   documentation piece here, not there.
+     - one type scale: title, section, sub, body, small, label
+     - one row: a hairline above each row, the name at the start, the words after (index, rows, about, path)
+     - one disclosure: a flat row, the turquoise plus that turns into a minus (fold, questions, mini contents)
+     - one window for code you read (quiet, dark in both themes); code you copy is the command window
+     - section blocks by meaning: data-tone="act" orange, data-tone="get" turquoise, none plain
+   ===================================================================================================== */
+
+/* ---- Tokens of the documentation ---- */
+.doc {
+  /* The blocks of the mark: rules the top bar, skills the orange block, specialists the column, checks the bottom bar. */
+  --k-rule: var(--ivory);
+  --k-skill: var(--accent);
+  --k-agent: var(--turq);
+  --k-hook: var(--ivory);
+  --k-page: var(--turq);
+  /* Orange and turquoise as small text: the same on dark, a step deeper on paper so they reach 4.5:1. */
+  --accent-text: var(--accent);
+  --turq-text: var(--turq);
+  --measure: 68ch;
+  --row-name: 13rem;
+  --code-ground: #121211;
+  --code-ink: #e4dfd8;
+}
+
+html[data-theme='light'] .doc {
+  --accent-text: #a64b28;
+  --turq-text: #006c6d;
+  --k-skill: #a64b28;
+  --k-agent: #006c6d;
+  --k-page: #006c6d;
+}
+
+/* ---- The mark in a page head and on the hub: each block keeps the colour it has in the logo ---- */
+.doc-mark .b0,
+.doc-mark .b3 {
+  fill: #f1ede7;
+}
+
+.doc-mark .b1 {
+  fill: #d97757;
+}
+
+.doc-mark .b2 {
+  fill: #19abab;
+}
+
+.doc-mark .dim {
+  fill: rgb(241 237 231 / 0.24);
+}
+
+html[data-theme='light'] .doc-mark .b0,
+html[data-theme='light'] .doc-mark .b3 {
+  fill: #141413;
+}
+
+html[data-theme='light'] .doc-mark .b1 {
+  fill: #c4623a;
+}
+
+html[data-theme='light'] .doc-mark .b2 {
+  fill: #0c8a8a;
+}
+
+html[data-theme='light'] .doc-mark .dim {
+  fill: rgb(20 20 19 / 0.2);
+}
+
+/* ---- The head: the board, then the words start at once ---- */
+.doc .doc-head.board-head {
+  margin-block-end: 0;
+  padding-block: 2.5rem 0;
+}
+
+.doc .doc-head h1 {
+  font-size: clamp(1.875rem, 1.3rem + 1.6vw, 2.625rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.doc .doc-head h1.is-name {
+  font-family: var(--latin);
+  overflow-wrap: anywhere;
+}
+
+:lang(ar) .doc .doc-head h1 {
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.doc .doc-head .doc-summary {
+  max-width: var(--measure);
+  font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.doc .toc-mini {
+  margin-block: 1.5rem 0;
+}
+
+.doc .doc-article {
+  padding-block: 0 4rem;
+}
+
+/* ---- Sections: one rhythm, one title size, a small block that says what kind of section it is ---- */
+.doc .doc-article > .block {
+  padding-block: 2.75rem 0;
+}
+
+.doc .doc-article > .glance + .block,
+.doc .doc-article > .block:first-child {
+  padding-block-start: 2.25rem;
+}
+
+.doc .block > h2 {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  margin-block: 0 0.875rem;
+  font-size: clamp(1.375rem, 1.15rem + 0.6vw, 1.625rem);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.doc .block > h2::before {
+  content: '';
+  display: block;
+  flex: none;
+  align-self: flex-start;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: calc((1.3em - 0.6rem) / 2) 0 0;
+  border-radius: 2px;
+  background: rgb(var(--ink-rgb) / 0.35);
+}
+
+.doc .block[data-tone='act'] > h2::before {
+  background: var(--accent);
+}
+
+.doc .block[data-tone='get'] > h2::before {
+  background: var(--turq);
+}
+
+.doc .block-lead {
+  max-width: var(--measure);
+  margin-block: 0 1.25rem;
+  color: var(--muted);
+}
+
+.doc .doc-article .block > p,
+.doc .doc-article .big {
+  max-width: var(--measure);
+  font-size: inherit;
+}
+
+.doc .doc-article :is(h3.sub, .block > h3) {
+  margin-block: 2rem 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* ---- The facts under a detail page's head ---- */
+.doc .glance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.5rem;
+  margin: 2rem 0 0;
+  padding: 0 0 1.25rem;
+  border: 0;
+  border-block-end: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.doc .glance dt {
+  margin-block-end: 0.15rem;
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.doc .glance dd {
+  color: var(--ivory);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* ---- One row, everywhere: a hairline above, the name at the start, the words after ---- */
+.doc :is(.index, .about, .rows, .hub-path) {
+  margin: 0;
+  padding: 0;
+  border-block-end: 1px solid var(--line);
+  list-style: none;
+}
+
+.doc :is(.index > li, .about > div, .rows > div) {
+  display: grid;
+  grid-template-columns: minmax(0, var(--row-name)) minmax(0, 1fr);
+  gap: 0.25rem 1.5rem;
+  align-items: baseline;
+  padding-block: 0.875rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.doc :is(.index, .about, .rows) :is(p, dd) {
+  max-width: var(--measure);
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--small);
+  line-height: 1.65;
+}
+
+.doc :is(.about dt, .rows dt) {
+  color: var(--ivory);
+  font-size: var(--small);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.doc .about dd {
+  font-size: var(--body);
+}
+
+/* A name you can open: ivory and underlined, turquoise when you point at it; the tap area grows, the line does not. */
+.doc :is(.index a, .rows dt a, .hub-path a) {
+  display: inline;
+  min-height: 0;
+  margin-block: -0.625rem;
+  padding-block: 0.625rem;
+  color: var(--ivory);
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--ink-rgb) / 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  overflow-wrap: anywhere;
+  transition:
+    color 0.2s,
+    text-decoration-color 0.2s;
+}
+
+.doc :is(.index a, .rows dt a, .hub-path a):hover {
+  color: var(--turq-text);
+  text-decoration-color: currentColor;
+}
+
+.doc .rows small {
+  display: block;
+  margin-block-start: 0.35rem;
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 600px) {
+  .doc :is(.index > li, .about > div, .rows > div) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Lists: steps the kit takes are turquoise, steps you take orange; what you get is ticked; what it will not do is a quiet dash ---- */
+.doc .doc-article ol.numbered {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  border-inline-start: 2px solid color-mix(in srgb, var(--turq) 55%, transparent);
+}
+
+.doc .doc-article ol.numbered > li {
+  max-width: var(--measure);
+  min-height: 2rem;
+  margin-block-end: 0.875rem;
+  padding-block-start: 0.15rem;
+  padding-inline-start: 2.75rem;
+}
+
+.doc .doc-article ol.numbered > li:last-child {
+  margin-block-end: 0;
+}
+
+.doc .doc-article ol.numbered > li::before {
+  width: 1.875rem;
+  height: 1.875rem;
+  border: 1px solid color-mix(in srgb, var(--turq) 55%, transparent);
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--turq) 10%, transparent);
+  color: var(--turq-text);
+  font: 600 0.875rem/1 var(--latin);
+}
+
+.doc .block[data-tone='act'] ol.numbered,
+main[data-section='get-started'] .doc-article ol.numbered {
+  border-inline-start-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.doc .block[data-tone='act'] ol.numbered > li::before,
+main[data-section='get-started'] .doc-article ol.numbered > li::before {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-text);
+}
+
+.doc .doc-article :is(.ticks, .crosses) {
+  margin: 0;
+}
+
+.doc .doc-article :is(.ticks, .crosses) li {
+  max-width: var(--measure);
+}
+
+.doc .doc-article .ticks li::before {
+  background: var(--turq);
+}
+
+.doc .doc-article .crosses {
+  padding: 0;
+}
+
+.doc .doc-article .crosses li::before {
+  width: 0.75rem;
+  background: rgb(var(--ink-rgb) / 0.45);
+}
+
+/* ---- One disclosure: a flat row with a hairline and the turquoise plus that turns into a minus ---- */
+.doc :is(.folds, .questions) {
+  border-block-start: 1px solid var(--line);
+}
+
+.doc :is(.fold, .questions details) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-block-end: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.doc .block > .fold {
+  margin-block-start: 1.25rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.doc .block > .fold + .fold {
+  margin-block-start: 0;
+  border-block-start: 0;
+}
+
+.doc :is(.fold, .questions details, .toc-mini) > summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 3.25rem;
+  padding-block: 0.75rem;
+  color: var(--ivory);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.45;
+  list-style: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+:lang(ar) .doc :is(.fold, .questions details) > summary {
+  font-size: 1.125rem;
+}
+
+.doc :is(.fold, .questions details, .toc-mini) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc :is(.fold, .questions details, .toc-mini) > summary::after {
+  content: '';
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-inline-start: auto;
+  background:
+    linear-gradient(var(--turq), var(--turq)) center / 100% 2px no-repeat,
+    linear-gradient(var(--turq), var(--turq)) center / 2px 100% no-repeat;
+  font: inherit;
+  rotate: none;
+  transition: background-size 0.2s ease;
+}
+
+.doc :is(.fold, .questions details, .toc-mini)[open] > summary::after {
+  content: '';
+  background-size:
+    100% 2px,
+    2px 0;
+  rotate: none;
+}
+
+.doc :is(.fold, .questions details) > summary:hover {
+  color: var(--turq-text);
+}
+
+.doc :is(.fold, .questions details, .toc-mini) > summary:focus-visible {
+  outline: 2px solid var(--turq);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+.doc .fold > summary > code {
+  margin-inline-start: auto;
+  padding: 0;
+  background: none;
+  color: var(--faint);
+  font: 500 0.8125rem/1.4 var(--code);
+}
+
+.doc .fold > summary:has(> span + code)::after {
+  margin-inline-start: 0;
+}
+
+.doc :is(.fold, .questions details) > :not(summary) {
+  max-width: var(--measure);
+  margin-block: 0 1.25rem;
+}
+
+.doc .fold > :is(.source-doc, pre, .command, .tags) {
+  max-width: none;
+}
+
+.doc .questions details > p {
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc :is(.fold, .questions details, .toc-mini) > summary,
+  .doc :is(.fold, .questions details, .toc-mini) > summary::after {
+    transition: none;
+  }
+}
+
+/* ---- Code you read: one quiet window, dark in both themes, left to right ---- */
+.doc .doc-article :is(.block pre, .source-doc pre, .fold pre, .script-about) {
+  max-width: 100%;
+  margin-block: 0.75rem;
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  border: 1px solid rgb(241 237 231 / 0.12);
+  border-radius: 0.7rem;
+  background: var(--code-ground);
+  color: var(--code-ink);
+  font: 500 0.8125rem/1.65 var(--code);
+  direction: ltr;
+  text-align: left;
+}
+
+.doc .doc-article :is(.block pre, .source-doc pre, .fold pre) code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+
+.doc .doc-article .script-about {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Names of files, commands and settings in a sentence: code in ivory, not a link colour. */
+.doc .doc-article :is(p, li, dd, h3) > code {
+  padding: 0.12em 0.35em;
+  border-radius: 0.3rem;
+  background: rgb(var(--ink-rgb) / 0.07);
+  color: var(--ivory);
+  font: 500 0.875em/1 var(--code);
+}
+
+/* The text of a source file shown in a fold. */
+.doc .source-doc {
+  font-size: var(--small);
+  line-height: 1.65;
+}
+
+.doc .source-doc h3::before {
+  background: rgb(var(--ink-rgb) / 0.35);
+}
+
+.doc .source-doc th {
+  background: rgb(var(--ink-rgb) / 0.06);
+}
+
+.doc .source-doc blockquote {
+  border-inline-start-color: rgb(var(--ink-rgb) / 0.3);
+  background: rgb(var(--ink-rgb) / 0.04);
+}
+
+/* ---- The one fixed way out to the original file ---- */
+.doc .source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  margin-block-start: 0.75rem;
+  color: var(--ivory);
+  font-size: var(--small);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--turq) 70%, transparent);
+  text-underline-offset: 0.3em;
+}
+
+.doc .source-link::after {
+  content: '\2197';
+  color: var(--turq-text);
+}
+
+[dir='rtl'] .doc .source-link::after {
+  content: '\2196';
+}
+
+.doc .source-link:hover {
+  color: var(--turq-text);
+}
+
+/* ---- What you can say: the prompt row, and the name to call in the command window ---- */
+.doc .doc-article .prompt {
+  max-width: var(--measure);
+  margin-block: 0 0.625rem;
+}
+
+.doc .by-name {
+  margin-block: 1.25rem 0.5rem;
+  color: var(--muted);
+}
+
+.doc .block > .command {
+  max-width: var(--measure);
+}
+
+/* ---- Pills: a plain fact is quiet, a pill you can open is a link ---- */
+.doc .doc-article .tags {
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.doc .doc-article .tags li {
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+
+.doc .doc-article .tags li:has(> a) {
+  padding: 0;
+}
+
+.doc .doc-article .tags a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding-inline: 0.85rem;
+  color: var(--ivory);
+  text-decoration: none;
+}
+
+.doc .doc-article .tags a:hover {
+  color: var(--turq-text);
+}
+
+@media (pointer: coarse) {
+  .doc .doc-article .tags a {
+    min-height: 2.75rem;
+  }
+}
+
+/* ---- Lists of skills and specialists: flat rows you can press, the sentence to say last ---- */
+.doc .doc-article .cards {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border-block-end: 1px solid var(--line);
+  list-style: none;
+}
+
+.doc .doc-article .cards > li {
+  border-block-start: 1px solid var(--line);
+}
+
+.doc .doc-article .card {
+  display: grid;
+  gap: 0.3rem;
+  height: auto;
+  margin-inline: -0.75rem;
+  padding: 0.9rem 0.75rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--muted);
+  font-size: var(--small);
+  font-weight: 400;
+  line-height: 1.6;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.doc .doc-article .card:hover {
+  border: 0;
+  background: rgb(var(--ink-rgb) / 0.04);
+}
+
+.doc .doc-article .card strong {
+  color: var(--ivory);
+  font: 600 1.0625rem/1.35 var(--latin);
+  transition: color 0.2s;
+}
+
+.doc .doc-article .card:hover strong {
+  color: var(--turq-text);
+}
+
+.doc .doc-article .card > span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.doc .doc-article .card-say {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin: 0.15rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.doc .doc-article .card-say em {
+  color: var(--faint);
+  font-size: 0.8125rem;
+  font-style: normal;
+}
+
+.doc .doc-article .card-say q {
+  color: var(--ivory);
+  font: 400 var(--small) / 1.5 var(--type);
+  quotes: none;
+}
+
+.doc .doc-article .card-say q::before {
+  content: '\203A\00a0';
+  color: var(--accent-text);
+}
+
+/* The skills page: the three ways and the close-up read top to bottom, not in narrow columns. */
+.doc .doc-article :is(.ways, .anatomy) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border-block-end: 1px solid var(--line);
+  list-style: none;
+}
+
+.doc .doc-article :is(.ways, .anatomy) > :is(li, div) {
+  padding-block: 1.25rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.doc .doc-article :is(.ways, .anatomy) h3 {
+  margin: 0 0 0.625rem;
+  font-size: 1.0625rem;
+}
+
+.doc .doc-article .ways p:not(.prompt) {
+  max-width: var(--measure);
+  margin: 0 0 0.75rem;
+  font-size: var(--small);
+}
+
+.doc .doc-article :is(.ways, .anatomy) .prompt {
+  margin: 0;
+}
+
+/* ---- The search over the skills ---- */
+.doc .finder input {
+  min-height: 3rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: var(--void);
+  font-size: 1rem;
+}
+
+.doc .finder input:focus-visible {
+  border-color: var(--turq);
+  outline: 2px solid color-mix(in srgb, var(--turq) 40%, transparent);
+  outline-offset: 1px;
+}
+
+/* ---- The hub: where to start as a path of steps you take, and the four kinds laid out as the mark ---- */
+.doc .hub-path {
+  counter-reset: path;
+}
+
+.doc .hub-path > li {
+  display: grid;
+  grid-template-columns: 1.875rem minmax(0, 11rem) minmax(0, 1fr);
+  gap: 0.25rem 1.25rem;
+  align-items: baseline;
+  padding-block: 0.875rem;
+  border-block-start: 1px solid var(--line);
+  counter-increment: path;
+}
+
+.doc .hub-path > li::before {
+  content: counter(path);
+  display: grid;
+  place-items: center;
+  align-self: start;
+  width: 1.875rem;
+  height: 1.875rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-text);
+  font: 600 0.875rem/1 var(--latin);
+}
+
+.doc .hub-path p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--small);
+  line-height: 1.65;
+}
+
+@media (max-width: 600px) {
+  .doc .hub-path > li {
+    grid-template-columns: 1.875rem minmax(0, 1fr);
+  }
+
+  .doc .hub-path p {
+    grid-column: 2;
+  }
+}
+
+.doc .hub-kinds {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-areas:
+    'rule rule'
+    'skill agent'
+    'hook agent';
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* The board keeps the logo's left-to-right shape in both languages; the words inside follow the page. */
+  direction: ltr;
+}
+
+.doc .hub-kinds > li {
+  min-width: 0;
+}
+
+[dir='rtl'] .doc .hub-kinds > li {
+  direction: rtl;
+}
+
+.doc .hub-kinds [data-kind='rule'] {
+  grid-area: rule;
+  --kind: rgb(var(--ink-rgb) / 0.55);
+}
+
+.doc .hub-kinds [data-kind='skill'] {
+  grid-area: skill;
+  --kind: var(--accent);
+}
+
+.doc .hub-kinds [data-kind='agent'] {
+  grid-area: agent;
+  --kind: var(--turq);
+}
+
+.doc .hub-kinds [data-kind='hook'] {
+  grid-area: hook;
+  --kind: rgb(var(--ink-rgb) / 0.55);
+}
+
+.doc .hub-kinds a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  padding: 1rem 1.25rem 1.25rem;
+  border: 1px solid rgb(var(--ink-rgb) / 0.14);
+  border-block-start: 2px solid var(--kind);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--kind) 5%, #0d0e10);
+  color: var(--muted);
+  text-decoration: none;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.doc .hub-kinds a:hover {
+  border-color: color-mix(in srgb, var(--turq) 60%, transparent);
+  border-block-start-color: var(--kind);
+}
+
+.doc .hub-kinds a:focus-visible {
+  outline: 2px solid var(--turq);
+  outline-offset: 2px;
+}
+
+.doc .hub-kind-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 0.35rem;
+}
+
+.doc .hub-kinds b {
+  color: var(--ivory);
+  font: 600 1.5rem/1 var(--latin);
+  font-variant-numeric: tabular-nums;
+}
+
+.doc .hub-kinds strong {
+  color: var(--ivory);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  transition: color 0.2s;
+}
+
+.doc .hub-kinds a:hover strong {
+  color: var(--turq-text);
+}
+
+.doc .hub-kind-about {
+  max-width: var(--measure);
+  font-size: var(--small);
+  line-height: 1.6;
+}
+
+html[data-theme='light'] .doc .hub-kinds a {
+  border-color: rgb(20 20 19 / 0.14);
+  border-block-start-color: var(--kind);
+  background: color-mix(in srgb, var(--kind) 8%, #ede8e0);
+}
+
+@media (max-width: 600px) {
+  .doc .hub-kinds {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'rule' 'skill' 'agent' 'hook';
+  }
+}
+
+/* ---- The changelog: the latest version open, the earlier ones folded ---- */
+.doc .version h3 {
+  margin: 0 0 0.5rem;
+}
+
+.doc :is(.version h3, .fold > summary) > code:only-child {
+  margin: 0;
+  color: var(--ivory);
+  font: 600 1rem/1.4 var(--code);
+}
+
+.doc .version .source-doc > :first-child {
+  margin-block-start: 0;
+}
+
+/* ---- A safety check page: each script is a small part of its own ---- */
+.doc .script + .script {
+  margin-block-start: 2.5rem;
+}
+
+.doc .script h3 {
+  margin: 0;
+}
+
+.doc .script h3 code {
+  padding: 0;
+  background: none;
+  font: 600 1.0625rem/1.4 var(--code);
+}
+
+.doc .script .glance {
+  margin-block-start: 0.75rem;
+  padding-block-end: 0.75rem;
+}
+
+/* What each moment of a session can do is what you get: turquoise, deep enough to read. */
+.doc .timeline-head span {
+  color: var(--turq-text);
+  font-size: 0.8125rem;
+}
+
+/* ---- The end of every page: the note bar; both links are at least 44px to press ---- */
+.doc .pager a,
+.doc .pager .pager-next {
+  min-height: 2.75rem;
+  align-items: center;
+}
+
+/* ---- On this page, and the mini version under 1280px ---- */
+.doc .toc a[aria-current] {
+  color: var(--ivory);
+}
+
+.doc .toc-mini {
+  border-block: 1px solid var(--line);
+}
+
+.doc .toc-mini > summary {
+  font-size: var(--small);
+}
+
+/* ---- Try the safety check yourself: commands you press, and the answer in one quiet window ---- */
+.doc .gate-commands {
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.doc .gate-commands button {
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--ivory);
+  font: 500 0.875rem/1.4 var(--code);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.doc .gate-commands button:hover {
+  border-color: var(--accent);
+}
+
+.doc .gate-commands button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--ivory);
+}
+
+.doc .gate-commands button:focus-visible {
+  outline: 2px solid var(--turq);
+  outline-offset: 2px;
+}
+
+.doc .gate-output {
+  --ivory: #f1ede7;
+  --muted: #bcb8b1;
+  --ink-rgb: 241 237 231;
+  min-height: 7.5rem;
+  margin-block-start: 1rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgb(241 237 231 / 0.12);
+  border-radius: 0.7rem;
+  background: var(--code-ground);
+  color: var(--muted);
+}
+
+.doc .gate-output .gate-title {
+  font-size: 1.25rem;
+}
+
+.doc .note {
+  max-width: var(--measure);
+  margin-block: 0.75rem 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: var(--small);
+}
+
+/* The hub's column lists a few specialists, rows sharing its height, like the side column of a board. */
+.doc .hub-kinds [data-kind='agent'] a {
+  background: #0d0e10;
+}
+
+html[data-theme='light'] .doc .hub-kinds [data-kind='agent'] a {
+  background: #ede8e0;
+}
+
+.doc .hub-kind-about {
+  font-weight: 400;
+}
+
+.doc .hub-kind-rows {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-block-start: 0.75rem;
+}
+
+.doc .hub-kind-rows > span {
+  padding-block: 0.45rem;
+  border-block-start: 1px solid var(--line);
+  color: var(--ivory);
+  font: 500 0.8125rem/1.4 var(--code);
+  text-align: start;
+}
+
+/* Steps you take, wherever they are listed (the guide, get started, the install): orange squares and edge. */
+.doc .block[data-tone='act'] ol.explained > li::before {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-text);
+}
+
+/* A step that starts with a short bold name: the name is its own line, the words under it. */
+.doc .doc-article ol.numbered > li > strong:first-child {
+  display: block;
+  margin-block-end: 0.15rem;
+  color: var(--ivory);
+}
+
+/* A list of facts that are neither steps nor results: a small plain square, like the block of a plain section. */
+.doc .doc-article .plain {
+  margin: 0;
+  padding: 0;
+}
+
+.doc .doc-article .plain li {
+  max-width: var(--measure);
+}
+
+.doc .doc-article .plain li::before {
+  inset-block-start: calc(0.4rem + 0.8em - 3px);
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 1px;
+  background: rgb(var(--ink-rgb) / 0.45);
+}

@@ -7,7 +7,8 @@ import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { REPO_URL } from '../../lib/plugin.ts'
 import { ruleFiles } from '../../lib/plugin-details.ts'
-import Block from '../guide/Block.astro'
+import InShort from '../guide/InShort.astro'
+import SourceBlock from '../guide/SourceBlock.astro'
 import Source from '../guide/Source.astro'
 
 interface Props {
@@ -41,20 +42,22 @@ const types =
   <div><dt>{words.installed[locale]}</dt><dd>{types}</dd></div>
   <div><dt>{words.becomes[locale]}</dt><dd><code dir="ltr">.claude/rules/{name}</code></dd></div>
 </dl>
-<Block id="why" title={ui.why[locale]} lead={words.yours[locale]}><p class="big">{rulePurpose[key]![locale]}</p></Block>
-<Block id="loads" title={words.load[locale]} lead={(paths.length ? words.loadLead : words.always)[locale]}>
+<InShort
+  locale={locale}
+  lead={words.yours[locale]}
+  rows={[
+    [ui.why[locale], rulePurpose[key]![locale]],
+    [words.load[locale], (paths.length ? words.loadLead : words.always)[locale]],
+  ]}
+/>
+<SourceBlock locale={locale} href={`${REPO_URL}/blob/main/${file}`}>
   {
     paths.length > 0 && (
-      <div class="questions">
-        <details>
-          <summary>{words.exact[locale]}</summary>
-          <ul class="tags">{paths.map((path) => <li><code dir="ltr">{path}</code></li>)}</ul>
-        </details>
-      </div>
+      <details class="fold">
+        <summary><span>{words.exact[locale]}</span></summary>
+        <ul class="tags">{paths.map((path) => <li><code dir="ltr">{path}</code></li>)}</ul>
+      </details>
     )
   }
-</Block>
-<Block id="full" title={ui.fullRule[locale]} lead={ui.fullText[locale]}>
-  <Source file={file} />
-  <a class="source" href={`${REPO_URL}/blob/main/${file}`}>{ui.source[locale]}</a>
-</Block>
+  <Source file={file} label={ui.fullRule[locale]} name={name} />
+</SourceBlock>

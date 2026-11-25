@@ -482,114 +482,11 @@
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--kc, var(--accent)) 20%, transparent);
 }
 
-/* ---------- The guide's front page ---------- */
-.hub-cards {
-  padding-block: 1.5rem 1rem;
-}
-
-.hub-title {
-  margin-block: 1.5rem 1rem;
-}
-
-.hub-lead {
-  margin: -0.5rem 0 1rem;
-  color: var(--muted);
-}
-
-.hub-start,
-.hub-kinds {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 0 0 1.5rem;
-  padding: 0;
-  list-style: none;
-}
-
-.hub-start a,
-.hub-kinds a {
-  display: grid;
-  align-content: start;
-  gap: 0.375rem;
-  height: 100%;
-  text-decoration: none;
-  transition:
-    border-color 0.3s,
-    translate 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hub-start a:hover {
-  border-color: rgb(217 119 87 / 0.55);
-}
-
-.hub-mark {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-block-end: 0.375rem;
-  border-radius: 0.625rem;
-  background: rgb(217 119 87 / 0.14);
-  color: var(--accent);
-  font: 700 1rem / 1 var(--latin);
-}
-
-.hub-start strong,
-.hub-kinds strong {
-  color: #fff;
-  font-size: 1.0625rem;
-  font-weight: 500;
-}
-
-.hub-start a > span:last-child,
-.hub-kinds a > span {
-  color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-}
-
-.hub-kinds li {
-  --gc: var(--ivory);
-}
-
-.hub-kinds [data-kind='skill'] {
-  --gc: var(--k-skill);
-}
-
-.hub-kinds [data-kind='rule'] {
-  --gc: var(--k-rule);
-}
-
-.hub-kinds [data-kind='agent'] {
-  --gc: var(--k-agent);
-}
-
-.hub-kinds [data-kind='hook'] {
-  --gc: var(--k-hook);
-}
-
-.hub-kinds b {
-  color: var(--gc);
-  font: 600 1.75rem / 1 var(--latin);
-}
-
-.hub-kinds a {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--gc) 8%, transparent), transparent 70%);
-}
-
-.hub-kinds a:hover {
-  border-color: color-mix(in srgb, var(--gc) 55%, transparent);
-}
 
 /* ---------- Small screens ---------- */
 @media (max-width: 900px) {
   .doc .column {
     padding-inline: var(--edge, 1.25rem);
-  }
-
-  .hub-start,
-  .hub-kinds {
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1220,29 +1117,6 @@ main.doc .doc-article h3 {
   line-height: 1.3;
 }
 
-/* Section titles on the guide's front page are as big as every other section title. */
-.hub-title {
-  font-size: 1.75rem;
-}
-
-/* The front page's cards are flat, like its list of other pages: words only, no boxes. */
-.hub-start a,
-.hub-kinds a {
-  padding: 0.25rem 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-}
-
-.hub-start a:hover,
-.hub-kinds a:hover {
-  translate: none;
-}
-
-.hub-start a:hover strong,
-.hub-kinds a:hover strong {
-  color: var(--accent);
-}
 
 /* No half-drawn outlines: rows are plain, and the small facts row has no frame. */
 .questions details,
@@ -1296,23 +1170,12 @@ main.doc .doc-article :is(h3, h4) {
   color: var(--ivory);
 }
 
-.hub-title {
-  line-height: 1.3;
-}
 
 /* The page intro has no line under it. */
 .doc-head {
   border-block-end: 0;
 }
 
-/* The guide's front page: the cards carry words only, and the odd fifth one takes the whole row. */
-.hub-mark {
-  display: none;
-}
-
-.hub-start li:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
 
 /* Arabic reads a little larger, since its letters are smaller than Latin ones at the same size. */
 html[lang='ar'] .doc-article p,
@@ -1652,28 +1515,6 @@ html[lang='ar'] .credits {
 :lang(ar) .start-more {
   font-size: 1rem;
   line-height: 1.85;
-}
-
-/* A long list the reader may not need: one line to open it. */
-.fold-all {
-  margin-block-start: 0.75rem;
-  border-block-end: 1px solid var(--line);
-}
-
-.fold-all > summary {
-  min-height: 2.75rem;
-  padding-block: 0.75rem;
-  color: var(--ivory);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.fold-all[open] > summary {
-  color: var(--turq);
-}
-
-.fold-all > :not(summary) {
-  margin-block-end: 1rem;
 }
 
 /* ---------- Identity: the mark, put together part by part down the home page ---------- */
@@ -3112,17 +2953,6 @@ body:has(main.doc) .top.is-scrolled,
   padding-block: 0;
 }
 
-/* The docs hub: the start items look like links too. */
-.hub-start a strong {
-  text-decoration: underline;
-  text-decoration-color: rgb(var(--ink-rgb) / 0.4);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.25em;
-}
-
-.hub-start a:hover strong {
-  text-decoration-color: var(--accent);
-}
 
 /* The steps of the guide: the bold lead is its own line. */
 .doc-article ol.explained li > strong,
@@ -3131,11 +2961,6 @@ body:has(main.doc) .top.is-scrolled,
   margin-block-end: 0.15rem;
 }
 
-/* In Arabic the counts of the hub sit at the start edge, like their labels. */
-.hub-kinds b {
-  justify-self: start;
-  unicode-bidi: isolate;
-}
 
 /* Commands, files and settings read as code anywhere in the words of a page. */
 .doc-article :is(p, li, dd) > code {
@@ -3351,37 +3176,6 @@ main[data-section='get-started'] ol.explained li::before {
   color: var(--accent);
 }
 
-/* One disclosure: a turquoise plus, no native triangle. */
-.doc-article details:not(.questions details) > summary,
-.fold-all > summary,
-.toc-mini > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  list-style: none;
-}
-
-.doc-article details:not(.questions details) > summary::-webkit-details-marker,
-.fold-all > summary::-webkit-details-marker,
-.toc-mini > summary::-webkit-details-marker {
-  display: none;
-}
-
-.doc-article details:not(.questions details) > summary::after,
-.fold-all > summary::after,
-.toc-mini > summary::after {
-  content: '+';
-  color: var(--turq);
-  font: 600 1.25rem/1 var(--code);
-}
-
-.doc-article details[open]:not(.questions details) > summary::after,
-.fold-all[open] > summary::after,
-.toc-mini[open] > summary::after {
-  content: '\2013';
-}
-
 /* A prompt is the clearest thing you do: a flat row with an orange edge. */
 .prompt {
   border: 0;
@@ -3520,20 +3314,6 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   background: rgb(var(--ink-rgb) / 0.35);
 }
 
-#ask > h2::before,
-#install > h2::before,
-#questions > h2::before,
-#approve > h2::before,
-#after > h2::before {
-  background: var(--accent);
-}
-
-#steps > h2::before,
-#result > h2::before,
-#build > h2::before,
-#matches > h2::before {
-  background: var(--turq);
-}
 
 /* The page that is not there is an empty board. */
 .missing {
@@ -3578,12 +3358,6 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   background: none;
 }
 
-/* Sections the kit does (steps it takes, what it hands back, the gate) are "you get". */
-#does > h2::before,
-#returns > h2::before,
-#gate > h2::before {
-  background: var(--turq);
-}
 
 /* A script you read is one quiet window: no colour edge, text left to right, no stray indent. */
 .script-about {
@@ -3592,37 +3366,6 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   border-radius: 0.7rem;
   background: rgb(var(--ink-rgb) / 0.05);
   text-indent: 0;
-}
-
-/* One disclosure for files too: a flat row with a hairline and the turquoise plus. */
-.file {
-  padding-inline: 0;
-  border: 0;
-  border-block-end: 1px solid var(--line);
-  border-radius: 0;
-  background: none;
-}
-
-.file > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  list-style: none;
-}
-
-.file > summary::-webkit-details-marker {
-  display: none;
-}
-
-.file > summary::after {
-  content: '+';
-  color: var(--turq);
-  font: 600 1.25rem/1 var(--code);
-}
-
-.file[open] > summary::after {
-  content: '\2013';
 }
 
 /* The page that is not there: links are arrows (go there), not ticks. */
@@ -3779,25 +3522,3 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   padding-block-start: 1.5rem;
 }
 
-/* The hub's section titles carry their block like every other section: orange for where to start, plain for the rest. */
-.doc .hub-title {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.doc .hub-title::before {
-  content: '';
-  display: inline-block;
-  flex: none;
-  width: 0.6rem;
-  height: 0.6rem;
-  align-self: center;
-  border-radius: 2px;
-  background: rgb(var(--ink-rgb) / 0.35);
-}
-
-.hub-start .hub-title::before,
-.hub-cards > .hub-title:first-child::before {
-  background: var(--accent);
-}

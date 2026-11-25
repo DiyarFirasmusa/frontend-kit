@@ -30,7 +30,7 @@ const words = {
 ---
 
 <Block id="intro" title={words.intro[locale]} lead={words.introText[locale]} />
-<Block id="commands" title={words.how[locale]}>
+<Block id="commands" tone="act" title={words.how[locale]}>
   <ol class="explained">
     {refactor.steps.map(([command, text]) => <li><CommandBox command={command} install={install} /><p>{text}</p></li>)}
   </ol>

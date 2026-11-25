@@ -1,4 +1,5 @@
 ---
+import { agents } from '../../content/catalogue.ts'
 import { PAGES } from '../../content/guide/pages.ts'
 import { t } from '../../content/guide/text.ts'
 import type { Locale } from '../../content/types.ts'
@@ -12,19 +13,26 @@ interface Props {
 
 const { locale } = Astro.props
 // The landing cards: the pages to start with, then the four parts of the kit with their counts.
-const startCards = (['guide', 'get-started', 'project-types', 'examples', 'questions'] as const).map((id, i) => ({
+const startCards = (['guide', 'get-started', 'project-types', 'examples', 'questions'] as const).map((id) => ({
   id,
-  mark: ['?', '1', '▦', '“', '!'][i]!,
   name: PAGES[id].name[locale],
   about: PAGES[id].lead[locale],
   href: pageUrl(locale, id),
 }))
+// In the order of the mark's blocks: top bar, orange block, column, bottom bar. The column, as tall as two blocks,
+// lists a few specialists by name, so it is never an empty slab.
 const kindCards = [
+  { kind: 'rule', id: 'rules', count: facts.rules },
   { kind: 'skill', id: 'skills', count: facts.skills },
   { kind: 'agent', id: 'agents', count: facts.agents },
-  { kind: 'rule', id: 'rules', count: facts.rules },
   { kind: 'hook', id: 'checks', count: facts.events },
 ].map(({ kind, id, count }) => ({ kind, count, name: PAGES[id as 'skills'].name[locale], about: PAGES[id as 'skills'].lead[locale], href: pageUrl(locale, id as 'skills') }))
+const markBlocks = [
+  { x: 5, y: 5, w: 54, h: 12 },
+  { x: 5, y: 21, w: 36, h: 20 },
+  { x: 45, y: 21, w: 14, h: 38 },
+  { x: 5, y: 45, w: 36, h: 14 },
+]
 const glossary = {
   title: t('Words used in this guide', 'كلمات تُستعمل في هذا الدليل'),
   items: [
@@ -54,39 +62,47 @@ const morePages = (['features', 'modes', 'configuration', 'refactor', 'changelog
 }))
 ---
 
-<section class="hub-cards" aria-label={hubWords.start[locale]}>
-  <h2 class="hub-title">{hubWords.start[locale]}</h2>
-  <ul class="hub-start">
+<Block id="start" tone="act" title={hubWords.start[locale]}>
+  <ol class="hub-path">
     {
-      startCards.map(({ mark, name, about, href }) => (
+      startCards.map(({ name, about, href }) => (
         <li>
-          <a href={href}>
-            <span class="hub-mark" aria-hidden="true">{mark}</span>
-            <strong>{name}</strong>
-            <span>{about}</span>
-          </a>
+          <a href={href}>{name}</a>
+          <p>{about}</p>
         </li>
       ))
     }
-  </ul>
-  <h2 class="hub-title">{hubWords.behind[locale]}</h2>
-  <p class="hub-lead">{hubWords.behindLead[locale]}</p>
+  </ol>
+</Block>
+<Block id="kinds" title={hubWords.behind[locale]} lead={hubWords.behindLead[locale]}>
+  <!-- The four kinds are laid out as the mark: rules the top bar, skills the orange block, specialists the column, checks the bottom bar. -->
   <ul class="hub-kinds">
     {
-      kindCards.map(({ kind, count, name, about, href }) => (
+      kindCards.map(({ kind, count, name, about, href }, lit) => (
         <li data-kind={kind}>
           <a href={href}>
-            <b dir="ltr">{count}</b>
+            <span class="hub-kind-top">
+              <svg class="doc-mark" viewBox="0 0 64 64" width="24" height="24" aria-hidden="true">
+                {markBlocks.map((b, i) => (
+                  <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" class:list={[`b${i}`, { dim: i !== lit }]} />
+                ))}
+              </svg>
+              <b dir="ltr">{count}</b>
+            </span>
             <strong>{name}</strong>
-            <span>{about}</span>
+            <span class="hub-kind-about">{about}</span>
+            {kind === 'agent' && (
+              <span class="hub-kind-rows" aria-hidden="true">
+                {Object.keys(agents).slice(0, 4).map((name) => <span><bdi>{name}</bdi></span>)}
+              </span>
+            )}
           </a>
         </li>
       ))
     }
   </ul>
-</section>
-<section id="more" class="block">
-  <h2>{hubWords.more[locale]}</h2>
+</Block>
+<Block id="more" title={hubWords.more[locale]}>
   <ul class="index">
     {
       morePages.map(({ name, about, href }) => (
@@ -97,9 +113,9 @@ const morePages = (['features', 'modes', 'configuration', 'refactor', 'changelog
       ))
     }
   </ul>
-</section>
+</Block>
 <Block id="words" title={glossary.title[locale]}>
-  <ul class="index">
-    {glossary.items.map(([name, text]) => <li><b>{name[locale]}</b><p>{text[locale]}</p></li>)}
-  </ul>
+  <dl class="about">
+    {glossary.items.map(([name, text]) => <div><dt>{name[locale]}</dt><dd>{text[locale]}</dd></div>)}
+  </dl>
 </Block>

@@ -15,7 +15,7 @@ const { locale } = Astro.props
 const sample = skillGuides['create-form']!
 ---
 
-<Block id="how" title={skillUse.title[locale]}>
+<Block id="how" tone="act" title={skillUse.title[locale]}>
   <ol class="ways">
     {skillUse.ways.map(({ name, text, example }) => (
       <li>
@@ -45,7 +45,7 @@ const sample = skillGuides['create-form']!
 
 {
   skillGroups.map(({ title, skills }) => (
-    <section class="block" data-finder-group>
+    <section class="block" id={`group-${title.en.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} data-finder-group>
       <h2>{title[locale]}</h2>
       <ul class="cards">
         {Object.entries(skills).map(([name, what]) => {

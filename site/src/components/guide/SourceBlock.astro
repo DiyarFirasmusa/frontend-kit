@@ -1,0 +1,22 @@
+---
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from './Block.astro'
+
+interface Props {
+  locale: Locale
+  /** The original file in the repository: the one fixed link at the end of the section. */
+  href: string
+  lead?: string | undefined
+}
+
+const { locale, href, lead } = Astro.props
+---
+
+<!-- Every detail page ends its words the same way: the files the assistant reads, folded, then one link to the original. -->
+<Block id="source" title={ui.theSource[locale]} lead={lead ?? ui.sourceLead[locale]}>
+  <div class="folds">
+    <slot />
+  </div>
+  <a class="source-link" href={href}>{ui.onGitHub[locale]}</a>
+</Block>

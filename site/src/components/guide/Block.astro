@@ -1,17 +1,27 @@
 ---
 interface Props {
   title: string
+  /** The anchor of the section. Without one it is made from the title, so every section is in "On this page". */
   id?: string | undefined
   lead?: string | undefined
+  /** The small block before the title says what kind of section it is: orange where you act, turquoise where you get. */
+  tone?: 'act' | 'get' | undefined
 }
 
-const { title, id, lead } = Astro.props
+const { title, id, lead, tone } = Astro.props
+const anchor =
+  id ??
+  title
+    .toLowerCase()
+    .replace(/[⁦-⁩‎‏]/g, '')
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/^-|-$/g, '')
 ---
 
-<section {id} class="block">
+<section id={anchor} class="block" data-tone={tone}>
   <h2>
     {title}
-    {id && <a class="heading-link" href={`#${id}`} aria-hidden="true" tabindex="-1">#</a>}
+    <a class="heading-link" href={`#${anchor}`} aria-hidden="true" tabindex="-1">#</a>
   </h2>
   {lead && <p class="block-lead">{lead}</p>}
   <slot />

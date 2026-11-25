@@ -1,0 +1,30 @@
+---
+import { ui } from '../../content/guide/ui.ts'
+import type { Locale } from '../../content/types.ts'
+import Block from './Block.astro'
+
+interface Props {
+  locale: Locale
+  /** Each row: what the line answers, and the answer. Rows without words are left out. */
+  rows: [label: string, text: string | undefined][]
+  lead?: string | undefined
+}
+
+const { locale, rows, lead } = Astro.props
+---
+
+<Block id="about" title={ui.inShort[locale]} lead={lead}>
+  <dl class="about">
+    {
+      rows
+        .filter(([, text]) => text)
+        .map(([label, text]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd>{text}</dd>
+          </div>
+        ))
+    }
+  </dl>
+  <slot />
+</Block>

@@ -73,7 +73,7 @@ const commands = ['/wajiha-kit:mode list', '/wajiha-kit:mode status', '/wajiha-k
 ---
 
 <Block id="intro" title={words.intro[locale]} lead={words.introText[locale]} />
-<Block id="switch" title={words.switching[locale]} lead={words.switchingLead[locale]}>
+<Block id="switch" tone="act" title={words.switching[locale]} lead={words.switchingLead[locale]}>
   <ol class="explained">{commands.map((command) => <li><CommandBox command={command} install={install} /></li>)}</ol>
 </Block>
 {
@@ -109,8 +109,8 @@ const commands = ['/wajiha-kit:mode list', '/wajiha-kit:mode status', '/wajiha-k
   </p>
 </Block>
 <Block id="report" title={words.report[locale]} lead={words.reportLead[locale]}>
-  <p><bdi>Frontend report</bdi></p>
-  <Source file="plugins/wajiha-kit/output-styles/frontend-report.md" />
-  <p><bdi>Audit report</bdi></p>
-  <Source file="plugins/wajiha-kit/output-styles/audit-report.md" />
+  <div class="folds">
+    <Source file="plugins/wajiha-kit/output-styles/frontend-report.md" label="Frontend report" name="frontend-report.md" />
+    <Source file="plugins/wajiha-kit/output-styles/audit-report.md" label="Audit report" name="audit-report.md" />
+  </div>
 </Block>

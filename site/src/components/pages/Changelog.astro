@@ -1,19 +1,62 @@
 ---
+import { getEntry } from 'astro:content'
 import { t } from '../../content/guide/text.ts'
 import type { Locale } from '../../content/types.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import { ui } from '../../content/guide/ui.ts'
 import Block from '../guide/Block.astro'
-import Source from '../guide/Source.astro'
 
 interface Props {
   locale: Locale
 }
 
 const { locale } = Astro.props
-const title = t('Every version', 'كل الإصدارات')
+const words = {
+  read: t('How to read it', 'كيف تقرؤه'),
+  latest: t('The latest version', 'آخر إصدار'),
+  earlier: t('Earlier versions', 'الإصدارات السابقة'),
+}
 const note = t(
   'This list is written for developers, in English. What matters to you: after an update, run setup again to get the new rules, because the rules already copied into your project do not change by themselves. Every entry here, up to the current version, still calls the kit frontend-kit and uses the old command and file names. Read that as Wajiha Kit: the commands today use wajiha-kit.',
   'هذا السجل مكتوب للمطورين بالإنجليزية. وما يهمك أنت: بعد كل تحديث شغّل الإعداد مرة أخرى لتصلك القواعد الجديدة، لأن القواعد المنسوخة إلى مشروعك لا تتغير وحدها. وكل إدخال هنا، حتى الإصدار الحالي، ما زال يسمي الإضافة ⁦frontend-kit⁩ ويستخدم أسماء الأوامر والملفات القديمة. اقرأها على أنها ⁦Wajiha Kit⁩؛ وتستخدم الأوامر اليوم ⁦wajiha-kit⁩.',
 )
+const entry = await getEntry('reference', 'CHANGELOG.md')
+if (!entry?.rendered) throw new Error('The documentation has no text for CHANGELOG.md')
+// One part per version: the file's own "## 1.16.0" headings cut it, and the text before the first one is its preface.
+const level = entry.rendered.html.match(/<h([2-4])[^>]*>\s*\d+\.\d+/)?.[1] ?? '2'
+const versions = entry.rendered.html
+  .split(new RegExp(`(?=<h${level}[\\s>])`))
+  .slice(1)
+  .map((part) => {
+    const match = part.match(new RegExp(`^<h${level}[^>]*>([\\s\\S]*?)</h${level}>`))
+    return { version: (match?.[1] ?? '').replace(/<[^>]+>/g, '').trim(), body: part.slice(match?.[0].length ?? 0) }
+  })
+const [latest, ...earlier] = versions
 ---
 
-<Block id="versions" title={title[locale]} lead={note[locale]}><Source file="CHANGELOG.md" /></Block>
+<Block id="read" title={words.read[locale]}><p>{note[locale]}</p></Block>
+{
+  latest && (
+    <Block id="latest" title={words.latest[locale]}>
+      <article class="version" lang="en" dir="ltr">
+        <h3><code>{latest.version}</code></h3>
+        <div class="source-doc" set:html={latest.body} />
+      </article>
+    </Block>
+  )
+}
+<Block id="earlier" title={words.earlier[locale]}>
+  <div class="folds">
+    {
+      earlier.map(({ version, body }) => (
+        <details class="fold">
+          <summary>
+            <code dir="ltr">{version}</code>
+          </summary>
+          <div class="source-doc" lang="en" dir="ltr" set:html={body} />
+        </details>
+      ))
+    }
+  </div>
+  <a class="source-link" href={`${REPO_URL}/blob/main/CHANGELOG.md`}>{ui.onGitHub[locale]}</a>
+</Block>

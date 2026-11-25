@@ -220,8 +220,7 @@ body::before {
 .finder input:focus {
   border-color: var(--kc);
 }
-.block pre,
-.file pre {
+.block pre {
   border-inline-start: 2px solid color-mix(in srgb, var(--kc) 55%, transparent);
 }
 .journey li::before,
