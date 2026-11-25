@@ -2,48 +2,57 @@
    Dark like the rest of the site; orange for what you do, turquoise for what you get. */
 
 /* ---------- What can you build: tabs and a big browser window ---------- */
-.builds {
-  padding-block: clamp(4rem, 8vw, 7rem) 0;
+/* The same room above and below every section, and the same gap under every heading. */
+.builds,
+.home .example,
+.home .get-it {
+  padding-block: clamp(4rem, 8vw, 7rem);
 }
 
 .show {
-  margin-block-start: 2.5rem;
+  margin-block-start: 0;
 }
 
 .show-tabs {
-  display: inline-flex;
+  position: sticky;
+  inset-block-start: calc(var(--bar, 4rem) + 0.75rem);
+  z-index: 5;
+  display: flex;
   gap: 0.25rem;
+  width: max-content;
+  max-width: 100%;
+  margin-block-end: 1rem;
   padding: 0.3125rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgb(241 237 231 / 0.03);
+  background: #0b0c0d;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.45);
 }
 
-.show-tabs button {
+.show-tabs a {
+  display: inline-flex;
+  align-items: center;
   min-height: 2.5rem;
   padding: 0 1.25rem;
-  border: 0;
   border-radius: 999px;
-  background: none;
   color: var(--muted);
-  font: inherit;
   font-weight: 500;
-  cursor: pointer;
+  text-decoration: none;
   transition:
-    background-color 0.25s,
-    color 0.25s;
+    background-color 0.3s,
+    color 0.3s;
 }
 
-.show-tabs button:hover {
+.show-tabs a:hover {
   color: var(--ivory);
 }
 
-.show-tabs button[aria-selected='true'] {
+.show-tabs a[aria-current] {
   background: var(--accent);
   color: #141413;
 }
 
-.show-tabs button:focus-visible {
+.show-tabs a:focus-visible {
   outline: 2px solid var(--turq, #19abab);
   outline-offset: 2px;
 }
@@ -53,15 +62,16 @@
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
-  margin-block-start: 2rem;
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  scroll-margin-block-start: calc(var(--bar, 4rem) + 4.5rem);
 }
 
-.js .show-panel[data-hidden] {
-  display: none;
+.show-panel + .show-panel {
+  border-block-start: 1px solid var(--line);
 }
 
-.js .show-panel:not([data-hidden]) {
-  animation: show-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+.show-panel:nth-of-type(even) .show-picture {
+  order: -1;
 }
 
 @keyframes show-in {
@@ -456,8 +466,8 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
-  margin-block-start: 2.5rem;
-  padding: 0;
+  margin-block: 0;
+  padding-block: 0;
   list-style: none;
   counter-reset: none;
 }
@@ -907,7 +917,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .show-picture {
+  .show-picture,
+  .show-panel:nth-of-type(even) .show-picture {
     order: -1;
   }
 }
@@ -918,11 +929,83 @@
   }
 
   .show-tabs {
-    display: flex;
+    width: auto;
   }
 
-  .show-tabs button {
+  .show-tabs a {
     flex: 1;
+    justify-content: center;
     padding-inline: 0.5rem;
+  }
+}
+
+/* When a kind is reached: the words slide in, the window settles, and the drawing's pieces arrive one after another. */
+@media (prefers-reduced-motion: no-preference) {
+  .builds.is-live .show-panel:not(.is-seen) :is(.show-words > *, .browser) {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .builds.is-live .show-panel.is-seen .show-words > * {
+    animation: show-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .builds.is-live .show-panel.is-seen .show-words > :nth-child(2) { animation-delay: 0.06s; }
+  .builds.is-live .show-panel.is-seen .show-words > :nth-child(3) { animation-delay: 0.12s; }
+  .builds.is-live .show-panel.is-seen .show-words > :nth-child(4) { animation-delay: 0.18s; }
+
+  .builds.is-live .show-panel.is-seen .browser {
+    animation: show-window 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .builds.is-live .show-panel.is-seen :is(.mock-nav, .mock-hero, .mock-products > span, .mock-side, .mock-stats > span, .mock-chart i, .mock-table > span) {
+    animation: show-piece 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .builds.is-live .show-panel.is-seen :is(.mock-hero, .mock-stats > span:nth-child(1), .mock-chart i:nth-child(1), .mock-table > span:nth-child(1)) { animation-delay: 0.12s; }
+  .builds.is-live .show-panel.is-seen :is(.mock-products > span:nth-child(1), .mock-stats > span:nth-child(2), .mock-chart i:nth-child(2), .mock-table > span:nth-child(2)) { animation-delay: 0.2s; }
+  .builds.is-live .show-panel.is-seen :is(.mock-products > span:nth-child(2), .mock-stats > span:nth-child(3), .mock-chart i:nth-child(3), .mock-table > span:nth-child(3)) { animation-delay: 0.28s; }
+  .builds.is-live .show-panel.is-seen :is(.mock-products > span:nth-child(3), .mock-chart i:nth-child(4)) { animation-delay: 0.36s; }
+  .builds.is-live .show-panel.is-seen .mock-chart i:nth-child(5) { animation-delay: 0.42s; }
+  .builds.is-live .show-panel.is-seen .mock-chart i:nth-child(6) { animation-delay: 0.48s; }
+  .builds.is-live .show-panel.is-seen .mock-chart i:nth-child(7) { animation-delay: 0.54s; }
+
+  /* The bars of the chart grow from the bottom instead of sliding. */
+  .builds.is-live .show-panel.is-seen .mock-chart i {
+    animation-name: show-bar;
+    transform-origin: bottom;
+  }
+
+  .builds.is-live .show-panel.is-seen .mock-stage.is-fullstack .mock-dash {
+    animation: show-front 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+}
+
+@keyframes show-window {
+  from {
+    opacity: 0;
+    scale: 0.96;
+    translate: 0 1rem;
+  }
+}
+
+@keyframes show-piece {
+  from {
+    opacity: 0;
+    translate: 0 0.6em;
+  }
+}
+
+@keyframes show-bar {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes show-front {
+  from {
+    opacity: 0;
+    translate: 1.5em 1.5em;
   }
 }
