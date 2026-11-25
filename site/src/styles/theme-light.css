@@ -119,15 +119,16 @@ html[data-theme='light'] body::after {
   width: 2.75rem;
   height: 2.75rem;
   padding: 0;
-  border: 1px solid rgb(25 171 171 / 0.45);
-  border-radius: 50%;
-  background: rgb(25 171 171 / 0.08);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: transparent;
   color: var(--ivory);
   cursor: pointer;
 }
 
 .theme-toggle:hover {
   border-color: var(--turq);
+  background: transparent;
   color: var(--turq);
 }
 

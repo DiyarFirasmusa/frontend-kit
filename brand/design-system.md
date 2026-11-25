@@ -4,7 +4,7 @@ This is the one place that says how the site looks and why. Change the site by c
 
 ## 1. What the identity is
 
-The mark is four rounded blocks: an ivory bar on top, an orange block, a tall turquoise column, an ivory bar below. **The mark is the layout.** Every part of the home page is a *board*: the mark made big. A visitor who has seen one part knows what the next one will look like.
+The mark is four rounded blocks: an ivory bar on top, an orange block, a tall column, an ivory bar below. **The mark is the layout.** Every part of the home page is a *board*: the mark made big. A visitor who has seen one part knows what the next one will look like.
 
 Two colours carry all the meaning:
 
@@ -25,7 +25,7 @@ No other brand colour. Red is only for a deliberate error in an example. No glow
 ├────────────────────────────┬─────────────┤
 │                            │ TITLE       │
 │   main block               │ ✓ point     │  main block: orange = you act, dark ink = you look
-│   (a dark window inside)   │ ✓ point     │  side column: what you get, rows share the height
+│   (a dark window inside)   │ ✓ point     │  side column (neutral dark): what you get / need, rows share the height
 │                            │ ✓ point     │
 ├────────────────────────────┤             │
 │ note                  [pill]│             │  dark note bar: words at the start, the ONE action at the end
@@ -39,7 +39,7 @@ Rules:
 3. The main block holds **one drawing**: a window of the Claude app, a browser, the comparison. Every drawing is the same window: a bar, three lights, the stamp.
 4. The side column always has a title and rows with a drawn tick. It never stands empty.
 5. The action of a part is the pill at the end of its note bar: an orange pill for "you act", a ghost pill for links.
-6. On the **dark theme** each block is a dark surface with its colour as an edge and a soft tint, words light. In **light mode** the blocks are the solid colours of the mark with dark words. Bars and drawings stay dark in both themes, as the Claude app is.
+6. On the **dark theme** each block is a dark surface with its colour as an edge and a soft tint, words light; the **side column is the neutral dark surface** (decided by the owner: calmer than a turquoise slab). In **light mode** the main blocks are the solid colours of the mark with dark words, the side column a warm grey, and the bars paper-dark with dark words. The drawings of the Claude app (chat, browser, comparison, code windows) stay dark in both themes.
 7. The board keeps the logo's left-to-right shape in both languages; the words inside run right to left in Arabic.
 
 ## 3. Pages that are read
@@ -59,7 +59,7 @@ Guide and legal pages are the same law at a lower volume:
 
 ## 5. Light mode
 
-A button in the header switches (dark is the default, the choice is kept in `localStorage` as `wajiha-theme`). Light mode flips the tokens in `site/src/styles/theme-light.css`; windows and bars stay dark; orange and turquoise are a step deeper for contrast.
+A button in the header switches (dark is the default, the choice is kept in `localStorage` as `wajiha-theme`). Light mode flips the tokens in `site/src/styles/theme-light.css`; drawings of the Claude app stay dark, bars become paper-dark with dark words, orange and turquoise are a step deeper for contrast.
 
 ## 6. Copy
 
@@ -79,7 +79,7 @@ Plain words for someone who does not code; each technical word is explained wher
 
 ## 8. Review log
 
-Designer critic rounds with the scores they gave are in the repository history (`feat(site)` and `fix(site)` commits from 2026-11-25). A new part is accepted when professional critics score it at least 8.5 on identity, UI, marketing clarity, Arabic and mobile.
+Designer critic rounds with the scores they gave are in the repository history (`feat(site)` and `fix(site)` commits from 2026-11-25). A new part is accepted when professional critics score it at least 9 on identity, UI, readability, marketing clarity, craft, Arabic, mobile and light mode.
 
 ## 9. The law in the words of a page (added after the whole-site audit)
 

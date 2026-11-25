@@ -3568,3 +3568,84 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   justify-content: flex-start;
   min-height: 14rem;
 }
+
+
+/* =====================================================================================================
+   Round 23: from the fifth review
+   ===================================================================================================== */
+/* The tinted light of Arabic guide pages is gone like everywhere else. */
+[dir='rtl'] .doc .column {
+  background: none;
+}
+
+/* Sections the kit does (steps it takes, what it hands back, the gate) are "you get". */
+#does > h2::before,
+#returns > h2::before,
+#gate > h2::before {
+  background: var(--turq);
+}
+
+/* A script you read is one quiet window: no colour edge, text left to right, no stray indent. */
+.script-about {
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: rgb(var(--ink-rgb) / 0.05);
+  text-indent: 0;
+}
+
+/* One disclosure for files too: a flat row with a hairline and the turquoise plus. */
+.file {
+  padding-inline: 0;
+  border: 0;
+  border-block-end: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.file > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+}
+
+.file > summary::-webkit-details-marker {
+  display: none;
+}
+
+.file > summary::after {
+  content: '+';
+  color: var(--turq);
+  font: 600 1.25rem/1 var(--code);
+}
+
+.file[open] > summary::after {
+  content: '\2013';
+}
+
+/* The page that is not there: links are arrows (go there), not ticks. */
+.missing-board .board-list li::before {
+  content: '\2192';
+  width: auto;
+  height: auto;
+  margin: 0;
+  background: none;
+  color: var(--turq);
+  clip-path: none;
+  font-weight: 700;
+}
+
+[dir='rtl'] .missing-board .board-list li::before {
+  content: '\2190';
+}
+
+.missing-board .board-main {
+  min-height: auto;
+}
+
+.missing-help {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}

@@ -182,9 +182,7 @@ body::before {
 }
 
 /* The page: a faint light of its colour at the top, and the colour on what you scan for. */
-[dir='rtl'] .doc .column {
-  background: radial-gradient(52rem 24rem at 0 0, color-mix(in srgb, var(--kc) 17%, transparent), transparent 70%) no-repeat;
-}
+
 .crumbs a {
   color: var(--kc);
   text-decoration-color: color-mix(in srgb, var(--kc) 50%, transparent);

@@ -25,9 +25,10 @@ const route: Route = { kind: 'home' }
       <div class="board-main">
         <h1 data-missing-title>This page does not exist.</h1>
         <p lang="ar" dir="rtl" data-missing-other>هذه الصفحة غير موجودة.</p>
+        <p class="missing-help" data-missing-help>Check the address, or search the guide with Ctrl K.</p>
       </div>
       <div class="board-side">
-        <p class="board-side-title" data-missing-near>Try</p>
+        <p class="board-side-title" data-missing-near>Pages near here</p>
         <ul class="board-list" data-missing-links>
           <li><a href="/">Start</a></li>
           <li><a href="/get-started/">Get started</a></li>
@@ -43,8 +44,9 @@ const route: Route = { kind: 'home' }
     <script is:inline>
       // One static 404 serves both languages: under /ar/ the Arabic sentence leads and the page turns right to left.
       if (location.pathname.indexOf('/ar/') === 0) {
-        document.documentElement.lang = 'ar'
-        document.documentElement.dir = 'rtl'
+        var main = document.querySelector('main')
+        main.lang = 'ar'
+        main.dir = 'rtl'
         document.title = 'الصفحة غير موجودة | واجهة'
         var q = function (s) { return document.querySelector(s) }
         var title = q('[data-missing-title]')
@@ -55,7 +57,8 @@ const route: Route = { kind: 'home' }
         other.lang = 'en'
         other.dir = 'ltr'
         q('[data-missing-label]').textContent = 'غير موجودة'
-        q('[data-missing-near]').textContent = 'جرّب'
+        q('[data-missing-help]').textContent = 'تحقق من العنوان، أو ابحث في الدليل بـ Ctrl K.'
+        q('[data-missing-near]').textContent = 'صفحات قريبة'
         q('[data-missing-note]').textContent = 'لم يُحفظ شيء ولم يضع شيء: العنوان وحده فارغ.'
         var home = q('[data-missing-home]')
         home.textContent = 'العودة إلى البداية'
