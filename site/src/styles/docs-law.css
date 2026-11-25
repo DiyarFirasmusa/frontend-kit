@@ -1204,3 +1204,68 @@ html[data-theme='light'] .block.is-orange .num {
 .doc-article .fold-all[open] > summary::after {
   content: '\2013';
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Round 2 fixes
+   --------------------------------------------------------------------------------------------- */
+/* The two kinds of helper line up exactly: one grid, the same top, the same rule height. */
+.doc .pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.doc .pair p,
+.doc .pair p + p {
+  margin: 0;
+  padding-block: 0.75rem 0;
+}
+
+/* One step marker everywhere: a soft square, the same shape as the buttons and the guide's numbers. */
+.path-dot,
+.start-line-dot,
+.start-main .start-line-dot,
+.board.tone-orange .path-dot {
+  border-radius: 0.5rem;
+}
+
+/* The ground's grid is quieter on guide pages, where it is under the words. */
+.doc::before,
+[dir='rtl'] .doc::before {
+  opacity: 0.55;
+}
+
+/* Code you copy: body-size text, the copy pill at the top end, the same window on every page. */
+.command {
+  align-items: flex-start;
+}
+
+.command code,
+.command pre,
+.command span {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.command button {
+  align-self: flex-start;
+  margin-block: 0.15rem;
+}
+
+@media (min-width: 48rem) {
+  .command .msg-command,
+  .command.is-message code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    overflow-x: visible;
+  }
+}
+
+@media (min-width: 48rem) {
+  .doc-article .command .msg-command {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    overflow-x: visible !important;
+  }
+}
