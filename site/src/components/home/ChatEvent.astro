@@ -1,6 +1,7 @@
 ---
 import type { ChatEvent } from '../../content/guide/chat.ts'
 import type { Locale } from '../../content/types.ts'
+import Mock from './Mock.astro'
 
 interface Props {
   locale: Locale
@@ -59,10 +60,7 @@ const say = (text: string | { en: string; ar: string } | undefined) => (typeof t
   event.kind === 'ready' && (
     <div class="ce ce-ready" data-ev="ready">
       <div class="ce-shot" aria-hidden="true">
-        <span class="ce-shot-side"></span>
-        <span class="ce-shot-top"></span>
-        <span class="ce-shot-cards"><i></i><i></i><i></i></span>
-        <span class="ce-shot-rows"><i></i><i></i><i></i><i></i></span>
+        <Mock kind="dashboard" />
       </div>
       <p>
         <b>{say(event.title)}</b>

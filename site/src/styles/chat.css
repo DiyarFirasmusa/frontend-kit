@@ -273,50 +273,14 @@
   font: 500 0.75rem / 1.6 var(--code);
 }
 
+/* The finished dashboard: the same dark drawing as in "What can you build", small. */
 .ce-shot {
-  display: grid;
-  grid-template-columns: 22% 1fr;
-  grid-template-rows: 0.875rem auto auto;
-  gap: 0.375rem;
-  height: 6.5rem;
-  padding: 0.5rem;
-  border-radius: 0.625rem;
-  background: #f1ede7;
-}
-
-.ce-shot-side {
-  grid-row: 1 / -1;
-  border-radius: 0.375rem;
-  background: #19abab;
-  opacity: 0.85;
-}
-
-.ce-shot-top {
-  border-radius: 0.25rem;
-  background: rgb(20 20 19 / 0.12);
-}
-
-.ce-shot-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.375rem;
-}
-
-.ce-shot-cards i {
-  height: 1.25rem;
-  border-radius: 0.25rem;
-  background: rgb(217 119 87 / 0.35);
-}
-
-.ce-shot-rows {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.ce-shot-rows i {
-  height: 0.4375rem;
-  border-radius: 0.25rem;
-  background: rgb(20 20 19 / 0.12);
+  height: 8.5rem;
+  padding: 0.375rem;
+  border: 1px solid rgb(241 237 231 / 0.1);
+  border-radius: 0.75rem;
+  background: #0b0c0d;
+  font-size: 0.5rem;
 }
 
 /* Claude is working. */
