@@ -1,0 +1,20 @@
+{
+  "about": {
+    "metaTitle": "About us",
+    "metaDescription": "Meet Example Company: our story, our values and how we work with small businesses. Demo content.",
+    "title": "About us",
+    "lead": "A small team that believes small businesses deserve the same care that large companies get.",
+    "storyTitle": "Our story",
+    "storyP1": "We started as three people helping friends organize their businesses. The team grew, but our way of working stayed the same: listen first, explain clearly, and work with the owner, not instead of them.",
+    "storyP2": "This page is demo content for a fictional site. Replace all of the text with the words of your real project.",
+    "valuesTitle": "Our values",
+    "value1Title": "Clarity",
+    "value1Text": "We write in plain language and tell you the price and the time up front.",
+    "value2Title": "Respect",
+    "value2Text": "Your time and budget matter. We never suggest what you do not need.",
+    "value3Title": "Follow-up",
+    "value3Text": "We do not stop at delivery. A month later we ask: did the solution work?",
+    "teamTitle": "The team",
+    "teamText": "Six consultants, trainers and support technicians, most of whom have worked with us for years."
+  }
+}

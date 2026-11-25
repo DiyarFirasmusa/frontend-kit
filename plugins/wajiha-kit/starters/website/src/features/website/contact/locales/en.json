@@ -1,0 +1,31 @@
+{
+  "contact": {
+    "metaTitle": "Contact us",
+    "metaDescription": "Send us a message and we will reply within one working day. You will also find our email, phone and opening hours. Demo site.",
+    "title": "Contact us",
+    "lead": "Write your message and we will reply within one working day.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone (optional)",
+    "messageLabel": "Your message",
+    "honeypotLabel": "Leave this field empty",
+    "submit": "Send message",
+    "sending": "Sending...",
+    "successTitle": "We got your message",
+    "successText": "Thank you. We will reply to your email soon.",
+    "sendAnother": "Send another message",
+    "serverError": "The message could not be sent. Check your connection and try again.",
+    "nameRequired": "Enter your name (at least 2 characters).",
+    "nameTooLong": "The name is too long (80 characters at most).",
+    "emailInvalid": "Enter a valid email address, for example name@example.com.",
+    "phoneInvalid": "Enter a valid number: digits only, and it may start with +.",
+    "messageTooShort": "The message is too short. Write at least 10 characters.",
+    "messageTooLong": "The message is too long (2000 characters at most).",
+    "detailsTitle": "Other ways to reach us",
+    "emailTitle": "Email",
+    "phoneTitle": "Phone",
+    "addressTitle": "Address",
+    "hoursTitle": "Opening hours",
+    "hoursText": "Sunday to Thursday, 9 am to 4 pm"
+  }
+}

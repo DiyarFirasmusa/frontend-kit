@@ -1,0 +1,17 @@
+{
+  "news": {
+    "metaTitle": "News",
+    "metaDescription": "News and short tips from the Example Company team for small businesses. Demo content.",
+    "title": "News",
+    "lead": "Company news and short tips for your business.",
+    "publishedOn": "Published on {{date}}",
+    "readTime_zero": "Under a minute to read",
+    "readTime_one": "{{count}} minute read",
+    "readTime_two": "{{count}} minute read",
+    "readTime_few": "{{count}} minute read",
+    "readTime_many": "{{count}} minute read",
+    "readTime_other": "{{count}} minute read",
+    "backToList": "Back to news",
+    "related": "Also read"
+  }
+}

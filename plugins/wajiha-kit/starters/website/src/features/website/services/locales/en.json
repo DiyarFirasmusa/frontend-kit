@@ -1,0 +1,25 @@
+{
+  "services": {
+    "metaTitle": "Our services",
+    "metaDescription": "Consulting, training, support and review for small businesses. See what we offer and how we work step by step. Demo content.",
+    "title": "Our services",
+    "lead": "Four services. Order any one alone or combine them.",
+    "consultingTitle": "Consulting",
+    "consultingText": "One or more sessions to review the business, find the biggest problems and write a plan with steps and dates.",
+    "trainingTitle": "Training",
+    "trainingText": "Practical courses for your team on topics such as customer service, bookkeeping and using digital tools.",
+    "supportTitle": "Support",
+    "supportText": "A monthly subscription that gets you quick answers and regular follow-up on any problem that appears.",
+    "reviewTitle": "Review",
+    "reviewText": "An independent check of what was done, with a short report on what worked and what needs improvement.",
+    "processTitle": "How we work",
+    "step1Title": "We listen",
+    "step1Text": "We start with a short call to understand what you want.",
+    "step2Title": "We propose",
+    "step2Text": "We send a written offer with the price and the time.",
+    "step3Title": "We deliver and follow up",
+    "step3Text": "We work with you, then check the results after delivery.",
+    "ctaTitle": "Which service fits you?",
+    "ctaButton": "Ask our team"
+  }
+}

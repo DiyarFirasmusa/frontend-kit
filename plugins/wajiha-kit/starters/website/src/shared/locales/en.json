@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "news": "News",
+    "contact": "Contact",
+    "main": "Main menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "common": {
+    "skipToContent": "Skip to content",
+    "switchLanguage": "العربية",
+    "switchTheme": "Switch between light and dark theme",
+    "readMore": "Read more",
+    "viewAll": "View all"
+  },
+  "footer": {
+    "blurb": "A fictional company offering consulting, training and support for small businesses. This site is a demo.",
+    "pages": "Pages",
+    "contactTitle": "Contact",
+    "rights": "All rights reserved. Demo content.",
+    "address": "Baghdad, Iraq (sample address)"
+  },
+  "error": {
+    "notFoundTitle": "Page not found",
+    "notFoundText": "The link you opened is wrong or the page has moved. Try the home page.",
+    "errorTitle": "Something went wrong",
+    "errorText": "This page could not be shown. Please try again in a moment.",
+    "retry": "Try again",
+    "goHome": "Back to the home page"
+  }
+}
