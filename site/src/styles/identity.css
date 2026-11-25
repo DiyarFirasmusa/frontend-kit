@@ -117,9 +117,6 @@
 .fit > div:first-child {
   border-block-start-color: var(--turq);
 }
-.cc-tick {
-  color: var(--turq);
-}
 
 /* The light behind the page: turquoise from the top, orange from below. */
 body::before {

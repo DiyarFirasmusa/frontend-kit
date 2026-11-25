@@ -324,83 +324,6 @@
   color: var(--muted);
 }
 
-/* The console is Claude Code as it looks when you open it: always left to right, like the program itself. */
-.cc {
-  margin: 0;
-  padding: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
-  background: #0a0b0c;
-  box-shadow: 0 0 0 1px rgb(241 237 231 / 0.03), 0 2rem 4rem rgb(0 0 0 / 0.5);
-  direction: ltr;
-  text-align: left;
-  font: 400 0.8125rem / 1.65 var(--code);
-}
-
-.cc p {
-  margin: 0;
-}
-
-.cc-dim {
-  color: var(--faint);
-}
-
-.cc-welcome {
-  margin-block-end: 1rem;
-  padding: 0.625rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 0.375rem;
-}
-
-.cc-welcome i {
-  margin-inline-end: 0.25rem;
-  color: var(--ivory);
-  font-style: normal;
-}
-
-.cc-welcome b {
-  color: #fff;
-  font-weight: 600;
-}
-
-/* What you typed. */
-.cc-user {
-  display: flex;
-  align-items: baseline;
-  gap: 0.625rem;
-  padding: 0.375rem 0.625rem;
-  border-radius: 0.25rem;
-  background: rgb(241 237 231 / 0.07);
-  color: #fff;
-}
-
-.cc-user i,
-.cc-input i {
-  color: var(--faint);
-  font-style: normal;
-}
-
-.cc-user q {
-  quotes: none;
-  font-family: var(--type);
-  font-size: 0.9375rem;
-  text-align: left;
-  unicode-bidi: plaintext;
-}
-
-.caret {
-  display: none;
-  width: 0.5rem;
-  height: 1.05em;
-  background: var(--ivory);
-}
-
-.is-playing .caret {
-  display: inline-block;
-  align-self: center;
-  animation: blink 1s steps(1) infinite;
-}
-
 @keyframes blink {
   50% {
     opacity: 0;
@@ -408,92 +331,14 @@
 }
 
 /* What Claude Code prints back: a bullet and the call, then its result under an elbow. */
-.cc-lines,
 .session-lines,
 .group-inner {
   display: grid;
   gap: 0.5rem;
 }
 
-.cc-lines,
 .session-lines {
   margin-block: 0.875rem;
-}
-
-.cc-line {
-  display: grid;
-  gap: 0.0625rem;
-}
-
-.cc-call,
-.cc-note {
-  display: grid;
-  grid-template-columns: 1.25rem minmax(0, 1fr);
-  overflow-wrap: anywhere;
-}
-
-.cc-call {
-  color: #fff;
-  font-weight: 500;
-}
-
-.cc-call i {
-  color: var(--ivory);
-  font-style: normal;
-}
-
-.cc-note {
-  padding-inline-start: 1.25rem;
-  color: var(--muted);
-}
-
-.cc-note i {
-  color: var(--faint);
-  font-style: normal;
-}
-
-.cc-note span {
-  text-align: left;
-  unicode-bidi: plaintext;
-}
-
-.cc-line.is-ok .cc-note {
-  color: var(--ivory);
-}
-
-.cc-line.is-bad .cc-call i,
-.cc-line.is-bad .cc-note,
-.cc-line.is-bad .cc-note i {
-  color: #f3b3ab;
-}
-
-.cc-line.is-bad .cc-call i {
-  color: var(--bad);
-}
-
-.cc-line.is-ask .cc-call {
-  font-family: var(--latin);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-/* The box you type into, and the line under it. */
-.cc-input {
-  display: flex;
-  gap: 0.625rem;
-  padding: 0.375rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 0.375rem;
-  color: var(--faint);
-}
-
-.cc-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.375rem 0.75rem 0;
-  color: var(--faint);
-  font-size: 0.75rem;
 }
 
 .demo-dots {
@@ -515,27 +360,9 @@
   background: var(--ivory);
 }
 
-.live {
-  min-height: 21rem;
-}
-
-/* With the script, each line arrives when it is its turn. */
-.is-playing .cc-lines > .cc-line {
-  opacity: 0;
-  translate: 0 0.5rem;
-  transition:
-    opacity 0.4s,
-    translate 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.is-playing .cc-lines > .cc-line.is-in {
-  opacity: 1;
-  translate: none;
-}
-
 /* On the page of steps, the console plays along with them. */
 @media (min-width: 901px) {
-  .is-playing .cc {
+  .is-playing .chat {
     position: sticky;
     inset-block-start: calc(var(--bar) + 2rem);
   }
@@ -629,9 +456,7 @@
     gap: 2rem;
   }
 
-  .cc {
-    order: -1;
-  }
+  
 }
 
 @media (max-width: 620px) {
@@ -644,7 +469,6 @@
   }
 
 }
-
 
 .works-for li {
   padding-block: 0.5rem;
@@ -1080,23 +904,6 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-}
-
-
-/* Claude's orange, in touches: it marks what is alive and what is yours to press. */
-.cc-welcome i,
-.cc-call i,
-.cc-user i,
-.cc-input i {
-  color: var(--accent);
-}
-
-.cc-line.is-bad .cc-call i {
-  color: var(--bad);
-}
-
-.caret {
-  background: var(--accent);
 }
 
 .demo-dots .is-on {

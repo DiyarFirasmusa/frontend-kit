@@ -22,7 +22,6 @@
 }
 
 /* Boxes. */
-.cc,
 .detail,
 .command,
 .card,
@@ -46,9 +45,6 @@
   overflow: hidden;
 }
 
-.cc-welcome,
-.cc-input,
-.cc-user,
 .start-command,
 .pager a,
 .finder input,
@@ -126,10 +122,6 @@
 .card-say,
 .glance {
   border-radius: var(--radius-sm);
-}
-
-.caret {
-  border-radius: 1px;
 }
 
 /* The steps of the one-request section: plain words, no frame. The one being read is bright, the rest are dim. */

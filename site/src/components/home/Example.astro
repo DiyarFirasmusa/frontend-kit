@@ -2,40 +2,42 @@
 import type { Bilingual } from '../../content/catalogue.ts'
 import { home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
-import CcLine from './CcLine.astro'
-import CcWelcome from './CcWelcome.astro'
+import ChatHead from './ChatHead.astro'
+import ChatLine from './ChatLine.astro'
 
 interface Props {
   locale: Locale
 }
 
 interface Line {
-  call: string
-  note?: string | Bilingual
+  label: Bilingual
+  detail?: string | Bilingual
   mark?: 'ok' | 'bad' | 'ask'
 }
 
 const { locale } = Astro.props
 const { skills, rules, guard, gate: gate_, review, done } = home.steps
 const say = home.session
-const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
-// What the console shows at each step: real names from the kit.
+// What the chat shows at each step, in plain words.
 const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
-  { ...skills, lines: [{ call: 'Skill(setup)', note: { en: 'five simple questions', ar: 'خمسة أسئلة بسيطة' } }] },
+  { ...skills, lines: [{ label: { en: 'Is it a dashboard, a website or both? Do you have a design?', ar: 'هل هو لوحة تحكم أو موقع أو الاثنان؟ وهل عندك تصميم؟' } }] },
+  { ...rules, lines: [{ label: { en: 'The plan: orders, customers and products, in Arabic and English', ar: 'الخطة: الطلبات والعملاء والمنتجات، بالعربية والإنجليزية' } }] },
   {
-    ...rules,
-    lines: [{ call: 'Plan(shop dashboard)', note: { en: 'orders, customers, products · Arabic and English', ar: 'الطلبات والعملاء والمنتجات · عربي وإنجليزي' } }],
+    ...guard,
+    lines: [
+      { label: { en: 'Made the orders page', ar: 'أنشأت صفحة الطلبات' } },
+      { label: { en: 'Made the customer details page', ar: 'أنشأت صفحة تفاصيل العميل' } },
+    ],
   },
-  { ...guard, lines: [{ call: 'Skill(dash-create-table)' }, { call: 'Skill(dash-create-detail)' }] },
   {
     ...gate_,
     lines: [
-      gate({ en: 'no mistakes found', ar: 'لا أخطاء' }),
-      gate({ en: 'tests passed', ar: 'نجحت الاختبارات' }),
+      { label: { en: 'No mistakes found', ar: 'لا أخطاء' }, mark: 'ok' },
+      { label: { en: 'Tests passed', ar: 'نجحت الاختبارات' }, mark: 'ok' },
     ],
   },
-  { ...review, lines: [{ call: 'Agent(frontend-reviewer)', note: say.reviewing }] },
-  { ...done, lines: [{ call: say.ask[locale], mark: 'ask' }] },
+  { ...review, lines: [{ label: say.reviewing, mark: 'ok' }] },
+  { ...done, lines: [{ label: say.ask, mark: 'ask' }] },
 ]
 ---
 
@@ -58,26 +60,26 @@ const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
         ))
       }
     </ol>
-    <figure class="cc" dir="ltr" aria-label={home.example[locale]}>
-      <CcWelcome />
-      <p class="cc-user">
-        <i aria-hidden="true">&gt;</i>
-        <q dir="auto">{home.prompt[locale]}</q>
-      </p>
-      <div class="session-lines">
-        {
-          steps.map(({ lines }, i) => (
-            <div class="session-group" data-shows={i}>
-              <div class="group-inner">{lines.map((line) => <CcLine locale={locale} {...line} />)}</div>
-            </div>
-          ))
-        }
+    <figure class="chat" aria-label={home.example[locale]}>
+      <ChatHead locale={locale} />
+      <div class="chat-body">
+        <p class="chat-user">
+          <q dir="auto">{home.prompt[locale]}</q>
+        </p>
+        <div class="session-lines">
+          {
+            steps.map(({ lines }, i) => (
+              <div class="session-group" data-shows={i}>
+                <div class="group-inner">{lines.map((line) => <ChatLine locale={locale} {...line} />)}</div>
+              </div>
+            ))
+          }
+        </div>
       </div>
-      <div class="cc-input" aria-hidden="true">
-        <i>&gt;</i>
-        <span>Try “fix lint errors”</span>
+      <div class="chat-input" aria-hidden="true">
+        <span class="chat-placeholder">{locale === 'ar' ? 'اكتب رسالة إلى Claude…' : 'Message Claude…'}</span>
+        <i class="chat-send">↑</i>
       </div>
-      <div class="cc-foot" aria-hidden="true"><span>? for shortcuts</span></div>
     </figure>
   </div>
 </section>

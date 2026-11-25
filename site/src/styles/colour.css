@@ -60,14 +60,6 @@ body::after {
   pointer-events: none;
 }
 
-.cc {
-  border-color: rgb(217 119 87 / 0.35);
-  box-shadow:
-    0 0 0 1px rgb(217 119 87 / 0.08),
-    0 0 4rem rgb(217 119 87 / 0.16),
-    0 2rem 4rem rgb(0 0 0 / 0.5);
-}
-
 /* The second sentence of the headline carries the colour. */
 .hero h1 span:last-child {
   background: linear-gradient(90deg, var(--accent), var(--amber));
@@ -244,16 +236,6 @@ body::after {
   color: var(--pick);
 }
 
-/* The console: bullets orange, a pass teal, a refusal rose. */
-.cc-line.is-ok .cc-note,
-.cc-line.is-ok .cc-note i {
-  color: var(--teal);
-}
-
-.cc-user {
-  background: rgb(217 119 87 / 0.1);
-}
-
 /* Chips drifting past take the four colours in turn. */
 .marquee-track li:nth-child(4n + 1) {
   border-color: rgb(217 119 87 / 0.5);
@@ -372,10 +354,6 @@ body::after {
   background-color: var(--kc);
 }
 
-.cc {
-  background: rgb(10 11 12 / 0.86);
-}
-
 /* THE HEADER: glass over the glow, an orange mark, the version, and an orange line under the place you are. */
 .top {
   background: rgb(5 6 7 / 0.62);
@@ -454,131 +432,6 @@ body::after {
   border-color: rgb(217 119 87 / 0.3);
 }
 
-/* THE CONSOLE, closer to the real thing: Arabic falls back to Plex Arabic, not to a stretched default. */
-.cc {
-  font-family: 'IBM Plex Mono', 'IBM Plex Sans Arabic', ui-monospace, monospace;
-}
-
-/* A call is a tool and its argument, in two colours. */
-.cc-tool {
-  color: #fff;
-  font-weight: 600;
-}
-
-.cc-args {
-  color: var(--sand);
-  font-weight: 400;
-}
-
-.cc-line.is-bad .cc-args {
-  color: #f3b3ab;
-}
-
-.cc-line.is-ask .cc-tool {
-  color: #fff;
-}
-
-/* The tick sits before the words, so Arabic cannot send it to the wrong end of the line. */
-.cc-result {
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
-}
-
-.cc-tick {
-  flex: none;
-  color: var(--teal);
-  font-weight: 700;
-}
-
-.cc-line.is-bad .cc-tick {
-  color: var(--rose);
-}
-
-.cc-result > span {
-  min-width: 0;
-  font-family: 'IBM Plex Mono', 'IBM Plex Sans Arabic', ui-monospace, monospace;
-}
-
-.cc-line.is-ok .cc-note {
-  color: var(--ivory);
-}
-
-/* While the request is being typed, the message is not up yet. */
-.demo.is-waiting .cc-user,
-.demo.is-waiting .cc-lines {
-  display: none;
-}
-
-/* Thinking: Claude Code's turning star and the seconds. */
-.cc-status {
-  margin-block: 0.25rem 0.75rem;
-  color: var(--accent);
-}
-
-.cc-status[hidden] {
-  display: none;
-}
-
-.cc-status i {
-  display: inline-block;
-  min-width: 1ch;
-  font-style: normal;
-}
-
-.cc-status span {
-  color: var(--accent);
-}
-
-.cc-status small {
-  color: var(--faint);
-  font-size: inherit;
-}
-
-/* The box you type into: what is typed shows there, with the caret after it. */
-.cc-input {
-  align-items: center;
-  min-height: 2.25rem;
-  transition: border-color 0.3s;
-}
-
-.cc-input.is-typing {
-  border-color: rgb(217 119 87 / 0.7);
-}
-
-.cc-input.is-typing .cc-placeholder {
-  display: none;
-}
-
-.cc-typed {
-  color: #fff;
-  font-family: var(--type);
-  font-size: 0.9375rem;
-  unicode-bidi: plaintext;
-}
-
-.cc-input .caret {
-  display: none;
-  margin-inline-start: -0.5rem;
-}
-
-.is-playing .cc-input .caret {
-  display: inline-block;
-}
-
-.is-playing .cc-input:not(.is-typing) .caret {
-  margin-inline-start: -0.625rem;
-  opacity: 0.35;
-}
-
-.cc-input:has(.cc-typed:not(:empty)) .caret {
-  margin-inline-start: 0;
-}
-
-.cc-foot ol {
-  margin: 0;
-}
-
 /* THE HEADER: no ground at all. The words and marks sit straight over the glow. */
 .top,
 .top.is-scrolled {
@@ -589,10 +442,6 @@ body::after {
 
 .top .top-install {
   text-shadow: none;
-}
-
-.live {
-  min-height: 19rem;
 }
 
 /* The Arabic headline is two lines, one sentence each. */
@@ -836,12 +685,6 @@ body::after {
   vector-effect: non-scaling-stroke;
 }
 
-
-/* LIGHTER ON THE PAGE: the console and the marquee paint on their own, so the rest of the page is left alone. */
-.cc {
-  contain: layout paint;
-}
-
 .marquee {
   mask-image: none;
 }
@@ -966,42 +809,3 @@ body .top.is-scrolled::before {
   }
 }
 
-/* NO JUMPING: the hero console keeps one height whatever it is showing, so nothing below it moves while it plays. */
-.cc.live {
-  display: flex;
-  flex-direction: column;
-  height: 23rem;
-  min-height: 0;
-}
-
-.cc.live .demo {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.cc.live .cc-status {
-  margin-block: 0 0.75rem;
-}
-
-/* The thinking line keeps its room when it is not showing; the typed message keeps its room too. */
-.cc-status[hidden] {
-  display: block !important;
-  visibility: hidden;
-}
-
-.demo.is-waiting .cc-user {
-  display: flex;
-  visibility: hidden;
-}
-
-.demo.is-waiting .cc-lines {
-  display: grid;
-  visibility: hidden;
-}
-
-@media (max-width: 620px) {
-  .cc.live {
-    height: 27rem;
-  }
-}

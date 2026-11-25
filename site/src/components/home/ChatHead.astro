@@ -1,0 +1,17 @@
+---
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<div class="chat-head" aria-hidden="true">
+  <span class="chat-avatar">✻</span>
+  <p>
+    <b>Claude</b>
+    <small>{locale === 'ar' ? 'يعمل مع واجهة' : 'working with Wajiha Kit'}</small>
+  </p>
+</div>

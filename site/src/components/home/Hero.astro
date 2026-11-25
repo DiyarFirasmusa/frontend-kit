@@ -6,52 +6,48 @@ import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
 import { verdicts } from '../../lib/verdicts.ts'
 import Commands from '../Commands.astro'
-import CcLine from './CcLine.astro'
-import CcWelcome from './CcWelcome.astro'
+import ChatHead from './ChatHead.astro'
+import ChatLine from './ChatLine.astro'
 
 interface Props {
   locale: Locale
 }
 
 interface Line {
-  call: string
-  note?: string | Bilingual
+  label: Bilingual
+  detail?: string | Bilingual
   mark?: 'ok' | 'bad' | 'ask'
 }
 
 const { locale } = Astro.props
 const main = verdicts.find(({ id }) => id === 'main')!
-const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
-const checked: Bilingual = { en: 'no mistakes found, tests passed', ar: 'لا أخطاء، ونجحت الاختبارات' }
+const checked: Line = { label: { en: 'Checked it: no mistakes, tests passed', ar: 'فحصته: لا أخطاء، ونجحت الاختبارات' }, mark: 'ok' }
 
-// Four real requests, played one after another in the console. Names and answers come from the kit itself.
+// Four requests, played one after another in the chat. The last answer is the real answer of the kit's guard.
 const demos: { prompt: Bilingual; lines: Line[] }[] = [
   {
     prompt: home.prompt,
     lines: [
-      { call: 'Skill(setup)', note: { en: 'asks you five simple questions', ar: 'تسألك خمسة أسئلة بسيطة' } },
-      { call: 'Skill(dash-create-table)', note: { en: 'builds orders, customers, products', ar: 'تبني الطلبات والعملاء والمنتجات' } },
-      gate(checked),
+      { label: { en: 'Asked you five simple questions', ar: 'سألتك خمسة أسئلة بسيطة' } },
+      { label: { en: 'Made the orders, customers and products pages', ar: 'أنشأت صفحات الطلبات والعملاء والمنتجات' } },
+      checked,
     ],
   },
   {
     prompt: { en: 'Make it look like a site I like', ar: 'اجعله يشبه موقعا يعجبني' },
     lines: [
-      { call: 'Skill(frontend-design)', note: { en: 'takes the colours and the feel, not a copy', ar: 'تأخذ الألوان والإحساس، لا نسخة' } },
-      { call: 'Agent(frontend-reviewer)', note: home.session.reviewing },
-      gate(checked),
+      { label: { en: 'Took its colours and feel, not a copy', ar: 'أخذت ألوانه وإحساسه، لا نسخة منه' } },
+      { label: { en: 'A second reviewer read the work', ar: 'قرأ مراجع ثان العمل' } },
+      checked,
     ],
   },
   {
     prompt: { en: 'Add Arabic next to English', ar: 'أضف العربية بجانب الإنجليزية' },
-    lines: [
-      { call: 'Skill(i18n-conventions)', note: { en: 'both languages, right-to-left works', ar: 'اللغتان معا، والكتابة من اليمين لليسار تعمل' } },
-      gate(checked),
-    ],
+    lines: [{ label: { en: 'Both languages work, right to left too', ar: 'اللغتان تعملان، والكتابة من اليمين لليسار أيضا' } }, checked],
   },
   {
     prompt: { en: 'Send my changes straight to the live version', ar: 'أرسل تغييراتي مباشرة إلى النسخة الحية' },
-    lines: [{ call: `Bash(${main.command})`, note: main.reason, mark: 'bad' }],
+    lines: [{ label: { en: 'I stopped a risky step', ar: 'أوقفت خطوة خطرة' }, detail: main.reason, mark: 'bad' }],
   },
 ]
 ---
@@ -69,32 +65,33 @@ const demos: { prompt: Bilingual; lines: Line[] }[] = [
     </p>
   </div>
   <div class="hero-side">
-    <figure class="cc live" dir="ltr" data-live aria-label={home.example[locale]}>
-      <CcWelcome />
-      {
-        demos.map(({ prompt, lines }, i) => (
-          <div class="demo" data-demo={i} hidden={i > 0}>
-            <p class="cc-user">
-              <i aria-hidden="true">&gt;</i>
-              <q data-type dir="auto">{prompt[locale]}</q>
-            </p>
-            <div class="cc-lines">
-              {lines.map((line) => <CcLine locale={locale} {...line} />)}
+    <figure class="chat live" data-live aria-label={home.example[locale]}>
+      <ChatHead locale={locale} />
+      <div class="chat-body">
+        {
+          demos.map(({ prompt, lines }, i) => (
+            <div class="demo" data-demo={i} hidden={i > 0}>
+              <p class="chat-user">
+                <q data-type dir="auto">{prompt[locale]}</q>
+              </p>
+              <div class="chat-replies">
+                {lines.map((line) => <ChatLine locale={locale} {...line} />)}
+              </div>
             </div>
-          </div>
-        ))
-      }
-      <p class="cc-status" data-status hidden aria-hidden="true"><i data-spinner>✻</i> <span>Thinking…</span> <small>(esc to interrupt)</small></p>
-      <div class="cc-input" aria-hidden="true" data-box>
-        <i>&gt;</i>
-        <span class="cc-placeholder">Try “fix lint errors”</span>
-        <span class="cc-typed" data-input dir="auto"></span>
+          ))
+        }
+        <p class="chat-status" data-status hidden aria-hidden="true">
+          <span class="chat-dots"><i></i><i></i><i></i></span>
+          {locale === 'ar' ? 'Claude يعمل على طلبك…' : 'Claude is working on it…'}
+        </p>
+      </div>
+      <div class="chat-input" aria-hidden="true" data-box>
+        <span class="chat-placeholder">{locale === 'ar' ? 'اكتب رسالة إلى Claude…' : 'Message Claude…'}</span>
+        <span class="chat-typed" data-input dir="auto"></span>
         <b class="caret"></b>
+        <i class="chat-send">↑</i>
       </div>
-      <div class="cc-foot" aria-hidden="true">
-        <span>? for shortcuts</span>
-        <ol class="demo-dots">{demos.map((_, i) => <li data-dot={i} class:list={{ 'is-on': i === 0 }}></li>)}</ol>
-      </div>
+      <ol class="demo-dots" aria-hidden="true">{demos.map((_, i) => <li data-dot={i} class:list={{ 'is-on': i === 0 }}></li>)}</ol>
     </figure>
   </div>
 </section>
