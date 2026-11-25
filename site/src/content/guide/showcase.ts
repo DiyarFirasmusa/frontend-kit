@@ -109,7 +109,13 @@ export const installWords = {
   other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),
 }
 
-/** Why use the kit and not an AI on its own: what happens without it, and what you get with it. */
+/** Why use the kit and not an AI on its own: two pictures of the result, then six gains. */
+export interface Gain {
+  name: Bilingual
+  text: Bilingual
+  instead: Bilingual
+}
+
 export const compare = {
   title: t('Why not just ask an AI?', 'لماذا لا تسأل الذكاء الاصطناعي وحده؟'),
   lead: t(
@@ -118,34 +124,39 @@ export const compare = {
   ),
   without: t('AI on its own', 'الذكاء الاصطناعي وحده'),
   with: t('With Wajiha Kit', 'مع واجهة'),
-  rows: <[Bilingual, Bilingual][]>[
-    [
-      t('Asks you technical choices you do not know: which library, which framework.', 'يسألك عن خيارات تقنية لا تعرفها: أي مكتبة، وأي إطار عمل.'),
-      t('You answer plain questions. The setup is chosen for you, the way a good team would.', 'تجيب عن أسئلة بسيطة. ويُختار الإعداد لك، كما يختاره فريق جيد.'),
-    ],
-    [
-      t('A different structure every time you ask.', 'هيكل مختلف في كل مرة تطلب فيها شيئا.'),
-      t('One clear structure, the same every time.', 'هيكل واحد واضح، هو نفسه في كل مرة.'),
-    ],
-    [
-      t('Says “done” even when something is broken.', 'يقول «تم» حتى لو كان هناك شيء معطل.'),
-      t('Checks for mistakes and runs tests before it says done.', 'يفحص الأخطاء ويجري الاختبارات قبل أن يقول تم.'),
-    ],
-    [
-      t('Writes a new copy of the same button again and again.', 'يكتب نسخة جديدة من الزر نفسه مرة بعد مرة.'),
-      t('Finds what already exists and uses it again.', 'يجد ما هو موجود ويعيد استخدامه.'),
-    ],
-    [
-      t('Arabic and phones often come out broken.', 'العربية والهاتف يخرجان مكسورين في الغالب.'),
-      t('Arabic right to left and phones work from the start.', 'العربية من اليمين لليسار والهاتف يعملان من البداية.'),
-    ],
-    [
-      t('Can run a risky step, like deleting work or publishing.', 'قد ينفذ خطوة خطرة، مثل حذف العمل أو النشر.'),
-      t('Risky steps are stopped, and it asks you first.', 'تُوقف الخطوات الخطرة، ويسألك أولا.'),
-    ],
-    [
-      t('Code that is hard for anyone to read later.', 'كود يصعب على أي شخص قراءته لاحقا.'),
-      t('Clean, organised code a developer can pick up at any time.', 'كود نظيف ومرتب يستطيع أي مبرمج متابعته في أي وقت.'),
-    ],
+  broken: t('Build failed · broken on phones', 'فشل البناء · مكسور على الهاتف'),
+  fine: t('No mistakes · tests passed', 'لا أخطاء · نجحت الاختبارات'),
+  instead: t('Instead of', 'بدلا من'),
+  gains: <Gain[]>[
+    {
+      name: t('Plain questions only', 'أسئلة بسيطة فقط'),
+      text: t('The setup is chosen for you, the way a good team would choose it.', 'يُختار الإعداد لك، كما يختاره فريق جيد.'),
+      instead: t('questions about libraries and frameworks you do not know', 'أسئلة عن مكتبات وأطر عمل لا تعرفها'),
+    },
+    {
+      name: t('One clear structure', 'هيكل واحد واضح'),
+      text: t('Every file has its place, and it is the same every time.', 'لكل ملف مكانه، وهو نفسه في كل مرة.'),
+      instead: t('a different layout every time you ask', 'ترتيب مختلف في كل مرة تطلب فيها'),
+    },
+    {
+      name: t('Checked before “done”', 'يُفحص قبل «تم»'),
+      text: t('It looks for mistakes and runs tests before it tells you it is finished.', 'يبحث عن الأخطاء ويجري الاختبارات قبل أن يخبرك أنه انتهى.'),
+      instead: t('“done” while something is broken', '«تم» وهناك شيء معطل'),
+    },
+    {
+      name: t('Nothing made twice', 'لا شيء يتكرر'),
+      text: t('It finds the button you already have and uses it again.', 'يجد الزر الموجود عندك ويعيد استخدامه.'),
+      instead: t('a third copy of the same button', 'نسخة ثالثة من الزر نفسه'),
+    },
+    {
+      name: t('Arabic and phones from day one', 'العربية والهاتف من البداية'),
+      text: t('Right to left and small screens work from the first page.', 'الكتابة من اليمين لليسار والشاشات الصغيرة تعمل من أول صفحة.'),
+      instead: t('a layout that breaks in Arabic or on a phone', 'شكل ينكسر بالعربية أو على الهاتف'),
+    },
+    {
+      name: t('Safe by default', 'آمن دائما'),
+      text: t('Risky steps, like deleting work or publishing, are stopped until you say yes.', 'الخطوات الخطرة، مثل حذف العمل أو النشر، تتوقف حتى توافق.'),
+      instead: t('a risky step run without asking', 'خطوة خطرة تُنفذ دون سؤال'),
+    },
   ],
 }

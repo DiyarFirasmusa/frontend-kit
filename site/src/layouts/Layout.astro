@@ -93,6 +93,8 @@ const product = JSON.stringify({
     {home && <script type="application/ld+json" set:html={product} />}
     <script is:inline>
       document.documentElement.classList.add('js')
+      // A page swapped in without a reload brings its own <html>: mark it again, or the tabs show every panel.
+      document.addEventListener('astro:after-swap', () => document.documentElement.classList.add('js'))
     </script>
   </head>
   <body>

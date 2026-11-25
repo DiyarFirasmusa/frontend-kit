@@ -17,7 +17,7 @@ export const basics = {
   steps: [
     {
       title: t('Install it', 'ثبّتها'),
-      text: t('Install Claude Code, then the kit. It takes three commands, which the Get started page shows.', 'ثبّت ⁦Claude Code⁩ ثم الإضافة. يكفي ثلاثة أوامر، وتجدها في صفحة «ابدأ».'),
+      text: t('Open the Claude app and send Claude one message: it installs the kit for you. The Get started page has the message.', 'افتح تطبيق ⁦Claude⁩ وأرسل له رسالة واحدة، فيثبت الإضافة بنفسه. تجد الرسالة في صفحة «ابدأ».'),
     },
     {
       title: t('Start a new project', 'ابدأ مشروعا جديدا'),

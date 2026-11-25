@@ -1322,6 +1322,349 @@
 }
 
 
+/* ---------- Why not just ask an AI: two pictures of the result, then six gains ---------- */
+.compare-section {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.vs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.vs-side {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.vs-side figcaption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.vs-side.is-without figcaption {
+  color: var(--faint);
+}
+
+.vs-side.is-with figcaption {
+  color: #fff;
+}
+
+.vs-side.is-with figcaption i {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.vs-window {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: #111110;
+}
+
+.vs-side.is-without .vs-window {
+  border-color: rgb(224 119 107 / 0.3);
+  filter: saturate(0.6);
+}
+
+.vs-side.is-with .vs-window {
+  border-color: rgb(25 171 171 / 0.45);
+  box-shadow:
+    0 0 0 1px rgb(25 171 171 / 0.08),
+    0 1.5rem 3rem rgb(0 0 0 / 0.45),
+    0 0 3rem rgb(25 171 171 / 0.1);
+}
+
+.vs-window .chat-bar {
+  justify-content: flex-start;
+  min-height: 2.25rem;
+}
+
+.vs-files,
+.vs-tree {
+  display: grid;
+  gap: 0.375rem;
+  min-height: 13rem;
+  margin: 0;
+  padding: 1rem 1.25rem;
+  list-style: none;
+  font: 500 0.875rem / 1.5 var(--code);
+}
+
+/* The mess: files scattered, a few tilted. */
+.vs-files li {
+  justify-self: start;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  background: rgb(241 237 231 / 0.05);
+  color: var(--faint);
+}
+
+.vs-files li:nth-child(2) {
+  margin-inline-start: 2.5rem;
+  rotate: -2deg;
+}
+
+.vs-files li:nth-child(3) {
+  margin-inline-start: 0.75rem;
+  rotate: 1.5deg;
+  color: rgb(224 119 107 / 0.85);
+}
+
+.vs-files li:nth-child(5) {
+  margin-inline-start: 3.5rem;
+  rotate: 2deg;
+}
+
+.vs-files li:nth-child(6) {
+  margin-inline-start: 1.25rem;
+  rotate: -1deg;
+  color: rgb(224 119 107 / 0.85);
+}
+
+/* The order: one tree, folders with their contents. */
+.vs-tree li {
+  color: var(--ivory);
+}
+
+.vs-tree .is-folder::before {
+  content: '▸ ';
+  color: var(--turq, #19abab);
+}
+
+.vs-tree .is-in {
+  padding-inline-start: 1.25rem;
+}
+
+.vs-tree span {
+  color: var(--faint);
+}
+
+.vs-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.625rem 1.25rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+
+.vs-status i {
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-style: normal;
+}
+
+.vs-status.is-bad {
+  background: rgb(224 119 107 / 0.08);
+  color: rgb(224 119 107 / 0.95);
+}
+
+.vs-status.is-bad i {
+  background: var(--bad);
+  color: #141413;
+}
+
+.vs-status.is-good {
+  background: rgb(25 171 171 / 0.08);
+  color: var(--ivory);
+}
+
+.vs-status.is-good i {
+  background: var(--turq, #19abab);
+  color: #141413;
+}
+
+.vs-badge {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-block-start: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #0b0c0d;
+  color: var(--faint);
+  font: 600 0.875rem / 1 var(--latin);
+  text-transform: uppercase;
+}
+
+/* The six gains. */
+.gains {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block: 3rem 0;
+  padding-block: 0;
+  list-style: none;
+}
+
+.gain {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.5rem;
+  padding: 1.375rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgb(25 171 171 / 0.05), rgb(241 237 231 / 0.01));
+  transition:
+    border-color 0.3s,
+    translate 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gain:hover {
+  border-color: rgb(25 171 171 / 0.5);
+  translate: 0 -0.25rem;
+}
+
+.gain-mark {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-block-end: 0.25rem;
+  border-radius: 0.625rem;
+  background: rgb(25 171 171 / 0.15);
+  color: var(--turq, #19abab);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.gain h3 {
+  color: #fff;
+  font-size: 1.1875rem;
+  line-height: 1.35;
+}
+
+.gain p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.gain .gain-instead {
+  padding-block-start: 0.75rem;
+  border-block-start: 1px dashed rgb(241 237 231 / 0.1);
+  color: var(--faint);
+  font-size: 0.875rem;
+}
+
+.gain-instead s {
+  text-decoration-color: rgb(224 119 107 / 0.8);
+  text-decoration-thickness: 1.5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vs.is-alive .vs-files li {
+    animation: wobble 4s ease-in-out infinite alternate;
+    animation-delay: calc(var(--n) * -0.7s);
+  }
+
+  .vs.is-alive .vs-status.is-bad i {
+    animation: tick-glow-bad 2.4s ease-in-out infinite;
+  }
+
+  .vs.is-alive .vs-status.is-good i {
+    animation: tick-glow 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes wobble {
+  to {
+    translate: 0.25rem -0.125rem;
+  }
+}
+
+@keyframes tick-glow {
+  0%,
+  70%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(25 171 171 / 0);
+  }
+  80% {
+    box-shadow: 0 0 0 0.35rem rgb(25 171 171 / 0.25);
+  }
+}
+
+@keyframes tick-glow-bad {
+  0%,
+  70%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(224 119 107 / 0);
+  }
+  80% {
+    box-shadow: 0 0 0 0.35rem rgb(224 119 107 / 0.25);
+  }
+}
+
+@media (max-width: 900px) {
+  .vs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vs-badge {
+    justify-self: center;
+    margin: 0;
+  }
+
+  .gains {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .gains {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The message box and the copy button in the install window. */
+.start-message {
+  border: 1px solid rgb(217 119 87 / 0.55);
+  border-radius: 1.125rem;
+  background: #1f1f1d;
+  box-shadow: 0 0 0 4px rgb(217 119 87 / 0.08);
+}
+
+.start-text {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.start-copy {
+  min-height: 3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #141413;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-copy:hover {
+  background: var(--amber, #f2a183);
+}
+
+.start-copy:focus-visible {
+  outline: 2px solid var(--turq, #19abab);
+  outline-offset: 3px;
+}
+
+
 /* ---------- Why not just ask an AI: one row per point, without on one side, with the kit on the other ---------- */
 .compare-section {
   padding-block: clamp(4rem, 8vw, 7rem);
@@ -1452,3 +1795,4 @@
     gap: 0.375rem;
   }
 }
+

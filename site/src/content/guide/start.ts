@@ -1,6 +1,6 @@
 import { t } from './text.ts'
 
-/** What you need on your computer before the three commands. `link` and `hint` are optional. */
+/** What you need on your computer before you start. `link` and `hint` are optional. */
 export const needs = [
   {
     name: t('The Claude app', 'تطبيق ⁦Claude⁩'),

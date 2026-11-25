@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { locale } = Astro.props
+const messy = ['Button.tsx', 'Button2.tsx', 'button-new.tsx', 'helpers.js', 'helpers2.js', 'page-final-v3.tsx']
 ---
 
 <section id="why" class="compare-section">
@@ -14,31 +15,47 @@ const { locale } = Astro.props
     <h2>{compare.title[locale]}</h2>
     <p>{compare.lead[locale]}</p>
   </div>
-  <div class="column versus" data-alive>
-    <p class="versus-head" aria-hidden="true">
-      <span class="is-without">{compare.without[locale]}</span>
-      <span class="is-with">
-        <i>✻</i>
-        {compare.with[locale]}
-      </span>
-    </p>
-    <ul class="versus-rows">
-      {
-        compare.rows.map(([without, withKit], i) => (
-          <li style={`--n:${i}`}>
-            <p class="versus-without">
-              <i aria-hidden="true">✕</i>
-              <span class="sr-only">{compare.without[locale]}: </span>
-              {without[locale]}
-            </p>
-            <p class="versus-with">
-              <i aria-hidden="true">✓</i>
-              <span class="sr-only">{compare.with[locale]}: </span>
-              {withKit[locale]}
-            </p>
-          </li>
-        ))
-      }
-    </ul>
+
+  <div class="column vs" data-alive aria-hidden="true">
+    <figure class="vs-side is-without">
+      <figcaption>{compare.without[locale]}</figcaption>
+      <div class="vs-window">
+        <div class="chat-bar"><span class="chat-lights"><i></i><i></i><i></i></span></div>
+        <ul class="vs-files" dir="ltr">
+          {messy.map((name, i) => <li style={`--n:${i}`}>{name}</li>)}
+        </ul>
+        <p class="vs-status is-bad"><i>✕</i>{compare.broken[locale]}</p>
+      </div>
+    </figure>
+    <span class="vs-badge">vs</span>
+    <figure class="vs-side is-with">
+      <figcaption><i>✻</i>{compare.with[locale]}</figcaption>
+      <div class="vs-window">
+        <div class="chat-bar"><span class="chat-lights"><i></i><i></i><i></i></span></div>
+        <ul class="vs-tree" dir="ltr">
+          <li class="is-folder">src/</li>
+          <li class="is-folder is-in">pages/ <span>orders · customers</span></li>
+          <li class="is-folder is-in">components/ <span>Button.tsx</span></li>
+          <li class="is-folder is-in">features/orders/</li>
+          <li class="is-folder is-in">i18n/ <span>ar · en</span></li>
+        </ul>
+        <p class="vs-status is-good"><i>✓</i>{compare.fine[locale]}</p>
+      </div>
+    </figure>
   </div>
+
+  <ul class="column gains">
+    {
+      compare.gains.map(({ name, text, instead }) => (
+        <li class="gain">
+          <i class="gain-mark" aria-hidden="true">✓</i>
+          <h3>{name[locale]}</h3>
+          <p>{text[locale]}</p>
+          <p class="gain-instead">
+            <span>{compare.instead[locale]}</span> <s>{instead[locale]}</s>
+          </p>
+        </li>
+      ))
+    }
+  </ul>
 </section>

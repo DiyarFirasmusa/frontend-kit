@@ -27,15 +27,17 @@ const words = {
   rules: t('Its rules, besides the shared ones', 'قواعده، غير القواعد المشتركة'),
 }
 const special = skillNames.filter((name) => profilesOf(name).length < projects.length)
+// Only the kinds a new project can be today; the kit's fourth profile is for existing projects in other tools.
+const kinds = projects.filter(({ id }) => id !== 'react')
 ---
 
 <Block id="which" title={words.which[locale]} lead={words.whichLead[locale]}>
   <dl class="rows">
-    {projects.map(({ id, name, fits }) => <div><dt><a href={`#${id}`}>{name[locale]}</a></dt><dd>{fits[locale]}</dd></div>)}
+    {kinds.map(({ id, name, fits }) => <div><dt><a href={`#${id}`}>{name[locale]}</a></dt><dd>{fits[locale]}</dd></div>)}
   </dl>
 </Block>
 {
-  projects.map((project) => {
+  kinds.map((project) => {
     const own = special.filter((name) => profilesOf(name).includes(project.id))
     const rules = new Set(project.rules.flatMap((group) => (ruleFiles[group] ?? []).map((rule) => rule.name)))
     return (
