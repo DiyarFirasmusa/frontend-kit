@@ -1323,3 +1323,56 @@ html[data-theme='light'] .board.tone-orange .path-label p,
 html[data-theme='light'] .board.tone-orange .path-label h3 {
   color: #050607;
 }
+
+/* Get started: the five steps carry their number in the same soft-square badge as the home page (no "2." in the words, which reads as ".2" in Arabic). */
+main[data-section='get-started'] .doc-article {
+  counter-reset: gs-step;
+}
+
+main[data-section='get-started'] #install,
+main[data-section='get-started'] #questions,
+main[data-section='get-started'] #approve,
+main[data-section='get-started'] #build,
+main[data-section='get-started'] #after {
+  counter-increment: gs-step;
+}
+
+main[data-section='get-started'] :is(#install, #questions, #approve, #build, #after) > h2::before {
+  content: counter(gs-step);
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: 0;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: #141413;
+  font: 600 0.9375rem/1 var(--latin, inherit);
+}
+
+main[data-section='get-started'] #build > h2::before {
+  background: var(--turq);
+}
+
+/* "All pages" on a phone is a real row: 44px, a chevron at the inline end, a hairline under it. */
+@media (max-width: 61.99rem) {
+  .tree > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2.75rem;
+    border-block-end: 1px solid var(--line);
+  }
+
+  .tree > summary::after {
+    content: '\203A';
+    color: var(--turq);
+    font-size: 1.5rem;
+    line-height: 1;
+    transform: rotate(90deg);
+  }
+
+  .tree[open] > summary::after {
+    transform: rotate(-90deg);
+  }
+}

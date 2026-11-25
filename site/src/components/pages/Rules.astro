@@ -76,7 +76,7 @@ const plain = (paths: string[]): string => {
                 <div>
                   <dt>
                     <a href={ruleUrl(locale, group, name)}>
-                      <bdi>{name}</bdi>
+                      <bdi>{name.replace(/\.md$/, '')}</bdi>
                     </a>
                   </dt>
                   <dd>
