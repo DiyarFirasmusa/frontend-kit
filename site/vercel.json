@@ -26,8 +26,8 @@
           "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
         },
         {
-          "key": "Content-Security-Policy-Report-Only",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'sha256-4GtWUImnSnjm9fy8hPMnkJgK2sADDeKytgyWtfUALgQ=' 'sha256-Xx3ZAsIQdRVG+LjNF0E+EjJQUcUdbObaT7yxUdEQyjI=' 'sha256-gwAe+CdgBr2yvbZFUfPLK9TbVd/zdTEcRxq/YqHMm6Y=' 'sha256-oPgDhN5fE0YXsSHayjQAIG/fVnMRYW9ZGK2H7wTcL7Q=' 'sha256-xPsqPsaQ/IQH9edNe5S5GpUVpuJlgExu74RuZqr5ZDc='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
         }
       ]
     },
