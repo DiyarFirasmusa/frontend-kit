@@ -77,7 +77,7 @@ export const journeyWords = {
   /** What happens at each stop, one sentence each. */
   details: [
     t('In the Claude app you send one message. Claude installs the kit and starts the setup.', 'في تطبيق Claude ترسل رسالة واحدة. فيثبت Claude الإضافة ويبدأ الإعداد.'),
-    t('What you are building, your project in your own words, the design, your backend link if you have one, and the languages.', 'ماذا تبني، ومشروعك بكلماتك، والتصميم، ورابط الخادم إن كان عندك، واللغات.'),
+    t('What you are building, your project in your own words, the design, your backend description if you have one, and the languages.', 'ماذا تبني، ومشروعك بكلماتك، والتصميم، ووصف الخادم إن كان عندك، واللغات.'),
     t('A short summary of the pages and the look. Nothing starts before your yes.', 'ملخص قصير بالصفحات والشكل. ولا يبدأ شيء قبل موافقتك.'),
     t('Pages, forms, tables and sign-in, with sample data so you can click through at once.', 'صفحات ونماذج وجداول وتسجيل دخول، ببيانات تجريبية لتتصفحها فورا.'),
     t('It looks for mistakes, runs tests, and a reviewer reads the work. It tries to fix what fails before you see it.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجع العمل. ويحاول إصلاح ما يفشل قبل أن تراه.'),
@@ -108,7 +108,7 @@ export const installWords = {
   slash: t('Then type / and pick', 'ثم اكتب / واختر'),
   illustration: t('An illustration, not a measurement.', 'توضيح، وليس قياسا.'),
   differs: t('Site builders host and publish your site for you. Wajiha Kit builds the files on your computer, inside Claude, and publishes nothing.', 'منصات بناء المواقع تستضيف موقعك وتنشره لك. أما واجهة فتبني الملفات على حاسوبك داخل ⁦Claude⁩، ولا تنشر شيئا.'),
-  hint: t('You do not need to understand it. Claude carries it out, and asks your permission before each command.', 'لا تحتاج أن تفهمها. ينفذها ⁦Claude⁩، ويسألك إذنك قبل كل أمر.'),
+  hint: t('You do not need to understand it. Claude carries it out, and asks your permission before the commands in this message.', 'لا تحتاج أن تفهمها. ينفذها ⁦Claude⁩، ويسألك إذنك قبل الأوامر التي فيها.'),
   source: t('This installs code from github.com/DiyarFirasmusa/wajiha-kit, our only source.', 'تثبّت هذه الرسالة كودا من github.com/DiyarFirasmusa/wajiha-kit، وهو مصدرنا الوحيد.'),
   madeBy: t('Made by', 'صنعها'),
   other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),
@@ -168,7 +168,7 @@ export const compare = {
   gains: <Gain[]>[
     {
       name: t('Plain questions only', 'أسئلة بسيطة فقط'),
-      text: t('The kit chooses the setup for you, the way a good team would.', 'تختار الإضافة الإعداد لك، كما يختاره فريق جيد.'),
+      text: t('The kit picks the setup, the way a good team would.', 'تقترح الإضافة الإعداد، كما يقترحه فريق جيد.'),
       instead: t('questions about libraries and frameworks you do not know', 'أسئلة عن مكتبات وأطر عمل لا تعرفها'),
       short: t('Technical questions', 'أسئلة تقنية'),
       bad: 'redux? zustand? vite? next?',

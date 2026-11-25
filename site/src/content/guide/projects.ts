@@ -26,7 +26,7 @@ export const projects: Project[] = [
       t('Pages that open fast, even on a phone.', 'صفحات تفتح بسرعة، حتى على الهاتف.'),
       t('Pages that search engines and chat apps can read, so a shared link shows a title and a picture.', 'صفحات تستطيع محركات البحث وتطبيقات المحادثة قراءتها، فيظهر عند مشاركة الرابط عنوان وصورة.'),
       t('A proper “page not found” page, and redirects when an address changes.', 'صفحة «الصفحة غير موجودة» مضبوطة، وتحويل تلقائي عندما يتغير عنوان.'),
-      t('Your secrets, such as keys and passwords, stay on the server and never reach the visitor’s browser.', 'أسرارك، مثل المفاتيح وكلمات المرور، تبقى على الخادم ولا تصل إلى متصفح الزائر.'),
+      t('Your secrets, such as keys and passwords, stay on the server and are not sent to the visitor’s browser.', 'أسرارك، مثل المفاتيح وكلمات المرور، تبقى على الخادم ولا تصل إلى متصفح الزائر.'),
     ],
     stack: ['TanStack Start', 'TanStack Query', 'Tailwind', 'i18next', 'Vitest', 'Playwright'],
     ask: t('build a page that shows my products from my backend', 'ابن صفحة تعرض منتجاتي من الخادم الخلفي الخاص بي'),

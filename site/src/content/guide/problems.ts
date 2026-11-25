@@ -51,7 +51,7 @@ export const beginnerQuestions = [
 export const problems = [
   [
     t('Every command is refused after installing.', 'تُرفض كل الأوامر بعد التثبيت.'),
-    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it yourself (on macOS: brew install jq; on Windows: winget install jqlang.jq; on Linux: sudo apt install jq), then close Claude Code and open it again. Claude cannot install it for you here, because the checks refuse the command.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها بنفسك (على macOS: ⁦brew install jq⁩، وعلى Windows: ⁦winget install jqlang.jq⁩، وعلى Linux: ⁦sudo apt install jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد.'),
+    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it yourself (on macOS: brew install jq; on Windows: winget install jqlang.jq; on Linux: sudo apt install jq), then close Claude Code and open it again. Claude cannot install it for you here, because the checks refuse the command.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها بنفسك (على macOS: ⁦brew install jq⁩، وعلى Windows: ⁦winget install jqlang.jq⁩، وعلى Linux: ⁦sudo apt install jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد. ولا يستطيع ⁦Claude⁩ تثبيتها لك هنا، لأن فحوص الأمان ترفض الأمر.'),
   ],
   [
     t('The rules do not seem to load.', 'القواعد لا تعمل على ما يبدو.'),

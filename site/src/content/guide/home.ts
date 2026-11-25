@@ -5,14 +5,14 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
   lead: t(
-    'A free kit for the Claude app on your computer. You answer a few simple questions, and it builds a website or dashboard you can open and click through, in Arabic and English. Then it checks the result before you see it. You approve each command it runs.',
-    '«واجهة» إضافة مجانية لتطبيق \u2066Claude\u2069 على حاسوبك. تجيب عن بضعة أسئلة بسيطة، فتبني لك موقعا أو لوحة تحكم تفتحها وتتصفحها، بالعربية والإنجليزية. ثم تفحص النتيجة قبل أن تراها. وتوافق أنت على كل أمر ينفذه.',
+    'A free kit for the Claude app on your computer. You answer a few simple questions, and it builds a website or dashboard you can open and click through, in Arabic and English. Then it checks the result before you see it. It asks before risky steps.',
+    '«واجهة» إضافة مجانية لتطبيق \u2066Claude\u2069 على حاسوبك. تجيب عن بضعة أسئلة بسيطة، فتبني لك موقعا أو لوحة تحكم تفتحها وتتصفحها، بالعربية والإنجليزية. ثم تفحص النتيجة قبل أن تراها. ويسألك قبل الخطوات الخطرة.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
     {
       name: t('You answer five questions', 'تجيب عن خمسة أسئلة'),
-      text: t('What you want to build, a few lines about it, the look you like, your backend link and the languages. No technical choices.', 'ماذا تريد أن تبني، وأسطر قليلة عنه، والشكل الذي يعجبك، ورابط الخادم، واللغات. دون أي قرار تقني.'),
+      text: t('What you want to build, a few lines about it, the look you like, your backend description and the languages. No technical knowledge needed.', 'ماذا تريد أن تبني، وأسطر قليلة عنه، والشكل الذي يعجبك، ووصف الخادم، واللغات. دون أي معرفة تقنية.'),
     },
     {
       name: t('It builds the whole project', 'تبني المشروع كاملا'),
@@ -34,7 +34,7 @@ export const home = {
   docs: t('Read the guide', 'اقرأ الدليل'),
 
   example: t('From an idea to a working project', 'من فكرة إلى مشروع يعمل'),
-  exampleLead: t('You say what you want. This is what happens next, in plain words.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة.'),
+  exampleLead: t('You say what you want. This is what happens next, in plain words. The setup is being updated, so today it may ask a little differently.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة. والإعداد قيد التحديث، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
   prompt: t('I want a dashboard to manage my shop orders', 'أريد لوحة تحكم لإدارة طلبات متجري'),
   steps: {
     install: {
@@ -43,7 +43,7 @@ export const home = {
     },
     skills: {
       name: t('It asks what you want', 'تسألك ماذا تريد'),
-      text: t('Dashboard, website or both. Your project in your own words: what it contains and what people can do in it. Your design or a site you like. Your backend link. The languages.', 'لوحة تحكم أو موقع أو الاثنان. مشروعك بكلماتك: ماذا يحتوي وماذا يفعل الناس فيه. تصميمك أو موقع يعجبك. رابط الخادم. واللغات.'),
+      text: t('Dashboard, website or both. Your project in your own words: what it contains and what people can do in it. Your design or a site you like. Your backend description. The languages.', 'لوحة تحكم أو موقع أو الاثنان. مشروعك بكلماتك: ماذا يحتوي وماذا يفعل الناس فيه. تصميمك أو موقع يعجبك. وصف الخادم. واللغات.'),
     },
     rules: {
       name: t('It tells you the plan', 'تعرض عليك الخطة'),

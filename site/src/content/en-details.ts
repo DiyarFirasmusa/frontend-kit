@@ -81,10 +81,10 @@ export const enDetails: Details = {
         ],
       },
       {
-        title: 'It comes with tools',
+        title: 'Tools it can use',
         items: [
-          ['Chrome DevTools', 'An MCP server (a small helper program that gives the assistant a new ability) for inspecting pages, requests and speed.'],
-          ['Playwright', 'An MCP server that drives a browser, with a skill for stable end-to-end tests (a robot that uses your app like a person).'],
+          ['Chrome DevTools', 'An MCP server (a small helper program that gives the assistant a new ability) for inspecting pages, requests and speed. Optional: setup asks once, and the default is no.'],
+          ['Playwright', 'An MCP server that drives a browser, with a skill for stable end-to-end tests (a robot that uses your app like a person). Optional: setup asks once, and the default is no.'],
           ['Context7', 'An MCP server that brings up-to-date documentation for the tools you use.'],
           ['Frontend report', 'A report format that says what changed, what was checked and what was not.'],
           ['Audit report', 'A report format for read-only reviews: findings first, with evidence.'],
@@ -147,8 +147,8 @@ export const enDetails: Details = {
     title: 'Fair questions.',
     items: [
       ['Will it work on a project I already have?', 'Yes. Setup has a mode for existing projects: it finds out which tools you use, adapts to them and shows every change to existing files before it writes.'],
-      ['Do I have to use TanStack (a set of tools for building web apps)?', 'No. The website kind is built on TanStack Start. Dashboards can use Vite, TanStack Start or Next.js, and the React kind adapts to other tools. For a new project the kit picks its own tested setup, so you do not have to choose.'],
-      ['Does it cost more to run?', 'Yes, somewhat. Checks and reviews use tokens (the units of text the assistant is charged by) and time. On two small test tasks it cost about 1.5 times as much and scored higher on our own scoring sheet. That is a small sample.'],
+      ['Do I have to use TanStack (a set of tools for building web apps)?', 'No. The website kind is built on TanStack Start. Dashboards can use Vite, TanStack Start or Next.js, and the React kind adapts to other tools. For a new project the kit suggests a setup, and it may ask you which framework you want.'],
+      ['Does it cost more to run?', 'Yes, somewhat. Checks and reviews use tokens (the units of text the assistant is charged by) and time, so it uses somewhat more of your Claude allowance than a plain request. The kit itself is free.'],
       ['Are the safety checks a real security sandbox?', 'No. They are small scripts that catch known patterns, so a command written in a different way can get past them. Keep the branch protection of your code host and your normal access rules.'],
       ['Can I turn parts off or change the rules?', 'Yes. The rules are files in your project folder. The automatic review and the skill hints have switches in the settings file.'],
       ['Will it delete my rules?', 'No. Setup shows what would change before it touches an existing file, and clean-up moves files to a backup folder.'],
