@@ -3,46 +3,38 @@ import { t } from './text.ts'
 /** What you need on your computer before the three commands. `link` and `hint` are optional. */
 export const needs = [
   {
-    name: t('A Claude account', 'حساب في Claude'),
-    why: t('Claude Code signs in with it. Sign up at claude.ai if you have none.', 'يسجل ⁦Claude Code⁩ الدخول به. أنشئ حسابا من claude.ai إن لم يكن عندك.'),
+    name: t('The Claude app', 'تطبيق ⁦Claude⁩'),
+    why: t('This is where you talk to Claude. Sign in with your Claude account. Its Code tab works on a folder on your computer and makes your project there.', 'هنا تتحدث مع ⁦Claude⁩. سجّل الدخول بحسابك في ⁦Claude⁩. قسم ⁦Code⁩ فيه يعمل على مجلد في جهازك ويصنع مشروعك هناك.'),
+    link: 'https://claude.ai/download',
+    linkLabel: t('Download the Claude app', 'نزّل تطبيق ⁦Claude⁩'),
   },
   {
-    name: t('Claude Code, version 2.1.295 or newer', '⁦Claude Code⁩ بالإصدار 2.1.295 أو أحدث'),
-    why: t('This is the assistant that does the work. Follow the install steps on its official page.', 'هذا هو المساعد الذي ينفذ العمل. اتبع خطوات التثبيت في صفحته الرسمية.'),
-    link: 'https://code.claude.com/docs/en/overview',
-    linkLabel: t('Install Claude Code', 'تثبيت ⁦Claude Code⁩'),
-  },
-  {
-    name: t('Node, version 20 or newer', '⁦Node⁩ بالإصدار 20 أو أحدث'),
-    why: t('It runs your project on your computer while you build it.', 'يشغل مشروعك على جهازك أثناء بنائه.'),
-  },
-  {
-    name: t('git', '⁦git⁩'),
-    why: t('It keeps every saved version of your work, so you can always go back.', 'يحفظ كل نسخة من عملك، فتستطيع الرجوع إليها دائما.'),
-  },
-  {
-    name: t('jq', '⁦jq⁩'),
-    why: t('A small tool the safety checks use to read data. On a Mac, install it with brew install jq.', 'أداة صغيرة تستخدمها فحوص الأمان لقراءة البيانات. على جهاز Mac ثبّتها بالأمر ⁦brew install jq⁩.'),
+    name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
+    why: t(
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). If you do not have them, ask Claude: “Install what Wajiha Kit needs”. It will show you each step and ask before it installs anything.',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). إن لم تكن عندك، اطلب من ⁦Claude⁩: «ثبّت ما تحتاجه واجهة». سيريك كل خطوة ويسألك قبل أن يثبت أي شيء.',
+    ),
   },
 ]
 
 /** The sentence before the three commands: where to be, and how to start Claude Code. */
 export const openStep = t(
-  'Make an empty folder for your project. Open the command window in it (the place where you type commands) and start Claude Code by typing claude. Then type the three lines below into Claude Code, one at a time.',
-  'أنشئ مجلدا فارغا لمشروعك. افتح فيه نافذة الأوامر (المكان الذي تكتب فيه الأوامر)، وشغّل ⁦Claude Code⁩ بكتابة ⁦claude⁩. ثم اكتب الأسطر الثلاثة التالية داخل ⁦Claude Code⁩، سطرا بعد سطر.',
+  'Make an empty folder for your project. Open the Claude app, choose Code at the top, and pick your folder with the folder button next to the message box. Then copy each line below, paste it into the message box and send it, like a normal message. You do not need to understand them.',
+  'أنشئ مجلدا فارغا لمشروعك. افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩ في الأعلى، واختر مجلدك من زر المجلد بجانب خانة الرسائل. ثم انسخ كل سطر من الأسطر التالية، والصقه في خانة الرسائل وأرسله، كأي رسالة. لا تحتاج أن تفهمها.',
 )
 
-/** One short title for each of the three commands. */
+/** One short title for each of the three lines: what you do. */
 export const installTitles = [
-  t('Tell Claude Code where the kit is', 'عرّف ⁦Claude Code⁩ بمكان الإضافة'),
-  t('Install the kit', 'ثبّت الإضافة'),
-  t('Start the setup', 'ابدأ الإعداد'),
+  t('Send this to Claude', 'أرسل هذا إلى ⁦Claude⁩'),
+  t('Then send this', 'ثم أرسل هذا'),
+  t('And last, this one', 'وأخيرا هذا'),
 ]
 
+/** What each line does, in a few words. */
 export const installSteps = [
-  t('Nothing is installed yet. This only tells Claude Code where the kit lives.', 'لا يثبت هذا شيئا بعد. يخبر ⁦Claude Code⁩ فقط أين توجد الإضافة.'),
-  t('This installs the kit: its skills (a ready set of instructions for one job), its specialists (separate helpers with one job, like a reviewer or a tester) and its safety checks.', 'يثبت الإضافة: مهاراتها (مجموعة تعليمات جاهزة لعمل واحد)، ومختصيها (مساعدون منفصلون لكل واحد عمل، كالمراجع والمختبر)، وفحوص الأمان فيها.'),
-  t('This starts the setup. When it asks what we are doing, choose “New project”.', 'يبدأ هذا الإعداد. عندما يسألك ماذا سنفعل، اختر «مشروع جديد».'),
+  t('It tells Claude where to find the kit.', 'يخبر ⁦Claude⁩ أين يجد الإضافة.'),
+  t('It adds the kit to Claude.', 'يضيف الإضافة إلى ⁦Claude⁩.'),
+  t('Claude starts asking about your project. When it asks what you are doing, choose “New project”.', 'يبدأ ⁦Claude⁩ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
 ]
 
 export const questionsLead = t(

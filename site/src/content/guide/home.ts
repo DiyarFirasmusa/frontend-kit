@@ -23,6 +23,7 @@ export const home = {
       text: t('It looks for mistakes, runs tests and asks a second reviewer. Risky actions are stopped. You decide what to keep.', 'تبحث عن الأخطاء، وتجري الاختبارات، وتسأل مراجعا ثانيا. وتوقف أي خطوة خطرة. وأنت تقرر ما تحتفظ به.'),
     },
   ],
+  start: t('Start now', 'ابدأ الآن'),
   see: t('See how it goes, step by step', 'شاهد كيف تسير الأمور خطوة بخطوة'),
   docs: t('Read the guide', 'اقرأ الدليل'),
 
@@ -30,6 +31,10 @@ export const home = {
   exampleLead: t('You say what you want. This is what happens next, in plain words.', 'تقول ما تريده. وهذا ما يحدث بعدها، بكلمات بسيطة.'),
   prompt: t('I want a dashboard to manage my shop orders', 'أريد لوحة تحكم لإدارة طلبات متجري'),
   steps: {
+    install: {
+      name: t('You add the kit to Claude', 'تضيف الإضافة إلى Claude'),
+      text: t('In the Claude app, you type three short lines. They add the kit and start setting up your project.', 'في تطبيق Claude تكتب ثلاثة أسطر قصيرة. تضيف الإضافة، وتبدأ تجهيز مشروعك.'),
+    },
     skills: {
       name: t('It asks what you want', 'تسألك ماذا تريد'),
       text: t('Dashboard, website or both. One sentence about it. Do you have a design, or a site you like? Your backend link. Arabic, English or both.', 'لوحة تحكم أو موقع أو الاثنان. جملة عنه. هل عندك تصميم، أو موقع يعجبك؟ رابط الخادم. عربي أو إنجليزي أو الاثنان.'),
@@ -44,7 +49,7 @@ export const home = {
     },
     gate: {
       name: t('It checks its own work', 'تفحص عملها بنفسها'),
-      text: t('It looks for mistakes and runs tests. If something fails, it fixes it before you see it.', 'تبحث عن الأخطاء وتجري الاختبارات. وإذا فشل شيء أصلحته قبل أن تراه.'),
+      text: t('It looks for mistakes, runs tests, and a second reviewer reads the work. If something fails, it fixes it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجع ثان العمل. وإذا فشل شيء أصلحته قبل أن تراه.'),
     },
     review: {
       name: t('A second reviewer reads it', 'يقرؤها مراجع ثان'),

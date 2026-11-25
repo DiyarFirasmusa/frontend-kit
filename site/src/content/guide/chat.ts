@@ -63,6 +63,12 @@ export const firstRun: ChatEvent[] = [
 /** The section of steps: what the window shows at each one. */
 export const stepChat: ChatEvent[][] = [
   [
+    { kind: 'user', text: '/plugin marketplace add DiyarFirasmusa/wajiha-kit', command: true },
+    { kind: 'user', text: '/plugin install wajiha-kit@wajiha-kit', command: true },
+    { kind: 'tool', text: t('Installed Wajiha Kit', 'ثُبّتت واجهة'), mark: 'ok' },
+    { kind: 'user', text: '/wajiha-kit:setup', command: true },
+  ],
+  [
     { kind: 'claude', text: t('Let’s set up your project. A few quick questions.', 'لنجهز مشروعك. بضعة أسئلة سريعة.') },
     {
       kind: 'ask',
@@ -70,6 +76,8 @@ export const stepChat: ChatEvent[][] = [
       options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
       picked: 0,
     },
+    { kind: 'claude', text: t('Describe it in one sentence.', 'صفه بجملة واحدة.') },
+    { kind: 'user', text: t('A dashboard to manage my shop orders', 'لوحة لإدارة طلبات متجري') },
   ],
   [
     {
@@ -85,10 +93,10 @@ export const stepChat: ChatEvent[][] = [
   [
     { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
     { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
+    { kind: 'tool', text: t('A second reviewer read the work', 'قرأ مراجع ثان العمل'), mark: 'ok' },
   ],
-  [{ kind: 'tool', text: t('A second reviewer read the work', 'قرأ مراجع ثان العمل'), mark: 'ok' }],
   [
-    { kind: 'claude', text: t('Done. Your dashboard is ready.', 'تم. لوحتك جاهزة.') },
+    { kind: 'ready', title: t('Your dashboard is ready', 'لوحتك جاهزة'), text: t('Open it in your browser and click around.', 'افتحها في المتصفح وتصفحها.') },
     { kind: 'ask', question: t('Save this version?', 'هل أحفظ هذه النسخة؟'), options: [t('Yes, save it', 'نعم، احفظها'), notYet], picked: 0 },
   ],
 ]

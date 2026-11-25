@@ -1,5 +1,5 @@
 ---
-import { after, build, installSteps, installTitles, limits, maintenance, needs, openStep, questions, questionsLead, summary, written } from '../../content/guide/start.ts'
+import { after, build, installSteps, installTitles, limits, maintenance, needs, openStep, questions, questionsLead, summary } from '../../content/guide/start.ts'
 import { t } from '../../content/guide/text.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
@@ -16,7 +16,7 @@ const { locale } = Astro.props
 const { install } = content[locale]
 const words = {
   before: t('What you need first', 'ما تحتاجه أولا'),
-  beforeLead: t('Install these once. Each one is there for a reason.', 'ثبّت هذه الأشياء مرة واحدة. ولكل واحد منها سبب.'),
+  beforeLead: t('Two things, once. Claude can help you with the second.', 'شيئان، مرة واحدة. ويستطيع ⁦Claude⁩ مساعدتك في الثاني.'),
   install: t('1. Install the kit', '1. ثبّت الإضافة'),
   answer: t('2. Answer a few questions', '2. أجب عن بضعة أسئلة'),
   approve: t('3. Say yes to the summary', '3. وافق على الملخص'),
@@ -67,11 +67,6 @@ const words = {
 <Block id="build" title={words.built[locale]}>
   <h3>{build.title[locale]}</h3>
   <p class="big">{build.text[locale]}</p>
-</Block>
-<Block id="files" title={words.files[locale]} lead={words.filesLead[locale]}>
-  <dl class="rows">
-    {written.map(({ path, text }) => <div><dt><code dir="ltr">{path}</code></dt><dd>{text[locale]}</dd></div>)}
-  </dl>
 </Block>
 <Block id="after" title={words.next[locale]} lead={words.nextLead[locale]}>
   <ol class="numbered">{after.map((step) => <li>{step[locale]}</li>)}</ol>

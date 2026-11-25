@@ -10,8 +10,8 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const { skills, rules, guard, gate, review, done } = home.steps
-const steps = [skills, rules, guard, gate, review, done]
+const { install, skills, rules, guard, gate, done } = home.steps
+const steps = [install, skills, rules, guard, gate, done]
 ---
 
 <section id="example" class="example" data-example>
@@ -23,20 +23,22 @@ const steps = [skills, rules, guard, gate, review, done]
     <ol class="run">
       {
         steps.map(({ name, text }, i) => (
-          <li data-step={i} aria-current={i === 0 ? 'step' : undefined}>
-            <span class="run-number" dir="ltr">
-              {i + 1}
-            </span>
-            <h3>{name[locale]}</h3>
-            <p>{text[locale]}</p>
+          <li data-step={i}>
+            <button type="button" class="run-pick" data-jump={i}>
+              <span class="run-number" dir="ltr">
+                {i + 1}
+              </span>
+              <span class="run-text">
+                <strong>{name[locale]}</strong>
+                <span>{text[locale]}</span>
+              </span>
+            </button>
+            <span class="run-bar" aria-hidden="true"></span>
           </li>
         ))
       }
     </ol>
     <ChatWindow locale={locale} label={home.example[locale]}>
-      <div class="ce ce-user">
-        <p dir="auto">{home.prompt[locale]}</p>
-      </div>
       <div class="session-lines">
         {
           stepChat.map((events, i) => (

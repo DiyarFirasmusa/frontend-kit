@@ -1,10 +1,8 @@
 ---
 import { firstRun } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
-import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
-import Commands from '../Commands.astro'
 import ChatEvent from './ChatEvent.astro'
 import ChatWindow from './ChatWindow.astro'
 
@@ -19,10 +17,8 @@ const { locale } = Astro.props
   <div class="column hero-copy">
     <h1 class="enter">{home.title[locale].split(/(?<=\.) /).map((part) => <span>{part}</span>)}</h1>
     <p class="hero-lead enter">{home.lead[locale]}</p>
-    <div class="enter">
-      <Commands install={content[locale].install} first />
-    </div>
-    <p class="hero-ways enter">
+    <p class="hero-actions enter">
+      <a class="hero-start" href="#install">{home.start[locale]}</a>
       <a href="#example">{home.see[locale]}</a>
       <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
     </p>
