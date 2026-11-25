@@ -1684,3 +1684,28 @@
   color: var(--faint);
 }
 
+
+/* Each line of the reports: a few words, then a short example as it looks in the project. */
+.vs-log li > span {
+  flex: none;
+}
+
+.vs-log li > code {
+  margin-inline-start: auto;
+  padding: 0.125rem 0.5rem;
+  overflow: hidden;
+  border-radius: 0.375rem;
+  font: 500 0.8125rem / 1.5 var(--code);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vs-log.is-bad li > code {
+  background: rgb(224 119 107 / 0.08);
+  color: rgb(224 119 107 / 0.85);
+}
+
+.vs-log.is-good li > code {
+  background: rgb(25 171 171 / 0.1);
+  color: #7ad9d9;
+}

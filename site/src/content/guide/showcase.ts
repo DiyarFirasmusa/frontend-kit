@@ -114,6 +114,10 @@ export interface Gain {
   name: Bilingual
   text: Bilingual
   instead: Bilingual
+  /** Two or three words for the problem, and a short example of each side, as it looks in a project. */
+  short: Bilingual
+  bad: string
+  good: string
 }
 
 export const compare = {
@@ -132,31 +136,49 @@ export const compare = {
       name: t('Plain questions only', 'أسئلة بسيطة فقط'),
       text: t('The setup is chosen for you, the way a good team would choose it.', 'يُختار الإعداد لك، كما يختاره فريق جيد.'),
       instead: t('questions about libraries and frameworks you do not know', 'أسئلة عن مكتبات وأطر عمل لا تعرفها'),
+      short: t('Technical questions', 'أسئلة تقنية'),
+      bad: 'redux? zustand? vite? next?',
+      good: '? dashboard · website · both',
     },
     {
       name: t('One clear structure', 'هيكل واحد واضح'),
       text: t('Every file has its place, and it is the same every time.', 'لكل ملف مكانه، وهو نفسه في كل مرة.'),
       instead: t('a different layout every time you ask', 'ترتيب مختلف في كل مرة تطلب فيها'),
+      short: t('A random layout', 'ترتيب عشوائي'),
+      bad: 'src/new/stuff/page2.tsx',
+      good: 'src/pages/orders.tsx',
     },
     {
       name: t('Checked before “done”', 'يُفحص قبل «تم»'),
       text: t('It looks for mistakes and runs tests before it tells you it is finished.', 'يبحث عن الأخطاء ويجري الاختبارات قبل أن يخبرك أنه انتهى.'),
       instead: t('“done” while something is broken', '«تم» وهناك شيء معطل'),
+      short: t('“Done”, but broken', '«تم» وهو معطل'),
+      bad: 'done ✓ · build ✕',
+      good: 'checks ✓ · tests ✓ · done',
     },
     {
       name: t('Nothing made twice', 'لا شيء يتكرر'),
       text: t('It finds the button you already have and uses it again.', 'يجد الزر الموجود عندك ويعيد استخدامه.'),
       instead: t('a third copy of the same button', 'نسخة ثالثة من الزر نفسه'),
+      short: t('Copies', 'تكرار'),
+      bad: 'Button2.tsx · button-new.tsx',
+      good: 'components/Button.tsx ↺',
     },
     {
       name: t('Arabic and phones from day one', 'العربية والهاتف من البداية'),
       text: t('Right to left and small screens work from the first page.', 'الكتابة من اليمين لليسار والشاشات الصغيرة تعمل من أول صفحة.'),
       instead: t('a layout that breaks in Arabic or on a phone', 'شكل ينكسر بالعربية أو على الهاتف'),
+      short: t('Arabic breaks', 'العربية تنكسر'),
+      bad: '/ar → layout ✕',
+      good: '/ar ✓ · /en ✓ · phone ✓',
     },
     {
       name: t('Safe by default', 'آمن دائما'),
       text: t('Risky steps, like deleting work or publishing, are stopped until you say yes.', 'الخطوات الخطرة، مثل حذف العمل أو النشر، تتوقف حتى توافق.'),
       instead: t('a risky step run without asking', 'خطوة خطرة تُنفذ دون سؤال'),
+      short: t('Risky steps', 'خطوات خطرة'),
+      bad: 'git push --force',
+      good: 'git push --force → asks you',
     },
   ],
 }

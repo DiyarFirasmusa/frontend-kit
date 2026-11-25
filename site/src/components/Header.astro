@@ -23,6 +23,16 @@ const places = [
   ['builds', t('What you can build', 'ماذا تبني')],
   ['example', t('How it works', 'كيف تعمل')],
 ] as const
+// On a guide page the header serves the guide: a search over every page, and the pages people come back to.
+const guideLinks = [
+  [routeUrl(locale, { kind: 'home' }), t('Home', 'الرئيسية')],
+  [pageUrl(locale, 'get-started'), PAGES['get-started'].name],
+  [pageUrl(locale, 'questions'), PAGES.questions.name],
+] as const
+const searchWords = {
+  label: t('Search the guide', 'ابحث في الدليل'),
+  hint: t('Search the guide: table, Arabic, upload…', 'ابحث في الدليل: جدول، عربي، رفع…'),
+}
 ---
 
 <a class="skip" href="#content">{chrome.skip}</a>
@@ -37,8 +47,19 @@ const places = [
     <bdi>Wajiha Kit</bdi>
     <small class="brand-version" dir="ltr">v{version}</small>
   </a>
+  {
+    !home && (
+      <label class="top-search">
+        <span class="sr-only">{searchWords.label[locale]}</span>
+        <input type="search" placeholder={searchWords.hint[locale]} autocomplete="off" data-top-search />
+        <kbd aria-hidden="true">/</kbd>
+      </label>
+    )
+  }
   <nav class="top-nav" aria-label={chrome.sections}>
-    {places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)}
+    {home
+      ? places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)
+      : guideLinks.map(([href, name]) => <a href={href} aria-current={Astro.url.pathname === href ? 'page' : undefined}>{name[locale]}</a>)}
     <a class="nav-docs" href={pageUrl(locale, 'docs')} aria-current={home ? undefined : 'true'}>{PAGES.docs.name[locale]}</a>
   </nav>
   <a class="top-docs" href={pageUrl(locale, 'docs')} aria-current={home ? undefined : 'true'}>{PAGES.docs.name[locale]}</a>

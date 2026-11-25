@@ -54,10 +54,11 @@ const tidy: [string, number][] = [
             ))}
           </ul>
           <ul class="vs-log is-bad">
-            {compare.gains.map(({ instead }, i) => (
+            {compare.gains.map(({ short, bad }, i) => (
               <li style={`--n:${i}`}>
                 <i aria-hidden="true">✕</i>
-                {instead[locale]}
+                <span>{short[locale]}</span>
+                <code dir="ltr">{bad}</code>
               </li>
             ))}
           </ul>
@@ -76,10 +77,11 @@ const tidy: [string, number][] = [
             ))}
           </ul>
           <ul class="vs-log is-good">
-            {compare.gains.map(({ name }, i) => (
+            {compare.gains.map(({ name, good }, i) => (
               <li style={`--n:${i}`}>
                 <i aria-hidden="true">✓</i>
-                {name[locale]}
+                <span>{name[locale]}</span>
+                <code dir="ltr">{good}</code>
               </li>
             ))}
           </ul>

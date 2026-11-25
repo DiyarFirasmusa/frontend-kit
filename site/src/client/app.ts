@@ -8,6 +8,7 @@ import { initLife } from './life.ts'
 import { initChrome } from './page-chrome.ts'
 import { initTabs } from './tabs.ts'
 import { initToc } from './toc.ts'
+import { initTopSearch } from './top-search.ts'
 import { warmPages } from './warm.ts'
 import { initWords } from './words.ts'
 
@@ -28,4 +29,5 @@ document.addEventListener('astro:page-load', () => {
   initAlive(page.signal)
   warmPages(page.signal)
   initToc(page.signal)
+  initTopSearch(page.signal)
 })
