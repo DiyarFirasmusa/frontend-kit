@@ -1,0 +1,434 @@
+---
+// A page for the owner only: it is not linked from anywhere, not in the sitemap, and asks search engines to skip it.
+// It lists what the rights, privacy and terms pages claim and that only the owner can confirm, in the site's own look.
+import Header from '../../components/Header.astro'
+import SiteFooter from '../../components/SiteFooter.astro'
+import Layout from '../../layouts/Layout.astro'
+import { pageUrl } from '../../lib/links.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+import type { Route } from '../../lib/routes.ts'
+
+const route: Route = { kind: 'page', id: 'guide' }
+const here = (page: 'licence' | 'privacy' | 'terms', section: string): string => `${pageUrl('ar', page)}#${section}`
+
+interface Item {
+  id: string
+  title: string
+  says: string
+  ask: string
+  where: [string, string][]
+  /** Something already checked by me, so you do not have to. */
+  checked?: string
+}
+
+const groups: { title: string; items: Item[] }[] = [
+  {
+    title: 'من أنت على الموقع',
+    items: [
+      {
+        id: 'name',
+        title: 'اسمك وحقوق النشر',
+        says: 'الاسم الوحيد على الموقع هو «ديار فراس» مع رابط حسابك على GitHub، وحقوق النشر © 2026 باسمك. ولا توجد وسيلة تواصل غير GitHub.',
+        ask: 'هل تريد أن يبقى اسمك الحقيقي معلنا هكذا، وهل GitHub وحده يكفي للتواصل؟',
+        where: [['الحقوق: من صنعها', here('licence', 'owner')]],
+      },
+      {
+        id: 'mit',
+        title: 'رخصة MIT على كل شيء',
+        says: 'كل ما في المستودع، ومنه كود الإضافة وكود الموقع ونصوصه، برخصة MIT: يستطيع أي شخص أن ينسخه ويعدله ويبيعه ما دام يبقي سطر حقوقك.',
+        ask: 'هل MIT مناسبة لنصوص الموقع وتصميمه أيضا، أم تريد الاحتفاظ بحقوق النصوص والتصميم لك؟',
+        where: [['الحقوق: ماذا يحق لك أن تفعل بها', here('licence', 'licence')]],
+      },
+      {
+        id: 'brand',
+        title: 'الاسم والشعار',
+        says: 'يحق للناس أن يقولوا إنهم يستخدمون «واجهة»، ونرجو ألا يقدّموا نسختهم على أنها «واجهة». وهذا طلب لطيف وليس علامة تجارية مسجلة.',
+        ask: 'هل هذا يكفيك؟ إن أردت حماية أقوى فيلزم تسجيل العلامة، وهذا قرار قانوني خارج الموقع.',
+        where: [['الحقوق: الاسم والشعار', here('licence', 'names')]],
+      },
+      {
+        id: 'anthropic',
+        title: 'الاستقلال عن Anthropic',
+        says: 'واجهة مشروع مستقل لم تصنعه Anthropic ولم تراجعه ولم تزكّه، وClaude وClaude Code اسمان تملكهما.',
+        ask: 'هل هذا صحيح تماما بالنسبة لك؟',
+        where: [['الحقوق: Claude وAnthropic', here('licence', 'anthropic')], ['أسفل كل صفحة', pageUrl('ar', 'licence')]],
+      },
+    ],
+  },
+  {
+    title: 'الخصوصية',
+    items: [
+      {
+        id: 'cookies',
+        title: 'لا كوكيز ولا تحليلات',
+        says: 'الموقع لا يضع كوكيز ولا يستخدم تحليلات ولا إعلانات ولا تتبعا، وجهته الوحيدة الأخرى هي Vercel.',
+        ask: 'ادخل إلى مشروع الموقع في Vercel وتأكد أن Web Analytics وSpeed Insights مطفأتان. فإن كانت إحداهما مفعّلة فالجملة خاطئة.',
+        where: [['الخصوصية: هذا الموقع', here('privacy', 'site')], ['الخصوصية: الاستضافة', here('privacy', 'hosting')]],
+      },
+      {
+        id: 'kit',
+        title: 'الإضافة على جهاز المستخدم',
+        says: 'الإضافة نفسها لا ترسل شيئا إليك. والخدمات الخارجية هي Claude وAnthropic، وContext7 (اختياري، يسأل الإعداد)، وnpm، وGitHub، وChrome DevTools وPlaywright (اختياريان).',
+        ask: 'هل القائمة كاملة بحسب ما تعرفه عن الإضافة؟',
+        checked: 'راجعت جلسة الإضافة هذه التفاصيل: لم تعد الإضافة تشغّل أي خادم من نفسها، وكلها تُضاف بعد موافقة المستخدم.',
+        where: [['الخصوصية: الإضافة على جهازك', here('privacy', 'kit')]],
+      },
+      {
+        id: 'contact',
+        title: 'طريقة الإبلاغ',
+        says: 'للأسئلة تكتب إلى ديار فراس على GitHub، وللثغرات تُبلَّغ بشكل خاص من تبويب Security في المستودع.',
+        ask: 'هل تريد أن تتابع بلاغات GitHub بنفسك؟',
+        checked: 'تحققت أن «الإبلاغ الخاص عن الثغرات» مفعّل في المستودع، وأن بلاغات Issues مفعّلة.',
+        where: [['الخصوصية: أسئلة', here('privacy', 'questions')], ['المستودع', REPO_URL]],
+      },
+    ],
+  },
+  {
+    title: 'الشروط',
+    items: [
+      {
+        id: 'use',
+        title: 'الاستخدام التجاري مجاني',
+        says: 'يحق لأي شخص أن يستخدم الإضافة في مشاريع شخصية وتجارية، مجانا، برخصة MIT.',
+        ask: 'هل تقبل أن تُستخدم تجاريا دون أي مقابل؟',
+        where: [['الشروط: استخدام الإضافة', here('terms', 'use')]],
+      },
+      {
+        id: 'asis',
+        title: 'بلا ضمان',
+        says: 'الإضافة والموقع «كما هما» دون أي ضمان، والمساعد قد يخطئ، وفحوص الأمان حاجز وليست بيئة معزولة.',
+        ask: 'هل الصياغة تناسبك؟',
+        where: [['الشروط: بلا ضمان', here('terms', 'asis')]],
+      },
+      {
+        id: 'liability',
+        title: 'حدود المسؤولية',
+        says: 'في حدود ما يسمح به القانون، لا تتحمل أنت مسؤولية أي خسارة تنتج عن الاستخدام. ولم يُذكر قانون بلد ولا محكمة محددة.',
+        ask: 'هل تريد تحديد بلد يحكم الشروط (مثلا العراق)؟ هذا قرار لك، وأفضل أن يراجعه محام إن كنت تتوقع نزاعا.',
+        where: [['الشروط: المسؤولية', here('terms', 'liability')]],
+      },
+      {
+        id: 'support',
+        title: 'لا وعد بدعم',
+        says: 'يعتني بالإضافة شخص واحد هو أنت، ولا وعد بدعم ولا بسرعة رد، والنسخة الأحدث وحدها تصلها الإصلاحات.',
+        ask: 'هل هذا ما تريد أن تلتزم به علنا؟',
+        where: [['الشروط: من يعتني بها', here('terms', 'maintenance')]],
+      },
+      {
+        id: 'reference',
+        title: 'النص الإنجليزي هو المرجع',
+        says: 'إن اختلف النصان العربي والإنجليزي فالإنجليزي هو المرجع.',
+        ask: 'هل تريد أن يكون المرجع هو الإنجليزي فعلا؟',
+        where: [['الشروط: التغييرات', here('terms', 'changes')]],
+      },
+      {
+        id: 'age',
+        title: 'عمر المستخدمين',
+        says: 'لا شيء في الصفحات عن عمر المستخدمين أو الأطفال.',
+        ask: 'هل تريد إضافة جملة مثل «الإضافة موجهة لمن هم فوق 18 عاما»، أم تتركه كما هو؟',
+        where: [['الشروط', pageUrl('ar', 'terms')]],
+      },
+    ],
+  },
+]
+const total = groups.reduce((n, g) => n + g.items.length, 0)
+---
+
+<Layout locale="ar" route={route} title="مراجعة الصفحات القانونية | واجهة" description="صفحة خاصة بصاحب المشروع لمراجعة صفحات الحقوق والخصوصية والشروط." indexable={false}>
+  <Header locale="ar" route={route} />
+  <main id="content" class="review" tabindex="-1">
+    <header class="review-head">
+      <p class="review-tag">لك وحدك · غير ظاهرة في الموقع ولا في محركات البحث</p>
+      <h1>مراجعة الصفحات القانونية</h1>
+      <p class="review-lead">
+        هذه كل جملة في صفحات الحقوق والخصوصية والشروط يستطيع صاحب المشروع وحده أن يؤكدها. اقرأ كل بند، واضغط «موافق» أو «أعدّله»، واكتب ملاحظتك إن أردت. ثم اضغط «انسخ إجاباتي» والصقها لي في المحادثة وأعدّل الصفحات.
+      </p>
+      <p class="review-note">أنا لست محاميا، وهذه ليست استشارة قانونية. إن كنت تتوقع أن تستخدم الإضافة شركات، أو تبيع شيئا حولها، فراجع محاميا.</p>
+      <div class="review-progress" aria-live="polite">
+        <span><b data-done>0</b> من {total}</span>
+        <i><u data-bar></u></i>
+      </div>
+    </header>
+
+    {
+      groups.map((group) => (
+        <section class="review-group">
+          <h2>{group.title}</h2>
+          {group.items.map((item) => (
+            <article class="review-item" data-item={item.id} data-title={item.title}>
+              <h3>{item.title}</h3>
+              <p class="review-says"><span>ما يقوله الموقع</span>{item.says}</p>
+              <p class="review-ask"><span>ما نحتاجه منك</span>{item.ask}</p>
+              {item.checked && <p class="review-checked">✓ {item.checked}</p>}
+              <p class="review-where">
+                {item.where.map(([label, href]) => <a href={href}>{label}</a>)}
+              </p>
+              <div class="review-answer" role="group" aria-label={`إجابتك عن: ${item.title}`}>
+                <button type="button" data-choice="ok" aria-pressed="false">موافق</button>
+                <button type="button" data-choice="change" aria-pressed="false">أعدّله</button>
+                <input type="text" data-note placeholder="ملاحظتك، إن أردت" aria-label={`ملاحظتك عن: ${item.title}`} />
+              </div>
+            </article>
+          ))}
+        </section>
+      ))
+    }
+
+    <div class="review-send">
+      <button type="button" class="review-copy" data-copy>انسخ إجاباتي</button>
+      <p data-status role="status"></p>
+    </div>
+  </main>
+  <SiteFooter locale="ar" />
+
+  <script is:inline>
+    ;(function () {
+      var KEY = 'wajiha-legal-review'
+      var saved = {}
+      try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') } catch (e) {}
+      var items = Array.prototype.slice.call(document.querySelectorAll('[data-item]'))
+      var label = { ok: 'موافق', change: 'أعدّله' }
+
+      function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)) } catch (e) {} }
+      function paint() {
+        var done = 0
+        items.forEach(function (el) {
+          var s = saved[el.getAttribute('data-item')] || {}
+          if (s.choice) done++
+          el.setAttribute('data-state', s.choice || '')
+          el.querySelectorAll('[data-choice]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-choice') === s.choice)) })
+          var note = el.querySelector('[data-note]')
+          if (note !== document.activeElement) note.value = s.note || ''
+        })
+        document.querySelector('[data-done]').textContent = String(done)
+        document.querySelector('[data-bar]').style.width = Math.round((done / items.length) * 100) + '%'
+      }
+
+      items.forEach(function (el) {
+        var id = el.getAttribute('data-item')
+        el.querySelectorAll('[data-choice]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            saved[id] = saved[id] || {}
+            saved[id].choice = saved[id].choice === b.getAttribute('data-choice') ? '' : b.getAttribute('data-choice')
+            save(); paint()
+          })
+        })
+        el.querySelector('[data-note]').addEventListener('input', function (e) {
+          saved[id] = saved[id] || {}
+          saved[id].note = e.target.value
+          save()
+        })
+      })
+
+      document.querySelector('[data-copy]').addEventListener('click', function () {
+        var lines = ['مراجعة الصفحات القانونية:']
+        items.forEach(function (el) {
+          var s = saved[el.getAttribute('data-item')] || {}
+          lines.push('- ' + el.getAttribute('data-title') + ': ' + (label[s.choice] || 'لم أقرر') + (s.note ? ' (' + s.note + ')' : ''))
+        })
+        var text = lines.join(String.fromCharCode(10))
+        var status = document.querySelector('[data-status]')
+        function ok() { status.textContent = 'نُسخت إجاباتك. الصقها لي في المحادثة.' }
+        function fail() { status.textContent = 'تعذر النسخ تلقائيا. حدّد النص التالي وانسخه:' + String.fromCharCode(10) + text }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fail)
+        else fail()
+      })
+      paint()
+    })()
+  </script>
+</Layout>
+
+<style is:global>
+  .review {
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: calc(var(--bar) + 3rem) var(--edge) 5rem;
+  }
+
+  .review-head {
+    margin-block-end: 3rem;
+  }
+
+  .review-tag {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--turq);
+    font-size: var(--small);
+  }
+
+  .review h1 {
+    margin-block: 1.25rem 1rem;
+    font-size: var(--title);
+    line-height: 1.15;
+  }
+
+  .review-lead {
+    max-width: 44rem;
+    color: var(--ivory);
+    font-size: var(--lead);
+  }
+
+  .review-note {
+    max-width: 44rem;
+    margin-block-start: 1rem;
+    color: var(--muted);
+  }
+
+  .review-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-block-start: 1.75rem;
+    color: var(--muted);
+  }
+
+  .review-progress i {
+    flex: 1;
+    max-width: 20rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .review-progress u {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--turq);
+    transition: width 0.3s ease;
+  }
+
+  .review-group {
+    margin-block-start: 3.5rem;
+  }
+
+  .review-group > h2 {
+    margin-block-end: 1.25rem;
+    font-size: var(--sub);
+  }
+
+  .review-item {
+    display: grid;
+    gap: 0.75rem;
+    margin-block-end: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    background: var(--raised);
+  }
+
+  .review-item[data-state='ok'] {
+    border-color: var(--turq);
+  }
+
+  .review-item[data-state='change'] {
+    border-color: var(--accent);
+  }
+
+  .review-item h3 {
+    font-size: 1.25rem;
+  }
+
+  .review-item p {
+    margin: 0;
+    max-width: 48rem;
+  }
+
+  .review-item p > span {
+    display: block;
+    margin-block-end: 0.15rem;
+    color: var(--faint);
+    font-size: 0.875rem;
+  }
+
+  .review-says {
+    color: var(--muted);
+  }
+
+  .review-ask {
+    color: var(--ivory);
+  }
+
+  .review-checked {
+    color: var(--turq);
+  }
+
+  .review-where {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .review-where a {
+    padding-block: 0.4rem;
+    color: var(--ivory);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .review-answer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-block-start: 0.5rem;
+  }
+
+  .review-answer button {
+    min-height: 2.75rem;
+    padding-inline: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ivory);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .review-answer button[data-choice='ok'][aria-pressed='true'] {
+    border-color: var(--turq);
+    background: var(--turq-soft);
+  }
+
+  .review-answer button[data-choice='change'][aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .review-answer input {
+    flex: 1;
+    min-width: 14rem;
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--void);
+    color: var(--ivory);
+    font: inherit;
+  }
+
+  .review-send {
+    margin-block-start: 3rem;
+  }
+
+  .review-copy {
+    min-height: 3rem;
+    padding-inline: 2rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--void);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .review-send p {
+    margin-block-start: 1rem;
+    color: var(--muted);
+    white-space: pre-line;
+  }
+</style>
