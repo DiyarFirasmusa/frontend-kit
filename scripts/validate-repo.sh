@@ -7,6 +7,8 @@ cd "$ROOT" || exit 1
 FAIL=0
 bad() { echo "✗ $1"; FAIL=$((FAIL + 1)); }
 command -v jq >/dev/null || { echo "jq is required"; exit 1; }
+# shellcheck source=../plugins/wajiha-kit/scripts/jq-compat.sh
+. "$ROOT/plugins/wajiha-kit/scripts/jq-compat.sh"
 
 # 1. every JSON file parses
 while IFS= read -r f; do
@@ -190,7 +192,8 @@ for agent in "$KIT"/agents/*.md; do
     case ",$tools," in *,Bash,*) bad "$agent: says read-only but has Bash" ;; esac
   fi
   for server in $(printf '%s\n' "$tools" | tr ',' '\n' | sed -n 's/^mcp__plugin_wajiha-kit_\(.*\)__.*/\1/p' | sort -u); do
-    jq -e --arg s "$server" '.mcpServers[$s]' "$KIT/.mcp.json" >/dev/null || bad "$agent: no MCP server $server in .mcp.json"
+    # The plugin starts no server itself: each one is a template that setup writes when the user says yes.
+    jq -es --arg s "$server" 'any(.[]; .mcpServers[$s] != null)' "$KIT"/templates/shared/mcp/*.mcp.json >/dev/null 2>&1 || bad "$agent: no MCP server $server in templates/shared/mcp"
   done
 done
 
