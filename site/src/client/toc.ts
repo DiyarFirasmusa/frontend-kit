@@ -25,7 +25,12 @@ export function initToc(signal: AbortSignal): void {
     (entries) => {
       for (const { target, isIntersecting } of entries) {
         if (!isIntersecting) continue
-        for (const link of links) link.toggleAttribute('aria-current', link.hash === `#${target.id}`)
+        const at = links.findIndex((link) => link.hash === `#${target.id}`)
+        links.forEach((link, i) => {
+          link.toggleAttribute('aria-current', i === at)
+          link.toggleAttribute('data-passed', i < at)
+        })
+        toc.style.setProperty('--reached', String((at + 0.5) / links.length))
       }
     },
     { rootMargin: '-20% 0px -70% 0px' },
