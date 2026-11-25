@@ -1,8 +1,7 @@
 ---
-import { chatWords, stepChat } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
+import { journeyWords as w } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
-import ChatEvent from './ChatEvent.astro'
 
 interface Props {
   locale: Locale
@@ -14,34 +13,76 @@ const steps = [install, skills, rules, guard, gate, done]
 ---
 
 <section id="example" class="example">
-  <div class="column example-head">
+  <div class="column section-head">
     <h2>{home.example[locale]}</h2>
     <p>{home.exampleLead[locale]}</p>
   </div>
-  <ol class="column flow">
+  <ol class="column idea-steps">
     {
       steps.map(({ name, text }, i) => (
-        <li class="flow-step">
-          <div class="flow-words">
+        <li class="journey-card" style={`--n:${i}`}>
+          <div class="journey-picture" aria-hidden="true">
+            {i === 0 && (
+              <div class="jp-input">
+                <span>{w.install[locale]}</span>
+                <b class="jp-caret"></b>
+                <i class="chat-send">↑</i>
+              </div>
+            )}
+            {i === 1 && (
+              <div class="jp-ask">
+                <p>{w.ask[locale]}</p>
+                <ul>
+                  {w.options.map((option, n) => (
+                    <li class:list={{ 'is-pick': n === 0 }}>
+                      <span class="ce-key" dir="ltr">{n + 1}</span>
+                      {option[locale]}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {i === 2 && (
+              <div class="jp-plan">
+                <ul>{w.plan.map((line) => <li>{line[locale]}</li>)}</ul>
+                <span class="jp-pill">{w.start[locale]}</span>
+              </div>
+            )}
+            {i === 3 && (
+              <ul class="jp-build">
+                {w.pages.map((page, n) => (
+                  <li style={`--n:${n}`}>
+                    <span>{page[locale]}</span>
+                    <i class="jp-bar"><b></b></i>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {i === 4 && (
+              <ul class="jp-checks">
+                {w.checks.map((check, n) => (
+                  <li style={`--n:${n}`}>
+                    <i class="ce-tool-icon">✓</i>
+                    {check[locale]}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {i === 5 && (
+              <div class="jp-save">
+                <p>{w.save[locale]}</p>
+                <span class="jp-pill">{w.yes[locale]}</span>
+                <span class="jp-pill is-quiet">{w.no[locale]}</span>
+              </div>
+            )}
+          </div>
+          <div class="journey-words">
             <span class="run-number" dir="ltr">
               {i + 1}
             </span>
             <h3>{name[locale]}</h3>
             <p>{text[locale]}</p>
           </div>
-          <figure class="chat flow-chat" aria-label={name[locale]}>
-            <div class="chat-bar" aria-hidden="true">
-              <span class="chat-lights"><i></i><i></i><i></i></span>
-              <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
-            </div>
-            <div class="chat-body">
-              {stepChat[i]!.map((event, n) => (
-                <div class="flow-message" style={`--n:${n}`}>
-                  <ChatEvent locale={locale} event={event} />
-                </div>
-              ))}
-            </div>
-          </figure>
         </li>
       ))
     }

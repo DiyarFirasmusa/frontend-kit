@@ -1,45 +1,70 @@
 ---
+import { chatWords } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
-import { content } from '../../content/index.ts'
+import { installWords as w } from '../../content/guide/showcase.ts'
+import { installFlow, installMessage } from '../../content/guide/start.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
-import { installFlow } from '../../content/guide/start.ts'
-import CommandBox from '../CommandBox.astro'
 
 interface Props {
   locale: Locale
 }
 
 const { locale } = Astro.props
-const { install } = content[locale]
+const message = installMessage[locale]
 ---
 
 <section id="install" class="get-it">
-  <div class="column section-head">
-    <h2>{home.install[locale]}</h2>
-    <p>{install.needs}</p>
-  </div>
-  <div class="column">
-    <ol class="install-steps">
-      {
-        installFlow.map(({ title, text, copy }, i) => (
-          <li>
-            <span class="step-number" dir="ltr">
-              {i + 1}
-            </span>
-            <p>
-              <strong>{title[locale]}</strong> {text[locale]}
-            </p>
-            {copy && <CommandBox command={typeof copy === 'string' ? copy : copy[locale]} install={install} message={typeof copy !== 'string'} />}
-          </li>
-        ))
-      }
-    </ol>
+  <div class="column start-panel">
+    <div class="start-steps">
+      <h2>{w.title[locale]}</h2>
+      <p class="start-lead">{w.lead[locale]}</p>
+      <ol>
+        {
+          installFlow.map(({ title, text }, i) => (
+            <li>
+              <span class="run-number" dir="ltr">
+                {i + 1}
+              </span>
+              <h3>{title[locale]}</h3>
+              <p>{text[locale]}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="hero-ways">
+        <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
+        <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
+      </p>
+    </div>
 
-
-    <p class="hero-ways">
-      <a href={pageUrl(locale, 'get-started')}>{locale === 'ar' ? 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه' : 'Already have a project, or an old one? Read how to start from it'}</a>
-    </p>
-    <p class="hero-ways"><a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a></p>
+    <figure class="chat start-window" aria-label={w.title[locale]}>
+      <div class="chat-bar" aria-hidden="true">
+        <span class="chat-lights"><i></i><i></i><i></i></span>
+        <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
+      </div>
+      <div class="start-body">
+        <p class="start-folder" aria-hidden="true">
+          <span class="start-folder-icon">▣</span>
+          <bdi dir="ltr">~/my-shop</bdi>
+        </p>
+        <div class="start-message">
+          <p class="start-text" dir="auto">{message}</p>
+          <p class="chat-tools" aria-hidden="true">
+            <i class="chat-plus">+</i>
+            <span class="chat-model" dir="ltr">{chatWords.model}</span>
+            <i class="chat-send">↑</i>
+          </p>
+        </div>
+        <button type="button" class="start-copy" data-copy={message} data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]}>
+          <span aria-live="polite" data-status>{w.copy[locale]}</span>
+        </button>
+        <p class="start-hint">{w.send[locale]}</p>
+        <div class="start-slash" aria-hidden="true">
+          <small>{w.slash[locale]}</small>
+          <p dir="ltr"><b>/wajiha-kit:setup</b></p>
+        </div>
+      </div>
+    </figure>
   </div>
 </section>

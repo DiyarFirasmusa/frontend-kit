@@ -1,0 +1,60 @@
+---
+import type { ProfileId } from '../../content/guide/projects.ts'
+
+interface Props {
+  kind: ProfileId
+}
+
+const { kind } = Astro.props
+// A drawing of the kind of project, in the site's dark colours. Sizes are in em, so one font size scales it.
+---
+
+<div class:list={['mock-stage', `is-${kind}`]} dir="ltr">
+  {
+    kind !== 'dashboard' && (
+      <div class="mock mock-site">
+        <div class="mock-nav">
+          <i class="mock-logo"></i>
+          <span class="mock-links"><i></i><i></i><i></i></span>
+          <i class="mock-button"></i>
+        </div>
+        <div class="mock-hero">
+          <i class="mock-line is-long"></i>
+          <i class="mock-line"></i>
+          <i class="mock-cta"></i>
+        </div>
+        <div class="mock-products">
+          <span><i></i><b></b></span>
+          <span><i></i><b></b></span>
+          <span><i></i><b></b></span>
+        </div>
+      </div>
+    )
+  }
+  {
+    kind !== 'website' && (
+      <div class="mock mock-dash">
+        <div class="mock-side">
+          <i class="mock-logo"></i>
+          <i class="is-on"></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+        <div class="mock-main">
+          <div class="mock-stats">
+            <span><b></b><i></i></span>
+            <span><b></b><i></i></span>
+            <span><b></b><i></i></span>
+          </div>
+          <div class="mock-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="mock-table">
+            <span><i></i><b class="is-done"></b></span>
+            <span><i></i><b class="is-wait"></b></span>
+            <span><i></i><b class="is-done"></b></span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+</div>

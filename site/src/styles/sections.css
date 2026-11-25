@@ -1,0 +1,928 @@
+/* THE THREE SECTIONS AFTER THE OPENING SCREEN, at the same level as it: one big picture each, few words.
+   Dark like the rest of the site; orange for what you do, turquoise for what you get. */
+
+/* ---------- What can you build: tabs and a big browser window ---------- */
+.builds {
+  padding-block: clamp(4rem, 8vw, 7rem) 0;
+}
+
+.show {
+  margin-block-start: 2.5rem;
+}
+
+.show-tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.3125rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgb(241 237 231 / 0.03);
+}
+
+.show-tabs button {
+  min-height: 2.5rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.show-tabs button:hover {
+  color: var(--ivory);
+}
+
+.show-tabs button[aria-selected='true'] {
+  background: var(--accent);
+  color: #141413;
+}
+
+.show-tabs button:focus-visible {
+  outline: 2px solid var(--turq, #19abab);
+  outline-offset: 2px;
+}
+
+.show-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  margin-block-start: 2rem;
+}
+
+.js .show-panel[data-hidden] {
+  display: none;
+}
+
+.js .show-panel:not([data-hidden]) {
+  animation: show-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes show-in {
+  from {
+    opacity: 0;
+    translate: 0 0.75rem;
+  }
+}
+
+.show-words {
+  display: grid;
+  gap: 1rem;
+  align-content: center;
+}
+
+.show-words h3 {
+  color: #fff;
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  line-height: 1.15;
+}
+
+.show-words > p:not(.build-say) {
+  color: var(--muted);
+  font-size: var(--lead);
+}
+
+.show-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.show-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.875rem;
+  border: 1px solid rgb(25 171 171 / 0.4);
+  border-radius: 999px;
+  background: rgb(25 171 171 / 0.08);
+  font-size: 0.9375rem;
+}
+
+.show-chips li::before {
+  content: '✓';
+  color: var(--turq, #19abab);
+  font-size: 0.8125rem;
+}
+
+.build-say {
+  display: grid;
+  gap: 0.375rem;
+  margin-block-start: 0.5rem;
+}
+
+.build-say small {
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.build-say span {
+  justify-self: start;
+  padding: 0.5625rem 0.95rem;
+  border: 1px solid rgb(217 119 87 / 0.35);
+  border-radius: 1rem;
+  border-end-start-radius: 0.3rem;
+  background: rgb(217 119 87 / 0.1);
+}
+
+/* The browser window around the drawing. */
+.show-picture {
+  position: relative;
+}
+
+.show-picture::before {
+  content: '';
+  position: absolute;
+  inset: -10% -6%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(217 119 87 / 0.2), transparent);
+  pointer-events: none;
+}
+
+.browser {
+  overflow: hidden;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 1rem;
+  background: #141413;
+  box-shadow:
+    0 0 0 1px rgb(217 119 87 / 0.06),
+    0 2rem 4rem rgb(0 0 0 / 0.55);
+}
+
+.browser-bar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+  background: #1a1a18;
+}
+
+.browser-url {
+  min-width: 45%;
+  padding: 0.1875rem 1rem;
+  border-radius: 999px;
+  background: rgb(241 237 231 / 0.06);
+  color: var(--faint);
+  font: 500 0.75rem / 1.6 var(--code);
+  text-align: center;
+}
+
+.browser-page {
+  aspect-ratio: 16 / 10;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  font-size: clamp(0.85rem, 0.5rem + 1vw, 1.25rem);
+}
+
+/* ---------- The drawings, sized in em ---------- */
+.mock-stage {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.mock {
+  display: flex;
+  flex: 1;
+  gap: 0.5em;
+  padding: 0.75em;
+  border-radius: 0.75em;
+  background: #0f0f0e;
+}
+
+.mock i,
+.mock b {
+  display: block;
+}
+
+.mock-logo {
+  flex: none;
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 0.25em;
+  background: var(--accent);
+}
+
+.mock-site {
+  flex-direction: column;
+}
+
+.mock-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding-block-end: 0.6em;
+  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+}
+
+.mock-links {
+  display: flex;
+  flex: 1;
+  gap: 0.5em;
+}
+
+.mock-links i {
+  width: 2em;
+  height: 0.3em;
+  border-radius: 0.2em;
+  background: rgb(241 237 231 / 0.25);
+}
+
+.mock-button {
+  width: 2.6em;
+  height: 0.8em;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.mock-hero {
+  display: grid;
+  gap: 0.45em;
+  padding-block: 0.9em 0.6em;
+}
+
+.mock-line {
+  width: 55%;
+  height: 0.5em;
+  border-radius: 0.2em;
+  background: rgb(241 237 231 / 0.45);
+}
+
+.mock-line.is-long {
+  width: 80%;
+  height: 0.9em;
+  background: #f1ede7;
+}
+
+.mock-cta {
+  width: 4em;
+  height: 1em;
+  margin-block-start: 0.3em;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--amber, #f2a183));
+}
+
+.mock-products {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5em;
+}
+
+.mock-products span {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 0.35em;
+  padding: 0.35em;
+  border-radius: 0.5em;
+  background: rgb(241 237 231 / 0.05);
+}
+
+.mock-products i {
+  border-radius: 0.35em;
+  background: linear-gradient(135deg, rgb(217 119 87 / 0.6), rgb(242 161 131 / 0.18));
+}
+
+.mock-products span:nth-child(2) i {
+  background: linear-gradient(135deg, rgb(25 171 171 / 0.6), rgb(87 205 205 / 0.18));
+}
+
+.mock-products b {
+  width: 70%;
+  height: 0.3em;
+  border-radius: 0.2em;
+  background: rgb(241 237 231 / 0.3);
+}
+
+.mock-side {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 0.55em;
+  width: 20%;
+  padding: 0.55em;
+  border-radius: 0.55em;
+  background: rgb(241 237 231 / 0.04);
+}
+
+.mock-side i:not(.mock-logo) {
+  height: 0.45em;
+  border-radius: 0.2em;
+  background: rgb(241 237 231 / 0.16);
+}
+
+.mock-side .is-on {
+  background: #19abab;
+}
+
+.mock-side .mock-logo {
+  margin-block-end: 0.4em;
+}
+
+.mock-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5em;
+  min-width: 0;
+}
+
+.mock-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5em;
+}
+
+.mock-stats span {
+  display: grid;
+  gap: 0.35em;
+  padding: 0.55em;
+  border: 1px solid rgb(241 237 231 / 0.08);
+  border-radius: 0.5em;
+}
+
+.mock-stats b {
+  width: 55%;
+  height: 0.75em;
+  border-radius: 0.2em;
+  background: var(--accent);
+}
+
+.mock-stats span:nth-child(2) b {
+  background: #19abab;
+}
+
+.mock-stats span:nth-child(3) b {
+  background: #f1ede7;
+}
+
+.mock-stats i {
+  width: 80%;
+  height: 0.3em;
+  border-radius: 0.15em;
+  background: rgb(241 237 231 / 0.2);
+}
+
+.mock-chart {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  gap: 0.45em;
+  padding: 0.55em;
+  border: 1px solid rgb(241 237 231 / 0.08);
+  border-radius: 0.5em;
+}
+
+.mock-chart i {
+  flex: 1;
+  border-radius: 0.2em 0.2em 0 0;
+  background: linear-gradient(180deg, rgb(25 171 171 / 0.8), rgb(25 171 171 / 0.2));
+}
+
+.mock-chart i:nth-child(1) { height: 35%; }
+.mock-chart i:nth-child(2) { height: 55%; }
+.mock-chart i:nth-child(3) { height: 45%; }
+.mock-chart i:nth-child(4) { height: 70%; }
+.mock-chart i:nth-child(5) { height: 60%; }
+.mock-chart i:nth-child(6) { height: 85%; background: linear-gradient(180deg, var(--accent), rgb(217 119 87 / 0.2)); }
+.mock-chart i:nth-child(7) { height: 75%; }
+
+.mock-table {
+  display: grid;
+  gap: 0.45em;
+  padding: 0.55em;
+  border: 1px solid rgb(241 237 231 / 0.08);
+  border-radius: 0.5em;
+}
+
+.mock-table span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.mock-table i {
+  width: 55%;
+  height: 0.3em;
+  border-radius: 0.15em;
+  background: rgb(241 237 231 / 0.25);
+}
+
+.mock-table b {
+  width: 2.2em;
+  height: 0.65em;
+  border-radius: 999px;
+}
+
+.mock-table .is-done {
+  background: rgb(25 171 171 / 0.75);
+}
+
+.mock-table .is-wait {
+  background: rgb(217 119 87 / 0.75);
+}
+
+/* Both: the website behind, its dashboard in front. */
+.mock-stage.is-fullstack .mock {
+  position: absolute;
+  width: 66%;
+  height: 74%;
+  box-shadow: 0 1em 2em rgb(0 0 0 / 0.5);
+}
+
+.mock-stage.is-fullstack .mock-site {
+  inset: 0 auto auto 0;
+  opacity: 0.75;
+}
+
+.mock-stage.is-fullstack .mock-dash {
+  inset: auto 0 0 auto;
+  border: 1px solid rgb(241 237 231 / 0.12);
+}
+
+/* ---------- From an idea to a working project: six cards, each with a small live picture ---------- */
+.idea-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-block-start: 2.5rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.journey-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgb(241 237 231 / 0.035), rgb(241 237 231 / 0.01));
+  transition:
+    border-color 0.3s,
+    translate 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.journey-card:hover {
+  border-color: rgb(217 119 87 / 0.5);
+  translate: 0 -0.25rem;
+}
+
+.journey-picture {
+  display: grid;
+  place-items: center;
+  height: 12.5rem;
+  padding: 1.25rem;
+  border-block-end: 1px solid var(--line);
+  background:
+    radial-gradient(70% 90% at 50% 120%, rgb(217 119 87 / 0.18), transparent 70%),
+    #0b0c0d;
+  font-size: 0.875rem;
+}
+
+.journey-words {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+  padding: 1.25rem 1.375rem 1.5rem;
+}
+
+.journey-words .run-number {
+  grid-row: span 2;
+}
+
+.journey-words h3 {
+  color: #fff;
+  font-size: var(--sub);
+  line-height: 1.3;
+}
+
+.journey-words p {
+  color: var(--muted);
+}
+
+/* 1: the message box with the request being written. */
+.jp-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.625rem 0.5rem 0.625rem 1rem;
+  padding-inline: 1rem 0.5rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-radius: 1rem;
+  background: #1f1f1d;
+}
+
+.jp-input span {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.jp-caret {
+  width: 2px;
+  height: 1.1em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+.jp-input .chat-send {
+  margin-inline-start: auto;
+}
+
+/* 2: the question and its choices. */
+.jp-ask {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid rgb(241 237 231 / 0.12);
+  border-radius: 0.875rem;
+  background: #1c1c1a;
+}
+
+.jp-ask p {
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+}
+
+.jp-ask ul {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jp-ask li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid rgb(241 237 231 / 0.1);
+  border-radius: 0.5rem;
+}
+
+.jp-ask li.is-pick {
+  border-color: rgb(217 119 87 / 0.7);
+  background: rgb(217 119 87 / 0.14);
+}
+
+.jp-ask li.is-pick .ce-key {
+  background: var(--accent);
+  color: #141413;
+}
+
+/* 3: the plan and the yes. */
+.jp-plan {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  width: 100%;
+}
+
+.jp-plan ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jp-plan li::before {
+  content: '•';
+  margin-inline-end: 0.5rem;
+  color: var(--accent);
+}
+
+.jp-pill {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: #f1ede7;
+  color: #141413;
+  font-weight: 500;
+}
+
+.jp-pill.is-quiet {
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--ivory);
+}
+
+/* 4: pages being made, each bar filling. */
+.jp-build {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jp-build li {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.jp-bar {
+  display: block;
+  height: 0.375rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(241 237 231 / 0.08);
+}
+
+.jp-bar b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--turq, #19abab));
+  transform-origin: left;
+}
+
+[dir='rtl'] .jp-bar b {
+  transform-origin: right;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .journey-card.has-arrived .jp-bar b {
+    animation: jp-fill 1.6s cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation-delay: calc(0.3s + var(--n, 0) * 0.35s);
+  }
+
+  .journey-card.has-arrived .jp-checks li {
+    animation: show-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.3s + var(--n, 0) * 0.25s);
+  }
+}
+
+@keyframes jp-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* 5: the checks. */
+.jp-checks {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jp-checks li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgb(25 171 171 / 0.3);
+  border-radius: 0.6rem;
+  background: rgb(25 171 171 / 0.06);
+}
+
+.jp-checks .ce-tool-icon {
+  background: var(--turq, #19abab);
+  color: #141413;
+}
+
+/* 6: the last question. */
+.jp-save {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid rgb(217 119 87 / 0.4);
+  border-radius: 0.875rem;
+  background: #1c1c1a;
+}
+
+.jp-save p {
+  width: 100%;
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ---------- Install: the steps beside a big Claude window with the message ---------- */
+.get-it {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.start-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.start-steps h2 {
+  font-size: var(--title, clamp(2rem, 1.2rem + 3vw, 3.25rem));
+}
+
+.start-lead {
+  margin-block: 1rem 2rem;
+  color: var(--muted);
+  font-size: var(--lead);
+}
+
+.start-steps ol {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The line that joins the three numbers. */
+.start-steps ol::before {
+  content: '';
+  position: absolute;
+  inset-block: 1rem 1rem;
+  inset-inline-start: 0.9rem;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--turq, #19abab));
+  opacity: 0.5;
+}
+
+.start-steps li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+}
+
+.start-steps .run-number {
+  grid-row: span 2;
+  background: var(--void, #050607);
+}
+
+.start-steps h3 {
+  color: #fff;
+  font-size: var(--sub);
+  line-height: 1.3;
+}
+
+.start-steps li p {
+  color: var(--muted);
+}
+
+.start-steps .hero-ways {
+  margin-block-start: 1.75rem;
+}
+
+.start-window {
+  position: relative;
+}
+
+.start-window::before {
+  content: '';
+  position: absolute;
+  inset: -8% -6%;
+  z-index: -1;
+  background: radial-gradient(50% 60% at 50% 60%, rgb(217 119 87 / 0.22), transparent 70%);
+  pointer-events: none;
+}
+
+.start-body {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.start-folder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: start;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgb(25 171 171 / 0.4);
+  border-radius: 999px;
+  background: rgb(25 171 171 / 0.08);
+  font: 500 0.8125rem / 1.6 var(--code);
+}
+
+.start-folder-icon {
+  color: var(--turq, #19abab);
+}
+
+.start-message {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 1rem 0.75rem;
+  border: 1px solid rgb(217 119 87 / 0.55);
+  border-radius: 1.125rem;
+  background: #1f1f1d;
+  box-shadow: 0 0 0 4px rgb(217 119 87 / 0.08);
+}
+
+.start-text {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+.start-copy {
+  min-height: 3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #141413;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-copy:hover {
+  background: var(--amber, #f2a183);
+}
+
+.start-copy:focus-visible {
+  outline: 2px solid var(--turq, #19abab);
+  outline-offset: 3px;
+}
+
+.start-hint {
+  margin: -0.25rem 0 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.start-slash {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.start-slash small {
+  color: var(--faint);
+}
+
+.start-slash p {
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgb(241 237 231 / 0.08);
+  font: 500 0.875rem / 1.6 var(--code);
+}
+
+.start-slash b {
+  color: var(--amber, #f2a183);
+  font-weight: 500;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 1000px) {
+  .idea-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .show-panel,
+  .start-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .show-picture {
+    order: -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .idea-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .show-tabs {
+    display: flex;
+  }
+
+  .show-tabs button {
+    flex: 1;
+    padding-inline: 0.5rem;
+  }
+}

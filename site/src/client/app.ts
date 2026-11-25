@@ -6,6 +6,7 @@ import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
 import { initChrome } from './page-chrome.ts'
 import { initReveal } from './reveal.ts'
+import { initTabs } from './tabs.ts'
 import { initWords } from './words.ts'
 
 let page = new AbortController()
@@ -22,4 +23,5 @@ document.addEventListener('astro:page-load', () => {
   initReveal(page.signal)
   initGate()
   initLife(page.signal)
+  initTabs(page.signal)
 })
