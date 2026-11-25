@@ -5,8 +5,8 @@ export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
   title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
   lead: t(
-    'A free kit for the Claude app on your computer. You answer a few simple questions, and it builds a working website or dashboard in Arabic and English. Then it checks the result before you see it.',
-    'واجهة إضافة مجانية لتطبيق \u2066Claude\u2069 على حاسوبك. تجيب عن بضعة أسئلة بسيطة، فتبني لك موقعا أو لوحة تحكم تعمل، بالعربية والإنجليزية. ثم تفحص النتيجة قبل أن تراها.',
+    'A free kit for the Claude app on your computer. You answer a few simple questions, and it builds a website or dashboard you can open and click through, in Arabic and English. Then it checks the result before you see it. You approve each command it runs.',
+    '«واجهة» إضافة مجانية لتطبيق \u2066Claude\u2069 على حاسوبك. تجيب عن بضعة أسئلة بسيطة، فتبني لك موقعا أو لوحة تحكم تفتحها وتتصفحها، بالعربية والإنجليزية. ثم تفحص النتيجة قبل أن تراها. وتوافق أنت على كل أمر ينفذه.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
@@ -20,17 +20,17 @@ export const home = {
     },
     {
       name: t('It checks before showing you', 'تفحص العمل قبل أن تعرضه عليك'),
-      text: t('It looks for mistakes, runs tests and asks a second reviewer. Known risky commands are stopped. You decide what to keep.', 'تبحث عن الأخطاء، وتجري الاختبارات، وتسأل مراجعا ثانيا. وتوقف الأوامر الخطرة المعروفة. وأنت تقرر ما تحتفظ به.'),
+      text: t('It looks for mistakes, runs tests and asks a reviewer. Known risky commands are stopped. You decide what to keep.', 'تبحث عن الأخطاء، وتجري الاختبارات، وتسأل مراجعا. وتوقف الأوامر الخطرة المعروفة. وأنت تقرر ما تحتفظ به.'),
     },
   ],
-  start: t('Start now', 'ابدأ الآن'),
+  start: t('Install the kit', 'ثبّت الإضافة'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
     lead: t('Pick one when Claude asks. You do not choose any tools: each kind comes ready.', 'اختر واحدا عندما يسألك Claude. ولن تختار أي أدوات: كل نوع يأتي جاهزا.'),
     say: t('You could say', 'يمكنك أن تقول'),
-    more: t('More about each kind', 'المزيد عن كل نوع'),
+    more: t('See the three kinds of project', 'شاهد الأنواع الثلاثة للمشاريع'),
   },
-  see: t('See how it goes, step by step', 'شاهد كيف تسير الأمور خطوة بخطوة'),
+  see: t('See an example, step by step', 'شاهد مثالا خطوة بخطوة'),
   docs: t('Read the guide', 'اقرأ الدليل'),
 
   example: t('From an idea to a working project', 'من فكرة إلى مشروع يعمل'),
@@ -55,11 +55,11 @@ export const home = {
     },
     gate: {
       name: t('It checks its own work', 'تفحص عملها بنفسها'),
-      text: t('It looks for mistakes, runs tests, and a second reviewer reads the work. If something fails, it tries to fix it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجع ثان العمل. وإذا فشل شيء حاولت إصلاحه قبل أن تراه.'),
+      text: t('It looks for mistakes, runs tests, and a reviewer reads the work. If something fails, it tries to fix it before you see it.', 'تبحث عن الأخطاء، وتجري الاختبارات، ويقرأ مراجع العمل. وإذا فشل شيء حاولت إصلاحه قبل أن تراه.'),
     },
     review: {
-      name: t('A second reviewer reads it', 'يقرؤها مراجع ثان'),
-      text: t('A separate helper reads the work with fresh eyes and lists anything to improve.', 'مساعد مستقل يقرأ العمل بعين جديدة، ويكتب ما يمكن تحسينه.'),
+      name: t('A reviewer reads it', 'يقرؤها مراجع'),
+      text: t('Another Claude helper, called a reviewer, reads the work and lists anything to improve.', 'مساعد آخر من ⁦Claude⁩ يسمى المراجع يقرأ العمل ويكتب ما يمكن تحسينه.'),
     },
     done: {
       name: t('You decide', 'القرار لك'),
@@ -100,16 +100,16 @@ export const home = {
       {
         mode: 'refactor',
         name: t('My project is old and messy', 'مشروعي قديم وفوضوي'),
-        text: t('It measures the mess, makes a plan in six steps and does them one by one. What your app does stays the same.', 'تقيس حجم الفوضى، وتضع خطة من ست خطوات، وتنفذها واحدة بعد أخرى. وما يفعله تطبيقك لا يتغير.'),
+        text: t('It measures the mess, makes a plan in six steps and does them one by one. What your app does stays the same.', 'تقيس حجم الفوضى، وتضع خطة من ست مراحل، وتنفذها واحدة بعد أخرى. وما يفعله تطبيقك لا يتغير.'),
         command: '/wajiha-kit:refactor-mode on',
         page: 'refactor',
       },
     ],
-    more: t('Ways of working, from building new to a release freeze', 'طرق العمل، من البناء الجديد إلى تجميد الإصدار'),
+    more: t('Ways of working, from building something new to protecting an old app', 'طرق العمل، من بناء شيء جديد إلى حماية تطبيق قديم'),
   },
 
   inside: t('What is inside', 'ما بداخلها'),
-  insideLead: t('You do not need this to start. It shows what works for you behind the scenes. Press any name to learn more.', 'لست بحاجة لهذا لتبدأ. هنا ما يعمل لأجلك خلف الستار. اضغط على أي اسم لتعرف أكثر.'),
+  insideLead: t('You do not need this to start. It shows what works for you behind the scenes. Press any name to learn more.', 'لست بحاجة إلى هذا لتبدأ. هنا ما يعمل لأجلك في الخلفية. اضغط على أي اسم لتعرف أكثر.'),
   kinds: {
     skills: t('Skills', 'المهارات'),
     agents: t('Specialists', 'المختصون'),

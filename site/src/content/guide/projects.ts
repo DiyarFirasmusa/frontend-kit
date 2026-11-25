@@ -29,7 +29,7 @@ export const projects: Project[] = [
       t('Your secrets, such as keys and passwords, stay on the server and never reach the visitor’s browser.', 'أسرارك، مثل المفاتيح وكلمات المرور، تبقى على الخادم ولا تصل إلى متصفح الزائر.'),
     ],
     stack: ['TanStack Start', 'TanStack Query', 'Tailwind', 'i18next', 'Vitest', 'Playwright'],
-    ask: t('build a page that shows my products from my backend', 'ابن صفحة تعرض منتجاتي من الـ backend الخاص بي'),
+    ask: t('build a page that shows my products from my backend', 'ابن صفحة تعرض منتجاتي من الخادم الخلفي الخاص بي'),
     rules: ['website'],
   },
   {
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     gets: [
       t('Everything the website gets, and everything the dashboard gets.', 'كل ما يحصل عليه الموقع، وكل ما تحصل عليه لوحة التحكم.'),
       t('The public pages and the private dashboard live in one project, so they stay in step.', 'الصفحات العامة ولوحة التحكم الخاصة في مشروع واحد، فتبقيان متوافقتين.'),
-      t('If you have two backends, each part talks to its own.', 'إن كان عندك backend لكل جزء، فيتصل كل جزء بالخاص به.'),
+      t('If you have two backends, each part talks to its own.', 'إن كان لكل جزء خادم خلفي، فيتصل كل جزء بالخاص به.'),
     ],
     stack: ['TanStack Start', 'src/admin', 'src/routes/admin'],
     ask: t('add a blog to the website, and a page to write posts in the dashboard', 'أضف مدونة إلى الموقع، وصفحة لكتابة المقالات في لوحة التحكم'),

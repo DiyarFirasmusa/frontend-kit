@@ -32,7 +32,7 @@ export const settings = [
       ['commands.allTests', t('Runs every test, when the final check is set to all.', 'يشغل كل الاختبارات، عندما تضبط الفحص الأخير على all.')],
       ['commands.i18nValidate', t('The command that checks your translations.', 'أمر التحقق من الترجمة.')],
       ['commands.formatFile', t('The command that tidies one file’s layout. It replaces the tool setup found.', 'أمر ترتيب شكل ملف واحد. يحل محل الأداة التي وجدها الإعداد.')],
-      ['commands.lintFile', t('The command that checks one file for common mistakes and style problems. It replaces the tool setup found.', 'أمر فحص ملف واحد بحثا عن الأخطاء الشائعة ومشاكل الأسلوب. يحل محل الأداة التي وجدها الإعداد.')],
+      ['commands.lintFile', t('The command that checks one file for common mistakes and style problems. It replaces the tool setup found.', 'أمر فحص ملف واحد بحثا عن الأخطاء الشائعة ومشكلات الأسلوب. يحل محل الأداة التي وجدها الإعداد.')],
       ['devPort', t('The number your app uses while you work on it on your computer (the port).', 'الرقم الذي يستخدمه تطبيقك أثناء عملك عليه على جهازك (المنفذ).')],
       ['e2ePort', t('The port used by the tests that click through your whole app like a person would.', 'المنفذ الذي تستخدمه الاختبارات التي تتنقل في تطبيقك كله كما يفعل شخص حقيقي.')],
       ['apiBaseEnv', t('The name of the setting that holds your backend’s address.', 'اسم الإعداد الذي يحمل عنوان خادمك.')],

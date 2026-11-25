@@ -31,7 +31,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
       id: 'owner',
       title: t('Who made it', 'من صنعها'),
       text: [
-        t(`Wajiha Kit is made by ${MAKER.name}. Copyright © ${YEAR} ${MAKER.name}.`, `صنع واجهة ديار فراس. جميع الحقوق © ${YEAR} ديار فراس.`),
+        t(`Wajiha Kit is made by ${MAKER.name}. Copyright © ${YEAR} ${MAKER.name}.`, `صنع «واجهة» ديار فراس. حقوق النشر © ${YEAR} ديار فراس.`),
       ],
       links: [{ label: t('GitHub profile', 'الحساب على GitHub'), to: MAKER.href, kind: 'outside' }],
     },
@@ -43,7 +43,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
           'The code of the kit is released under the MIT licence. You may use it, copy it, change it and share it, for free, including in work you sell, as long as you keep the copyright line and the licence text with it.',
           'كود الإضافة منشور برخصة ⁦MIT⁩. يحق لك أن تستخدمه وتنسخه وتعدله وتشاركه، مجانا، حتى في عمل تبيعه، بشرط أن تبقي سطر الحقوق ونص الرخصة معه.',
         ),
-        t('It comes without any warranty. The full text is in the file called LICENSE.', 'وهي تأتي دون أي ضمان. والنص الكامل في الملف المسمى ⁦LICENSE⁩.'),
+        t('It comes without any warranty. The full text is in the file called LICENSE.', 'والإضافة تأتي دون أي ضمان. والنص الكامل في الملف المسمى ⁦LICENSE⁩.'),
       ],
       links: [{ label: t('Read the full licence', 'اقرأ الرخصة كاملة'), to: 'blob/main/LICENSE', kind: 'repo' }],
     },
@@ -72,8 +72,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Other people’s work', 'أعمال الآخرين'),
       text: [
         t(
-          'Some skills in the kit come from other projects and keep their own licences. They are listed in the third-party notices. The fonts of this website (Familjen Grotesk, IBM Plex Sans Arabic and IBM Plex Mono) are free fonts, used under their own open licences.',
-          'بعض المهارات في الإضافة أتت من مشاريع أخرى وتحتفظ برخصها. وهي مذكورة في ملف إشعارات الأطراف الثالثة. أما خطوط هذا الموقع (⁦Familjen Grotesk⁩ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩) فخطوط مجانية، تُستخدم برخصها المفتوحة.',
+          'Some skills in the kit come from other projects and keep their own licences. They are listed in the third-party notices. The fonts of this website (Familjen Grotesk, IBM Plex Sans Arabic and IBM Plex Mono) are free fonts, used under the SIL Open Font Licence.',
+          'بعض المهارات في الإضافة أتت من مشاريع أخرى وتحتفظ برخصها. وهي مذكورة في ملف إشعارات الأطراف الثالثة. أما خطوط هذا الموقع (⁦Familjen Grotesk⁩ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩) فخطوط مجانية، تُستخدم برخصة ⁦SIL Open Font License⁩.',
         ),
       ],
       links: [{ label: t('Third-party notices', 'إشعارات الأطراف الثالثة'), to: 'blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md', kind: 'repo' }],
@@ -96,8 +96,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('This website', 'هذا الموقع'),
       text: [
         t(
-          'This website sets no cookies and uses no analytics, no advertising and no tracking. It has no accounts, forms or comments, so it asks you for nothing. Its fonts and files come from the website itself, with no other service involved.',
-          'هذا الموقع لا يضع ملفات تعريف الارتباط (كوكيز)، ولا يستخدم أي تحليلات أو إعلانات أو تتبع. وليس فيه حسابات ولا نماذج ولا تعليقات، فهو لا يطلب منك شيئا. وخطوطه وملفاته تأتي من الموقع نفسه، دون أي خدمة أخرى.',
+          'This website sets no cookies and uses no analytics, no advertising and no tracking. It has no accounts, forms or comments, so it asks you for nothing. Its fonts and files come from this website. The only other party is its host, Vercel.',
+          'هذا الموقع لا يضع ملفات تعريف الارتباط (كوكيز)، ولا يستخدم أي تحليلات أو إعلانات أو تتبع. وليس فيه حسابات ولا نماذج ولا تعليقات، فهو لا يطلب منك شيئا. وخطوطه وملفاته تأتي من هذا الموقع. والجهة الوحيدة الأخرى هي مستضيفه ⁦Vercel⁩.',
         ),
       ],
     },
@@ -107,7 +107,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
       text: [
         t(
           'The website is hosted by Vercel. Like most hosts, Vercel keeps ordinary server records of each visit, such as the IP address, the time and the page asked for, to run and protect its service. This website adds no analytics of its own on top of that.',
-          'يُستضاف الموقع لدى ⁦Vercel⁩. وكأغلب شركات الاستضافة، تحتفظ ⁦Vercel⁩ بسجلات خادم عادية لكل زيارة، مثل عنوان ⁦IP⁩ والوقت والصفحة المطلوبة، لتشغيل خدمتها وحمايتها. ولا يضيف هذا الموقع أي تحليلات من عنده فوق ذلك.',
+          'يُستضاف الموقع لدى ⁦Vercel⁩. وكأغلب شركات الاستضافة، تحتفظ ⁦Vercel⁩ بسجلات خادم عادية لكل زيارة، مثل عنوان ⁦IP⁩ والوقت والصفحة المطلوبة، لتشغيل خدمتها وحمايتها. ولا يضيف هذا الموقع أي تحليلات من تلقاء نفسه فوق ذلك.',
         ),
       ],
       links: [{ label: t('Vercel’s privacy policy', 'سياسة الخصوصية لدى Vercel'), to: 'https://vercel.com/legal/privacy-policy', kind: 'outside' }],
@@ -117,32 +117,42 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('The kit on your computer', 'الإضافة على جهازك'),
       text: [
         t(
-          'Wajiha Kit runs on your computer, and the kit itself does not collect anything or send anything to its maker. Other services are still involved when you use it: Claude sends the parts of your project that the assistant reads to Anthropic, under Anthropic’s terms and privacy policy. A documentation tool called Context7 receives documentation searches. Helper tools are downloaded from npm. A link you give, such as a design or a description of your backend, is opened from your computer.',
-          'تعمل واجهة على جهازك، والإضافة نفسها لا تجمع شيئا ولا ترسل شيئا إلى صانعها. لكن خدمات أخرى تشارك عندما تستخدمها: يرسل ⁦Claude⁩ الأجزاء التي يقرؤها المساعد من مشروعك إلى ⁦Anthropic⁩، وفق شروطها وسياسة الخصوصية لديها. وتستقبل أداة التوثيق ⁦Context7⁩ عمليات البحث في التوثيق. وتُنزَّل الأدوات المساعدة من ⁦npm⁩. وأي رابط تعطيه، مثل تصميم أو وصف لخادمك، يُفتح من جهازك.',
+          'Wajiha Kit runs on your computer, and the kit itself does not collect anything or send anything to its maker. Other services are still involved when you use it: Claude sends the parts of your project that the assistant reads to Anthropic, under Anthropic’s terms and privacy policy. A documentation tool called Context7 receives documentation searches. Helper tools are downloaded from npm. A link you give, such as a design or a description of your backend, is opened from your computer. Two helper programs, Chrome DevTools and Playwright, can open web pages and read what is on them, so use them only on pages that are not private.',
+          'تعمل واجهة على جهازك، والإضافة نفسها لا تجمع شيئا ولا ترسل شيئا إلى صانعها. لكن تدخل خدمات أخرى في العمل عند استخدامها: يرسل ⁦Claude⁩ الأجزاء التي يقرؤها المساعد من مشروعك إلى ⁦Anthropic⁩، وفق شروطها وسياسة الخصوصية لديها. وتستقبل أداة التوثيق ⁦Context7⁩ عمليات البحث في التوثيق. وتُنزَّل الأدوات المساعدة من ⁦npm⁩. وأي رابط تعطيه، مثل تصميم أو وصف لخادمك، يُفتح من جهازك. وبرنامجان مساعدان، هما ⁦Chrome DevTools⁩ و⁦Playwright⁩، يستطيعان فتح صفحات الويب وقراءة ما فيها، فاستخدمهما فقط في صفحات ليست خاصة.',
         ),
       ],
       links: [{ label: t('Anthropic’s privacy policy', 'سياسة الخصوصية لدى Anthropic'), to: 'https://www.anthropic.com/legal/privacy', kind: 'outside' }],
+    },
+    {
+      id: 'updates',
+      title: t('Updates', 'التحديثات'),
+      text: [
+        t(
+          'Setup turns on automatic updates from the kit’s GitHub repository, so a new version can reach your computer without you asking. To read each version before you take it, switch automatic updates off and update by hand after you have read the changelog.',
+          'يفعّل الإعداد التحديث التلقائي من مستودع الإضافة على ⁦GitHub⁩، فقد تصل نسخة جديدة إلى جهازك دون أن تطلبها. وإن أردت أن تقرأ كل نسخة قبل أن تأخذها، فأوقف التحديث التلقائي وحدّث يدويا بعد أن تقرأ سجل التغييرات.',
+        ),
+      ],
     },
     {
       id: 'keys',
       title: t('Passwords and keys', 'كلمات المرور والمفاتيح'),
       text: [
         t(
-          'Never type a password or a key into the chat. Keep keys in a file named .env in your project. The kit stops the assistant from opening that file.',
-          'لا تكتب كلمة مرور ولا مفتاحا في المحادثة. احفظ المفاتيح في ملف اسمه ⁦.env⁩ داخل مشروعك. وتمنع الإضافة المساعد من فتح هذا الملف.',
+          'Never type a password or a key into the chat. Keep keys in a file named .env in your project. The kit tells the assistant not to open that file and blocks the usual ways, but it cannot see everything, so keep real production keys out of the project folder.',
+          'لا تكتب كلمة مرور ولا مفتاحا في المحادثة. احفظ المفاتيح في ملف اسمه ⁦.env⁩ داخل مشروعك. وتطلب الإضافة من المساعد ألا يفتح هذا الملف وتسد الطرق المعتادة، لكنها لا ترى كل شيء، فأبعد مفاتيح الإنتاج الحقيقية عن مجلد المشروع.',
         ),
       ],
     },
     {
       id: 'links',
       title: t('Links to other sites', 'روابط إلى مواقع أخرى'),
-      text: [t('This website links to GitHub, Anthropic and other sites. They have their own rules, and this page does not cover them.', 'يشير هذا الموقع إلى ⁦GitHub⁩ و⁦Anthropic⁩ ومواقع أخرى. ولها قواعدها الخاصة، ولا تشملها هذه الصفحة.')],
+      text: [t('This website links to GitHub, Anthropic and other sites. They have their own rules, and this page does not cover them.', 'يضع هذا الموقع روابط إلى ⁦GitHub⁩ و⁦Anthropic⁩ ومواقع أخرى. ولها قواعدها الخاصة، ولا تشملها هذه الصفحة.')],
     },
     {
       id: 'questions',
       title: t('Questions', 'أسئلة'),
-      text: [t('If something here is unclear or wrong, open an issue on GitHub.', 'إن كان شيء هنا غير واضح أو غير صحيح، فافتح موضوعا (issue) على ⁦GitHub⁩.')],
-      links: [{ label: t('Open an issue', 'افتح موضوعا'), to: 'issues', kind: 'repo' }],
+      text: [t('If something here is unclear or wrong, write to Diyar Firas on GitHub. If you found a security problem, please do not post the details in a public place.', 'إن كان شيء هنا غير واضح أو غير صحيح، فاكتب إلى ديار فراس على ⁦GitHub⁩. وإن وجدت مشكلة أمنية، فلا تنشر تفاصيلها في مكان عام.')],
+      links: [{ label: t('Diyar Firas on GitHub', 'ديار فراس على GitHub'), to: MAKER.href, kind: 'outside' }],
     },
   ],
 
@@ -153,7 +163,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
       text: [
         t(
           'Wajiha Kit is free. You may use it for personal and for commercial projects, under the MIT licence described on the rights page.',
-          'واجهة مجانية. يحق لك أن تستخدمها في مشاريع شخصية وتجارية، برخصة ⁦MIT⁩ الموضحة في صفحة الحقوق.',
+          '«واجهة» مجانية. يحق لك أن تستخدمها في مشاريع شخصية وتجارية، برخصة ⁦MIT⁩ الموضحة في صفحة الحقوق.',
         ),
       ],
       links: [{ label: t('Rights and licence', 'الحقوق والترخيص'), to: 'licence', kind: 'site' }],
@@ -164,7 +174,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
       text: [
         t(
           'The kit and this website are provided “as is”, without any warranty. The assistant can make mistakes. The checks reduce them but cannot remove them. Look at what it makes before you rely on it, and keep a copy of anything you cannot lose.',
-          'تُقدَّم الإضافة وهذا الموقع «كما هما»، دون أي ضمان. وقد يخطئ المساعد. والفحوص تقلل الأخطاء لكنها لا تلغيها. انظر إلى ما يصنعه قبل أن تعتمد عليه، واحتفظ بنسخة من كل ما لا تحتمل خسارته.',
+          'تُقدَّم الإضافة وهذا الموقع «كما هي»، دون أي ضمان. وقد يخطئ المساعد. والفحوص تقلل الأخطاء لكنها لا تلغيها. انظر إلى ما يصنعه قبل أن تعتمد عليه، واحتفظ بنسخة من كل ما لا تحتمل خسارته.',
         ),
       ],
     },
@@ -173,8 +183,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Your responsibility', 'مسؤوليتك'),
       text: [
         t(
-          'You are responsible for what you build and publish with it, for the services you connect to it, such as a backend, and for following the terms of those services, including Anthropic’s terms for Claude.',
-          'أنت المسؤول عما تبنيه وتنشره بها، وعن الخدمات التي تربطها بها، مثل الخادم الخلفي، وعن الالتزام بشروط تلك الخدمات، ومنها شروط ⁦Anthropic⁩ لاستخدام ⁦Claude⁩.',
+          'You are responsible for what you build and publish with it, for the services you connect to it, such as a backend, and for following the terms of those services, including Anthropic’s terms for Claude. If you use it at work, your Claude account must allow business use under Anthropic’s terms.',
+          'أنت المسؤول عما تبنيه وتنشره بالإضافة، وعن الخدمات التي تربطها بمشروعك، مثل الخادم الخلفي، وعن الالتزام بشروط تلك الخدمات، ومنها شروط ⁦Anthropic⁩ لاستخدام ⁦Claude⁩. وإن استخدمتها في العمل، فيجب أن يسمح حسابك في ⁦Claude⁩ بالاستخدام التجاري وفق شروط ⁦Anthropic⁩.',
         ),
       ],
     },
@@ -184,7 +194,17 @@ export const legal: Record<LegalId, LegalSection[]> = {
       text: [
         t(
           'As far as the law allows, the maker is not responsible for any loss that comes from using the kit or this website.',
-          'بقدر ما يسمح القانون، لا يتحمل صانع الإضافة مسؤولية أي خسارة تنتج عن استخدام الإضافة أو هذا الموقع.',
+          'في حدود ما يسمح به القانون، لا يتحمل صانع الإضافة مسؤولية أي خسارة تنتج عن استخدام الإضافة أو هذا الموقع.',
+        ),
+      ],
+    },
+    {
+      id: 'maintenance',
+      title: t('Who looks after it', 'من يعتني بها'),
+      text: [
+        t(
+          'Wajiha Kit is made and looked after by one person, Diyar Firas. There is no promise of support or of how fast he answers, and only the latest version receives fixes. If it stops being updated, what you installed keeps working. The code is under the MIT licence, so you may keep your copy or make your own.',
+          'يصنع واجهة ويعتني بها شخص واحد، هو ديار فراس. ولا وعد بدعم ولا بسرعة الرد، والنسخة الأحدث وحدها تصلها الإصلاحات. وإن توقف تحديثها فما ثبّتّه يبقى يعمل. والكود برخصة ⁦MIT⁩، فيحق لك أن تحتفظ بنسختك أو أن تصنع نسختك.',
         ),
       ],
     },
@@ -196,7 +216,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
     {
       id: 'changes',
       title: t('Changes', 'التغييرات'),
-      text: [t('The kit and these terms may change over time. The date at the top of this page shows when it was last written.', 'قد تتغير الإضافة وهذه الشروط مع الوقت. والتاريخ في أعلى هذه الصفحة يبين متى كُتبت آخر مرة.')],
+      text: [t('The kit and these terms may change over time. The date at the top of this page shows when it was last written.', 'قد تتغير الإضافة وهذه الشروط مع الوقت. والتاريخ في أعلى هذه الصفحة يبين متى حُدِّثت هذه الصفحة آخر مرة.')],
     },
   ],
 }

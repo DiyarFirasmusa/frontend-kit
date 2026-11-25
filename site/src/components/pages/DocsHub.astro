@@ -26,7 +26,7 @@ const kindCards = [
 ].map(({ kind, id, count }) => ({ kind, count, name: PAGES[id as 'skills'].name[locale], about: PAGES[id as 'skills'].lead[locale], href: pageUrl(locale, id as 'skills') }))
 const hubWords = {
   start: t('Start here', 'ابدأ من هنا'),
-  behind: t('Behind the scenes', 'خلف الستار'),
+  behind: t('Behind the scenes', 'في الخلفية'),
   behindLead: t('You do not need these to start. They show what works for you.', 'لا تحتاجها لتبدأ. تشرح ما يعمل لأجلك.'),
   more: t('More pages', 'صفحات أخرى'),
 }

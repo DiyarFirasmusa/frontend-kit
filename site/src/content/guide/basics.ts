@@ -10,7 +10,7 @@ export const basics = {
   answer: t('What the kit does about it', 'ماذا تفعل الإضافة'),
   answerText: t(
     'Wajiha Kit is an add-on for Claude Code, an AI assistant that works inside your project folder. You answer a few plain questions. The kit builds a complete, tidy project with a fixed setup that is already proven. You never choose libraries. Then it checks the result before you see it.',
-    'واجهة إضافة تعمل داخل ⁦Claude Code⁩، وهو مساعد ذكاء اصطناعي يعمل داخل مجلد مشروعك. تجيب عن بضعة أسئلة بسيطة، فتبني الإضافة مشروعا كاملا ومرتبا بإعداد ثابت مجرب. ولا تختار أنت أي مكتبة. ثم تفحص النتيجة قبل أن تراها.',
+    '«واجهة» إضافة تعمل داخل ⁦Claude Code⁩، وهو مساعد ذكاء اصطناعي يعمل داخل مجلد مشروعك. تجيب عن بضعة أسئلة بسيطة، فتبني الإضافة مشروعا كاملا ومرتبا بإعداد ثابت مجرب. ولا تختار أنت أي مكتبة. ثم تفحص النتيجة قبل أن تراها.',
   ),
   youDo: t('What you do', 'ماذا تفعل أنت'),
   youDoLead: t('Five steps, and you never need to know the technical words.', 'خمس خطوات، ولا تحتاج أن تعرف الكلمات التقنية.'),
@@ -27,7 +27,7 @@ export const basics = {
       title: t('Answer a few questions', 'أجب عن بضعة أسئلة'),
       text: t(
         'What are you building: a dashboard, a website, or both? Tell it about your project, in your own words: what it contains and what people can do in it. Send your design, or a picture or link of a style you like. Send the link that describes your backend, if you have one. Pick Arabic, English or both.',
-        'ماذا تبني: لوحة تحكم أو موقعا أو الاثنين؟ حدثها عن مشروعك بكلماتك: ماذا يحتوي وماذا يستطيع الناس أن يفعلوا فيه. أرسل تصميمك، أو صورة أو رابطا لأسلوب يعجبك. أرسل رابط وصف خادمك الخلفي إن كان عندك. واختر العربية أو الإنجليزية أو الاثنتين.',
+        'ماذا تبني: لوحة تحكم أو موقعا أو الاثنين؟ حدّثها عن مشروعك بكلماتك: ماذا يحتوي وماذا يستطيع الناس أن يفعلوا فيه. أرسل تصميمك، أو صورة أو رابطا لأسلوب يعجبك. أرسل رابط وصف خادمك الخلفي إن كان عندك. واختر العربية أو الإنجليزية أو الاثنتين.',
       ),
     },
     {
@@ -51,6 +51,6 @@ export const basics = {
   expect: t('What to expect', 'ما الذي تتوقعه'),
   expectText: t(
     'It is a helper, not magic. You still look at the result and approve it. Putting your project online comes later, as a separate step.',
-    'هي مساعد وليست سحرا. تبقى أنت من ينظر إلى النتيجة ويوافق عليها. ونشر مشروعك على الإنترنت يأتي لاحقا، كخطوة منفصلة.',
+    'هي مساعد وليست سحرا. يبقى عليك أن تنظر إلى النتيجة ويوافق عليها. ونشر مشروعك على الإنترنت يأتي لاحقا، كخطوة منفصلة.',
   ),
 }

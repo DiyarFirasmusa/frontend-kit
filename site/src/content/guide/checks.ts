@@ -21,11 +21,11 @@ export const guards = [
     script: 'guard-bash.sh',
     items: [
       t('Saving a version (commit), merging, rebasing or uploading (push) on a protected branch', 'الحفظ (commit) أو الدمج أو الـ rebase أو الرفع (push) على فرع محمي'),
-      t('Force pushes (uploads that overwrite other people’s work) and skipped git hooks (checks git runs by itself)', 'الرفع بالقوة (force push، رفع يمسح عمل غيرك) وتخطي الـ git hooks (فحوص يشغلها git تلقائيا)'),
+      t('Force pushes (uploads that overwrite other people’s work) and skipped git hooks (checks git runs by itself)', 'الرفع القسري (force push، رفع يمسح عمل غيرك) وتخطي الـ git hooks (فحوص يشغلها git تلقائيا)'),
       t('Throwing away work: reset --hard, clean -f, checkout -f', 'حذف العمل: reset --hard وclean -f وcheckout -f'),
       t('Recursive deletes (deleting a folder and everything in it) outside the project, of its main folders, or of a path it cannot check', 'حذف مجلدات بكل ما فيها (recursive) خارج المشروع، أو مجلداته الرئيسية، أو مسار لا يستطيع التأكد منه'),
       t('Opening or merging a pull request (a request to merge your changes)', 'فتح pull request (طلب دمج تغييراتك) أو دمجه'),
-      t('Reading .env secrets (the file that holds your passwords and keys) through the command window', 'قراءة أسرار ‎.env (الملف الذي يحمل كلمات السر والمفاتيح) من نافذة الأوامر'),
+      t('Reading .env secrets (the file that holds your passwords and keys) through the command window', 'قراءة أسرار ‎.env (الملف الذي يحمل كلمات المرور والمفاتيح) من نافذة الأوامر'),
       t('Publishing, deploying (putting the app online), or installing with another package manager', 'النشر أو الـ deploy (وضع التطبيق على الإنترنت) أو التثبيت بمدير حزم آخر'),
       t('Code downloaded and run straight away without being read', 'كود يحمل ويشغل مباشرة دون أن يقرأه أحد'),
       t('Writes from the command window to protected paths, lockfiles (files that pin exact versions) and git hooks', 'الكتابة من نافذة الأوامر في المسارات المحمية وملفات القفل (ملفات تثبت الإصدارات بدقة) والـ git hooks'),
@@ -38,7 +38,7 @@ export const guards = [
     items: [
       t('Reading or editing .env and other credential files', 'قراءة أو تعديل ‎.env وملفات الأسرار الأخرى'),
       t('Editing lockfiles or anything inside .git (where git keeps its data)', 'تعديل ملفات القفل أو أي شيء داخل ‎.git (المكان الذي يحفظ فيه git بياناته)'),
-      t('Generated files (made by a tool, not by hand) and deploy configuration', 'الملفات المولدة (تصنعها أداة لا يد إنسان) وإعدادات النشر'),
+      t('Generated files (made by a tool, not by hand) and deploy configuration', 'الملفات المولدة (تصنعها أداة لا إنسان) وإعدادات النشر'),
       t('Changing an existing build script', 'تغيير سكربت بناء موجود'),
       t('Writing a credential into a file', 'كتابة سر داخل ملف'),
       t('A JavaScript file in a TypeScript source folder', 'ملف JavaScript في مجلد كود TypeScript'),

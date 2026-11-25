@@ -10,6 +10,10 @@ interface Props {
 
 const { locale } = Astro.props
 const title = t('Every version', 'كل الإصدارات')
+const note = t(
+  'Versions before the rename call the kit frontend-kit. Read that as Wajiha Kit: the commands today use wajiha-kit.',
+  'الإصدارات التي سبقت تغيير الاسم تسمي الإضافة ⁦frontend-kit⁩. اقرأها على أنها ⁦Wajiha Kit⁩؛ وتستخدم الأوامر اليوم ⁦wajiha-kit⁩.',
+)
 ---
 
-<Block id="versions" title={title[locale]}><Source file="CHANGELOG.md" /></Block>
+<Block id="versions" title={title[locale]} lead={note[locale]}><Source file="CHANGELOG.md" /></Block>

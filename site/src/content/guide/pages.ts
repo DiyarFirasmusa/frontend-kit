@@ -43,14 +43,14 @@ export const PAGES: Record<PageId, PageInfo> = {
     title: t('The guide: from your first idea to a working project.', 'الدليل: من فكرتك الأولى إلى مشروع يعمل.'),
     lead: t(
       'Start with the first pages. The rest explains what works for you behind the scenes, and you can skip it.',
-      'ابدأ بالصفحات الأولى. وما بعدها يشرح ما يعمل لأجلك خلف الستار، ويمكنك تجاوزه.',
+      'ابدأ بالصفحات الأولى. وما بعدها يشرح ما يعمل لأجلك في الخلفية، ويمكنك تجاوزه.',
     ),
   },
   modes: {
     id: 'modes',
     still: 'layers',
     name: t('Ways of working', 'طرق العمل'),
-    title: t('Ways of working: how careful the assistant is.', 'طرق العمل: كم يحتاط المساعد.'),
+    title: t('Ways of working: how careful the assistant is.', 'طرق العمل: درجة حذر المساعد.'),
     lead: t(
       'Nine modes, from building something new to freezing a release. You switch with one command, and you can skip this page at the start.',
       'تسعة أنماط، من بناء شيء جديد إلى تجميد الإصدار. تنتقل بينها بأمر واحد، ويمكنك تجاوز هذه الصفحة في البداية.',
@@ -67,10 +67,10 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'guide',
     still: 'screen',
     name: t('What is it?', 'ما هي؟'),
-    title: t('What is Wajiha Kit?', 'ما هي واجهة؟'),
+    title: t('What is Wajiha Kit?', 'ما هي «واجهة»؟'),
     lead: t(
       'A kit for Claude Code that builds your website or dashboard for you, the way a good team would, and checks the work before you see it. You do not need to know how to code.',
-      'إضافة لـ Claude Code تبني لك موقعك أو لوحة التحكم كما يفعل فريق جيد، وتفحص العمل قبل أن تراه. لا تحتاج أن تعرف البرمجة.',
+      'إضافة لـ Claude Code تبني لك موقعك أو لوحة تحكمك كما يفعل فريق جيد، وتفحص العمل قبل أن تراه. لا تحتاج أن تعرف البرمجة.',
     ),
   },
   'get-started': {
@@ -107,7 +107,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'features',
     still: 'dashboard',
     name: t('Everything it does', 'كل ما تفعله'),
-    title: t('Everything it does, in one page.', 'كل ما تفعله، في صفحة واحدة.'),
+    title: t('Everything it does, in one page.', 'كل ما تفعله الإضافة، في صفحة واحدة.'),
     lead: t('A plain list of what the current version gives you, with a link to the part that explains each.', 'قائمة بسيطة بما يعطيك إياه الإصدار الحالي، مع رابط إلى شرح كل جزء.'),
   },
   'project-types': {
@@ -162,7 +162,7 @@ export const PAGES: Record<PageId, PageInfo> = {
     id: 'questions',
     still: 'gate',
     name: t('Questions', 'الأسئلة'),
-    title: t('Questions and problems.', 'أسئلة ومشاكل.'),
+    title: t('Questions and problems.', 'أسئلة ومشكلات.'),
     lead: t('Honest answers about cost, safety and limits, and what to do when something does not work.', 'إجابات صريحة عن التكلفة والأمان والحدود، وماذا تفعل عندما لا يعمل شيء.'),
   },
   licence: {
@@ -191,7 +191,7 @@ export const PAGES: Record<PageId, PageInfo> = {
 export const SECTIONS: PageSection[] = [
   { title: t('Start here', 'ابدأ من هنا'), pages: ['docs', 'guide', 'get-started', 'project-types', 'examples'] },
   { title: t('Help', 'مساعدة'), pages: ['questions'] },
-  { title: t('Behind the scenes', 'خلف الستار'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
+  { title: t('Behind the scenes', 'في الخلفية'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
   { title: t('For your project', 'لمشروعك'), pages: ['modes', 'configuration', 'refactor'] },
   { title: t('About', 'عن واجهة'), pages: ['changelog', 'licence', 'privacy', 'terms'] },
 ]

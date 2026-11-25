@@ -14,8 +14,20 @@ const { answers } = content[locale]
 const trouble = t('When something does not work', 'عندما لا يعمل شيء')
 const first = t('Before you start', 'قبل أن تبدأ')
 const firstLead = t('The questions most people ask first, answered plainly.', 'الأسئلة التي يسألها أغلب الناس أولا، مع إجابات واضحة.')
+// The same questions, for search engines: plain text without the marks that keep Latin words in order.
+const clean = (text: string) => text.replace(/[‎‏⁦-⁩]/g, '')
+const faq = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [...beginnerQuestions, ...answers.items.map(([q, a]) => [{ [locale]: q }, { [locale]: a }] as const), ...problems].map(([question, answer]) => ({
+    '@type': 'Question',
+    name: clean((question as Record<string, string>)[locale] ?? ''),
+    acceptedAnswer: { '@type': 'Answer', text: clean((answer as Record<string, string>)[locale] ?? '') },
+  })),
+})
 ---
 
+<script type="application/ld+json" set:html={faq} />
 <Block id="before" title={first[locale]} lead={firstLead[locale]}>
   <div class="questions">
     {beginnerQuestions.map(([question, answer]) => <details><summary>{question[locale]}</summary><p>{answer[locale]}</p></details>)}

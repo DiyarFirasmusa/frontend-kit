@@ -43,7 +43,7 @@ export const skillPurpose: Record<string, Purpose> = {
   },
   'tanstack-query-key-conventions': {
     why: t('TanStack Query keeps saved copies of data from your backend, and finds each copy by a key. A key written by hand in each place is a mistake waiting to happen. One factory (a single place that makes all the keys) lets you mark a whole family of copies as outdated, so they reload, and it always works.', 'تحتفظ TanStack Query بنسخ محفوظة من بيانات الخادم الخلفي، وتجد كل نسخة بمفتاح. كتابة المفتاح يدويا في كل مكان خطأ ينتظر أن يقع. مصنع واحد (مكان واحد يصنع كل المفاتيح) يجعل تعليم مجموعة كاملة من النسخ على أنها قديمة، حتى تعاد تحميلها، يعمل دائما.'),
-    when: t('Writing or reviewing anything that loads, changes, preloads or refreshes data with TanStack Query.', 'عند كتابة أو مراجعة أي كود يحمل البيانات أو يعدلها أو يجلبها مسبقا أو يحدثها باستخدام TanStack Query.'),
+    when: t('Writing or reviewing anything that loads, changes, preloads or refreshes data with TanStack Query.', 'عند كتابة أو مراجعة أي كود يحمل البيانات أو يعدلها أو يجلبها مسبقا أو يحدّثها باستخدام TanStack Query.'),
   },
   'typescript-advanced-types': {
     why: t('TypeScript describes what kind of data each part of the code expects. When that gets hard, it is tempting to write any (which switches the checking off) or to force a type with a cast. This reference shows the exact type to use instead.', 'تصف TypeScript نوع البيانات الذي يتوقعه كل جزء من الكود. وعندما يصعب ذلك، يغري كتابة any (التي توقف الفحص) أو فرض نوع بالقوة بما يسمى cast. يعرض هذا المرجع النوع الدقيق بدلا منهما.'),
@@ -159,7 +159,7 @@ export const skillPurpose: Record<string, Purpose> = {
   },
   'backend-request': {
     why: t('What the screens need from your backend gets lost in chat. This skill keeps one readable list in the project folder.', 'ما تحتاجه الشاشات من الخادم الخلفي يضيع في المحادثات. تحفظ هذه المهارة قائمة واحدة واضحة داخل مجلد المشروع.'),
-    when: t('A backend address (endpoint) or field is missing, a response is wrong, or you need a message for the backend team.', 'عنوان (endpoint) أو حقل ناقص في الخادم الخلفي، أو استجابة خاطئة، أو تحتاج رسالة لفريق الـ backend.'),
+    when: t('A backend address (endpoint) or field is missing, a response is wrong, or you need a message for the backend team.', 'عنوان (endpoint) أو حقل ناقص في الخادم الخلفي، أو استجابة خاطئة، أو تحتاج رسالة لفريق الخادم الخلفي.'),
   },
   setup: {
     why: t('A generic plugin would give generic advice. Setup looks at the tools your project uses and installs standards written for them.', 'الإضافة العامة تعطي نصائح عامة. أما الإعداد فيكتشف الأدوات التي يستخدمها مشروعك ويثبت معايير مكتوبة لها.'),

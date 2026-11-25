@@ -7,7 +7,7 @@ export const rescue = {
     t('Structure: folders, huge files, files that depend on each other in circles, and code nobody uses.', 'البنية: المجلدات، والملفات الضخمة، والملفات التي يعتمد بعضها على بعض في دائرة، والكود الذي لا يستخدمه أحد.'),
     t('Type safety: places that skip the checks (any), errors that are ignored, and data from your backend with no description.', 'سلامة الأنواع: الأماكن التي تتجاوز الفحص (any)، والأخطاء المتجاهلة، وبيانات الخادم التي لا وصف لها.'),
     t('Data: loading data in messy places, and missing states such as loading and error.', 'البيانات: جلب البيانات في أماكن غير مرتبة، والحالات الناقصة مثل التحميل والخطأ.'),
-    t('Screens: copy-pasted parts, text that is not translated, right-to-left (Arabic) problems and missing labels.', 'الشاشات: الأجزاء المكررة، والنص غير المترجم، ومشاكل الاتجاه من اليمين إلى اليسار (العربية)، والتسميات الناقصة.'),
+    t('Screens: copy-pasted parts, text that is not translated, right-to-left (Arabic) problems and missing labels.', 'الشاشات: الأجزاء المكررة، والنص غير المترجم، ومشكلات الاتجاه من اليمين إلى اليسار (العربية)، والتسميات الناقصة.'),
     t('Quality: how much code the tests cover, skipped tests, and passwords or keys saved in the project.', 'الجودة: مقدار الكود الذي تغطيه الاختبارات، والاختبارات المتخطاة، وكلمات المرور أو المفاتيح المحفوظة داخل المشروع.'),
   ],
   phaseList: [

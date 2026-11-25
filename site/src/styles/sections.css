@@ -2253,3 +2253,18 @@
   font-size: 0.875rem;
 }
 
+
+/* Two quiet lines under the comparison: it is an illustration, and how this differs from a site builder. */
+.ba-note {
+  margin: 0.75rem 0 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.ba-differs {
+  max-width: 44rem;
+  margin-block-start: 1.5rem;
+  color: var(--muted);
+}
+

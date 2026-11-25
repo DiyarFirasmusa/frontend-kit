@@ -1,5 +1,5 @@
 ---
-import { compare } from '../../content/guide/showcase.ts'
+import { compare, installWords as words } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
 
 interface Props {
@@ -93,6 +93,7 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
       <span class="ba-handle" aria-hidden="true"><i>⟷</i></span>
       <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range data-bad={compare.without[locale]} data-good={compare.with[locale]} />
     </div>
+    <p class="ba-note">{words.illustration[locale]}</p>
 
     <ul class="ba-results">
       {
@@ -104,5 +105,6 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
         ))
       }
     </ul>
+    <p class="ba-note ba-differs">{words.differs[locale]}</p>
   </div>
 </section>

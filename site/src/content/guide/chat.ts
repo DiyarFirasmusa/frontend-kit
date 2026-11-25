@@ -18,7 +18,7 @@ export const chatWords = {
   reply: t('Reply to Claude…', 'رد على Claude…'),
   working: t('Working…', 'يعمل…'),
   model: 'Opus 5.5',
-  pause: t('Pause the demo', 'أوقف العرض مؤقتًا'),
+  pause: t('Pause the demo', 'أوقف العرض مؤقتا'),
   play: t('Play the demo', 'شغّل العرض'),
   /** What a screen reader hears instead of the moving chat. */
   summary: t(
@@ -39,7 +39,7 @@ export const firstRun: ChatEvent[] = [
     options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
     picked: 0,
   },
-  { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
+  { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدّثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
   { kind: 'user', text: t('My team sees the orders, changes their status, and manages customers and products.', 'يرى فريقي الطلبات ويغير حالتها، ويدير العملاء والمنتجات.') },
   {
     kind: 'ask',
@@ -82,7 +82,7 @@ export const stepChat: ChatEvent[][] = [
       options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
       picked: 0,
     },
-    { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
+    { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدّثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
     { kind: 'user', text: t('My team sees the orders, changes their status, and manages customers and products.', 'يرى فريقي الطلبات ويغير حالتها، ويدير العملاء والمنتجات.') },
   ],
   [
@@ -99,7 +99,7 @@ export const stepChat: ChatEvent[][] = [
   [
     { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
     { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
-    { kind: 'tool', text: t('A second reviewer read the work', 'قرأ مراجع ثان العمل'), mark: 'ok' },
+    { kind: 'tool', text: t('A reviewer read the work', 'قرأ مراجع العمل'), mark: 'ok' },
   ],
   [
     { kind: 'ready', title: t('Your dashboard is ready', 'لوحتك جاهزة'), text: t('Open it in your browser and click around.', 'افتحها في المتصفح وتصفحها.') },

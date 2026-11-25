@@ -18,7 +18,7 @@ export const recipes: { title: Bilingual; items: Recipe[] }[] = [
       { want: t('A screen from my design', 'شاشة من تصميمي'), say: t('build this screen from my Figma link', 'ابن هذه الشاشة من رابط ⁦Figma⁩ الخاص بي'), skills: ['figma-match'] },
       { want: t('A table of my data', 'جدول لبياناتي'), say: t('show my orders in a table I can search and filter', 'اعرض طلباتي في جدول أستطيع البحث فيه وتصفيته'), skills: ['dash-create-table', 'dash-create-filter-bar'] },
       { want: t('A new page in my dashboard', 'صفحة جديدة في لوحة التحكم'), say: t('add a customers page where I can list, add and edit customers', 'أضف صفحة عملاء أستطيع أن أعرض فيها العملاء وأضيفهم وأعدلهم'), skills: ['dash-create-route', 'dash-create-crud'] },
-      { want: t('A new part of my website', 'جزء جديد في موقعي'), say: t('add a page that shows my products from my backend', 'أضف صفحة تعرض منتجاتي من الـ backend الخاص بي'), skills: ['web-create-feature', 'web-create-route'] },
+      { want: t('A new part of my website', 'جزء جديد في موقعي'), say: t('add a page that shows my products from my backend', 'أضف صفحة تعرض منتجاتي من الخادم الخلفي الخاص بي'), skills: ['web-create-feature', 'web-create-route'] },
     ],
   },
   {
@@ -49,7 +49,7 @@ export const recipes: { title: Bilingual; items: Recipe[] }[] = [
       { want: t('Save a version and upload it', 'حفظ نسخة ورفعها'), say: t('save a version of my work and upload it', 'احفظ نسخة من عملي وارفعها'), skills: ['commit-push'] },
       { want: t('A request to merge my changes', 'طلب لدمج تغييراتي'), say: t('give me the link to ask for my changes to be merged', 'أعطني رابط طلب دمج تغييراتي'), skills: ['pr-link'] },
       { want: t('The latest changes from my team', 'آخر تغييرات فريقي'), say: t('bring in the latest changes from the main version', 'أدخل آخر التغييرات من النسخة الرئيسية'), skills: ['sync-main', 'branch-status'] },
-      { want: t('A note for the backend team', 'ملاحظة لفريق الـ backend'), say: t('write a note to the backend team: I need the order date in the orders list', 'اكتب ملاحظة لفريق الـ backend: أحتاج تاريخ الطلب في قائمة الطلبات'), skills: ['backend-request'] },
+      { want: t('A note for the backend team', 'ملاحظة لفريق الخادم الخلفي'), say: t('write a note to the backend team: I need the order date in the orders list', 'اكتب ملاحظة لفريق الخادم الخلفي: أحتاج تاريخ الطلب في قائمة الطلبات'), skills: ['backend-request'] },
     ],
   },
 ]

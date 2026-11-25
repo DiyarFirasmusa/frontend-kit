@@ -20,7 +20,7 @@ export const concepts: Concept[] = [
     like: t('A ready set of instructions', 'تعليمات جاهزة'),
     text: t(
       'The steps for one job, such as building a table. The assistant reads them when your request fits, or when you type the skill’s name.',
-      'خطوات مهمة واحدة، مثل بناء جدول. يقرؤها المساعد عندما يناسبها طلبك، أو عندما تكتب اسم المهارة.',
+      'خطوات لمهمة واحدة، مثل بناء جدول. يقرؤها المساعد عندما يناسبها طلبك، أو عندما تكتب اسم المهارة.',
     ),
     example: t(
       'You ask for a table, and the assistant follows the skill dash-create-table.',
@@ -106,7 +106,7 @@ export const journey: Moment[] = [
   { who: t('Rules', 'قواعد'), what: t('The standards for tables, permissions and your backend are read while those files are edited.', 'يقرأ المساعد معايير الجداول والصلاحيات والخادم الخلفي أثناء تعديل هذه الملفات.') },
   {
     who: t('Safety check', 'فحص أمان'),
-    what: t('Each file is tidied and checked for mistakes the moment it is saved. Errors go straight back to the assistant.', 'كل ملف يُنسق ويُفحص بحثا عن الأخطاء لحظة حفظه. وترجع الأخطاء إلى المساعد مباشرة.'),
+    what: t('Each file is tidied and checked for mistakes the moment it is saved. Errors go straight back to the assistant.', 'كل ملف يُنسق ويُفحص بحثا عن الأخطاء لحظة حفظه. وتعيد الأخطاء إلى المساعد مباشرة.'),
   },
   {
     who: t('Final check', 'الفحص الأخير'),

@@ -11,8 +11,8 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). If you do not have them, ask Claude: “Install what Wajiha Kit needs”. It will show you each step and ask before it installs anything.',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). إن لم تكن عندك، اطلب من ⁦Claude⁩: «ثبّت ما تحتاجه واجهة». سيريك كل خطوة ويسألك قبل أن يثبت أي شيء.',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). On Windows the safety checks may not fully work yet (see Questions). You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK. You can also ask it: “Install what Wajiha Kit needs”.',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد (راجع «الأسئلة»). ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. ويمكنك أيضا أن تطلب منه: «ثبّت ما تحتاجه واجهة».',
     ),
   },
 ]
@@ -31,7 +31,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs, unless you have switched that off. Read each one and press Allow only if it matches this page. Then it starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه، ما لم تكن قد عطّلت ذلك. اقرأ كل أمر، ولا تضغط «السماح» إلا إذا طابق ما في هذه الصفحة. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
+    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs, unless you have switched that off. Check that each command matches this page, then press Allow. Then it starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه، ما لم تكن قد عطّلت ذلك. تأكد أن كل أمر يطابق ما في هذه الصفحة، ثم اضغط «السماح». ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
     copy: installMessage,
   },
 ]
@@ -51,7 +51,7 @@ export const questions = [
     ],
   },
   {
-    question: t('Tell me about your project.', 'حدثني عن مشروعك.'),
+    question: t('Tell me about your project.', 'حدّثني عن مشروعك.'),
     answers: [
       t('Explain what your project contains and what people can do in it, the way you would ask for it.', 'اشرح ماذا يحتوي مشروعك وماذا يستطيع الناس أن يفعلوا فيه، بالطريقة التي تطلبه بها.'),
       t('For example: “A shop for handmade soap. Visitors see the products and order; I manage the orders from a dashboard.”', 'مثلا: «متجر لصابون يدوي. يرى الزوار المنتجات ويطلبون، وأنا أدير الطلبات من لوحة تحكم».'),
@@ -69,7 +69,7 @@ export const questions = [
     question: t('Do you already have a backend?', 'هل عندك خادم خلفي (backend)؟'),
     answers: [
       t('Yes: send the link to its description, or the file. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: أرسل رابط وصفه أو ملفه. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك.'),
-      t('Not sure, or no: say no, and connect one later. It asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'لست متأكدا أو لا: قل لا، وتستطيع ربط خادم لاحقا. تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
+      t('Not sure, or no: say no, and connect one later. It asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'إن لم تكن متأكدا أو لم يكن عندك: قل لا، وتستطيع ربط خادم لاحقا. تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
     ],
   },
   {
@@ -100,7 +100,7 @@ export const written = [
   { path: 'src/', text: t('Your pages, tables and forms, built from your answers.', 'صفحاتك وجداولك ونماذجك، مبنية من إجاباتك.') },
   { path: 'CLAUDE.md', text: t('A note the assistant reads first: what your project is, the rules it follows and how to run it.', 'ملاحظة يقرؤها المساعد أولا: ما مشروعك، والقواعد التي يتبعها، وكيف يُشغَّل.') },
   { path: '.claude/rules/', text: t('The rules: written standards the assistant follows in your project.', 'القواعد: معايير مكتوبة يتبعها المساعد في مشروعك.') },
-  { path: '.claude/settings.json', text: t('What the assistant may do freely, what it must ask you about, and what it may never do.', 'ما يفعله المساعد بحرية، وما عليه أن يسألك عنه، وما يمنع عليه تماما.') },
+  { path: '.claude/settings.json', text: t('What the assistant may do freely, what it must ask you about, and what it may never do.', 'ما يفعله المساعد بحرية، وما عليه أن يسألك عنه، وما يُمنع منه تماما.') },
   { path: '.claude/wajiha-kit.json', text: t('The settings the skills and safety checks read, such as ports, names and commands.', 'الإعدادات التي تقرؤها المهارات وفحوص الأمان، مثل المنافذ والأسماء والأوامر.') },
 ]
 

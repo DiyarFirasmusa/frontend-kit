@@ -24,6 +24,7 @@ const words = {
   rights: t('The code is released under the MIT licence.', 'الكود منشور برخصة ⁦MIT⁩.'),
   independent: t('An independent project, not made or endorsed by Anthropic. Claude is a name of Anthropic.', 'مشروع مستقل، لم تصنعه ⁦Anthropic⁩ ولم تزكّه. و⁦Claude⁩ اسم تملكه ⁦Anthropic⁩.'),
 }
+const siteLinks = t('Site links', 'روابط الموقع')
 const home = routeUrl(locale, { kind: 'home' })
 const page = (id: Parameters<typeof pageUrl>[1]) => [pageUrl(locale, id), PAGES[id].name[locale]] as const
 const columns = [
@@ -56,7 +57,7 @@ const columns = [
       </a>
       <p>{words.about[locale]}</p>
     </div>
-    <nav class="foot-columns" aria-label={words.legal[locale]}>
+    <nav class="foot-columns" aria-label={siteLinks[locale]}>
       {
         columns.map(({ title, links }) => (
           <div>
