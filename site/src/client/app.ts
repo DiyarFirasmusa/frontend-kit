@@ -1,6 +1,5 @@
 import { initCopy } from './copy-button.ts'
 import { initTree } from './docs-tree.ts'
-import { initExample } from './example.ts'
 import { initExplorer } from './explorer.ts'
 import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
@@ -16,7 +15,6 @@ document.addEventListener('astro:page-load', () => {
   page = new AbortController()
   initWords()
   initChrome(page.signal)
-  initExample(page.signal)
   initExplorer()
   initCopy()
   initFinder()

@@ -1,44 +1,17 @@
 ---
-import type { Bilingual } from '../../content/catalogue.ts'
+import { stepChat } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
-import ChatHead from './ChatHead.astro'
-import ChatLine from './ChatLine.astro'
+import ChatEvent from './ChatEvent.astro'
+import ChatWindow from './ChatWindow.astro'
 
 interface Props {
   locale: Locale
 }
 
-interface Line {
-  label: Bilingual
-  detail?: string | Bilingual
-  mark?: 'ok' | 'bad' | 'ask'
-}
-
 const { locale } = Astro.props
-const { skills, rules, guard, gate: gate_, review, done } = home.steps
-const say = home.session
-// What the chat shows at each step, in plain words.
-const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
-  { ...skills, lines: [{ label: { en: 'Is it a dashboard, a website or both? Do you have a design?', ar: 'هل هو لوحة تحكم أو موقع أو الاثنان؟ وهل عندك تصميم؟' } }] },
-  { ...rules, lines: [{ label: { en: 'The plan: orders, customers and products, in Arabic and English', ar: 'الخطة: الطلبات والعملاء والمنتجات، بالعربية والإنجليزية' } }] },
-  {
-    ...guard,
-    lines: [
-      { label: { en: 'Made the orders page', ar: 'أنشأت صفحة الطلبات' } },
-      { label: { en: 'Made the customer details page', ar: 'أنشأت صفحة تفاصيل العميل' } },
-    ],
-  },
-  {
-    ...gate_,
-    lines: [
-      { label: { en: 'No mistakes found', ar: 'لا أخطاء' }, mark: 'ok' },
-      { label: { en: 'Tests passed', ar: 'نجحت الاختبارات' }, mark: 'ok' },
-    ],
-  },
-  { ...review, lines: [{ label: say.reviewing, mark: 'ok' }] },
-  { ...done, lines: [{ label: say.ask, mark: 'ask' }] },
-]
+const { skills, rules, guard, gate, review, done } = home.steps
+const steps = [skills, rules, guard, gate, review, done]
 ---
 
 <section id="example" class="example" data-example>
@@ -60,26 +33,19 @@ const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
         ))
       }
     </ol>
-    <figure class="chat" aria-label={home.example[locale]}>
-      <ChatHead locale={locale} />
-      <div class="chat-body">
-        <p class="chat-user">
-          <q dir="auto">{home.prompt[locale]}</q>
-        </p>
-        <div class="session-lines">
-          {
-            steps.map(({ lines }, i) => (
-              <div class="session-group" data-shows={i}>
-                <div class="group-inner">{lines.map((line) => <ChatLine locale={locale} {...line} />)}</div>
-              </div>
-            ))
-          }
-        </div>
+    <ChatWindow locale={locale} label={home.example[locale]}>
+      <div class="ce ce-user">
+        <p dir="auto">{home.prompt[locale]}</p>
       </div>
-      <div class="chat-input" aria-hidden="true">
-        <span class="chat-placeholder">{locale === 'ar' ? 'اكتب رسالة إلى Claude…' : 'Message Claude…'}</span>
-        <i class="chat-send">↑</i>
+      <div class="session-lines">
+        {
+          stepChat.map((events, i) => (
+            <div class="session-group" data-shows={i}>
+              <div class="group-inner">{events.map((event) => <ChatEvent locale={locale} event={event} />)}</div>
+            </div>
+          ))
+        }
       </div>
-    </figure>
+    </ChatWindow>
   </div>
 </section>

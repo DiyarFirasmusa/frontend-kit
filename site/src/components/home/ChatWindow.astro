@@ -1,0 +1,39 @@
+---
+import { chatWords } from '../../content/guide/chat.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+  label: string
+  /** The opening window plays by itself; the other follows the steps. */
+  live?: boolean
+}
+
+const { locale, label, live = false } = Astro.props
+---
+
+<figure class:list={['chat', { live }]} aria-label={label} data-live={live ? '' : undefined}>
+  <div class="chat-bar" aria-hidden="true">
+    <span class="chat-lights"><i></i><i></i><i></i></span>
+    <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
+  </div>
+  <div class="chat-body" data-body>
+    <slot />
+    <p class="chat-status" data-status hidden aria-hidden="true">
+      <i class="ce-spark is-busy">✻</i>
+      <span>{chatWords.working[locale]}</span>
+    </p>
+  </div>
+  <div class="chat-input" aria-hidden="true" data-box>
+    <p class="chat-field">
+      <span class="chat-placeholder">{chatWords.reply[locale]}</span>
+      <span class="chat-typed" data-input dir="auto"></span>
+      <b class="caret"></b>
+    </p>
+    <p class="chat-tools">
+      <i class="chat-plus">+</i>
+      <span class="chat-model" dir="ltr">{chatWords.model}</span>
+      <i class="chat-send">↑</i>
+    </p>
+  </div>
+</figure>

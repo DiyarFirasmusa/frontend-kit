@@ -100,7 +100,6 @@
   color: var(--turq);
 }
 .run > li[aria-current] .run-number,
-.is-playing .run > li[aria-current] .run-number,
 .install-steps li:hover .step-number,
 .points li:hover .point-number {
   border-color: var(--turq);

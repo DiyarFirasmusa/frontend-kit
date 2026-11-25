@@ -360,51 +360,6 @@
   background: var(--ivory);
 }
 
-/* On the page of steps, the console plays along with them. */
-@media (min-width: 901px) {
-  .is-playing .chat {
-    position: sticky;
-    inset-block-start: calc(var(--bar) + 2rem);
-  }
-
-  .is-playing .run > li {
-    min-height: 32svh;
-    align-content: center;
-  }
-
-  .is-playing .run > li > * {
-    opacity: 0.35;
-    transition: opacity 0.5s var(--glide, ease);
-  }
-
-  .is-playing .run > li[aria-current] > * {
-    opacity: 1;
-  }
-
-  .is-playing .session-group {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition:
-      grid-template-rows 0.5s var(--glide, ease),
-      opacity 0.4s ease;
-  }
-
-  .is-playing .session-group > * {
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .is-playing .session-group.is-shown {
-    grid-template-rows: 1fr;
-    opacity: 0.5;
-  }
-
-  .is-playing .session-group.is-now {
-    opacity: 1;
-  }
-}
-
 /* The opening words come in once, in order. */
 @media (prefers-reduced-motion: no-preference) {
   .enter {
@@ -976,10 +931,6 @@
 
 .install-steps li:hover .step-number,
 .points li:hover .point-number {
-  color: var(--accent);
-}
-
-.is-playing .run > li[aria-current] .run-number {
   color: var(--accent);
 }
 

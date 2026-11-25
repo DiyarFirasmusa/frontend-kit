@@ -7,57 +7,64 @@ const wait = (ms: number, signal: AbortSignal): Promise<void> =>
     signal.addEventListener('abort', () => (clearTimeout(timer), resolve()), { once: true })
   })
 
-/** The chat in the opening screen plays four requests: type, send, think, answer. */
-function playTerminal(signal: AbortSignal): void {
-  const terminal = document.querySelector<HTMLElement>('[data-live]')
-  if (!terminal || calm()) return
-  const demos = all<HTMLElement>('[data-demo]', terminal)
-  const dots = all<HTMLElement>('[data-dot]', terminal)
-  const box = terminal.querySelector<HTMLElement>('[data-box]')
-  const input = terminal.querySelector<HTMLElement>('[data-input]')
-  const status = terminal.querySelector<HTMLElement>('[data-status]')
-  if (!box || !input || !status) return
-  terminal.classList.add('is-playing')
+/** Keeps the newest message in view, as a chat does. */
+const follow = (body: HTMLElement): void => body.scrollTo({ top: body.scrollHeight, behavior: calm() ? 'auto' : 'smooth' })
+
+/** The chat in the opening screen plays the first run: install, answer the questions, get the project. */
+function playChat(signal: AbortSignal): void {
+  const chat = document.querySelector<HTMLElement>('[data-live]')
+  if (!chat || calm()) return
+  const body = chat.querySelector<HTMLElement>('[data-body]')
+  const box = chat.querySelector<HTMLElement>('[data-box]')
+  const input = chat.querySelector<HTMLElement>('[data-input]')
+  const status = chat.querySelector<HTMLElement>('[data-status]')
+  const events = all<HTMLElement>('[data-ev]', chat)
+  if (!body || !box || !input || !status) return
+  chat.classList.add('is-playing')
+
+  const think = async (ms: number): Promise<void> => {
+    status.hidden = false
+    follow(body)
+    await wait(ms, signal)
+    status.hidden = true
+  }
 
   void (async () => {
-    for (let round = 0; !signal.aborted; round++) {
-      const at = round % demos.length
-      const demo = demos[at]!
-      for (const [i, other] of demos.entries()) other.hidden = i !== at
-      for (const [i, dot] of dots.entries()) dot.classList.toggle('is-on', i === at)
+    while (!signal.aborted) {
+      for (const event of events) event.classList.remove('is-in', 'is-picked')
+      body.scrollTop = 0
+      await wait(600, signal)
 
-      const lines = all<HTMLElement>('[data-line]', demo)
-      const sent = demo.querySelector<HTMLElement>('.chat-user')!
-      const words = sent.querySelector('q')?.textContent ?? ''
-      for (const line of lines) line.classList.remove('is-in')
-      demo.classList.add('is-waiting')
-
-      // Typed into the box at the bottom, one key at a time.
-      box.classList.add('is-typing')
-      input.textContent = ''
-      for (let n = 1; n <= words.length && !signal.aborted; n++) {
-        input.textContent = words.slice(0, n)
-        await wait(36, signal)
-      }
-      await wait(420, signal)
-
-      // Enter: the box empties, and what was typed stands above as the message.
-      input.textContent = ''
-      box.classList.remove('is-typing')
-      demo.classList.remove('is-waiting')
-      await wait(200, signal)
-
-      // Thinking: three soft dots while the answer is made.
-      status.hidden = false
-      await wait(1100, signal)
-      status.hidden = true
-
-      for (const line of lines) {
+      for (const event of events) {
         if (signal.aborted) return
-        line.classList.add('is-in')
-        await wait(480, signal)
+        const kind = event.dataset['ev']
+        if (kind === 'user') {
+          // Typed into the box at the bottom, one key at a time, then sent.
+          const words = event.querySelector('[data-say]')?.textContent?.trim() ?? ''
+          box.classList.add('is-typing')
+          for (let n = 1; n <= words.length && !signal.aborted; n++) {
+            input.textContent = words.slice(0, n)
+            await wait(32, signal)
+          }
+          await wait(380, signal)
+          input.textContent = ''
+          box.classList.remove('is-typing')
+        } else if (kind === 'claude' || kind === 'ready') {
+          await think(900)
+        } else if (kind === 'tool') {
+          await think(650)
+        }
+        event.classList.add('is-in')
+        follow(body)
+        if (kind === 'ask') {
+          // The question waits a moment, then your answer is picked.
+          await wait(1300, signal)
+          event.classList.add('is-picked')
+          await wait(800, signal)
+        } else {
+          await wait(kind === 'ready' ? 5200 : 450, signal)
+        }
       }
-      await wait(2800, signal)
     }
   })()
 }
@@ -120,7 +127,7 @@ function glow(signal: AbortSignal): void {
 }
 
 export function initLife(signal: AbortSignal): void {
-  playTerminal(signal)
+  playChat(signal)
   countUp(signal)
   glow(signal)
 }

@@ -1,228 +1,354 @@
-/* THE CHAT: a window that looks like talking to Claude, so a first-time visitor knows what they will be doing.
-   It follows the page direction, so Arabic reads right to left. */
+/* THE CHAT: a window drawn like the Claude app, in the colours of this site, so a first-time visitor
+   sees exactly what they will be doing. It follows the page direction, so Arabic reads right to left. */
 
 .chat {
   display: flex;
   flex-direction: column;
   margin: 0;
-  border: 1px solid rgb(217 119 87 / 0.35);
+  overflow: hidden;
+  border: 1px solid rgb(217 119 87 / 0.32);
   border-radius: 1.25rem;
-  background: #0d0e10;
+  background: #141413;
   box-shadow:
-    0 0 0 1px rgb(217 119 87 / 0.08),
-    0 0 4rem rgb(217 119 87 / 0.16),
+    0 0 0 1px rgb(217 119 87 / 0.06),
+    0 0 4rem rgb(217 119 87 / 0.14),
     0 2rem 4rem rgb(0 0 0 / 0.5);
+  color: var(--ivory);
   font-size: 0.9375rem;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .chat p {
   margin: 0;
 }
 
-.chat-head {
+/* The window bar. */
+.chat-bar {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1.125rem;
-  border-block-end: 1px solid var(--line);
-}
-
-.chat-avatar {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #0a0b0c;
-  font-size: 1rem;
-  line-height: 1;
-}
-
-.chat-head p {
-  display: grid;
-  line-height: 1.25;
-}
-
-.chat-head small {
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+  background: #1a1a18;
   color: var(--faint);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
 }
 
+.chat-lights {
+  position: absolute;
+  inset-inline-start: 1rem;
+  display: flex;
+  gap: 0.4375rem;
+}
+
+.chat-lights i {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  border-radius: 50%;
+  background: rgb(241 237 231 / 0.16);
+}
+
+.chat-lights i:first-child {
+  background: var(--accent);
+}
+
+.chat-title i {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* The conversation. */
 .chat-body {
-  display: grid;
+  display: flex;
   flex: 1 1 auto;
-  align-content: start;
-  gap: 0.875rem;
+  flex-direction: column;
+  gap: 1rem;
   min-height: 0;
-  padding: 1.125rem;
+  padding: 1.25rem 1.25rem 0.75rem;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
-.demo {
-  display: grid;
-  gap: 0.875rem;
-  min-height: 0;
+.chat-body::-webkit-scrollbar {
+  display: none;
 }
 
-/* What you say: a bubble on your side. */
-.chat-user {
-  justify-self: end;
-  max-width: 88%;
-  padding: 0.625rem 0.95rem;
-  border: 1px solid rgb(217 119 87 / 0.4);
-  border-radius: 1.125rem;
-  border-end-end-radius: 0.3rem;
-  background: rgb(217 119 87 / 0.16);
-  color: var(--ivory);
+.ce {
+  flex: none;
 }
 
-.chat-user q {
-  quotes: none;
+/* Your message: a soft bubble on your side. */
+.ce-user {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 0.5rem 0.9rem;
+  border-radius: 1rem;
+  background: #2b2a27;
 }
 
-/* What Claude answers: short lines in plain words. */
-.chat-replies,
-.session-lines,
-.group-inner {
-  display: grid;
-  gap: 0.5rem;
+.ce-user .is-command {
+  font: 500 0.8125rem / 1.6 var(--code);
+  color: var(--amber, #f2a183);
 }
 
-.chat-line {
+/* Claude's words: plain text with its mark, no bubble. */
+.ce-claude {
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
-  justify-self: start;
-  max-width: 94%;
-  padding: 0.55rem 0.85rem;
-  border: 1px solid transparent;
-  border-radius: 1rem;
-  border-start-start-radius: 0.3rem;
-  background: rgb(241 237 231 / 0.06);
 }
 
-.chat-mark {
+.ce-spark {
+  flex: none;
+  color: var(--accent);
+  font-size: 1.125rem;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.ce-spark.is-busy {
+  display: inline-block;
+  animation: chat-spin 1.6s linear infinite;
+}
+
+@keyframes chat-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* A step it took: a slim row you could open. */
+.ce-tool {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 0.4375rem 0.75rem;
+  border: 1px solid rgb(241 237 231 / 0.1);
+  border-radius: 0.75rem;
+  color: rgb(241 237 231 / 0.82);
+  font-size: 0.875rem;
+}
+
+.ce-tool p small {
+  display: block;
+  color: var(--faint);
+  font-size: 0.8125rem;
+}
+
+.ce-tool-icon {
   display: grid;
   flex: none;
   place-items: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-block-start: 0.1875rem;
+  width: 1.125rem;
+  height: 1.125rem;
   border-radius: 50%;
-  background: rgb(241 237 231 / 0.14);
-  color: var(--ivory);
-  font-size: 0.6875rem;
+  background: rgb(241 237 231 / 0.12);
+  font-size: 0.625rem;
   font-style: normal;
-  line-height: 1;
 }
 
-.chat-line.is-ok .chat-mark {
+.ce-tool.is-ok .ce-tool-icon {
   background: var(--accent);
-  color: #0a0b0c;
+  color: #141413;
 }
 
-.chat-line.is-bad {
+.ce-tool.is-bad {
   border-color: rgb(224 119 107 / 0.45);
 }
 
-.chat-line.is-bad .chat-mark {
+.ce-tool.is-bad .ce-tool-icon {
   background: var(--bad);
-  color: #0a0b0c;
+  color: #141413;
 }
 
-.chat-say small {
-  display: block;
-  margin-block-start: 0.125rem;
+.ce-chevron {
   color: var(--faint);
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  font-style: normal;
 }
 
-.chat-line.is-ask {
+[dir='rtl'] .ce-chevron {
+  rotate: 180deg;
+}
+
+/* A question with choices, as Claude asks it. */
+.ce-ask {
+  padding: 0.875rem;
+  border: 1px solid rgb(241 237 231 / 0.12);
+  border-radius: 1rem;
+  background: #1c1c1a;
+}
+
+.ce-question {
+  margin-block-end: 0.625rem !important;
+  font-weight: 500;
+}
+
+.ce-ask ol {
   display: grid;
-  gap: 0.625rem;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.chat-choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.chat-choices span {
-  padding: 0.3125rem 0.875rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  font-size: 0.8125rem;
-}
-
-.chat-choices .is-main {
-  border-color: var(--ivory);
-  background: var(--ivory);
-  color: #0a0b0c;
-}
-
-/* Claude is working: three soft dots. */
-.chat-status {
+.ce-ask li {
   display: flex;
   align-items: center;
   gap: 0.625rem;
+  padding: 0.4375rem 0.625rem;
+  border: 1px solid rgb(241 237 231 / 0.1);
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    opacity 0.3s;
+}
+
+.ce-key {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 0.375rem;
+  background: rgb(241 237 231 / 0.08);
   color: var(--faint);
-  font-size: 0.8125rem;
+  font: 500 0.75rem / 1 var(--code);
 }
 
-.chat-status[hidden] {
-  display: flex !important;
-  visibility: hidden;
+/* The answer you pick. Without the script, the picked one is simply shown. */
+.ce-ask li.is-pick,
+.chat.is-playing .ce-ask.is-picked li.is-pick {
+  border-color: rgb(217 119 87 / 0.7);
+  background: rgb(217 119 87 / 0.14);
 }
 
-.chat-dots {
-  display: inline-flex;
+.ce-ask li.is-pick .ce-key {
+  background: var(--accent);
+  color: #141413;
+}
+
+.chat.is-playing .ce-ask:not(.is-picked) li.is-pick {
+  border-color: rgb(241 237 231 / 0.1);
+  background: none;
+}
+
+.chat.is-playing .ce-ask:not(.is-picked) li.is-pick .ce-key {
+  background: rgb(241 237 231 / 0.08);
+  color: var(--faint);
+}
+
+.chat.is-playing .ce-ask.is-picked li:not(.is-pick) {
+  opacity: 0.45;
+}
+
+/* The finished project: a small picture of it. */
+.ce-ready {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 1px solid rgb(217 119 87 / 0.4);
+  border-radius: 1rem;
+  background: #1c1c1a;
+}
+
+.ce-ready p {
+  display: grid;
+}
+
+.ce-ready small {
+  color: var(--faint);
+}
+
+.ce-open {
+  justify-self: start;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #141413;
+  font: 500 0.75rem / 1.6 var(--code);
+}
+
+.ce-shot {
+  display: grid;
+  grid-template-columns: 22% 1fr;
+  grid-template-rows: 0.875rem auto auto;
+  gap: 0.375rem;
+  height: 6.5rem;
+  padding: 0.5rem;
+  border-radius: 0.625rem;
+  background: #f1ede7;
+}
+
+.ce-shot-side {
+  grid-row: 1 / -1;
+  border-radius: 0.375rem;
+  background: #19abab;
+  opacity: 0.85;
+}
+
+.ce-shot-top {
+  border-radius: 0.25rem;
+  background: rgb(20 20 19 / 0.12);
+}
+
+.ce-shot-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.375rem;
+}
+
+.ce-shot-cards i {
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  background: rgb(217 119 87 / 0.35);
+}
+
+.ce-shot-rows {
+  display: grid;
   gap: 0.25rem;
 }
 
-.chat-dots i {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: chat-dot 1s ease-in-out infinite;
+.ce-shot-rows i {
+  height: 0.4375rem;
+  border-radius: 0.25rem;
+  background: rgb(20 20 19 / 0.12);
 }
 
-.chat-dots i:nth-child(2) {
-  animation-delay: 0.15s;
+/* Claude is working. */
+.chat-status {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--faint);
+  font-size: 0.875rem;
 }
 
-.chat-dots i:nth-child(3) {
-  animation-delay: 0.3s;
+.chat-status[hidden] {
+  display: none;
 }
 
-@keyframes chat-dot {
-  0%,
-  100% {
-    opacity: 0.25;
-    translate: 0 0;
-  }
-  50% {
-    opacity: 1;
-    translate: 0 -0.1875rem;
-  }
-}
-
-/* The message box at the bottom. */
+/* The message box, as in the app: the field, then + on one side and the model and send on the other. */
 .chat-input {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.25rem 0.875rem 0.875rem;
+  padding: 0.75rem 0.875rem 0.625rem;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 1.125rem;
+  background: #1f1f1d;
+  color: var(--faint);
+}
+
+.chat-field {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0 1.125rem 0.875rem;
-  padding-block: 0.4375rem;
-  padding-inline: 1rem 0.4375rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgb(241 237 231 / 0.04);
-  color: var(--faint);
+  min-height: 1.5rem;
 }
 
 .chat-typed {
@@ -234,68 +360,92 @@
   display: none;
 }
 
-.chat-send {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 1.875rem;
-  height: 1.875rem;
-  margin-inline-start: auto;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #0a0b0c;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 700;
-}
-
 .caret {
   display: none;
   width: 2px;
   height: 1.1em;
+  margin-inline-start: 1px;
   background: var(--accent);
 }
 
 .chat-input.is-typing .caret {
   display: inline-block;
-  animation: blink 1s steps(1) infinite;
 }
 
-.chat .demo-dots {
-  justify-content: center;
-  margin: 0 0 0.875rem;
+.chat-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.chat-plus {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 0.5rem;
+  font-style: normal;
+}
+
+.chat-model {
+  margin-inline-start: auto;
+  font-size: 0.8125rem;
+}
+
+.chat-send {
+  display: grid;
+  place-items: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: #141413;
+  font-style: normal;
+  font-weight: 700;
 }
 
 /* NO JUMPING: the opening chat keeps one height whatever it shows, so nothing below it moves while it plays. */
 .chat.live {
-  height: 27rem;
+  height: 32rem;
 }
 
-.chat.live .chat-body {
-  overflow: hidden;
+/* While it plays, each message waits for its turn. */
+.chat.is-playing [data-ev]:not(.is-in) {
+  display: none;
 }
 
-.demo.is-waiting .chat-user,
-.demo.is-waiting .chat-replies {
-  visibility: hidden;
+.chat.is-playing [data-ev].is-in {
+  animation: chat-in 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes chat-in {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+}
+
+/* In the section of steps, the whole conversation is shown at once, beside the steps it matches. */
+.example .chat-body {
+  overflow: visible;
 }
 
 @media (max-width: 620px) {
   .chat.live {
-    height: 31rem;
+    height: 34rem;
+  }
+
+  .chat {
+    font-size: 0.875rem;
   }
 }
 
-/* With the script, each answer arrives when it is its turn. */
-.is-playing .chat-replies > .chat-line {
-  opacity: 0;
-  translate: 0 0.5rem;
-  transition:
-    opacity 0.4s,
-    translate 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+/* Inside the groups of the steps section the messages sit on a grid, so they line up by their own side. */
+.group-inner > .ce-user {
+  justify-self: end;
 }
 
-.is-playing .chat-replies > .chat-line.is-in {
-  opacity: 1;
-  translate: none;
+.group-inner > .ce-tool {
+  justify-self: start;
 }
