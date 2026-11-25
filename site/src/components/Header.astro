@@ -71,7 +71,7 @@ const searchWords = {
     </svg>
     <span class="sr-only">{chrome.switchLanguage}</span>
   </a>
-  <a class="top-install" href={`${start}#install`}>{chrome.install}</a>
+  <a class="top-install" href={`${start}#install`} aria-label={t('Start the install', 'ابدأ التثبيت')[locale]}>{chrome.install}</a>
   <details class="menu" data-menu>
     <summary><span class="sr-only">{chrome.menu}</span><i aria-hidden="true"></i></summary>
     <nav aria-label={chrome.menu}>
