@@ -42,7 +42,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('Any change to visible text, a translation file or a translation call.', 'أي تغيير في نص ظاهر أو ملف ترجمة أو استدعاء ترجمة.'),
   },
   'tanstack-query-key-conventions': {
-    why: t('TanStack Query keeps saved copies of data from your backend, and finds each copy by a key. A key written by hand in each place is a mistake waiting to happen. One factory (a single place that makes all the keys) lets you mark a whole family of copies as outdated, so they reload, and it always works.', 'تحتفظ TanStack Query بنسخ محفوظة من بيانات الخادم الخلفي، وتجد كل نسخة بمفتاح. كتابة المفتاح يدويا في كل مكان خطأ ينتظر أن يقع. مصنع واحد (مكان واحد يصنع كل المفاتيح) يجعل تعليم مجموعة كاملة من النسخ على أنها قديمة، حتى تعاد تحميلها، يعمل دائما.'),
+    why: t('TanStack Query keeps saved copies of data from your backend, and finds each copy by a key. A key written by hand in each place is a mistake waiting to happen. One factory (a single place that makes all the keys) lets you mark a whole family of copies as outdated, so they reload, and it always works.', 'تحتفظ TanStack Query بنسخ محفوظة من بيانات الخادم الخلفي، وتجد كل نسخة بمفتاح. كتابة المفتاح يدويا في كل مكان خطأ ينتظر أن يقع. مصنع واحد (مكان واحد يصنع كل المفاتيح) يجعل تعليم مجموعة كاملة من النسخ على أنها قديمة، حتى تعاد تحميلها، يعمل.'),
     when: t('Writing or reviewing anything that loads, changes, preloads or refreshes data with TanStack Query.', 'عند كتابة أو مراجعة أي كود يحمل البيانات أو يعدلها أو يجلبها مسبقا أو يحدّثها باستخدام TanStack Query.'),
   },
   'typescript-advanced-types': {
@@ -102,7 +102,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('Starting, stopping or restarting the app, or when it shows old code.', 'تشغيل التطبيق أو إيقافه أو إعادة تشغيله، أو عندما يعرض كودا قديما.'),
   },
   refactor: {
-    why: t('Cleaning up code is where behaviour breaks by accident. This skill moves code in safe steps and proves that nothing changed.', 'عند تنظيف الكود ينكسر السلوك بالخطأ. تنقل هذه المهارة الكود بخطوات آمنة وتثبت أن شيئا لم يتغير.'),
+    why: t('Cleaning up code is where behaviour breaks by accident. This skill moves code in safe steps and checks that nothing changed.', 'عند تنظيف الكود ينكسر السلوك بالخطأ. تنقل هذه المهارة الكود بخطوات آمنة وتتحقق أن شيئا لم يتغير.'),
     when: t('A long file, repeated code, logic in the wrong place, or leftovers from a move to a new tool.', 'ملف طويل، أو كود مكرر، أو منطق في المكان الخطأ، أو بقايا من الانتقال إلى أداة جديدة.'),
   },
   'refactor-mode': {
@@ -170,7 +170,7 @@ export const skillPurpose: Record<string, Purpose> = {
     when: t('Before a release, during an outage, for an audit where nothing may change (read-only), a prototype, or an app you only maintain. Only you switch it.', 'قبل الإصدار، أو أثناء عطل، أو لتدقيق لا يجوز فيه تغيير شيء (قراءة فقط)، أو لنموذج أولي، أو لتطبيق تكتفي بصيانته. وأنت وحدك تبدله.'),
   },
   'upgrade-mode': {
-    why: t('A major upgrade fails quietly: the code builds with the new version’s interface (its API) while the behaviour changes. This skill proves each phase by comparing it with a recorded starting point.', 'الترقية الكبيرة تفشل بصمت: الكود يبنى مع واجهة النسخة الجديدة (الـ API) لكن السلوك يتغير. تثبت هذه المهارة كل مرحلة بمقارنتها بنقطة بداية مسجلة.'),
+    why: t('A major upgrade fails quietly: the code builds with the new version’s interface (its API) while the behaviour changes. This skill checks each phase by comparing it with a recorded starting point.', 'الترقية الكبيرة تفشل بصمت: الكود يبنى مع واجهة النسخة الجديدة (الـ API) لكن السلوك يتغير. تثبت هذه المهارة كل مرحلة بمقارنتها بنقطة بداية مسجلة.'),
     when: t('A major new version of a framework or library (a tool your app is built on). A patch (a small fix release) or a single small bump is a normal task.', 'إصدار رئيسي جديد من إطار عمل أو مكتبة (أداة يبنى عليها تطبيقك). أما الـ patch (إصدار إصلاح صغير) أو ترقية صغيرة واحدة فهي مهمة عادية.'),
   },
 }
@@ -198,7 +198,7 @@ export const agentPurpose: Record<string, Purpose> = {
   },
   'frontend-reviewer': {
     why: t('A reader who never saw the conversation judges only the code, the way a colleague would.', 'قارئ لم ير المحادثة يحكم على الكود وحده، مثل زميل.'),
-    when: t('After the final checks (the quality gate) pass, or for any branch or diff (the list of changes) before you save a version.', 'بعد نجاح الفحوص الأخيرة (بوابة الجودة)، أو لأي فرع أو diff (قائمة التغييرات) قبل حفظ نسخة.'),
+    when: t('After the final checks pass, or for any branch or diff (the list of changes) before you save a version.', 'بعد نجاح الفحوص الأخيرة (الفحص الأخير)، أو لأي فرع أو diff (قائمة التغييرات) قبل حفظ نسخة.'),
   },
   'accessibility-auditor': {
     why: t('People who use a keyboard or a screen reader (software that reads the screen aloud) are shut out by mistakes nobody else sees. This specialist checks for them.', 'أخطاء لا يراها غيرهم تمنع من يستخدمون لوحة المفاتيح أو قارئ الشاشة (برنامج يقرأ الشاشة بصوت عال) من استعمال الصفحة. هذا المختص يبحث عنها.'),
@@ -214,7 +214,7 @@ export const agentPurpose: Record<string, Purpose> = {
   },
   'qa-engineer': {
     why: t('Passing tests can still ship broken screens. This specialist opens every changed page in both languages, sizes and themes (light and dark).', 'قد تنجح الاختبارات وتصل مع ذلك شاشات معطلة. هذا المختص يفتح كل صفحة تغيرت في كل لغة وكل حجم وكل مظهر (فاتح وداكن).'),
-    when: t('The last gate before you are asked to save a version.', 'آخر بوابة قبل أن يطلب منك حفظ نسخة.'),
+    when: t('The last gate before you are asked to save a version.', 'نظرة أخيرة على الصفحات قبل أن يطلب منك حفظ نسخة.'),
   },
   'frontend-security-reviewer': {
     why: t('A leak or an open redirect (a link that can send visitors to any site) looks like normal code in a review. This specialist reports only what it can show an attack path for.', 'التسريب أو التحويل المفتوح (رابط يمكن أن يرسل الزوار إلى أي موقع) يبدو في المراجعة كأي كود عادي. ولا يبلغ هذا المختص إلا عن الثغرات التي يستطيع أن يبين لها طريق هجوم.'),
@@ -261,7 +261,7 @@ export const rulePurpose: Record<string, Bilingual> = {
   'dashboard/api-layer.md': t('So one client owns tokens (secrets that prove who is signed in), errors and keys instead of every screen.', 'ليتولى عميل واحد الـ tokens (أسرار تثبت من سجل دخوله) والأخطاء والمفاتيح، بدل أن تتولاها كل شاشة.'),
   'dashboard/data-tables.md': t('So tables still work with a hundred thousand rows and a keyboard.', 'لتبقى الجداول تعمل مع مئة ألف صف ومع لوحة المفاتيح.'),
   'dashboard/error-monitoring.md': t('So errors in the live app reach you without leaking personal data.', 'لتصلك أخطاء التطبيق المنشور دون تسريب بيانات شخصية.'),
-  'dashboard/forms-crud.md': t('So two admins editing at once, or a double click, cannot lose data.', 'حتى لا تضيع البيانات إذا عدّل أكثر من مدير في الوقت نفسه، أو ضغط أحدهم مرتين.'),
+  'dashboard/forms-crud.md': t('So two admins editing at once, or a double click, is less likely to lose data.', 'لتقل فرصة ضياع البيانات إذا عدّل أكثر من مدير في الوقت نفسه، أو ضغط أحدهم مرتين.'),
   'dashboard/permissions.md': t('So one list decides what each role sees and can do.', 'لتحدد قائمة واحدة ما يراه كل دور وما يقدر على فعله.'),
   'dashboard/routing.md': t('So protection holds and a list’s state survives a reload or a shared link.', 'لتصمد الحماية، وتبقى حالة القائمة بعد التحديث أو عبر رابط مشارك.'),
 

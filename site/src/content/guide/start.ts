@@ -26,19 +26,19 @@ export const needs = [
 
 /** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
 export const installMessage = t(
-  'Please install the Wajiha Kit plugin for this project. First check that jq is installed. If it is missing, help me install it (brew install jq on a Mac, winget install jqlang.jq on Windows, sudo apt install jq on Linux). If Homebrew is missing on my Mac, explain it to me step by step. Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
-  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ مثبّت. وإن لم يكن موجودا فساعدني في تثبيته (⁦brew install jq⁩ على ماك، و⁦winget install jqlang.jq⁩ على ويندوز، و⁦sudo apt install jq⁩ على لينكس). وإن لم يكن ⁦Homebrew⁩ مثبتا على ماكي فاشرح لي ذلك خطوة بخطوة. ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي باستخدام ⁦Wajiha Kit⁩.',
+  'Please install the Wajiha Kit plugin for this project. First check that jq is installed. If it is missing, help me install it (brew install jq on a Mac, winget install jqlang.jq on Windows, sudo apt install jq on Linux; explain Homebrew to me if it is missing). Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
+  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ مثبّت. وإن لم يكن موجودا فساعدني في تثبيته (⁦brew install jq⁩ على ماك، و⁦winget install jqlang.jq⁩ على ويندوز، و⁦sudo apt install jq⁩ على لينكس؛ واشرح لي ⁦Homebrew⁩ إن لم يكن مثبتا). ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي باستخدام ⁦Wajiha Kit⁩.',
 )
 
 /** Three steps, all inside the Claude app. `copy` is what the step asks you to send. */
 export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof t>; copy?: ReturnType<typeof t> | string }[] = [
   {
     title: t('Open a folder in the Claude app', 'افتح مجلدا في تطبيق Claude'),
-    text: t('Make a new empty folder on your computer for your project, for example “my-shop”. Open the Claude app, choose Code, and pick the folder with the folder button next to the message box.', 'أنشئ مجلدا جديدا فارغا على حاسوبك لمشروعك، مثل «متجري». افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد بجانب خانة الرسائل.'),
+    text: t('Make a new empty folder on your computer, for example “my-shop”. Open the Claude app, choose Code, and pick the folder with the folder button.', 'أنشئ مجلدا جديدا فارغا على حاسوبك، مثل «متجري». افتح تطبيق ⁦Claude⁩، واختر ⁦Code⁩، واختر المجلد من زر المجلد.'),
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude Code asks your permission before each command it runs: a box appears asking whether to allow it. For the commands in this message, which contain claude plugin or install jq, press Allow. If a command you do not recognise appears, do not press Allow: ask Claude why it needs it. Then it starts asking about your project. When it asks what you are doing, choose “New project”. If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر ينفذه: يظهر مربع يسأل هل تسمح به. والأوامر التي في هذه الرسالة، وفيها ⁦claude plugin⁩ أو تثبيت ⁦jq⁩، اضغط عليها «السماح». وإن ظهر أمر لا تعرفه فلا تضغط «السماح»، واسأل ⁦Claude⁩ لماذا يحتاجه. ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد». وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),
+    text: t('Copy it, paste it into the message box and send it. Claude Code asks permission before each command: allow the ones in this message. If a command you do not recognise appears, press Deny and ask Claude why. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يسألك ⁦Claude Code⁩ إذنك قبل كل أمر: اسمح بالأوامر التي في هذه الرسالة. وإن ظهر أمر لا تعرفه فاضغط «رفض» واسأل ⁦Claude⁩ لماذا يحتاجه. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
     copy: installMessage,
   },
 ]
@@ -115,7 +115,7 @@ export const after = [
   t('Something went wrong? See Questions: “When something does not work”.', 'حدث خطأ؟ راجع «الأسئلة»: «عندما لا يعمل شيء».'),
   t('Look at the result and tell it what to change, in plain sentences.', 'انظر إلى النتيجة، وقل لها ما تريد تغييره بجمل بسيطة.'),
   t('Each change runs through the same safety checks. They run by themselves, so nothing depends on the assistant remembering.', 'يمر كل تغيير بفحوص الأمان نفسها. وهي تعمل وحدها، فلا يعتمد شيء على أن يتذكر المساعد.'),
-  t('When you are happy, ask it to save a version. You can always go back to it.', 'عندما ترضى عن النتيجة، اطلب منها حفظ نسخة. وتستطيع الرجوع إليها دائما.'),
+  t('When you are happy, ask it to save a version. You can go back to it.', 'عندما ترضى عن النتيجة، اطلب منها حفظ نسخة. وتستطيع الرجوع إليها.'),
 ]
 
 export const limits = [

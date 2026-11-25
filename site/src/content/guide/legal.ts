@@ -188,7 +188,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
       text: [
         t(
           'The kit and this website are provided “as is”, without any warranty. The assistant can make mistakes. The checks reduce them but cannot remove them. The safety checks are a guard rail, not a sandbox: they read commands, but not what a script or program does inside. They need jq and a recent Claude Code, and older versions can let a command through. Keep branch protection on. Look at what the assistant makes before you rely on it, and keep a copy of anything you cannot lose.',
-          'تُقدَّم الإضافة وهذا الموقع «كما هي»، دون أي ضمان. وقد يخطئ المساعد. والفحوص تقلل الأخطاء لكنها لا تلغيها. وفحوص الأمان حاجز وقائي وليست بيئة معزولة: تقرأ الأوامر لكنها لا ترى ما يفعله سكربت أو برنامج من الداخل. وتحتاج ⁦jq⁩ ونسخة حديثة من ⁦Claude Code⁩، وقد تمرّر النسخ الأقدم أمرا. أبقِ حماية الفروع مفعّلة. وانظر إلى ما يصنعه المساعد قبل أن تعتمد عليه، واحتفظ بنسخة من كل ما لا تحتمل خسارته.',
+          'تُقدَّم الإضافة وهذا الموقع «كما هي»، دون أي ضمان. وقد يخطئ المساعد. والفحوص تقلل الأخطاء لكنها لا تلغيها. وفحوص الأمان حاجز أمان وليست بيئة معزولة: تقرأ الأوامر لكنها لا ترى ما يفعله سكربت أو برنامج من الداخل. وتحتاج ⁦jq⁩ ونسخة حديثة من ⁦Claude Code⁩، وقد تمرّر النسخ الأقدم أمرا. أبقِ حماية الفروع مفعّلة. وانظر إلى ما يصنعه المساعد قبل أن تعتمد عليه، واحتفظ بنسخة من كل ما لا تحتمل خسارته.',
         ),
       ],
     },

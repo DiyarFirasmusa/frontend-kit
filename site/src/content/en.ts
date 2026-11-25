@@ -33,12 +33,12 @@ export const en: Copy = {
   },
   gate: {
     title: 'Try the safety check yourself.',
-    lead: 'Pick a command and send it as the assistant. Each answer is the real output of the hook in the plugin. It catches known patterns and is not a sandbox.',
+    lead: 'Pick a command and send it as the assistant. Each answer is the real output of the safety check in the plugin. It catches known patterns and is not a sandbox.',
     commands: 'Commands to try',
     waiting: 'Waiting for a command.',
     denied: 'Blocked',
     allowed: 'Let through',
-    quiet: 'The hook stays silent and the command runs.',
+    quiet: 'The safety check stays silent and the command runs.',
     notes: {
       force: 'A force push would rewrite shared history.',
       verify: 'This would skip the checks of your repo.',
@@ -48,7 +48,7 @@ export const en: Copy = {
       live: 'This would touch real customers. The live hosts come from your config.',
       typecheck: 'Ordinary work goes straight through.',
     },
-    after: 'When the assistant stops after changing source, committed or not, typecheck and related tests run. Then a reviewer agent reads the change.',
+    after: 'When the assistant stops after changing source, committed or not, typecheck and related tests run. Then a reviewer reads the change.',
   },
   install: {
     title: 'Start in two steps.',

@@ -39,6 +39,7 @@ const words = {
 // The first few globs say enough.
 // The paths in plain words: a reader sees "screen files", not a pattern like **/*.{jsx,tsx}. The exact paths are on each rule's page.
 const KINDS = [
+  [/^src\/|\*\*\/\*$|^\*\*$/, t('source files', 'ملفات المصدر')],
   [/\.(tsx|jsx|vue|svelte)|components|pages|routes/, t('screen files', 'ملفات الشاشات')],
   [/test|spec|e2e/, t('test files', 'ملفات الاختبار')],
   [/\.(css|scss)|styles?/, t('style files', 'ملفات التنسيق')],

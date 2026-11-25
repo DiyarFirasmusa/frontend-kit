@@ -98,7 +98,15 @@ export const journeyWords = {
 /** The install panel. */
 export const installWords = {
   title: t('Start in two steps', 'ابدأ بخطوتين'),
-  lead: t('Wajiha Kit is free. Claude is an AI assistant like ChatGPT, made by Anthropic: sign in to it first. Claude Code, which the kit works inside, is not part of every Claude plan, so check yours on Claude’s website before you start. After you sign in to the Claude app, look for the Code tab: if it does not open for you, your plan does not include Claude Code yet. On Windows, go on as usual: only the safety checks may differ, and Questions explains what to do if every command is refused. You need the Claude app on a computer; a phone is not enough. You send one message, and Claude installs the kit for you. Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “Explain how to publish this site”.', '«واجهة» مجانية. و⁦Claude⁩ مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩، من شركة ⁦Anthropic⁩: سجّل فيه بحسابك أولا. أما ⁦Claude Code⁩، الذي تعمل داخله الإضافة، فليس في كل خطط ⁦Claude⁩، فتأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. وبعد أن تسجّل الدخول في تطبيق ⁦Claude⁩ ابحث عن تبويب ⁦Code⁩: إن لم يفتح لك فخطتك لا تشمل ⁦Claude Code⁩ بعد. وعلى ⁦Windows⁩ تابع كالمعتاد: الذي قد يختلف هو فحوص الأمان فقط، وصفحة «الأسئلة» تشرح ما تفعله إن رُفضت كل الأوامر. وتحتاج تطبيق ⁦Claude⁩ على حاسوب، فالهاتف لا يكفي. ترسل رسالة واحدة، ويثبت ⁦Claude⁩ الإضافة بنفسه. والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس، اطلب لاحقا من ⁦Claude⁩: «اشرح لي كيف أنشر هذا الموقع».'),
+  lead: t('Wajiha Kit is free. You send one message, and Claude installs the kit for you.', '«واجهة» مجانية. ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة بنفسه.'),
+  needsTitle: t('What you need', 'ما تحتاجه'),
+  needsList: [
+    t('A Claude account (an AI assistant like ChatGPT) that includes Claude Code. After you sign in, look for the Code tab.', 'حساب في ⁦Claude⁩ (مساعد ذكاء اصطناعي مثل ⁦ChatGPT⁩) يشمل ⁦Claude Code⁩. وبعد تسجيل الدخول ابحث عن تبويب ⁦Code⁩.'),
+    t('A computer. A phone is not enough.', 'حاسوب. الهاتف لا يكفي.'),
+    t('On Windows, go on as usual: the safety checks were tested only on macOS and may skip some checks.', 'وعلى ويندوز تابع كالمعتاد: فحوص الأمان جُرّبت على ⁦macOS⁩ فقط وقد تتخطى بعض الفحوص.'),
+  ],
+  reopen: t('If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),
+  tonight: t('Tonight you will see your site on your own computer only. To let other people see it, ask Claude later: “What are my options to publish my site, and what does each one involve?”', 'والليلة سترى موقعك على حاسوبك فقط. ولكي يراه الناس اطلب لاحقا من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),
   failed: t('Select it and copy', 'حدّدها وانسخها'),

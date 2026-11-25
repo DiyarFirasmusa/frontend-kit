@@ -29,7 +29,7 @@ export const chatWords = {
 
 /** The opening screen: from installing the kit to a working project, as it really goes. */
 export const firstRun: ChatEvent[] = [
-  { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project, then start setting it up.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع، ثم ابدأ بتجهيزه.') },
+  { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project. First check that jq is installed. Then start setting it up.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع. تحقق أولا أن jq مثبّت، ثم ابدأ بتجهيزه.') },
   { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
   { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
     { kind: 'claude', text: t('Let’s set up your project. A few quick questions, nothing technical.', 'لنجهز مشروعك. بضعة أسئلة سريعة، ولا شيء تقني.') },
@@ -70,7 +70,7 @@ export const firstRun: ChatEvent[] = [
 /** The section of steps: what the window shows at each one. */
 export const stepChat: ChatEvent[][] = [
   [
-    { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project, then start setting it up.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع، ثم ابدأ بتجهيزه.') },
+    { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project. First check that jq is installed. Then start setting it up.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع. تحقق أولا أن jq مثبّت، ثم ابدأ بتجهيزه.') },
     { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
     { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
       ],

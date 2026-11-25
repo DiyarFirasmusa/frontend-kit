@@ -12,14 +12,14 @@ export const beginnerQuestions = [
   ],
   [
     t('Is my data safe?', 'هل بياناتي آمنة؟'),
-    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. One tool the kit uses, Context7, sends documentation searches to its own service, and helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env. The kit tells the assistant not to open it and blocks the usual ways, but this is not a lock. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وأداة تستخدمها الإضافة، وهي ⁦Context7⁩، ترسل عمليات البحث في التوثيق إلى خدمتها، وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩. تطلب الإضافة من المساعد ألا يفتحه وتسد الطرق المعتادة، لكن هذا ليس قفلا. وفحوص الأمان حاجز يحميك، وليست خزنة مغلقة.'),
+    t('Your project stays on your computer. Like any use of Claude Code, the parts of your project that the assistant reads are sent to Claude so it can work on them. The safety checks are small scripts that run on your computer. One tool the kit uses, Context7, sends documentation searches to its own service, and helper tools are downloaded from npm. Never type a password or a key into the chat; keep keys in a file named .env. The kit tells the assistant not to open it and blocks the usual ways, but this is not a lock. The safety checks are a guard rail, not a locked vault.', 'مشروعك يبقى على جهازك. وكما في أي استخدام لـ ⁦Claude Code⁩، تُرسل الأجزاء التي يقرؤها المساعد من مشروعك إلى Claude حتى يعمل عليها. وفحوص الأمان سكربتات صغيرة تعمل على جهازك. وأداة تستخدمها الإضافة، وهي ⁦Context7⁩، ترسل عمليات البحث في التوثيق إلى خدمتها، وتُنزَّل أدوات مساعدة من ⁦npm⁩. لا تكتب كلمة مرور ولا مفتاحا في المحادثة؛ احفظ المفاتيح في ملف اسمه ⁦.env⁩. تطلب الإضافة من المساعد ألا يفتحه وتسد الطرق المعتادة، لكن هذا ليس قفلا. وفحوص الأمان حاجز أمان، وليست خزنة مغلقة.'),
   ],
   [
     t('What if it breaks something?', 'ماذا لو أفسد شيئا؟'),
     t('Two things protect you. First, it asks before it starts, and the safety checks stop known risky commands, such as force pushes or deleting top-level folders. They cannot see inside scripts. Second, the same checks run after the work and send mistakes back to the assistant to fix. Still, nothing is perfect. Keep a copy of anything you cannot lose, and ask it to undo the last change if you do not like it.', 'تحميك الإضافة بأمرين. أولهما أنها تسألك قبل أن تبدأ، وفحوص الأمان توقف الأوامر الخطرة المعروفة، مثل الرفع القسري أو حذف المجلدات الرئيسية. ولا ترى ما داخل السكربتات. وثانيهما أن الفحوص نفسها تعمل بعد انتهاء العمل وتعيد الأخطاء إلى المساعد ليصلحها. ومع ذلك لا شيء كامل. احتفظ بنسخة من كل ما لا تحتمل خسارته، واطلب منه أن يتراجع عن آخر تغيير إذا لم يعجبك.'),
   ],
   [
-    t('What if I do not know my backend’s API link?', 'ماذا لو لم أكن أعرف رابط وصف خادمي (API)؟'),
+    t('What if I do not know my backend’s API description?', 'ماذا لو لم أكن أعرف وصف الـ ⁦API⁩ لخادمي؟'),
     t('That is fine. This is a file or page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it, and save it in your project as docs/api/openapi.json. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later. The setup is being improved, so it may ask a little differently today.', 'لا مشكلة. هذا ملف أو صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم، واحفظه في مشروعك باسم ⁦docs/api/openapi.json⁩. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا. والإعداد يتحسّن، فقد يسأل اليوم بصيغة مختلفة قليلا.'),
   ],
   [
@@ -43,12 +43,20 @@ export const beginnerQuestions = [
     t('The kit builds the pages and forms of a shop. It does not include a payment system: taking real payments needs a payment service and a backend, which you connect yourself.', 'تبني الإضافة صفحات المتجر ونماذجه. ولا تشمل نظام دفع: فقبول دفعات حقيقية يحتاج إلى خدمة دفع وخادم خلفي، وتربطهما أنت.'),
   ],
   [
+    t('Does it work with Cursor or Lovable?', 'هل تعمل مع ⁦Cursor⁩ أو ⁦Lovable⁩؟'),
+    t('No. It is a plugin for Claude Code only: the Claude app, a terminal, or an editor that runs Claude Code. What it builds is a normal project made of files, which you can open with any tool afterwards.', 'لا. هي إضافة لـ ⁦Claude Code⁩ فقط: تطبيق ⁦Claude⁩ أو الطرفية أو محرر يشغّله. وما تبنيه مشروع عادي من ملفات، تستطيع أن تفتحه بأي أداة بعد ذلك.'),
+  ],
+  [
+    t('Will a contact form send me the messages?', 'هل يرسل نموذج التواصل الرسائل إلي؟'),
+    t('The kit builds the form. To receive the messages by email or WhatsApp you need a service that sends them. Ask Claude: “Connect the form so the messages reach me”, and it will ask which service you want.', 'تبني الإضافة النموذج. ولتصلك الرسائل على البريد أو واتساب تحتاج خدمة ترسلها. اطلب من ⁦Claude⁩: «اربط النموذج بحيث تصلني الرسائل»، وسيسألك عن الخدمة التي تريدها.'),
+  ],
+  [
     t('Does it put my site online?', 'هل تنشر لي الموقع على الإنترنت؟'),
     t('No. It builds the project and runs it on your computer so you can see it. To put it online you need a place that hosts it. You can ask Claude: “What are my options to publish my site, and what does each one involve?”, and it will ask before each step.', 'لا. تبني لك المشروع وتشغله على جهازك لترى النتيجة. ولنشره على الإنترنت تحتاج مكانا يستضيفه. ويمكنك أن تطلب من ⁦Claude⁩: «ما خياراتي لنشر موقعي، وماذا يتطلب كل خيار؟»، وسيسألك قبل كل خطوة.'),
   ],
   [
     t('Does it work on Windows?', 'هل تعمل الإضافة على Windows؟'),
-    t('The project builds and runs normally. The safety checks were tested only on macOS, so on Windows they may skip some checks. If every command is refused after the install, see “Every command is refused after installing”.', 'يُبنى المشروع ويعمل بشكل عادي. وفحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد تتخطى بعض الفحوص على ⁦Windows⁩. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
+    t('The project builds and runs normally. The safety checks were tested only on macOS, so on Windows they may skip some checks. If every command is refused after the install, see “Every command is refused after installing”.', 'يُبنى المشروع ويعمل بشكل عادي. وفحوص الأمان جُرّبت على ⁦macOS⁩ فقط، فقد تتخطى بعض الفحوص على ويندوز. وإذا رُفضت كل الأوامر بعد التثبيت، فراجع «تُرفض كل الأوامر بعد التثبيت».'),
   ],
 ] as const
 
@@ -67,7 +75,7 @@ export const problems = [
   ],
   [
     t('The final check keeps failing.', 'الفحص الأخير يفشل دائما.'),
-    t('It runs the commands listed in wajiha-kit.json, the kit’s settings file. Run those commands yourself to see which one fails. A check that points at a command that does not exist can never pass.', 'يشغل الأوامر المكتوبة في ⁦wajiha-kit.json⁩، وهو ملف إعدادات الإضافة. شغّل هذه الأوامر بنفسك لترى أيها يفشل. وإذا كان الفحص يشير إلى أمر غير موجود، فلن ينجح أبدا.'),
+    t('It runs the commands listed in wajiha-kit.json, the kit’s settings file. Run those commands yourself to see which one fails. A check that points at a command that does not exist will not pass.', 'يشغل الأوامر المكتوبة في ⁦wajiha-kit.json⁩، وهو ملف إعدادات الإضافة. شغّل هذه الأوامر بنفسك لترى أيها يفشل. وإذا كان الفحص يشير إلى أمر غير موجود، فلن ينجح.'),
   ],
   [
     t('It is slow, or uses too much of my Claude allowance, for small edits.', 'الإضافة بطيئة، أو تستهلك كثيرا من رصيدي في ⁦Claude⁩، في التعديلات الصغيرة.'),

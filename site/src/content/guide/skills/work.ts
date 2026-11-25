@@ -118,7 +118,7 @@ export const work: Record<string, SkillGuide> = {
   'upgrade-mode': {
     plain: t(
       'Moves your project to a new major version of its tools, as a job of its own: one family of packages (tools your project uses) at a time, in phases you approve, proven by the whole set of tests.',
-      'ينقل مشروعك إلى إصدار رئيسي جديد من أدواته، كعمل مستقل: مجموعة حزم واحدة (أدوات يستخدمها مشروعك) في كل مرة، على مراحل توافق عليها، وتثبت نجاحه كل الاختبارات.',
+      'ينقل مشروعك إلى إصدار رئيسي جديد من أدواته، كعمل مستقل: مجموعة حزم واحدة (أدوات يستخدمها مشروعك) في كل مرة، على مراحل توافق عليها، وتؤكد نجاحه الاختبارات.',
     ),
     ask: [t('/wajiha-kit:upgrade-mode on', '/wajiha-kit:upgrade-mode on'), t('/wajiha-kit:upgrade-mode plan', '/wajiha-kit:upgrade-mode plan')],
     steps: [

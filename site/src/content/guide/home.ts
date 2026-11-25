@@ -24,7 +24,7 @@ export const home = {
     },
   ],
   start: t('Install the kit', 'ثبّت الإضافة'),
-  for: t('For people who do not code, for vibe coders, and for backend developers who need a frontend.', 'لمن لا يبرمج، ولمن يبني بالذكاء الاصطناعي، ولمطوري الخادم الخلفي الذين يحتاجون واجهة.'),
+  for: t('For people who do not code, for people who build with AI, and for developers who have a backend and need screens.', 'لمن لا يبرمج، ولمن يبني مع الذكاء الاصطناعي، وللمطورين الذين عندهم خادم ويحتاجون شاشات.'),
   forLink: t('For developers', 'للمطورين'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
