@@ -178,3 +178,43 @@ html[data-theme='light'] .doc-head h1 em {
   color: var(--accent);
   -webkit-text-fill-color: var(--accent);
 }
+
+
+/* In light mode the blocks are the solid colours of the mark, with dark words on them. */
+html[data-theme='light'] .board-main {
+  background: var(--tone);
+  box-shadow: none;
+}
+
+html[data-theme='light'] .board.tone-ink .board-main {
+  background: #1b1a18;
+}
+
+html[data-theme='light'] .board-side {
+  background: var(--side);
+  box-shadow: none;
+  color: #101010;
+}
+
+html[data-theme='light'] .board-side-title {
+  border-block-end-color: rgb(16 16 16 / 0.85);
+  color: #101010;
+}
+
+html[data-theme='light'] .board-list li {
+  border-block-start-color: rgb(16 16 16 / 0.2);
+}
+
+html[data-theme='light'] .board-list li::before {
+  background: currentColor;
+}
+
+html[data-theme='light'] .board.tone-orange .path-label strong {
+  color: #141413;
+}
+
+html[data-theme='light'] .board.tone-orange .path-dot,
+html[data-theme='light'] .start-main .start-line-dot {
+  background: #141413 !important;
+  color: var(--accent) !important;
+}

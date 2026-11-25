@@ -2527,21 +2527,21 @@ body:has(main.doc)::after {
 }
 
 /* Inside the orange block of the journey, the words under each window are dark and the rail is dark. */
-.board.tone-orange .path-label,
-.board.tone-orange .path-label * {
+html[data-theme='light'] .board.tone-orange .path-label,
+html[data-theme='light'] .board.tone-orange .path-label * {
   color: #141413;
 }
 
-.board.tone-orange .path-label p {
+html[data-theme='light'] .board.tone-orange .path-label p {
   color: rgb(20 20 19 / 0.85);
 }
 
-.board.tone-orange .path-dot {
+html[data-theme='light'] .board.tone-orange .path-dot {
   background: #141413;
   color: var(--accent);
 }
 
-.board.tone-orange .path-track i {
+html[data-theme='light'] .board.tone-orange .path-track i {
   background: #141413;
   opacity: 0.5;
 }
@@ -2593,12 +2593,12 @@ body:has(main.doc)::after {
 }
 
 /* On orange, the words are as dark and as big as they need to be, and the numbers keep their dark dots. */
-.board.tone-orange .path-label p {
+html[data-theme='light'] .board.tone-orange .path-label p {
   color: #141413;
   font-size: 0.9375rem;
 }
 
-.board.tone-orange .path-dot {
+html[data-theme='light'] .board.tone-orange .path-dot {
   background: #141413 !important;
   color: var(--accent) !important;
   border-color: #141413 !important;
@@ -2661,16 +2661,16 @@ body:has(main.doc)::after {
   padding: clamp(1.25rem, 3vw, 2.25rem);
 }
 
-.doc-head.board-head.tone-orange .board-main,
-.doc-head.board-head.tone-orange .board-main h1,
-.doc-head.board-head.tone-orange .board-main .doc-summary,
-.doc-head.board-head.tone-orange .board-main .crumbs a,
-.doc-head.board-head.tone-orange .board-main .crumbs span {
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main h1,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main .doc-summary,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main .crumbs a,
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main .crumbs span {
   color: #141413;
   -webkit-text-fill-color: #141413;
 }
 
-.doc-head.board-head.tone-orange .board-main h1 em {
+html[data-theme='light'] .doc-head.board-head.tone-orange .board-main h1 em {
   background: none;
   color: #141413;
   -webkit-text-fill-color: #141413;
@@ -2820,25 +2820,25 @@ body:has(main.doc)::after {
   align-items: start;
 }
 
-.start-main .start-line,
-.start-main .start-line li,
-.start-main .start-line h3,
-.start-main .start-line p,
-.start-main .start-line a {
+html[data-theme='light'] .start-main .start-line,
+html[data-theme='light'] .start-main .start-line li,
+html[data-theme='light'] .start-main .start-line h3,
+html[data-theme='light'] .start-main .start-line p,
+html[data-theme='light'] html[data-theme='light'] .start-main .start-line a {
   color: #141413;
 }
 
-.start-main .start-line a {
+html[data-theme='light'] .start-main .start-line a {
   text-decoration-color: rgb(20 20 19 / 0.6);
 }
 
-.start-main .start-line-dot {
+html[data-theme='light'] .start-main .start-line-dot {
   border-color: #141413;
   background: #141413;
   color: var(--accent);
 }
 
-.start-main .start-line-track i {
+html[data-theme='light'] .start-main .start-line-track i {
   background: #141413;
   opacity: 0.45;
 }
@@ -2851,4 +2851,70 @@ body:has(main.doc)::after {
 
 .board-note > div {
   display: contents;
+}
+
+
+/* =====================================================================================================
+   THE BOARD ON THE DARK THEME. The blocks are not flat bright slabs on a black page: each is a dark surface
+   with its colour as a clear edge and a soft tint, and its words stay light. The logo's shape and its
+   four colours are all there; the page keeps one dark voice. (In light mode the blocks are solid, see theme-light.css.)
+   ===================================================================================================== */
+.board-main {
+  background: color-mix(in srgb, var(--tone) 13%, #0c0c0b);
+  box-shadow: inset 0 0 0 1.5px var(--tone);
+}
+
+.board.tone-ink .board-main {
+  background: #131312;
+  box-shadow: inset 0 0 0 1px rgb(241 237 231 / 0.2);
+}
+
+.board-side {
+  background: color-mix(in srgb, var(--side) 11%, #0c0c0b);
+  box-shadow: inset 0 0 0 1.5px var(--side);
+  color: #f1ede7;
+}
+
+.board-side-title {
+  border-block-end: 1px solid color-mix(in srgb, var(--side) 65%, transparent);
+  color: var(--side);
+}
+
+.board-list li {
+  border-block-start-color: color-mix(in srgb, var(--side) 32%, transparent);
+}
+
+.board-list li::before {
+  background: var(--side);
+}
+
+.board-list li small {
+  opacity: 0.85;
+}
+
+/* The chat inside its block needs no frame of its own: the block is its frame. */
+.board-main > .chat,
+.board-main > .browser,
+.board-main > .ba {
+  box-shadow: none;
+}
+
+/* Titles and steps on the tinted block keep the page's light words. */
+.board.tone-orange .path-label strong {
+  color: var(--ivory);
+}
+
+.board.tone-orange .path-dot {
+  background: var(--accent);
+  color: #141413;
+}
+
+.start-main .start-line-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #141413;
+}
+
+.doc-head.board-head.tone-orange .board-main h1 em {
+  color: var(--accent);
 }
