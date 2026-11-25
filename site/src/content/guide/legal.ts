@@ -40,8 +40,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('What you may do with it', 'ماذا يحق لك أن تفعل بها'),
       text: [
         t(
-          'The code of the kit is released under the MIT licence. You may use it, copy it, change it and share it, for free, including in work you sell, as long as you keep the copyright line and the licence text with it.',
-          'كود الإضافة منشور برخصة ⁦MIT⁩. يحق لك أن تستخدمه وتنسخه وتعدله وتشاركه، مجانا، حتى في عمل تبيعه، بشرط أن تبقي سطر الحقوق ونص الرخصة معه.',
+          'Everything in the repository, including the kit’s code, this website’s source and its text, is released under the MIT licence unless a file says otherwise. You may use it, copy it, change it and share it, for free, including in work you sell, as long as you keep the copyright line and the licence text with it.',
+          'كل ما في المستودع، بما فيه كود الإضافة وكود هذا الموقع ونصوصه، منشور برخصة ⁦MIT⁩ ما لم يذكر ملف غير ذلك. يحق لك أن تستخدمه وتنسخه وتعدله وتشاركه، مجانا، حتى في عمل تبيعه، بشرط أن تبقي سطر الحقوق ونص الرخصة معه.',
         ),
         t('It comes without any warranty. The full text is in the file called LICENSE.', 'والإضافة تأتي دون أي ضمان. والنص الكامل في الملف المسمى ⁦LICENSE⁩.'),
       ],
@@ -72,8 +72,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Other people’s work', 'أعمال الآخرين'),
       text: [
         t(
-          'Some skills in the kit come from other projects and keep their own licences. They are listed in the third-party notices. The fonts of this website (Familjen Grotesk, IBM Plex Sans Arabic and IBM Plex Mono) are free fonts, used under the SIL Open Font Licence.',
-          'بعض المهارات في الإضافة أتت من مشاريع أخرى وتحتفظ برخصها. وهي مذكورة في ملف إشعارات الأطراف الثالثة. أما خطوط هذا الموقع (⁦Familjen Grotesk⁩ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩) فخطوط مجانية، تُستخدم برخصة ⁦SIL Open Font License⁩.',
+          'Some skills in the kit come from other projects and keep their own licences. They are listed in the third-party notices. The fonts of this website (Familjen Grotesk, IBM Plex Sans Arabic and IBM Plex Mono) are free fonts, used under the SIL Open Font Licence. Familjen Grotesk © 2021 The Familjen Grotesk Project Authors; IBM Plex Sans Arabic and IBM Plex Mono © IBM Corp. The licence text is at openfontlicense.org. This website is built with Astro (MIT licence).',
+          'بعض المهارات في الإضافة أتت من مشاريع أخرى وتحتفظ برخصها. وهي مذكورة في ملف إشعارات الأطراف الثالثة. أما خطوط هذا الموقع (⁦Familjen Grotesk⁩ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩) فخطوط مجانية، تُستخدم برخصة ⁦SIL Open Font License⁩. ⁦Familjen Grotesk⁩ © 2021 ⁦The Familjen Grotesk Project Authors⁩؛ و⁦IBM Plex Sans Arabic⁩ و⁦IBM Plex Mono⁩ © ⁦IBM Corp.⁩ ونص الرخصة في ⁦openfontlicense.org⁩. وبُني هذا الموقع بـ ⁦Astro⁩ (رخصة ⁦MIT⁩).',
         ),
       ],
       links: [{ label: t('Third-party notices', 'إشعارات الأطراف الثالثة'), to: 'blob/main/plugins/wajiha-kit/THIRD_PARTY_NOTICES.md', kind: 'repo' }],
@@ -117,8 +117,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('The kit on your computer', 'الإضافة على جهازك'),
       text: [
         t(
-          'Wajiha Kit runs on your computer, and the kit itself does not collect anything or send anything to its maker. Other services are still involved when you use it: Claude sends the parts of your project that the assistant reads to Anthropic, under Anthropic’s terms and privacy policy. A documentation tool called Context7 receives documentation searches. Helper tools are downloaded from npm. A link you give, such as a design or a description of your backend, is opened from your computer. Setup asks once whether to add two helper programs, Chrome DevTools and Playwright. If you say yes, they can open web pages and read what is on them, so use them only on pages that are not private.',
-          'تعمل واجهة على جهازك، والإضافة نفسها لا تجمع شيئا ولا ترسل شيئا إلى صانعها. لكن تدخل خدمات أخرى في العمل عند استخدامها: يرسل ⁦Claude⁩ الأجزاء التي يقرؤها المساعد من مشروعك إلى ⁦Anthropic⁩، وفق شروطها وسياسة الخصوصية لديها. وتستقبل أداة التوثيق ⁦Context7⁩ عمليات البحث في التوثيق. وتُنزَّل الأدوات المساعدة من ⁦npm⁩. وأي رابط تعطيه، مثل تصميم أو وصف لخادمك، يُفتح من جهازك. ويسألك الإعداد مرة واحدة إن كنت تريد إضافة برنامجين مساعدين، هما ⁦Chrome DevTools⁩ و⁦Playwright⁩. وإن وافقت فيستطيعان فتح صفحات الويب وقراءة ما فيها، فاستخدمهما فقط في صفحات ليست خاصة.',
+          'Wajiha Kit runs on your computer, and the kit itself does not collect anything or send anything to its maker. Other services are still involved when you use it: Claude sends your messages, the files it reads and what commands print to Anthropic, under Anthropic’s terms and privacy policy; how long Anthropic keeps them depends on your plan and settings. A documentation tool called Context7 (run by Upstash) is on by default and receives what the assistant searches for, plus your Context7 key if you add one. The kit’s checks are scripts that run on your computer with your permissions. One skill downloads a guidelines file from GitHub when you ask for a design audit. Helper tools are downloaded from npm. A link you give, such as a design or a description of your backend, is opened from your computer. Setup asks once whether to add two helper programs, Chrome DevTools and Playwright. If you say yes, they can open web pages and read what is on them, so use them only on pages that are not private.',
+          'تعمل واجهة على جهازك، والإضافة نفسها لا تجمع شيئا ولا ترسل شيئا إلى صانعها. لكن تدخل خدمات أخرى في العمل عند استخدامها: يرسل ⁦Claude⁩ رسائلك والملفات التي يقرؤها وما تطبعه الأوامر إلى ⁦Anthropic⁩، وفق شروطها وسياسة الخصوصية لديها؛ ومدة حفظها عندها تتبع خطتك وإعداداتك. وأداة التوثيق ⁦Context7⁩ (تشغّلها ⁦Upstash⁩) تعمل افتراضيا وتستقبل ما يبحث عنه المساعد، ومفتاحك فيها إن أضفته. وفحوص الإضافة سكربتات تعمل على جهازك بصلاحياتك. ومهارة واحدة تنزّل ملف إرشادات من ⁦GitHub⁩ عند طلب مراجعة تصميم. وتُنزَّل الأدوات المساعدة من ⁦npm⁩. وأي رابط تعطيه، مثل تصميم أو وصف لخادمك، يُفتح من جهازك. ويسألك الإعداد مرة واحدة إن كنت تريد إضافة برنامجين مساعدين، هما ⁦Chrome DevTools⁩ و⁦Playwright⁩. وإن وافقت فيستطيعان فتح صفحات الويب وقراءة ما فيها، فاستخدمهما فقط في صفحات ليست خاصة.',
         ),
       ],
       links: [{ label: t('Anthropic’s privacy policy', 'سياسة الخصوصية لدى Anthropic'), to: 'https://www.anthropic.com/legal/privacy', kind: 'outside' }],
@@ -176,8 +176,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('No guarantee', 'بلا ضمان'),
       text: [
         t(
-          'The kit and this website are provided “as is”, without any warranty. The assistant can make mistakes. The checks reduce them but cannot remove them. Look at what it makes before you rely on it, and keep a copy of anything you cannot lose.',
-          'تُقدَّم الإضافة وهذا الموقع «كما هي»، دون أي ضمان. وقد يخطئ المساعد. والفحوص تقلل الأخطاء لكنها لا تلغيها. انظر إلى ما يصنعه قبل أن تعتمد عليه، واحتفظ بنسخة من كل ما لا تحتمل خسارته.',
+          'The kit and this website are provided “as is”, without any warranty. The assistant can make mistakes. The checks reduce them but cannot remove them. The safety checks are a guard rail, not a sandbox: they read commands, but not what a script or program does inside. They need jq and a recent Claude Code, and older versions can let a command through. Keep branch protection on. Look at what the assistant makes before you rely on it, and keep a copy of anything you cannot lose.',
+          'تُقدَّم الإضافة وهذا الموقع «كما هي»، دون أي ضمان. وقد يخطئ المساعد. والفحوص تقلل الأخطاء لكنها لا تلغيها. وفحوص الأمان حاجز وقائي وليست بيئة معزولة: تقرأ الأوامر لكنها لا ترى ما يفعله سكربت أو برنامج من الداخل. وتحتاج ⁦jq⁩ ونسخة حديثة من ⁦Claude Code⁩، وقد تمرّر النسخ الأقدم أمرا. أبقِ حماية الفروع مفعّلة. وانظر إلى ما يصنعه المساعد قبل أن تعتمد عليه، واحتفظ بنسخة من كل ما لا تحتمل خسارته.',
         ),
       ],
     },
@@ -206,8 +206,8 @@ export const legal: Record<LegalId, LegalSection[]> = {
       title: t('Who looks after it', 'من يعتني بها'),
       text: [
         t(
-          'Wajiha Kit is made and looked after by one person, Diyar Firas. There is no promise of support or of how fast he answers, and only the latest version receives fixes. If it stops being updated, what you installed keeps working. The code is under the MIT licence, so you may keep your copy or make your own.',
-          'يصنع واجهة ويعتني بها شخص واحد، هو ديار فراس. ولا وعد بدعم ولا بسرعة الرد، والنسخة الأحدث وحدها تصلها الإصلاحات. وإن توقف تحديثها فما ثبّتّه يبقى يعمل. والكود برخصة ⁦MIT⁩، فيحق لك أن تحتفظ بنسختك أو أن تصنع نسختك.',
+          'Wajiha Kit is made and looked after by one person, Diyar Firas. There is no promise of support or of how fast he answers, and only the latest version receives fixes. If it stops being updated, what you installed usually keeps working, but it can break when Claude Code or the tools it uses change. The code is under the MIT licence, so you may keep your copy or make your own.',
+          'يصنع واجهة ويعتني بها شخص واحد، هو ديار فراس. ولا وعد بدعم ولا بسرعة الرد، والنسخة الأحدث وحدها تصلها الإصلاحات. وإن توقف تحديثها فما ثبّتّه يبقى يعمل عادة، لكنه قد يتعطل إذا تغيّر ⁦Claude Code⁩ أو الأدوات التي يستخدمها. والكود برخصة ⁦MIT⁩، فيحق لك أن تحتفظ بنسختك أو أن تصنع نسختك.',
         ),
       ],
     },
@@ -219,7 +219,7 @@ export const legal: Record<LegalId, LegalSection[]> = {
     {
       id: 'changes',
       title: t('Changes', 'التغييرات'),
-      text: [t('The kit and these terms may change over time. The date at the top of this page shows when it was last written.', 'قد تتغير الإضافة وهذه الشروط مع الوقت. والتاريخ في أعلى هذه الصفحة يبين متى حُدِّثت هذه الصفحة آخر مرة.')],
+      text: [t('The kit and these terms may change over time. The date at the top of this page shows when it was last written. If the Arabic and English texts differ, the English text is the reference.', 'قد تتغير الإضافة وهذه الشروط مع الوقت. والتاريخ في أعلى هذه الصفحة يبين متى حُدِّثت هذه الصفحة آخر مرة. وإن اختلف النصان العربي والإنجليزي، فالنص الإنجليزي هو المرجع.')],
     },
   ],
 }
