@@ -1,7 +1,8 @@
 // Builds the share images from site/design/og/og.html with the Chrome that is already on this machine.
-// Run it from site/ after changing the design:  node scripts/make-og.mjs
+// Run it from site/ after `npm run build` (the page images read each page's title from dist/):
+//   node scripts/make-og.mjs
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -18,10 +19,10 @@ if (!CHROME) throw new Error('Chrome was not found.')
 const page = pathToFileURL(resolve('design/og/og.html')).href
 const dir = join(tmpdir(), 'kit-og')
 mkdirSync(dir, { recursive: true })
-const looks = { en: 'og', ar: 'og-ar', docs: 'og-docs', 'docs-ar': 'og-docs-ar' }
+mkdirSync(resolve('public/og'), { recursive: true })
 
-for (const [look, name] of Object.entries(looks)) {
-  const png = join(dir, `${name}.png`)
+async function shoot(hash, out) {
+  const png = join(dir, 'shot.png')
   execFileSync(CHROME, [
     '--headless=new',
     '--disable-gpu',
@@ -30,9 +31,42 @@ for (const [look, name] of Object.entries(looks)) {
     '--window-size=1200,630',
     '--virtual-time-budget=4000',
     `--screenshot=${png}`,
-    `${page}#${look}`,
+    `${page}#${hash}`,
   ])
-  await sharp(png).jpeg({ quality: 88, mozjpeg: true }).toFile(resolve('public', `${name}.jpg`))
-  console.log(`public/${name}.jpg`)
+  await sharp(png).jpeg({ quality: 86, mozjpeg: true }).toFile(resolve('public', out))
+  console.log(`public/${out}`)
+}
+
+// The home page, in each language.
+await shoot('en', 'og.jpg')
+await shoot('ar', 'og-ar.jpg')
+
+// One image for each page of the guide, in each language, with its own title, words and colour.
+const PAGES = ['docs', 'guide', 'get-started', 'project-types', 'examples', 'questions', 'changelog', 'skills', 'agents', 'rules', 'checks', 'features', 'modes', 'configuration', 'refactor']
+const COLOURS = { skills: '#d97757', rules: '#f2a183', agents: '#57cdcd', checks: '#19abab' }
+const text = (html) =>
+  html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+const pick = (html, pattern) => text(html.match(pattern)?.[1] ?? '')
+
+for (const id of PAGES) {
+  for (const ar of [false, true]) {
+    const file = resolve('dist', ar ? 'ar' : '', id, 'index.html')
+    if (!existsSync(file)) throw new Error(`Build the site first: ${file} is missing.`)
+    const html = readFileSync(file, 'utf8')
+    const look = {
+      dir: ar ? 'rtl' : 'ltr',
+      title: pick(html, /<h1[^>]*>([\s\S]*?)<\/h1>/),
+      lead: pick(html, /<p class="doc-summary"[^>]*>([\s\S]*?)<\/p>/),
+      eyebrow: pick(html, /<p class="doc-eyebrow"[^>]*>([\s\S]*?)<\/p>/),
+      colour: COLOURS[id] ?? '#19abab',
+    }
+    await shoot(`page=${encodeURIComponent(JSON.stringify(look))}`, `og/${id}${ar ? '-ar' : ''}.jpg`)
+  }
 }
 rmSync(dir, { recursive: true, force: true })

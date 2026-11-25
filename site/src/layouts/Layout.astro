@@ -42,8 +42,11 @@ const { locale, route, title, description, indexable = true } = Astro.props
 const home = route.kind === 'home' && indexable
 const copy = content[locale]
 const absolute = (path: string) => new URL(path, Astro.site).href
-// The picture that shows when the link is shared: one look for the home page, one for the documentation, in each language.
-const share = `og${route.kind === 'home' ? '' : '-docs'}${locale === 'ar' ? '-ar' : ''}.jpg`
+// The picture that shows when the link is shared, in each language: the logo for the home page, and for each page of the
+// guide its own title and colour (scripts/make-og.mjs). A skill, specialist, rule or check uses its section's picture.
+const SECTION = { skill: 'skills', agent: 'agents', rule: 'rules', hook: 'checks' } as const
+const lang = locale === 'ar' ? '-ar' : ''
+const share = route.kind === 'home' ? `og${lang}.jpg` : `og/${route.kind === 'page' ? route.id : SECTION[route.kind]}${lang}.jpg`
 const product = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -79,7 +82,7 @@ const product = JSON.stringify({
     <meta property="og:description" content={description} />
     <meta property="og:url" content={absolute(routeUrl(locale, route))} />
     <meta property="og:image" content={absolute(asset(share))} />
-    <meta property="og:image:alt" content={copy.meta.title} />
+    <meta property="og:image:alt" content={route.kind === 'home' ? copy.meta.title : title} />
     <meta name="twitter:image" content={absolute(asset(share))} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
