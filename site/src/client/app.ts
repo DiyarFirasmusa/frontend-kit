@@ -16,16 +16,26 @@ let page = new AbortController()
 document.addEventListener('astro:page-load', () => {
   page.abort()
   page = new AbortController()
-  initChrome(page.signal)
-  initCopy()
-  initFinder()
-  initTree(page.signal)
-  initGate()
-  initLife(page.signal)
-  initTabs(page.signal)
-  initAlive(page.signal)
-  warmPages(page.signal)
-  initToc(page.signal)
-  initTopSearch(page.signal)
-  initBeforeAfter(page.signal)
+  const { signal } = page
+  const starters: [string, () => void][] = [
+    ['chrome', () => initChrome(signal)],
+    ['copy', initCopy],
+    ['finder', initFinder],
+    ['tree', () => initTree(signal)],
+    ['gate', initGate],
+    ['life', () => initLife(signal)],
+    ['tabs', () => initTabs(signal)],
+    ['alive', () => initAlive(signal)],
+    ['warm', () => warmPages(signal)],
+    ['toc', () => initToc(signal)],
+    ['search', () => initTopSearch(signal)],
+    ['slider', () => initBeforeAfter(signal)],
+  ]
+  for (const [name, start] of starters) {
+    try {
+      start()
+    } catch (error) {
+      console.error(`Wajiha Kit: the ${name} script did not start`, error)
+    }
+  }
 })

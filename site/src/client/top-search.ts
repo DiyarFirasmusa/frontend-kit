@@ -4,6 +4,10 @@ export function initTopSearch(signal: AbortSignal): void {
   const tree = document.querySelector<HTMLInputElement>('[data-tree-input]')
   if (!top || !tree) return
 
+  // The hint beside the box names the key this computer has.
+  const hint = top.parentElement?.querySelector('kbd')
+  if (hint && /mac|iphone|ipad/i.test(navigator.userAgent)) hint.textContent = '⌘ K'
+
   top.addEventListener(
     'input',
     () => {
@@ -16,7 +20,7 @@ export function initTopSearch(signal: AbortSignal): void {
   top.addEventListener(
     'keydown',
     (event) => {
-      if (event.key !== 'Enter') return
+      if (event.key !== 'Enter' || !top.value.trim()) return
       const first = document.querySelector<HTMLAnchorElement>('[data-tree-item]:not([hidden]) a')
       if (!first) return
       event.preventDefault()

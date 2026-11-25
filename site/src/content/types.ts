@@ -1,5 +1,3 @@
-import type { SceneId } from './scenes.ts'
-
 export type Locale = 'en' | 'ar'
 export type VerdictId = 'force' | 'verify' | 'main' | 'reset' | 'secrets' | 'live' | 'typecheck'
 
@@ -24,13 +22,6 @@ export type HookEvent =
   | 'Notification'
   | 'Stop'
   | 'SessionEnd'
-
-export interface SceneCopy {
-  title: string | ((facts: Facts) => string)
-  text?: string
-  points?: string[]
-  steps?: [name: string, text: string][]
-}
 
 /** The long read under the film: why to use the kit and everything it holds. */
 export interface Details {
@@ -60,7 +51,6 @@ export interface Copy {
     pause: string
     play: string
   }
-  scenes: Record<SceneId, SceneCopy>
   facts: { skills: string; agents: string; rules: string; events: string }
   box: { title: string; lead: string; contents: (facts: Facts) => [amount: number, label: string][] }
   gate: {

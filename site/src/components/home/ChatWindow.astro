@@ -21,7 +21,7 @@ const { locale, label, live = false } = Astro.props
     live && (
       <>
         <p class="sr-only">{chatWords.summary[locale]}</p>
-        <button type="button" class="chat-pause" aria-pressed="false" aria-label={chatWords.pause[locale]} data-pause data-pause-label={chatWords.pause[locale]} data-play-label={chatWords.play[locale]} hidden>
+        <button type="button" class="chat-pause" aria-pressed="false" aria-label={chatWords.pause[locale]} data-pause hidden>
           <i aria-hidden="true"></i>
         </button>
       </>

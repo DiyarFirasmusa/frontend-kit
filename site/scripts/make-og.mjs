@@ -9,12 +9,13 @@ import { pathToFileURL } from 'node:url'
 import sharp from 'sharp'
 
 const CHROME = [
+  process.env.CHROME,
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/usr/bin/google-chrome',
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-].find((path) => existsSync(path))
-if (!CHROME) throw new Error('Chrome was not found.')
+].find((path) => path && existsSync(path))
+if (!CHROME) throw new Error('Chrome was not found. Set CHROME to the browser path.')
 
 const page = pathToFileURL(resolve('design/og/og.html')).href
 const dir = join(tmpdir(), 'kit-og')
@@ -32,7 +33,7 @@ async function shoot(hash, out) {
     '--virtual-time-budget=4000',
     `--screenshot=${png}`,
     `${page}#${hash}`,
-  ])
+  ], { timeout: 60000 })
   await sharp(png).jpeg({ quality: 86, mozjpeg: true }).toFile(resolve('public', out))
   console.log(`public/${out}`)
 }

@@ -37,5 +37,16 @@ export function initToc(signal: AbortSignal): void {
     { rootMargin: '-20% 0px -70% 0px' },
   )
   for (const part of parts) watcher.observe(part)
+  const atEnd = (): void => {
+    if (innerHeight + scrollY < document.documentElement.scrollHeight - 4) return
+    const last = links.length - 1
+    links.forEach((link, i) => {
+      if (i === last) link.setAttribute('aria-current', 'location')
+      else link.removeAttribute('aria-current')
+      link.toggleAttribute('data-passed', i < last)
+    })
+    toc.style.setProperty('--reached', String((last + 0.5) / links.length))
+  }
+  addEventListener('scroll', atEnd, { passive: true, signal })
   signal.addEventListener('abort', () => watcher.disconnect())
 }

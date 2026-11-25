@@ -1,4 +1,4 @@
-import { all, required } from './dom.ts'
+import { all, fold, required } from './dom.ts'
 
 /** Filters the skill list as you type, in either language. */
 export function initFinder(): void {
@@ -6,15 +6,18 @@ export function initFinder(): void {
   if (!finder) return
   const input = required<HTMLInputElement>('[data-finder-input]', finder)
   const empty = required<HTMLElement>('[data-finder-empty]', finder)
-  const groups = all<HTMLElement>('[data-finder-group]').map((element) => ({ element, items: all<HTMLElement>('[data-finder-item]', element) }))
+  const groups = all<HTMLElement>('[data-finder-group]').map((element) => ({
+    element,
+    items: all<HTMLElement>('[data-finder-item]', element).map((item) => ({ item, text: fold(item.dataset['search'] ?? '') })),
+  }))
 
   input.addEventListener('input', () => {
-    const words = input.value.toLowerCase().split(/\s+/).filter(Boolean)
+    const words = fold(input.value).split(/\s+/).filter(Boolean)
     let found = 0
     for (const { element, items } of groups) {
       let shown = 0
-      for (const item of items) {
-        item.hidden = !words.every((word) => item.dataset['search']?.includes(word))
+      for (const { item, text } of items) {
+        item.hidden = !words.every((word) => text.includes(word))
         if (!item.hidden) shown++
       }
       element.hidden = shown === 0

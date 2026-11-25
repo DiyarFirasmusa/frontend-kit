@@ -7,10 +7,9 @@ import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import { content } from '../../content/index.ts'
 import type { Bilingual } from '../../content/catalogue.ts'
-import type { Locale } from '../../content/types.ts'
-import { hookOrder } from '../../lib/kit-map.ts'
+import type { HookEvent, Locale } from '../../content/types.ts'
 import { agentUrl, hookUrl, pageUrl, routeUrl, ruleUrl, skillUrl } from '../../lib/links.ts'
-import { ruleGroups } from '../../lib/plugin.ts'
+import { hookEvents, ruleGroups } from '../../lib/plugin.ts'
 import type { Route } from '../../lib/routes.ts'
 
 interface Props {
@@ -26,6 +25,8 @@ interface Leaf {
 }
 
 const { locale, route } = Astro.props
+// The checks, in the order the plugin's own list gives them.
+const hookOrder = (Object.keys(content.en.session.events) as HookEvent[]).filter((event) => hookEvents.includes(event))
 const copy = content[locale]
 const here = routeUrl(locale, route)
 const words = {

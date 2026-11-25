@@ -83,7 +83,7 @@ const searchWords = {
           <div>
             <p>{title[locale]}</p>
             {pages.map((id) => (
-              <a href={pageUrl(locale, id)} aria-current={id === current ? 'true' : undefined}>
+              <a href={pageUrl(locale, id)} aria-current={id === current ? 'page' : undefined}>
                 {PAGES[id].name[locale]}
               </a>
             ))}

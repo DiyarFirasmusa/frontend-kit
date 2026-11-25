@@ -3,8 +3,15 @@ import { all } from './dom.ts'
 const calm = (): boolean => matchMedia('(prefers-reduced-motion: reduce)').matches
 const wait = (ms: number, signal: AbortSignal): Promise<void> =>
   new Promise((resolve) => {
-    const timer = setTimeout(resolve, ms)
-    signal.addEventListener('abort', () => (clearTimeout(timer), resolve()), { once: true })
+    const stop = (): void => {
+      clearTimeout(timer)
+      resolve()
+    }
+    const timer = setTimeout(() => {
+      signal.removeEventListener('abort', stop)
+      resolve()
+    }, ms)
+    signal.addEventListener('abort', stop, { once: true })
   })
 
 /** Keeps the newest message in view, as a chat does. */

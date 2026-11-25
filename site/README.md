@@ -1,31 +1,31 @@
 # Wajiha Kit website
 
-The public site of the plugin: Astro (static), Three.js, English at `/` and Arabic at `/ar/`.
+The public site of the plugin: Astro (static), English at `/` and Arabic at `/ar/`. Live at https://www.wajihakit.com.
 It is not part of the plugin and is not installed into projects.
 
 ```bash
 cd site
 npm ci
 npm run dev        # http://localhost:4321/
-npm run check      # types
-npm test           # scene geometry and timeline
+npm run check      # types (must stay at 0 errors)
 npm run build      # site/dist
+npm run og         # share images, after a build (needs Chrome)
 ```
 
-Building needs `bash`, `git` and `jq`: the gate demo runs the plugin's real `guard-bash.sh` and prints what it answers.
+Building needs `bash`, `git` and `jq`: the safety-check demo runs the plugin's real `guard-bash.sh` and prints what it
+answers.
 
 ## Deploy (Vercel)
 
-Live: https://www.wajihakit.com (Vercel project `wajiha-kit`, connected to `main`; wajihakit.com and wajiha-kit.vercel.app lead there too).
+Vercel project `wajiha-kit`, connected to `main`: a push publishes. `wajihakit.com` redirects to `www.wajihakit.com`.
 
 Import the repository with **Root Directory** set to `site`, and keep "Include source files outside of the Root Directory"
-on: the build reads `../plugins` and `../examples`. `vercel.json` holds the rest. Pushes to `main` then publish.
-Canonical links use Vercel's production domain, or `SITE_URL` when it is set (for a custom domain).
+on: the build reads `../plugins` and `../examples`. `vercel.json` holds the rest. Canonical links use
+`https://www.wajihakit.com` (or `SITE_URL` when it is set); only `npm run dev` uses `http://localhost:4321`.
 
 ## How it stays true to the plugin
 
-- Counts, version, rule files and hook events are read from `../plugins/wajiha-kit` at build time, and the 3D shapes
-  are counted from the same numbers (a plate per skill, a guardian per agent, a ring per hook event).
+- Counts, version, rule files and hook events are read from `../plugins/wajiha-kit` at build time.
 - The build fails when the plugin has a skill, agent, rule file, hook event or example project with no copy here (or the
   reverse). What to add, in both languages:
 
@@ -37,46 +37,45 @@ Canonical links use Vercel's production domain, or `SITE_URL` when it is set (fo
   | a hook event | `src/content/*-details.ts` and `src/content/guide/checks.ts` and `purpose.ts` |
   | an example project | `src/content/guide/examples.ts` |
 
-- Prose claims are written by hand. Review them when the plugin's behaviour changes.
+- Prose claims are written by hand. Review them when the plugin's behaviour changes: the pages say what the kit does
+  today (for example "known risky commands", "updates are off after setup"), and the setup questions say the setup is
+  being updated until the next version ships.
 
-## The documentation
+## Words
 
-`/docs/` indexes everything. `src/pages/[...path].astro` builds every route in both languages from `src/lib/routes.ts`:
-the home page, the topic pages (`src/content/guide/pages.ts`), and one page per skill, agent, rule file and hook event.
-Each of those says why it exists and when it applies (`src/content/guide/purpose.ts`), then shows the plugin's own file
-in full, read at build time (`src/content.config.ts`, `src/lib/reference.ts`). Skills bundled from other projects
-(`THIRD_PARTY_NOTICES.md`) are described and linked, not copied.
+Every sentence is a pair: `t('English', 'العربية')` in `src/content/**`. Rules for the words: plain language for people who
+do not code, one name per thing (kit, specialist, safety check, reviewer, backend), no prices, and the only person named
+is Diyar Firas with his GitHub link. A Latin word inside Arabic text is wrapped in the isolate marks `⁦ … ⁩`.
 
-A new topic page is an entry in `PAGES`, a place in `SECTIONS` and a component in `BODIES`. Only the home page loads
-Three.js.
+## Pages
 
-## The one stage
+`src/pages/[...path].astro` builds every route in both languages from `src/lib/routes.ts`: the home page, the topic
+pages (`src/content/guide/pages.ts`), and one page per skill, agent, rule file and hook event. The topic pages are
+components in `src/components/pages/`. A new topic page is an entry in `PAGES`, a place in `SECTIONS` and a component in
+`BODIES` (the rights, privacy and terms pages share `Legal.astro` and live in `src/content/guide/legal.ts`).
 
-Every page stands on the same WebGL stage (`src/components/stage/Stage.astro`). Astro's client router keeps it between
-pages, so the blocks fly from one page's shape to the next. Switching language reloads: the stage is built for one
-direction.
+Each skill, agent, rule and check says why it exists and when it applies (`src/content/guide/purpose.ts`), then shows
+the plugin's own file in full, read at build time (`src/content.config.ts`, `src/lib/reference.ts`).
 
-Without JavaScript or WebGL 2, under reduced motion, with data saver, at 2 GB of memory or less, or when WebGL runs in
-software, every page is complete plain HTML with a still frame. While it plays, a governor lowers the resolution and
-then the effects. The pause button switches between the two.
+## Scripts and styles
 
-On the home page each `[data-stage-shape]` under `[data-score]` is a cue. The scroll between two cues is the change
-itself: shape and words are played from one eased position (`src/client/stage/score.ts`), in both directions.
+`src/client/app.ts` starts the scripts on every page load (each in its own `try`, with one `AbortSignal` that ends them
+on the next navigation).
 
-Dragging turns the shape. Pressing it blows it apart, and pressing an object on an overview opens what it names.
+The 16 CSS files in `src/styles/` are imported in this order by `src/layouts/Layout.astro`, and a later file wins:
 
-| Path | What |
+| File | Owns |
 | ---- | ---- |
-| `src/content/emblems.ts` | which sign each skill, agent, rule file, hook and page has |
-| `src/film/shapes/emblems/signs.ts` | the signs, drawn with a few pencils (`draw.ts`) and built out of blocks (`build.ts`) |
-| `src/film/shapes/` | the other shapes: plain functions, covered by `npm test` |
-| `src/film/direction.ts` | camera shots, light and how blocks fly |
-| `src/film/render/` | the instanced mesh, set, camera and lens |
-| `src/client/stage/` | the stage, its score, flights and what can be pressed |
-| `src/components/home/`, `src/components/docs/` | the home page and the tree of the documentation |
-| `src/styles/motion.css`, `src/client/reveal.ts` | how everything else moves; none of it under reduced motion |
+| `tokens.css`, `base.css` | colours, type, spacing, resets |
+| `header.css`, `details.css`, `guide.css`, `doc.css`, `stage.css` | the header, small components, the guide's blocks, the document layout |
+| `home.css`, `colour.css`, `rounded.css`, `motion.css`, `identity.css` | the home page, then the orange / turquoise identity, radii and motion passes over it |
+| `chat.css`, `sections.css`, `loops.css` | the chat window, the home sections, the loops that run only on screen (`data-alive`) |
+| `docs-space.css` | the guide's dark frame, footer, accessibility and last overrides |
 
-A new skill, agent, rule file or hook event also needs a sign in `src/content/emblems.ts`: the build says which is
-missing.
+When you change a rule, search the later files for the same selector first.
 
-`public/stills/<shape>.jpg` (1000 x 620) and `public/og.jpg` (1200 x 630) are screenshots of the stage.
+## Share images
+
+`npm run og` (after `npm run build`) runs Chrome on `design/og/og.html` and writes the share images: `public/og.jpg`,
+`public/og-ar.jpg` and one `public/og/<page>[-ar].jpg` per guide page (title, words and section colour read from the built
+page), plus copies in `../brand/cover/`. Set `CHROME` to the browser's path if it is not found.

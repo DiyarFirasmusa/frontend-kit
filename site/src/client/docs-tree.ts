@@ -1,4 +1,4 @@
-import { all, required } from './dom.ts'
+import { all, fold, required } from './dom.ts'
 
 /** Where the tree was scrolled to, so moving between pages does not move the tree. */
 let scrolled = 0
@@ -20,7 +20,7 @@ export function initTree(signal: AbortSignal): void {
   announce.setAttribute('role', 'status')
   tree.append(announce)
   const openAtFirst = groups.map((group) => group.open)
-  const items = groups.map((group) => all<HTMLElement>('[data-tree-item]', group))
+  const items = groups.map((group) => all<HTMLElement>('[data-tree-item]', group).map((item) => ({ item, text: fold(item.dataset['search'] ?? '') })))
 
   list.scrollTop = scrolled
   const current = list.querySelector<HTMLElement>('a[aria-current="page"]')
@@ -32,16 +32,16 @@ export function initTree(signal: AbortSignal): void {
   list.addEventListener('scroll', () => (scrolled = list.scrollTop), { passive: true })
 
   input.addEventListener('input', () => {
-    const words = input.value.toLowerCase().split(/\s+/).filter(Boolean)
+    const words = fold(input.value).split(/\s+/).filter(Boolean)
     let found = 0
     groups.forEach((group, i) => {
       let shown = 0
-      for (const item of items[i]!) {
-        item.hidden = !words.every((word) => item.dataset['search']?.includes(word))
+      for (const { item, text } of items[i] ?? []) {
+        item.hidden = !words.every((word) => text.includes(word))
         if (!item.hidden) shown++
       }
       group.hidden = shown === 0
-      group.open = words.length > 0 || openAtFirst[i]!
+      group.open = words.length > 0 || (openAtFirst[i] ?? false)
       found += shown
     })
     empty.hidden = found > 0

@@ -2,7 +2,6 @@ import { globSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
 import { agents as agentCopy, skillGroups } from '../content/catalogue.ts'
 import { enDetails } from '../content/en-details.ts'
-import type { Census } from '../film/shapes/index.ts'
 import type { Facts, HookEvent } from '../content/types.ts'
 
 // Astro runs from site/, next to plugins/.
@@ -56,13 +55,6 @@ export const facts: Facts = {
   servers: Object.keys(JSON.parse(read('.mcp.json')).mcpServers).length,
   denied: JSON.parse(read('templates', 'react', 'settings.json')).permissions.deny.length,
   examples: readdirSync(resolve(PLUGIN_DIR, '../../examples'), { withFileTypes: true }).filter((e) => e.isDirectory()).length,
-}
-
-export const census: Census = {
-  skills: facts.skills,
-  agents: facts.agents,
-  events: facts.events,
-  ruleGroups: ruleGroups.map(({ names }) => names.length),
 }
 
 export const REPO = 'DiyarFirasmusa/wajiha-kit'
