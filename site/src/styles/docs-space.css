@@ -3234,3 +3234,8 @@ body:has(main.doc) .top.is-scrolled,
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
+
+/* Long points read in two layers: the sentence that matters, then the detail in a quieter tone. */
+.ticks li .rest {
+  color: var(--muted);
+}

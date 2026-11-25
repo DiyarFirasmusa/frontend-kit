@@ -32,6 +32,12 @@ const parts = (x: string): string[] => {
   for (let i = 0; i < sentences.length; i += 2) out.push(sentences.slice(i, i + 2).join(' '))
   return out
 }
+// A point: its first sentence is the point, the rest is the detail.
+const point = (x: string): string => {
+  const at = x.search(/(?<=[.؟!])\s/)
+  if (at < 0) return f(x)
+  return '<strong>' + f(x.slice(0, at)) + '</strong> <span class="rest">' + f(x.slice(at + 1)) + '</span>'
+}
 const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
 ---
 
@@ -46,7 +52,7 @@ const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
 </Block>
 <Block id="tidy" title={d.tidy.title[locale]}>
   <ul class="ticks">
-    {d.tidy.items.map((item) => <li><Fragment set:html={f(item[locale])} /></li>)}
+    {d.tidy.items.map((item) => <li><Fragment set:html={point(item[locale])} /></li>)}
   </ul>
   <p><Fragment set:html={f(d.tidy.limits[locale])} /></p>
   <p class="links">
@@ -99,7 +105,7 @@ const f = (x: string): string => esc(x).replace(/`([^`]+)`/g, '<code>$1</code>')
 </Block>
 <Block id="checks" title={d.checks.title[locale]} lead={d.checks.lead[locale]}>
   <ul class="ticks">
-    {d.checks.items.map((item) => <li><Fragment set:html={f(item[locale])} /></li>)}
+    {d.checks.items.map((item) => <li><Fragment set:html={point(item[locale])} /></li>)}
   </ul>
   <p><Fragment set:html={f(d.checks.limits[locale])} /></p>
   <p class="links"><a class="source" href={pageUrl(locale, 'checks')}>{words.checks[locale]}</a></p>
