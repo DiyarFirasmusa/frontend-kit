@@ -1611,3 +1611,29 @@ html[lang='ar'] .credits {
     font-size: 1rem;
   }
 }
+
+/* ---------- Round 9: phone targets ---------- */
+@media (max-width: 620px) {
+  /* A row of links never leaves one stranded at the far end. */
+  .doc .links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .show-tabs button {
+    min-height: 2.75rem;
+  }
+
+  .questions summary {
+    min-height: 2.75rem;
+  }
+
+  .hero-ways a,
+  .start-side > a,
+  .start-line + p a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+}
