@@ -248,3 +248,72 @@ html[data-theme='light'] .ba .ba-tag.is-good span {
   background: #0c7a7a !important;
   color: #fff !important;
 }
+
+/* The small lines under side-column rows and journey steps are never below 13px. */
+html .board-list li small,
+html .board .path-label p {
+  font-size: max(0.8125rem, 1em);
+  line-height: 1.5;
+}
+
+/* Round 4: focus is visible on the orange blocks (near-black ring, 5.5:1), small hit areas grow without changing the look. */
+html[data-theme='light'] .board-main :focus-visible,
+html[data-theme='light'] .board-main a:focus-visible,
+html[data-theme='light'] .board-main input:focus-visible {
+  outline-color: #141413;
+  box-shadow: 0 0 0 2px #fffdf9;
+}
+
+.heading-link {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+}
+
+.chat-pause,
+[data-pause] {
+  position: relative;
+}
+
+.chat-pause::before,
+[data-pause]::before {
+  content: '';
+  position: absolute;
+  inset: -0.5rem;
+}
+
+.foot a {
+  padding-block: 0.25rem;
+}
+
+/* Round 4 (Arabic and phone): Arabic text is never below 15px, also in the start part and the hero's small lines. */
+:lang(ar) #install .start-window .start-message,
+:lang(ar) #install .start-skip,
+:lang(ar) #install .start-window .start-hint,
+:lang(ar) #install .start-text,
+:lang(ar) .hero-trust,
+:lang(ar) .hero-audience-label {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+:lang(ar) .tree small,
+:lang(ar) .tree summary {
+  font-size: max(0.875rem, 1em);
+  letter-spacing: 0;
+}
+
+/* The comparison's drag pill sits at the bottom centre of the window, clear of the cards, on a phone. */
+@media (max-width: 47.99rem) {
+  .ba-cue {
+    inset-block-end: 0.5rem;
+    inset-block-start: auto;
+  }
+
+  .chat.is-playing .chat-body,
+  .hero-side .chat .chat-body {
+    min-height: 0;
+  }
+}

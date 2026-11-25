@@ -1,5 +1,4 @@
 ---
-import { agents } from '../../content/catalogue.ts'
 import { PAGES } from '../../content/guide/pages.ts'
 import { t } from '../../content/guide/text.ts'
 import type { Locale } from '../../content/types.ts'
@@ -91,11 +90,6 @@ const morePages = (['features', 'modes', 'configuration', 'refactor', 'changelog
             </span>
             <strong>{name}</strong>
             <span class="hub-kind-about">{about}</span>
-            {kind === 'agent' && (
-              <span class="hub-kind-rows" aria-hidden="true">
-                {Object.keys(agents).slice(0, 4).map((name) => <span><bdi>{name}</bdi></span>)}
-              </span>
-            )}
           </a>
         </li>
       ))

@@ -1207,3 +1207,20 @@ body:has(main.doc) .top.is-scrolled,
     overflow-wrap: break-word;
   }
 }
+
+/* Round 4: no small text below 13px; heading links in rows are not underlined like running links. */
+.doc-article :is(.rows dd small, .check-row small, .hook-when, .trigger, dd small),
+.doc .rows dd > small {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.doc-article h3 a,
+.doc-article .rows dt a {
+  text-decoration: none;
+}
+
+.doc-article h3 a:hover,
+.doc-article .rows dt a:hover {
+  text-decoration: underline;
+}
