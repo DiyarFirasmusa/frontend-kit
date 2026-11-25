@@ -11,16 +11,16 @@ export const needs = [
   {
     name: t('Three free helper programs', 'ثلاثة برامج مساعدة مجانية'),
     why: t(
-      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). On Windows the safety checks may not fully work yet (see Questions). You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK. You can also ask it: “Install what Wajiha Kit needs”.',
-      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد (راجع «الأسئلة»). ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. ويمكنك أيضا أن تطلب منه: «ثبّت ما تحتاجه واجهة».',
+      'Your project needs them to run on your computer: Node (runs the project), git (keeps every version so you can go back) and jq (used by the safety checks). On Windows the safety checks may not fully work yet (see Questions). You do not install anything yourself. If one is missing, Claude tells you which and installs it after your OK. The message below makes Claude check jq first, because without jq the safety checks refuse every command.',
+      'يحتاجها مشروعك ليعمل على جهازك: ⁦Node⁩ (يشغل المشروع)، و⁦git⁩ (يحفظ كل نسخة لترجع إليها)، و⁦jq⁩ (تستخدمه فحوص الأمان). وعلى ⁦Windows⁩ قد لا تعمل فحوص الأمان كاملة بعد (راجع «الأسئلة»). ولا تثبّت شيئا بنفسك. إن نقص أحدها يخبرك ⁦Claude⁩ بما ينقص ويثبّته بعد موافقتك. وتجعل الرسالة أدناه ⁦Claude⁩ يتحقق من ⁦jq⁩ أولا، لأن فحوص الأمان ترفض كل الأوامر بدونه.',
     ),
   },
 ]
 
 /** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
 export const installMessage = t(
-  'Please install the Wajiha Kit plugin for this project. Run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
-  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي بواجهة.',
+  'Please install the Wajiha Kit plugin for this project. First check that jq is installed. If it is missing, help me install it (brew install jq on a Mac, winget install jqlang.jq on Windows, sudo apt install jq on Linux). Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
+  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ مثبّت. وإن لم يكن موجودا فساعدني في تثبيته (⁦brew install jq⁩ على ماك، و⁦winget install jqlang.jq⁩ على ويندوز، و⁦sudo apt install jq⁩ على لينكس). ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي بواجهة.',
 )
 
 /** Three steps, all inside the Claude app. `copy` is what the step asks you to send. */
@@ -37,8 +37,8 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
 ]
 
 export const questionsLead = t(
-  'The setup asks the same few questions of everyone. None of them is technical. Answer in your own words.',
-  'يسأل Claude الجميع الأسئلة القليلة نفسها. ليس فيها سؤال تقني. أجب بكلماتك أنت.',
+  'The setup asks the same few questions of everyone. None of them is technical. Answer in your own words. The setup is being updated, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
+  'يسأل Claude الجميع الأسئلة القليلة نفسها. ليس فيها سؤال تقني. أجب بكلماتك أنت. والإعداد قيد التحديث، فقد يسأل اليوم بصيغة مختلفة قليلا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
 )
 
 export const questions = [
@@ -68,7 +68,7 @@ export const questions = [
   {
     question: t('Do you already have a backend?', 'هل عندك خادم خلفي (backend)؟'),
     answers: [
-      t('Yes: send the link to its description, or the file. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers.', 'نعم: أرسل رابط وصفه أو ملفه. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك.'),
+      t('Yes: save its description in your project as docs/api/openapi.json. It is often called OpenAPI or Swagger. The kit reads it to learn what your backend offers. Sending a link instead comes in the next version.', 'نعم: احفظ وصفه في مشروعك باسم ⁦docs/api/openapi.json⁩. وغالبا يسمى ⁦OpenAPI⁩ أو ⁦Swagger⁩. تقرؤه الإضافة لتعرف ما يقدمه خادمك. وإرسال رابطه بدل ذلك يأتي في النسخة القادمة.'),
       t('Not sure, or no: say no, and connect one later. It asks whether people sign in. It asks what the main things are that your project manages (orders, customers, products…) only if you did not already say so.', 'إن لم تكن متأكدا أو لم يكن عندك: قل لا، وتستطيع ربط خادم لاحقا. تسألك إن كان الناس يسجلون الدخول. وتسألك عن الأشياء الرئيسية التي يديرها مشروعك (طلبات، عملاء، منتجات…) فقط إن لم تذكرها من قبل.'),
     ],
   },

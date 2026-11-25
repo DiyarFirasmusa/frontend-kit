@@ -20,7 +20,7 @@ export const beginnerQuestions = [
   ],
   [
     t('What if I do not know my backend’s API link?', 'ماذا لو لم أكن أعرف رابط وصف خادمي (API)؟'),
-    t('That is fine. This link is a page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later.', 'لا مشكلة. هذا الرابط صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا.'),
+    t('That is fine. This is a file or page that describes what your backend offers, often called OpenAPI or Swagger. Ask whoever built your backend for it, and save it in your project as docs/api/openapi.json. If you do not have it yet, skip it. The kit asks instead whether people sign in and what the main things are that you manage, such as orders, customers or products. It can then build the pages with example data, and you connect your real backend later.', 'لا مشكلة. هذا ملف أو صفحة تصف ما يقدمه خادمك، وتسمى غالبا ⁦OpenAPI⁩ أو ⁦Swagger⁩. اطلبه ممن بنى الخادم، واحفظه في مشروعك باسم ⁦docs/api/openapi.json⁩. وإذا لم يكن عندك بعد، تجاوز هذا السؤال. ستسألك الإضافة بدله هل يسجل الناس الدخول، وما أهم الأشياء التي تديرها، مثل الطلبات والعملاء والمنتجات. وعندها تبني الصفحات ببيانات تجريبية، وتربطها بخادمك الحقيقي لاحقا.'),
   ],
   [
     t('What if I have no design?', 'ماذا لو لم يكن عندي تصميم؟'),
@@ -47,7 +47,7 @@ export const beginnerQuestions = [
 export const problems = [
   [
     t('Every command is refused after installing.', 'تُرفض كل الأوامر بعد التثبيت.'),
-    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it (on macOS: brew install jq; on Windows: winget install jqlang.jq), then close Claude Code and open it again.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها (على macOS: ⁦brew install jq⁩، وعلى Windows: ⁦winget install jqlang.jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد.'),
+    t('The safety checks refuse a command when they cannot read it. This happens when a small free tool called jq is missing. Install it yourself (on macOS: brew install jq; on Windows: winget install jqlang.jq; on Linux: sudo apt install jq), then close Claude Code and open it again. Claude cannot install it for you here, because the checks refuse the command.', 'ترفض فحوص الأمان الأمر إذا لم تستطع قراءته، وهذا يحدث عندما تكون أداة صغيرة مجانية اسمها ⁦jq⁩ غير موجودة. ثبّتها بنفسك (على macOS: ⁦brew install jq⁩، وعلى Windows: ⁦winget install jqlang.jq⁩، وعلى Linux: ⁦sudo apt install jq⁩) ثم أغلق ⁦Claude Code⁩ وافتحه من جديد.'),
   ],
   [
     t('The rules do not seem to load.', 'القواعد لا تعمل على ما يبدو.'),
