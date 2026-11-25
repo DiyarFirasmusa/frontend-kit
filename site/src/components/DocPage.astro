@@ -88,7 +88,8 @@ const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${he
 // The site's name in the language of the page, so an Arabic title never starts or ends with a Latin brand.
 const brand = locale === 'ar' ? 'واجهة' : 'Wajiha Kit'
 // A short description is padded with the page's place in the guide, so it is never a bare tagline.
-const padded = summary && summary.length < 70 ? `${summary} ${info.name[locale]}: ${PAGES.docs.name[locale]} ${brand}.` : (summary ?? '')
+const ended = summary ? summary.trim().replace(/[.؟?!:]*$/u, '.') : ''
+const padded = summary && summary.length < 70 ? (locale === 'ar' ? `${ended} من دليل ${brand}، قسم ${info.name[locale]}.` : `${ended} Part of the ${brand} guide: ${info.name[locale]}.`) : (summary ?? '')
 const described = padded.length > 160 ? `${padded.slice(0, 157).replace(/\s+\S*$/, '')}…` : padded
 // The same mark as the home page: on a kind's pages its own block shows in the kind's colour, on the other pages all four.
 // The colours of the blocks are in docs-law.css (the documentation law), so light mode can deepen them.

@@ -39,6 +39,7 @@ jobs:
 
   site:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: site
@@ -51,11 +52,16 @@ jobs:
           node-version-file: site/.nvmrc
           cache: npm
           cache-dependency-path: site/package-lock.json
-      - name: Install jq
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq jq
       - name: Install dependencies
         run: npm ci --no-fund --no-audit
       - name: Type and template check
         run: npx astro check
       - name: Build
         run: npm run build
+      - name: Check the built site
+        run: |
+          test -f dist/sitemap.xml
+          pages=$(find dist -name index.html | wc -l)
+          echo "pages: $pages"
+          test "$pages" -gt 200
+          grep -q 'hreflang="ar"' dist/index.html
