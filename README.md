@@ -39,7 +39,7 @@ detects the stack (package manager, framework, router, tests, linter, formatter,
 and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/wajiha-kit.json`,
 adapted to what it found.
 
-**Updates don't always arrive by themselves.** Setup turns on `autoUpdate` for the kit's marketplace, but Claude Code
+**Updates don't always arrive by themselves.** Setup writes `autoUpdate: false` for the kit's marketplace, so updates are by hand unless you turn it on. Where it is on, Claude Code
 updates plugins only in interactive sessions, and not at all where `DISABLE_AUTOUPDATER`, `DISABLE_UPDATES` or
 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is set (the Claude desktop app sets the first), unless
 `FORCE_AUTOUPDATE_PLUGINS=1` is too. To update by hand, in the project's folder (both commands: the first alone refreshes
