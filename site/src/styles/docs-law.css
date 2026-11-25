@@ -1269,3 +1269,57 @@ html[data-theme='light'] .block.is-orange .num {
     overflow-x: visible !important;
   }
 }
+
+/* Round 2, from the Arabic / phone / light review */
+/* The comparison keeps a real height on a phone, and the drag pill never covers the cards. */
+@media (max-width: 47.99rem) {
+  .board-main > .ba {
+    aspect-ratio: 3 / 4;
+    min-height: 22rem;
+    width: 100%;
+  }
+
+  .hero-phone button,
+  .hero-phone a {
+    border-radius: 0.5rem;
+  }
+
+  /* One layout for the opening bar in both languages: the mark and one line of words. */
+  .board-top {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .board-top > span:last-child,
+  .board-top > bdi {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Commands that scroll show it: a fade at the end edge. */
+  #install .start-text .msg-command {
+    mask-image: linear-gradient(to right, #000 85%, transparent);
+  }
+}
+
+.hero-trust {
+  max-width: 34rem;
+  text-wrap: pretty;
+}
+
+/* Light mode: small coloured text uses the deeper tones. */
+html[data-theme='light'] .brand-version {
+  color: #006c6d;
+}
+
+html[data-theme='light'] .tree summary > span,
+html[data-theme='light'] [data-tree-group] > summary span {
+  color: #a64b28;
+}
+
+html[data-theme='light'] .board.tone-orange .path-label,
+html[data-theme='light'] .board.tone-orange .path-label p,
+html[data-theme='light'] .board.tone-orange .path-label h3 {
+  color: #050607;
+}

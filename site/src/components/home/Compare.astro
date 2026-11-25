@@ -100,7 +100,7 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
       <Fragment slot="side">
         <p class="board-side-title">{home.board.getTitle[locale]}</p>
         <ul class="board-list">
-          {w.results.map((result) => <li>{result[locale]}</li>)}
+          {w.results.map((result, i) => <li>{result[locale]}<small>{w.resultsDetail[i]?.[locale]}</small></li>)}
         </ul>
       </Fragment>
       <div slot="note">

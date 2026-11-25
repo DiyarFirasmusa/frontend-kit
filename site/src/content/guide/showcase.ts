@@ -194,6 +194,12 @@ export const compare = {
       t('Works on phones and in dark mode', 'يعمل على الهاتف وفي الوضع الداكن'),
       t('Every file is yours, on your computer', 'كل ملف ملكك، على حاسوبك'),
     ],
+    resultsDetail: [
+      t('It tests the pages and fixes what fails.', 'يختبر الصفحات ويصلح ما يفشل.'),
+      t('Right-to-left and small screens are checked.', 'يفحص اتجاه الكتابة والشاشات الصغيرة.'),
+      t('Both light and dark look right.', 'يبدو الوضعان الفاتح والداكن سليمين.'),
+      t('Nothing is stored anywhere else.', 'لا يُخزَّن شيء في مكان آخر.'),
+    ],
   },
   gains: <Gain[]>[
     {

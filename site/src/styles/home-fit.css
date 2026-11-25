@@ -45,10 +45,12 @@
 }
 
 /* 3/4: the comparison is a wide window, not a tall one. */
-.board-main > .ba {
-  width: min(100%, 44rem);
-  margin-inline: auto;
-  aspect-ratio: 16 / 7.4;
+@media (min-width: 48rem) {
+  .board-main > .ba {
+    width: min(100%, 44rem);
+    margin-inline: auto;
+    aspect-ratio: 16 / 7.4;
+  }
 }
 
 .ba-ask {
