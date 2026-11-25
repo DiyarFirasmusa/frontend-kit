@@ -71,9 +71,10 @@ const detail = route.kind !== 'page'
 const summary = here.about
 const heading = detail ? here.name : info.title[locale]
 // The last word of a page title carries the thread, as the last line of the home headline does.
-const parts = detail ? [] : heading.trim().split(' ')
-const lastWord = parts.length > 1 ? parts.pop() : undefined
-const firstWords = parts.join(' ')
+const match = detail ? null : heading.trim().match(/^(.*?)([\p{L}\p{N}][\p{L}\p{N}-]*)([.:?!؟]*)$/su)
+const firstWords = match?.[1] ?? ''
+const lastWord = match?.[2]
+const tail = match?.[3] ?? ''
 const label = detail ? `${here.name}: ${info.name[locale]}${here.among ? ` (${here.among})` : ''}` : info.name[locale]
 // The site's name in the language of the page, so an Arabic title never starts or ends with a Latin brand.
 const brand = locale === 'ar' ? 'واجهة' : 'Wajiha Kit'
@@ -102,7 +103,7 @@ const crumbs = [
       <header class="doc-head">
         <p class="doc-eyebrow">
           <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
-            {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={lit === undefined ? b.fill : i === lit ? 'var(--kc, #d97757)' : 'rgb(241 237 231 / 0.16)'} />)}
+            {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={lit === undefined ? b.fill : i === lit ? 'var(--kc, #d97757)' : 'rgb(241 237 231 / 0.3)'} />)}
           </svg>
           {PAGES[parent].name[locale]}
         </p>
@@ -110,7 +111,7 @@ const crumbs = [
           {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
           {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
         </nav>
-        <h1 class:list={{ 'is-name': detail }}>{detail ? <bdi>{heading}</bdi> : lastWord ? <>{firstWords} <em>{lastWord}</em></> : heading}</h1>
+        <h1 class:list={{ 'is-name': detail }}>{detail ? <bdi>{heading}</bdi> : lastWord ? <>{firstWords}<em>{lastWord}</em>{tail}</> : heading}</h1>
         <p class="doc-summary">{summary}</p>
       </header>
       <article class="doc-article">

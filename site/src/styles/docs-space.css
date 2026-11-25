@@ -2205,3 +2205,121 @@ html[lang='ar'] .credits {
   color: transparent;
   font-style: normal;
 }
+
+/* ---------- Round 12 ---------- */
+/* The hero is where the logo shows whole, in colour; the counter starts on the first part. */
+.hero-copy .eyebrow svg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.hero-copy .eyebrow-count {
+  display: none;
+}
+
+/* On the guide the grid is calmer behind the words. */
+body:has(main.doc)::after {
+  opacity: 0.55;
+}
+
+/* Copy is something you do, so on the guide it is orange too. */
+.doc .command button {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* The comparison: the stamp sits at the end of the bar like on every window, and its tag is not a third colour. */
+.ba::after {
+  inset-inline-start: auto;
+  inset-inline-end: 0.85rem;
+  translate: none;
+}
+
+.ba .ba-tag.is-bad {
+  border: 1px solid rgb(241 237 231 / 0.4);
+  background: rgb(20 20 19 / 0.9);
+  color: var(--ivory);
+}
+
+/* The room between the parts is a little smaller and the light carries the change. */
+.builds,
+.home .example,
+.home .get-it {
+  padding-block: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+#builds::before,
+#example::before,
+#why::before,
+#install::before {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 24%, transparent), transparent);
+}
+
+/* The guide's related pages are rows, not boxes. */
+.doc .card {
+  gap: 0.25rem;
+  padding: 0.9rem 0;
+  border: 0;
+  border-block-start: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.doc .card:hover {
+  border-color: var(--turq);
+  background: none;
+}
+
+/* The caption under a drawing says what it is. */
+.hero-caption,
+.show-caption {
+  max-width: 34rem;
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+:lang(ar) .hero-caption,
+:lang(ar) .show-caption {
+  font-size: 1rem;
+}
+
+/* The phone card is the main step on a phone: setup needs a computer. */
+.hero-phone {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.hero-phone strong {
+  font-size: 1.0625rem;
+}
+
+.hero-phone button {
+  margin-block-start: 0.5rem;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #141413;
+}
+
+.hero-phone a {
+  padding-block: 0.6rem;
+  color: var(--ivory);
+}
+
+@media (max-width: 768px) {
+  .hero-actions .hero-start {
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+  }
+}
+
+.hero-phone {
+  margin-block-end: 1.25rem;
+}
+
+body:has(main.doc)::after {
+  opacity: 0.35;
+}

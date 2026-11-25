@@ -101,9 +101,11 @@ export const installWords = {
   lead: t('Wajiha Kit is free. You send one message, and Claude installs the kit for you.', '«واجهة» مجانية. ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة بنفسه.'),
   needsTitle: t('What you need', 'ما تحتاجه'),
   needsList: [
-    t('A Claude account with the Code tab. Not every Claude plan includes it, and Anthropic sets the plans.', 'حساب في ⁦Claude⁩ فيه تبويب ⁦Code⁩. وليست كل خطط ⁦Claude⁩ تشمله، و⁦Anthropic⁩ هي التي تحدد الخطط.'),
-    t('A computer, not a phone. Claude checks jq, Node and git and helps you install them.', 'حاسوب وليس هاتفا. ويتأكد ⁦Claude⁩ من ⁦jq⁩ و⁦Node⁩ و⁦git⁩ ويساعدك في تثبيتها.'),
+    t('The Claude app, with a plan that includes the Code tab.', 'تطبيق ⁦Claude⁩، بخطة تتضمن تبويب ⁦Code⁩.'),
+    t('A computer.', 'حاسوب.'),
+    t('Claude installs the small helper programs for you, after you say yes.', 'يثبّت ⁦Claude⁩ البرامج المساعدة الصغيرة لك بعد موافقتك.'),
   ],
+  helpers: t('Claude checks that jq, Node and git are on your computer and helps you install them if they are not. Claude’s plans and prices are set by Anthropic, not by this kit.', 'يتأكد ⁦Claude⁩ أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ على حاسوبك ويساعدك في تثبيتها إن لم تكن. وخطط ⁦Claude⁩ وأسعارها تحددها ⁦Anthropic⁩ لا الإضافة.'),
   moreTitle: t('Notes before you start', 'ملاحظات قبل أن تبدأ'),
   windows: t('You can use it on Windows. Some of the safety checks were only tried by hand there, so some may not work as expected: keep a copy of any important file.', 'تستطيع استخدامها على ويندوز. وبعض فحوص الأمان جُرّبت يدويا هناك فقط، فقد لا يعمل بعضها كما هو متوقع: احتفظ بنسخة من أي ملف مهم.'),
   reopen: t('If Claude installs jq for you, close the Claude app and open it again, then send: “Continue setting up my project.”', 'وإن ثبّت ⁦Claude⁩ أداة ⁦jq⁩ لك، فأغلق تطبيق ⁦Claude⁩ وافتحه من جديد، ثم أرسل: «تابع تجهيز مشروعي».'),

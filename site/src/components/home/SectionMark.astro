@@ -21,7 +21,7 @@ const blocks = [
 
 <p class="eyebrow">
   <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
-    {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={i === part ? b.fill : 'rgb(241 237 231 / 0.16)'} />)}
+    {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={i === part || part === -1 ? b.fill : 'rgb(241 237 231 / 0.3)'} />)}
   </svg>
   <span class="eyebrow-count" dir="ltr">{part + 1}/4</span>
   <span class="eyebrow-label">{label}</span>
