@@ -629,3 +629,40 @@ html[data-theme='light'] body main .board .path-stop[data-who='kit'] .path-dot {
 html[data-theme='light'] .board-count {
   color: #004f50;
 }
+
+/* Round 7: hub cards share one neutral ground in dark mode; the two kinds of helper start at the same height;
+   the comparison's quote lines up with the title; one small size in the specialists' rows. */
+html:not([data-theme='light']) .doc .hub-kinds a {
+  background: #0d0e10;
+}
+
+.doc .pair p,
+.doc .pair p + p {
+  margin: 0 !important;
+}
+
+#why .ba-ask,
+.ba-ask {
+  margin-inline-start: 0;
+  justify-self: start;
+  text-align: start;
+}
+
+.doc .card-say,
+.doc .card-say em,
+.doc .card-say q {
+  font-size: 0.875rem;
+  font-style: normal;
+  color: var(--muted);
+}
+
+/* Commands break only at spaces (never inside a name at a hyphen); the copy pill has the primary button's weight. */
+.tok {
+  white-space: nowrap;
+}
+
+.command button,
+.start-copy {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}

@@ -17,12 +17,14 @@ const lines = message
       return { text: text.startsWith('claude plugin') ? text : line, command: text.startsWith('claude plugin') }
     })
   : []
+const esc = (value: string): string => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const tokens = (value: string): string => value.split(' ').map((word) => `<span class="tok">${esc(word)}</span>`).join(' ')
 ---
 
 <div class:list={['command', { 'is-message': message }]} dir={message ? 'auto' : 'ltr'}>
   {
     message ? (
-      <code>{lines.map(({ text, command: isCommand }) => (isCommand ? <span class="msg-command" dir="ltr">{text}</span> : <span class="msg-line">{text}</span>))}</code>
+      <code>{lines.map(({ text, command: isCommand }) => (isCommand ? <span class="msg-command" dir="ltr" set:html={tokens(text)} /> : <span class="msg-line">{text}</span>))}</code>
     ) : (
       <code>{command}</code>
     )

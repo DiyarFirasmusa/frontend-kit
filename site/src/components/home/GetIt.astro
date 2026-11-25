@@ -19,6 +19,8 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
   const text = line.replace(isolates, '')
   return { text: text.startsWith('claude plugin') ? text : line, command: text.startsWith('claude plugin') }
 })
+const esc = (value: string): string => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const tokens = (value: string): string => value.split(' ').map((word) => `<span class="tok">${esc(word)}</span>`).join(' ')
 ---
 
 <section id="install" class="get-it">
@@ -58,7 +60,7 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
               <p class="start-skip">{w.hint[locale]}</p>
               <div class="start-message">
                 <div class="start-text" dir="auto">
-                  {lines.map(({ text, command }) => (command ? <code class="msg-command" dir="ltr">{text}</code> : <span class="msg-line">{text}</span>))}
+                  {lines.map(({ text, command }) => (command ? <code class="msg-command" dir="ltr" set:html={tokens(text)} /> : <span class="msg-line">{text}</span>))}
                 </div>
                 <p class="chat-tools" aria-hidden="true">
                   <i class="chat-plus">+</i>
