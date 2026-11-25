@@ -1,0 +1,69 @@
+{
+  "home": {
+    "greeting": {
+      "morning": "صباح الخير، {{name}}",
+      "morningPlain": "صباح الخير",
+      "evening": "مساء الخير، {{name}}",
+      "eveningPlain": "مساء الخير"
+    },
+    "subtitle": "ملخص لسجلاتك وما تغيّر مؤخراً.",
+    "lastSync": "آخر مزامنة: {{time}}",
+    "loadError": "تعذّر تحميل هذا القسم",
+    "kpi": {
+      "warehouses": "المستودعات",
+      "suppliers": "الموردون",
+      "categories": "التصنيفات",
+      "units": "وحدات القياس",
+      "change": "التغيّر مقارنة بالفترة السابقة"
+    },
+    "activity": {
+      "title": "النشاط",
+      "subtitle": "السجلات المضافة والمعدّلة خلال آخر {{days}} يوماً",
+      "created": "مضافة",
+      "updated": "معدّلة",
+      "empty": "لا يوجد نشاط في هذه الفترة"
+    },
+    "recent": {
+      "title": "آخر التغييرات",
+      "subtitle": "آخر السجلات المضافة أو المعدّلة",
+      "empty": "لا توجد تغييرات حديثة",
+      "col": {
+        "name": "الاسم",
+        "resource": "النوع",
+        "action": "التغيير",
+        "date": "التاريخ",
+        "actions": "إجراءات"
+      },
+      "resource": {
+        "warehouse": "مستودع",
+        "supplier": "مورد",
+        "category": "تصنيف",
+        "unit": "وحدة قياس"
+      },
+      "action": {
+        "created": "إضافة",
+        "updated": "تعديل",
+        "deleted": "حذف"
+      },
+      "open": "فتح قائمة {{resource}}: {{name}}"
+    },
+    "time": {
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "justNow": "الآن",
+      "dayTime": "{{day}}، {{time}}",
+      "minutesAgo_zero": "منذ أقل من دقيقة",
+      "minutesAgo_one": "منذ دقيقة",
+      "minutesAgo_two": "منذ دقيقتين",
+      "minutesAgo_few": "منذ {{count}} دقائق",
+      "minutesAgo_many": "منذ {{count}} دقيقة",
+      "minutesAgo_other": "منذ {{count}} دقيقة",
+      "hoursAgo_zero": "منذ أقل من ساعة",
+      "hoursAgo_one": "منذ ساعة",
+      "hoursAgo_two": "منذ ساعتين",
+      "hoursAgo_few": "منذ {{count}} ساعات",
+      "hoursAgo_many": "منذ {{count}} ساعة",
+      "hoursAgo_other": "منذ {{count}} ساعة"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "suppliers": {
+    "title": "الموردون",
+    "subtitle": "سجل الموردين الذي تختار منه سندات الاستلام والتكاليف الإضافية",
+    "create": "إضافة مورد",
+    "empty": "لا يوجد موردون بعد",
+    "emptyFiltered": "لا يوجد موردون مطابقون لهذه الفلاتر",
+    "columns": {
+      "code": "الرمز",
+      "name": "المورد",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني",
+      "taxNumber": "الرقم الضريبي",
+      "inUse": "مستخدم في سندات",
+      "status": "الحالة"
+    },
+    "inUse": {
+      "yes": "نعم",
+      "no": "لا"
+    },
+    "status": {
+      "unregistered": "غير مسجل"
+    },
+    "filters": {
+      "searchPlaceholder": "ابحث بالرمز أو الاسم أو الهاتف",
+      "status": "الحالة",
+      "source": "العرض",
+      "registered": "الموردون المسجلون",
+      "withUnregistered": "مع الأسماء الواردة في السندات"
+    },
+    "actions": {
+      "register": "تسجيل المورد",
+      "deactivate": "إيقاف"
+    },
+    "dialog": {
+      "createTitle": "إضافة مورد",
+      "editTitle": "تعديل المورد",
+      "description": "الرمز والاسم مطلوبان، وباقي الحقول تساعد المشتريات في التواصل مع المورد",
+      "code": "الرمز",
+      "codePlaceholder": "مثال: SUP-001",
+      "name": "الاسم",
+      "namePlaceholder": "مثال: شركة الرافدين للتجهيزات",
+      "contactName": "الشخص المسؤول",
+      "contactNamePlaceholder": "مثال: علي حسن",
+      "phone": "الهاتف",
+      "phonePlaceholder": "مثال: ‎+964 780 000 0000",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "مثال: orders@example.com",
+      "taxNumber": "الرقم الضريبي",
+      "taxNumberPlaceholder": "مثال: 123456789",
+      "address": "العنوان",
+      "addressPlaceholder": "المدينة، المنطقة، الشارع",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "شروط الدفع، أيام التوريد…",
+      "isActive": "فعّال",
+      "save": "حفظ المورد"
+    },
+    "delete": {
+      "title": "حذف المورد",
+      "description": "سيتم حذف «{{name}}». لا يمكن التراجع عن هذا الإجراء."
+    },
+    "deactivate": {
+      "title": "إيقاف المورد",
+      "description": "«{{name}}» مستخدم في سندات، لذلك لا يمكن حذفه. سيتم إيقافه ولن يظهر في سندات الاستلام الجديدة."
+    },
+    "messages": {
+      "created": "تمت إضافة المورد",
+      "updated": "تم تعديل المورد",
+      "deactivated": "تم إيقاف المورد",
+      "deleted": "تم حذف المورد"
+    },
+    "validation": {
+      "codeRequired": "الرمز مطلوب",
+      "codeMax": "يجب ألا يتجاوز الرمز 30 حرفاً",
+      "nameRequired": "الاسم مطلوب",
+      "nameMax": "يجب ألا يتجاوز الاسم 255 حرفاً",
+      "contactNameMax": "يجب ألا يتجاوز اسم المسؤول 150 حرفاً",
+      "phoneMax": "يجب ألا يتجاوز الهاتف 50 حرفاً",
+      "email": "أدخل بريداً إلكترونياً صحيحاً",
+      "emailMax": "يجب ألا يتجاوز البريد 150 حرفاً",
+      "addressMax": "يجب ألا يتجاوز العنوان 500 حرف",
+      "taxNumberMax": "يجب ألا يتجاوز الرقم الضريبي 50 حرفاً",
+      "notesMax": "يجب ألا تتجاوز الملاحظات 2000 حرف"
+    }
+  }
+}

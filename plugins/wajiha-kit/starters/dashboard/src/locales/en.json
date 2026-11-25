@@ -1,0 +1,335 @@
+{
+  "authBrand": {
+    "logoMark": "D",
+    "body": "One place to manage your records, with permissions, search and reports ready to use.",
+    "tagline": "Warehouses • Suppliers • Categories • Units"
+  },
+  "common": {
+    "breadcrumb": "Breadcrumb",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "actions": "Actions",
+    "exportExcel": "Export Excel",
+    "exportCurrentPage": "Current page",
+    "exportAllRows": "All data",
+    "exporting": "Exporting…",
+    "exportTruncated": "The file holds the first {{limit}} of {{total}} rows. Narrow the filters (for example a shorter date range) to export the rest.",
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All",
+    "none": "None",
+    "loading": "Loading...",
+    "noData": "No data",
+    "error": "An error occurred",
+    "loadError": "Couldn't load the data. Please try again.",
+    "tryAgain": "Try again",
+    "required": "Required",
+    "close": "Close",
+    "open": "Open",
+    "status": "Status",
+    "language": "Language",
+    "logout": "Sign out",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "select": "Select",
+    "searchByName": "Search by name",
+    "showing": "Showing",
+    "of": "of",
+    "page": "Page",
+    "noResults": "No results",
+    "reset": "Reset",
+    "unknown": "Unknown",
+    "errors": {
+      "badRequest": "Invalid request. Please check your input.",
+      "forbidden": "You don't have permission to do this.",
+      "notFound": "The requested item was not found.",
+      "conflict": "Data conflict. Please review.",
+      "unprocessable": "Unprocessable data.",
+      "server": "Server error. Please try again later.",
+      "unavailable": "Service unavailable. Please try again later.",
+      "generic": "Something went wrong.",
+      "dataConflict": "This conflicts with existing data. The item may already exist, or one of the selected values is no longer valid. Refresh and try again."
+    },
+    "validation": {
+      "maxLength10": "Use no more than 10 characters",
+      "maxLength20": "Use no more than 20 characters",
+      "maxLength30": "Use no more than 30 characters",
+      "maxLength50": "Use no more than 50 characters",
+      "maxLength100": "Use no more than 100 characters",
+      "maxLength150": "Use no more than 150 characters",
+      "maxLength200": "Use no more than 200 characters",
+      "maxLength300": "Use no more than 300 characters",
+      "maxLength500": "Use no more than 500 characters",
+      "maxLength1000": "Use no more than 1000 characters",
+      "nonNegative": "The value cannot be negative",
+      "wholeNumber": "Enter a whole number in the allowed range",
+      "percentRange": "Enter a percentage from 0 to 100",
+      "format": {
+        "code": "Use English letters only (A–Z)",
+        "digits": "Use digits only",
+        "personName": "Use letters only (no digits or symbols)",
+        "labelText": "Use letters, digits and basic punctuation, with at least one letter",
+        "phone": "Enter a valid phone number (7–15 digits)",
+        "alphanumeric": "Use English letters and digits only",
+        "identifier": "Use letters, digits and . _ - / only",
+        "username": "Use letters, digits and . _ - @ only",
+        "currency": "Use a currency code of English letters, e.g. IQD",
+        "bloodType": "Use a blood type such as A+, O-, AB+"
+      },
+      "maxLength3": "Use no more than 3 digits"
+    },
+    "selectAll": "Select all",
+    "selectRow": "Select row",
+    "selectedCount": "{{count}} selected",
+    "clearSelection": "Clear selection",
+    "clearValue": "Clear selection",
+    "columns": "Columns",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "signIn": "Sign in",
+    "pickDate": "Pick a date",
+    "today": "Today",
+    "clear": "Clear",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "previousYear": "Previous year",
+    "nextYear": "Next year",
+    "increase": "Increase",
+    "decrease": "Decrease",
+    "pickTime": "Pick a time",
+    "now": "Now",
+    "hour": "Hour",
+    "minute": "Minute",
+    "typeToSearch": "Type to search"
+  },
+  "nav": {
+    "warehouses": "Warehouses",
+    "dashboard": "Home",
+    "groups": {
+      "products": "Products",
+      "warehouses": "Warehouses"
+    },
+    "categories": "Categories",
+    "attributes": "Attributes",
+    "unitsOfMeasure": "Units of measure",
+    "suppliers": "Suppliers"
+  },
+  "errorPages": {
+    "states": {
+      "forbidden": {
+        "code": "403",
+        "title": "Access denied",
+        "subtitle": "The page was not opened",
+        "alertTitle": "Access was refused because of permissions",
+        "alertDescription": "You do not have the permission this page needs. Nothing was changed. If you need it, contact your system administrator.",
+        "detailsTitle": "Permission details",
+        "tipsTitle": "What to do now?",
+        "tip1": "Go back to the previous page or ask your system administrator for the right permission. Do not retry before your permissions are updated.",
+        "action": "Action",
+        "actionValue": "Open the page",
+        "status": "Status",
+        "statusValue": "Not allowed"
+      },
+      "notFound": {
+        "code": "404",
+        "title": "Item not found",
+        "subtitle": "The record could not be opened",
+        "alertTitle": "The requested record was not found",
+        "alertDescription": "The record may not exist, or it may belong to a warehouse outside the ones you are allowed to see.",
+        "detailsTitle": "Request details",
+        "tipsTitle": "Note",
+        "tip1": "No extra details are shown about warehouses you cannot access. Go back to the list and open one of the available records.",
+        "kind": "Record type",
+        "kindValue": "Page",
+        "requested": "Requested id",
+        "scope": "Access scope",
+        "scopeValue": "Your warehouses only",
+        "result": "Result",
+        "resultValue": "Not found",
+        "backToList": "Back to the list"
+      }
+    },
+    "goHome": "Go home",
+    "goBack": "Go back",
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or has been moved."
+    },
+    "unauthorized": {
+      "title": "Sign in required",
+      "description": "You need to be signed in to view this page. Sign in with your credentials to continue."
+    },
+    "forbidden": {
+      "title": "Access denied",
+      "description": "You don't have permission to view this page. If you believe this is a mistake, contact an administrator.",
+      "signInAgain": "Sign in again"
+    },
+    "serverError": {
+      "title": "Server error",
+      "description": "Something went wrong on our end. Please try again in a moment."
+    },
+    "generic": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred while loading this page."
+    },
+    "retry": "Try again",
+    "reload": "Reload page",
+    "details": {
+      "title": "Error details",
+      "code": "Error type",
+      "status": "HTTP status",
+      "request": "Request",
+      "reference": "Reference",
+      "time": "Time",
+      "page": "Page"
+    },
+    "network": {
+      "code": "Network",
+      "title": "No internet connection",
+      "subtitle": "The dashboard can't reach the server right now",
+      "alertTitle": "The connection to the server was lost",
+      "alertDescription": "Your device is offline or the server can't be reached. Nothing you were viewing was changed.",
+      "tipsTitle": "What to do now",
+      "tip1": "Check your Wi-Fi or network cable and make sure you are online.",
+      "tip2": "If you use a VPN or a proxy, check that it is connected.",
+      "tip3": "The page reloads automatically as soon as the connection is back.",
+      "offline": "Offline — waiting for the connection",
+      "online": "You're online — the server can't be reached"
+    },
+    "server": {
+      "code": "500",
+      "title": "The server ran into a problem",
+      "subtitle": "The page data couldn't be loaded",
+      "alertTitle": "The server failed to complete the request",
+      "alertDescription": "This is a problem on the server side, not something you did. Your data was not changed.",
+      "tipsTitle": "Before trying again",
+      "tip1": "Wait a moment and try again — temporary server problems usually clear quickly.",
+      "tip2": "If it keeps happening, send the reference below to your system administrator."
+    },
+    "unexpected": {
+      "code": "Error",
+      "title": "Something unexpected happened",
+      "subtitle": "The page stopped working because of an unexpected error",
+      "alertTitle": "This page couldn't be displayed",
+      "alertDescription": "An unexpected error occurred in the application. The error was recorded so it can be fixed.",
+      "tipsTitle": "What to do now",
+      "tip1": "Reload the page — most of the time that fixes it.",
+      "tip2": "If it happens again, go back to the dashboard and tell your system administrator what you were doing."
+    },
+    "signInAgain": "Sign in again"
+  },
+  "table": {
+    "scrollRegion": "Scrollable table"
+  },
+  "enums": {
+    "AttributeDataType": {
+      "TEXT": "Text",
+      "NUMBER": "Number",
+      "BOOLEAN": "Yes / No",
+      "DATE": "Date",
+      "OPTION": "Option"
+    }
+  },
+  "shell": {
+    "brand": {
+      "title": "Dashboard",
+      "subtitle": "Admin panel"
+    },
+    "sidebar": {
+      "collapse": "Collapse sidebar",
+      "expand": "Expand sidebar",
+      "title": "Dashboard"
+    },
+    "workspace": {
+      "label": "Current workspace"
+    },
+    "nav": {
+      "label": "Main navigation"
+    },
+    "status": "System operational",
+    "roles": {
+      "SUPERADMIN": "System administrator",
+      "ADMIN": "Administrator",
+      "WAREHOUSE_MANAGER": "Warehouse manager",
+      "STOREKEEPER": "Storekeeper",
+      "STOCK_CONTROLLER": "Stock controller",
+      "APPROVER": "Approver",
+      "VIEWER": "Viewer"
+    },
+    "language": {
+      "menuTitle": "Interface language",
+      "arabic": "العربية",
+      "english": "English",
+      "current": "Current"
+    }
+  },
+  "search": {
+    "label": "Global search",
+    "placeholder": "Search warehouses, suppliers, categories, units...",
+    "results": "Search results",
+    "loading": "Searching...",
+    "empty": "No results found",
+    "error": "Search failed. Try again.",
+    "groups": {
+      "warehouses": "Warehouses",
+      "suppliers": "Suppliers",
+      "categories": "Categories",
+      "units": "Units of measure"
+    }
+  },
+  "notifications": {
+    "open": "Notifications",
+    "title": "Notifications",
+    "unread": "{{count}} unread",
+    "empty": "No notifications yet",
+    "error": "Notifications could not be loaded",
+    "unreadItem": "Unread",
+    "types": {
+      "INFO": "Information",
+      "SUCCESS": "Done",
+      "WARNING": "Needs attention",
+      "DANGER": "Problem"
+    },
+    "markAllRead": "Mark all as read",
+    "titleWithUnread": "Notifications · {{count}} unread"
+  },
+  "auditLog": {
+    "open": "Change log",
+    "title": "Change log",
+    "empty": "No changes recorded yet",
+    "error": "The change log could not be loaded",
+    "loadMore": "Show more",
+    "by": "By",
+    "field": "Field",
+    "before": "Before",
+    "after": "After",
+    "noFieldChanges": "No field details",
+    "actions": {
+      "CREATE": "Created",
+      "UPDATE": "Updated",
+      "DELETE": "Deleted"
+    },
+    "entities": {
+      "ATTRIBUTE_DEFINITION": "Attribute",
+      "ATTRIBUTE_OPTION": "Attribute option",
+      "CATEGORY_ATTRIBUTE": "Category attribute",
+      "ITEM_CATEGORY": "Category",
+      "LOCATION": "Location",
+      "UNIT_OF_MEASURE": "Unit of measure",
+      "WAREHOUSE": "Warehouse",
+      "WAREHOUSE_USER": "Warehouse member"
+    },
+    "description": "Who changed what, newest first"
+  },
+  "pwa": {
+    "updateAvailable": "A new version is ready",
+    "reload": "Reload"
+  }
+}

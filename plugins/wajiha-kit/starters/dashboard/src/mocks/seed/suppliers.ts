@@ -1,0 +1,231 @@
+import { type SupplierResponse } from '@/types/api/suppliers';
+/** Suppliers. */
+import { isoDaysAgo, makeId } from './base';
+
+// Suppliers
+// ---------------------------------------------------------------------------
+
+const SUPPLIER_SEEDS: [string, string, string, string, string][] = [
+  // name, contact, city/address, email domain, notes
+  [
+    'شركة المثال للتجهيزات العامة',
+    'سعد عبد الكريم',
+    'بغداد - شارع الصناعة',
+    'dijla-supplies.iq',
+    'مورد رئيسي بعقد سنوي',
+  ],
+  [
+    'شركة الرافدين للمواد الإنشائية',
+    'فلاح حسن',
+    'بغداد - الشعلة، المنطقة الصناعية',
+    'rafidain-build.iq',
+    '',
+  ],
+  [
+    'مؤسسة بابل التجارية',
+    'منتظر جاسم',
+    'الحلة - شارع 40',
+    'babylon-trade.iq',
+    '',
+  ],
+  [
+    'شركة نينوى للصناعات الغذائية',
+    'غانم يونس',
+    'الموصل - حي الصناعة',
+    'ninawa-foods.iq',
+    'التوريد كل أسبوعين',
+  ],
+  [
+    'شركة الفرات للأدوية والمستلزمات الطبية',
+    'د. ليث عباس',
+    'بغداد - المنصور، شارع 14 رمضان',
+    'alfurat-pharma.iq',
+    'مرخصة من وزارة الصحة',
+  ],
+  [
+    'مكتب الكرخ للقرطاسية',
+    'باسم محمود',
+    'بغداد - الكرخ، سوق الشورجة',
+    'karkh-stationery.iq',
+    '',
+  ],
+  [
+    'شركة أور للكهربائيات',
+    'علاء ناظم',
+    'الناصرية - شارع الحبوبي',
+    'ur-electric.iq',
+    '',
+  ],
+  [
+    'شركة سومر للتجارة العامة',
+    'حامد كاظم',
+    'بغداد - الكرادة داخل',
+    'sumer-trading.iq',
+    '',
+  ],
+  [
+    'شركة آشور لقطع الغيار',
+    'نبيل يوسف',
+    'بغداد - السنك',
+    'ashur-parts.iq',
+    'خصم 5% على الطلبات الكبيرة',
+  ],
+  [
+    'شركة الخليج للزيوت والشحوم',
+    'عقيل ماجد',
+    'البصرة - الزبير',
+    'gulf-oils.iq',
+    '',
+  ],
+  [
+    'مجموعة الزوراء التجارية',
+    'رعد سامي',
+    'بغداد - الأعظمية',
+    'zawraa-group.iq',
+    '',
+  ],
+  [
+    'شركة كوردستان للأثاث',
+    'شيرزاد عمر',
+    'أربيل - شارع 100 متر',
+    'kurdistan-furniture.com',
+    '',
+  ],
+  [
+    'شركة المنصور للأجهزة المكتبية',
+    'وسام فؤاد',
+    'بغداد - المنصور',
+    'mansour-office.iq',
+    '',
+  ],
+  [
+    'شركة النهرين للتوريدات الطبية',
+    'د. هالة صادق',
+    'بغداد - باب المعظم',
+    'nahrain-medical.iq',
+    '',
+  ],
+  [
+    'مؤسسة الحلة للمواد الغذائية',
+    'جبار عودة',
+    'الحلة - حي بابل',
+    'hilla-foods.iq',
+    '',
+  ],
+  [
+    'شركة الأنبار للإسمنت',
+    'خالد حميد',
+    'الرمادي - طريق هيت',
+    'anbar-cement.iq',
+    'التسليم على شاحنات المورد',
+  ],
+  [
+    'شركة كربلاء للتجهيزات الكهربائية',
+    'مرتضى حسين',
+    'كربلاء - شارع الجمهورية',
+    'karbala-electric.iq',
+    '',
+  ],
+  [
+    'شركة السليمانية للحديد والصلب',
+    'هيوا رشيد',
+    'السليمانية - المنطقة الصناعية',
+    'suli-steel.com',
+    '',
+  ],
+  [
+    'مكتب الأعظمية للتجارة',
+    'أنور عبد الله',
+    'بغداد - الأعظمية، راغبة خاتون',
+    'adhamiya-trade.iq',
+    '',
+  ],
+  [
+    'شركة الكوت للصناعات البلاستيكية',
+    'صلاح مهدي',
+    'الكوت - الحي الصناعي',
+    'kut-plastics.iq',
+    '',
+  ],
+  [
+    'شركة ميسان للنقل والتجهيز',
+    'حسن فالح',
+    'العمارة - شارع دجلة',
+    'maysan-logistics.iq',
+    '',
+  ],
+  [
+    'شركة العمارة للمنظفات والمعقمات',
+    'ضياء كريم',
+    'العمارة - حي الحسين',
+    'amara-clean.iq',
+    '',
+  ],
+  [
+    'شركة دهوك للإطارات',
+    'ريبوار سعيد',
+    'دهوك - طريق زاخو',
+    'duhok-tyres.com',
+    '',
+  ],
+  [
+    'شركة الناصرية للمواد الزراعية',
+    'كاظم جبر',
+    'الناصرية - سوق الشيوخ',
+    'nasiriya-agri.iq',
+    'متوقف مؤقتاً لحين تجديد العقد',
+  ],
+  [
+    'شركة الموصل للمطاحن',
+    'محمود سالم',
+    'الموصل - الساحل الأيسر',
+    'mosul-mills.iq',
+    '',
+  ],
+];
+
+const INACTIVE_SUPPLIERS = new Set([19, 23, 24]);
+const IDLE_SUPPLIERS = new Set([12, 17, 19, 20, 24]);
+
+export const suppliers: SupplierResponse[] = SUPPLIER_SEEDS.map(
+  ([name, contact, address, domain, notes], i) => ({
+    id: makeId(0xe0, i + 1),
+    code: `SUP-${String(i + 1).padStart(3, '0')}`,
+    name,
+    contactName: contact,
+    phone: `+964 7${(70 + ((i * 3) % 10)).toString()} ${String(
+      100 + ((i * 37) % 900),
+    )} ${String(1000 + ((i * 271) % 9000))}`,
+    email: `sales@${domain}`,
+    address,
+    taxNumber: `TIN-${String(1_004_200 + i * 113)}`,
+    notes: notes === '' ? null : notes,
+    isActive: !INACTIVE_SUPPLIERS.has(i),
+    registered: true,
+    inUse: !IDLE_SUPPLIERS.has(i),
+    createdAt: isoDaysAgo(400 - i * 11, 10, 30),
+    updatedAt: isoDaysAgo(60 - i, 12, 0),
+  }),
+);
+
+/** Names seen on documents but never registered in the supplier master. */
+export const unregisteredSuppliers: SupplierResponse[] = [
+  ['محلات أبو علي للأدوات الاحتياطية', null],
+  ['مكتب النور للطباعة', 'NOOR-PR'],
+  ['معرض الجادرية للأثاث', null],
+].map(([name, code], i) => ({
+  id: makeId(0xe1, i + 1),
+  code,
+  name,
+  contactName: null,
+  phone: null,
+  email: null,
+  address: null,
+  taxNumber: null,
+  notes: null,
+  isActive: true,
+  registered: false,
+  inUse: true,
+  createdAt: null,
+  updatedAt: null,
+}));

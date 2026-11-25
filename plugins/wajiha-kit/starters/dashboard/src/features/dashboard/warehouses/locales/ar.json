@@ -1,0 +1,135 @@
+{
+  "warehouses": {
+    "title": "المستودعات",
+    "subtitle": "إدارة المستودعات والأعضاء والمواقع التابعة لها",
+    "add": "إنشاء مستودع",
+    "list": {
+      "searchPlaceholder": "ابحث بالاسم أو الرمز...",
+      "empty": "لا توجد مستودعات مطابقة للبحث أو الفلاتر.",
+      "filterType": "نوع المستودع",
+      "filterStatus": "الحالة",
+      "filterManager": "المدير"
+    },
+    "type": {
+      "regular": "اعتيادي",
+      "transitBadge": "مستودع عبور",
+      "transit": "عبور"
+    },
+    "col": {
+      "name": "المستودع",
+      "code": "الرمز",
+      "type": "النوع",
+      "address": "العنوان",
+      "manager": "المدير",
+      "status": "الحالة",
+      "actions": "إجراءات",
+      "locations": "المواقع",
+      "members": "الأعضاء"
+    },
+    "actions": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "form": {
+      "createTitle": "إنشاء مستودع",
+      "editTitle": "تعديل المستودع",
+      "description": "أدخل بيانات المستودع الأساسية",
+      "name": "الاسم",
+      "namePlaceholder": "مثال: مخزن بغداد المركزي",
+      "code": "الرمز",
+      "codePlaceholder": "مثال: BGD-01",
+      "address": "العنوان",
+      "addressPlaceholder": "المدينة، المنطقة، الشارع",
+      "managerUserId": "المدير",
+      "managerUserIdPlaceholder": "ابحث عن مستخدم",
+      "isTransit": "مستودع عبور",
+      "isActive": "نشط",
+      "submit": "حفظ المستودع",
+      "errors": {
+        "name": "أدخل اسم المستودع",
+        "nameMax": "استخدم 200 حرف على الأكثر",
+        "code": "أدخل رمز المستودع",
+        "address": "أدخل عنوان المستودع",
+        "codeMax": "استخدم 30 حرفاً على الأكثر",
+        "addressMax": "استخدم 300 حرف على الأكثر",
+        "uuid": "أدخل معرّفاً صالحاً (UUID)"
+      }
+    },
+    "delete": {
+      "title": "حذف المستودع",
+      "description": "سيتم حذف “{{name}}” نهائياً ولا يمكن التراجع عن ذلك.",
+      "confirm": "حذف"
+    },
+    "detail": {
+      "title": "المستودع",
+      "breadcrumb": "تفاصيل المستودع",
+      "notFound": "هذا المستودع غير موجود أو تم حذفه.",
+      "recordType": "مستودع",
+      "tabsLabel": "أقسام المستودع",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "members": "الأعضاء",
+        "locations": "المواقع"
+      },
+      "back": "العودة"
+    },
+    "overview": {
+      "map": "مخطط المستودع",
+      "mapCount": "{{count}} موقع تخزين",
+      "manager": "المدير",
+      "name": "اسم المستودع",
+      "code": "رمز المستودع",
+      "codeLocked": "الرمز ثابت ولا يمكن تعديله",
+      "isTransit": "مستودع عبور",
+      "isActive": "نشط"
+    },
+    "members": {
+      "title": "أعضاء المستودع",
+      "description": "الأعضاء فقط يمكنهم رؤية المستودع ومستنداته.",
+      "add": "إضافة عضو",
+      "addTitle": "إضافة عضو",
+      "addDescription": "أدخل معرّف المستخدم واختر دوره في هذا المستودع.",
+      "addSubmit": "إضافة عضو",
+      "userId": "المستخدم",
+      "userIdPlaceholder": "ابحث عن مستخدم",
+      "errors": {
+        "userId": "اختر مستخدماً",
+        "role": "اختر الدور"
+      },
+      "empty": "لا يوجد أعضاء بعد.",
+      "addedOn": "أُضيف في {{date}}",
+      "remove": "إزالة",
+      "removeTitle": "إزالة العضو",
+      "removeDescription": "سيفقد المستخدم صلاحية الوصول إلى هذا المستودع.",
+      "removeConfirm": "إزالة",
+      "roles": {
+        "WAREHOUSE_MANAGER": "مدير المخزن",
+        "STOREKEEPER": "أمين المخزن",
+        "STOCK_CONTROLLER": "مراقب المخزون"
+      },
+      "active": "عضو نشط",
+      "role": "الدور",
+      "rolePlaceholder": "اختر الدور",
+      "managerBadge": "المدير",
+      "inactive": "عضو غير نشط",
+      "menu": "إجراءات العضو",
+      "changeRole": "تغيير الدور"
+    },
+    "locations": {
+      "title": "مواقع المستودع",
+      "summary": "{{count}} موقعاً ضمن {{zones}} مناطق",
+      "childCount": "{{count}} موقعاً فرعياً",
+      "empty": "لا توجد مواقع لهذا المستودع بعد.",
+      "blocked": "محظور"
+    },
+    "toasts": {
+      "created": "تم إنشاء المستودع",
+      "updated": "تم تحديث المستودع",
+      "deleted": "تم حذف المستودع",
+      "memberAdded": "تمت إضافة العضو",
+      "memberRemoved": "تمت إزالة العضو",
+      "memberRoleChanged": "تم تحديث دور العضو"
+    }
+  }
+}

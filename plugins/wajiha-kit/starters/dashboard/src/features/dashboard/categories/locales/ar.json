@@ -1,0 +1,213 @@
+{
+  "categories": {
+    "title": "التصنيفات والخصائص",
+    "subtitle": "إدارة الهيكل الهرمي والخصائص المباشرة والموروثة",
+    "actions": {
+      "addCategory": "إضافة تصنيف",
+      "addAttribute": "إضافة خاصية",
+      "move": "نقل التصنيف",
+      "disable": "تعطيل",
+      "enable": "تفعيل"
+    },
+    "tree": {
+      "title": "شجرة التصنيفات",
+      "searchPlaceholder": "ابحث عن تصنيف",
+      "empty": "لا توجد تصنيفات بعد. أضف أول تصنيف.",
+      "noMatch": "لا توجد تصنيفات مطابقة للبحث.",
+      "expand": "توسيع",
+      "collapse": "طي",
+      "itemCount": "الأصناف: {{count}}",
+      "all": "كل الأصناف"
+    },
+    "detail": {
+      "title": "التصنيف المحدد",
+      "path": "المسار",
+      "empty": "اختر تصنيفاً لعرض خصائصه.",
+      "allCount": "{{count}} صنف في كل التصنيفات",
+      "allDescription": "اختر تصنيفاً لعرض خصائصه المرتبطة والموروثة.",
+      "expiryAlertDays": "نافذة تنبيه الصلاحية",
+      "expiryAlertDaysValue": "{{days}} يوم"
+    },
+    "form": {
+      "createTitle": "إضافة تصنيف",
+      "editTitle": "تعديل التصنيف",
+      "moveTitle": "نقل التصنيف",
+      "description": "الحقول المعلَّمة بـ * مطلوبة.",
+      "code": "رمز التصنيف",
+      "name": "اسم التصنيف",
+      "namePlaceholder": "مثال: حماية اليدين",
+      "parent": "التصنيف الأب",
+      "noParent": "بدون (تصنيف رئيسي)",
+      "isActive": "نشط",
+      "expiryAlertDays": "نافذة تنبيه الصلاحية (يوم)",
+      "expiryAlertDaysHint": "فارغ = يرث من التصنيف الأب أو الإعداد العام",
+      "moveDescription": "اختر تصنيفاً أباً جديداً لهذا التصنيف."
+    },
+    "delete": {
+      "title": "حذف التصنيف؟",
+      "description": "سيتم حذف “{{name}}”. لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف"
+    },
+    "blocked": {
+      "title": "تعذر حذف التصنيف",
+      "reason": "التصنيف ما زال مستخدماً.",
+      "hint": "انقل العناصر أو التصنيفات الفرعية، أو اجعل التصنيف غير نشط.",
+      "deactivate": "تعطيل التصنيف",
+      "items": "الأصناف",
+      "children": "الفروع",
+      "status": "الحالة",
+      "description": "لا يمكن حذف التصنيف لأنه يحتوي أصنافاً أو تصنيفات فرعية مرتبطة به.",
+      "category": "التصنيف",
+      "linkedItems": "الأصناف المرتبطة",
+      "childCategories": "التصنيفات الفرعية",
+      "rejectReason": "سبب الرفض",
+      "suggestion": "الإجراء المقترح",
+      "present": "موجودة",
+      "none": "لا توجد",
+      "whyTitle": "لماذا تعذر الحذف؟",
+      "whyBody": "يُرفض الحذف عندما يحتوي التصنيف على أصناف أو أبناء. عالج الارتباطات أولاً، أو عطّل التصنيف لإخفائه من القوائم الجديدة."
+    },
+    "assignments": {
+      "title": "الخصائص المرتبطة",
+      "description": "حدد الإلزام ومحاور المتغيرات لكل خاصية.",
+      "attach": "ربط خاصية",
+      "empty": "لا توجد خصائص مرتبطة بهذا التصنيف بعد.",
+      "inheritedReadonly": "خاصية موروثة للقراءة فقط",
+      "editOptions": "تحرير الخيارات",
+      "detach": "فصل",
+      "col": {
+        "attribute": "الخاصية",
+        "dataType": "النوع",
+        "source": "المصدر",
+        "required": "مطلوبة؟",
+        "variantAxis": "محور متغير؟",
+        "options": "الخيارات",
+        "actions": "الإجراءات"
+      }
+    },
+    "detach": {
+      "title": "فصل الخاصية؟",
+      "description": "سيتم فصل “{{name}}” عن هذا التصنيف.",
+      "confirm": "فصل"
+    },
+    "attach": {
+      "title": "ربط خاصية",
+      "description": "اختر خاصية نشطة لربطها بهذا التصنيف.",
+      "attribute": "الخاصية",
+      "attributePlaceholder": "اختر خاصية",
+      "isRequired": "مطلوبة عند إنشاء الأصناف",
+      "isVariantAxis": "محور متغير",
+      "submit": "ربط",
+      "noAvailable": "كل الخصائص النشطة مرتبطة بالفعل."
+    },
+    "attributes": {
+      "title": "تعريفات الخصائص",
+      "description": "عرّف الخاصية مرة واحدة، ثم اربطها بالتصنيفات.",
+      "searchPlaceholder": "ابحث عن خاصية",
+      "empty": "لا توجد خصائص مطابقة للبحث.",
+      "filter": {
+        "dataType": "النوع",
+        "allTypes": "كل الأنواع",
+        "status": "الحالة",
+        "allStatuses": "كل الحالات"
+      },
+      "col": {
+        "name": "الخاصية",
+        "code": "الرمز",
+        "dataType": "النوع",
+        "unit": "الوحدة",
+        "options": "الخيارات",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "attributeForm": {
+      "createTitle": "إنشاء خاصية جديدة",
+      "editTitle": "تعديل الخاصية",
+      "description": "أنشئ تعريف الخاصية أولاً، ثم اربطه بالتصنيفات وحدد الإلزام ومحور المتغير عند الربط.",
+      "code": "رمز الخاصية",
+      "name": "اسم الخاصية",
+      "namePlaceholder": "مثال: اللون",
+      "dataType": "نوع الخاصية",
+      "dataTypePlaceholder": "اختر النوع",
+      "unitLabel": "وحدة القياس",
+      "unitLabelPlaceholder": "مثال: كجم",
+      "optionsHint": "تُضاف الخيارات بعد الحفظ.",
+      "usageNote": "الإلزام ومحور المتغير ليسا جزءاً من تعريف الخاصية؛ يتم تحديدهما عند ربط الخاصية بالتصنيف.",
+      "submit": "حفظ الخاصية",
+      "usage": {
+        "title": "قاعدة الاستخدام",
+        "required": {
+          "label": "الإلزام",
+          "value": "عند الربط"
+        },
+        "variantAxis": {
+          "label": "محور المتغير",
+          "value": "عند الربط"
+        },
+        "options": {
+          "label": "الخيارات",
+          "value": "بعد الحفظ"
+        }
+      },
+      "status": "الحالة",
+      "statusPlaceholder": "اختر الحالة",
+      "statusActive": "نشطة",
+      "statusInactive": "غير نشطة"
+    },
+    "attributeDelete": {
+      "title": "حذف الخاصية؟",
+      "description": "سيتم حذف “{{name}}”. لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف"
+    },
+    "options": {
+      "title": "خيارات خاصية {{name}}",
+      "description": "أضف الخيارات وعدّلها واحذفها ورتّبها، ثم احفظها معاً.",
+      "empty": "لا توجد خيارات بعد.",
+      "label": "اسم الخيار",
+      "labelPlaceholder": "مثال: كبير",
+      "add": "إضافة خيار",
+      "save": "حفظ الخيارات",
+      "formCreateTitle": "إضافة خيار",
+      "formEditTitle": "تعديل الخيار",
+      "confirmAdd": "إضافة إلى القائمة",
+      "confirmEdit": "تطبيق",
+      "cancelForm": "إلغاء",
+      "order": "الترتيب {{number}}",
+      "moveUp": "نقل لأعلى",
+      "moveDown": "نقل لأسفل"
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب.",
+      "codeTooLong": "استخدم 50 حرفاً كحد أقصى.",
+      "nameTooLong": "استخدم 200 حرف كحد أقصى.",
+      "attributeNameTooLong": "استخدم 100 حرف كحد أقصى.",
+      "unitTooLong": "استخدم 20 حرفاً كحد أقصى.",
+      "labelTooLong": "استخدم 100 حرف كحد أقصى.",
+      "dataTypeRequired": "اختر النوع.",
+      "attributeRequired": "اختر خاصية.",
+      "sortOrderInvalid": "أدخل رقماً صحيحاً أكبر من أو يساوي 0.",
+      "expiryAlertDaysInvalid": "أدخل عدداً صحيحاً من 1 إلى 365."
+    },
+    "toasts": {
+      "categoryCreated": "تمت إضافة التصنيف",
+      "categoryUpdated": "تم تحديث التصنيف",
+      "categoryDeleted": "تم حذف التصنيف",
+      "assignmentCreated": "تم ربط الخاصية",
+      "assignmentUpdated": "تم تحديث ربط الخاصية",
+      "assignmentDeleted": "تم فصل الخاصية",
+      "attributeCreated": "تم إنشاء الخاصية",
+      "attributeUpdated": "تم تحديث الخاصية",
+      "attributeDeleted": "تم حذف الخاصية",
+      "optionCreated": "تمت إضافة الخيار",
+      "optionUpdated": "تم تحديث الخيار",
+      "optionDeleted": "تم حذف الخيار",
+      "optionsSaved": "تم حفظ الخيارات"
+    },
+    "export": {
+      "level": "المستوى",
+      "itemCount": "عدد الأصناف",
+      "childCount": "الفئات الفرعية"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "login": {
+    "title": "أهلاً بعودتك",
+    "subtitle": "سجّل الدخول إلى حساب العمل للمتابعة",
+    "username": "اسم المستخدم",
+    "usernamePlaceholder": "أدخل اسم المستخدم",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "submit": "تسجيل الدخول",
+    "noAccount": "ليس لديك حساب؟ تواصل مع مسؤولي جهتك للحصول على دعوة.",
+    "usernameRequired": "اسم المستخدم مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة"
+  }
+}

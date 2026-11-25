@@ -1,0 +1,213 @@
+{
+  "categories": {
+    "title": "Categories and attributes",
+    "subtitle": "Manage the category hierarchy, directly linked and inherited attributes",
+    "actions": {
+      "addCategory": "Add category",
+      "addAttribute": "Add attribute",
+      "move": "Move category",
+      "disable": "Disable",
+      "enable": "Enable"
+    },
+    "tree": {
+      "title": "Category tree",
+      "searchPlaceholder": "Search categories",
+      "empty": "No categories yet. Add the first one.",
+      "noMatch": "No categories match your search.",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "itemCount": "Items: {{count}}",
+      "all": "All items"
+    },
+    "detail": {
+      "title": "Selected category",
+      "path": "Path",
+      "empty": "Select a category to see its attributes.",
+      "allCount": "{{count}} items across all categories",
+      "allDescription": "Select a category to see its linked and inherited attributes.",
+      "expiryAlertDays": "Expiry alert window",
+      "expiryAlertDaysValue": "{{days}} days"
+    },
+    "form": {
+      "createTitle": "Add category",
+      "editTitle": "Edit category",
+      "moveTitle": "Move category",
+      "description": "Fields marked with * are required.",
+      "code": "Category code",
+      "name": "Category name",
+      "namePlaceholder": "e.g. Hand protection",
+      "parent": "Parent category",
+      "noParent": "None (top-level)",
+      "isActive": "Active",
+      "expiryAlertDays": "Expiry alert window (days)",
+      "expiryAlertDaysHint": "Empty = inherits from the parent category or the general setting",
+      "moveDescription": "Choose a new parent category for this category."
+    },
+    "delete": {
+      "title": "Delete category?",
+      "description": "“{{name}}” will be removed. This cannot be undone.",
+      "confirm": "Delete"
+    },
+    "blocked": {
+      "title": "Can't delete this category",
+      "reason": "This category is still in use.",
+      "hint": "Move its items or child categories, or make it inactive.",
+      "deactivate": "Deactivate category",
+      "items": "Items",
+      "children": "Branches",
+      "status": "Status",
+      "description": "The category can't be deleted because it has linked items or child categories.",
+      "category": "Category",
+      "linkedItems": "Linked items",
+      "childCategories": "Child categories",
+      "rejectReason": "Reason",
+      "suggestion": "Suggested action",
+      "present": "Present",
+      "none": "None",
+      "whyTitle": "Why can't it be deleted?",
+      "whyBody": "Deleting is refused while the category has items or children. Resolve the links first, or deactivate the category to hide it from new lists."
+    },
+    "assignments": {
+      "title": "Linked attributes",
+      "description": "Set required and variant-axis flags for each attribute.",
+      "attach": "Link attribute",
+      "empty": "No attributes are linked to this category yet.",
+      "inheritedReadonly": "Inherited attribute, read-only",
+      "editOptions": "Edit options",
+      "detach": "Detach",
+      "col": {
+        "attribute": "Attribute",
+        "dataType": "Type",
+        "source": "Source",
+        "required": "Required?",
+        "variantAxis": "Variant axis?",
+        "options": "Options",
+        "actions": "Actions"
+      }
+    },
+    "detach": {
+      "title": "Detach attribute?",
+      "description": "“{{name}}” will be unlinked from this category.",
+      "confirm": "Detach"
+    },
+    "attach": {
+      "title": "Link attribute",
+      "description": "Choose an active attribute to link to this category.",
+      "attribute": "Attribute",
+      "attributePlaceholder": "Select an attribute",
+      "isRequired": "Required when creating items",
+      "isVariantAxis": "Variant axis",
+      "submit": "Link",
+      "noAvailable": "All active attributes are already linked."
+    },
+    "attributes": {
+      "title": "Attribute definitions",
+      "description": "Define attributes once, then link them to categories.",
+      "searchPlaceholder": "Search attributes",
+      "empty": "No attributes match your search.",
+      "filter": {
+        "dataType": "Type",
+        "allTypes": "All types",
+        "status": "Status",
+        "allStatuses": "All statuses"
+      },
+      "col": {
+        "name": "Attribute",
+        "code": "Code",
+        "dataType": "Type",
+        "unit": "Unit",
+        "options": "Options",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "attributeForm": {
+      "createTitle": "New attribute",
+      "editTitle": "Edit attribute",
+      "description": "Create the attribute definition first, then link it to categories and set required and variant axis when linking.",
+      "code": "Attribute code",
+      "name": "Attribute name",
+      "namePlaceholder": "e.g. Color",
+      "dataType": "Type",
+      "dataTypePlaceholder": "Select a type",
+      "unitLabel": "Unit label",
+      "unitLabelPlaceholder": "e.g. kg",
+      "optionsHint": "Options can be added after saving.",
+      "usageNote": "Required and variant axis are not part of the attribute definition; they are set when the attribute is linked to a category.",
+      "submit": "Save attribute",
+      "usage": {
+        "title": "Usage rule",
+        "required": {
+          "label": "Required",
+          "value": "When linked"
+        },
+        "variantAxis": {
+          "label": "Variant axis",
+          "value": "When linked"
+        },
+        "options": {
+          "label": "Options",
+          "value": "After saving"
+        }
+      },
+      "status": "Status",
+      "statusPlaceholder": "Select a status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive"
+    },
+    "attributeDelete": {
+      "title": "Delete attribute?",
+      "description": "“{{name}}” will be removed. This cannot be undone.",
+      "confirm": "Delete"
+    },
+    "options": {
+      "title": "{{name}} attribute options",
+      "description": "Add, edit, remove and reorder the options, then save them together.",
+      "empty": "No options yet.",
+      "label": "Option label",
+      "labelPlaceholder": "e.g. Large",
+      "add": "Add option",
+      "save": "Save options",
+      "formCreateTitle": "Add option",
+      "formEditTitle": "Edit option",
+      "confirmAdd": "Add to list",
+      "confirmEdit": "Apply",
+      "cancelForm": "Cancel",
+      "order": "Order {{number}}",
+      "moveUp": "Move up",
+      "moveDown": "Move down"
+    },
+    "validation": {
+      "required": "This field is required.",
+      "codeTooLong": "Use at most 50 characters.",
+      "nameTooLong": "Use at most 200 characters.",
+      "attributeNameTooLong": "Use at most 100 characters.",
+      "unitTooLong": "Use at most 20 characters.",
+      "labelTooLong": "Use at most 100 characters.",
+      "dataTypeRequired": "Choose a type.",
+      "attributeRequired": "Choose an attribute.",
+      "sortOrderInvalid": "Enter a whole number, 0 or more.",
+      "expiryAlertDaysInvalid": "Enter a whole number from 1 to 365."
+    },
+    "toasts": {
+      "categoryCreated": "Category added",
+      "categoryUpdated": "Category updated",
+      "categoryDeleted": "Category deleted",
+      "assignmentCreated": "Attribute linked",
+      "assignmentUpdated": "Attribute link updated",
+      "assignmentDeleted": "Attribute detached",
+      "attributeCreated": "Attribute created",
+      "attributeUpdated": "Attribute updated",
+      "attributeDeleted": "Attribute deleted",
+      "optionCreated": "Option added",
+      "optionUpdated": "Option updated",
+      "optionDeleted": "Option deleted",
+      "optionsSaved": "Options saved"
+    },
+    "export": {
+      "level": "Level",
+      "itemCount": "Items",
+      "childCount": "Subcategories"
+    }
+  }
+}

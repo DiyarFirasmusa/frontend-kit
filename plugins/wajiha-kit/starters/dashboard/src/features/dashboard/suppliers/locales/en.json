@@ -1,0 +1,86 @@
+{
+  "suppliers": {
+    "title": "Suppliers",
+    "subtitle": "The supplier master that receipts and landed costs pick from",
+    "create": "Add supplier",
+    "empty": "No suppliers yet",
+    "emptyFiltered": "No suppliers match these filters",
+    "columns": {
+      "code": "Code",
+      "name": "Supplier",
+      "phone": "Phone",
+      "email": "Email",
+      "taxNumber": "Tax number",
+      "inUse": "On documents",
+      "status": "Status"
+    },
+    "inUse": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "status": {
+      "unregistered": "Not registered"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by code, name or phone",
+      "status": "Status",
+      "source": "Show",
+      "registered": "Registered suppliers",
+      "withUnregistered": "Include names from documents"
+    },
+    "actions": {
+      "register": "Register supplier",
+      "deactivate": "Deactivate"
+    },
+    "dialog": {
+      "createTitle": "Add supplier",
+      "editTitle": "Edit supplier",
+      "description": "Code and name are required; the rest helps purchasing reach the supplier",
+      "code": "Code",
+      "codePlaceholder": "e.g. SUP-001",
+      "name": "Name",
+      "namePlaceholder": "e.g. Al-Rafidain Supplies",
+      "contactName": "Contact person",
+      "contactNamePlaceholder": "e.g. Ali Hassan",
+      "phone": "Phone",
+      "phonePlaceholder": "e.g. +964 780 000 0000",
+      "email": "Email",
+      "emailPlaceholder": "e.g. orders@example.com",
+      "taxNumber": "Tax number",
+      "taxNumberPlaceholder": "e.g. 123456789",
+      "address": "Address",
+      "addressPlaceholder": "City, district, street",
+      "notes": "Notes",
+      "notesPlaceholder": "Payment terms, delivery days…",
+      "isActive": "Active",
+      "save": "Save supplier"
+    },
+    "delete": {
+      "title": "Delete supplier",
+      "description": "“{{name}}” will be deleted. This cannot be undone."
+    },
+    "deactivate": {
+      "title": "Deactivate supplier",
+      "description": "“{{name}}” is on documents, so it cannot be deleted. It will be deactivated and no longer offered on new receipts."
+    },
+    "messages": {
+      "created": "Supplier added",
+      "updated": "Supplier updated",
+      "deactivated": "Supplier deactivated",
+      "deleted": "Supplier deleted"
+    },
+    "validation": {
+      "codeRequired": "Code is required",
+      "codeMax": "Code must be 30 characters or fewer",
+      "nameRequired": "Name is required",
+      "nameMax": "Name must be 255 characters or fewer",
+      "contactNameMax": "Contact person must be 150 characters or fewer",
+      "phoneMax": "Phone must be 50 characters or fewer",
+      "email": "Enter a valid email address",
+      "emailMax": "Email must be 150 characters or fewer",
+      "addressMax": "Address must be 500 characters or fewer",
+      "taxNumberMax": "Tax number must be 50 characters or fewer",
+      "notesMax": "Notes must be 2000 characters or fewer"
+    }
+  }
+}

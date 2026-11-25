@@ -1,0 +1,61 @@
+{
+  "home": {
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "morningPlain": "Good morning",
+      "evening": "Good evening, {{name}}",
+      "eveningPlain": "Good evening"
+    },
+    "subtitle": "A summary of your records and what changed lately.",
+    "lastSync": "Last sync: {{time}}",
+    "loadError": "Could not load this section",
+    "kpi": {
+      "warehouses": "Warehouses",
+      "suppliers": "Suppliers",
+      "categories": "Categories",
+      "units": "Units of measure",
+      "change": "Change from the previous period"
+    },
+    "activity": {
+      "title": "Activity",
+      "subtitle": "Records created and updated over the last {{days}} days",
+      "created": "Created",
+      "updated": "Updated",
+      "empty": "No activity in this period"
+    },
+    "recent": {
+      "title": "Recent changes",
+      "subtitle": "The latest records added or changed",
+      "empty": "No recent changes",
+      "col": {
+        "name": "Name",
+        "resource": "Type",
+        "action": "Change",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "resource": {
+        "warehouse": "Warehouse",
+        "supplier": "Supplier",
+        "category": "Category",
+        "unit": "Unit of measure"
+      },
+      "action": {
+        "created": "Created",
+        "updated": "Updated",
+        "deleted": "Deleted"
+      },
+      "open": "Open {{resource}} list: {{name}}"
+    },
+    "time": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "justNow": "Just now",
+      "dayTime": "{{day}}, {{time}}",
+      "minutesAgo_one": "{{count}} minute ago",
+      "minutesAgo_other": "{{count}} minutes ago",
+      "hoursAgo_one": "{{count}} hour ago",
+      "hoursAgo_other": "{{count}} hours ago"
+    }
+  }
+}

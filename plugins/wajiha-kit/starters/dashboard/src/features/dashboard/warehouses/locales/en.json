@@ -1,0 +1,135 @@
+{
+  "warehouses": {
+    "title": "Warehouses",
+    "subtitle": "Manage warehouses, their members and locations",
+    "add": "Add warehouse",
+    "list": {
+      "searchPlaceholder": "Search by name or code...",
+      "empty": "No warehouses match your search or filters.",
+      "filterType": "Warehouse type",
+      "filterStatus": "Status",
+      "filterManager": "Manager"
+    },
+    "type": {
+      "regular": "Regular",
+      "transitBadge": "Transit warehouse",
+      "transit": "Transit"
+    },
+    "col": {
+      "name": "Warehouse",
+      "code": "Code",
+      "type": "Type",
+      "address": "Address",
+      "manager": "Manager",
+      "status": "Status",
+      "actions": "Actions",
+      "locations": "Locations",
+      "members": "Members"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "createTitle": "Add warehouse",
+      "editTitle": "Edit warehouse",
+      "description": "Enter the warehouse's basic information.",
+      "name": "Name",
+      "namePlaceholder": "e.g. Central warehouse",
+      "code": "Code",
+      "codePlaceholder": "e.g. BGD-01",
+      "address": "Address",
+      "addressPlaceholder": "City, district or street",
+      "managerUserId": "Manager",
+      "managerUserIdPlaceholder": "Search for a user",
+      "isTransit": "Transit warehouse",
+      "isActive": "Active",
+      "submit": "Save warehouse",
+      "errors": {
+        "name": "Enter the warehouse name",
+        "nameMax": "Use at most 200 characters",
+        "code": "Enter the warehouse code",
+        "address": "Enter the warehouse address",
+        "codeMax": "Use at most 30 characters",
+        "addressMax": "Use at most 300 characters",
+        "uuid": "Enter a valid ID (UUID)"
+      }
+    },
+    "delete": {
+      "title": "Delete warehouse",
+      "description": "“{{name}}” will be removed permanently. This can't be undone.",
+      "confirm": "Delete"
+    },
+    "detail": {
+      "title": "Warehouse",
+      "breadcrumb": "Warehouse details",
+      "notFound": "This warehouse doesn't exist or was removed.",
+      "recordType": "Warehouse",
+      "tabsLabel": "Warehouse sections",
+      "tabs": {
+        "overview": "Overview",
+        "members": "Members",
+        "locations": "Locations"
+      },
+      "back": "Back"
+    },
+    "overview": {
+      "map": "Warehouse map",
+      "mapCount": "{{count}} storage locations",
+      "manager": "Manager",
+      "name": "Warehouse name",
+      "code": "Warehouse code",
+      "codeLocked": "The code is fixed and cannot be changed",
+      "isTransit": "Transit warehouse",
+      "isActive": "Active"
+    },
+    "members": {
+      "title": "Warehouse members",
+      "description": "Only members can see the warehouse and its documents.",
+      "add": "Add member",
+      "addTitle": "Add member",
+      "addDescription": "Enter the user's ID and choose their role in this warehouse.",
+      "addSubmit": "Add member",
+      "userId": "User",
+      "userIdPlaceholder": "Search for a user",
+      "errors": {
+        "userId": "Choose a user",
+        "role": "Choose a role"
+      },
+      "empty": "No members yet.",
+      "addedOn": "Added {{date}}",
+      "remove": "Remove",
+      "removeTitle": "Remove member",
+      "removeDescription": "The user will lose access to this warehouse.",
+      "removeConfirm": "Remove",
+      "roles": {
+        "WAREHOUSE_MANAGER": "Warehouse manager",
+        "STOREKEEPER": "Storekeeper",
+        "STOCK_CONTROLLER": "Stock controller"
+      },
+      "active": "Active member",
+      "role": "Role",
+      "rolePlaceholder": "Select a role",
+      "managerBadge": "Manager",
+      "inactive": "Inactive member",
+      "menu": "Member actions",
+      "changeRole": "Change role"
+    },
+    "locations": {
+      "title": "Warehouse locations",
+      "summary": "{{count}} locations across {{zones}} top-level zones",
+      "childCount": "{{count}} sub-locations",
+      "empty": "This warehouse has no locations yet.",
+      "blocked": "Blocked"
+    },
+    "toasts": {
+      "created": "Warehouse created",
+      "updated": "Warehouse updated",
+      "deleted": "Warehouse deleted",
+      "memberAdded": "Member added",
+      "memberRemoved": "Member removed",
+      "memberRoleChanged": "Member role updated"
+    }
+  }
+}

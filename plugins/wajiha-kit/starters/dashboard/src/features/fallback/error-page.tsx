@@ -1,0 +1,254 @@
+import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { ErrorKind } from '@/api/error/utils/classify';
+import { PageHeader } from '@/components/shared/page-header';
+import { Button } from '@/components/ui/button';
+import { directionOf } from '@/lib/i18n/languages';
+import { Home, LogIn, RefreshCw, type IconComponent } from '@/lib/icons';
+import { cn } from '@/lib/utils';
+
+interface KindConfig {
+  /** i18n key prefix holding code, title, subtitle, alert and tips copy. */
+  prefix: string;
+  tips: readonly string[];
+}
+
+/** Request-level failures plus the page-level 403 and 404 states. */
+export type ErrorPageKind = ErrorKind | 'forbidden' | 'notFound';
+
+export const ERROR_KIND: Record<ErrorPageKind, KindConfig> = {
+  network: {
+    prefix: 'errorPages.network',
+    tips: ['tip1', 'tip2', 'tip3'],
+  },
+  server: {
+    prefix: 'errorPages.server',
+    tips: ['tip1', 'tip2'],
+  },
+  unexpected: {
+    prefix: 'errorPages.unexpected',
+    tips: ['tip1', 'tip2'],
+  },
+  forbidden: {
+    prefix: 'errorPages.states.forbidden',
+    tips: ['tip1'],
+  },
+  notFound: {
+    prefix: 'errorPages.states.notFound',
+    tips: ['tip1'],
+  },
+};
+
+export interface ErrorDetail {
+  label: string;
+  value: ReactNode;
+  mono?: boolean;
+  ltr?: boolean;
+}
+
+export interface ErrorPageAction {
+  label: string;
+  onClick: () => void;
+  /** Leading icon; each slot has a default, `null` hides it. */
+  icon?: IconComponent | null;
+}
+
+export interface ErrorPageProps {
+  kind: ErrorPageKind;
+  /** Optional button under the details table (e.g. "Back to the list"). */
+  detailsAction?: ErrorPageAction;
+  /** Overrides the page title (defaults to the kind's title). */
+  title?: string;
+  primary: ErrorPageAction;
+  secondary?: ErrorPageAction;
+  extra?: ErrorPageAction;
+  details?: ErrorDetail[];
+  status?: ReactNode;
+  standalone?: boolean;
+}
+
+/**
+ * Full-page error in the dashboard's own layout (design frames 23.x): page
+ * header with actions, a danger alert card, the error details and an amber
+ * "what to do now" card. Inside the shell it replaces the page content; with
+ * `standalone` it centres itself on the canvas for errors above the shell.
+ */
+export function ErrorPage({
+  kind,
+  primary,
+  secondary,
+  extra,
+  details = [],
+  status,
+  standalone = false,
+  detailsAction,
+  title,
+}: ErrorPageProps) {
+  const { t, i18n } = useTranslation();
+  const config = ERROR_KIND[kind];
+  const key = (name: string) => `${config.prefix}.${name}`;
+
+  const content = (
+    <section
+      dir={directionOf(i18n.language)}
+      aria-labelledby="error-page-title"
+      className="gap-card animate-in fade-in slide-in-from-bottom-2 flex w-full flex-col duration-300"
+    >
+      <PageHeader
+        title={title ?? t(key('title'))}
+        subtitle={`${t(key('code'))} · ${t(key('subtitle'))}`}
+        actions={
+          <>
+            {secondary ? (
+              <ActionButton
+                action={secondary}
+                variant="outline"
+                fallbackIcon={Home}
+              />
+            ) : null}
+            {extra ? (
+              <ActionButton
+                action={extra}
+                variant="outline"
+                fallbackIcon={LogIn}
+              />
+            ) : null}
+            <ActionButton
+              action={primary}
+              variant="default"
+              fallbackIcon={RefreshCw}
+            />
+          </>
+        }
+      />
+
+      <div
+        role="alert"
+        className="border-danger/60 gap-field p-card flex flex-col rounded-(--radius-modal) border"
+      >
+        <h2 id="error-page-title" className="text-h4 text-danger">
+          {t(key('alertTitle'))}
+        </h2>
+        <p className="text-b2 text-text-secondary">
+          {t(key('alertDescription'))}
+        </p>
+        {status ? <div className="pt-field">{status}</div> : null}
+      </div>
+
+      {details.length > 0 ? (
+        <section
+          aria-labelledby="error-page-details"
+          className="surface-card gap-row flex flex-col"
+        >
+          <h2 id="error-page-details" className="text-h4 text-text-primary">
+            {t(
+              kind === 'forbidden' || kind === 'notFound'
+                ? key('detailsTitle')
+                : 'errorPages.details.title',
+            )}
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-xl border-separate border-spacing-0 text-start">
+              <thead>
+                <tr>
+                  {details.map((detail, index) => (
+                    <th
+                      key={detail.label}
+                      scope="col"
+                      className={cn(
+                        'bg-hover-row text-table-header text-text-muted h-11 px-3 text-start',
+                        index === 0 && 'rounded-s-(--radius-control)',
+                        index === details.length - 1 &&
+                          'rounded-e-(--radius-control)',
+                      )}
+                    >
+                      {detail.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {details.map((detail) => (
+                    <td
+                      key={detail.label}
+                      className="border-stroke-subtle text-b2 text-text-primary h-16 border-b px-3"
+                    >
+                      {renderDetailValue(detail)}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {detailsAction ? (
+            <div>
+              <ActionButton
+                action={detailsAction}
+                variant="outline"
+                fallbackIcon={null}
+              />
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      <section className="border-warning/60 gap-field p-card flex flex-col rounded-(--radius-modal) border">
+        <h2 className="text-h4 text-warning">{t(key('tipsTitle'))}</h2>
+        <ul className="gap-field text-b2 text-text-secondary flex flex-col">
+          {config.tips.map((tip) => (
+            <li key={tip}>{t(key(tip))}</li>
+          ))}
+        </ul>
+      </section>
+    </section>
+  );
+
+  if (!standalone) {
+    return content;
+  }
+  return (
+    <main className="bg-background md:p-page flex min-h-svh w-full justify-center p-4">
+      <div className="flex w-full max-w-4xl flex-col justify-center">
+        {content}
+      </div>
+    </main>
+  );
+}
+
+function renderDetailValue(detail: ErrorDetail): ReactNode {
+  const empty =
+    detail.value === null || detail.value === undefined || detail.value === '';
+  if (empty) {
+    return '—';
+  }
+  if (detail.mono || detail.ltr) {
+    return (
+      <span
+        dir="ltr"
+        className={detail.mono ? 'font-mono break-all' : undefined}
+      >
+        {detail.value}
+      </span>
+    );
+  }
+  return detail.value;
+}
+
+function ActionButton({
+  action,
+  variant,
+  fallbackIcon,
+}: {
+  action: ErrorPageAction;
+  variant: 'default' | 'outline';
+  fallbackIcon: IconComponent | null;
+}) {
+  const Icon = action.icon === undefined ? fallbackIcon : action.icon;
+  return (
+    <Button type="button" variant={variant} onClick={action.onClick}>
+      {Icon ? <Icon className="size-4" /> : null}
+      {action.label}
+    </Button>
+  );
+}

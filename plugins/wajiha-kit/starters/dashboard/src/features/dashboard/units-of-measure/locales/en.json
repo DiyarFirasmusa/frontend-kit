@@ -1,0 +1,57 @@
+{
+  "unitsOfMeasure": {
+    "title": "Units of measure",
+    "subtitle": "Define units and the decimal precision used in stock movements",
+    "add": "Create unit",
+    "list": {
+      "searchPlaceholder": "Search by name or code",
+      "decimalsFilter": "Decimal places",
+      "empty": "No units match your search."
+    },
+    "col": {
+      "code": "Code",
+      "name": "Name",
+      "decimalPlaces": "Decimal places",
+      "example": "Display example",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "createTitle": "Create unit of measure",
+      "editTitle": "Edit unit of measure",
+      "code": "Code",
+      "codePlaceholder": "e.g. PCS",
+      "name": "Name",
+      "namePlaceholder": "e.g. Piece",
+      "decimalPlaces": "Decimal places (0–6)",
+      "decimalPlacesPlaceholder": "e.g. 0",
+      "active": "Active",
+      "submit": "Save unit",
+      "errors": {
+        "code": "Enter the unit code",
+        "codeLength": "The code can be at most 20 characters",
+        "name": "Enter the unit name",
+        "nameLength": "The name can be at most 100 characters",
+        "decimalPlaces": "Choose a whole number from 0 to 6"
+      }
+    },
+    "delete": {
+      "title": "Delete unit of measure",
+      "description": "“{{name}}” will be removed permanently. This can't be undone.",
+      "confirm": "Delete"
+    },
+    "toasts": {
+      "created": "Unit of measure created",
+      "updated": "Unit of measure updated",
+      "deleted": "Unit of measure deleted"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "unitsOfMeasure": {
+    "title": "وحدات القياس",
+    "subtitle": "تعريف الوحدات ودقة الكسور المستخدمة في حركة المخزون",
+    "add": "إنشاء وحدة",
+    "list": {
+      "searchPlaceholder": "ابحث بالاسم أو الرمز",
+      "decimalsFilter": "المنازل العشرية",
+      "empty": "لا توجد وحدات مطابقة لبحثك."
+    },
+    "col": {
+      "code": "الرمز",
+      "name": "الاسم",
+      "decimalPlaces": "المنازل العشرية",
+      "example": "مثال العرض",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "status": {
+      "active": "نشطة",
+      "inactive": "غير نشطة"
+    },
+    "actions": {
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "form": {
+      "createTitle": "إنشاء وحدة قياس",
+      "editTitle": "تعديل وحدة القياس",
+      "code": "الرمز",
+      "codePlaceholder": "مثال: PCS",
+      "name": "الاسم",
+      "namePlaceholder": "مثال: قطعة",
+      "decimalPlaces": "المنازل العشرية (0–6)",
+      "decimalPlacesPlaceholder": "مثال: 0",
+      "active": "نشطة",
+      "submit": "حفظ الوحدة",
+      "errors": {
+        "code": "أدخل رمز الوحدة",
+        "codeLength": "لا يتجاوز الرمز 20 حرفاً",
+        "name": "أدخل اسم الوحدة",
+        "nameLength": "لا يتجاوز الاسم 100 حرف",
+        "decimalPlaces": "اختر رقماً صحيحاً من 0 إلى 6"
+      }
+    },
+    "delete": {
+      "title": "حذف وحدة القياس",
+      "description": "سيُحذف «{{name}}» نهائياً ولا يمكن التراجع عن ذلك.",
+      "confirm": "حذف"
+    },
+    "toasts": {
+      "created": "تمت إضافة وحدة القياس",
+      "updated": "تم تحديث وحدة القياس",
+      "deleted": "تم حذف وحدة القياس"
+    }
+  }
+}
