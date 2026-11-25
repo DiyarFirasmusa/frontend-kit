@@ -192,7 +192,7 @@ export const SECTIONS: PageSection[] = [
   { title: t('Start here', 'ابدأ من هنا'), pages: ['docs', 'guide', 'get-started', 'project-types', 'examples'] },
   { title: t('Help', 'مساعدة'), pages: ['questions'] },
   { title: t('Behind the scenes', 'في الخلفية'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
-  { title: t('For your project', 'لمشروعك'), pages: ['modes', 'configuration', 'refactor'] },
+  { title: t('More ways to work', 'طرق أخرى للعمل'), pages: ['modes', 'configuration', 'refactor'] },
   { title: t('About', 'عن واجهة'), pages: ['changelog', 'licence', 'privacy', 'terms'] },
 ]
 

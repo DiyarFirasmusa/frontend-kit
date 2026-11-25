@@ -16,7 +16,7 @@ export const home = {
     },
     {
       name: t('It builds the whole project', 'تبني المشروع كاملا'),
-      text: t('Pages, forms, tables, light and dark mode, Arabic and English. All of it is set up in a proven way.', 'الصفحات والنماذج والجداول والوضع الفاتح والداكن والعربية والإنجليزية. كلها مرتبة بطريقة مجربة.'),
+      text: t('Pages, forms, tables, light and dark mode, Arabic and English. All of it is set up the same fixed way.', 'الصفحات والنماذج والجداول والوضع الفاتح والداكن والعربية والإنجليزية. كلها مرتبة بطريقة ثابتة.'),
     },
     {
       name: t('It checks before showing you', 'تفحص العمل قبل أن تعرضه عليك'),
@@ -26,7 +26,7 @@ export const home = {
   start: t('Install the kit', 'ثبّت الإضافة'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
-    lead: t('Pick one when Claude asks. You do not choose any tools: each kind comes ready.', 'اختر واحدا عندما يسألك Claude. ولن تختار أي أدوات: كل نوع يأتي جاهزا.'),
+    lead: t('Pick one when Claude asks. You do not need to choose tools: each kind comes ready.', 'اختر واحدا عندما يسألك Claude. ولا تحتاج أن تختار أدوات: كل نوع يأتي جاهزا.'),
     say: t('You could say', 'يمكنك أن تقول'),
     more: t('See the three kinds of project', 'شاهد الأنواع الثلاثة للمشاريع'),
   },

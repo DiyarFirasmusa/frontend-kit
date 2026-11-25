@@ -37,8 +37,8 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
 ]
 
 export const questionsLead = t(
-  'The setup asks the same few questions of everyone. None of them is technical. Answer in your own words. The setup is being updated, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
-  'يسأل Claude الجميع الأسئلة القليلة نفسها. ليس فيها سؤال تقني. أجب بكلماتك أنت. والإعداد قيد التحديث، فقد يسأل اليوم بصيغة مختلفة قليلا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
+  'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The setup is being updated, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
+  'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. والإعداد قيد التحديث، فقد يسأل اليوم بصيغة مختلفة قليلا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
 )
 
 export const questions = [
@@ -91,8 +91,8 @@ export const summary = {
 export const build = {
   title: t('It builds your project', 'تبني مشروعك'),
   text: t(
-    'It builds a complete project on a fixed setup that has already been proven to work. You never choose libraries or tools. The kit also decides light and dark mode, who may open which page, and how the files are organised. Then it runs its checks and shows you the result.',
-    'تبني مشروعا كاملا على إعداد ثابت ثبتت جودته من قبل. ولا تختار أنت أي مكتبات أو أدوات. وتقرر الإضافة أيضا الوضع الفاتح والداكن، ومن يحق له فتح أي صفحة، وكيف تُرتب الملفات. ثم تشغل فحوصها وتعرض عليك النتيجة.',
+    'It builds a complete project on a fixed setup chosen for these kinds of project. You do not need to know libraries or tools: the kit picks them, and may ask you about the framework. The kit also decides light and dark mode, who may open which page, and how the files are organised. Then it runs its checks and shows you the result.',
+    'تبني مشروعا كاملا على إعداد ثابت اختير لهذه الأنواع من المشاريع. ولا تحتاج أن تعرف المكتبات أو الأدوات: تختارها الإضافة، وقد تسألك عن الإطار. وتقرر الإضافة أيضا الوضع الفاتح والداكن، ومن يحق له فتح أي صفحة، وكيف تُرتب الملفات. ثم تشغل فحوصها وتعرض عليك النتيجة.',
   ),
 }
 
