@@ -2166,3 +2166,21 @@
   }
 }
 
+
+/* The two results stay a modest size, centred. */
+/* As wide as the other sections; kept short so it does not take the whole screen. */
+.ba {
+  max-width: none;
+  aspect-ratio: 16 / 6.6;
+  font-size: clamp(0.6rem, 0.2rem + 0.8vw, 1rem);
+}
+
+.ba-ask span {
+  font-size: 1rem;
+}
+
+.ba-results {
+  margin-block-start: 1.25rem;
+}
+
+
