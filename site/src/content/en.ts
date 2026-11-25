@@ -129,7 +129,7 @@ export const en: Copy = {
     after: 'When the assistant stops after changing source, committed or not, typecheck and related tests run. Then a reviewer agent reads the change.',
   },
   install: {
-    title: 'Install it in three steps.',
+    title: 'Start in two steps.',
     lead: 'Open the Claude app, choose Code, pick a folder for your project, then type these one by one in the message box.',
     steps: ['Send this to Claude. It tells Claude where to find the kit.', 'Then send this. It adds the kit.', 'And last, this one. Claude starts asking about your project.'],
     needs: 'Everything happens in the Claude app. You send one message, and Claude does the installing for you.',

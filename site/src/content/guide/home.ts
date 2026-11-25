@@ -39,7 +39,7 @@ export const home = {
   steps: {
     install: {
       name: t('You add the kit to Claude', 'تضيف الإضافة إلى Claude'),
-      text: t('In the Claude app, you send one message. Claude installs the kit for you, then starts setting up your project.', 'في تطبيق Claude ترسل رسالة واحدة. يثبت Claude الإضافة بنفسه، ثم يبدأ تجهيز مشروعك.'),
+      text: t('In the Claude app, you send one message. Claude installs the kit for you and goes straight on to your project.', 'في تطبيق Claude ترسل رسالة واحدة. يثبت Claude الإضافة بنفسه، ثم يبدأ تجهيز مشروعك.'),
     },
     skills: {
       name: t('It asks what you want', 'تسألك ماذا تريد'),
@@ -128,6 +128,6 @@ export const home = {
   type: t('You type', 'تكتب'),
   open: t('Read the full page', 'اقرأ صفحته كاملة'),
 
-  install: t('Start in three steps.', 'ابدأ بثلاث خطوات.'),
+  install: t('Start in two steps.', 'ابدأ بخطوتين.'),
   types: t('What you can build', 'ماذا تستطيع أن تبني'),
 }

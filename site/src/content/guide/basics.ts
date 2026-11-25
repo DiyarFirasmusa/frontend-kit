@@ -21,7 +21,7 @@ export const basics = {
     },
     {
       title: t('Start a new project', 'ابدأ مشروعا جديدا'),
-      text: t('Type /wajiha-kit:setup in Claude Code, then choose “new project”.', 'اكتب ⁦/wajiha-kit:setup⁩ في ⁦Claude Code⁩، ثم اختر «مشروع جديد».'),
+      text: t('Right after the install, in the same chat, Claude asks what you are doing. Choose “new project”.', 'بعد التثبيت مباشرة، وفي المحادثة نفسها، يسألك ⁦Claude⁩ ماذا تفعل. اختر «مشروع جديد».'),
     },
     {
       title: t('Answer a few questions', 'أجب عن بضعة أسئلة'),

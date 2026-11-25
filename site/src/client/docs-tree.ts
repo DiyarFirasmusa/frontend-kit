@@ -8,6 +8,8 @@ export function initTree(): void {
   const tree = document.querySelector<HTMLDetailsElement>('[data-tree]')
   if (!tree) return
   if (innerWidth < 900) tree.open = false
+  // A tablet turned, or a window widened: the list is open beside the page and folded away above it.
+  matchMedia('(min-width: 901px)').addEventListener('change', (wide) => (tree.open = wide.matches))
   const list = required<HTMLElement>('[data-tree-list]', tree)
   const input = required<HTMLInputElement>('[data-tree-input]', tree)
   const empty = required<HTMLElement>('[data-tree-empty]', tree)

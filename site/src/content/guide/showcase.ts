@@ -97,7 +97,7 @@ export const journeyWords = {
 
 /** The install panel. */
 export const installWords = {
-  title: t('Start in three steps', 'ابدأ بثلاث خطوات'),
+  title: t('Start in two steps', 'ابدأ بخطوتين'),
   lead: t('Everything happens in the Claude app. You send one message, and Claude installs the kit for you.', 'كل شيء يحدث في تطبيق Claude. ترسل رسالة واحدة، ويثبت Claude الإضافة بنفسه.'),
   copy: t('Copy the message', 'انسخ الرسالة'),
   copied: t('Copied. Paste it in Claude', 'نُسخت. الصقها في Claude'),

@@ -2184,3 +2184,29 @@
 }
 
 
+
+/* The Arabic headline keeps its two lines but never runs under the chat beside it:
+   its size follows the width of its own column. On narrow screens it may wrap. */
+[dir='rtl'] .hero h1 {
+  font-size: clamp(1.625rem, 0.35rem + 2.15vw, 3.25rem);
+}
+
+@media (max-width: 1100px) {
+  [dir='rtl'] .hero h1 {
+    font-size: clamp(1.75rem, 1rem + 3.6vw, 3rem);
+  }
+
+  [dir='rtl'] .hero h1 span {
+    white-space: normal;
+  }
+}
+
+/* The phone menu's panel is out of the page while it is closed, so it can never push the page sideways. */
+.menu:not([open]) nav {
+  display: none;
+}
+
+/* Glows behind the windows may reach past a section's sides; they are clipped there so the page never scrolls sideways. */
+.home > section {
+  overflow-x: clip;
+}

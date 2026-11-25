@@ -19,8 +19,8 @@ export const needs = [
 
 /** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
 export const installMessage = t(
-  'Please install the Wajiha Kit plugin for this project. Run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first.',
-  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا.',
+  'Please install the Wajiha Kit plugin for this project. Run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
+  'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي بواجهة.',
 )
 
 /** Three steps, all inside the Claude app. `copy` is what the step asks you to send. */
@@ -31,13 +31,8 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
   },
   {
     title: t('Send Claude this message', 'أرسل هذه الرسالة إلى Claude'),
-    text: t('Copy it, paste it into the message box and send it. Claude installs the kit for you and asks before each step.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يثبت ⁦Claude⁩ الإضافة بنفسه، ويسألك قبل كل خطوة.'),
+    text: t('Copy it, paste it into the message box and send it. Claude installs the kit, asks before each step, and then starts asking about your project. When it asks what you are doing, choose “New project”.', 'انسخها، والصقها في خانة الرسائل وأرسلها. يثبت ⁦Claude⁩ الإضافة، ويسألك قبل كل خطوة، ثم يبدأ بسؤالك عن مشروعك. وعندما يسألك ماذا تفعل، اختر «مشروع جديد».'),
     copy: installMessage,
-  },
-  {
-    title: t('Start a new chat and type /wajiha-kit:setup', 'ابدأ محادثة جديدة واكتب ‎/wajiha-kit:setup'),
-    text: t('Open a new session in the same folder, so Claude sees the kit. Type / and pick wajiha-kit:setup from the list. Claude starts asking about your project.', 'افتح جلسة جديدة في المجلد نفسه، حتى يرى ⁦Claude⁩ الإضافة. اكتب / واختر ⁦wajiha-kit:setup⁩ من القائمة. يبدأ ⁦Claude⁩ بسؤالك عن مشروعك.'),
-    copy: '/wajiha-kit:setup',
   },
 ]
 
