@@ -88,6 +88,8 @@ const markBlocks = [
   { x: 45, y: 21, w: 14, h: 38, fill: '#19abab' },
   { x: 5, y: 45, w: 36, h: 14, fill: '#f1ede7' },
 ]
+// The head of a page is a board too: orange for the pages you read to act, a dark block for the reference pages.
+const tone = ({ rules: 'ivory', skills: 'orange', agents: 'ivory', checks: 'ivory' } as Record<string, string>)[parent] ?? 'orange'
 const lit = ({ rules: 0, skills: 1, agents: 2, checks: 3 } as Record<string, number | undefined>)[parent]
 const crumbs = [
   ...(parent !== 'docs' ? [{ name: PAGES.docs.name[locale], href: pageUrl(locale, 'docs') }] : []),
@@ -100,19 +102,21 @@ const crumbs = [
   <main class="doc" data-section={parent}>
     <DocsTree locale={locale} route={route} />
     <div class="column" id="content" tabindex="-1" transition:name="page">
-      <header class="doc-head">
-        <p class="doc-eyebrow">
-          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+      <header class:list={['doc-head', 'board', 'board-head', `tone-${tone}`]}>
+        <p class="board-top doc-eyebrow">
+          <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
             {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={lit === undefined ? b.fill : i === lit ? 'var(--kc, #d97757)' : 'rgb(241 237 231 / 0.3)'} />)}
           </svg>
-          {PAGES[parent].name[locale]}
+          <span>{PAGES[parent].name[locale]}</span>
         </p>
-        <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
-          {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
-          {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
-        </nav>
-        <h1 class:list={{ 'is-name': detail }}>{detail ? <bdi>{heading}</bdi> : lastWord ? <>{firstWords}<em>{lastWord}</em>{tail}</> : heading}</h1>
-        <p class="doc-summary">{summary}</p>
+        <div class="board-main">
+          <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
+            {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
+            {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
+          </nav>
+          <h1 class:list={{ 'is-name': detail }}>{detail ? <bdi>{heading}</bdi> : lastWord ? <>{firstWords}<em>{lastWord}</em>{tail}</> : heading}</h1>
+          <p class="doc-summary">{summary}</p>
+        </div>
       </header>
       <article class="doc-article">
         <slot />

@@ -2623,3 +2623,75 @@ body:has(main.doc)::after {
     display: none;
   }
 }
+
+/* ---------- The head of a guide or legal page is a board too: one bar and one block, at a lower volume ---------- */
+.doc-head.board-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  direction: inherit;
+  margin-block-end: 1.5rem;
+}
+
+.doc-head.board-head::before {
+  display: none;
+}
+
+.doc-head.board-head .board-top {
+  margin: 0;
+  gap: 0.75rem;
+  color: #f1ede7;
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:lang(ar) .doc-head.board-head .board-top {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.doc-head.board-head .board-main {
+  grid-column: 1;
+  grid-row: 2;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.doc-head.board-head.tone-orange .board-main,
+.doc-head.board-head.tone-orange .board-main h1,
+.doc-head.board-head.tone-orange .board-main .doc-summary,
+.doc-head.board-head.tone-orange .board-main .crumbs a,
+.doc-head.board-head.tone-orange .board-main .crumbs span {
+  color: #141413;
+  -webkit-text-fill-color: #141413;
+}
+
+.doc-head.board-head.tone-orange .board-main h1 em {
+  background: none;
+  color: #141413;
+  -webkit-text-fill-color: #141413;
+  text-decoration: underline;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 0.12em;
+}
+
+.doc-head.board-head.tone-ivory .board-main h1,
+.doc-head.board-head.tone-ivory .board-main .doc-summary {
+  color: #f1ede7;
+}
+
+.doc-head.board-head.tone-ivory .board-main .doc-summary {
+  color: #bcb8b1;
+}
+
+.doc-head.board-head .board-main h1 {
+  margin-block: 0 0.75rem;
+}
+
+.doc-head.board-head .board-main .doc-summary {
+  margin: 0;
+}
