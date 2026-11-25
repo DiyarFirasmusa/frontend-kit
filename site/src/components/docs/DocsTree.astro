@@ -87,9 +87,9 @@ const groups: { name: string; kind: Route['kind']; leaves: Leaf[] }[] = [
   <summary>{ui.allPages[locale]}</summary>
   <label class="tree-search">
     <span class="sr-only">{words.search[locale]}</span>
-    <input type="search" placeholder={words.search[locale]} aria-label={words.search[locale]} autocomplete="off" data-tree-input />
+    <input type="search" placeholder={words.search[locale]} autocomplete="off" data-tree-input />
   </label>
-  <p class="tree-none" role="status" data-tree-empty hidden>{words.none[locale]}</p>
+  <p class="tree-none" data-tree-empty hidden>{words.none[locale]}</p>
   <nav aria-label={PAGES.docs.name[locale]} data-tree-list>
     {
       groups.map(({ name, kind, leaves }) => (

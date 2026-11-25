@@ -37,7 +37,7 @@ async function copy(words: string): Promise<boolean> {
 }
 
 export function initCopy(): void {
-  for (const button of all<HTMLButtonElement>('[data-copy]')) {
+  for (const button of all<HTMLButtonElement>('[data-copy]').filter((candidate) => candidate.dataset['copy'])) {
     let timer = 0
     button.addEventListener('click', async () => {
       const status = required<HTMLElement>('[data-status]', button)

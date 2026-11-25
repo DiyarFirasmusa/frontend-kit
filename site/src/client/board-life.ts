@@ -29,37 +29,50 @@ export function initBoardLife(signal: AbortSignal): void {
   // The journey: one current step.
   const path = document.querySelector<HTMLElement>('.path')
   if (!path) return
+  const root = document.documentElement
   const stops = all<HTMLElement>('.path-stop', path)
   if (stops.length === 0) return
   let current = -1
-  let chosen = false
+  let chosen = false // a step chosen by a click stays; hover only holds the turn while the pointer is on it
+  let hovering = false
   let visible = false
   const show = (index: number): void => {
     current = index
     stops.forEach((stop, i) => {
       stop.classList.toggle('is-current', i === index)
       stop.classList.toggle('is-done', i < index)
+      if (i === index) stop.setAttribute('aria-current', 'step')
+      else stop.removeAttribute('aria-current')
     })
     path.style.setProperty('--current', String(index))
   }
-  const choose = (index: number): void => {
-    chosen = true
-    show(index)
-  }
   stops.forEach((stop, i) => {
-    stop.tabIndex = 0
-    stop.addEventListener('pointerenter', () => choose(i), { signal })
-    stop.addEventListener('focus', () => choose(i), { signal })
-    stop.addEventListener('click', () => choose(i), { signal })
+    stop.addEventListener(
+      'pointerenter',
+      (event) => {
+        if (event.pointerType === 'touch') return
+        hovering = true
+        show(i)
+      },
+      { signal },
+    )
+    stop.addEventListener(
+      'click',
+      () => {
+        chosen = true
+        show(i)
+      },
+      { signal },
+    )
   })
-  path.addEventListener('pointerleave', () => (chosen = false), { signal })
-  path.addEventListener('focusout', () => (chosen = false), { signal })
+  path.addEventListener('pointerleave', () => (hovering = false), { signal })
   show(0)
   if (calm()) return
   const watcher = new IntersectionObserver(([entry]) => (visible = Boolean(entry?.isIntersecting)), { threshold: 0.4 })
   watcher.observe(path)
   const timer = setInterval(() => {
-    if (!visible || chosen || document.hidden) return
+    // The opening screen's pause button stops every moving thing on the page.
+    if (!visible || chosen || hovering || document.hidden || root.classList.contains('is-paused')) return
     show((current + 1) % stops.length)
   }, 2600)
   signal.addEventListener('abort', () => (watcher.disconnect(), clearInterval(timer)))

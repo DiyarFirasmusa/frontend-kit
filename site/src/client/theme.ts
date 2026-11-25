@@ -5,7 +5,6 @@ export function initTheme(signal: AbortSignal): void {
     const paint = (): void => {
       const light = root.dataset['theme'] === 'light'
       button.setAttribute('aria-label', (light ? button.dataset['light'] : button.dataset['dark']) ?? '')
-      button.setAttribute('aria-pressed', String(light))
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#f4f0ea' : '#050607')
     }
     paint()

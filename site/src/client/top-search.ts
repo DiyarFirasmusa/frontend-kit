@@ -33,8 +33,15 @@ export function initTopSearch(signal: AbortSignal): void {
     'keydown',
     (event) => {
       if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return
+      // Below the width where the header box is shown, the page list's own box takes the key.
+      const target = top.getClientRects().length > 0 ? top : tree
+      if (target === tree) {
+        const list = tree.closest('details')
+        if (list) list.open = true
+        if (!tree.getClientRects().length) return
+      }
       event.preventDefault()
-      top.focus()
+      target.focus()
     },
     { signal },
   )

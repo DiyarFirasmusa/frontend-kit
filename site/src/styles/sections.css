@@ -64,7 +64,7 @@
   margin-block-start: 2rem;
 }
 
-.js .show-panel[data-hidden] {
+.builds.is-live .show-panel[data-hidden] {
   display: none;
 }
 

@@ -2,10 +2,11 @@ import { all, required } from './dom.ts'
 
 /** The header: its ground, the section being read, the progress line, the menu and the language. Lives as long as its page. */
 export function initChrome(signal: AbortSignal): void {
-  const bar = required<HTMLElement>('.top')
-  const progress = required<HTMLElement>('[data-progress]')
-  const menu = required<HTMLDetailsElement>('[data-menu]')
-  const language = required<HTMLAnchorElement>('[data-language]')
+  // The page that is not there carries a header in each language; only the one in view is the header.
+  const bar = all<HTMLElement>('.top').find((candidate) => !candidate.closest('[hidden]')) ?? required<HTMLElement>('.top')
+  const progress = required<HTMLElement>('[data-progress]', bar)
+  const menu = required<HTMLDetailsElement>('[data-menu]', bar)
+  const language = required<HTMLAnchorElement>('[data-language]', bar)
   const languageHome = language.pathname
   const sections = all<HTMLElement>('main section[id]')
   const reading = (): HTMLElement | undefined => sections.findLast((section) => section.getBoundingClientRect().top <= innerHeight * 0.4)

@@ -25,7 +25,7 @@ const route: Route = { kind: 'home' }
       </p>
       <div class="board-main">
         <h1 data-missing-title>This page does not exist.</h1>
-        <p class="missing-help" data-missing-help>Check the address, or search the guide with Ctrl K.</p>
+        <p class="missing-help" data-missing-help>Check the address, or open the guide.</p>
         <p class="missing-other" lang="ar" dir="rtl" data-missing-other>هذه الصفحة غير موجودة.</p>
       </div>
       <div class="board-side">
@@ -62,7 +62,7 @@ const route: Route = { kind: 'home' }
         other.lang = 'en'
         other.dir = 'ltr'
         q('[data-missing-label]').textContent = 'غير موجودة'
-        q('[data-missing-help]').textContent = 'تحقق من العنوان، أو ابحث في الدليل بـ Ctrl K.'
+        q('[data-missing-help]').textContent = 'تحقق من العنوان، أو افتح الدليل.'
         q('[data-missing-near]').textContent = 'صفحات قريبة'
         q('[data-missing-note]').textContent = 'لم يُحفظ شيء ولم يضع شيء: العنوان وحده فارغ.'
         var home = q('[data-missing-home]')
