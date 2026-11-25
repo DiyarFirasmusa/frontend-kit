@@ -1,4 +1,5 @@
 import { initAlive } from './alive.ts'
+import { initBoardLife } from './board-life.ts'
 import { initCopy } from './copy-button.ts'
 import { initTree } from './docs-tree.ts'
 import { initFinder } from './finder.ts'
@@ -34,6 +35,7 @@ document.addEventListener('astro:page-load', () => {
     ['slider', () => initBeforeAfter(signal)],
     ['share', () => initShareLink(signal)],
     ['theme', () => initTheme(signal)],
+    ['boards', () => initBoardLife(signal)],
   ]
   for (const [name, start] of starters) {
     try {

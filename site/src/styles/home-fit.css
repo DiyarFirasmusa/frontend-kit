@@ -1,0 +1,199 @@
+/* ---------------------------------------------------------------------------------------------
+   HOME: every part fits a screen. A part is a title, a lead and one board; with its title it is
+   never taller than about one laptop screen, so it can be read whole without scrolling inside it.
+   --------------------------------------------------------------------------------------------- */
+.builds,
+.home .example,
+.home .get-it,
+.compare-section {
+  padding-block: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.section-head {
+  margin-block-end: 1.75rem;
+}
+
+.section-head p {
+  margin-block-start: 0.5rem;
+}
+
+/* 1/4: the drawing is as tall as it needs to be, not as wide as the column. */
+.board-main > .browser {
+  width: min(100%, 36rem);
+}
+
+.show-panel {
+  gap: 0.75rem;
+}
+
+.show-words h3 {
+  margin-block-end: 0.35rem;
+}
+
+.show-tabs {
+  margin-block-end: 1rem;
+}
+
+/* 2/4: smaller windows, tighter words. */
+.path-picture {
+  height: 9.5rem;
+}
+
+.board .path-label p {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* 3/4: the comparison is a wide window, not a tall one. */
+.board-main > .ba {
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  aspect-ratio: 16 / 7.4;
+}
+
+.ba-ask {
+  margin-block: 0 0.75rem;
+}
+
+/* The side columns: compact rows. */
+.board-list li {
+  padding-block: 0.6rem;
+}
+
+.board-list li small {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.board-side {
+  padding-block: 0.9rem;
+}
+
+/* 4/4: the window and the two steps are closer together. */
+.start-main {
+  gap: 1rem;
+}
+
+.start-window .start-body {
+  gap: 0.6rem;
+}
+
+.start-window .start-hint {
+  margin-block-start: 0.4rem;
+}
+
+@media (max-width: 760px) {
+  .path-picture {
+    height: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   LIFE: interactions that explain. Nothing moves without a reason; all of it stops for people
+   who ask for less motion.
+   --------------------------------------------------------------------------------------------- */
+/* The journey: the current step is the one lit; the steps before it are done, the ones after it are quiet. */
+.path-stop {
+  cursor: pointer;
+  outline-offset: 4px;
+}
+
+.path-stop .path-picture,
+.path-stop .path-label {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.path-stop:not(.is-current):not(.is-done) .path-picture,
+.path-stop:not(.is-current):not(.is-done) .path-label {
+  opacity: 0.55;
+}
+
+.path-stop.is-current .path-picture {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.path-stop.is-current .path-label strong,
+.path-stop.is-current .path-label h3 {
+  color: var(--ivory);
+}
+
+.path-stop:focus-visible .path-picture {
+  box-shadow: 0 0 0 2px var(--turq);
+}
+
+/* A board wakes once: the block lit in its bar pulses when you arrive. */
+.board.is-awake .board-top svg rect[fill],
+.board.is-awake .board-count {
+  animation: board-wake 0.9s ease 0.15s 1 both;
+}
+
+@keyframes board-wake {
+  0% { opacity: 0.35; }
+  45% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Side rows: they arrive one after another, and answer your pointer. */
+.board.is-awake .board-list li {
+  animation: board-row 0.45s ease both;
+  animation-delay: calc(0.1s * var(--row, 0));
+}
+
+.board-list li:nth-child(1) { --row: 1; }
+.board-list li:nth-child(2) { --row: 2; }
+.board-list li:nth-child(3) { --row: 3; }
+.board-list li:nth-child(4) { --row: 4; }
+.board-list li:nth-child(5) { --row: 5; }
+
+@keyframes board-row {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+[dir='rtl'] .board.is-awake .board-list li {
+  animation-name: board-row-rtl;
+}
+
+@keyframes board-row-rtl {
+  from { opacity: 0; transform: translateX(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.board-list li {
+  transition: background-color 0.2s ease, padding-inline-start 0.2s ease;
+}
+
+.board-list li:hover {
+  padding-inline-start: 0.35rem;
+}
+
+/* Pills and the board's note bar answer a press. */
+.board-note a,
+.hero-start {
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.board-note a:hover,
+.hero-start:hover {
+  transform: translateY(-1px);
+}
+
+.board-note a:active,
+.hero-start:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board .board-list li,
+  .board .board-top *,
+  .path-stop .path-picture,
+  .path-stop .path-label {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .path-stop.is-current .path-picture {
+    transform: none;
+  }
+}
