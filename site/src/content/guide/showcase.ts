@@ -83,6 +83,12 @@ export const journeyWords = {
     t('It looks for mistakes, runs tests, and a reviewer reads the work. It tries to fix what fails before you see it.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجِعٌ العمل. ويحاول إصلاح ما يفشل قبل أن تراه.'),
     t('A short report and one question: save this version? Nothing is saved or published without your yes.', 'تقرير قصير وسؤال واحد: هل أحفظ هذه النسخة؟ ولا يُحفظ ولا يُنشر شيء دون موافقتك.'),
   ],
+  endTitle: t('At the end', 'في النهاية'),
+  end: [
+    t('Nothing is saved or published without your yes.', 'ولا يُحفظ ولا يُنشر شيء دون موافقتك.'),
+    t('It asks before risky steps.', 'ويسألك قبل الخطوات الخطرة.'),
+    t('You decide what to keep.', 'وأنت تقرر ما تحتفظ به.'),
+  ],
   install: t('Please install Wajiha Kit…', 'من فضلك ثبّت واجهة…'),
   ask: t('What are we building?', 'ماذا سنبني؟'),
   options: [t('Dashboard', 'لوحة تحكم'), t('Website', 'موقع'), t('Both', 'الاثنان')],

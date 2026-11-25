@@ -1,9 +1,9 @@
 ---
-import SectionMark from './SectionMark.astro'
 import { home } from '../../content/guide/home.ts'
 import { showcase } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
+import Board from './Board.astro'
 import Mock from './Mock.astro'
 
 interface Props {
@@ -15,7 +15,6 @@ const { locale } = Astro.props
 
 <section id="builds" class="builds" data-kinds>
   <div class="column section-head">
-    <SectionMark locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} />
     <h2>{home.builds.title[locale]}</h2>
     <p>{home.builds.lead[locale]}</p>
   </div>
@@ -35,27 +34,31 @@ const { locale } = Astro.props
           <div class="show-words">
             <h3>{title[locale]}</h3>
             <p>{text[locale]}</p>
-            <ul class="show-features">
-              {features.map(({ name, text }) => (
-                <li>
-                  <strong>{name[locale]}</strong>
-                  <span>{text[locale]}</span>
-                </li>
-              ))}
-            </ul>
           </div>
-          <div class="show-picture" aria-hidden="true">
-            <div class="browser">
-              <div class="browser-bar">
-                <span class="chat-lights"><i></i><i></i><i></i></span>
-                <span class="browser-url" dir="ltr">{url}</span>
+          <div class="show-picture">
+            <Board locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} tone="ivory">
+              <div class="browser" aria-hidden="true">
+                <div class="browser-bar">
+                  <span class="chat-lights"><i></i><i></i><i></i></span>
+                  <span class="browser-url" dir="ltr">{url}</span>
+                </div>
+                <div class="browser-page">
+                  <Mock kind={id} />
+                </div>
               </div>
-              <div class="browser-page">
-                <Mock kind={id} />
-              </div>
-            </div>
+              <Fragment slot="side">
+                <ul class="board-list">
+                  {features.map(({ name, text }) => (
+                    <li>
+                      {name[locale]}
+                      <small>{text[locale]}</small>
+                    </li>
+                  ))}
+                </ul>
+              </Fragment>
+              <p slot="note">{home.madeUp[locale]}</p>
+            </Board>
           </div>
-          <p class="show-caption">{home.madeUp[locale]}</p>
         </div>
       ))
     }

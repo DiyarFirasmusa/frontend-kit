@@ -1842,20 +1842,7 @@ html[lang='ar'] .credits {
 }
 
 /* A soft light in the part's colour behind its first lines. It is not a band: it fades out on every side. */
-#builds::before,
-#example::before,
-#why::before,
-#install::before {
-  content: '';
-  position: absolute;
-  inset-block-start: -2rem;
-  inset-inline-start: -8rem;
-  z-index: -1;
-  width: min(52rem, 90vw);
-  height: 26rem;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 11%, transparent), transparent);
-  pointer-events: none;
-}
+
 
 #example .eyebrow-count,
 #why .eyebrow-count {
@@ -2053,13 +2040,6 @@ html[lang='ar'] .credits {
     height: 2.25rem;
   }
 
-  #builds::before,
-  #example::before,
-  #why::before,
-  #install::before {
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 18%, transparent), transparent);
-  }
-
   .ba-results {
     flex-direction: column;
     flex-wrap: nowrap;
@@ -2122,12 +2102,7 @@ html[lang='ar'] .credits {
 }
 
 /* The light behind each part is strong enough to read as its colour. */
-#builds::before,
-#example::before,
-#why::before,
-#install::before {
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 18%, transparent), transparent);
-}
+
 
 #builds,
 #install {
@@ -2248,12 +2223,7 @@ body:has(main.doc)::after {
   padding-block: clamp(3.5rem, 7vw, 5.5rem);
 }
 
-#builds::before,
-#example::before,
-#why::before,
-#install::before {
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 24%, transparent), transparent);
-}
+
 
 /* The guide's related pages are rows, not boxes. */
 .doc .card {
@@ -2354,4 +2324,219 @@ body:has(main.doc)::after {
   border-color: rgb(241 237 231 / 0.35);
   color: var(--ivory);
   font-size: 1rem;
+}
+
+/* =====================================================================================================
+   THE BOARD: the mark made big, and the one layout of the home page.
+   An ivory bar on top, a main block, a tall side column, an ivory bar below. Every part of the page is
+   this board, in the same places. Only what is inside changes, and the colour of the main block says what
+   the part is about: you act = orange, you get = turquoise, you look = ivory.
+   ===================================================================================================== */
+.board {
+  --tone: var(--accent);
+  --side: var(--turq);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(10.5rem, 0.32fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  direction: ltr;
+}
+
+.board.tone-turq {
+  --tone: var(--turq);
+}
+
+.board.tone-ivory {
+  --tone: var(--ivory);
+}
+
+.board.side-ivory {
+  --side: var(--ivory);
+}
+
+.board.side-orange {
+  --side: var(--accent);
+}
+
+.board > * {
+  min-width: 0;
+  margin: 0;
+}
+
+.board-top,
+.board-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.9rem;
+  background: var(--ivory);
+  color: #141413;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.board-top {
+  grid-column: 1 / -1;
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.board-count {
+  font-weight: 700;
+}
+
+.board-note {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.board-note p {
+  margin: 0;
+}
+
+.board-note a {
+  color: #141413;
+}
+
+.board-main {
+  grid-column: 1;
+  grid-row: 2;
+  padding: 0.9rem;
+  border-radius: 1.4rem;
+  background: var(--tone);
+}
+
+.board-main > .chat,
+.board-main > .browser,
+.board-main > .ba {
+  border: 0;
+  border-radius: 1rem;
+}
+
+.board-side {
+  grid-column: 2;
+  grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1rem;
+  border-radius: 1.4rem;
+  background: var(--side);
+  color: #101010;
+}
+
+.board-side p {
+  margin: 0;
+}
+
+.board-side-title {
+  font-family: var(--code);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.board-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.board-list li {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.board-list li::before {
+  content: '✓ ';
+}
+
+.board-list li small {
+  display: block;
+  margin-block-start: 0.2rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.board-top svg {
+  flex: none;
+}
+
+[dir='rtl'] .board-top,
+[dir='rtl'] .board-main,
+[dir='rtl'] .board-side,
+[dir='rtl'] .board-note {
+  direction: rtl;
+}
+
+[dir='rtl'] .board-top,
+[dir='rtl'] .board-side-title {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (max-width: 760px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .board-top,
+  .board-main,
+  .board-side,
+  .board-note {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .board-note {
+    order: 4;
+  }
+
+  .board-main {
+    padding: 0.6rem;
+    border-radius: 1.1rem;
+  }
+}
+
+/* No coloured light behind the titles of the parts or behind the drawings: the page is plain black, the colour is in the blocks. */
+#builds::before,
+#example::before,
+#why::before,
+#install::before,
+.hero-side::before,
+.show-picture::before,
+.start-window::before {
+  content: none;
+}
+
+/* Inside the orange block of the journey, the words under each window are dark and the rail is dark. */
+.board.tone-orange .path-label,
+.board.tone-orange .path-label * {
+  color: #141413;
+}
+
+.board.tone-orange .path-label p {
+  color: rgb(20 20 19 / 0.85);
+}
+
+.board.tone-orange .path-dot {
+  background: #141413;
+  color: var(--accent);
+}
+
+.board.tone-orange .path-track i {
+  background: #141413;
+  opacity: 0.5;
 }

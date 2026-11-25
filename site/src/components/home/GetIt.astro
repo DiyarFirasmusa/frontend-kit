@@ -1,5 +1,5 @@
 ---
-import SectionMark from './SectionMark.astro'
+import Board from './Board.astro'
 import { chatWords } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
 import { installWords as w } from '../../content/guide/showcase.ts'
@@ -25,13 +25,8 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
 <section id="install" class="get-it">
   <div class="column start-split" data-alive>
     <div class="start-side">
-      <SectionMark locale={locale} part={3} label={locale === 'ar' ? 'ابدأ' : 'Start'} />
       <h2>{w.title[locale]}</h2>
       <p class="start-lead">{w.lead[locale]}</p>
-      <p class="start-needs-title">{w.needsTitle[locale]}</p>
-      <ul class="start-needs">
-        {w.needsList.map((item) => <li>{item[locale]}</li>)}
-      </ul>
       <ol class="start-line">
         <li class="start-line-track" role="presentation" aria-hidden="true"><i></i></li>
         {
@@ -48,9 +43,6 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
         }
       </ol>
       <p class="start-trust">
-        {w.source[locale]} <a href={REPO_URL} dir="ltr">GitHub</a>
-      </p>
-      <p class="start-trust">
         {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a>
       </p>
       <p class="hero-ways">
@@ -59,41 +51,52 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
       </p>
     </div>
 
-    <figure class="chat start-window" aria-label={w.title[locale]}>
-      <div class="chat-bar" aria-hidden="true">
-        <span class="chat-lights"><i></i><i></i><i></i></span>
-        <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
-      </div>
-      <div class="start-body">
-        <p class="start-folder" aria-hidden="true">
-          <span class="start-folder-icon">▣</span>
-          <bdi dir="ltr">~/my-shop</bdi>
-        </p>
-        <p class="start-skip">{w.hint[locale]}</p>
-        <div class="start-message">
-          <div class="start-text" dir="auto">
-            {lines.map(({ text, command }) => (command ? <code class="msg-command" dir="ltr">{text}</code> : <span class="msg-line">{text}</span>))}
-          </div>
-          <p class="chat-tools" aria-hidden="true">
-            <i class="chat-plus">+</i>
-            <span class="chat-model" dir="ltr">{chatWords.model}</span>
-            <i class="chat-send">↑</i>
-          </p>
+    <div class="start-board">
+      <Board locale={locale} part={3} label={locale === 'ar' ? 'ابدأ' : 'Start'} tone="orange">
+      <figure class="chat start-window" aria-label={w.title[locale]}>
+        <div class="chat-bar" aria-hidden="true">
+          <span class="chat-lights"><i></i><i></i><i></i></span>
+          <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
         </div>
-        <button type="button" class="start-copy" data-copy={message} data-copy-from=".start-text" data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]} aria-label={w.copy[locale]}>
-          <span aria-hidden="true" data-status>{w.copy[locale]}</span>
-        </button>
-        <span class="sr-only" role="status" data-announce></span>
-        <p class="start-hint">{w.send[locale]}</p>
-        <p class="start-hint">{w.tonight[locale]}</p>
-        <details class="start-more">
-          <summary>{w.moreTitle[locale]}</summary>
-          <p>{w.helpers[locale]}</p>
-          <p>{w.phone[locale]}</p>
-          <p>{w.reopen[locale]}</p>
-          <p>{w.windows[locale]}</p>
-        </details>
-      </div>
-    </figure>
+        <div class="start-body">
+          <p class="start-folder" aria-hidden="true">
+            <span class="start-folder-icon">▣</span>
+            <bdi dir="ltr">~/my-shop</bdi>
+          </p>
+          <p class="start-skip">{w.hint[locale]}</p>
+          <div class="start-message">
+            <div class="start-text" dir="auto">
+              {lines.map(({ text, command }) => (command ? <code class="msg-command" dir="ltr">{text}</code> : <span class="msg-line">{text}</span>))}
+            </div>
+            <p class="chat-tools" aria-hidden="true">
+              <i class="chat-plus">+</i>
+              <span class="chat-model" dir="ltr">{chatWords.model}</span>
+              <i class="chat-send">↑</i>
+            </p>
+          </div>
+          <button type="button" class="start-copy" data-copy={message} data-copy-from=".start-text" data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]} aria-label={w.copy[locale]}>
+            <span aria-hidden="true" data-status>{w.copy[locale]}</span>
+          </button>
+          <span class="sr-only" role="status" data-announce></span>
+          <p class="start-hint">{w.send[locale]}</p>
+          <p class="start-hint">{w.tonight[locale]}</p>
+          <details class="start-more">
+            <summary>{w.moreTitle[locale]}</summary>
+            <p>{w.helpers[locale]}</p>
+            <p>{w.phone[locale]}</p>
+            <p>{w.reopen[locale]}</p>
+            <p>{w.windows[locale]}</p>
+          </details>
+        </div>
+      </figure>
+        <Fragment slot="side">
+          <p class="board-side-title">{w.needsTitle[locale]}</p>
+          <ul class="board-list">
+            {w.needsList.map((item) => <li>{item[locale]}</li>)}
+          </ul>
+        </Fragment>
+        <p slot="note">{w.source[locale]} <a href={REPO_URL} dir="ltr">GitHub</a></p>
+      </Board>
+    </div>
   </div>
 </section>

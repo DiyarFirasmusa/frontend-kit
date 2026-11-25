@@ -1,0 +1,38 @@
+---
+// The kit's one layout, the mark made big: an ivory bar on top, a main block, a tall side column, an ivory bar below.
+// Every part of the home page is a board with the same four pieces in the same places; only the colour of the main block
+// (what the part is about: you act = orange, you get = turquoise, you look = ivory) and the content change.
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+  /** 0 to 3 is the part of the page (its block of the mark is lit); -1 is the whole mark. */
+  part: -1 | 0 | 1 | 2 | 3
+  label: string
+  tone?: 'orange' | 'turq' | 'ivory'
+  /** The side column's colour; turquoise unless the main block is turquoise. */
+  side?: 'turq' | 'ivory' | 'orange'
+}
+
+const { part, label, tone = 'orange', side } = Astro.props
+const sideTone = side ?? (tone === 'turq' ? 'ivory' : 'turq')
+const blocks = [
+  { x: 5, y: 5, w: 54, h: 12, fill: '#f1ede7' },
+  { x: 5, y: 21, w: 36, h: 20, fill: '#d97757' },
+  { x: 45, y: 21, w: 14, h: 38, fill: '#19abab' },
+  { x: 5, y: 45, w: 36, h: 14, fill: '#f1ede7' },
+]
+---
+
+<div class:list={['board', `tone-${tone}`, `side-${sideTone}`]}>
+  <p class="board-top">
+    <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+      {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={part === -1 || i === part ? b.fill : 'rgb(20 20 19 / 0.22)'} stroke="rgb(20 20 19 / 0.35)" stroke-width={part === -1 || i === part ? 0 : 0} />)}
+    </svg>
+    {part >= 0 && <span class="board-count" dir="ltr">{part + 1}/4</span>}
+    <span>{label}</span>
+  </p>
+  <div class="board-main"><slot /></div>
+  <div class="board-side"><slot name="side" /></div>
+  <div class="board-note"><slot name="note" /></div>
+</div>
