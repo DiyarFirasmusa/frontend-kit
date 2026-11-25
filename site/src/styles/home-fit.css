@@ -317,3 +317,44 @@
     align-content: space-evenly;
   }
 }
+
+/* Start in two steps, round 2: a wider window means fewer lines in it; the side column is narrower. */
+@media (min-width: 901px) {
+  #install .board {
+    grid-template-columns: minmax(0, 1fr) minmax(12.5rem, 0.24fr);
+  }
+
+  #install .start-main {
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  }
+
+  #install .start-window .start-body {
+    padding: 0.7rem 0.9rem;
+  }
+
+  #install .start-skip {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  #install .start-window .start-hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+}
+
+/* Less air between the parts: about a screen each, with the title. */
+@media (min-width: 62rem) {
+  .builds.builds,
+  .home .example,
+  .home .get-it,
+  .compare-section {
+    padding-block: 2rem;
+  }
+
+  .section-head {
+    margin-block-end: 1.25rem;
+  }
+}
