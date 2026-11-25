@@ -271,10 +271,6 @@ html[data-theme='light'] .board-main input:focus-visible {
   min-height: 1.5rem;
 }
 
-.chat-pause,
-[data-pause] {
-  position: relative;
-}
 
 .chat-pause::before,
 [data-pause]::before {
