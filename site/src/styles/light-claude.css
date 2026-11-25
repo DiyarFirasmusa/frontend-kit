@@ -464,3 +464,73 @@ html[data-theme='light'] .board-note a:not(.hero-start) {
     mask-image: none;
   }
 }
+
+/* Round 6 (light mode, measured): small coloured and muted text reaches 4.5:1 (3:1 for large text). */
+html[data-theme='light'] .doc-head .doc-summary {
+  color: #141413;
+}
+
+html[data-theme='light'] .hero h1 > span + span {
+  color: #c9532c;
+}
+
+html[data-theme='light'] :is(.tree summary > span, [data-tree-group] > summary span) {
+  color: #8a3c1f;
+}
+
+html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
+  background: #0a7676 !important;
+  color: #fff !important;
+}
+
+/* The copy button is at the top end of every code window, and row-name links are at least 24px wide. */
+.doc-article .command,
+.doc-article .command.is-message {
+  align-items: flex-start;
+}
+
+.doc .rows dt a {
+  display: inline-block;
+  min-width: 1.5rem;
+  padding-block: 0.125rem;
+}
+
+/* Round 6 (measured, light): every small or muted text reaches 4.5:1, large text 3:1. */
+html[data-theme='light'] .doc-head .doc-summary,
+html[data-theme='light'] .doc-head.board-head .board-main .doc-summary {
+  color: #141413 !important;
+}
+
+html[data-theme='light'] .hero h1 > span + span,
+html[data-theme='light'] .hero h1 span:nth-child(2) {
+  color: #c9532c !important;
+}
+
+html[data-theme='light'] .board-count {
+  color: #005a5b;
+}
+
+html[data-theme='light'] :is(.chat, .start-window, .browser, .ba, .path-picture, .dash, .mock) {
+  --faint: #57534c;
+  --muted: #3f3c37;
+}
+
+html[data-theme='light'] :is(.ce-spark, .chat-title i, .ce-tool-icon) {
+  color: #b5461f;
+}
+
+html[data-theme='light'] .browser-url {
+  color: #57534c;
+}
+
+html[data-theme='light'] :is(.toc a, .toc-mini a, .doc .crumbs a, .tree a) {
+  color: rgb(20 20 19 / 0.74);
+}
+
+html .board-list li small {
+  opacity: 0.9;
+}
+
+html[data-theme='light'] .prompt > span {
+  color: #b5461f;
+}
