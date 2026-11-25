@@ -250,3 +250,10 @@
     padding-inline: var(--edge, 1.25rem);
   }
 }
+
+/* The header keeps the same room from the edge on the guide as on the home page. */
+@media (min-width: 901px) {
+  body:has(main.doc) .top {
+    padding-inline-start: var(--edge);
+  }
+}
