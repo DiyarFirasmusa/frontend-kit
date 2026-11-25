@@ -20,6 +20,7 @@ const words = {
     'A rule is a short written standard that the assistant follows, for example “every screen needs a loading state and an error state”. You do not write them. Setup puts them in your project, and the assistant reads the right one when it works on a matching file.',
     'القاعدة معيار مكتوب قصير يتبعه المساعد، مثل «لكل شاشة حالة تحميل وحالة خطأ». لا تكتبها أنت. يضعها الإعداد في مشروعك، ويقرأ المساعد القاعدة المناسبة عندما يعمل على ملف يطابقها.',
   ),
+  show: t('Show the {n} rules', 'عرض {n} قاعدة'),
   how: t('How a rule works', 'كيف تعمل القاعدة'),
   steps: [
     t('Setup copies the rules for your project type into the folder .claude/rules/ and adapts them to the tools your project uses.', 'ينسخ الإعداد قواعد نوع مشروعك إلى مجلد ⁦.claude/rules/⁩ ويضبطها لتناسب الأدوات التي يستخدمها مشروعك.'),
@@ -59,25 +60,35 @@ const plain = (paths: string[]): string => {
 <Block id="how" title={words.how[locale]}><ol class="numbered">{words.steps.map((step) => <li>{step[locale]}</li>)}</ol></Block>
 <Block id="quality-bar" title={words.bar[locale]}><ul class="ticks">{words.barItems.map((item) => <li>{item[locale]}</li>)}</ul></Block>
 {
-  Object.entries(ruleFiles).map(([group, files]) => (
-    <Block title={rules.groups[group] ?? group}>
-      <dl class="rows">
-        {files.map(({ key, name, paths }) => (
-          <div>
-            <dt>
-              <a href={ruleUrl(locale, group, name)}>
-                <bdi>{name}</bdi>
-              </a>
-            </dt>
-            <dd>
-              {ruleGuides[key]?.[locale]}
-              <small>
-                {paths.length > 0 ? `${ui.loadsFor[locale]}: ${plain(paths)}` : ui.always[locale]}
-              </small>
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </Block>
-  ))
+  Object.entries(ruleFiles).map(([group, files], g) => {
+    // The "read when" line is said once for each run of rules that share it.
+    let last = ''
+    return (
+      <Block title={rules.groups[group] ?? group}>
+        <details class="fold-all" open={g === 0}>
+          <summary>{words.show[locale].replace('{n}', String(files.length))}</summary>
+          <dl class="rows">
+            {files.map(({ key, name, paths }) => {
+              const when = paths.length > 0 ? `${ui.loadsFor[locale]}: ${plain(paths)}` : ui.always[locale]
+              const said = when === last
+              last = when
+              return (
+                <div>
+                  <dt>
+                    <a href={ruleUrl(locale, group, name)}>
+                      <bdi>{name}</bdi>
+                    </a>
+                  </dt>
+                  <dd>
+                    {ruleGuides[key]?.[locale]}
+                    {!said && <small>{when}</small>}
+                  </dd>
+                </div>
+              )
+            })}
+          </dl>
+        </details>
+      </Block>
+    )
+  })
 }

@@ -14,12 +14,12 @@ export const showcase: { id: ProfileId; tab: Bilingual; title: Bilingual; text: 
     tab: t('Website', 'موقع'),
     title: t('Pages your visitors open', 'صفحات يفتحها زوارك'),
     text: t(
-      'A portfolio, a menu, a shop, a company site or a blog. You choose the colours and the logo, and anyone can open it from a link or a search, on a phone or a computer.',
-      'معرض أعمال، أو قائمة طعام، أو متجر، أو موقع شركة، أو مدونة. تختار الألوان والشعار، ويفتحه أي شخص من رابط أو من البحث، على الهاتف أو الحاسوب.',
+      'A portfolio, a menu, a shop, a company site or a blog. You choose the colours and the logo. Once you put it online, anyone can open it from a link or a search, on a phone or a computer.',
+      'معرض أعمال، أو قائمة طعام، أو متجر، أو موقع شركة، أو مدونة. تختار الألوان والشعار، وبعد أن تنشره يفتحه أي شخص من رابط أو من البحث، على الهاتف أو الحاسوب.',
     ),
     features: [
       { name: t('Fast on phones', 'سريع على الهاتف'), text: t('Pages are built to a speed budget for slow phones.', 'تُبنى الصفحات وفق حدود سرعة للهواتف البطيئة.') },
-      { name: t('Found in search', 'يظهر في البحث'), text: t('Search engines are able to read your pages and show them.', 'تستطيع محركات البحث قراءة صفحاتك وعرضها.') },
+      { name: t('Found in search', 'يظهر في البحث'), text: t('Once it is online, search engines can read your pages and show them.', 'بعد نشره، تستطيع محركات البحث قراءة صفحاتك وعرضها.') },
       { name: t('Links share with a picture', 'الروابط تظهر بصورة'), text: t('A shared link shows a title and an image in chat apps.', 'الرابط المشارك يظهر بعنوان وصورة في تطبيقات المحادثة.') },
       { name: t('Arabic and English', 'العربية والإنجليزية'), text: t('Both languages, with right-to-left done properly.', 'اللغتان معا، والكتابة من اليمين إلى اليسار مضبوطة.') },
     ],

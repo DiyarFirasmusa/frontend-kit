@@ -1180,3 +1180,27 @@ html[data-theme='light'] .doc ol.explained li::before,
 html[data-theme='light'] .block.is-orange .num {
   color: #a8512b;
 }
+
+/* One disclosure: a turquoise plus, never the native triangle (also for the groups of a long list). */
+.doc-article .fold-all > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.doc-article .fold-all > summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-article .fold-all > summary::after {
+  content: '+';
+  color: var(--turq);
+  font: 600 1.25rem/1 var(--code);
+}
+
+.doc-article .fold-all[open] > summary::after {
+  content: '\2013';
+}
