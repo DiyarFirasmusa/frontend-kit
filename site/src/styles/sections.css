@@ -746,133 +746,147 @@
   text-align: center;
 }
 
-/* ---------- Install: the steps on one side, joined by moving arrows; a Claude window on the other ---------- */
+/* ---------- Install: the words on one side along a single line; the Claude window on the other ---------- */
 .start-split {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: clamp(2rem, 6vw, 5rem);
   align-items: center;
 }
 
-.start-steps {
+.start-side h2 {
+  font-size: var(--title);
+  line-height: 1.15;
+}
+
+.start-lead {
+  max-width: 34rem;
+  margin-block: 1rem 2.5rem;
+  color: var(--muted);
+  font-size: var(--lead);
+}
+
+/* The line: one thin road down the side of the three steps, with a light that keeps travelling down it. */
+.start-line {
+  position: relative;
   display: grid;
-  gap: 3rem;
-  margin: 0;
+  gap: 2.25rem;
+  margin: 0 0 2.25rem;
   padding: 0;
   list-style: none;
 }
 
-.start-steps > li {
+.start-line > li:not(.start-line-track) {
   position: relative;
+  padding-inline-start: 3.5rem;
 }
 
-/* The arrow from one step down to the next. */
-.start-steps > li + li::before {
-  content: '';
+.start-line-track {
   position: absolute;
-  inset-block-end: calc(100% + 0.5rem);
-  inset-inline-start: 2.1rem;
+  inset-block: 1rem 1rem;
+  inset-inline-start: calc(0.9375rem - 1px);
   width: 2px;
-  height: 2rem;
-  background: repeating-linear-gradient(180deg, var(--accent) 0 0.4rem, transparent 0.4rem 0.7rem);
-  background-size: 2px 0.7rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--turq, #19abab));
+  opacity: 0.85;
 }
 
-.start-steps > li + li::after {
-  content: '';
+.start-line-track i {
   position: absolute;
-  inset-block-end: calc(100% + 0.15rem);
-  inset-inline-start: calc(2.1rem - 0.35rem + 1px);
-  width: 0.7rem;
-  height: 0.55rem;
+  inset-inline: 0;
+  inset-block-start: 0;
+  height: 22%;
+  background: linear-gradient(180deg, transparent, rgb(255 255 255 / 0.95), transparent);
+  opacity: 0;
+}
+
+.start-line-dot {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: grid;
+  place-items: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 50%;
   background: var(--accent);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  color: #141413;
+  font: 600 0.875rem / 1 var(--latin);
+  box-shadow: 0 0 0 5px var(--void, #050607);
 }
 
-.start-steps > li:nth-child(3)::before {
-  background-image: repeating-linear-gradient(180deg, var(--turq, #19abab) 0 0.4rem, transparent 0.4rem 0.7rem);
-}
-
-.start-steps > li:nth-child(3)::after {
+.start-line > li:nth-child(4) .start-line-dot {
   background: var(--turq, #19abab);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .start-split.is-alive .start-steps > li + li::before {
-    animation: road-down 0.9s linear infinite;
-  }
-
-  .start-split.is-alive .start-steps > li + li::after {
-    animation: road-arrow-down 1.8s ease-in-out infinite;
-  }
-}
-
-@keyframes road-down {
-  to {
-    background-position: 0 0.7rem;
-  }
-}
-
-@keyframes road-arrow-down {
-  50% {
-    translate: 0 0.2rem;
-    opacity: 0.6;
-  }
-}
-
-.start-step {
-  display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr);
-  gap: 0.75rem;
-  width: 100%;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgb(241 237 231 / 0.02);
-  color: inherit;
-  font: inherit;
-  text-align: start;
-  cursor: pointer;
-  transition:
-    border-color 0.3s,
-    background-color 0.3s;
-}
-
-.start-step:hover,
-.start-step[aria-pressed='true'] {
-  border-color: rgb(217 119 87 / 0.55);
-  background: rgb(217 119 87 / 0.07);
-}
-
-.start-step:focus-visible {
-  outline: 2px solid var(--turq, #19abab);
-  outline-offset: 3px;
-}
-
-.start-step[aria-pressed='true'] .run-number {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #141413;
-}
-
-.start-step-words {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.start-step-words strong {
+.start-line h3 {
   color: #fff;
   font-size: var(--sub);
   font-weight: 500;
   line-height: 1.35;
 }
 
-.start-step-words span {
+.start-line p {
+  max-width: 32rem;
+  margin: 0.375rem 0 0;
   color: var(--muted);
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
-/* The window: one screen at a time. */
+@media (prefers-reduced-motion: no-preference) {
+  .start-split.is-alive .start-line-track i {
+    animation: line-run 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  .start-split.is-alive .start-line-dot {
+    animation: dot-ring 3s ease-out infinite;
+  }
+
+  .start-split.is-alive .start-line > li:nth-child(3) .start-line-dot {
+    animation-delay: 1s;
+  }
+
+  .start-split.is-alive .start-line > li:nth-child(4) .start-line-dot {
+    animation-delay: 2s;
+  }
+}
+
+@keyframes line-run {
+  0% {
+    opacity: 0;
+    translate: 0 -100%;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 460%;
+  }
+}
+
+@keyframes dot-ring {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 5px var(--void, #050607),
+      0 0 0 5px rgb(217 119 87 / 0);
+  }
+  10% {
+    box-shadow:
+      0 0 0 5px var(--void, #050607),
+      0 0 0 9px rgb(217 119 87 / 0.35);
+  }
+  30% {
+    box-shadow:
+      0 0 0 5px var(--void, #050607),
+      0 0 0 14px rgb(217 119 87 / 0);
+  }
+}
+
+/* The window, as before: the folder, the message to send, the copy button, then the slash step. */
 .start-window {
   position: relative;
 }
@@ -886,198 +900,76 @@
   pointer-events: none;
 }
 
-.start-screens {
-  display: grid;
-  min-height: 20rem;
-  padding: 1.5rem;
-  background: radial-gradient(80% 90% at 50% 120%, rgb(217 119 87 / 0.1), transparent 70%);
-}
-
-.start-screen {
+.start-body {
   display: grid;
   gap: 1rem;
-  align-content: center;
-  grid-area: 1 / 1;
+  padding: 1.25rem;
 }
 
-.js .start-screen[data-hidden] {
-  visibility: hidden;
-  opacity: 0;
-}
-
-.js .start-screen {
-  transition:
-    opacity 0.35s ease,
-    visibility 0.35s;
-}
-
-.start-screen .start-text {
-  font-size: 0.875rem;
-}
-
-/* 1: the app, Code chosen, the folder picked. */
-.sp-app {
-  display: grid;
-  gap: 0.625rem;
-  width: 100%;
-}
-
-.sp-tabs {
-  display: flex;
-  gap: 0.25rem;
-  justify-self: center;
-  margin: 0;
-  padding: 0.25rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-}
-
-.sp-tabs span {
-  padding: 0.2rem 0.875rem;
-  border-radius: 999px;
-  color: var(--faint);
-}
-
-.sp-tabs .is-on {
-  background: var(--accent);
-  color: #141413;
-  font-weight: 600;
-}
-
-.sp-folder {
-  justify-self: start;
-  margin: 0;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid rgb(25 171 171 / 0.45);
-  border-radius: 999px;
-  background: rgb(25 171 171 / 0.1);
-  font: 500 0.8125rem / 1.6 var(--code);
-}
-
-.sp-folder i {
-  color: var(--turq, #19abab);
-  font-style: normal;
-}
-
-.sp-box {
-  display: flex;
+.start-folder {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  justify-self: start;
   margin: 0;
-  padding-block: 0.5rem;
-  padding-inline: 0.875rem 0.375rem;
-  border: 1px solid rgb(241 237 231 / 0.16);
-  border-radius: 0.875rem;
-  background: #1f1f1d;
-  color: var(--faint);
-}
-
-.sp-box .chat-send {
-  width: 1.625rem;
-  height: 1.625rem;
-  margin-inline-start: auto;
-}
-
-/* 2: the message in the box. */
-.start-message {
-  position: relative;
-  width: 100%;
-  max-height: 100%;
-  padding: 0.75rem 0.875rem 2.5rem;
-  overflow: hidden;
-  border: 1px solid rgb(217 119 87 / 0.55);
-  border-radius: 1rem;
-  background: #1f1f1d;
-  box-shadow: 0 0 0 4px rgb(217 119 87 / 0.08);
-}
-
-.start-text {
-  margin: 0;
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-  font-size: 0.75rem;
-  line-height: 1.65;
-}
-
-.start-message .chat-send {
-  position: absolute;
-  inset-block-end: 0.5rem;
-  inset-inline-end: 0.5rem;
-  width: 1.625rem;
-  height: 1.625rem;
-}
-
-.start-copy {
-  grid-column: 1 / -1;
-  min-height: 3rem;
-  margin-block-start: 0.75rem;
-  border: 0;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgb(25 171 171 / 0.4);
   border-radius: 999px;
-  background: var(--accent);
-  color: #141413;
-  font: inherit;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.start-copy:hover {
-  background: var(--amber, #f2a183);
-}
-
-.start-copy:focus-visible {
-  outline: 2px solid var(--turq, #19abab);
-  outline-offset: 3px;
-}
-
-/* 3: the slash list, with the setup chosen. */
-.sp-slash {
-  display: grid;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.sp-slash ul {
-  display: grid;
-  gap: 0.125rem;
-  margin: 0;
-  padding: 0.375rem;
-  list-style: none;
-  border: 1px solid rgb(241 237 231 / 0.14);
-  border-radius: 0.75rem;
-  background: #1c1c1a;
+  background: rgb(25 171 171 / 0.08);
   font: 500 0.8125rem / 1.6 var(--code);
+}
+
+.start-folder-icon {
+  color: var(--turq, #19abab);
+}
+
+.start-hint {
+  margin: -0.25rem 0 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.start-slash {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 0.25rem 0;
+  border-block-start: 1px solid var(--line);
+}
+
+.start-slash small {
   color: var(--faint);
 }
 
-.sp-slash li {
-  padding: 0.25rem 0.625rem;
+.start-slash p {
+  margin: 0;
+  padding: 0.25rem 0.75rem;
   border-radius: 0.5rem;
+  background: rgb(241 237 231 / 0.08);
+  font: 500 0.875rem / 1.6 var(--code);
 }
 
-.sp-slash li.is-on {
-  background: rgb(217 119 87 / 0.16);
-  color: var(--ivory);
-}
-
-.sp-slash li.is-on b {
+.start-slash b {
   color: var(--amber, #f2a183);
   font-weight: 500;
 }
 
-.sp-typed {
-  color: var(--ivory);
+.start-window .start-message {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 1rem 0.75rem;
 }
 
-.sp-caret {
-  width: 2px;
-  height: 1.1em;
-  background: var(--accent);
+.start-window .start-text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
 }
 
-.start-more {
-  margin-block-start: 2rem;
+.start-window .start-message .chat-send {
+  position: static;
 }
 
 /* ---------- Small screens ---------- */
@@ -1390,5 +1282,42 @@
   .path-label p {
     min-height: 0;
   }
+}
+
+
+/* The message box and the copy button in the install window. */
+.start-message {
+  border: 1px solid rgb(217 119 87 / 0.55);
+  border-radius: 1.125rem;
+  background: #1f1f1d;
+  box-shadow: 0 0 0 4px rgb(217 119 87 / 0.08);
+}
+
+.start-text {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.start-copy {
+  min-height: 3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #141413;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-copy:hover {
+  background: var(--amber, #f2a183);
+}
+
+.start-copy:focus-visible {
+  outline: 2px solid var(--turq, #19abab);
+  outline-offset: 3px;
 }
 

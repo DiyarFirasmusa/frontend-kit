@@ -15,68 +15,57 @@ const message = installMessage[locale]
 ---
 
 <section id="install" class="get-it">
-  <div class="column section-head">
-    <h2>{w.title[locale]}</h2>
-    <p>{w.lead[locale]}</p>
-  </div>
-
-  <div class="column start-split" data-start data-alive>
-    <ol class="start-steps">
-      {
-        installFlow.map(({ title, text }, i) => (
-          <li>
-            <button type="button" class="start-step" data-start-pick={i} aria-pressed={i === 0 ? 'true' : 'false'}>
-              <span class="run-number" dir="ltr">
+  <div class="column start-split" data-alive>
+    <div class="start-side">
+      <h2>{w.title[locale]}</h2>
+      <p class="start-lead">{w.lead[locale]}</p>
+      <ol class="start-line">
+        <li class="start-line-track" role="presentation" aria-hidden="true"><i></i></li>
+        {
+          installFlow.map(({ title, text }, i) => (
+            <li>
+              <span class="start-line-dot">
                 {i + 1}
               </span>
-              <span class="start-step-words">
-                <strong>{title[locale]}</strong>
-                <span>{text[locale]}</span>
-              </span>
-            </button>
-          </li>
-        ))
-      }
-    </ol>
+              <h3>{title[locale]}</h3>
+              <p>{text[locale]}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="hero-ways">
+        <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
+        <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
+      </p>
+    </div>
 
     <figure class="chat start-window" aria-label={w.title[locale]}>
       <div class="chat-bar" aria-hidden="true">
         <span class="chat-lights"><i></i><i></i><i></i></span>
         <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
       </div>
-      <div class="start-screens">
-        <div class="start-screen" data-start-screen="0">
-          <div class="sp-app">
-            <p class="sp-tabs" dir="ltr"><span>Chat</span><span class="is-on">Code</span></p>
-            <p class="sp-folder" dir="ltr"><i>▣</i> ~/my-shop</p>
-            <p class="sp-box"><span>{w.reply[locale]}</span><i class="chat-send">↑</i></p>
-          </div>
-        </div>
-        <div class="start-screen" data-start-screen="1" data-hidden>
-          <div class="start-message">
-            <p class="start-text" dir="auto">{message}</p>
+      <div class="start-body">
+        <p class="start-folder" aria-hidden="true">
+          <span class="start-folder-icon">▣</span>
+          <bdi dir="ltr">~/my-shop</bdi>
+        </p>
+        <div class="start-message">
+          <p class="start-text" dir="auto">{message}</p>
+          <p class="chat-tools" aria-hidden="true">
+            <i class="chat-plus">+</i>
+            <span class="chat-model" dir="ltr">{chatWords.model}</span>
             <i class="chat-send">↑</i>
-          </div>
-          <button type="button" class="start-copy" data-copy={message} data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]}>
-            <span aria-live="polite" data-status>{w.copy[locale]}</span>
-          </button>
+          </p>
         </div>
-        <div class="start-screen" data-start-screen="2" data-hidden>
-          <div class="sp-slash" dir="ltr">
-            <ul>
-              <li class="is-on"><b>/wajiha-kit:setup</b></li>
-              <li>/wajiha-kit:mode</li>
-              <li>/help</li>
-            </ul>
-            <p class="sp-box"><span class="sp-typed">/</span><b class="sp-caret"></b><i class="chat-send">↑</i></p>
-          </div>
+        <button type="button" class="start-copy" data-copy={message} data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]}>
+          <span aria-live="polite" data-status>{w.copy[locale]}</span>
+        </button>
+        <p class="start-hint">{w.send[locale]}</p>
+        <div class="start-slash" aria-hidden="true">
+          <small>{w.slash[locale]}</small>
+          <p dir="ltr"><b>/wajiha-kit:setup</b></p>
         </div>
       </div>
     </figure>
   </div>
-
-  <p class="column hero-ways start-more">
-    <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
-    <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
-  </p>
 </section>
