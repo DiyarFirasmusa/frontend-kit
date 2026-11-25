@@ -2193,3 +2193,15 @@ html[lang='ar'] .credits {
     display: flex;
   }
 }
+
+/* The last word of a guide title carries the thread. */
+.doc-head h1 em {
+  display: inline-block;
+  padding-block-end: 0.2em;
+  margin-block-end: -0.2em;
+  background: var(--thread);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: normal;
+}
