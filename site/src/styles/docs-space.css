@@ -768,3 +768,40 @@ body .top.is-scrolled::before {
   background: none !important;
   box-shadow: none !important;
 }
+
+/* ---------- The guide wears the home page's ground: the same grid and the same soft light ---------- */
+.doc {
+  position: relative;
+  isolation: isolate;
+}
+
+.doc::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 110svh;
+  background:
+    radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
+    radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
+    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
+  mask-image: radial-gradient(ellipse 90% 80% at 60% 20%, #000 35%, transparent 85%);
+  pointer-events: none;
+}
+
+[dir='rtl'] .doc::before {
+  background:
+    radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
+    radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
+    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
+    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem;
+  mask-image: radial-gradient(ellipse 90% 80% at 40% 20%, #000 35%, transparent 85%);
+}
+
+/* The page list lets the ground show through. */
+@media (min-width: 901px) {
+  .doc .tree {
+    background: rgb(5 6 7 / 0.72);
+  }
+}
