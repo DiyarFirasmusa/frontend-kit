@@ -335,3 +335,15 @@ html[data-theme='light'] .board.tone-orange .path-stop:nth-child(7) .path-dot {
   background: #141413 !important;
   color: var(--accent) !important;
 }
+
+/* The header is solid paper over the page: titles never show through it. */
+html[data-theme='light'] .top,
+html[data-theme='light'] .top.is-scrolled,
+html[data-theme='light'] body .top.is-scrolled {
+  background: #f4f0ea;
+}
+
+html[data-theme='light'] #install .start-line-track {
+  background: #141413;
+  opacity: 0.35;
+}

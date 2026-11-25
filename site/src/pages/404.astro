@@ -42,7 +42,10 @@ const route: Route = { kind: 'home' }
         <a class="hero-start" href="/" data-missing-home>Back to the start</a>
       </div>
     </div>
-    <script is:inline>
+  </main>
+  <div data-chrome="en"><SiteFooter locale="en" /></div>
+  <div data-chrome="ar" hidden><SiteFooter locale="ar" /></div>
+  <script is:inline>
       // One static 404 serves both languages: under /ar/ the Arabic sentence leads and the page turns right to left.
       if (location.pathname.indexOf('/ar/') === 0) {
         document.documentElement.lang = 'ar'
@@ -72,8 +75,5 @@ const route: Route = { kind: 'home' }
           a.setAttribute('href', paths[i])
         })
       }
-    </script>
-  </main>
-  <div data-chrome="en"><SiteFooter locale="en" /></div>
-  <div data-chrome="ar" hidden><SiteFooter locale="ar" /></div>
+  </script>
 </Layout>

@@ -3746,3 +3746,58 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
 .foot {
   background: var(--void);
 }
+
+
+/* =====================================================================================================
+   Round 25: from the seventh review
+   ===================================================================================================== */
+/* The install message never pushes its window wider than a phone. */
+.start-window .start-message {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.start-window .start-text {
+  min-width: 0;
+}
+
+@media (max-width: 47.99rem) {
+  .start-text .msg-command {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* The rail under the install steps is orange all the way: both steps are yours. */
+#install .start-line-track {
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+/* The line for the other language sits at the end of the 404 block. */
+.missing-board .board-main > .missing-other {
+  margin-block-start: auto;
+  padding-block-start: 1.5rem;
+}
+
+/* The hub's section titles carry their block like every other section: orange for where to start, plain for the rest. */
+.doc .hub-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.doc .hub-title::before {
+  content: '';
+  display: inline-block;
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  align-self: center;
+  border-radius: 2px;
+  background: rgb(var(--ink-rgb) / 0.35);
+}
+
+.hub-start .hub-title::before,
+.hub-cards > .hub-title:first-child::before {
+  background: var(--accent);
+}
