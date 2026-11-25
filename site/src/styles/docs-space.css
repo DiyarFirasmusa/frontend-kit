@@ -842,3 +842,39 @@ body:has(main.doc) .top.is-scrolled {
     #050607;
   background-attachment: fixed;
 }
+
+/* ---------- A dark frame around the words ----------
+   The page list, the header and "On this page" share one darker colour with a clear edge,
+   so together they wrap the middle like an arch; the grid and the light show only where you read. */
+@media (min-width: 901px) {
+  .doc .tree {
+    background: #08090a;
+    border-inline-end: 1px solid rgb(241 237 231 / 0.1);
+  }
+
+  body:has(main.doc) .top,
+  body:has(main.doc) .top.is-scrolled,
+  [dir='rtl'] body:has(main.doc) .top.is-scrolled {
+    background: #08090a;
+    background-attachment: scroll;
+    border-block-end: 1px solid rgb(241 237 231 / 0.1);
+  }
+}
+
+@media (min-width: 1280px) {
+  .toc:not([hidden]) {
+    position: sticky;
+    inset-block-start: 0;
+    align-self: start;
+    height: 100svh;
+    margin: 0 !important;
+    padding: calc(var(--bar) + 2.5rem) 1.5rem 2rem !important;
+    background: #08090a !important;
+    border-inline-start: 1px solid rgb(241 237 231 / 0.1) !important;
+  }
+}
+
+/* The middle keeps the ground; its corners meet the frame softly. */
+.doc .column {
+  position: relative;
+}
