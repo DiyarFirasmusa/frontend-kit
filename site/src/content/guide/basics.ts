@@ -9,7 +9,7 @@ export const basics = {
   ),
   answer: t('What the kit does about it', 'ماذا تفعل الإضافة'),
   answerText: t(
-    'Wajiha Kit is a free kit for Claude Code, an AI assistant that works inside your project folder. You answer a few plain questions. The kit builds a complete, tidy project with a fixed setup. You do not need to know libraries or tools. Then it checks the result before you see it. The setup is being improved, so it may ask a little differently today. Answer in your own words.',
+    'Wajiha Kit is a free kit for Claude Code, an AI assistant that works inside your project folder. You answer a few plain questions. The kit builds a complete, tidy project with a fixed setup. You do not need to know libraries or tools. Then it checks the result before you see it. The questions can vary a little between versions. Answer in your own words.',
     '«واجهة» إضافة تعمل داخل ⁦Claude Code⁩، وهو مساعد ذكاء اصطناعي يعمل داخل مجلد مشروعك. تجيب عن بضعة أسئلة بسيطة، فتبني الإضافة مشروعا كاملا ومرتبا بإعداد ثابت. ولا تحتاج إلى معرفة المكتبات أو الأدوات. ثم تفحص النتيجة قبل أن تراها. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا. أجب بكلماتك.',
   ),
   youDo: t('What you do', 'ماذا تفعل أنت'),

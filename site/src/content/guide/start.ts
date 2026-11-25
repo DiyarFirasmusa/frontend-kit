@@ -44,7 +44,7 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
 ]
 
 export const questionsLead = t(
-  'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The setup is being improved, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
+  'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The questions can vary a little between versions, for example which kind of project and which framework. Answer in the same plain way.',
   'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
 )
 
