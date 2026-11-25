@@ -2695,3 +2695,31 @@ body:has(main.doc)::after {
 .doc-head.board-head .board-main .doc-summary {
   margin: 0;
 }
+
+/* The tick sits beside the words of each point, not above them. */
+.board-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  column-gap: 0.5rem;
+}
+
+.board-list li::before {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.board-list li small {
+  grid-column: 2;
+}
+
+/* What sits in the main block is centred in it, so a short drawing never leaves an empty band under it. */
+.board-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.board-main > * {
+  width: 100%;
+}
