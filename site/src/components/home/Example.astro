@@ -22,7 +22,7 @@ const { locale } = Astro.props
       <li class="path-track" role="presentation" aria-hidden="true"><i></i></li>
       {
         w.stops.map((stop, i) => (
-          <li class="path-stop" style={`--n:${i}`}>
+          <li class="path-stop" data-who={i === 2 ? 'kit' : 'you'} style={`--n:${i}`}>
             <div class="path-picture" aria-hidden="true">
               {i === 0 && (
                 <div class="jp-input">
@@ -44,12 +44,6 @@ const { locale } = Astro.props
                 </div>
               )}
               {i === 2 && (
-                <div class="jp-plan">
-                  <ul>{w.plan.map((line, n) => <li style={`--o:${n}`}>{line[locale]}</li>)}</ul>
-                  <span class="jp-pill jp-go">{w.start[locale]}</span>
-                </div>
-              )}
-              {i === 3 && (
                 <ul class="jp-build">
                   {w.pages.map((page, n) => (
                     <li style={`--o:${n}`}>
@@ -59,17 +53,7 @@ const { locale } = Astro.props
                   ))}
                 </ul>
               )}
-              {i === 4 && (
-                <ul class="jp-checks">
-                  {w.checks.map((check, n) => (
-                    <li style={`--o:${n}`}>
-                      <i class="ce-tool-icon">✓</i>
-                      {check[locale]}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {i === 5 && (
+              {i === 3 && (
                 <div class="jp-save">
                   <p>{w.save[locale]}</p>
                   <span class="jp-pill jp-yes">{w.yes[locale]}</span>
@@ -100,3 +84,36 @@ const { locale } = Astro.props
   </div>
 
 </section>
+
+<style is:global>
+  /* Four steps, four windows: you send, you answer, Claude builds, you decide. */
+  .path {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .board .path-stop[data-who='you'] .path-dot {
+    background: var(--accent) !important;
+    color: #141413 !important;
+  }
+
+  .board .path-stop[data-who='kit'] .path-dot {
+    background: var(--turq) !important;
+    color: #141413 !important;
+  }
+
+  html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
+    color: #fff !important;
+  }
+
+  /* The question window shows two choices, so none is cut off. */
+  .jp-ask ul li:nth-child(n + 3) {
+    display: none;
+  }
+
+  @media (max-width: 47.99rem) {
+    .path {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

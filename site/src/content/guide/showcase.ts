@@ -67,23 +67,19 @@ export const journeyWords = {
   /** The six stops, two or three words each. */
   stops: [
     t('You send one message', 'ترسل رسالة'),
-    t('You answer a few questions', 'تجيب عن أسئلة'),
-    t('You say yes to the plan', 'توافق على الخطة'),
-    t('Claude builds your project', 'يبني Claude مشروعك'),
-    t('Claude checks it', 'يفحصه Claude'),
+    t('You answer and say yes', 'تجيب وتوافق'),
+    t('Claude builds and checks', 'يبني Claude ويفحص'),
     t('You decide', 'القرار لك'),
   ],
   lead: t('From the first message to a project you can open. You write no code.', 'من أول رسالة إلى مشروع تفتحه. ولا تكتب أي كود.'),
   /** What happens at each stop, one sentence each. */
   details: [
     t('You send one message. Claude installs the kit.', 'ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة.'),
-    t('You answer a few plain questions about your project.', 'تجيب عن أسئلة بسيطة عن مشروعك.'),
-    t('You read a short plan. Nothing starts before your yes.', 'تقرأ خطة قصيرة. ولا يبدأ شيء قبل موافقتك.'),
-    t('Pages, forms and sign-in, with sample data.', 'صفحات ونماذج وتسجيل دخول، ببيانات تجريبية.'),
-    t('It tests the work and fixes what fails.', 'يختبر العمل ويصلح ما يفشل.'),
+    t('A few plain questions, then a short plan. Nothing starts before your yes.', 'أسئلة بسيطة، ثم خطة قصيرة. ولا يبدأ شيء قبل موافقتك.'),
+    t('Pages, forms and sign-in, with sample data. It tests the work and fixes what fails.', 'صفحات ونماذج وتسجيل دخول، ببيانات تجريبية. ويختبر العمل ويصلح ما يفشل.'),
     t('You get a short report and decide what to keep.', 'يصلك تقرير قصير، وتقرر ما تحتفظ به.'),
   ],
-  noteLine: t('Six steps, from one message to a project you can open.', 'ست خطوات، من رسالة واحدة إلى مشروع تفتحه.'),
+  noteLine: t('Four steps, from one message to a project you can open.', 'أربع خطوات، من رسالة واحدة إلى مشروع تفتحه.'),
   endTitle: t('At the end', 'في النهاية'),
   end: [
     t('Nothing is saved or published without your yes.', 'لا يُحفظ ولا يُنشر شيء دون موافقتك.'),
