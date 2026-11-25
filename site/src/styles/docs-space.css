@@ -1816,3 +1816,52 @@ html[lang='ar'] .credits {
     padding: 2rem 0.5rem 0.5rem;
   }
 }
+
+/* ---------- Identity: each part of the home page has its own colour, from the block it adds to the mark ---------- */
+#builds {
+  --sec: #f1ede7;
+}
+
+#example {
+  --sec: #d97757;
+}
+
+#why {
+  --sec: #19abab;
+}
+
+#install {
+  --sec: #f1ede7;
+}
+
+#builds,
+#example,
+#why,
+#install {
+  position: relative;
+}
+
+/* A soft light in the part's colour behind its first lines. It is not a band: it fades out on every side. */
+#builds::before,
+#example::before,
+#why::before,
+#install::before {
+  content: '';
+  position: absolute;
+  inset-block-start: -2rem;
+  inset-inline-start: -8rem;
+  z-index: -1;
+  width: min(52rem, 90vw);
+  height: 26rem;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--sec) 11%, transparent), transparent);
+  pointer-events: none;
+}
+
+#example .eyebrow-count,
+#why .eyebrow-count {
+  color: var(--sec);
+}
+
+.doc-eyebrow svg {
+  flex: none;
+}

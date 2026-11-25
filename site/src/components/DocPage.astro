@@ -76,6 +76,14 @@ const brand = locale === 'ar' ? 'واجهة' : 'Wajiha Kit'
 // A short description is padded with the page's place in the guide, so it is never a bare tagline.
 const padded = summary && summary.length < 70 ? `${summary} ${info.name[locale]}: ${PAGES.docs.name[locale]} ${brand}.` : (summary ?? '')
 const described = padded.length > 160 ? `${padded.slice(0, 157).replace(/\s+\S*$/, '')}…` : padded
+// The same mark as the home page: on a kind's pages its own block shows in the kind's colour, on the other pages all four.
+const markBlocks = [
+  { x: 5, y: 5, w: 54, h: 12, fill: '#f1ede7' },
+  { x: 5, y: 21, w: 36, h: 20, fill: '#d97757' },
+  { x: 45, y: 21, w: 14, h: 38, fill: '#19abab' },
+  { x: 5, y: 45, w: 36, h: 14, fill: '#f1ede7' },
+]
+const lit = ({ rules: 0, skills: 1, agents: 2, checks: 3 } as Record<string, number | undefined>)[parent]
 const crumbs = [
   ...(parent !== 'docs' ? [{ name: PAGES.docs.name[locale], href: pageUrl(locale, 'docs') }] : []),
   ...(detail ? [{ name: info.name[locale], href: pageUrl(locale, parent) }] : []),
@@ -88,7 +96,12 @@ const crumbs = [
     <DocsTree locale={locale} route={route} />
     <div class="column" id="content" tabindex="-1" transition:name="page">
       <header class="doc-head">
-        <p class="doc-eyebrow"><i aria-hidden="true"></i>{PAGES[parent].name[locale]}</p>
+        <p class="doc-eyebrow">
+          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+            {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={lit === undefined ? b.fill : i === lit ? 'var(--kc, #d97757)' : 'rgb(241 237 231 / 0.16)'} />)}
+          </svg>
+          {PAGES[parent].name[locale]}
+        </p>
         <nav class="crumbs" aria-label={ui.whereYouAre[locale]}>
           {parent !== 'docs' && <a href={pageUrl(locale, 'docs')}>{PAGES.docs.name[locale]}</a>}
           {detail ? <a href={pageUrl(locale, parent)}>{info.name[locale]}</a> : <span aria-current="page">{info.name[locale]}</span>}
