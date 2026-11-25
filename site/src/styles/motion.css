@@ -65,6 +65,11 @@
     transition: background-size 0.55s var(--glide);
   }
 
+  [dir='rtl'] .rows > div,
+  [dir='rtl'] .index li {
+    background-position: 100% 0;
+  }
+
   .rows > div:hover,
   .index li:hover {
     background-size: 100% 1px;

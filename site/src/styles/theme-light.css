@@ -32,6 +32,7 @@ html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, 
   --faint: #96938d;
   --line: rgb(241 237 231 / 0.18);
   --accent: #d97757;
+  --amber: #f2a183;
   --turq: #19abab;
   color: #f1ede7;
 }

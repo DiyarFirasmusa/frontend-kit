@@ -1376,3 +1376,80 @@ main[data-section='get-started'] #build > h2::before {
     transform: rotate(-90deg);
   }
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Fixes from the CSS review (contrast, focus, targets, overflow, motion)
+   --------------------------------------------------------------------------------------------- */
+/* The main button keeps dark words on orange wherever it sits (a note bar's inherited colour made it ivory: 2.7:1). */
+.board-note .hero-start,
+.board-note a.hero-start:hover {
+  color: #141413;
+}
+
+/* The link that appears beside a heading is reachable by keyboard and visible when focused. */
+.heading-link:focus-visible {
+  opacity: 1;
+}
+
+/* Light mode: the current guide link and the journey's number badge. */
+html[data-theme='light'] .top-docs[aria-current],
+html[data-theme='light'] .top-docs:hover {
+  color: var(--ivory);
+}
+
+html[data-theme='light'] .board.tone-orange .path-dot,
+html[data-theme='light'] .board.tone-orange .path-stop:nth-child(n + 5) .path-dot {
+  color: #141413 !important;
+}
+
+/* Every button is at least 44px high. */
+.command button,
+.board-note a,
+.board-note a:not(.hero-start),
+#install .start-copy {
+  min-height: 2.75rem;
+}
+
+/* A flex item may shrink: the facts row never pushes the page wider. */
+.glance > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* The ground has no moving cost: the header over a guide page is solid, not a fixed-attachment grid repainted on every scroll frame. */
+body:has(main.doc) .top.is-scrolled,
+[dir='rtl'] body:has(main.doc) .top.is-scrolled {
+  background: var(--void);
+  background-attachment: scroll;
+}
+
+/* Side rows move with transform, not padding, so nothing reflows on hover. */
+.board-list li:hover {
+  padding-inline-start: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .board-list li {
+    transition: translate 0.2s ease;
+  }
+
+  .board-list li:hover {
+    translate: 0.3rem 0;
+  }
+
+  [dir='rtl'] .board-list li:hover {
+    translate: -0.3rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ce-spark.is-busy,
+  .chat.is-playing [data-ev].is-in,
+  .board-count,
+  .board-note a,
+  .hero-start {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

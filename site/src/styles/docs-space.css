@@ -1843,10 +1843,6 @@ html[lang='ar'] .credits {
   translate: -2em 0.4em;
 }
 
-[dir='rtl'] .ba::after {
-  translate: 50% 0;
-}
-
 /* Arabic is smaller than Latin at the same size: the labels above titles are a step larger and bolder. */
 :lang(ar) .eyebrow,
 :lang(ar) .doc-eyebrow,
@@ -2971,7 +2967,10 @@ body:has(main.doc) .top.is-scrolled,
   font: 500 0.875em/1 var(--code);
   direction: ltr;
   unicode-bidi: isolate;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 /* Below the width where the rail fits, "On this page" opens from one line under the title. */
