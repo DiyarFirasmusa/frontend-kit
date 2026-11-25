@@ -10,10 +10,11 @@ command -v jq >/dev/null || { echo "jq is required"; exit 1; }
 # shellcheck source=../plugins/wajiha-kit/scripts/jq-compat.sh
 . "$ROOT/plugins/wajiha-kit/scripts/jq-compat.sh"
 
+# tsconfig and VS Code files are JSON with comments (TypeScript and VS Code read them that way); the starters ship some.
 # 1. every JSON file parses
 while IFS= read -r f; do
   jq empty "$f" 2>/dev/null || bad "invalid JSON: $f"
-done < <(find .claude-plugin plugins -name '*.json' -not -path '*/node_modules/*')
+done < <(find .claude-plugin plugins -name '*.json' -not -path '*/node_modules/*' -not -path '*/starters/*/.vscode/*' -not -name 'tsconfig*.json')
 
 # 2. marketplace entries match their plugin.json (name, version) and point at real folders
 while IFS=$'\t' read -r name source; do
