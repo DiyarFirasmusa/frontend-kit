@@ -36,7 +36,7 @@ const { locale } = Astro.props
             <p>{text[locale]}</p>
           </div>
           <div class="show-picture">
-            <Board locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} tone="ivory">
+            <Board locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} tone="ink">
               <div class="browser" aria-hidden="true">
                 <div class="browser-bar">
                   <span class="chat-lights"><i></i><i></i><i></i></span>
@@ -47,6 +47,7 @@ const { locale } = Astro.props
                 </div>
               </div>
               <Fragment slot="side">
+                <p class="board-side-title">{home.board.getTitle[locale]}</p>
                 <ul class="board-list">
                   {features.map(({ name, text }) => (
                     <li>
@@ -56,14 +57,14 @@ const { locale } = Astro.props
                   ))}
                 </ul>
               </Fragment>
-              <p slot="note">{home.madeUp[locale]}</p>
+              <div slot="note">
+                <p>{home.madeUp[locale]}</p>
+                <a class="note-cta" href={pageUrl(locale, 'project-types')}>{home.builds.more[locale]}</a>
+              </div>
             </Board>
           </div>
         </div>
       ))
     }
   </div>
-  <p class="column hero-ways">
-    <a href={pageUrl(locale, 'project-types')}>{home.builds.more[locale]}</a>
-  </p>
 </section>

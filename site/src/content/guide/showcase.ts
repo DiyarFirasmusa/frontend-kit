@@ -83,6 +83,7 @@ export const journeyWords = {
     t('It looks for mistakes, runs tests, and a reviewer reads the work. It tries to fix what fails before you see it.', 'يبحث عن الأخطاء ويجري الاختبارات، ويقرأ مراجِعٌ العمل. ويحاول إصلاح ما يفشل قبل أن تراه.'),
     t('A short report and one question: save this version? Nothing is saved or published without your yes.', 'تقرير قصير وسؤال واحد: هل أحفظ هذه النسخة؟ ولا يُحفظ ولا يُنشر شيء دون موافقتك.'),
   ],
+  noteLine: t('Six steps, from one message to a project you can open.', 'ست خطوات، من رسالة واحدة إلى مشروع تفتحه.'),
   endTitle: t('At the end', 'في النهاية'),
   end: [
     t('Nothing is saved or published without your yes.', 'ولا يُحفظ ولا يُنشر شيء دون موافقتك.'),

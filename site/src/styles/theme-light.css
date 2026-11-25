@@ -61,11 +61,6 @@ html[data-theme='light'] .home h2 {
   -webkit-text-fill-color: currentColor;
 }
 
-html[data-theme='light'] .hero h1 span:last-child,
-html[data-theme='light'] .doc-head h1 em {
-  background-image: linear-gradient(90deg, var(--accent), var(--turq));
-  -webkit-text-fill-color: transparent;
-}
 
 html[data-theme='light'] .hero h1,
 html[data-theme='light'] .hero h1 span {
@@ -171,4 +166,15 @@ html[data-theme='light'] .language {
 html[data-theme='light'] .command button:hover,
 html[data-theme='light'] .start-copy {
   color: #141413;
+}
+
+/* Active items and titles that were hard-coded white are ink on ivory. */
+html[data-theme='light'] :is(.top-nav a[aria-current], .menu nav [aria-current], .tree a[aria-current], .doc .pager a bdi, .toc a[aria-current], .foot-logo, .foot-title, .foot-logo bdi) {
+  color: var(--ivory);
+}
+
+html[data-theme='light'] .hero h1 span:last-child,
+html[data-theme='light'] .doc-head h1 em {
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
 }

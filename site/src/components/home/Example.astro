@@ -92,7 +92,10 @@ const { locale } = Astro.props
           {w.end.map((line) => <li>{line[locale]}</li>)}
         </ul>
       </Fragment>
-      <p slot="note"><a class="hero-start" href="#install">{home.start[locale]}</a></p>
+      <div slot="note">
+        <p>{w.noteLine[locale]}</p>
+        <a class="hero-start" href="#install">{home.start[locale]}</a>
+      </div>
     </Board>
   </div>
 

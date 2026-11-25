@@ -22,7 +22,7 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
   <div class="column">
     <p class="ba-ask"><span>{w.ask[locale]}</span></p>
 
-    <Board locale={locale} part={2} label={locale === 'ar' ? 'قارن' : 'Compare'} tone="ivory">
+    <Board locale={locale} part={2} label={locale === 'ar' ? 'قارن' : 'Compare'} tone="ink">
     <div class="ba" data-ba style="--pos: 50%">
       <div class="ba-layer ba-good" aria-label={compare.with[locale]} role="img">
         <div class="dash" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -98,15 +98,15 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
       <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range data-bad={compare.without[locale]} data-good={compare.with[locale]} />
     </div>
       <Fragment slot="side">
+        <p class="board-side-title">{home.board.getTitle[locale]}</p>
         <ul class="board-list">
           {w.results.map((result) => <li>{result[locale]}</li>)}
         </ul>
       </Fragment>
       <div slot="note">
-        <p>{words.illustration[locale]}</p>
-        <p>{words.differs[locale]}</p>
+        <p>{words.illustration[locale]} {words.differs[locale]}</p>
+        <a class="hero-start" href="#install">{home.start[locale]}</a>
       </div>
     </Board>
   </div>
-  <p class="column section-cta"><a class="hero-start" href="#install">{home.start[locale]}</a></p>
 </section>

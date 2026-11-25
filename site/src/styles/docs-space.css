@@ -2346,8 +2346,8 @@ body:has(main.doc)::after {
   --tone: var(--turq);
 }
 
-.board.tone-ivory {
-  --tone: #2a2823;
+.board.tone-ink {
+  --tone: #1b1a18;
 }
 
 .board.side-ivory {
@@ -2674,17 +2674,14 @@ body:has(main.doc)::after {
   background: none;
   color: #141413;
   -webkit-text-fill-color: #141413;
-  text-decoration: underline;
-  text-decoration-thickness: 4px;
-  text-underline-offset: 0.12em;
 }
 
-.doc-head.board-head.tone-ivory .board-main h1,
-.doc-head.board-head.tone-ivory .board-main .doc-summary {
+.doc-head.board-head.tone-ink .board-main h1,
+.doc-head.board-head.tone-ink .board-main .doc-summary {
   color: #f1ede7;
 }
 
-.doc-head.board-head.tone-ivory .board-main .doc-summary {
+.doc-head.board-head.tone-ink .board-main .doc-summary {
   color: #bcb8b1;
 }
 
@@ -2722,4 +2719,136 @@ body:has(main.doc)::after {
 
 .board-main > * {
   width: 100%;
+}
+
+
+/* =====================================================================================================
+   Round 16, after the studio review: colour lives in the blocks, not in lines and gradients.
+   ===================================================================================================== */
+.doc-head::before,
+.hero-copy::before,
+.section-head::before,
+.start-side::before {
+  content: none;
+}
+
+.hero h1 span:last-child {
+  background: none;
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+
+.doc-head h1 em {
+  background: none;
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+
+/* A drawn tick, beside the words, in every point of every side column. */
+.board-list li::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-block-start: 0.3em;
+  background: currentColor;
+  clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 24%, 86% 10%, 38% 72%);
+}
+
+.board-side-title {
+  padding-block-end: 0.75rem;
+  border-block-end: 2px solid rgb(16 16 16 / 0.85);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.path-picture input,
+.jp-input {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+  .board .path-picture {
+    display: none;
+  }
+
+  .board .path-stop {
+    padding-block: 0.5rem;
+  }
+}
+
+/* =====================================================================================================
+   ONE PLACE FOR THE BOARD: under the title of its part, as wide as the column. Only the hero is split.
+   The action of a part is always at the end of its note bar; the note's words are at the start.
+   ===================================================================================================== */
+.board-note {
+  justify-content: space-between;
+}
+
+.board-note .hero-start,
+.board-note .note-cta {
+  margin-inline-start: auto;
+}
+
+/* 1/4: the words of the chosen kind sit in a row above the board, the board is the full width. */
+.show-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.show-panel .show-words {
+  max-width: 46rem;
+}
+
+.show-panel .show-picture {
+  width: 100%;
+}
+
+.board-main > .browser {
+  width: min(100%, 52rem);
+  margin-inline: auto;
+}
+
+/* 4/4: inside the orange block, the two steps and the window sit side by side. */
+.start-main {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.start-main .start-line,
+.start-main .start-line li,
+.start-main .start-line h3,
+.start-main .start-line p,
+.start-main .start-line a {
+  color: #141413;
+}
+
+.start-main .start-line a {
+  text-decoration-color: rgb(20 20 19 / 0.6);
+}
+
+.start-main .start-line-dot {
+  border-color: #141413;
+  background: #141413;
+  color: var(--accent);
+}
+
+.start-main .start-line-track i {
+  background: #141413;
+  opacity: 0.45;
+}
+
+@media (max-width: 900px) {
+  .start-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.board-note > div {
+  display: contents;
 }
