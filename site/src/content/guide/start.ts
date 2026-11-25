@@ -58,10 +58,9 @@ export const questions = [
   {
     question: t('Tell me about your project.', 'حدثني عن مشروعك.'),
     answers: [
-      t('What is it, and who is it for?', 'ما هو، ولمن هو؟'),
-      t('What do you already have? A backend, data, content, a logo, an old version…', 'ماذا عندك الآن؟ خادم خلفي (backend)، أو بيانات، أو محتوى، أو شعار، أو نسخة قديمة…'),
-      t('What should it contain? The main pages and what they do.', 'ماذا تريد أن يحتوي؟ الصفحات الرئيسية وما تفعله.'),
-      t('Write it your way, in a few lines. The project name is suggested from your answer, and you can change it.', 'اكتبه بطريقتك، في أسطر قليلة. ويُقترح اسم المشروع من جوابك، وتستطيع تغييره.'),
+      t('Explain what your project contains and what people can do in it, the way you would ask for it.', 'اشرح ماذا يحتوي مشروعك وماذا يستطيع الناس أن يفعلوا فيه، بالطريقة التي تطلبه بها.'),
+      t('For example: “A shop for handmade soap. Visitors see the products and order; I manage the orders from a dashboard.”', 'مثلا: «متجر لصابون يدوي. يرى الزوار المنتجات ويطلبون، وأنا أدير الطلبات من لوحة تحكم».'),
+      t('The project name is suggested from your answer, and you can change it.', 'ويُقترح اسم المشروع من جوابك، وتستطيع تغييره.'),
     ],
   },
   {

@@ -26,8 +26,8 @@ export const basics = {
     {
       title: t('Answer a few questions', 'أجب عن بضعة أسئلة'),
       text: t(
-        'What are you building: a dashboard, a website, or both? Tell it about your project: what it is and who it is for, what you already have, and what it should contain. Send your design, or a picture or link of a style you like. Send the link that describes your backend, if you have one. Pick Arabic, English or both.',
-        'ماذا تبني: لوحة تحكم أو موقعا أو الاثنين؟ حدثها عن مشروعك: ما هو ولمن، وماذا عندك الآن، وماذا تريد أن يحتوي. أرسل تصميمك، أو صورة أو رابطا لأسلوب يعجبك. أرسل رابط وصف خادمك الخلفي إن كان عندك.واختر العربية أو الإنجليزية أو الاثنتين.',
+        'What are you building: a dashboard, a website, or both? Tell it about your project, in your own words: what it contains and what people can do in it. Send your design, or a picture or link of a style you like. Send the link that describes your backend, if you have one. Pick Arabic, English or both.',
+        'ماذا تبني: لوحة تحكم أو موقعا أو الاثنين؟ حدثها عن مشروعك بكلماتك: ماذا يحتوي وماذا يستطيع الناس أن يفعلوا فيه. أرسل تصميمك، أو صورة أو رابطا لأسلوب يعجبك. أرسل رابط وصف خادمك الخلفي إن كان عندك.واختر العربية أو الإنجليزية أو الاثنتين.',
       ),
     },
     {

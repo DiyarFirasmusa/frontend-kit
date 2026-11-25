@@ -43,7 +43,7 @@ export const home = {
     },
     skills: {
       name: t('It asks what you want', 'تسألك ماذا تريد'),
-      text: t('Dashboard, website or both. A few lines about your project: what it is, what you have, what it should contain. Your design or a site you like. Your backend link. The languages.', 'لوحة تحكم أو موقع أو الاثنان. أسطر قليلة عن مشروعك: ما هو، وماذا عندك، وماذا يحتوي. تصميمك أو موقع يعجبك. رابط الخادم. واللغات.'),
+      text: t('Dashboard, website or both. Your project in your own words: what it contains and what people can do in it. Your design or a site you like. Your backend link. The languages.', 'لوحة تحكم أو موقع أو الاثنان. مشروعك بكلماتك: ماذا يحتوي وماذا يفعل الناس فيه. تصميمك أو موقع يعجبك. رابط الخادم. واللغات.'),
     },
     rules: {
       name: t('It tells you the plan', 'تعرض عليك الخطة'),

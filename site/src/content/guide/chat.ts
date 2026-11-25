@@ -33,8 +33,8 @@ export const firstRun: ChatEvent[] = [
     options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
     picked: 0,
   },
-  { kind: 'claude', text: t('Tell me about your project: what it is, what you have, what it should contain.', 'حدثني عن مشروعك: ما هو، وماذا عندك، وماذا يحتوي.') },
-  { kind: 'user', text: t('A dashboard for my shop team. I have a backend. Pages: orders, customers, products.', 'لوحة لفريق متجري. عندي backend. الصفحات: الطلبات والعملاء والمنتجات.') },
+  { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
+  { kind: 'user', text: t('My team sees the orders, changes their status, and manages customers and products.', 'يرى فريقي الطلبات ويغير حالتها، ويدير العملاء والمنتجات.') },
   {
     kind: 'ask',
     question: t('Do you have a design?', 'هل عندك تصميم؟'),
@@ -77,8 +77,8 @@ export const stepChat: ChatEvent[][] = [
       options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')],
       picked: 0,
     },
-    { kind: 'claude', text: t('Tell me about your project: what it is, what you have, what it should contain.', 'حدثني عن مشروعك: ما هو، وماذا عندك، وماذا يحتوي.') },
-    { kind: 'user', text: t('A dashboard for my shop team. I have a backend. Pages: orders, customers, products.', 'لوحة لفريق متجري. عندي backend. الصفحات: الطلبات والعملاء والمنتجات.') },
+    { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
+    { kind: 'user', text: t('My team sees the orders, changes their status, and manages customers and products.', 'يرى فريقي الطلبات ويغير حالتها، ويدير العملاء والمنتجات.') },
   ],
   [
     {
