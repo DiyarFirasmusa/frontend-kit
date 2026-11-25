@@ -15,19 +15,24 @@ interface Props {
 const { locale } = Astro.props
 const { rules } = content[locale]
 const words = {
+  what: t('What a rule is', 'ما هي القاعدة'),
+  whatText: t(
+    'A rule is a short written standard that the assistant follows, for example “every screen needs a loading state and an error state”. You do not write them. Setup puts them in your project, and the assistant reads the right one when it works on a matching file.',
+    'القاعدة معيار مكتوب قصير يتبعه المساعد، مثل «لكل شاشة حالة تحميل وحالة خطأ». لا تكتبها أنت. يضعها الإعداد في مشروعك، ويقرأ المساعد القاعدة المناسبة عندما يعمل على ملف يطابقها.',
+  ),
   how: t('How a rule works', 'كيف تعمل القاعدة'),
   steps: [
-    t('Setup copies the rules of your project type into .claude/rules/ and adapts them to your stack.', 'ينسخ الإعداد قواعد نوع مشروعك إلى ‎.claude/rules/ ويضبطها لتناسب تقنياتك.'),
-    t('At the top of most files is a list of paths. The assistant loads the rule when it works on a matching file.', 'في أعلى أغلب الملفات قائمة مسارات. وعندما يعمل المساعد على ملف يطابق أحدها، يقرأ القاعدة.'),
-    t('They are ordinary files in your repo. Edit them, and your team reviews the change like any other.', 'هي ملفات عادية في المستودع. عدّلها، وسيراجع فريقك التغيير كأي تغيير آخر.'),
+    t('Setup copies the rules for your project type into the folder .claude/rules/ and adapts them to the tools your project uses.', 'ينسخ الإعداد قواعد نوع مشروعك إلى مجلد ⁦.claude/rules/⁩ ويضبطها لتناسب الأدوات التي يستخدمها مشروعك.'),
+    t('At the top of most files is a list of paths. The assistant reads the rule when it works on a file that matches one of them.', 'في أعلى أغلب الملفات قائمة مسارات. وعندما يعمل المساعد على ملف يطابق أحدها، يقرأ القاعدة.'),
+    t('They are ordinary files in your project folder. Edit them, and your team reviews the change like any other.', 'هي ملفات عادية في مجلد مشروعك. عدّلها، وسيراجع فريقك التغيير كأي تغيير آخر.'),
   ],
-  bar: t('The quality bar, the most important one', 'معيار الجودة، وهو أهم قاعدة'),
+  bar: t('The quality bar, the most important rule', 'معيار الجودة، وهو أهم قاعدة'),
   barItems: [
-    t('Strict types: no any, no forced casts, no ignored errors.', 'أنواع صارمة: لا any، ولا تحويل قسري للأنواع، ولا أخطاء متجاهلة.'),
-    t('Small files with honest names, and no dead code.', 'ملفات صغيرة بأسماء صادقة، وبلا كود ميت.'),
-    t('Loading, error, empty and success, each designed.', 'لكل حالة تصميمها: التحميل والخطأ والفراغ والنجاح.'),
-    t('Touch targets of at least 44 pixels, keyboard and screen readers.', 'مناطق لمس لا تقل عن 44 بكسل، وتعمل بلوحة المفاتيح وقارئات الشاشة.'),
-    t('Arabic and English, with logical CSS only.', 'دعم العربية والإنجليزية، باستخدام CSS المنطقي فقط.'),
+    t('Strict types: no any (a way to skip checks), no forced conversions, no ignored errors.', 'أنواع صارمة: لا any (وهي طريقة لتجاوز الفحص)، ولا تحويل بالإجبار، ولا أخطاء متجاهلة.'),
+    t('Small files with honest names, and no unused code.', 'ملفات صغيرة بأسماء صادقة، وبلا كود غير مستخدم.'),
+    t('Every screen has a design for loading, error, empty and success.', 'لكل شاشة تصميم لحالات التحميل والخطأ والفراغ والنجاح.'),
+    t('Buttons big enough to touch (at least 44 pixels), and use by keyboard and screen readers.', 'أزرار كبيرة بما يكفي للمس (لا تقل عن 44 بكسل)، وتعمل بلوحة المفاتيح وقارئات الشاشة.'),
+    t('Arabic and English, with right-to-left handled by logical CSS (styling that follows the reading direction).', 'دعم العربية والإنجليزية، مع معالجة الاتجاه من اليمين إلى اليسار بـ CSS منطقي (تنسيق يتبع اتجاه القراءة).'),
     t('Tests with every change, and no claim of a check that did not run.', 'اختبارات مع كل تغيير، ولا يقول المساعد إنه فحص شيئا لم يفحصه.'),
   ],
 }
@@ -35,6 +40,7 @@ const words = {
 const PATHS_SHOWN = 3
 ---
 
+<Block id="what" title={words.what[locale]} lead={words.whatText[locale]} />
 <Block id="how" title={words.how[locale]}><ol class="numbered">{words.steps.map((step) => <li>{step[locale]}</li>)}</ol></Block>
 <Block id="quality-bar" title={words.bar[locale]}><ul class="ticks">{words.barItems.map((item) => <li>{item[locale]}</li>)}</ul></Block>
 {

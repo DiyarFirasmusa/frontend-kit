@@ -1,5 +1,5 @@
 ---
-import { problems } from '../../content/guide/problems.ts'
+import { beginnerQuestions, problems } from '../../content/guide/problems.ts'
 import { t } from '../../content/guide/text.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
@@ -12,8 +12,15 @@ interface Props {
 const { locale } = Astro.props
 const { answers } = content[locale]
 const trouble = t('When something does not work', 'عندما لا يعمل شيء')
+const first = t('Before you start', 'قبل أن تبدأ')
+const firstLead = t('The questions most people ask first, answered plainly.', 'الأسئلة التي يسألها أغلب الناس أولا، مع إجابات واضحة.')
 ---
 
+<Block id="before" title={first[locale]} lead={firstLead[locale]}>
+  <div class="questions">
+    {beginnerQuestions.map(([question, answer]) => <details><summary>{question[locale]}</summary><p>{answer[locale]}</p></details>)}
+  </div>
+</Block>
 <Block id="answers" title={answers.title}>
   <div class="questions">
     {answers.items.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}

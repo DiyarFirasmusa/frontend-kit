@@ -1,6 +1,5 @@
 ---
 import { exampleProjects, recipes } from '../../content/guide/examples.ts'
-import { skillGuides } from '../../content/guide/skills/index.ts'
 import { t } from '../../content/guide/text.ts'
 import { ui } from '../../content/guide/ui.ts'
 import type { Locale } from '../../content/types.ts'
@@ -16,9 +15,9 @@ interface Props {
 
 const { locale } = Astro.props
 const words = {
-  full: t('A whole example', 'مثال كامل'),
-  projects: t('Example projects', 'مشاريع نموذجية'),
-  projectsLead: t('Small projects that show what setup produces on different stacks.', 'مشاريع صغيرة تعرض ما ينتجه الإعداد مع تقنيات مختلفة.'),
+  full: t('A whole example, step by step', 'مثال كامل، خطوة بخطوة'),
+  projects: t('Projects the kit was tried on', 'مشاريع جُربت عليها الإضافة'),
+  projectsLead: t('Small projects that show what setup does with different tools. They are for the curious: you do not need them to start.', 'مشاريع صغيرة تعرض ما يفعله الإعداد مع أدوات مختلفة. وهي لمن يريد التفاصيل: لا تحتاجها لتبدأ.'),
 }
 ---
 
@@ -26,10 +25,10 @@ const words = {
   recipes.map(({ title, items }) => (
     <Block title={title[locale]}>
       <ul class="recipes">
-        {items.map(({ want, skills }) => (
+        {items.map(({ want, say, skills }) => (
           <li>
             <h3>{want[locale]}</h3>
-            <Prompt text={skillGuides[skills[0]!]!.ask[0]![locale]} />
+            <Prompt text={say[locale]} />
             <p>
               <span>{ui.use[locale]}</span>
               {skills.map((name) => <a href={skillUrl(locale, name)}><bdi>{name}</bdi></a>)}

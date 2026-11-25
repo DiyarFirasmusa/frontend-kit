@@ -14,19 +14,22 @@ interface Props {
 
 const { locale } = Astro.props
 const words = {
-  which: t('Which one is mine?', 'أي نوع يناسبني؟'),
-  fits: t('For', 'لمن'),
-  gets: t('What it adds', 'ماذا يضيف'),
-  stack: t('Made for', 'مصمم لـ'),
-  special: t('Its special skills', 'مهاراته الخاصة'),
-  neutral: t('The shared skills, which adapt to the stack.', 'المهارات المشتركة، وتتكيف مع تقنياتك.'),
+  which: t('Pick what you want to build', 'اختر ما تريد أن تبنيه'),
+  whichLead: t('The setup asks this first. Pick the one closest to your idea.', 'يسألك الإعداد هذا أولا. اختر الأقرب إلى فكرتك.'),
+  gets: t('What you get', 'ماذا تحصل عليه'),
+  describe: t('How you could describe it in the setup', 'كيف تصفه في الإعداد'),
+  ask: t('Later you could say', 'وبعد ذلك تستطيع أن تقول'),
+  curious: t('For the curious', 'لمن يريد التفاصيل'),
+  curiousText: t('You never have to choose any of this. The kit has already chosen.', 'لا تحتاج أن تختار شيئا من هذا. فقد اختارته الإضافة عنك.'),
+  stack: t('The tools it uses', 'الأدوات التي يستخدمها'),
+  special: t('Skills only this type has', 'مهارات خاصة بهذا النوع'),
+  neutral: t('It has no extra skills. The shared skills adapt to your project.', 'ليس له مهارات إضافية. والمهارات المشتركة تتكيف مع مشروعك.'),
   rules: t('Its rules, besides the shared ones', 'قواعده، غير القواعد المشتركة'),
-  ask: t('A first sentence', 'جملة أولى'),
 }
 const special = skillNames.filter((name) => profilesOf(name).length < projects.length)
 ---
 
-<Block id="which" title={words.which[locale]}>
+<Block id="which" title={words.which[locale]} lead={words.whichLead[locale]}>
   <dl class="rows">
     {projects.map(({ id, name, fits }) => <div><dt><a href={`#${id}`}>{name[locale]}</a></dt><dd>{fits[locale]}</dd></div>)}
   </dl>
@@ -37,8 +40,14 @@ const special = skillNames.filter((name) => profilesOf(name).length < projects.l
     const rules = new Set(project.rules.flatMap((group) => (ruleFiles[group] ?? []).map((rule) => rule.name)))
     return (
       <Block id={project.id} title={project.name[locale]} lead={project.fits[locale]}>
+        <h3>{words.describe[locale]}</h3>
+        <p class="big">{project.example[locale]}</p>
         <h3>{words.gets[locale]}</h3>
         <ul class="ticks">{project.gets.map((item) => <li>{item[locale]}</li>)}</ul>
+        <h3>{words.ask[locale]}</h3>
+        <Prompt text={project.ask[locale]} />
+        <h3>{words.curious[locale]}</h3>
+        <p class="muted">{words.curiousText[locale]}</p>
         <h3>{words.stack[locale]}</h3>
         <ul class="tags">{project.stack.map((item) => <li><bdi>{item}</bdi></li>)}</ul>
         <h3>{words.special[locale]}</h3>
@@ -49,8 +58,6 @@ const special = skillNames.filter((name) => profilesOf(name).length < projects.l
         )}
         <h3>{words.rules[locale]}</h3>
         <ul class="tags">{[...rules].map((name) => <li><bdi>{name}</bdi></li>)}</ul>
-        <h3>{words.ask[locale]}</h3>
-        <Prompt text={project.ask[locale]} />
       </Block>
     )
   })

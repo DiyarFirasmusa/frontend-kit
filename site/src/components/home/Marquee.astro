@@ -1,9 +1,30 @@
 ---
-import { agentOrder, skillOrder } from '../../lib/kit-map.ts'
+import type { Locale } from '../../content/types.ts'
+import { t } from '../../content/guide/text.ts'
 
-// Two slow rows of the kit's own names, moving against each other. Decorative: the names are all listed below.
-const half = Math.ceil(skillOrder.length / 2)
-const rows = [skillOrder.slice(0, half), [...skillOrder.slice(half), ...agentOrder]]
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+// Two slow rows of what you get in the project, in plain words. Decorative: the same things are explained below.
+const gets = [
+  t('A dashboard', 'لوحة تحكم'),
+  t('A website', 'موقع'),
+  t('Sign-in page', 'صفحة دخول'),
+  t('Tables with search', 'جداول مع بحث'),
+  t('Forms that check input', 'نماذج تتحقق من الإدخال'),
+  t('Charts', 'رسوم بيانية'),
+  t('Light and dark', 'فاتح وداكن'),
+  t('Arabic and English', 'عربي وإنجليزي'),
+  t('Works on phones', 'يعمل على الهاتف'),
+  t('Fast pages', 'صفحات سريعة'),
+  t('Your colours and logo', 'ألوانك وشعارك'),
+  t('Checked before you see it', 'مفحوص قبل أن تراه'),
+].map((item) => item[locale])
+const half = Math.ceil(gets.length / 2)
+const rows = [gets.slice(0, half), gets.slice(half)]
 ---
 
 <div class="marquee" aria-hidden="true" dir="ltr">

@@ -1,14 +1,12 @@
 ---
-import { after, installSteps, maintenance, questions, written } from '../../content/guide/start.ts'
-import { skillGuides } from '../../content/guide/skills/index.ts'
+import { after, build, installSteps, installTitles, limits, maintenance, needs, openStep, questions, questionsLead, summary, written } from '../../content/guide/start.ts'
 import { t } from '../../content/guide/text.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
-import { skillUrl } from '../../lib/links.ts'
+import { pageUrl } from '../../lib/links.ts'
 import { INSTALL_COMMANDS } from '../../lib/plugin.ts'
 import CommandBox from '../CommandBox.astro'
 import Block from '../guide/Block.astro'
-import Prompt from '../guide/Prompt.astro'
 
 interface Props {
   locale: Locale
@@ -16,43 +14,45 @@ interface Props {
 
 const { locale } = Astro.props
 const { install } = content[locale]
-const FIRST_SKILLS = ['explain', 'create-component', 'verify', 'review', 'commit-push']
 const words = {
-  before: t('Before you start', 'قبل أن تبدأ'),
-  needs: [
-    t('Claude Code 2.1.295 or newer, opened in your project', 'Claude Code 2.1.295 أو أحدث، مفتوح في مشروعك'),
-    t('jq: every hook needs it (on macOS: brew install jq)', 'jq: يحتاجه كل حارس (على macOS: \u2066brew install jq\u2069)'),
-    t('Node 20 or newer, and git', 'Node 20 أو أحدث، وكذلك git'),
-  ],
-  install: t('1. Install', '1. تثبيت الإضافة'),
-  answer: t('2. Answer setup', '2. أجب عن أسئلة الإعداد'),
-  answerLead: t('Setup detects first and offers what it found. You decide.', 'يفحص الإعداد مشروعك أولا ويعرض ما وجده. والقرار لك.'),
-  approve: t('3. Approve the proposal', '3. وافق على المقترح'),
-  approveText: t(
-    'You see one list: every file it will write, every sentence it will adapt to your stack and everything it will clean up. Nothing is written before your yes. For a file you already have, it shows the difference and asks: overwrite, merge or skip.',
-    'ترى قائمة واحدة فيها كل ملف سيكتبه، وكل جملة سيضبطها لتناسب تقنياتك، وكل ما سينظفه. لا يكتب شيئا قبل أن توافق. وإذا كان الملف عندك أصلا، يعرض لك الفرق ويسأل: تستبدله أم تدمجه أم تتخطاه؟',
-  ),
-  files: t('What is now in your project', 'ماذا أصبح في مشروعك'),
-  next: t('4. Right after setup', '4. بعد الإعداد مباشرة'),
-  first: t('5. Your first five sentences', '5. أول خمس جمل تكتبها'),
-  firstLead: t('Try them in this order to see each part work.', 'جرّبها بهذا الترتيب لترى كيف يعمل كل جزء.'),
+  before: t('What you need first', 'ما تحتاجه أولا'),
+  beforeLead: t('Install these once. Each one is there for a reason.', 'ثبّت هذه الأشياء مرة واحدة. ولكل واحد منها سبب.'),
+  install: t('1. Install the kit', '1. ثبّت الإضافة'),
+  answer: t('2. Answer a few questions', '2. أجب عن بضعة أسئلة'),
+  approve: t('3. Say yes to the summary', '3. وافق على الملخص'),
+  built: t('4. It builds your project', '4. يُبنى مشروعك'),
+  files: t('What you get', 'ماذا تحصل عليه'),
+  filesLead: t('Your project is ready to open and change. Besides your pages, the kit adds these files.', 'مشروعك جاهز لتفتحه وتغيّره. وإلى جانب صفحاتك، تضيف الإضافة هذه الملفات.'),
+  next: t('5. Keep going in plain sentences', '5. تابع بجمل بسيطة'),
+  nextLead: t('Say what you want, the way you would tell a person.', 'قل ما تريده كما تقوله لشخص.'),
+  examples: t('See what you can say', 'شاهد ما يمكنك أن تقوله'),
+  limits: t('What to keep in mind', 'ما يجب أن تتذكره'),
   keep: t('Update, share and remove', 'التحديث والمشاركة والإزالة'),
 }
 ---
 
-<Block id="before" title={words.before[locale]}><ul class="ticks">{words.needs.map((need) => <li>{need[locale]}</li>)}</ul></Block>
-<Block id="install" title={words.install[locale]}>
+<Block id="before" title={words.before[locale]} lead={words.beforeLead[locale]}>
+  <ul class="ticks">
+    {needs.map(({ name, why, link, linkLabel }) => (
+      <li>
+        <strong>{name[locale]}.</strong> {why[locale]}
+        {link && linkLabel && <> <a href={link} rel="noopener"><bdi>{linkLabel[locale]}</bdi></a></>}
+      </li>
+    ))}
+  </ul>
+</Block>
+<Block id="install" title={words.install[locale]} lead={openStep[locale]}>
   <ol class="explained">
     {INSTALL_COMMANDS.map((command, i) => (
       <li>
-        <h3>{install.steps[i]}</h3>
+        <h3>{installTitles[i]?.[locale]}</h3>
         <CommandBox command={command} install={install} />
         <p>{installSteps[i]?.[locale]}</p>
       </li>
     ))}
   </ol>
 </Block>
-<Block id="questions" title={words.answer[locale]} lead={words.answerLead[locale]}>
+<Block id="questions" title={words.answer[locale]} lead={questionsLead[locale]}>
   {questions.map(({ question, answers }) => (
     <div class="question">
       <h3>{question[locale]}</h3>
@@ -60,21 +60,24 @@ const words = {
     </div>
   ))}
 </Block>
-<Block id="approve" title={words.approve[locale]}><p class="big">{words.approveText[locale]}</p></Block>
-<Block id="files" title={words.files[locale]}>
+<Block id="approve" title={words.approve[locale]}>
+  <h3>{summary.title[locale]}</h3>
+  <p class="big">{summary.text[locale]}</p>
+</Block>
+<Block id="build" title={words.built[locale]}>
+  <h3>{build.title[locale]}</h3>
+  <p class="big">{build.text[locale]}</p>
+</Block>
+<Block id="files" title={words.files[locale]} lead={words.filesLead[locale]}>
   <dl class="rows">
     {written.map(({ path, text }) => <div><dt><code dir="ltr">{path}</code></dt><dd>{text[locale]}</dd></div>)}
   </dl>
 </Block>
-<Block id="after" title={words.next[locale]}><ol class="numbered">{after.map((step) => <li>{step[locale]}</li>)}</ol></Block>
-<Block id="first" title={words.first[locale]} lead={words.firstLead[locale]}>
-  {FIRST_SKILLS.map((name) => (
-    <div class="try">
-      <Prompt text={skillGuides[name]!.ask[0]![locale]} />
-      <p>{skillGuides[name]!.plain[locale]} <a href={skillUrl(locale, name)}><bdi>{name}</bdi></a></p>
-    </div>
-  ))}
+<Block id="after" title={words.next[locale]} lead={words.nextLead[locale]}>
+  <ol class="numbered">{after.map((step) => <li>{step[locale]}</li>)}</ol>
+  <p><a href={pageUrl(locale, 'examples')}>{words.examples[locale]}</a></p>
 </Block>
+<Block id="limits" title={words.limits[locale]}><ul class="ticks">{limits.map((item) => <li>{item[locale]}</li>)}</ul></Block>
 <Block id="keep" title={words.keep[locale]}>
   {maintenance.map(({ title, text, command }) => (
     <div class="question">

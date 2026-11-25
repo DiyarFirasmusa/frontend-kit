@@ -2,7 +2,6 @@
 import type { Bilingual } from '../../content/catalogue.ts'
 import { home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
-import { verdicts } from '../../lib/verdicts.ts'
 import CcLine from './CcLine.astro'
 import CcWelcome from './CcWelcome.astro'
 
@@ -17,23 +16,22 @@ interface Line {
 }
 
 const { locale } = Astro.props
-const refused = verdicts.find(({ id }) => id === 'force')!
 const { skills, rules, guard, gate: gate_, review, done } = home.steps
 const say = home.session
 const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
-// What the console shows at each step: real names from the kit, the real answer of its guard.
+// What the console shows at each step: real names from the kit.
 const steps: { name: Bilingual; text: Bilingual; lines: Line[] }[] = [
-  { ...skills, lines: [{ call: 'Skill(dash-create-table)' }, { call: 'Skill(dash-create-filter-bar)' }] },
+  { ...skills, lines: [{ call: 'Skill(setup)', note: { en: 'five simple questions', ar: 'خمسة أسئلة بسيطة' } }] },
   {
     ...rules,
-    lines: [{ call: 'Rule(dashboard/data-tables.md)' }, { call: 'Rule(dashboard/permissions.md)' }, { call: 'Rule(dashboard/api-layer.md)' }],
+    lines: [{ call: 'Plan(shop dashboard)', note: { en: 'orders, customers, products · Arabic and English', ar: 'الطلبات والعملاء والمنتجات · عربي وإنجليزي' } }],
   },
-  { ...guard, lines: [{ call: `Bash(${refused.command})`, note: refused.reason, mark: 'bad' }] },
+  { ...guard, lines: [{ call: 'Skill(dash-create-table)' }, { call: 'Skill(dash-create-detail)' }] },
   {
     ...gate_,
     lines: [
-      gate({ en: 'typecheck passed', ar: 'نجح فحص الأنواع' }),
-      gate({ en: 'related tests passed', ar: 'نجحت الاختبارات المرتبطة' }),
+      gate({ en: 'no mistakes found', ar: 'لا أخطاء' }),
+      gate({ en: 'tests passed', ar: 'نجحت الاختبارات' }),
     ],
   },
   { ...review, lines: [{ call: 'Agent(frontend-reviewer)', note: say.reviewing }] },

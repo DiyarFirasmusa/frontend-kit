@@ -1,8 +1,10 @@
 ---
 import { basics } from '../../content/guide/basics.ts'
 import { t } from '../../content/guide/text.ts'
+import { ui } from '../../content/guide/ui.ts'
 import { content } from '../../content/index.ts'
 import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
 import Block from '../guide/Block.astro'
 import Concepts from '../guide/Concepts.astro'
 import Journey from '../guide/Journey.astro'
@@ -15,16 +17,26 @@ const { locale } = Astro.props
 const { why } = content[locale]
 const words = {
   ...basics,
-  parts: t('The six words you need', 'ست كلمات تحتاجها'),
-  partsLead: t('Everything in the kit is one of these. Open any of them for the detail.', 'كل ما في الإضافة هو واحدة من هذه الكلمات. افتح أي كلمة لترى التفاصيل.'),
-  journey: t('One request, start to finish', 'طلب واحد من البداية إلى النهاية'),
-  journeyLead: t('This is what happens in a dashboard project when you type one sentence.', 'هذا ما يحدث في مشروع لوحة تحكم عندما تكتب جملة واحدة.'),
+  parts: t('Six words you will meet', 'ست كلمات ستقابلها'),
+  partsLead: t('Everything in the kit is one of these. Open any of them to read more.', 'كل ما في الإضافة هو واحدة من هذه الكلمات. افتح أي كلمة لتقرأ المزيد.'),
+  journey: t('Later: one request, start to finish', 'لاحقا: طلب واحد من البداية إلى النهاية'),
+  journeyLead: t('Once your project exists, this is what happens when you type one sentence.', 'بعد أن يصبح مشروعك موجودا، هذا ما يحدث عندما تكتب جملة واحدة.'),
   compare: t('With and without it', 'مع الإضافة وبدونها'),
 }
 ---
 
 <Block id="problem" title={words.problem[locale]}><p class="big">{words.problemText[locale]}</p></Block>
 <Block id="answer" title={words.answer[locale]}><p class="big">{words.answerText[locale]}</p></Block>
+<Block id="do" title={words.youDo[locale]} lead={words.youDoLead[locale]}>
+  <ol class="numbered">
+    {words.steps.map(({ title, text }) => <li><strong>{title[locale]}</strong> {text[locale]}</li>)}
+  </ol>
+  <a class="source" href={pageUrl(locale, 'get-started')}>{ui.learnMore[locale]}</a>
+</Block>
+<Block id="get" title={words.youGet[locale]} lead={words.youGetLead[locale]}>
+  <ul class="ticks">{words.gets.map((item) => <li>{item[locale]}</li>)}</ul>
+</Block>
+<Block id="expect" title={words.expect[locale]}><p class="big">{words.expectText[locale]}</p></Block>
 <Block id="words" title={words.parts[locale]} lead={words.partsLead[locale]}><Concepts locale={locale} /></Block>
 <Block id="journey" title={words.journey[locale]} lead={words.journeyLead[locale]}><Journey locale={locale} /></Block>
 <Block id="compare" title={words.compare[locale]}>

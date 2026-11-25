@@ -3,9 +3,9 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'Wajiha Kit: build any frontend project, with the best result',
+    title: 'Wajiha Kit: build your own website or dashboard, no coding needed',
     description:
-      'A plugin for frontend projects in any stack, React and TypeScript first-class. Your coding assistant builds the way your project does, known dangerous commands are refused, and the code is checked and reviewed.',
+      'A Claude Code plugin for people who do not code. Answer a few simple questions and get a complete website or dashboard, checked and reviewed before you see it.',
   },
   chrome: {
     skip: 'Skip to content',
@@ -94,7 +94,7 @@ export const en: Copy = {
       text: 'Run these three inside Claude Code, in your project.',
     },
   },
-  facts: { skills: 'skills', agents: 'agents', rules: 'rules', events: 'hook events' },
+  facts: { skills: 'skills', agents: 'specialists', rules: 'rules', events: 'safety-check events' },
   box: {
     title: 'Everything the kit puts in your project.',
     lead: 'Nothing below is a plan. All of it ships in the current version.',
@@ -129,10 +129,10 @@ export const en: Copy = {
     after: 'When the assistant stops after changing source, committed or not, typecheck and related tests run. Then a reviewer agent reads the change.',
   },
   install: {
-    title: 'Install it in three commands.',
-    lead: 'Run them inside Claude Code, in your project. Restart it after setup.',
-    steps: ['Add the marketplace', 'Install the plugin', 'Set up the project'],
-    needs: 'Needs Claude Code 2.1.295 or newer, jq, Node 20 or newer, and git.',
+    title: 'Install it in three steps.',
+    lead: 'Type them one by one in the Claude Code message box, inside your project folder. Restart Claude Code after setup.',
+    steps: ['Tell Claude Code where the kit is', 'Install the kit', 'Start your project'],
+    needs: 'You need Claude Code (a recent version), plus Node 20 or newer, git and jq. The guide shows what each one is for.',
     copy: 'Copy',
     copied: 'Copied',
     failed: 'Press copy',

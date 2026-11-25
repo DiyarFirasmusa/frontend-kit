@@ -15,15 +15,21 @@ interface Props {
 const { locale } = Astro.props
 const { refactor, install } = content[locale]
 const words = {
+  intro: t('You do not need this to start', 'لا تحتاج هذه الصفحة لتبدأ'),
+  introText: t(
+    'This is for a project that already exists and has become messy or fragile, for example an old project that someone else built. If you are building a new project, you can skip it. “Fix an old project” first looks at the project and writes a plan. Then it cleans up one step at a time, and you approve each step before it starts.',
+    'هذه الصفحة لمشروع موجود بالفعل وصار فوضويا أو هشا، مثل مشروع قديم بناه شخص آخر. إذا كنت تبني مشروعا جديدا فتجاوزها. «إصلاح مشروع قديم» ينظر أولا في المشروع ويكتب خطة. ثم ينظفه خطوة خطوة، وتوافق أنت على كل خطوة قبل أن تبدأ.',
+  ),
   how: t('The four commands', 'الأوامر الأربعة'),
-  measured: t('What the audit measures', 'ماذا يقيس التدقيق'),
+  measured: t('What the first look checks', 'ماذا يفحص النظر الأول'),
   ...rescue,
-  phases: t('The six phases', 'المراحل الست'),
-  example: t('See a real audit', 'شاهد تدقيقا حقيقيا'),
+  phases: t('The six steps', 'الخطوات الست'),
+  example: t('See a real example', 'شاهد مثالا حقيقيا'),
   skill: t('The skill behind it', 'المهارة التي يستخدمها'),
 }
 ---
 
+<Block id="intro" title={words.intro[locale]} lead={words.introText[locale]} />
 <Block id="commands" title={words.how[locale]}>
   <ol class="explained">
     {refactor.steps.map(([command, text]) => <li><CommandBox command={command} install={install} /><p>{text}</p></li>)}

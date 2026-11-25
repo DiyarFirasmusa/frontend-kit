@@ -12,13 +12,19 @@ interface Props {
 
 const { locale } = Astro.props
 const words = {
+  intro: t('You do not need this to start', 'لا تحتاج هذه الصفحة لتبدأ'),
+  introText: t(
+    'These are the kit’s settings. Setup fills them in for you, so you can build a whole project without opening this page. It is here for the day you want to change something, such as which addresses the assistant must never touch, or whether the automatic review runs. The settings live in one small file in your project, .claude/wajiha-kit.json.',
+    'هذه إعدادات الإضافة. يملؤها الإعداد لك، فتستطيع بناء مشروع كامل دون أن تفتح هذه الصفحة. وهي هنا ليوم تريد فيه تغيير شيء، مثل العناوين التي يجب ألا يلمسها المساعد أبدا، أو تشغيل المراجعة التلقائية أو إيقافها. وتوجد الإعدادات في ملف صغير واحد داخل مشروعك: ⁦.claude/wajiha-kit.json⁩.',
+  ),
   sample: t('An example', 'مثال'),
-  shipped: t('What each project type ships with', 'ماذا يأتي مع كل نوع مشروع'),
-  shippedLead: t('The whole config and the whole permissions file that setup starts from, before it fills in your values.', 'هذه ملفات الإعدادات والصلاحيات كاملة، كما يبدأ بها الإعداد قبل أن يضع فيها قيمك.'),
-  sampleLead: t('A dashboard with the most useful keys. Setup fills the rest.', 'لوحة تحكم فيها أهم المفاتيح. ويضيف الإعداد الباقي.'),
+  shipped: t('What each project type starts with', 'بماذا يبدأ كل نوع مشروع'),
+  shippedLead: t('The whole settings file and the whole permissions file that setup starts from, before it fills in your values.', 'محتوى ملف الإعدادات وملف الصلاحيات كاملا، كما يبدأ الإعداد منه قبل أن يضع قيمك.'),
+  sampleLead: t('A dashboard with the most useful keys. Setup fills in the rest.', 'لوحة تحكم فيها أهم المفاتيح. ويضيف الإعداد الباقي.'),
 }
 ---
 
+<Block id="intro" title={words.intro[locale]} lead={words.introText[locale]} />
 <Block id="example" title={words.sample[locale]} lead={words.sampleLead[locale]}>
   <pre dir="ltr" tabindex="0" role="region" aria-label=".claude/wajiha-kit.json"><code>{sample}</code></pre>
 </Block>

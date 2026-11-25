@@ -1,21 +1,21 @@
 import { t } from './text.ts'
 
-/** What refactor mode measures, and the order it repairs in. */
+/** What fixing an old project measures, and the order it repairs in. */
 export const rescue = {
   measures: [
-    t('The safety net: do typecheck, lint and tests pass today?', 'شبكة الأمان: هل ينجح اليوم فحص الأنواع والـ lint والاختبارات؟'),
-    t('Structure: folders, huge files, circular imports, dead code.', 'البنية: المجلدات، والملفات الضخمة، والاستيراد الدائري، والكود الميت.'),
-    t('Types: any, ignored errors, untyped API data.', 'الأنواع: any، والأخطاء المتجاهلة، وبيانات الـ API بلا أنواع.'),
-    t('Data: fetching in components and missing states.', 'البيانات: الجلب داخل المكونات، والحالات الناقصة.'),
-    t('Interface: duplicates, untranslated text, RTL and labels.', 'الواجهة: التكرار، والنص غير المترجم، واتجاه RTL، والتسميات.'),
-    t('Quality: coverage, skipped tests and secrets in the repo.', 'الجودة: التغطية، والاختبارات التي تم تخطيها، والأسرار في المستودع.'),
+    t('The safety net: do the checks for mistakes, for code style and the tests pass today?', 'شبكة الأمان: هل تنجح اليوم فحوص الأخطاء وأسلوب الكود والاختبارات؟'),
+    t('Structure: folders, huge files, files that depend on each other in circles, and code nobody uses.', 'البنية: المجلدات، والملفات الضخمة، والملفات التي يعتمد بعضها على بعض في دائرة، والكود الذي لا يستخدمه أحد.'),
+    t('Type safety: places that skip the checks (any), errors that are ignored, and data from your backend with no description.', 'سلامة الأنواع: الأماكن التي تتجاوز الفحص (any)، والأخطاء المتجاهلة، وبيانات الخادم التي لا وصف لها.'),
+    t('Data: loading data in messy places, and missing states such as loading and error.', 'البيانات: جلب البيانات في أماكن غير مرتبة، والحالات الناقصة مثل التحميل والخطأ.'),
+    t('Screens: copy-pasted parts, text that is not translated, right-to-left (Arabic) problems and missing labels.', 'الشاشات: الأجزاء المكررة، والنص غير المترجم، ومشاكل الاتجاه من اليمين إلى اليسار (العربية)، والتسميات الناقصة.'),
+    t('Quality: how much code the tests cover, skipped tests, and passwords or keys saved in the project.', 'الجودة: مقدار الكود الذي تغطيه الاختبارات، والاختبارات المتخطاة، وكلمات المرور أو المفاتيح المحفوظة داخل المشروع.'),
   ],
   phaseList: [
-    t('Green baseline: make the checks pass.', 'أساس ناجح: اجعل الفحوص تنجح.'),
-    t('Mechanical: format, lint, renames and dead code.', 'العمل الآلي: التنسيق، والـ lint، وتغيير الأسماء، والكود الميت.'),
-    t('Types: strict and no any.', 'الأنواع: صارمة وبلا any.'),
-    t('Structure: the layout you picked, by default your own, and smaller files.', 'البنية: الترتيب الذي اخترته (وافتراضيا ترتيبك أنت)، وملفات أصغر.'),
-    t('Patterns: one way for data, forms and state.', 'الأنماط: طريقة واحدة للبيانات والنماذج والحالة.'),
-    t('Quality: tests, accessibility, translations and speed.', 'الجودة: الاختبارات، وسهولة الوصول، والترجمات، والسرعة.'),
+    t('A green start: make the checks pass first.', 'بداية سليمة: اجعل الفحوص تنجح أولا.'),
+    t('Safe automatic clean-up: tidy layout, style fixes, better names and removing unused code.', 'تنظيف آلي آمن: ترتيب الشكل، وإصلاح الأسلوب، وأسماء أفضل، وحذف الكود غير المستخدم.'),
+    t('Stricter types: no any.', 'أنواع أشد صرامة: بلا any.'),
+    t('Structure: the folder layout you picked (by default, your own) and smaller files.', 'البنية: ترتيب المجلدات الذي اخترته (وافتراضيا ترتيبك أنت)، وملفات أصغر.'),
+    t('One way for each job: one way to load data, handle forms and keep state.', 'طريقة واحدة لكل عمل: طريقة واحدة لجلب البيانات، ولمعالجة النماذج، ولحفظ الحالة.'),
+    t('Quality: tests, use by people with disabilities, translations and speed.', 'الجودة: الاختبارات، وسهولة الاستخدام لذوي الإعاقة، والترجمات، والسرعة.'),
   ],
 }

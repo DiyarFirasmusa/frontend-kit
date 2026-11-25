@@ -16,11 +16,15 @@ const { locale } = Astro.props
 const { features, box } = content[locale]
 // In the order of the feature groups.
 const DETAIL: (PageId | undefined)[] = ['get-started', 'rules', 'checks', 'checks', 'rules', undefined, 'project-types', 'configuration']
-const tools = t('The tool servers', 'خوادم الأدوات')
+const tools = t('Extra tools', 'الأدوات الإضافية')
+const toolsLead = t(
+  'Small connections that give the assistant abilities it lacks. Their technical name is MCP servers.',
+  'اتصالات صغيرة تعطي المساعد قدرات لا يملكها. واسمها التقني ⁦MCP servers⁩.',
+)
 const servers = [
-  ['Chrome DevTools', t('Opens pages, reads the console and requests, takes screenshots and records performance.', 'يفتح الصفحات، ويقرأ الـ console والطلبات، ويلتقط صور الشاشة، ويسجل الأداء.')],
-  ['Playwright', t('Drives a browser through your flows.', 'يتحكم في المتصفح ويجرب خطوات تطبيقك.')],
-  ['Context7', t('Fetches current documentation of libraries. An API key is optional.', 'يجلب أحدث توثيق للمكتبات. مفتاح API اختياري.')],
+  ['Chrome DevTools', t('Opens your page in a browser, shows its errors, takes screenshots and measures how fast it loads.', 'يفتح صفحتك في المتصفح، ويعرض أخطاءها، ويلتقط صور الشاشة، ويقيس سرعة تحميلها.')],
+  ['Playwright', t('Clicks through your pages like a visitor, to check that they work.', 'ينتقل بين صفحاتك وينقر فيها كما يفعل الزائر، ليتأكد أنها تعمل.')],
+  ['Context7', t('Looks up the current instructions of the libraries your project uses. A key from their website is optional.', 'يبحث عن أحدث تعليمات المكتبات التي يستخدمها مشروعك. والمفتاح من موقعهم اختياري.')],
 ] as const
 ---
 
@@ -46,6 +50,6 @@ const servers = [
     </Block>
   ))
 }
-<Block id="tools" title={tools[locale]}>
+<Block id="tools" title={tools[locale]} lead={toolsLead[locale]}>
   <dl class="rows">{servers.map(([name, text]) => <div><dt><bdi>{name}</bdi></dt><dd>{text[locale]}</dd></div>)}</dl>
 </Block>

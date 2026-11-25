@@ -31,37 +31,36 @@ const counts = [
 
 const main = verdicts.find(({ id }) => id === 'main')!
 const gate = (what: Bilingual): Line => ({ call: 'Stop hook', note: what, mark: 'ok' })
-const typecheck: Bilingual = { en: 'typecheck passed', ar: 'نجح فحص الأنواع' }
+const checked: Bilingual = { en: 'no mistakes found, tests passed', ar: 'لا أخطاء، ونجحت الاختبارات' }
 
 // Four real requests, played one after another in the console. Names and answers come from the kit itself.
 const demos: { prompt: Bilingual; lines: Line[] }[] = [
   {
     prompt: home.prompt,
     lines: [
-      { call: 'Skill(dash-create-table)' },
-      { call: 'Rule(dashboard/data-tables.md)' },
-      gate({ en: 'typecheck and related tests passed', ar: 'نجح فحص الأنواع والاختبارات المرتبطة' }),
+      { call: 'Skill(setup)', note: { en: 'asks you five simple questions', ar: 'تسألك خمسة أسئلة بسيطة' } },
+      { call: 'Skill(dash-create-table)', note: { en: 'builds orders, customers, products', ar: 'تبني الطلبات والعملاء والمنتجات' } },
+      gate(checked),
     ],
   },
   {
-    prompt: { en: 'Make the product page faster', ar: 'اجعل صفحة المنتج أسرع' },
+    prompt: { en: 'Make it look like a site I like', ar: 'اجعله يشبه موقعا يعجبني' },
     lines: [
-      { call: 'Skill(performance)' },
-      { call: 'Rule(website/performance.md)' },
-      { call: 'Agent(frontend-reviewer)', note: { en: 'reviewing the change', ar: 'يراجع التغيير' } },
-      gate(typecheck),
+      { call: 'Skill(frontend-design)', note: { en: 'takes the colours and the feel, not a copy', ar: 'تأخذ الألوان والإحساس، لا نسخة' } },
+      { call: 'Agent(frontend-reviewer)', note: home.session.reviewing },
+      gate(checked),
     ],
   },
   {
-    prompt: { en: 'Push this to main', ar: 'ارفع هذا إلى main' },
+    prompt: { en: 'Add Arabic next to English', ar: 'أضف العربية بجانب الإنجليزية' },
+    lines: [
+      { call: 'Skill(i18n-conventions)', note: { en: 'both languages, right-to-left works', ar: 'اللغتان معا، والكتابة من اليمين لليسار تعمل' } },
+      gate(checked),
+    ],
+  },
+  {
+    prompt: { en: 'Send my changes straight to the live version', ar: 'أرسل تغييراتي مباشرة إلى النسخة الحية' },
     lines: [{ call: `Bash(${main.command})`, note: main.reason, mark: 'bad' }],
-  },
-  {
-    prompt: { en: 'Clean up this old project', ar: 'نظّف هذا المشروع القديم' },
-    lines: [
-      { call: 'Mode(refactor)', note: { en: 'measures the mess, plans six phases', ar: 'يقيس الفوضى ويخطط ست مراحل' } },
-      gate({ en: 'behaviour unchanged', ar: 'السلوك لم يتغير' }),
-    ],
   },
 ]
 ---
