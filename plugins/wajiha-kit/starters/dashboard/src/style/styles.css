@@ -1,0 +1,235 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './theme.css';
+@import './preset.css';
+@import './button.css';
+@import './badge.css';
+@import './input.css';
+@import './datepicker.css';
+@import './select.css';
+@import './tabs.css';
+@import './pagination.css';
+@import './actions.css';
+@import './topbar.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* One visible focus ring for everything focusable. Component rules (.btn,
+     .control ...) may refine it; none removes it. --primary-highlight reaches
+     3:1 on every surface in every preset (tokens/contrast.test.ts). */
+  :focus-visible {
+    outline: 2px solid var(--primary-highlight);
+    outline-offset: 2px;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  /* Slim scrollbars tinted from the theme tokens (light and dark). */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--primary) 35%, var(--stroke))
+      transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklab, var(--primary) 35%, var(--stroke));
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary);
+  }
+  /* Header cells follow the reading direction like their data cells. */
+  th {
+    text-align: start;
+  }
+  /* Numbers stay Western Arabic in both languages. */
+  :where(input, textarea, table, .tabular) {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Theme switch — circular ripple reveal driven by the View Transitions API.
+   The default cross-fade is silenced so the ripple owns the reveal. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* The ripple lives here rather than being attached from JS after
+   `transition.ready` resolves: that left a gap where the transition had no
+   animation at all and could run on its own timeline, which showed up as a
+   stutter near the end. Declared in CSS, it exists the instant the transition
+   starts. The provider sets the origin/radius vars and the scoping attribute
+   synchronously, before calling startViewTransition. */
+@keyframes theme-ripple {
+  from {
+    clip-path: circle(0 at var(--vt-x) var(--vt-y));
+  }
+  to {
+    clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y));
+  }
+}
+html[data-theme-switching]::view-transition-new(root) {
+  animation: theme-ripple var(--vt-duration) var(--vt-easing) both;
+}
+
+/* Language switch — simple cross-fade. Scoped via [data-lang-switching] so it
+   overrides the silenced theme rule above (higher specificity) only while a
+   language change is in flight. */
+@keyframes lang-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lang-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+html[data-lang-switching]::view-transition-old(root) {
+  animation: lang-fade-out 260ms ease both;
+}
+html[data-lang-switching]::view-transition-new(root) {
+  animation: lang-fade-in 260ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Every animation and transition collapses, including tw-animate-css classes. */
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  html[data-lang-switching]::view-transition-old(root),
+  html[data-lang-switching]::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+}
+
+@layer components {
+  /* Canonical content surface. `.card` carries no padding so callers can set
+     their own; `.surface-card` is the padded section used by detail pages. */
+  .card {
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+  }
+  .surface-card {
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-modal);
+    padding: var(--spacing-panel);
+  }
+
+  /* Page heading pair — matches the H2 + B2 ramp. */
+  .page-title {
+    @apply text-h1;
+    color: var(--text-primary);
+  }
+  .page-subtitle {
+    @apply text-b2;
+    color: var(--text-secondary);
+  }
+
+  /* Tinted information panel (highlighted section in the page spec). */
+  .surface-panel {
+    background-color: var(--primary-tint);
+    border: 1px solid color-mix(in oklab, var(--primary) 20%, transparent);
+    border-radius: var(--radius);
+    padding: var(--spacing-card);
+  }
+
+  /* Toast surface — sonner is pointed at this class from ui/sonner.tsx. */
+  .cn-toast {
+    gap: var(--spacing-inline);
+    padding: var(--spacing-inline) var(--spacing-row);
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-large);
+    color: var(--text-primary);
+    @apply text-b1;
+  }
+  .cn-toast [data-title] {
+    @apply text-button-1;
+  }
+  .cn-toast [data-description] {
+    color: var(--text-secondary);
+    @apply text-b3;
+  }
+  .cn-toast [data-icon] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .cn-toast[data-type='success'] [data-icon] {
+    color: var(--success);
+  }
+  .cn-toast[data-type='error'] [data-icon] {
+    color: var(--danger);
+  }
+  .cn-toast[data-type='warning'] [data-icon] {
+    color: var(--warning);
+  }
+  .cn-toast[data-type='info'] [data-icon] {
+    color: var(--info);
+  }
+
+  /* Theme-aware scrollbar — adapts to light/dark via tokens. */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-border) transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 0.625rem;
+    width: 0.625rem;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--surface-border);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-muted);
+  }
+  .custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

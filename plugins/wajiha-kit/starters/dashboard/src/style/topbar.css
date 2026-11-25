@@ -1,0 +1,45 @@
+/* Top bar. Header height 72px. Controls are 44px chips on --surface with an
+   8px radius; the account chip sits on --primary-light. */
+@layer components {
+  .topbar {
+    height: 72px;
+    padding-inline: 24px;
+    background-color: var(--surface);
+    border-block-end: 1px solid var(--sidebar-border);
+  }
+  .topbar-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    gap: var(--spacing-field);
+    min-block-size: 44px;
+    padding-inline: 12px;
+    border-radius: 8px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font: 600 13px / 22px var(--font-sans);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+  .topbar-chip:hover:not(:disabled) {
+    background-color: var(--hover-row);
+    color: var(--primary-text);
+  }
+  .topbar-chip:focus-visible {
+    outline: 2px solid var(--primary-highlight);
+    outline-offset: 2px;
+  }
+  .topbar-chip-soft {
+    background-color: var(--primary-light);
+    padding-block: 4px;
+  }
+  .topbar-chip-soft:hover:not(:disabled) {
+    background-color: var(--primary-light);
+    color: var(--text-primary);
+  }
+}

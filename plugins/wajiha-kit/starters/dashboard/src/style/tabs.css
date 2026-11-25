@@ -1,0 +1,120 @@
+/* Tabs — design system spec (docs/design/design-system.md §4).
+   Track: pill on --surface with a 1px stroke. Trigger: 40px pill, idle =
+   secondary text, active = --primary-light container with --primary-text,
+   active count chip = brand fill. `.tabs-track-plain` is the text-only
+   variant. Mobile track scrolls horizontally. */
+
+@layer components {
+  .tabs-track {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-field);
+    width: 100%;
+    padding: 4px;
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-pill);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-field);
+    flex: 1 0 auto;
+    height: 40px;
+    padding-inline: 18px;
+    border-radius: var(--radius-pill);
+    background-color: transparent;
+    color: var(--text-secondary);
+    font: 600 13px / 19.5px var(--font-sans);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+
+  .tab > svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .tab:hover:not(:disabled) {
+    color: var(--text-primary);
+  }
+
+  .tab[data-active],
+  .tab[aria-selected='true'] {
+    background-color: var(--primary-light);
+    color: var(--primary-text);
+  }
+
+  .tab:disabled,
+  .tab[aria-disabled='true'] {
+    color: var(--text-inactive);
+    cursor: not-allowed;
+  }
+
+  .tab:focus-visible {
+    outline: 2px solid var(--primary-highlight);
+    outline-offset: 2px;
+  }
+
+  /* Counter chip inside a trigger. */
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding-inline: 6px;
+    border-radius: var(--radius-pill);
+    background-color: color-mix(in oklab, var(--text-primary) 7%, transparent);
+    color: var(--text-secondary);
+    font: 600 11px / 1 var(--font-sans);
+  }
+  /* Active count chip takes the brand fill (03.01). */
+  .tab[data-active] .tab-count,
+  .tab[aria-selected='true'] .tab-count {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  /* Full-width triggers (mobile) split the track evenly. */
+  .tabs-track-fill .tab {
+    flex: 1 1 0;
+  }
+
+  /* Plain-text variant (13.03): a bordered strip, triggers are text only and
+     the active one reads in --text-primary instead of taking a fill. */
+  .tabs-track-plain {
+    gap: var(--spacing-inline);
+    padding: 4px var(--spacing-field);
+    border-radius: var(--radius);
+  }
+  .tabs-track-plain .tab {
+    flex: 0 0 auto;
+    height: 34px;
+    padding-inline: var(--spacing-field);
+    border-radius: var(--radius-control);
+  }
+  .tabs-track-plain .tab:hover:not(:disabled) {
+    color: var(--text-primary);
+  }
+  .tabs-track-plain .tab[data-active],
+  .tabs-track-plain .tab[aria-selected='true'] {
+    background-color: transparent;
+    color: var(--text-primary);
+  }
+  .tabs-track-plain .tab:disabled,
+  .tabs-track-plain .tab[aria-disabled='true'] {
+    color: var(--text-inactive);
+  }
+}

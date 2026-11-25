@@ -1,0 +1,212 @@
+/* Custom date picker + number stepper (replace the browser's native widgets). */
+
+@layer components {
+  .date-picker {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .date-picker-trigger {
+    cursor: pointer;
+    text-align: start;
+  }
+
+  .date-picker-empty {
+    color: var(--text-inactive);
+  }
+
+  .date-popup {
+    isolation: isolate;
+    z-index: 50;
+    width: 18rem;
+    padding: var(--spacing-inline);
+    border-radius: var(--radius);
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: var(--shadow-mid);
+    border: 1px solid var(--stroke);
+  }
+
+  .date-popup-header,
+  .date-popup-year {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-field);
+  }
+
+  .date-popup-header {
+    margin-bottom: 4px;
+  }
+
+  .date-popup-title {
+    font: 600 14px / 1.5 var(--font-sans);
+  }
+
+  .date-popup-year {
+    margin-bottom: var(--spacing-field);
+    font: 500 12px / 1.5 var(--font-sans);
+    color: var(--text-secondary);
+  }
+
+  .date-popup-nav {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-control);
+    color: var(--text-secondary);
+    transition: background-color 150ms ease;
+  }
+
+  .date-popup-nav:hover {
+    background-color: var(--hover-row);
+    color: var(--text-primary);
+  }
+
+  /* Always reserve the weekday header plus six week rows so the popup keeps the
+     same height in 4-, 5- and 6-week months. Otherwise the popper re-measures
+     on every month change and flips between above and below the input. */
+  .date-popup-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: auto repeat(6, 34px);
+    gap: 2px;
+  }
+
+  .date-popup-weekday {
+    padding-block: 4px;
+    text-align: center;
+    font: 500 11px / 1.5 var(--font-sans);
+    color: var(--text-secondary);
+  }
+
+  .date-popup-day {
+    height: 34px;
+    border-radius: var(--radius-control);
+    font: 400 13px / 19.5px var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    transition: background-color 150ms ease;
+  }
+
+  .date-popup-day:hover:not(:disabled) {
+    background-color: var(--hover-row);
+  }
+
+  .date-popup-day[data-today] {
+    border: 1px solid var(--primary-highlight);
+  }
+
+  .date-popup-day[data-selected] {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .date-popup-day:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .date-popup-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-field);
+    padding-top: var(--spacing-field);
+    border-top: 1px solid var(--stroke);
+  }
+
+  .date-popup-link {
+    font: 600 13px / 19.5px var(--font-sans);
+    color: var(--primary-text);
+  }
+
+  .date-popup-link:disabled {
+    opacity: 0.4;
+  }
+
+  .number-control {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .number-control input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    padding-inline-end: 72px;
+  }
+
+  .number-control input[type='number']::-webkit-inner-spin-button,
+  .number-control input[type='number']::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  .number-stepper {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 6px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .number-stepper button {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-control);
+    color: var(--text-secondary);
+    font: 500 16px / 1 var(--font-sans);
+    transition: background-color 150ms ease;
+  }
+
+  .number-stepper button:hover:not(:disabled) {
+    background-color: var(--hover-row);
+    color: var(--text-primary);
+  }
+
+  .number-stepper button:disabled {
+    opacity: 0.4;
+  }
+}
+
+@layer components {
+  .time-popup {
+    width: 11rem;
+  }
+
+  .time-popup-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-field);
+  }
+
+  .time-popup-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 14rem;
+    overflow-y: auto;
+  }
+
+  .time-popup-item {
+    flex: 0 0 auto;
+    height: 34px;
+    border-radius: var(--radius-control);
+    font: 400 13px / 19.5px var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    transition: background-color 150ms ease;
+  }
+
+  .time-popup-item:hover {
+    background-color: var(--hover-row);
+  }
+
+  .time-popup-item[data-selected] {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
