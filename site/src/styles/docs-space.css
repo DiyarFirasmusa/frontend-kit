@@ -1393,3 +1393,18 @@ html[lang='ar'] .credits {
 .tree.is-filtering .leaf-about {
   display: block;
 }
+
+/* The line under the home headline that says who the kit is for. */
+.hero-for {
+  max-width: 34rem;
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.hero-for a {
+  color: var(--ivory);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

@@ -17,6 +17,7 @@ const { locale } = Astro.props
   <div class="column hero-copy">
     <h1 class="enter">{home.title[locale].split(/(?<=\.) /).map((part) => <span>{part}</span>)}</h1>
     <p class="hero-lead enter">{home.lead[locale]}</p>
+    <p class="hero-for enter">{home.for[locale]} <a href={pageUrl(locale, 'developers')}>{home.forLink[locale]}</a></p>
     <p class="hero-actions enter">
       <a class="hero-start" href="#install">{home.start[locale]}</a>
       <a href="#example">{home.see[locale]}</a>

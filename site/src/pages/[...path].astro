@@ -6,6 +6,7 @@ import Legal from '../components/pages/Legal.astro'
 import AgentList from '../components/pages/AgentList.astro'
 import AgentPage from '../components/pages/AgentPage.astro'
 import Changelog from '../components/pages/Changelog.astro'
+import Developers from '../components/pages/Developers.astro'
 import Checks from '../components/pages/Checks.astro'
 import Configuration from '../components/pages/Configuration.astro'
 import DocsHub from '../components/pages/DocsHub.astro'
@@ -58,6 +59,7 @@ const BODIES = {
   refactor: Refactor,
   examples: Examples,
   questions: Questions,
+  developers: Developers,
 } satisfies Record<Exclude<PageId, LegalId>, unknown>
 const LEGAL: PageId[] = ['licence', 'privacy', 'terms']
 

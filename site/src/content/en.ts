@@ -5,7 +5,7 @@ export const en: Copy = {
   meta: {
     title: 'Wajiha Kit: build a website or dashboard with Claude, no coding needed',
     description:
-      'A free kit for the Claude app. Answer a few simple questions and Claude builds your website or dashboard in Arabic and English, then checks it before you see it.',
+      'A free kit for the Claude app. Answer a few simple questions and Claude builds your website or dashboard in Arabic and English, then checks it before you see it. For people who do not code, vibe coders and backend developers.',
   },
   chrome: {
     skip: 'Skip to content',

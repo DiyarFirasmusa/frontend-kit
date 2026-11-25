@@ -17,6 +17,7 @@ export const KEYWORDS: Record<PageId, string> = {
   modes: 'mode freeze hotfix readonly أنماط تجميد إصلاح عاجل',
   configuration: 'settings config json wajiha-kit.json إعدادات تهيئة',
   refactor: 'refactor clean old messy legacy إصلاح قديم فوضوي تنظيف',
+  developers: 'developer developers vibe coder coding backend api openapi terminal cli install frontend react typescript stack hooks مطور مطورين برمجة باكند خادم خلفي طرفية واجهة امامية فرونت',
   licence: 'license licence mit rights copyright credits الرخصة ترخيص حقوق',
   privacy: 'privacy data cookies analytics tracking خصوصية بيانات كوكيز تتبع',
   terms: 'terms use warranty liability شروط استخدام ضمان مسؤولية',

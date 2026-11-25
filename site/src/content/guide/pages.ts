@@ -17,6 +17,7 @@ export type PageId =
   | 'refactor'
   | 'examples'
   | 'questions'
+  | 'developers'
   | 'licence'
   | 'privacy'
   | 'terms'
@@ -165,6 +166,13 @@ export const PAGES: Record<PageId, PageInfo> = {
     title: t('Questions and problems.', 'أسئلة ومشكلات.'),
     lead: t('Honest answers about cost, safety and limits, and what to do when something does not work.', 'إجابات صريحة عن التكلفة والأمان والحدود، وماذا تفعل عندما لا يعمل شيء.'),
   },
+  developers: {
+    id: 'developers',
+    still: 'skills',
+    name: t('For developers', 'للمطورين'),
+    title: t('For developers and vibe coders.', 'للمطورين ولمن يبني بالذكاء الاصطناعي.'),
+    lead: t('Install from a terminal, what setup writes into your project, what the checks do and do not do.', 'التثبيت من الطرفية، وما يكتبه الإعداد في مشروعك، وماذا تفعل الفحوص وماذا لا تفعل.'),
+  },
   licence: {
     id: 'licence',
     still: 'skills',
@@ -189,7 +197,7 @@ export const PAGES: Record<PageId, PageInfo> = {
 }
 
 export const SECTIONS: PageSection[] = [
-  { title: t('Start here', 'ابدأ من هنا'), pages: ['docs', 'guide', 'get-started', 'project-types', 'examples'] },
+  { title: t('Start here', 'ابدأ من هنا'), pages: ['docs', 'guide', 'get-started', 'project-types', 'examples', 'developers'] },
   { title: t('Help', 'مساعدة'), pages: ['questions'] },
   { title: t('Behind the scenes', 'في الخلفية'), pages: ['skills', 'agents', 'rules', 'checks', 'features'] },
   { title: t('More ways to work', 'طرق أخرى للعمل'), pages: ['modes', 'configuration', 'refactor'] },

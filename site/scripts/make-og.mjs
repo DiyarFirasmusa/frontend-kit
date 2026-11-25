@@ -43,7 +43,7 @@ await shoot('en', 'og.jpg')
 await shoot('ar', 'og-ar.jpg')
 
 // One image for each page of the guide, in each language, with its own title, words and colour.
-const PAGES = ['docs', 'guide', 'get-started', 'project-types', 'examples', 'questions', 'changelog', 'skills', 'agents', 'rules', 'checks', 'features', 'modes', 'configuration', 'refactor', 'licence', 'privacy', 'terms']
+const PAGES = ['docs', 'guide', 'get-started', 'project-types', 'examples', 'questions', 'changelog', 'skills', 'agents', 'rules', 'checks', 'features', 'modes', 'configuration', 'refactor', 'developers', 'licence', 'privacy', 'terms']
 const COLOURS = { skills: '#d97757', rules: '#f2a183', agents: '#57cdcd', checks: '#19abab' }
 const text = (html) =>
   html
