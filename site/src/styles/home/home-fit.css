@@ -45,7 +45,7 @@
   margin-block-start: 0.4rem;
 }
 
-@media (max-width: 760px) {
+@media (width < 48rem) {
   .path-picture {
     height: auto;
   }
@@ -97,7 +97,7 @@
   margin-block-end: 0.75rem;
 }
 
-@media (min-width: 62rem) {
+@media (width >= 62rem) {
   .show-panel .show-words {
     display: grid;
     align-items: baseline;
@@ -116,7 +116,7 @@
   }
 }
 
-@media (min-width: 62rem) {
+@media (width >= 62rem) {
 
   /* A wider side column: four features sit in four short rows, so the board is as tall as the picture. */
   .builds .board {
@@ -128,14 +128,14 @@
   }
 }
 
-@media (min-width: 62rem) {
+@media (width >= 62rem) {
 
   .builds.builds {
     padding-block: 2.5rem;
   }
 }
 
-@media (min-width: 901px) {
+@media (width >= 56.25rem) {
   #install .start-main {
     gap: 1.25rem;
     align-items: center;
@@ -182,7 +182,7 @@
   display: none;
 }
 
-@media (min-width: 901px) {
+@media (width >= 56.25rem) {
 
   #install .start-line {
     align-self: stretch;
@@ -190,7 +190,7 @@
   }
 }
 
-@media (min-width: 901px) {
+@media (width >= 56.25rem) {
 
   #install .start-window .start-body {
     padding: 0.7rem 0.9rem;
@@ -210,7 +210,7 @@
 }
 
 /* Less air between the parts: about a screen each, with the title. */
-@media (min-width: 62rem) {
+@media (width >= 62rem) {
   .builds.builds,
   .home .example,
   .home .get-it,
@@ -225,7 +225,7 @@
 
 /* The same air between every part of the home page: 8rem from the end of one board to the next title,
    the same as between the opening screen and the first part. */
-@media (min-width: 62rem) {
+@media (width >= 62rem) {
 
   .home .intro,
   .home .hero {
@@ -233,7 +233,7 @@
   }
 }
 
-@media (max-width: 61.99rem) {
+@media (width < 62rem) {
   .builds,
   .home .example,
   .home .get-it,

@@ -22,7 +22,7 @@
   line-height: 1.7;
 }
 
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   #install .start-text .msg-command {
     white-space: pre;
     overflow-wrap: normal;
@@ -38,7 +38,7 @@
   }
 }
 
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   .hero-phone button,
   .hero-phone a {
     border-radius: 0.5rem;

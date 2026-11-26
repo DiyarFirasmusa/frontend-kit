@@ -84,6 +84,13 @@ html[data-theme='light'] .prompt > span {
   text-align: left;
 }
 
+/* Past a phone's width the copy button of a one-line Arabic window sits at the end side (left). */
+@media (width >= 40rem) {
+  [dir='rtl'] .doc-article .command:not(.is-message) {
+    flex-direction: row-reverse;
+  }
+}
+
 [dir='rtl'] .doc-article .command:not(.is-message) {
   border-left-width: 1px;
   border-left-color: rgb(var(--ink-rgb) / 0.16);
@@ -91,7 +98,7 @@ html[data-theme='light'] .prompt > span {
 }
 
 /* On a phone the copy pill sits under the text at full width, and commands wrap at spaces so the whole command can be read. */
-@media (max-width: 40rem) {
+@media (width < 40rem) {
   .doc-article .command {
     flex-direction: column;
   }
@@ -167,6 +174,12 @@ html:not([data-theme='light']) .doc .hub-kinds a {
   font-weight: 400;
 }
 
+/* Arabic card descriptions have the line height of Arabic prose. */
+:lang(ar) .hub-kind-about {
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
 /* The comparison's two lines sit tight; one small size in the specialists' rows. */
 .doc .pair p,
 .doc .pair p + p {
@@ -177,6 +190,14 @@ html:not([data-theme='light']) .doc .hub-kinds a {
   font-size: 0.875rem;
   font-style: normal;
   color: var(--muted);
+}
+
+/* On a small phone a side-column row and its description use the whole line. */
+@media (width < 30rem) {
+  .board-list li small,
+  .board-list li {
+    max-width: none;
+  }
 }
 
 /* ---------- The side list, "on this page" and the page head ---------- */
@@ -208,26 +229,4 @@ html[data-theme='light'] .doc-head .board-main .crumbs,
 html[data-theme='light'] .doc-head .board-main .crumbs a,
 html[data-theme='light'] .doc-head .board-main .crumbs span {
   color: #cfcac2;
-}
-
-/* ---------- Arabic and RTL polish (round 9) ---------- */
-/* A one-line code window in Arabic: the copy button sits at the end side (left), the command keeps its left-to-right text. */
-@media (min-width: 40.01rem) {
-  [dir='rtl'] .doc-article .command:not(.is-message) {
-    flex-direction: row-reverse;
-  }
-}
-
-/* Arabic card descriptions in the guide hub have the same line height as Arabic prose. */
-:lang(ar) .hub-kind-about {
-  font-size: 1rem;
-  line-height: 1.85;
-}
-
-/* On a phone the side-column description uses the whole line. */
-@media (max-width: 30rem) {
-  .board-list li small,
-  .board-list li {
-    max-width: none;
-  }
 }

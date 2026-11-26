@@ -9,6 +9,24 @@
    the few !important left are for [hidden], reduced or paused motion, and focus rings. */
 @layer astro, shared, page, skin, skin-page;
 
+/* BREAKPOINTS. One list for every stylesheet (and the <style> blocks of components). Media queries cannot read custom
+   properties, so the steps live here as a list and every query uses exactly these values, in range syntax and rem:
+   below a step is `(width < X)`, from it up is `(width >= X)`, so two sides of a step never overlap or leave a gap.
+     22.5rem   (360px)   the narrowest phones: the header drops its mark, the tabs tighten
+     30rem     (480px)   small phones: the header's version and labels go
+     35rem     (560px)   phones: actions and inventories stack
+     37.5rem   (600px)   lists and hub cards become one column
+     38.75rem  (620px)   rows, footer columns and the home drawings narrow
+     40rem     (640px)   code windows: the copy button moves under the command
+     45rem     (720px)   the comparison drawing turns from wide to tall
+     48rem     (768px)   PHONE below, TABLET from here (boards side by side, the hero beside its board)
+     51.25rem  (820px)   the header bar shrinks
+     56.25rem  (900px)   GUIDE RAIL: the page list beside the page (from here up)
+     62rem     (992px)   DESKTOP: the wide hero and the guide's full page list
+     68.75rem  (1100px)  the journey and the footer fold; the guide bar hides its nav between 56.25rem and here
+     80rem     (1280px)  WIDE: the header's full nav and the guide's "on this page" column
+     120rem    (1920px)  very wide screens: the page stops growing */
+
 @import './tokens.css' layer(shared);
 @import './base.css' layer(shared);
 @import './header.css' layer(shared);

@@ -223,7 +223,7 @@ html[data-theme='light'] .doc-mark .dim {
   font-size: 0.8125rem;
 }
 
-@media (max-width: 600px) {
+@media (width < 37.5rem) {
   .doc :is(.index > li, .about > div, .rows > div) {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -696,7 +696,7 @@ main[data-section='get-started'] .doc-article ol.numbered > li::before {
   line-height: 1.65;
 }
 
-@media (max-width: 600px) {
+@media (width < 37.5rem) {
   .doc .hub-path > li {
     grid-template-columns: 1.875rem minmax(0, 1fr);
   }
@@ -816,7 +816,7 @@ html[data-theme='light'] .doc .hub-kinds a {
   background: color-mix(in srgb, var(--kind) 8%, #ede8e0);
 }
 
-@media (max-width: 600px) {
+@media (width < 37.5rem) {
   .doc .hub-kinds {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'rule' 'skill' 'agent' 'hook';
@@ -1075,7 +1075,7 @@ html[data-theme='light'] .doc ol.explained li::before {
 }
 
 /* A message in a code window wraps on a wider screen (the window itself: base.css). */
-@media (min-width: 48rem) {
+@media (width >= 48rem) {
   .command .msg-command,
   .command.is-message code,
   .doc-article .command .msg-command {
@@ -1120,7 +1120,7 @@ main[data-section='get-started'] #build > h2::before {
 }
 
 /* "All pages" on a phone is a real row: 44px, a chevron at the inline end, a hairline under it. */
-@media (max-width: 61.99rem) {
+@media (width < 62rem) {
   .tree > summary {
     display: flex;
     align-items: center;
@@ -1164,7 +1164,7 @@ body:has(main.doc) .top.is-scrolled,
   max-width: none;
 }
 
-@media (min-width: 48rem) {
+@media (width >= 48rem) {
   .doc-article .command .msg-command {
     overflow-wrap: break-word;
   }

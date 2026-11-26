@@ -33,7 +33,7 @@
 }
 
 /* On a phone a long command scrolls sideways instead of breaking. */
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   .command code,
   .command pre {
     white-space: pre;

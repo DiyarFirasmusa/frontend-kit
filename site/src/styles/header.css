@@ -118,7 +118,7 @@
   transform-origin: right;
 }
 
-@media (max-width: 1279px) {
+@media (width < 80rem) {
   .top-nav {
     display: none;
   }
@@ -128,7 +128,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width < 30rem) {
   .top {
     gap: 0;
     padding-inline: 0.875rem;
@@ -180,7 +180,7 @@
   white-space: nowrap;
 }
 
-@media (max-width: 600px) {
+@media (width < 37.5rem) {
   .top-docs {
     display: none;
   }
@@ -197,7 +197,7 @@
   fill: var(--accent);
 }
 
-@media (max-width: 359px) {
+@media (width < 22.5rem) {
   .brand-mark {
     display: none;
   }

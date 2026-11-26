@@ -53,9 +53,9 @@
   align-items: center;
   min-height: 2.75rem;
   padding-inline: 1rem;
-  border: 1px solid rgb(241 237 231 / 0.4);
+  border: 1px solid rgb(var(--ink-rgb) / 0.4);
   border-radius: 0.5rem;
-  color: #f1ede7;
+  color: var(--note-link);
   text-decoration: none;
 }
 
@@ -70,7 +70,6 @@
   padding: 0;
   border: 0;
   border-radius: 0;
-  color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

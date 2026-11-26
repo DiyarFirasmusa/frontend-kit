@@ -2,7 +2,7 @@
   padding-block: 0.5rem;
 }
 
-@media (max-width: 360px) {
+@media (width < 22.5rem) {
   .show-tabs {
     gap: 0.25rem;
   }
@@ -47,7 +47,7 @@ html:not(.js) .start-copy {
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
 
 .start-text .msg-command {
     white-space: pre-wrap;
@@ -61,7 +61,7 @@ html:not(.js) .start-copy {
 }
 
 /* Phones: the headline is clearly bigger than the section titles under it. */
-@media (max-width: 600px) {
+@media (width < 37.5rem) {
   .hero h1,
   [dir='rtl'] .hero h1 {
     font-size: clamp(2.25rem, 10vw, 2.75rem);
@@ -79,14 +79,14 @@ html:not(.js) .start-copy {
 }
 
 /* Phones: the message card comes right after step 2, and the links after it. */
-@media (max-width: 560px) {
+@media (width < 35rem) {
   .hero-actions {
     flex-direction: column;
     align-items: flex-start;
   }
 }
 
-@media (max-width: 768px) {
+@media (width < 48rem) {
 
 .hero-actions {
     display: none;
@@ -124,7 +124,7 @@ html:not(.js) .start-copy {
 }
 
 /* ---------- Phone targets ---------- */
-@media (max-width: 620px) {
+@media (width < 38.75rem) {
 
   .start-line + p a {
     display: inline-flex;
@@ -194,7 +194,7 @@ html:not(.js) .start-copy {
   border-radius: 1rem;
 }
 
-@media (max-width: 620px) {
+@media (width < 38.75rem) {
   .path-picture {
     height: 9.5rem;
     padding: 2rem 0.5rem 0.5rem;
@@ -346,7 +346,7 @@ html:not(.js) .start-copy {
   background: var(--accent);
 }
 
-@media (max-width: 768px) {
+@media (width < 48rem) {
   .hero-phone {
     display: flex;
   }
@@ -418,7 +418,7 @@ html[data-theme='light'] .board.tone-orange .path-track i {
    Colour lives in the blocks, not in lines and gradients.
    ===================================================================================================== */
 
-@media (max-width: 760px) {
+@media (width < 48rem) {
   .board .path-picture {
     display: none;
   }
@@ -453,7 +453,7 @@ html[data-theme='light'] .start-main .start-line-track i {
   opacity: 0.45;
 }
 
-@media (max-width: 900px) {
+@media (width < 56.25rem) {
   .start-main {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -470,12 +470,11 @@ html[data-theme='light'] .start-main .start-line-track i {
 }
 
 /* The journey on a phone: ruled rows, number first, then the title and the words, the full width. */
-@media (max-width: 760px) {
-  /* !important: beats the unlayered `.path { gap }` in components/home/Example.astro (drop it once that style is layered). */
+@media (width < 48rem) {
   .board .path {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 0 !important;
+    gap: 0;
   }
 
   .board .path-stop {
@@ -511,7 +510,7 @@ html[data-theme='light'] .start-main .start-line-track i {
 }
 
 /* The steps on a phone use the whole width. */
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   .path-label p {
     max-width: 40rem;
   }

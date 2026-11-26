@@ -378,7 +378,7 @@
   animation: chat-in 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (max-width: 620px) {
+@media (width < 38.75rem) {
   .chat.live {
     height: 27rem;
   }
@@ -402,7 +402,7 @@
   text-underline-offset: 6px;
 }
 
-@media (max-width: 768px) {
+@media (width < 48rem) {
   .hero-actions .hero-start {
     border: 1px solid var(--accent);
     background: transparent;

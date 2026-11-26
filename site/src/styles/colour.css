@@ -51,7 +51,7 @@ body::after {
   font: 500 0.6875rem / 1.5 var(--code);
 }
 
-@media (max-width: 480px) {
+@media (width < 30rem) {
   .brand-version {
     display: none;
   }
@@ -100,7 +100,7 @@ body::after {
 }
 
 /* THE HEADER'S LINKS, redone: one centred pill of places, a small language chip, and a round orange Install. */
-@media (min-width: 1280px) {
+@media (width >= 80rem) {
   .top-docs {
     display: none;
   }
@@ -144,7 +144,7 @@ body::after {
   }
 }
 
-@media (max-width: 1279px) {
+@media (width < 80rem) {
   .nav-docs {
     display: none;
   }
@@ -184,7 +184,7 @@ body::after {
   translate: -0.25rem 0;
 }
 
-@media (max-width: 480px) {
+@media (width < 30rem) {
   .top-install::after {
     display: none;
   }
@@ -193,7 +193,7 @@ body::after {
 /* The pill and the chip carry a little ground of their own, so they stay readable over whatever scrolls beneath. */
 
 /* THE HEADER'S LINKS, third version: plain numbered words with an orange line that slides in. No pill, no box. */
-@media (min-width: 1280px) {
+@media (width >= 80rem) {
   .top-nav,
   [dir='rtl'] .top-nav {
     position: static;
@@ -287,7 +287,7 @@ body::after {
   rotate: 90deg;
 }
 
-@media (max-width: 480px) {
+@media (width < 30rem) {
   .language {
     width: 36px;
     height: 36px;
@@ -317,7 +317,7 @@ body::after {
 
 /* NUMBERS: a small round badge with the digit, like the steps in the docs. No more 01, 02, 03. */
 /* The header's links lose the digits and get a small dot that lights for the place you are. */
-@media (min-width: 1280px) {
+@media (width >= 80rem) {
 
   .top-nav a:hover::before,
   .top-nav a[aria-current]::before {

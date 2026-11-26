@@ -545,7 +545,7 @@ html[data-theme='light'] .board.tone-orange .path-stop:nth-child(7) .path-dot {
   background: #141413;
 }
 
-@media (max-width: 760px) {
+@media (width < 48rem) {
   .board .path-dot {
     grid-column: 1;
     grid-row: 1 / span 2;
@@ -617,10 +617,11 @@ html[data-theme='light'] .board.tone-orange .path-stop:nth-child(7) .path-dot {
   border-radius: 0.4rem;
 }
 
+/* The key badges are 12px, never 10, as in the chat. */
 .jp-ask .ce-key {
   width: 1.1rem;
   height: 1.1rem;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
 }
 
 .jp-ask li.is-pick {
@@ -860,7 +861,7 @@ html[data-theme='light'] .start-main .start-line-dot {
 }
 
 /* ---------- Small screens ---------- */
-@media (max-width: 1100px) {
+@media (width < 68.75rem) {
   .path {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     row-gap: 2.5rem;
@@ -872,14 +873,14 @@ html[data-theme='light'] .start-main .start-line-dot {
   }
 }
 
-@media (max-width: 900px) {
+@media (width < 56.25rem) {
   .show-picture {
     order: -1;
   }
 }
 
 /* On a phone the stops are one list: the small picture on one side, the number, title and sentence beside it. */
-@media (max-width: 620px) {
+@media (width < 38.75rem) {
   .path {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.75rem;
@@ -922,7 +923,7 @@ html[data-theme='light'] .start-main .start-line-dot {
     min-height: 2.75rem;
   }
 }
-@media (max-width: 760px) {
+@media (width < 48rem) {
 
 .board .path-stop:first-of-type {
     border-block-start: 0;
@@ -972,7 +973,7 @@ html[data-theme='light'] .start-main .start-line-dot {
     -1.6rem 0 0 rgb(var(--ink-rgb) / 0.16);
 }
 
-@media (max-width: 620px) {
+@media (width < 38.75rem) {
 
 :lang(ar) .path-picture {
     font-size: 0.75rem;
@@ -1065,7 +1066,7 @@ html[data-theme='light'] .start-main .start-line-dot {
   width: 95%;
 }
 
-@media (max-width: 900px) {
+@media (width < 56.25rem) {
   .show-panel {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1144,7 +1145,7 @@ html[data-theme='light'] .board.tone-orange .path-label * {
   }
 }
 
-@media (max-width: 1100px) {
+@media (width < 68.75rem) {
   .path-track {
     display: none;
   }
@@ -1228,13 +1229,13 @@ html[data-theme='light'] .board.tone-orange .path-label * {
   user-select: none;
 }
 
-@media (min-width: 721px) {
+@media (width >= 45rem) {
   .ba {
     aspect-ratio: 16 / 6.6;
   }
 }
 
-@media (max-width: 720px) {
+@media (width < 45rem) {
   .ba {
     aspect-ratio: 3 / 4;
     font-size: 0.75rem;
@@ -1242,7 +1243,7 @@ html[data-theme='light'] .board.tone-orange .path-label * {
 }
 
 /* In its section it is a wide window, not a tall one; on a phone it keeps a real height. */
-@media (min-width: 48rem) {
+@media (width >= 48rem) {
   .board-main > .ba {
     width: min(100%, 44rem);
     margin-inline: auto;
@@ -1250,7 +1251,7 @@ html[data-theme='light'] .board.tone-orange .path-label * {
   }
 }
 
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   .board-main > .ba {
     aspect-ratio: 3 / 4;
     min-height: 22rem;
@@ -1648,7 +1649,7 @@ html[data-theme='light'] .board.tone-orange .path-label * {
   color: var(--faint);
 }
 
-@media (max-width: 720px) {
+@media (width < 45rem) {
   .dash {
     grid-template-columns: minmax(0, 1fr);
   }

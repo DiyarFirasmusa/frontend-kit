@@ -163,7 +163,7 @@
   color: var(--void);
 }
 
-@media (max-width: 900px) {
+@media (width < 56.25rem) {
   .doc {
     display: block;
   }

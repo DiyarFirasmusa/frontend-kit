@@ -21,6 +21,7 @@ html[data-theme='light'] {
   --turq: #0c8a8a;
   --turq-deep: #006c6d;
   --turq-soft: rgb(12 138 138 / 0.14);
+  --note-link: #005a5b;
   --bad: #b8483c;
 }
 
@@ -137,14 +138,14 @@ html[data-theme='light'] .board-note {
   color: #141413;
 }
 
+/* The go-there pill is a little heavier on paper, so it does not look thin; its words keep their deep turquoise on hover. */
 html[data-theme='light'] .board-note a:not(.hero-start) {
-  border-color: rgb(20 20 19 / 0.4);
-  color: #006c6d;
+  font-weight: 500;
 }
 
 html[data-theme='light'] .board-note a:not(.hero-start):hover {
   border-color: var(--turq);
-  color: var(--turq);
+  color: var(--note-link);
 }
 
 html[data-theme='light'] .board-top svg rect[fill*='241 237 231'] {

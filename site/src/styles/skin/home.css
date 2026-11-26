@@ -172,8 +172,7 @@ html[data-theme='light'] .hero h1 > span + span {
   -webkit-text-fill-color: #b8461f;
 }
 
-/* ---------- Number badges in light mode: dark digits on orange / turquoise ----------
-   The kit badge's two !important beat the unlayered !important in components/home/Example.astro. */
+/* ---------- Number badges in light mode: dark digits on orange / turquoise ---------- */
 html[data-theme='light'] .board .board-main .path-dot,
 html[data-theme='light'] .board .board-main .start-line-dot {
   color: #141413;
@@ -188,8 +187,8 @@ html[data-theme='light'] .board .path-stop[data-who='you'] .path-dot {
 }
 
 html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
-  background: #19abab !important;
-  color: #141413 !important;
+  background: #19abab;
+  color: #141413;
 }
 
 /* ---------- Sizes and hit areas (both themes) ---------- */
@@ -233,7 +232,7 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 }
 
 /* The hero board's side column is as wide as the others' minimum. */
-@media (min-width: 62rem) {
+@media (width >= 62rem) {
   .hero-side .board {
     grid-template-columns: minmax(0, 1fr) 15.5rem;
   }
@@ -251,7 +250,7 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 }
 
 /* On a phone: the drag pill sits at the bottom centre of the window, clear of the cards; the chat is as tall as its words. */
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   .ba-cue {
     inset-block-end: 0.5rem;
     inset-block-start: auto;
@@ -264,7 +263,7 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 }
 
 /* On a small phone the comparison keeps the one stat and the table, and the command wraps at spaces. */
-@media (max-width: 40rem) {
+@media (width < 40rem) {
   .ba .dash-stats > :nth-child(n + 5),
   .ba .dash-toast {
     display: none;

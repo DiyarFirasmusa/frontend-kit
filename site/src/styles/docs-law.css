@@ -20,7 +20,7 @@
 }
 
 /* Commands never break at a hyphen: they scroll inside their own window. */
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   /* The two header squares have air between them. */
   .top .theme-toggle,
   .top .language {
@@ -43,7 +43,7 @@ html[data-theme='light'] .board-top svg rect[fill*='/ 0.28'] {
 }
 
 /* The comparison keeps a real height on a phone, and the drag pill never covers the cards. */
-@media (max-width: 47.99rem) {
+@media (width < 48rem) {
   /* One layout for the opening bar in both languages: the mark and one line of words. */
 
   .board-top > span:last-child,
@@ -82,8 +82,3 @@ html[data-theme='light'] .top-docs:hover {
   }
 }
 
-/* The note bar's go-there pill: ink border, turquoise words, so the side column's edge is the one turquoise outline. */
-html .board-note a:not(.hero-start) {
-  border-color: rgb(241 237 231 / 0.4);
-  color: var(--turq);
-}

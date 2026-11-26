@@ -69,7 +69,7 @@
   background: rgb(25 171 171 / 0.22);
 }
 
-@media (max-width: 1279px) {
+@media (width < 80rem) {
   .top-nav a[aria-current] {
     background: var(--turq-soft);
     color: var(--turq);

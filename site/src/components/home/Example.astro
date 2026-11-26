@@ -86,34 +86,37 @@ const { locale } = Astro.props
 </section>
 
 <style is:global>
-  /* Four steps, four windows: you send, you answer, Claude builds, you decide. */
-  .path {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
+  /* In the home page's layer (the order is explained in styles/site.css; it is repeated here in case this loads first),
+     so these rules compete with the home page's own by specificity, like every other page rule. */
+  @layer astro, shared, page, skin, skin-page;
 
-  .board .path-stop[data-who='you'] .path-dot {
-    background: var(--accent) !important;
-    color: #141413 !important;
-  }
+  @layer page {
+    /* Four steps, four windows: you send, you answer, Claude builds, you decide. */
+    ol.path {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
 
-  .board .path-stop[data-who='kit'] .path-dot {
-    background: var(--turq) !important;
-    color: #141413 !important;
-  }
+    /* Who acts at each step: you in orange, the kit in turquoise, dark digits on both. */
+    .board .path .path-stop[data-who='you'] .path-dot {
+      background: var(--accent);
+      color: #141413;
+    }
 
-  html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
-    color: #fff !important;
-  }
+    .board .path .path-stop[data-who='kit'] .path-dot {
+      background: var(--turq);
+      color: #141413;
+    }
 
-  /* The question window shows two choices, so none is cut off. */
-  .jp-ask ul li:nth-child(n + 3) {
-    display: none;
-  }
+    /* The question window shows two choices, so none is cut off. */
+    .jp-ask ul li:nth-child(n + 3) {
+      display: none;
+    }
 
-  @media (max-width: 47.99rem) {
-    .path {
-      grid-template-columns: minmax(0, 1fr);
+    @media (width < 48rem) {
+      ol.path {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
   }
 </style>

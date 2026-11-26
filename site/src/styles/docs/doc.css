@@ -350,7 +350,7 @@
   align-items: flex-end;
 }
 
-@media (max-width: 620px) {
+@media (width < 38.75rem) {
   .rows > div {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -522,7 +522,7 @@
   color: var(--ivory);
 }
 
-@media (max-width: 600px) {
+@media (width < 37.5rem) {
   .index li {
     grid-template-columns: minmax(0, 1fr);
   }

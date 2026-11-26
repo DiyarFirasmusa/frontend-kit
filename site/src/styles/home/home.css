@@ -82,7 +82,7 @@
   }
 }
 
-@media (max-width: 1100px) {
+@media (width < 68.75rem) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
