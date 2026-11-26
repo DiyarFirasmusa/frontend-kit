@@ -1,6 +1,7 @@
 // What a crawler or a chat app receives: the server HTML, with no JavaScript. A page that only looks right
 // after hydration would pass a browser test and still fail here.
 import { expect, test } from '@playwright/test';
+import { SITE } from '../../src/config/site.config';
 import { DEFAULT_LOCALE, LANGUAGES, LOCALES } from '../../src/shared/lib/i18n/languages';
 import { ARTICLE, PAGES } from '../fixtures/app';
 import {
@@ -41,6 +42,16 @@ test.describe('server HTML of every public page', () => {
       expect(titles(html)[0]?.length ?? 0).toBeGreaterThan(5);
       expect(h1Count(html)).toBe(1);
       expect((metaContent(html, 'name', 'description') ?? '').length).toBeGreaterThanOrEqual(40);
+
+      // The browser toolbar colour, one tag per colour scheme (a failed page keeps both too).
+      expect(
+        tags(html, 'meta')
+          .filter((tag) => tag['name'] === 'theme-color')
+          .map((tag) => [tag['media'], tag['content']]),
+      ).toEqual([
+        ['(prefers-color-scheme: light)', SITE.themeColor.light],
+        ['(prefers-color-scheme: dark)', SITE.themeColor.dark],
+      ]);
 
       // Indexable, canonical to itself, absolute, same origin as the site.
       expect(metaContent(html, 'name', 'robots')).toContain('index');
@@ -122,6 +133,9 @@ test.describe('across pages', () => {
     expect(types).toEqual(expect.arrayContaining(['Article', 'BreadcrumbList']));
     expect(metaContent(html, 'property', 'og:type')).toBe('article');
     expect(metaContent(html, 'property', 'article:published_time')).toBe(ARTICLE.date);
+    // Google rejects an SVG as the article image: the covers are SVG here, so a raster file must be named.
+    const article = jsonLd(html).find((block) => block['@type'] === 'Article');
+    expect(String(article?.['image'])).toMatch(/.(png|jpe?g|webp|gif|avif)$/i);
   });
 
   test('the home page carries Organization and WebSite data', async ({ request }) => {

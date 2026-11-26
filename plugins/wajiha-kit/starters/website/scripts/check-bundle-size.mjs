@@ -13,8 +13,9 @@ import { gzipSync } from 'node:zlib';
 
 /**
  * Largest allowed gzip size in bytes: all JS and CSS a page loads (total) and the entry chunk alone.
- * Measured on the starter (home 162,477 B total with an entry of 94,392 B; news 162,139 B; contact 199,671 B,
- * which adds the form libraries) plus about 4% headroom.
+ * Measured on the starter (home 151,006 B total with an entry of 94,318 B; news 150,662 B; contact 188,352 B,
+ * which adds the form libraries). The entry has about 4% headroom: each added language costs 0.3 to 1.3 KB of it
+ * (all languages are bundled into the entry, see "Performance" in STRUCTURE.md).
  */
 const BUDGETS = {
   '/ar': { total: 169_000, entry: 98_000 },

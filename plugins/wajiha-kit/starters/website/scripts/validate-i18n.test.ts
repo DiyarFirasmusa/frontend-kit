@@ -4,6 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { DEFAULT_LOCALE, LOCALES } from '../src/shared/lib/i18n/languages.ts';
 
 const SCRIPT = join(process.cwd(), 'scripts', 'validate-i18n.ts');
 const GOOD_RESOURCES = "export const resources = import.meta.glob('/src/**/locales/*.json');\n";
@@ -11,6 +12,16 @@ const typesFor = (...aliases: string[]): string =>
   aliases.map((alias) => `import type x from '${alias}';`).join('\n');
 
 type Files = Record<string, string>;
+
+/** One `<dir>/<language>.json` per language in LOCALES: the default language gets `first`, every other one `rest`. */
+function bundle(dir: string, first: object, rest: object = first): Files {
+  return Object.fromEntries(
+    LOCALES.map((locale) => [
+      `${dir}/${locale}.json`,
+      JSON.stringify(locale === DEFAULT_LOCALE ? first : rest),
+    ]),
+  );
+}
 const roots: string[] = [];
 
 function project(extra: Files = {}, overrides: Files = {}): string {
@@ -20,10 +31,8 @@ function project(extra: Files = {}, overrides: Files = {}): string {
       '@/shared/locales/ar.json',
       '@/features/a/locales/ar.json',
     ),
-    'src/shared/locales/ar.json': JSON.stringify({ nav: { home: 'الرئيسية' } }),
-    'src/shared/locales/en.json': JSON.stringify({ nav: { home: 'Home' } }),
-    'src/features/a/locales/ar.json': JSON.stringify({ page: { title: 'عنوان' } }),
-    'src/features/a/locales/en.json': JSON.stringify({ page: { title: 'Title' } }),
+    ...bundle('src/shared/locales', { nav: { home: 'الرئيسية' } }, { nav: { home: 'Home' } }),
+    ...bundle('src/features/a/locales', { page: { title: 'عنوان' } }, { page: { title: 'Title' } }),
     'src/features/a/index.ts': "export const k = ['nav.home', 'page.title'];\n",
     ...extra,
     ...overrides,
@@ -57,8 +66,7 @@ describe('validate-i18n', () => {
 
   it('fails when a bundle is not in the typed-key file (a page added without registering its keys)', () => {
     const root = project({
-      'src/features/b/locales/ar.json': JSON.stringify({ team: { title: 'ا' } }),
-      'src/features/b/locales/en.json': JSON.stringify({ team: { title: 'a' } }),
+      ...bundle('src/features/b/locales', { team: { title: 'ا' } }, { team: { title: 'a' } }),
     });
     const { status, output } = run(root);
     expect(status).toBe(1);
@@ -76,8 +84,7 @@ describe('validate-i18n', () => {
   it('fails when two bundles share a group name, even with different keys', () => {
     const { status, output } = run(
       project({
-        'src/features/b/locales/ar.json': JSON.stringify({ page: { other: 'ا' } }),
-        'src/features/b/locales/en.json': JSON.stringify({ page: { other: 'a' } }),
+        ...bundle('src/features/b/locales', { page: { other: 'ا' } }, { page: { other: 'a' } }),
         'src/shared/lib/i18n/i18next.d.ts': typesFor(
           '@/shared/locales/ar.json',
           '@/features/a/locales/ar.json',

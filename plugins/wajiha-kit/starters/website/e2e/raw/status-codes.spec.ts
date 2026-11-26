@@ -35,9 +35,11 @@ test.describe('redirects', () => {
       ['/en/', '/en'],
       ['/EN/NEWS/', '/en/news'],
       [`/en/News/${ARTICLE.slug}/`, `/en/news/${ARTICLE.slug}`],
-      ['/ar/news/%d9%85%d9%82%d8%a7%d9%84', '/ar/news/%D9%85%D9%82%D8%A7%D9%84'],
       ['/en/news/?page=2', '/en/news?page=2'],
       ['/AR//About//', '/ar/about'],
+      // A slug in another case goes to the stored spelling, in one hop, because that page exists.
+      [`/en/news/${ARTICLE.slug.toUpperCase()}`, `/en/news/${ARTICLE.slug}`],
+      [`/EN/NEWS/${ARTICLE.slug.toUpperCase()}/?x=1`, `/en/news/${ARTICLE.slug}?x=1`],
     ] as const) {
       const response = await request.get(from, { maxRedirects: 0 });
       expect(response.status(), from).toBe(301);
@@ -45,16 +47,30 @@ test.describe('redirects', () => {
     }
   });
 
-  test('a slug keeps its case: it is never rewritten, so a mixed-case or encoded slug is looked up as written', async ({
+  test('a redirect always lands on a page: its target answers 200, never 404', async ({
     request,
   }) => {
+    const response = await request.get(`/EN/NEWS/${ARTICLE.slug.toUpperCase()}/`);
+    expect(response.url()).toMatch(new RegExp(`/en/news/${ARTICLE.slug}$`));
+    expect(response.status()).toBe(200);
+  });
+
+  test('a URL that names nothing is a direct 404, never a redirect to one', async ({ request }) => {
     for (const path of [
-      `/en/news/${ARTICLE.slug.toUpperCase()}`,
+      '/EN/NOTHING/',
+      '/xx/',
+      '/zz/about/',
+      '/en/Nothing',
+      '/EN/NEWS/NO-SUCH-ARTICLE/',
+      '/en/news/No-Such-Article',
+      `/en/news/${ARTICLE.slug}/extra`,
+      '/ar/news/%d9%85%d9%82%d8%a7%d9%84',
       '/ar/news/%D9%85%D9%82%D8%A7%D9%84',
       '/ar/news/مقال',
     ]) {
       const response = await request.get(path, { maxRedirects: 0 });
       expect(response.status(), path).toBe(404);
+      expect(response.headers()['location'], path).toBeUndefined();
     }
   });
 
@@ -71,7 +87,8 @@ test.describe('not found', () => {
   for (const path of [
     '/zz',
     '/zz/about',
-    '/fr/about',
+    '/xx/about',
+    '/EN/about/extra',
     '/en/nothing/extra',
     '/ar/does-not-exist',
     '/en/news/no-such-article',
