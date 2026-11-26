@@ -4,7 +4,7 @@ import { waitFor } from '@/test/render';
 import { qk } from '../api/query-keys';
 import { getAdminQueryClient } from '../lib/query-client';
 import { startSession } from '../store/session';
-import { prefetchOverview, prefetchSuppliers } from './prefetch';
+import { prefetchSuppliers } from './prefetch';
 import { suppliersListParams } from './supplier-search';
 
 function signIn(): void {
@@ -44,16 +44,6 @@ describe('route prefetch', () => {
       pageSize: 10,
     });
     expect(suppliersListParams({ q: 'abc', page: 3 })).toMatchObject({ q: 'abc', page: 3 });
-  });
-
-  it('prefetches the overview numbers', async () => {
-    signIn();
-    prefetchOverview();
-    await waitFor(() => {
-      expect(getAdminQueryClient().getQueryData(qk.overview)).toMatchObject({
-        suppliers: { total: expect.any(Number) },
-      });
-    });
   });
 
   it('fails silently: no error toast and nothing thrown (the page asks again and shows the error)', async () => {

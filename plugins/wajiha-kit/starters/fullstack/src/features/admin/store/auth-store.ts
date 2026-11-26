@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { usePermissionStore } from './permission-store';
+import { SESSION_STORE_VERSION, sessionPersistStorage } from './session-storage';
 
 export type AdminUser = { id: string; username: string; name: string };
 
@@ -32,7 +33,7 @@ export const useAuthStore = create<AuthState>()(
         usePermissionStore.getState().clear();
       },
     }),
-    { name: 'admin-auth', version: 1, storage: createJSONStorage(() => sessionStorage) },
+    { name: 'admin-auth', version: SESSION_STORE_VERSION, storage: sessionPersistStorage() },
   ),
 );
 

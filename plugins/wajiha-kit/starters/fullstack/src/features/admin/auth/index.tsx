@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/common/language-switcher';
 import { ThemeToggle } from '@/components/common/theme-toggle';
@@ -22,6 +23,13 @@ export function LoginPage({
 }) {
   const { t } = useTranslation();
   const page = useLoginPage({ locale, redirect });
+  const heading = useRef<HTMLHeadingElement>(null);
+
+  // The login page sits outside the shell (no route announcer). After a sign-out or a 401 the element that
+  // had focus is gone and focus would fall to <body>: put it on the page's heading instead.
+  useEffect(() => {
+    heading.current?.focus({ preventScroll: true });
+  }, []);
 
   return (
     <div className="bg-background p-row flex min-h-dvh flex-col">
@@ -35,7 +43,9 @@ export function LoginPage({
             <img src="/favicon.svg" alt="" width="40" height="40" className="size-10" />
             <div>
               <p className="text-b3 text-text-muted">{siteName(locale)}</p>
-              <h1 className="text-h2">{t('login.title')}</h1>
+              <h1 ref={heading} tabIndex={-1} className="text-h2">
+                {t('login.title')}
+              </h1>
             </div>
           </div>
           {expired ? (

@@ -40,6 +40,14 @@ describe('login page', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
+  it('puts focus on the page heading, so a sign-out does not leave it on <body>', async () => {
+    await renderAtUrl(<LoginPage locale="en" />, { url: '/en/admin/login' });
+    const heading = await screen.findByRole('heading', { level: 1, name: tt('login.title') });
+    await waitFor(() => {
+      expect(heading).toHaveFocus();
+    });
+  });
+
   it('asks for both fields before it sends anything', async () => {
     const { user } = await renderAtUrl(<LoginPage locale="en" />, { url: '/en/admin/login' });
     await user.click(await screen.findByRole('button', { name: tt('login.submit') }));

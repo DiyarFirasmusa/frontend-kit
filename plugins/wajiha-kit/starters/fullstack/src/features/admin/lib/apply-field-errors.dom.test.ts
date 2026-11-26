@@ -60,6 +60,26 @@ describe('reportSaveError', () => {
     ]);
   });
 
+  it('keeps the message of a field the form does not show when other fields were placed', () => {
+    const form = setup();
+    reportSaveError(
+      form,
+      httpError(400, {
+        errors: [
+          { field: 'code', message: 'taken' },
+          { field: 'ghost', message: 'GHOST MESSAGE' },
+          { field: 'address.city', message: 'NESTED MESSAGE' },
+        ],
+      }),
+      NAMES,
+    );
+    expect(form.getFieldState('code').error?.message).toBe('taken');
+    expect(useToastStore.getState().toasts.map((toast) => toast.message)).toEqual([
+      { text: 'GHOST MESSAGE' },
+      { text: 'NESTED MESSAGE' },
+    ]);
+  });
+
   it('toasts a network error by its generic key', () => {
     reportSaveError(setup(), new Error('offline'), NAMES);
     expect(useToastStore.getState().toasts.map((toast) => toast.message)).toEqual([

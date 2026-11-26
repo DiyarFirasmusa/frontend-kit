@@ -9,9 +9,10 @@ import { onSessionExpired } from '../api/session-events';
 import { endAdminSession } from './end-session';
 
 /**
- * Everything the admin owns, mounted by its layout route: its QueryClient (made in the route's beforeLoad and
- * kept in the router context; the public site has none), the toast region, tooltips, and the "session ended"
- * listener that sends the user back to login.
+ * Everything the admin owns, mounted by its layout route: its QueryClient (the module singleton from
+ * lib/query-client.ts, passed in by the route; the public site has none), the toast region, tooltips, and
+ * the "session ended" listener that sends the user back to login. A 401 that came back before this mounted
+ * (a loader's prefetch on a hard reload) is kept by session-events and delivered when the listener subscribes.
  */
 export function AdminRoot({ locale, queryClient }: { locale: Locale; queryClient: QueryClient }) {
   const navigate = useNavigate();

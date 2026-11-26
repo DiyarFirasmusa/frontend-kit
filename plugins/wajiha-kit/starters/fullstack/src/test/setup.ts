@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
+import { forgetMissedSessionExpiry } from '@/features/admin/api/session-events';
 import { resetMockDb } from '@/features/admin/mocks/db';
 import { useAuthStore } from '@/features/admin/store/auth-store';
 import { useToastStore } from '@/shared/store/toast-store';
@@ -48,6 +49,7 @@ afterEach(async () => {
   cleanup();
   server.resetHandlers();
   resetMockDb();
+  forgetMissedSessionExpiry();
   useToastStore.getState().clear();
   vi.restoreAllMocks();
   useAuthStore.getState().clear();

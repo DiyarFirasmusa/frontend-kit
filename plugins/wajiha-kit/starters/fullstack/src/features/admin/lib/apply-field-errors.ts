@@ -29,8 +29,9 @@ export function applyFieldErrors<T extends FieldValues>(
 
 /**
  * What a form does when its save fails (the request was sent with `silentError: true`): the backend's
- * field errors go under their inputs and nothing else is shown; with no field to blame, the error is
- * toasted like any other. A cancelled request is not an error.
+ * field errors go under their inputs; a message for a field this form does not show is toasted (never
+ * dropped, the user must learn why the save failed); with no field to blame at all, the error is toasted
+ * like any other. A cancelled request is not an error.
  */
 export function reportSaveError<T extends FieldValues>(
   form: UseFormReturn<T>,
@@ -42,7 +43,13 @@ export function reportSaveError<T extends FieldValues>(
   }
   const problem = parseApiProblem(error);
   const unplaced = applyFieldErrors(form, problem, names);
-  if (Object.keys(problem.fields).length === unplaced.length) {
+  const blamed = Object.keys(problem.fields).length;
+  if (unplaced.length === blamed) {
+    // Nothing was placed (or there was nothing to place): one toast for the whole request.
     toast.error(apiErrorMessage(error));
+    return;
+  }
+  for (const text of unplaced) {
+    toast.error({ text });
   }
 }

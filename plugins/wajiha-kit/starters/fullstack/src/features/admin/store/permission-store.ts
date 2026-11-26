@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { SUPER_ROLE, type Permission } from '../constants/permissions';
+import { SESSION_STORE_VERSION, sessionPersistStorage } from './session-storage';
 
 type PermissionState = {
   roles: string[];
@@ -22,7 +23,7 @@ export const usePermissionStore = create<PermissionState>()(
         set({ roles: [], permissions: [] });
       },
     }),
-    { name: 'admin-permissions', version: 1, storage: createJSONStorage(() => sessionStorage) },
+    { name: 'admin-permissions', version: SESSION_STORE_VERSION, storage: sessionPersistStorage() },
   ),
 );
 

@@ -4,7 +4,7 @@ import { OverviewPage } from '@/features/admin/overview';
 
 export const Route = createFileRoute('/$locale_/admin/_shell/')({
   loader: async () => {
-    const { prefetchOverview } = await import('@/features/admin/suppliers/prefetch');
+    const { prefetchOverview } = await import('@/features/admin/overview/prefetch');
     prefetchOverview();
   },
   head: adminHead('overview.title'),

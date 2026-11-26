@@ -23,7 +23,7 @@ let shared: QueryClient | undefined;
 
 /**
  * The admin's one QueryClient, made the first time the admin is entered. AdminRoot hands it to the
- * components and the route loaders prefetch into it (suppliers/prefetch.ts), so both use the same cache.
+ * components and the route loaders prefetch into it (<feature>/prefetch.ts), so both use the same cache.
  * It never exists on the server: the admin renders in the browser only (ssr: false), so nothing here is
  * shared between visitors.
  *

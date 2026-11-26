@@ -1,5 +1,5 @@
 import { createRoute, type AnyRoute } from '@tanstack/react-router';
-import { act } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { createTestQueryClient } from '@/test/render';
 import { renderRoutes } from '@/test/render-router';
@@ -62,5 +62,25 @@ describe('<AdminRoot> session expiry', () => {
     });
     // Not "login?redirect=/en/admin/login?...": the return address stays the page the user left.
     expect(router.state.location.href).toBe(first);
+  });
+});
+
+describe('<AdminRoot> session expiry that came first', () => {
+  it('moves to login when the 401 came back before the layout mounted (a loader prefetch on a hard reload)', async () => {
+    // Nobody listens yet: the API layer clears the session and announces the expiry into the void.
+    expect(emitSessionExpired()).toBe(false);
+    const { router } = await renderRoutes(adminRoutes, { url: '/en/admin/suppliers?page=2' });
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe('/en/admin/login');
+    });
+    expect(router.state.location.search).toEqual({
+      redirect: '/en/admin/suppliers?page=2',
+      reason: 'expired',
+    });
+  });
+
+  it('does not send anyone to login when nothing expired', async () => {
+    const { router } = await renderRoutes(adminRoutes, { url: '/en/admin/suppliers' });
+    expect(router.state.location.pathname).toBe('/en/admin/suppliers');
   });
 });
