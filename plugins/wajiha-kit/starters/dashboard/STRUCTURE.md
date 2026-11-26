@@ -1,7 +1,8 @@
 # هيكل مشروع الداشبورد (Dashboard Starter)
 
 نقطة بداية لداشبورد إداري: React 19 + Vite، عربي (من اليمين لليسار) وإنجليزي، فاتح وداكن.
-فيه خمس صفحات تجريبية (والتصنيفات لها تبويب ثاني بمسار خاص) تشتغل على داتا وهمية بالمتصفح، فتشتغل بدون باكند.
+فيه خمس صفحات تجريبية (والتصنيفات لها صفحة ثانية للخصائص بمسار خاص) تشتغل على داتا وهمية بالمتصفح، فتشتغل بدون باكند.
+كل القوائم فيها بنفس الشكل (الموردون هم المرجع): الحالة بالرابط، والترقيم والترتيب والفلاتر من السيرفر.
 
 التشغيل: `npm install` ثم `npm run dev`، وبعدها `http://localhost:3000`.
 تسجيل الدخول يقبل أي اسم وكلمة مرور (لأن `VITE_USE_MOCK="true"` بملف `.env.development`).
@@ -15,14 +16,14 @@
 
 ## الصفحات الخمس
 
-| الصفحة       | المسار                                     | فيها                                                                                                                |
-| ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| الرئيسية     | `/`                                        | أربع بطاقات (مستودعات، موردون، تصنيفات، وحدات) برسم صغير، رسم النشاط خلال 30 يوماً، آخر التغييرات                   |
-| المستودعات   | `/warehouses` و `/warehouses/$warehouseId` | جدول بفلاتر وبحث وتصدير Excel، إضافة وتعديل وحذف، صفحة تفاصيل بتبويبات (نظرة عامة، المواقع، الأعضاء، سجل التغييرات) |
-| الموردون     | `/suppliers`                               | **الكيان المرجعي**: ترقيم وترتيب من السيرفر، الفلاتر بالرابط، فورم إضافة وتعديل، حذف بتأكيد، صلاحيات                |
-| التصنيفات    | `/categories`                              | شجرة تصنيفات بثلاث مستويات، خصائص مرتبطة وموروثة                                                                    |
-| الخصائص      | `/attributes`                              | التبويب الثاني لنفس ميزة التصنيفات: تعريف الخصائص وخياراتها بترتيب (له مسار وعنصر بالقائمة)                         |
-| وحدات القياس | `/units-of-measure`                        | جدول بفلاتر وفورم وحذف                                                                                              |
+| الصفحة       | المسار                                     | فيها                                                                                                                           |
+| ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| الرئيسية     | `/`                                        | أربع بطاقات (مستودعات، موردون، تصنيفات، وحدات) برسم صغير، رسم النشاط خلال 30 يوماً، آخر التغييرات                              |
+| المستودعات   | `/warehouses` و `/warehouses/$warehouseId` | قائمة بالشكل المرجعي (حالة ونوع وبحث، تصدير Excel)، وصفحة تفاصيل بتبويبات بالرابط (نظرة عامة، المواقع، الأعضاء، سجل التغييرات) |
+| الموردون     | `/suppliers`                               | **الكيان المرجعي**: ترقيم وترتيب من السيرفر، الفلاتر بالرابط، فورم إضافة وتعديل، حذف بتأكيد، صلاحيات                           |
+| التصنيفات    | `/categories`                              | شجرة تصنيفات بثلاث مستويات (الشجرة كاملة من السيرفر، البحث والعقدة المختارة بالرابط)، خصائص مرتبطة وموروثة                     |
+| الخصائص      | `/attributes`                              | صفحة قائمة كاملة بالشكل المرجعي داخل ميزة التصنيفات (`pages/attributes/`)، لها مسار وعنصر بالقائمة                             |
+| وحدات القياس | `/units-of-measure`                        | بالشكل المرجعي + فلتر المنازل العشرية                                                                                          |
 
 وبالإضافة لها: تسجيل الدخول، وصفحات الأخطاء 401 و403 و404 و500.
 
@@ -50,7 +51,10 @@
 | تشغيل                                               | `npm run dev`                                              |
 | فحص الأنواع                                         | `npm run typecheck`                                        |
 | اللنت (يفشل حتى على التحذيرات)                      | `npm run lint:check` ، والإصلاح `npm run lint`             |
+| إثبات أن قاعدة حدود الطبقات تشتغل                   | `npm run lint:probe` (ضمن `check`)                         |
 | التنسيق                                             | `npm run fmt:check` ، والكتابة `npm run fmt`               |
+| توليد `routeTree.gen.ts` بدون تشغيل Vite            | `npm run routes`                                           |
+| بعد أي تعديل: المسارات + إصلاح اللنت + التنسيق      | `npm run fix`                                              |
 | الاختبارات                                          | `npm run test`                                             |
 | اختبارات المتصفح (عربي وإنجليزي × فاتح وداكن + axe) | `npm run test:e2e` (مرة واحدة قبلها `npm run e2e:install`) |
 | توليد ملفات الألوان                                 | `npm run tokens`                                           |
@@ -88,7 +92,8 @@ src/style/
 - **بدون وميض عند التحميل**: السكربت `public/theme-init.js` يُحمَّل من `<head>` قبل أول رسم، ويضبط `dark` و `data-preset` و `data-density` و `lang` و `dir`.
   اختار ملف خارجي مو سكربت داخل الصفحة حتى يبقى `script-src 'self'` شغّال.
 - **وضع الثيم**: `light` أو `dark` أو `system` (الافتراضي `system`، يتبع النظام). الزر الجانبي يحفظ الاختيار الصريح فقط.
-- **الكثافة**: `data-density="compact"` على `<html>` يصغّر ارتفاع الأزرار والحقول (`--control-h*`).
+- **الكثافة**: `data-density="compact"` على `<html>` يصغّر ارتفاع الأزرار والحقول (`--control-h*`) وصف الجدول (`--row-h`: 62 مريح و52 مضغوط، والصف والهيكل العظمي يستخدمون نفس المتغير).
+- **الأحجام بالعربي**: الحروف العربية تبدو أصغر من اللاتينية بنفس الحجم، فتحت `:lang(ar)` تكبر الأنماط الصغيرة بنقطة (`b2` `b3` `label` `button-2` `table-header`) وتنفتح أسطر العناوين (`h1` `h2` `h3`) حتى ما تنقص نقاط الحروف. الجدول `TYPE_RAMP_ARABIC` بـ`foundation.ts`، واختبار يمنع التصغير.
 - **`cn()`** يستخدم `twMerge` ومعه تعريف لكلاسات سلّم الخط (`text-h1` ...) حتى ما تضيع قبل `text-text-primary`.
 
 ## هيكل المجلدات
@@ -97,8 +102,8 @@ src/style/
 dashboard-starter/
 ├── e2e/                         → اختبارات Playwright (fixtures/ فيها mock لكل صفحة)
 ├── public/                      → الأيقونات، theme-init.js، mockServiceWorker.js
-├── scripts/                     → generate-tokens.ts، generate-icons.ts، validate-i18n.ts (كلها Node، بدون bun)
-├── vite/                        → pwa.ts (اختياري)، pwa-register-stub.ts، vendor-chunks.ts
+├── scripts/                     → generate-tokens.ts، generate-icons.ts، validate-i18n.ts، generate-routes.ts، probe-lint-boundaries.ts (كلها Node، بدون bun)
+├── vite/                        → pwa.ts (اختياري)، pwa-register-stub.ts، vendor-chunks.ts، router-options.ts (نفس إعداد الراوتر للـVite وللسكربت)
 ├── src/
 │   ├── main.tsx  router.tsx  env.ts
 │   ├── routes/                  → ملفات رفيعة: _auth/login، _app/ (كل صفحة تتحقق من الصلاحية)، (errors)/
@@ -114,8 +119,9 @@ dashboard-starter/
 │   │   └── auth/can.tsx         → <Can> و useCan و useCanAny
 │   ├── api/                     → client/ (privateApi، publicApi)، core/، error/، auth/ (تجديد التوكن، أحداث الجلسة)
 │   ├── constants/               → api.ts (العناوين)، query-keys.ts، permissions.ts، enums.ts، audit-entities.ts
-│   ├── types/api/               → أنواع عقد الباكند (DTO) للصفحات الخمس
-│   ├── hooks/ services/ store/ context/ guards/ lib/ utils/ validations/
+│   ├── types/api/               → أنواع عقد الباكند (DTO) للصفحات الخمس؛ types/routes.ts: مسارات بلا معاملات مأخوذة من شجرة المسارات المولّدة
+│   ├── hooks/                   → use-list-search (الترقيم والترتيب والفلاتر بالرابط)، use-delete-dialog، use-list-export، use-delete-target ...
+│   ├── services/ store/ context/ guards/ lib/ utils/ validations/
 │   ├── lib/theme.ts  lib/i18n/  → حالة الثيم، اللغات
 │   ├── locales/                 → ar.json و en.json (النصوص العامة) + locales/ لكل ميزة
 │   ├── style/                   → فوق
@@ -144,29 +150,42 @@ dashboard-starter/
 - **الصلاحيات تفاعلية**: `useCan()` يرجّع `can` ويمر للدوال الصافية بـ`*-actions.ts`. فعل مسموح عموماً بس مرفوض لهالصف
   (مورد مستخدم بمستندات) يبقى ظاهر بـ`aria-disabled` مع السبب، والضغط عليه ما يرسل شي.
 
-باقي الصفحات (المستودعات، التصنيفات، الوحدات) أقدم: قوائمها ترقّم بالمتصفح (`ClientDataTable`). تبقى مرجعاً لأشياء ما بالموردين
-(صفحة تفاصيل بتبويبات، شجرة، مفاتيح داخل الجدول). انقلها لشكل الموردين لما تشتغل عليها.
+باقي الصفحات (المستودعات، التصنيفات والخصائص، الوحدات) انتقلت لنفس الشكل وتزيد عليه شيئاً واحداً لكل صفحة:
+فلتر ثاني (الوحدات)، صفحة تفاصيل بتبويبات بالرابط (المستودعات)، شجرة قادمة كاملة من السيرفر مع بحثها وعقدتها المختارة بالرابط
+وصفحة قائمة ثانية `pages/attributes/` (التصنيفات). الأجزاء المشتركة بين كل القوائم بـ`src/hooks` (`use-list-search` و`use-delete-dialog` و`use-list-export`)،
+لا بالميزات. `ClientDataTable` انحذف: كل الجداول `DataTable`، والقائمة الصغيرة غير المرقّمة تستخدم `hidePagination`.
+
+**حدود الطبقات** (قاعدة لنت يولّدها `oxlint.config.ts` من المجلدات): الكود المشترك (`components` `hooks` `lib` `utils` `constants` `services` `store` `types` `validations` `guards` `context` `mocks`) ما يستورد من `features` ولا `layout` ولا `routes`؛
+والميزة ما تستورد ميزة ثانية (إلا `features/fallback` وهي شاشات الأخطاء المشتركة) ولا تطلع من مجلدها بمسار نسبي. القاعدة تمسك الاستيراد بـ`@/` وبالمسار النسبي وبكل عمق مجلد،
+و`npm run lint:probe` يكتب ملفات مخالفة مؤقتة (528 استيراداً مخالفاً) ويفشل إذا لم يُمسك أحدها.
 
 ## إضافة كيان جديد
 
-مثال: كيان اسمه `customers`. **انسخ مجلد واحد وعدّل 11 ملف**:
+مثال: كيان اسمه `customers`. **انسخ مجلد واحد وعدّل 11 ملفاً خارجه، ثم أمر واحد** (جُرّبت الخطوات فعلاً على نسخة: 8 اختبارات e2e للكيان الجديد نجحت، واللنت والتنسيق والمسبار نظيفين):
 
-1. انسخ `src/features/dashboard/suppliers/` إلى `src/features/dashboard/customers/` وبدّل الأسماء (`supplier` ← `customer`).
+1. انسخ `src/features/dashboard/suppliers/` إلى `src/features/dashboard/customers/` وبدّل الأسماء بالمجلد كله (أسماء الملفات والمحتوى: `supplier` ← `customer`).
    عدّل الحقول حسب OpenAPI: `types/types.ts` و`validations/*` و`services/*` والأعمدة والحوار والترجمات.
 2. `src/types/api/customers.ts`: أنواع الطلب والرد (أو ولّدها: `npx openapi-typescript docs/api/openapi.json -o src/types/api/schema.ts`).
 3. `src/constants/api.ts`: العناوين.
 4. `src/constants/query-keys.ts`: `qk.customers` (`all` و`lists` و`list(params)` و`detail(id)`).
 5. `src/constants/permissions.ts`: `PERMS.customer` بالمفاتيح `view/create/update/delete` وقيم الباكند نفسها.
 6. `src/routes/_app/customers/index.tsx`: انسخ ملف مسار الموردين (حارس + `validateSearch` + `loaderDeps` + `loader`).
-7. `src/layout/dashboard/sidebar/config/nav-config.ts`: عنصر القائمة مع `permission`.
-8. و 9. `src/locales/ar.json` و`en.json`: `nav.customers`.
+7. `src/layout/dashboard/sidebar/config/nav-config.ts`: عنصر القائمة مع `permission`. المسار `to` نوعه مأخوذ من شجرة المسارات المولّدة (`StaticRoutePath`)،
+   فالغلط بالمسار يفشل الـ`typecheck` وما تحتاج تحدّث قائمة أنواع بيدك.
+8. `src/locales/ar.json` و9. `en.json`: `nav.customers`.
 9. `PERMISSIONS.md`: سطر بالجدول (اختبار `route-guards.test.ts` يفشل بدونه).
-10. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين؛ الجدول `seedTable(() => [...])` ممكن يكون بنفس الملف)
-    وأضفه بـ`src/mocks/index.ts`. إذا الباكند جاهز تقدر تتخطى هالخطوة.
+10. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين مع جدول `seed/`) وسجّله بـ`src/mocks/index.ts`. إذا الباكند جاهز تقدر تتخطى هالخطوة.
+
+ثم: **`npm run fix`** يولّد `routeTree.gen.ts` (بدون تشغيل Vite) ويصلح اللنت ويكتب التنسيق، وبعده `npm run check`.
+اختبار `src/constants/permissions.test.ts` يثبّت قائمة الصلاحيات عمداً، فبعد إضافة `PERMS.customer` حدّثه بـ`npx vitest run src/constants -u`.
+قاعدة حدود الطبقات تغطي المجلد الجديد تلقائياً (تُولَّد من المجلدات) و`npm run lint:probe` يتأكد.
 
 الاختبارات: انسخ `e2e/suppliers.spec.ts` وأضف صفحة بـ`e2e/a11y-pages/`؛ الاثنين يستخدمون `mockApi.backend()` (نفس handlers
 `src/mocks`)، فما تحتاج ملف fixture خاص. اختبارات الوحدة بالمجلد المنسوخ تستخدم `server.use(...customerHandlers)` و`renderApp('/customers')`
 (المسار الحقيقي مع الحارس والـloader).
+
+عدد الملفات: **11 ملفاً خارج المجلد المنسوخ** (كان 11 أيضاً لكن بعدها أمران بيدك: تشغيل خادم التطوير أو البناء لتوليد شجرة المسارات، وتنسيق الملفات).
+الآن الأمران صارا `npm run fix`، وقائمة التنقل ما عاد لها نوع مكتوب بيدك.
 
 ## الوحدات الاختيارية (مطفية افتراضياً)
 
@@ -183,7 +202,7 @@ PWA: الألوان من الثيم الافتراضي، أيقونات PNG 192 
 
 - **طبقة وحدة**: نفس handlers تخدم المتصفح (`npm run dev`)، واختبارات الوحدة (`server.use(...supplierHandlers)`)،
   وPlaywright (`mockApi.backend()` يمرر كل طلب لـ`getResponse` من MSW). المسارات تطابق أي origin (`*/api/...`).
-  `resetMockDb()` يرجّع الجداول للبداية قبل كل اختبار. ملفات `e2e/fixtures/` للصفحات القديمة باقية لحد ما تنتقل.
+  `resetMockDb()` يرجّع الجداول للبداية قبل كل اختبار. ملفات `e2e/fixtures/` (`home.ts` و`warehouses.ts`) تبقى فقط لاختبارات الرئيسية والبحث العام والإشعارات التي تحتاج ردوداً ثابتة بعينها؛ كل صفحات القوائم تستخدم `mockApi.backend()`.
 - **شكل الردود مثل باكند OpenAPI عادي**: القوائم مرقّمة (`?page=0&size=10&sort=name,asc` ← `{content, totalElements, ...}`)،
   التحقق 422 بشكل problem+json مع `errors: { field: [..] }`، 404 لسجل غير موجود، 409 لما قاعدة ترفض.
 
@@ -214,7 +233,7 @@ PWA: الألوان من الثيم الافتراضي، أيقونات PNG 192 
 - توحيد الأسماء: `use-<x>-list-page` و `use-<x>-list` و `<x>-status` و `<x>-export-columns` و `<x>-test-utils`، و`deleteTarget` بكل مكان (كانت `removeTarget` ببعضها).
 - هوك واحد للحذف `useDeleteTarget` بدل نفس الحالة منسوخة بثلاث صفحات.
 - `use-refresh-token` طلع من `hooks/` إلى `api/auth/` (طبقة الـAPI ما تستورد من الهوكات)، وانتهاء الجلسة صار حدثاً يسمعه الراوتر بدل `window.location.href`.
-- حدود الطبقات بقاعدة لنت: `components` و `lib` و `utils` و `hooks` ما تستورد من `features` أو `layout` أو `routes`، و`api` ما تستورد من الواجهة.
+- حدود الطبقات بقاعدة لنت تُولَّد من المجلدات وتمسك `@/` والمسار النسبي بكل عمق (الكود المشترك، والميزات بعضها عن بعض، و`api` عن الواجهة)، ويثبتها `npm run lint:probe` (فوق).
 - سكربتات تشتغل على ويندوز: `build` بدون `NODE_ENV=`، وبدون `bun` بأي مكان، وسكربت `i18n:validate` كتبناه فعلاً.
 - أسماء المنتج الأصلي وعناوين خوادمه واسم الشركة بالداتا التجريبية استُبدلت بأسماء عامة.
 - ملفات كانت فوق 400 سطر انقسمت: `chart.tsx` إلى ثلاثة ملفات، و`data-table.tsx` استخرج البحث والترتيب، وملفا `mocks` الضخمان صارا ملفاً لكل ميزة.
@@ -228,13 +247,14 @@ PWA: الألوان من الثيم الافتراضي، أيقونات PNG 192 
 ## حالة الفحوصات (آخر تشغيل فعلي، ويندوز 11)
 
 - `npm run typecheck`: يمر.
-- `npm run lint:check` (`--deny-warnings`) و`npm run fmt:check`: يمرون (على نسخة خارج المستودع، شوف الملاحظة تحت).
-- `npm run test`: 235 ملفاً و1428 اختباراً، كلها تمر بحوالي 45 ثانية (كانت 333 ثانية).
+- `npm run lint:check` (`--deny-warnings`) و`npm run fmt:check`: يمرون (706 ملفاً، على نسخة خارج المستودع، شوف الملاحظة تحت). `npm run lint:probe`: 528 استيراداً مخالفاً كلها تُمسك، و291 مسموحاً نظيفين.
+- `npm run test`: 211 ملفاً و1327 اختباراً، كلها تمر بحوالي 34 ثانية (كانت 333 ثانية).
   السبب: `isolate: false` بـ`vitest.config.ts` (الوحدات تنحمّل مرة لكل عامل)، و`src/test/setup.ts` يرجّع بعد كل اختبار
   المخازن والتخزين وhandlers الـMSW وقاعدة الداتا الوهمية ومؤقتات vitest وحالة الاتصال بـTanStack Query.
-  لا تستخدم `vi.mock` (يتسرّب بين الملفات بهالوضع).
-- `npm run build`: يمر. أول تحميل حوالي 290 كيلوبايت JS مضغوط. بدون الداتا الوهمية يُحذف `mockServiceWorker.js` من `dist`.
-- `npm run test:e2e`: 288 اختباراً (4 مشاريع)، كلها تمر بحوالي 5 دقائق. `e2e/global-setup.ts` يسخّن سيرفر Vite قبل العمّال.
+  لا تستخدم `vi.mock` (يتسرّب بين الملفات بهالوضع). والملفان اللذان يستدعيان `vi.resetModules()` (`env.test.ts` و`monitoring.test.ts`)
+  يشتغلان بأمر ثاني معزول (`npm run test:isolated`، جزء من `npm run test`): بدون ذلك كانت ملفات تالية بنفس العامل تفشل أحياناً بـ"Network Error" حسب ترتيب التشغيل.
+- `npm run build`: يمر. بدون الداتا الوهمية يُحذف `mockServiceWorker.js` من `dist`.
+- `npm run test:e2e`: 320 اختباراً (4 مشاريع). `e2e/global-setup.ts` يسخّن سيرفر Vite قبل العمّال.
 
 ملاحظة: oxlint يتجاهل ملفات المجلد إذا كان المجلد داخل `.gitignore` لمستودع أب (مثل `playground/` بمستودع الكيت).
 داخل مستودعك الخاص يشتغل عادي.

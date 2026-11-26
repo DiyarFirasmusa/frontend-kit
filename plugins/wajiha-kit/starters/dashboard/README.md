@@ -64,7 +64,10 @@ API (`VITE_USE_MOCK="false"`).
 | `npm run tokens`                      | Regenerate `src/style/theme.css` and `preset.css` from `src/style/tokens`               |
 | `npm run icons`                       | Render the PNG icons from `public/icon.svg`                                             |
 | `npm run i18n:validate`               | Fail when a language is missing keys another has                                        |
-| `npm run check`                       | typecheck + lint + format + test                                                        |
+| `npm run routes`                      | Regenerate `src/routeTree.gen.ts` without starting Vite                                 |
+| `npm run fix`                         | routes + lint fix + format (run it after adding files)                                  |
+| `npm run lint:probe`                  | Prove the layer-boundary lint rule fires (temporary violating files)                    |
+| `npm run check`                       | typecheck + lint + boundary probe + format + test                                       |
 
 ## Add an entity
 
