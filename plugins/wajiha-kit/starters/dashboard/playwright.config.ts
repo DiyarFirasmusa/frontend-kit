@@ -21,6 +21,9 @@ interface AppOptions {
 
 export default defineConfig<AppOptions>({
   testDir: './e2e',
+  /* Loads the app once before the workers start, so the first wave of tests
+     does not time out while Vite transforms every module on a cold start. */
+  globalSetup: './e2e/global-setup.ts',
   fullyParallel: true,
   forbidOnly: IS_CI,
   retries: IS_CI ? 2 : 0,
