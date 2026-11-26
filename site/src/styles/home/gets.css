@@ -1,171 +1,89 @@
-/* WHAT YOU GET: four things in a row on the page ground, each a small window that shows it (the folder, the page, the
-   report, the two languages), with its name and one line under it. The windows are the site's one window, so light mode
-   follows. Layer skin-page (home/index.css). */
-.gets-list {
+/* WHAT CAN YOU BUILD: inside the board (like "Start", and as tall as it), the three kinds side by side: a window that shows
+   the kind, its name, one line, and something you could say to Claude to get it (orange: it is what you do). The windows
+   are the site's one window, so light mode follows. Layer skin-page (home/index.css). */
+#builds .board-main {
+  box-sizing: border-box;
+  min-block-size: var(--start-height, 30rem);
+}
+
+.kinds {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1.25rem, 2.5vw, 2rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(1rem, 2.5vw, 2rem);
   margin: 0;
-  padding: clamp(0.75rem, 2vw, 1.5rem);
+  padding: 0.5rem clamp(0.75rem, 2vw, 1.5rem);
   list-style: none;
 }
 
-.gets-item {
+.kind {
   display: grid;
-  grid-template-rows: auto auto 1fr;
-  gap: 0.5rem;
-  align-content: start;
+  gap: 0.45rem;
+  min-inline-size: 0;
 }
 
-.gets-shot {
+.kind-window {
   display: flex;
   flex-direction: column;
-  block-size: 12.75rem;
   margin-block-end: 0.6rem;
   overflow: hidden;
   border-radius: 0.9rem;
 }
 
-.gets-item.is-folder .gets-shot {
-  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--accent) 70%, transparent);
-}
-
-.gets-item.is-languages .gets-shot {
-  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--turq) 70%, transparent);
-}
-
-.gets-body {
-  flex: 1 1 auto;
-  min-block-size: 0;
-  padding: 0.9rem;
+.kind-page {
+  display: flex;
+  aspect-ratio: 16 / 8.2;
+  overflow: hidden;
+  padding: 0.7rem;
   container-type: inline-size;
+  font-size: calc(100cqw * 0.022);
 }
 
-.gets-item h3 {
+.kind h3 {
   margin: 0;
   color: var(--ivory);
-  font-size: 1.125rem;
-  line-height: 1.3;
+  font-size: clamp(1.25rem, 1rem + 0.7vw, 1.6rem);
+  line-height: 1.2;
 }
 
-.gets-item > p {
+.kind-line {
   margin: 0;
   color: var(--muted);
   font-size: 0.9375rem;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
-/* The folder: a small tree of files. */
-.gets-tree {
+.kind-say {
   display: grid;
-  gap: 0.35rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--muted);
-  font: 500 0.8125rem/1.4 var(--code);
-}
-
-.gets-tree li:not(.is-root)::before {
-  content: '\251C  ';
-  color: rgb(var(--ink-rgb) / 0.35);
-}
-
-.gets-tree li.is-last::before {
-  content: '\2514  ';
-}
-
-.gets-tree .is-root {
+  gap: 0.15rem;
+  margin: 0.35rem 0 0;
+  padding-block-start: 0.6rem;
+  border-block-start: 1px solid rgb(var(--ink-rgb) / 0.14);
   color: var(--ivory);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.kind-say span {
+  color: var(--accent);
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 
-/* The page: the drawing of a site. */
-.gets-page {
-  block-size: 100%;
-  font-size: calc(100cqw * 0.042);
-}
-
-/* The report: three checks. */
-.gets-report {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.875rem;
-}
-
-.gets-report li {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid rgb(var(--ink-rgb) / 0.12);
-  border-radius: 0.6rem;
-  color: var(--ivory);
-}
-
-.gets-report b {
-  display: grid;
-  place-items: center;
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
-  border-radius: 50%;
-  background: var(--turq);
-  color: #141413;
-  font-size: 0.7rem;
-}
-
-/* The two languages: the same page, one reading from the right, one from the left. */
-.gets-languages {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
-  block-size: 100%;
-}
-
-.gets-languages p {
-  display: grid;
-  align-content: start;
-  gap: 0.45rem;
-  margin: 0;
-  padding: 0.7rem;
-  border: 1px solid rgb(var(--ink-rgb) / 0.12);
-  border-radius: 0.6rem;
-}
-
-.gets-languages strong {
-  color: var(--ivory);
-  font-size: 1rem;
-}
-
-.gets-languages i {
-  display: block;
-  block-size: 0.4rem;
-  border-radius: 0.2rem;
-  background: rgb(var(--ink-rgb) / 0.18);
-}
-
-.gets-languages i:last-child {
-  inline-size: 60%;
-}
-
-/* Motion with the scroll (reveal.ts sets --p): the four come up one a little after the other. */
+/* With the scroll (reveal.ts sets --p): the three come up one a little after the other. */
 @media (prefers-reduced-motion: no-preference) {
-  .gets-item[data-scroll='rise'] {
-    transform: translateY(calc((1 - var(--p, 1)) * (4rem + var(--k, 0) * 2.5rem))) scale(calc(0.94 + var(--p, 1) * 0.06));
+  .kind[data-scroll='rise'] {
+    transform: translateY(calc((1 - var(--p, 1)) * (3rem + var(--k, 0) * 2.5rem)));
   }
 }
 
-@media (width < 62rem) {
-  .gets-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (width < 56.25rem) {
+  #builds .board-main {
+    min-block-size: 0;
   }
-}
 
-@media (width < 40rem) {
-  .gets-list {
+  .kinds {
     grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
   }
 }

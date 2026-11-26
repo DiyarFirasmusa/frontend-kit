@@ -9,10 +9,9 @@ import { all } from './dom.ts'
  * For a visitor who asked for less motion nothing is marked, so nothing moves.
  */
 const kinds: [string, string][] = [
-  ['main.home > section:not(#intro, #example, #get) > .column', 'rise'],
-  ['main.home #get > .section-head', 'rise'],
-  ['main.home #get .board-top', 'rise'],
-  ['main.home #get .gets-item', 'rise'],
+  ['main.home > section:not(#intro, #example, #builds) > .column', 'rise'],
+  ['main.home #builds > .section-head', 'rise'],
+  ['main.home #builds .kind', 'rise'],
   ['main.home #install .start-window', 'flip'],
   ['main.home #intro .hero-side', 'leave'],
   ['main.doc .doc-article > section.block', 'rise'],
@@ -21,7 +20,20 @@ const kinds: [string, string][] = [
   ['.foot-columns', 'rise'],
 ]
 
+/** "What can you build" is as tall as "Start": its block takes the height of the start block (CSS reads --start-height). */
+function matchHeights(signal: AbortSignal): void {
+  const builds = document.querySelector<HTMLElement>('#builds')
+  const start = document.querySelector<HTMLElement>('#install .board-main')
+  if (!builds || !start) return
+  const fit = (): void => builds.style.setProperty('--start-height', `${start.offsetHeight}px`)
+  fit()
+  const watcher = new ResizeObserver(fit)
+  watcher.observe(start)
+  signal.addEventListener('abort', () => watcher.disconnect())
+}
+
 export function initReveal(signal: AbortSignal): void {
+  matchHeights(signal)
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
   const parts: HTMLElement[] = []
   for (const [selector, kind] of kinds) {
