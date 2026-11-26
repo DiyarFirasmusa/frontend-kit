@@ -40,10 +40,19 @@ const NEVER = new RegExp(
   ].join('|'),
 );
 const ROUTE_PARAMS = new Set(['locale', 'locale_', 'slug', 'id', 'splat', '_splat']);
+// Read-only commands whose output may be spliced in with $(...): `for f in $(find . -type f)`, `sed -i ... $(grep -rl x src)`.
+const READ_ONLY_SUBST = /^\s*(find|grep|git\s+(ls-files|grep|diff\s+--name-only)|ls|echo|basename|dirname|cat|printf|sed\s+(?!-i)|head|tail|wc|sort|uniq|cut|jq|node\s+-p)\b/;
+// Shell variables that hold no path a delete could be pointed at.
+const HARMLESS_VARS = new Set(['PIPESTATUS', 'PWD', 'RANDOM', 'LINENO', 'SECONDS']);
+// Looks like an absolute path (a drive, a Git Bash drive, a system root), not a regex or URL path such as /api/.
+const ABSOLUTE = /^([A-Za-z]:[\\/]|\/[A-Za-z](\/|$)|\/(tmp|home|Users|etc|usr|var|opt|root|mnt|proc|bin|sbin|lib|private|Volumes|dev|cygdrive)(\/|$))/;
 const WRITES = /(^|[;&|]\s*)(rm|mv|cp|tee|touch|mkdir|rmdir|ln|sed\s+-i|git\s+(rm|mv))\b|(^|[^0-9&])>(?!&|\s*\/dev\/null)/;
 
 function cooperativeBash(command) {
-  if (typeof command !== 'string' || /`|\$\(|<\(/.test(command) || NEVER.test(command)) return false;
+  if (typeof command !== 'string' || /`|<\(/.test(command) || NEVER.test(command)) return false;
+  // $(...) only around a read-only command; nested or unclosed ones are not judged.
+  for (const m of command.matchAll(/\$\(([^()]*)\)/g)) if (!READ_ONLY_SUBST.test(m[1])) return false;
+  if (/\$\((?![^()]*\))/.test(command)) return false;
   const assigned = new Set([
     ...[...command.matchAll(/(?:^|[\s;&|])([A-Za-z_][A-Za-z0-9_]*)=/g)].map((m) => m[1]),
     ...[...command.matchAll(/\bfor\s+([A-Za-z_][A-Za-z0-9_]*)\s+in\b/g)].map((m) => m[1]),
@@ -52,7 +61,7 @@ function cooperativeBash(command) {
   const cd = command.match(/^\s*cd\s+("[^"]+"|'[^']+'|\S+)/)?.[1]?.replace(/^['"]|['"]$/g, '');
   const base = cd ? path.resolve(PROJECT, native(cd)) : PROJECT;
   for (const m of command.matchAll(/\$\{?([A-Za-z_][A-Za-z0-9_]*)/g))
-    if (!assigned.has(m[1]) && !ROUTE_PARAMS.has(m[1]) && m[1] !== 'CLAUDE_PLUGIN_ROOT') return false;
+    if (!assigned.has(m[1]) && !ROUTE_PARAMS.has(m[1]) && !HARMLESS_VARS.has(m[1]) && m[1] !== 'CLAUDE_PLUGIN_ROOT') return false;
   const words = (command.match(/'[^']*'|"[^"]*"|[^\s;&|]+/g) ?? []).map((w) =>
     w
       .replace(/^['"]|['"]$/g, '')
@@ -63,9 +72,9 @@ function cooperativeBash(command) {
   let touchesPlugin = false;
   for (const w of words) {
     if (w.startsWith('~')) return false;
-    if (w.split(/[\\/]/).includes('..') && (/^([A-Za-z]:[\\/]|\/)/.test(w) || !within(path.resolve(base, w.replace(/\\\$/g, '$')), PROJECT))) return false;
+    if (w.split(/[\\/]/).includes('..') && (ABSOLUTE.test(w) || !within(path.resolve(base, w.replace(/\\\$/g, '$')), PROJECT))) return false;
     const expanded = PLUGIN ? w.replace(/^\$\{?CLAUDE_PLUGIN_ROOT\}?/, PLUGIN) : w;
-    if (!/^([A-Za-z]:[\\/]|\/)/.test(expanded)) continue;
+    if (!ABSOLUTE.test(expanded)) continue;
     if (expanded.startsWith('/dev/null')) continue;
     const abs = path.resolve(native(expanded));
     if (within(abs, PROJECT)) continue;
@@ -77,7 +86,7 @@ function cooperativeBash(command) {
   }
   // A variable set in the command may hold the plugin's path: then, as with a written-out plugin path, read only
   // (the copy's own `rm wajiha-foundation.tar` of the archive in the project excepted).
-  const pluginMaybe = touchesPlugin || command.includes('CLAUDE_PLUGIN_ROOT') || assigned.size > 0;
+  const pluginMaybe = touchesPlugin || command.includes('CLAUDE_PLUGIN_ROOT');
   if (pluginMaybe && WRITES.test(command.replace(/&&\s*rm wajiha-foundation\.tar\b/g, ''))) return false;
   return true;
 }
