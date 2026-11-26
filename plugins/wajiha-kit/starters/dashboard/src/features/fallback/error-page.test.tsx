@@ -52,6 +52,18 @@ describe('ErrorPage', () => {
     ).toBeInTheDocument();
   });
 
+  it('keeps the request details behind a closed disclosure', async () => {
+    const { user } = setup('server');
+
+    const disclosure = screen.getByRole('table').closest('details');
+    expect(disclosure).not.toBeNull();
+    expect(disclosure).not.toHaveAttribute('open');
+    await user.click(
+      screen.getByRole('heading', { name: tt('errorPages.details.title') }),
+    );
+    expect(disclosure).toHaveAttribute('open');
+  });
+
   it('runs the primary and secondary actions', async () => {
     const { user, primary, secondary } = setup();
 

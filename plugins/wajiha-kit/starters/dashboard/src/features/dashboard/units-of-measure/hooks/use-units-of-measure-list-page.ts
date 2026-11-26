@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCan } from '@/components/auth/can';
 import { PERMS } from '@/constants/permissions';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useDeleteTarget } from '@/hooks/use-delete-target';
 import { useExcelExport } from '@/hooks/use-excel-export';
 import { usePagination } from '@/hooks/use-pagination';
 import { directionOf } from '@/lib/i18n/languages';
-import { useHasPermission } from '@/store/permission-store';
 import type { ResolvedTableFilter } from '@/types/table';
 import { getUnitOfMeasureColumns } from '../components/uom-columns';
 import type { UnitOfMeasureRow } from '../types/types';
@@ -28,7 +28,8 @@ const getUnitOfMeasureRowId = (row: UnitOfMeasureRow) => row.id;
 
 export function useUnitsOfMeasureListPage() {
   const { t, i18n } = useTranslation();
-  const canCreate = useHasPermission(PERMS.unitOfMeasure.write);
+  const can = useCan();
+  const canCreate = can(PERMS.unitOfMeasure.create);
   const pagination = usePagination({ pageSize: PAGE_SIZE });
   const { reset: resetPagination } = pagination;
 
@@ -75,10 +76,11 @@ export function useUnitsOfMeasureListPage() {
     () =>
       getUnitOfMeasureColumns({
         t,
+        can,
         onEdit: openEdit,
         onDelete: handleDelete,
       }),
-    [t, openEdit, handleDelete],
+    [t, can, openEdit, handleDelete],
   );
 
   const filters: ResolvedTableFilter[] = useMemo(

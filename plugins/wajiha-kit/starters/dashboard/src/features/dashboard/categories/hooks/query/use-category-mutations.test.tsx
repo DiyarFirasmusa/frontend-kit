@@ -23,7 +23,7 @@ function wrapperFor(queryClient: QueryClient) {
 
 describe('category mutation hooks', () => {
   it('createItemCategory success invalidates categories and lookups', async () => {
-    signIn({ permissions: ['item_category:write'] });
+    signIn({ permissions: ['item_category:create', 'item_category:update'] });
     server.use(
       http.post(api(endpoints.itemCategories.create), () =>
         HttpResponse.json(

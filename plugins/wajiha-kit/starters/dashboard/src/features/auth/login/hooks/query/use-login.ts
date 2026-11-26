@@ -20,7 +20,7 @@ export function useLogin() {
       setSession({
         user,
         accessToken: res.access,
-        refreshToken: res.refresh,
+        refreshToken: res.refresh ?? null,
         tenantId: session.tenantId,
       });
       usePermissionStore.getState().setPermissions({

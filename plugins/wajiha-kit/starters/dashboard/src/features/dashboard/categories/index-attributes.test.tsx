@@ -77,9 +77,10 @@ describe('CategoriesContainer (attributes tab)', () => {
   beforeEach(() => {
     signIn({
       permissions: [
-        PERMS.itemCategory.read,
-        PERMS.attributeDefinition.read,
-        PERMS.attributeDefinition.write,
+        PERMS.itemCategory.view,
+        PERMS.attributeDefinition.view,
+        PERMS.attributeDefinition.create,
+        PERMS.attributeDefinition.update,
         PERMS.attributeDefinition.delete,
       ],
     });

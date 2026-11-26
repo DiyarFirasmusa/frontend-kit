@@ -17,12 +17,15 @@ function LoginPageProbe({
   return null;
 }
 
-async function mountProbe() {
+async function mountProbe(initialEntries?: string[]) {
   const latest: { current: ReturnType<typeof useLoginPage> | null } = {
     current: null,
   };
-  await renderWithRouter(<LoginPageProbe latest={latest} />);
-  return latest;
+  const { router } = await renderWithRouter(
+    <LoginPageProbe latest={latest} />,
+    { initialEntries },
+  );
+  return Object.assign(latest, { router });
 }
 
 function fillForm(
@@ -67,4 +70,23 @@ describe('useLoginPage', () => {
       expect(latest.current!.isPending).toBe(false);
     });
   });
+
+  it.each([
+    ['/?redirect=%2Fsuppliers%3Fq%3Dsteel', '/suppliers', { q: 'steel' }],
+    ['/?redirect=%2F%2Fevil.example', '/', {}],
+    ['/?redirect=https%3A%2F%2Fevil.example', '/', {}],
+    ['/?redirect=%2F%5Cevil.example', '/', {}],
+    ['/?redirect=%2Flogin', '/', {}],
+  ])(
+    'after signing in from %s lands on %s',
+    async (entry, pathname, search) => {
+      const latest = await mountProbe([entry]);
+      fillForm(latest.current!, 'admin', 'secret');
+      await submitForm(latest.current!);
+      await waitFor(() => {
+        expect(latest.router.state.location.pathname).toBe(pathname);
+      });
+      expect(latest.router.state.location.search).toEqual(search);
+    },
+  );
 });

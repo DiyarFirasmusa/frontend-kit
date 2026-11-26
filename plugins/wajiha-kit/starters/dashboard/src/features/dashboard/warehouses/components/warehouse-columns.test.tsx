@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { DataTable } from '@/components/table/data-table';
+import { ClientDataTable } from '@/components/table/client-data-table';
 import i18n, { loadFeatureLocale } from '@/lib/i18n/i18n';
 import { setTestLanguage, tt } from '@/test/i18n';
 import { serveDirectoryNames } from '@/test/msw/directory';
@@ -12,6 +12,7 @@ import { getWarehouseColumns } from './warehouse-columns';
 function buildColumns() {
   return getWarehouseColumns({
     t: i18n.t,
+    can: () => true,
     onView: vi.fn(),
     onEdit: vi.fn(),
     onDelete: vi.fn(),
@@ -28,7 +29,7 @@ function column(id: string): Column<WarehouseResponse> {
 
 function renderColumns(ids: string[], rows: WarehouseResponse[]) {
   return renderWithProviders(
-    <DataTable
+    <ClientDataTable
       data={rows}
       columns={ids.map((id) => column(id))}
       getRowId={(r) => r.id}

@@ -38,7 +38,7 @@ describe('AddMemberDialog', () => {
 
   beforeEach(() => {
     serveDirectorySearch([{ id: VALID_UUID, name: 'Sara Ali' }]);
-    signIn({ permissions: [PERMS.warehouse.write] });
+    signIn({ permissions: [PERMS.warehouse.create, PERMS.warehouse.update] });
   });
 
   it('POSTs { userId, role } on submit and closes', async () => {

@@ -48,11 +48,10 @@ export function useHomePage(): HomePageModel {
     activity: toWidgetState(activity),
     recent: toWidgetState(recent),
     syncLabel: t('home.lastSync', {
-      time: formatDayTime(
-        summary.data?.generatedAt,
-        { t, language: i18n.language },
-        true,
-      ),
+      time: formatDayTime(summary.data?.generatedAt, {
+        t,
+        language: i18n.language,
+      }),
     }),
   };
 }

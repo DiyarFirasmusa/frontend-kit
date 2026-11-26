@@ -1,13 +1,13 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCan } from '@/components/auth/can';
 import { PERMS } from '@/constants/permissions';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useDeleteTarget } from '@/hooks/use-delete-target';
 import { useExcelExport } from '@/hooks/use-excel-export';
 import { usePagination } from '@/hooks/use-pagination';
 import { directionOf } from '@/lib/i18n/languages';
-import { useHasPermission } from '@/store/permission-store';
 import type { WarehouseResponse } from '@/types/api/warehouses';
 import type { ResolvedTableFilter } from '@/types/table';
 import { getWarehouseColumns } from '../components/warehouse-columns';
@@ -33,7 +33,8 @@ const getWarehouseRowId = (row: WarehouseResponse) => row.id;
 export function useWarehousesListPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const canCreate = useHasPermission(PERMS.warehouse.write);
+  const can = useCan();
+  const canCreate = can(PERMS.warehouse.create);
   const pagination = usePagination({ pageSize: PAGE_SIZE });
   const { reset: resetPagination } = pagination;
 
@@ -110,11 +111,12 @@ export function useWarehousesListPage() {
     () =>
       getWarehouseColumns({
         t,
+        can,
         onView,
         onEdit: openEdit,
         onDelete: handleDelete,
       }),
-    [t, onView, openEdit, handleDelete],
+    [t, can, onView, openEdit, handleDelete],
   );
 
   const managerOptions = useMemo(

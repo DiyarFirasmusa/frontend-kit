@@ -4,7 +4,7 @@ import type { BadgeTone } from '@/components/table/data-badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Table } from '@/components/ui/table';
 import { Wrapper } from '@/components/wrapper/loading-wrapper';
-import { MoreHorizontal } from '@/lib/icons';
+import { ChevronRight } from '@/lib/icons';
 import type {
   ChangeAction,
   ChangeResource,
@@ -64,7 +64,7 @@ function ChangeRow({ row }: { row: RecentChange }) {
           aria-label={t('home.recent.open', { name: row.name, resource })}
           className={buttonVariants({ variant: 'ghost', size: 'icon-xs' })}
         >
-          <MoreHorizontal className="size-4" aria-hidden />
+          <ChevronRight className="size-4 rtl:rotate-180" aria-hidden />
         </Link>
       </td>
     </tr>

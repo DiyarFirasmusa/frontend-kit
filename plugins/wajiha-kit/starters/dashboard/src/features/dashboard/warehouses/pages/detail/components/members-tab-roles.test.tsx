@@ -28,11 +28,17 @@ describe('MembersTab roles', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.warehouse.read, PERMS.warehouse.write] });
+    signIn({
+      permissions: [
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
+      ],
+    });
   });
 
   it('shows the role, the manager badge and the active status from the backend', async () => {
-    signIn({ permissions: [PERMS.warehouse.read] });
+    signIn({ permissions: [PERMS.warehouse.view] });
     serveMembers([
       makeWarehouseMember({
         id: 'm-1',
@@ -114,7 +120,7 @@ describe('MembersTab roles', () => {
   });
 
   it('shows the role as plain text without warehouse:write', async () => {
-    signIn({ permissions: [PERMS.warehouse.read], roles: [] });
+    signIn({ permissions: [PERMS.warehouse.view], roles: [] });
     serveMembers([makeWarehouseMember({ userId: USER_A, userName: 'Sara' })]);
     renderWithProviders(<MembersTab warehouseId="wh-1" />);
 
@@ -127,7 +133,7 @@ describe('MembersTab roles', () => {
   it('translates the member role in Arabic', async () => {
     await setTestLanguage('ar');
     await loadFeatureLocale('dashboard/warehouses');
-    signIn({ permissions: [PERMS.warehouse.read] });
+    signIn({ permissions: [PERMS.warehouse.view] });
     serveMembers([
       makeWarehouseMember({ userName: 'Sara', role: 'STOREKEEPER' }),
     ]);

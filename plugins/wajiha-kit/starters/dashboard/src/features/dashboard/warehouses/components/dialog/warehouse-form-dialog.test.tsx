@@ -36,7 +36,7 @@ describe('WarehouseFormDialog', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.warehouse.write] });
+    signIn({ permissions: [PERMS.warehouse.create, PERMS.warehouse.update] });
   });
 
   it('shows the required-field message when the name is cleared', async () => {

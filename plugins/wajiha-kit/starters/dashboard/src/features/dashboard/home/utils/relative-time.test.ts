@@ -43,9 +43,10 @@ describe('relative time in English', () => {
     expect(formatShortDate(null, 'en', NOW)).toBe('—');
   });
 
-  it('formats the clock in 24 h or 12 h', () => {
-    expect(formatClock(at(20, 9, 5), 'en')).toBe('09:05');
-    expect(formatClock(at(20, 12, 42), 'en', true)).toBe('12:42 PM');
+  it('formats every clock in 24 h', () => {
+    expect(formatClock(at(20, 9, 5))).toBe('09:05');
+    expect(formatClock(at(20, 15, 14))).toBe('15:14');
+    expect(formatClock(null)).toBe('—');
   });
 
   it('names today and yesterday, then falls back to the date', () => {
@@ -73,7 +74,7 @@ describe('relative time in Arabic', () => {
     await loadFeatureLocale('dashboard/home');
     expect(formatShortDate('2026-05-18', 'ar', NOW)).toBe('18 مايو');
     expect(formatShortDate('2025-06-04', 'ar', NOW)).toBe('4 يونيو 2025');
-    expect(formatClock(at(20, 12, 42), 'ar', true)).toBe('12:42 م');
+    expect(formatClock(at(20, 12, 42))).toBe('12:42');
     expect(formatRelativeDay(at(20, 10, 32), context())).toBe('اليوم');
     expect(formatRelativeDay(at(19, 14, 20), context())).toBe('أمس');
     expect(formatDayTime(at(20, 11, 40), context())).toBe('اليوم، 11:40');

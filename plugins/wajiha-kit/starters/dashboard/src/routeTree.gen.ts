@@ -9,27 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
-import { Route as DashboardRouteRouteImport } from './routes/_dashboard/route'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
-import { Route as DashboardIndexRouteImport } from './routes/_dashboard/index'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppAttributesIndexRouteImport } from './routes/_app/attributes/index'
+import { Route as AppCategoriesIndexRouteImport } from './routes/_app/categories/index'
+import { Route as AppSuppliersIndexRouteImport } from './routes/_app/suppliers/index'
+import { Route as AppUnitsOfMeasureIndexRouteImport } from './routes/_app/units-of-measure/index'
+import { Route as AppWarehousesIndexRouteImport } from './routes/_app/warehouses/index'
+import { Route as AppWarehousesWarehouseIdRouteImport } from './routes/_app/warehouses/$warehouseId'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
-import { Route as DashboardAttributesIndexRouteImport } from './routes/_dashboard/attributes/index'
-import { Route as DashboardCategoriesIndexRouteImport } from './routes/_dashboard/categories/index'
-import { Route as DashboardSuppliersIndexRouteImport } from './routes/_dashboard/suppliers/index'
-import { Route as DashboardUnitsOfMeasureIndexRouteImport } from './routes/_dashboard/units-of-measure/index'
-import { Route as DashboardWarehousesIndexRouteImport } from './routes/_dashboard/warehouses/index'
-import { Route as DashboardWarehousesWarehouseIdRouteImport } from './routes/_dashboard/warehouses/$warehouseId'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRouteRoute = DashboardRouteRouteImport.update({
-  id: '/_dashboard',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const errors401Route = errors401RouteImport.update({
@@ -52,96 +52,92 @@ const errors500Route = errors500RouteImport.update({
   path: '/500',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => DashboardRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
+const AppAttributesIndexRoute = AppAttributesIndexRouteImport.update({
+  id: '/attributes/',
+  path: '/attributes/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppCategoriesIndexRoute = AppCategoriesIndexRouteImport.update({
+  id: '/categories/',
+  path: '/categories/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppSuppliersIndexRoute = AppSuppliersIndexRouteImport.update({
+  id: '/suppliers/',
+  path: '/suppliers/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppUnitsOfMeasureIndexRoute = AppUnitsOfMeasureIndexRouteImport.update({
+  id: '/units-of-measure/',
+  path: '/units-of-measure/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppWarehousesIndexRoute = AppWarehousesIndexRouteImport.update({
+  id: '/warehouses/',
+  path: '/warehouses/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppWarehousesWarehouseIdRoute =
+  AppWarehousesWarehouseIdRouteImport.update({
+    id: '/warehouses/$warehouseId',
+    path: '/warehouses/$warehouseId',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const DashboardAttributesIndexRoute =
-  DashboardAttributesIndexRouteImport.update({
-    id: '/attributes/',
-    path: '/attributes/',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardCategoriesIndexRoute =
-  DashboardCategoriesIndexRouteImport.update({
-    id: '/categories/',
-    path: '/categories/',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardSuppliersIndexRoute = DashboardSuppliersIndexRouteImport.update({
-  id: '/suppliers/',
-  path: '/suppliers/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardUnitsOfMeasureIndexRoute =
-  DashboardUnitsOfMeasureIndexRouteImport.update({
-    id: '/units-of-measure/',
-    path: '/units-of-measure/',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardWarehousesIndexRoute =
-  DashboardWarehousesIndexRouteImport.update({
-    id: '/warehouses/',
-    path: '/warehouses/',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardWarehousesWarehouseIdRoute =
-  DashboardWarehousesWarehouseIdRouteImport.update({
-    id: '/warehouses/$warehouseId',
-    path: '/warehouses/$warehouseId',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof DashboardIndexRoute
+  '/': typeof AppIndexRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
-  '/warehouses/$warehouseId': typeof DashboardWarehousesWarehouseIdRoute
+  '/warehouses/$warehouseId': typeof AppWarehousesWarehouseIdRoute
+  '/attributes/': typeof AppAttributesIndexRoute
+  '/categories/': typeof AppCategoriesIndexRoute
+  '/suppliers/': typeof AppSuppliersIndexRoute
+  '/units-of-measure/': typeof AppUnitsOfMeasureIndexRoute
+  '/warehouses/': typeof AppWarehousesIndexRoute
   '/login/': typeof AuthLoginIndexRoute
-  '/attributes/': typeof DashboardAttributesIndexRoute
-  '/categories/': typeof DashboardCategoriesIndexRoute
-  '/suppliers/': typeof DashboardSuppliersIndexRoute
-  '/units-of-measure/': typeof DashboardUnitsOfMeasureIndexRoute
-  '/warehouses/': typeof DashboardWarehousesIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof DashboardIndexRoute
+  '/': typeof AppIndexRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
-  '/warehouses/$warehouseId': typeof DashboardWarehousesWarehouseIdRoute
+  '/warehouses/$warehouseId': typeof AppWarehousesWarehouseIdRoute
+  '/attributes': typeof AppAttributesIndexRoute
+  '/categories': typeof AppCategoriesIndexRoute
+  '/suppliers': typeof AppSuppliersIndexRoute
+  '/units-of-measure': typeof AppUnitsOfMeasureIndexRoute
+  '/warehouses': typeof AppWarehousesIndexRoute
   '/login': typeof AuthLoginIndexRoute
-  '/attributes': typeof DashboardAttributesIndexRoute
-  '/categories': typeof DashboardCategoriesIndexRoute
-  '/suppliers': typeof DashboardSuppliersIndexRoute
-  '/units-of-measure': typeof DashboardUnitsOfMeasureIndexRoute
-  '/warehouses': typeof DashboardWarehousesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/_dashboard': typeof DashboardRouteRouteWithChildren
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
-  '/_dashboard/': typeof DashboardIndexRoute
-  '/_dashboard/warehouses/$warehouseId': typeof DashboardWarehousesWarehouseIdRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/warehouses/$warehouseId': typeof AppWarehousesWarehouseIdRoute
+  '/_app/attributes/': typeof AppAttributesIndexRoute
+  '/_app/categories/': typeof AppCategoriesIndexRoute
+  '/_app/suppliers/': typeof AppSuppliersIndexRoute
+  '/_app/units-of-measure/': typeof AppUnitsOfMeasureIndexRoute
+  '/_app/warehouses/': typeof AppWarehousesIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
-  '/_dashboard/attributes/': typeof DashboardAttributesIndexRoute
-  '/_dashboard/categories/': typeof DashboardCategoriesIndexRoute
-  '/_dashboard/suppliers/': typeof DashboardSuppliersIndexRoute
-  '/_dashboard/units-of-measure/': typeof DashboardUnitsOfMeasureIndexRoute
-  '/_dashboard/warehouses/': typeof DashboardWarehousesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -152,12 +148,12 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/warehouses/$warehouseId'
-    | '/login/'
     | '/attributes/'
     | '/categories/'
     | '/suppliers/'
     | '/units-of-measure/'
     | '/warehouses/'
+    | '/login/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,33 +162,33 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/warehouses/$warehouseId'
-    | '/login'
     | '/attributes'
     | '/categories'
     | '/suppliers'
     | '/units-of-measure'
     | '/warehouses'
+    | '/login'
   id:
     | '__root__'
+    | '/_app'
     | '/_auth'
-    | '/_dashboard'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
     | '/(errors)/500'
-    | '/_dashboard/'
-    | '/_dashboard/warehouses/$warehouseId'
+    | '/_app/'
+    | '/_app/warehouses/$warehouseId'
+    | '/_app/attributes/'
+    | '/_app/categories/'
+    | '/_app/suppliers/'
+    | '/_app/units-of-measure/'
+    | '/_app/warehouses/'
     | '/_auth/login/'
-    | '/_dashboard/attributes/'
-    | '/_dashboard/categories/'
-    | '/_dashboard/suppliers/'
-    | '/_dashboard/units-of-measure/'
-    | '/_dashboard/warehouses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
@@ -201,18 +197,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth': {
       id: '/_auth'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_dashboard': {
-      id: '/_dashboard'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(errors)/401': {
@@ -243,12 +239,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors500RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_dashboard/': {
-      id: '/_dashboard/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/attributes/': {
+      id: '/_app/attributes/'
+      path: '/attributes'
+      fullPath: '/attributes/'
+      preLoaderRoute: typeof AppAttributesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/categories/': {
+      id: '/_app/categories/'
+      path: '/categories'
+      fullPath: '/categories/'
+      preLoaderRoute: typeof AppCategoriesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/suppliers/': {
+      id: '/_app/suppliers/'
+      path: '/suppliers'
+      fullPath: '/suppliers/'
+      preLoaderRoute: typeof AppSuppliersIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/units-of-measure/': {
+      id: '/_app/units-of-measure/'
+      path: '/units-of-measure'
+      fullPath: '/units-of-measure/'
+      preLoaderRoute: typeof AppUnitsOfMeasureIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/warehouses/': {
+      id: '/_app/warehouses/'
+      path: '/warehouses'
+      fullPath: '/warehouses/'
+      preLoaderRoute: typeof AppWarehousesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/warehouses/$warehouseId': {
+      id: '/_app/warehouses/$warehouseId'
+      path: '/warehouses/$warehouseId'
+      fullPath: '/warehouses/$warehouseId'
+      preLoaderRoute: typeof AppWarehousesWarehouseIdRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/_auth/login/': {
       id: '/_auth/login/'
@@ -257,50 +295,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_dashboard/attributes/': {
-      id: '/_dashboard/attributes/'
-      path: '/attributes'
-      fullPath: '/attributes/'
-      preLoaderRoute: typeof DashboardAttributesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/_dashboard/categories/': {
-      id: '/_dashboard/categories/'
-      path: '/categories'
-      fullPath: '/categories/'
-      preLoaderRoute: typeof DashboardCategoriesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/_dashboard/suppliers/': {
-      id: '/_dashboard/suppliers/'
-      path: '/suppliers'
-      fullPath: '/suppliers/'
-      preLoaderRoute: typeof DashboardSuppliersIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/_dashboard/units-of-measure/': {
-      id: '/_dashboard/units-of-measure/'
-      path: '/units-of-measure'
-      fullPath: '/units-of-measure/'
-      preLoaderRoute: typeof DashboardUnitsOfMeasureIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/_dashboard/warehouses/': {
-      id: '/_dashboard/warehouses/'
-      path: '/warehouses'
-      fullPath: '/warehouses/'
-      preLoaderRoute: typeof DashboardWarehousesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/_dashboard/warehouses/$warehouseId': {
-      id: '/_dashboard/warehouses/$warehouseId'
-      path: '/warehouses/$warehouseId'
-      fullPath: '/warehouses/$warehouseId'
-      preLoaderRoute: typeof DashboardWarehousesWarehouseIdRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
   }
 }
+
+interface AppRouteRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppWarehousesWarehouseIdRoute: typeof AppWarehousesWarehouseIdRoute
+  AppAttributesIndexRoute: typeof AppAttributesIndexRoute
+  AppCategoriesIndexRoute: typeof AppCategoriesIndexRoute
+  AppSuppliersIndexRoute: typeof AppSuppliersIndexRoute
+  AppUnitsOfMeasureIndexRoute: typeof AppUnitsOfMeasureIndexRoute
+  AppWarehousesIndexRoute: typeof AppWarehousesIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppWarehousesWarehouseIdRoute: AppWarehousesWarehouseIdRoute,
+  AppAttributesIndexRoute: AppAttributesIndexRoute,
+  AppCategoriesIndexRoute: AppCategoriesIndexRoute,
+  AppSuppliersIndexRoute: AppSuppliersIndexRoute,
+  AppUnitsOfMeasureIndexRoute: AppUnitsOfMeasureIndexRoute,
+  AppWarehousesIndexRoute: AppWarehousesIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
 
 interface AuthRouteRouteChildren {
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
@@ -314,33 +334,9 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
-interface DashboardRouteRouteChildren {
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardWarehousesWarehouseIdRoute: typeof DashboardWarehousesWarehouseIdRoute
-  DashboardAttributesIndexRoute: typeof DashboardAttributesIndexRoute
-  DashboardCategoriesIndexRoute: typeof DashboardCategoriesIndexRoute
-  DashboardSuppliersIndexRoute: typeof DashboardSuppliersIndexRoute
-  DashboardUnitsOfMeasureIndexRoute: typeof DashboardUnitsOfMeasureIndexRoute
-  DashboardWarehousesIndexRoute: typeof DashboardWarehousesIndexRoute
-}
-
-const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardIndexRoute: DashboardIndexRoute,
-  DashboardWarehousesWarehouseIdRoute: DashboardWarehousesWarehouseIdRoute,
-  DashboardAttributesIndexRoute: DashboardAttributesIndexRoute,
-  DashboardCategoriesIndexRoute: DashboardCategoriesIndexRoute,
-  DashboardSuppliersIndexRoute: DashboardSuppliersIndexRoute,
-  DashboardUnitsOfMeasureIndexRoute: DashboardUnitsOfMeasureIndexRoute,
-  DashboardWarehousesIndexRoute: DashboardWarehousesIndexRoute,
-}
-
-const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
-  DashboardRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
+  AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  DashboardRouteRoute: DashboardRouteRouteWithChildren,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,

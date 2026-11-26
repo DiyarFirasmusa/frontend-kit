@@ -3,14 +3,14 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getErrorStatus } from '@/api/error/api-error';
-import { qk } from '@/constants/query-keys';
+import { useCan } from '@/components/auth/can';
+import { PERMS } from '@/constants/permissions';
 import { directionOf } from '@/lib/i18n/languages';
 import { useWarehouseFormDialog } from '../../../hooks/form/use-warehouse-form-dialog';
-import { useDeleteWarehouse } from '../../../hooks/query/use-warehouse-mutations';
 import {
-  canDeleteWarehouse,
-  canEditWarehouse,
-} from '../../../hooks/warehouse-actions';
+  useDeleteWarehouse,
+  warehouseRecordKeys,
+} from '../../../hooks/query/use-warehouse-mutations';
 import type { WarehouseDetailTab } from '../types/types';
 import { useWarehouseDetails } from './query/use-warehouse-details';
 
@@ -20,6 +20,7 @@ export function useWarehouseDetailPage(
 ) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const can = useCan();
   const queryClient = useQueryClient();
   const query = useWarehouseDetails(warehouseId);
   const remove = useDeleteWarehouse();
@@ -58,8 +59,8 @@ export function useWarehouseDetailPage(
     title: warehouse?.name || t('warehouses.detail.title'),
     subtitle,
     formDialog,
-    canEdit: warehouse !== undefined && canEditWarehouse(),
-    canDelete: warehouse !== undefined && canDeleteWarehouse(),
+    canEdit: warehouse !== undefined && can(PERMS.warehouse.update),
+    canDelete: warehouse !== undefined && can(PERMS.warehouse.delete),
     onTabChange: (next: WarehouseDetailTab) => {
       void navigate({
         to: '/warehouses/$warehouseId',
@@ -85,15 +86,13 @@ export function useWarehouseDetailPage(
         remove.mutate(warehouseId, {
           onSuccess: () => {
             setDeleteOpen(false);
-            const staleKeys = [
-              qk.warehouses.detail(warehouseId),
-              qk.warehouses.locations(warehouseId),
-            ];
-            for (const queryKey of staleKeys) {
-              void queryClient.cancelQueries({ queryKey });
-              queryClient.removeQueries({ queryKey });
-            }
-            goToList();
+            void navigate({ to: '/warehouses' }).then(() => {
+              // Only now are they unwatched; earlier, removing them would
+              // make this page fetch the deleted record again.
+              for (const queryKey of warehouseRecordKeys(warehouseId)) {
+                queryClient.removeQueries({ queryKey, type: 'inactive' });
+              }
+            });
           },
         });
       },

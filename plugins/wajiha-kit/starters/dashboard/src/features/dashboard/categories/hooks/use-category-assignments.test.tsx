@@ -14,7 +14,13 @@ import {
 
 describe('useCategoryAssignments rows', () => {
   it('maps rows with the source category name', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     const { result } = renderAssignments();
 
@@ -26,7 +32,13 @@ describe('useCategoryAssignments rows', () => {
   });
 
   it('does not send a PUT for inherited rows even when other rows are written', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     const inheritedPutSpy = vi.fn();
     const ownPutSpy = vi.fn();
@@ -69,7 +81,13 @@ describe('useCategoryAssignments rows', () => {
   });
 
   it('returns no rows and sends no request when no category is selected', () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     const listSpy = vi.fn();
     server.use(
       http.get(api(endpoints.itemCategories.attributes('cat-hand')), () => {

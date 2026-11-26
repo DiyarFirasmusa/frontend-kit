@@ -44,7 +44,7 @@ describe('WarehouseDetailContainer', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.warehouse.read] });
+    signIn({ permissions: [PERMS.warehouse.view] });
   });
 
   it('shows the loading state with the chrome already rendered', async () => {
@@ -193,7 +193,7 @@ describe('WarehouseDetailContainer', () => {
   });
 
   it('deletes the warehouse and returns to the list', async () => {
-    signIn({ permissions: [PERMS.warehouse.read, PERMS.warehouse.delete] });
+    signIn({ permissions: [PERMS.warehouse.view, PERMS.warehouse.delete] });
     respondWith(makeWarehouse());
     const onDelete = vi.fn();
     server.use(
@@ -209,7 +209,7 @@ describe('WarehouseDetailContainer', () => {
         name: tt('warehouses.actions.delete'),
       }),
     );
-    const dialog = await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('alertdialog');
     await user.click(
       within(dialog).getByRole('button', {
         name: tt('warehouses.delete.confirm'),

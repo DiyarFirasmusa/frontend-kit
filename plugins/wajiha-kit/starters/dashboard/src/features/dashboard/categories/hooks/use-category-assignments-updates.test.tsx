@@ -17,7 +17,13 @@ const OWN_PUT = api(endpoints.itemCategories.attribute('cat-hand', 'asg-2'));
 
 describe('useCategoryAssignments updates', () => {
   it('sends a PUT with the other flags preserved when setting required', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     let body: unknown = null;
     server.use(
@@ -50,7 +56,13 @@ describe('useCategoryAssignments updates', () => {
   });
 
   it('sends a PUT that keeps isRequired when setting the variant axis', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     let body: unknown = null;
     server.use(
@@ -83,7 +95,13 @@ describe('useCategoryAssignments updates', () => {
   });
 
   it('sends the combined flags when two quick toggles hit the same row', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     const bodies: unknown[] = [];
     server.use(
@@ -124,7 +142,13 @@ describe('useCategoryAssignments updates', () => {
   });
 
   it('reports isUpdating while a PUT is in flight', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     const gate = createGate();
     server.use(

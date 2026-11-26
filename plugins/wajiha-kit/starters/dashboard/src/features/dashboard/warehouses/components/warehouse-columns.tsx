@@ -1,4 +1,5 @@
 import type { useTranslation as useTranslationType } from 'react-i18next';
+import type { CanCheck } from '@/components/auth/can';
 import { DataBadge } from '@/components/table/data-badge';
 import { DataTableRowActions } from '@/components/table/data-table-row-actions';
 import { Warehouse } from '@/lib/icons';
@@ -14,6 +15,8 @@ type TFn = ReturnType<typeof useTranslationType>['t'];
 
 interface GetWarehouseColumnsArgs {
   t: TFn;
+  /** From `useCan()`: the row menu shows only what the user may do. */
+  can: CanCheck;
   onView: (row: WarehouseResponse) => void;
   onEdit: (row: WarehouseResponse) => void;
   onDelete: (row: WarehouseResponse) => void;
@@ -21,6 +24,7 @@ interface GetWarehouseColumnsArgs {
 
 export function getWarehouseColumns({
   t,
+  can,
   onView,
   onEdit,
   onDelete,
@@ -31,7 +35,7 @@ export function getWarehouseColumns({
       header: t('warehouses.col.code'),
       accessor: (row) => row.code,
       cell: (row) => (
-        <span className="text-table-id text-warning" dir="ltr">
+        <span className="text-table-id text-text-primary" dir="ltr">
           {row.code?.trim() || '—'}
         </span>
       ),
@@ -44,7 +48,7 @@ export function getWarehouseColumns({
         <span className="gap-inline flex min-w-0 items-center">
           <span
             aria-hidden
-            className="border-stroke bg-surface-elevated text-warning inline-flex size-9 shrink-0 items-center justify-center rounded-(--radius-control) border"
+            className="bg-brand-tint text-brand-text inline-flex size-9 shrink-0 items-center justify-center rounded-(--radius-control)"
           >
             <Warehouse className="size-4" />
           </span>
@@ -107,7 +111,14 @@ export function getWarehouseColumns({
       align: 'end',
       cell: (row) => (
         <DataTableRowActions
-          actions={getWarehouseRowActions({ t, row, onView, onEdit, onDelete })}
+          actions={getWarehouseRowActions({
+            t,
+            can,
+            row,
+            onView,
+            onEdit,
+            onDelete,
+          })}
         />
       ),
     },

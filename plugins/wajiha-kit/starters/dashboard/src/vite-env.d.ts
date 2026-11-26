@@ -16,4 +16,6 @@ interface ImportMetaEnv {
   readonly VITE_PWA?: string;
   /** "true" starts the in-browser mock API (src/mocks), so the app runs with demo data and no backend. */
   readonly VITE_USE_MOCK?: string;
+  /** "cookie" (HttpOnly refresh cookie) | "session" (sessionStorage, default). */
+  readonly VITE_AUTH_REFRESH?: string;
 }

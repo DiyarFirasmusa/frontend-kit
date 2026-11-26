@@ -1,9 +1,16 @@
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { focusManager, onlineManager } from '@tanstack/react-query';
+import { cleanup, configure } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import i18n from '@/lib/i18n/i18n';
+import { queryClient } from '@/lib/query-client';
+import { resetMockDb } from '@/mocks/seed/base';
 import { server } from './msw/server';
 import { resetStores } from './stores';
+
+/* findBy / waitFor give up after 1 s by default; with every core busy (the
+   suite runs one worker per core) a slow render can need longer. */
+configure({ asyncUtilTimeout: 3000 });
 
 /* ── DOM APIs jsdom does not implement ─────────────────────────────────── */
 
@@ -58,20 +65,31 @@ console.error = (...args: unknown[]) => {
 
 /* ── Network: every request goes through MSW, unknown ones fail loudly ── */
 
+/* Listen per file and close in afterAll, before vitest swaps the jsdom
+   globals for the next file: closing later would restore a stale
+   XMLHttpRequest over the next file's one. */
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' });
+});
+
+afterAll(() => {
+  server.close();
 });
 
 afterEach(() => {
   server.resetHandlers();
   cleanup();
   resetStores();
+  // Workers reuse modules across files (isolate: false): reset shared state.
+  vi.useRealTimers();
+  // TanStack Query's managers are module singletons: a test that went
+  // offline would leave every later query paused.
+  onlineManager.setOnline(true);
+  focusManager.setFocused(undefined);
+  resetMockDb();
+  queryClient.clear();
   window.localStorage.clear();
   window.sessionStorage.clear();
-});
-
-afterAll(() => {
-  server.close();
 });
 
 /* ── i18n: tests run in English by default; call setTestLanguage('ar')

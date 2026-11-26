@@ -30,40 +30,39 @@ export function HomeKpiGrid({ state }: HomeKpiGridProps) {
       onRetry={state.onRetry}
     >
       {(summary) => (
-        <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2 2xl:grid-cols-4">
-          <HomeKpiCard
-            index={1}
-            label={t('home.kpi.warehouses')}
-            icon={Warehouse}
-            card={summary.warehouses}
-            link={{ to: '/warehouses' }}
-            visual="line"
-            accent="brand"
-          />
-          <HomeKpiCard
-            index={2}
-            label={t('home.kpi.suppliers')}
-            icon={Building2}
-            card={summary.suppliers}
-            link={{ to: '/suppliers' }}
-            visual="bars"
-          />
-          <HomeKpiCard
-            index={3}
-            label={t('home.kpi.categories')}
-            icon={Tag}
-            card={summary.categories}
-            link={{ to: '/categories' }}
-            visual="ring"
-          />
-          <HomeKpiCard
-            index={4}
-            label={t('home.kpi.units')}
-            icon={Hash}
-            card={summary.units}
-            link={{ to: '/units-of-measure' }}
-            visual="ring"
-          />
+        /* Columns follow the space the grid gets, not the viewport: with the
+           sidebar open an 800px window leaves too little for two cards. */
+        <div className="@container">
+          <div className="grid grid-cols-1 gap-x-4 gap-y-3 @2xl:grid-cols-2 @6xl:grid-cols-4">
+            <HomeKpiCard
+              label={t('home.kpi.warehouses')}
+              icon={Warehouse}
+              card={summary.warehouses}
+              link={{ to: '/warehouses' }}
+              visual="line"
+            />
+            <HomeKpiCard
+              label={t('home.kpi.suppliers')}
+              icon={Building2}
+              card={summary.suppliers}
+              link={{ to: '/suppliers' }}
+              visual="bars"
+            />
+            <HomeKpiCard
+              label={t('home.kpi.categories')}
+              icon={Tag}
+              card={summary.categories}
+              link={{ to: '/categories' }}
+              visual="ring"
+            />
+            <HomeKpiCard
+              label={t('home.kpi.units')}
+              icon={Hash}
+              card={summary.units}
+              link={{ to: '/units-of-measure' }}
+              visual="ring"
+            />
+          </div>
         </div>
       )}
     </Wrapper>

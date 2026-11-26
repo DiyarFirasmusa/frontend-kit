@@ -62,3 +62,32 @@ describe('env VITE_AUTH_BASE_URL', () => {
     expect(envError).toContain('VITE_API_BASE_URL');
   });
 });
+
+describe('env VITE_AUTH_REFRESH', () => {
+  beforeEach(() => {
+    vi.stubEnv('VITE_API_BASE_URL', 'http://api.test');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('defaults to session storage so the mock demo survives a reload', async () => {
+    vi.stubEnv('VITE_AUTH_REFRESH', '');
+    const { env, envError } = await loadEnv();
+    expect(envError).toBeNull();
+    expect(env.VITE_AUTH_REFRESH).toBe('session');
+  });
+
+  it('accepts the HttpOnly cookie mode', async () => {
+    vi.stubEnv('VITE_AUTH_REFRESH', 'cookie');
+    const { env } = await loadEnv();
+    expect(env.VITE_AUTH_REFRESH).toBe('cookie');
+  });
+
+  it('reports an unknown mode as a configuration error', async () => {
+    vi.stubEnv('VITE_AUTH_REFRESH', 'localStorage');
+    const { envError } = await loadEnv();
+    expect(envError).toContain('VITE_AUTH_REFRESH');
+  });
+});

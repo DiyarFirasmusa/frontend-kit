@@ -18,7 +18,7 @@ export function HomeStatusDot({
   return (
     <span
       className={cn(
-        'text-label inline-flex items-center gap-1.5 whitespace-nowrap rtl:flex-row-reverse',
+        'text-label inline-flex items-center gap-1.5 whitespace-nowrap',
         tintLabel ? TONE_TEXT[tone] : 'text-text-primary',
       )}
     >

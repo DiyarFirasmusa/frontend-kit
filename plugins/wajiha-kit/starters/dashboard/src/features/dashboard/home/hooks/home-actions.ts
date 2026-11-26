@@ -92,13 +92,10 @@ export function sparklinePoints(
     .join(' ');
 }
 
-/** Two-digit KPI value as the design shows it ("08"); larger values keep grouping. */
+/** KPI value with Western digits and grouping; no zero padding (it read as an index). */
 export function formatKpiValue(value: number | null | undefined): string {
   if (value === null || value === undefined) {
     return '—';
-  }
-  if (Number.isInteger(value) && value >= 0 && value < 10) {
-    return String(value).padStart(2, '0');
   }
   return new Intl.NumberFormat('en-US').format(value);
 }

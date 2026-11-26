@@ -37,7 +37,7 @@ describe('LocationsTab', () => {
   beforeEach(() => {
     signIn({
       roles: [],
-      permissions: [PERMS.warehouse.read],
+      permissions: [PERMS.warehouse.view],
     });
   });
 
@@ -104,7 +104,7 @@ describe('LocationsTab', () => {
   });
 
   it('hides the open-tree button without location:read', async () => {
-    signIn({ roles: [], permissions: [PERMS.warehouse.read] });
+    signIn({ roles: [], permissions: [PERMS.warehouse.view] });
     server.use(http.get(url, () => HttpResponse.json(twoLocations)));
     await render();
 

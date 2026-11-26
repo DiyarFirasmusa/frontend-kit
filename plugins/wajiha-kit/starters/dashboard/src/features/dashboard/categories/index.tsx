@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/dialog/confirm-dialog';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { PageHeader } from '@/components/shared/page-header';
-import { DataTable } from '@/components/table/data-table';
+import { ClientDataTable } from '@/components/table/client-data-table';
 import { ExportExcelButton } from '@/components/table/export-excel-button';
 import { ListFiltersBar } from '@/components/table/list-filters-bar';
 import { Button } from '@/components/ui/button';
@@ -54,7 +54,7 @@ export default function CategoriesContainer({
             {page.tab === 'categories' ? (
               <ExportExcelButton {...page.exportExcel} />
             ) : null}
-            {page.canWriteAttribute ? (
+            {page.canCreateAttribute ? (
               <Button
                 type="button"
                 variant={page.tab === 'attributes' ? 'default' : 'outline'}
@@ -64,7 +64,7 @@ export default function CategoriesContainer({
                 {t('categories.actions.addAttribute')}
               </Button>
             ) : null}
-            {page.canWriteCategory ? (
+            {page.canCreateCategory ? (
               <Button
                 type="button"
                 variant={page.tab === 'categories' ? 'default' : 'outline'}
@@ -256,7 +256,7 @@ function CategoryDetail({ page }: { page: CategoriesPage }) {
           </p>
         </div>
         <div className="gap-field flex flex-wrap items-center">
-          {page.canWriteCategory ? (
+          {page.canUpdateCategory ? (
             <>
               <Button
                 type="button"
@@ -302,7 +302,7 @@ function CategoryDetail({ page }: { page: CategoriesPage }) {
               {t('categories.assignments.description')}
             </p>
           </div>
-          {page.canWriteCategory ? (
+          {page.canUpdateCategory ? (
             <Button
               type="button"
               variant="outline"
@@ -314,7 +314,7 @@ function CategoryDetail({ page }: { page: CategoriesPage }) {
             </Button>
           ) : null}
         </div>
-        <DataTable
+        <ClientDataTable
           data={assignments.rows}
           columns={assignments.columns}
           getRowId={(row) => row.id}
@@ -384,7 +384,7 @@ function AttributesPanel({ page }: { page: CategoriesPage }) {
           onClearFilters={filters.clear}
           isDirty={filters.isDirty}
         />
-        <DataTable
+        <ClientDataTable
           embedded
           data={attributes.rows}
           columns={attributes.columns}

@@ -27,12 +27,11 @@ const VALUE_CLASS: Record<HomeKpiTone, string> = {
 };
 
 const ACCENT_CLASS: Record<HomeKpiAccent, string> = {
-  brand: 'border-s-2 border-s-primary-highlight shadow-primary',
+  brand: 'border-s-2 border-s-brand',
   warning: 'border-s-2 border-s-warning',
 };
 
 export interface HomeKpiCardProps {
-  index: number;
   label: string;
   icon: IconComponent;
   card: KpiCard | null;
@@ -44,7 +43,6 @@ export interface HomeKpiCardProps {
 }
 
 export function HomeKpiCard({
-  index,
   label,
   icon: Icon,
   card,
@@ -63,15 +61,10 @@ export function HomeKpiCard({
     <Link
       {...link}
       className={cn(
-        'bg-surface border-stroke rounded-kpi gap-row px-panel py-row hover:bg-hover-row relative flex min-h-22 items-center justify-between border transition-colors',
+        'bg-surface border-stroke rounded-kpi gap-row px-panel py-row hover:bg-hover-row flex min-h-22 items-center justify-between border transition-colors',
         accent ? ACCENT_CLASS[accent] : undefined,
       )}
     >
-      <span
-        aria-hidden="true"
-        data-index={String(index).padStart(2, '0')}
-        className="text-stroke-strong absolute end-3.5 top-2.5 font-mono text-[10px] leading-none before:content-[attr(data-index)]"
-      />
       <div className="gap-inline flex min-w-0 items-center">
         <span
           className={cn(
@@ -86,10 +79,13 @@ export function HomeKpiCard({
           <span className={cn('text-kpi tabular-nums', VALUE_CLASS[tone])}>
             {formatKpiValue(card?.value)}
           </span>
-          <span className="text-h5 text-text-primary truncate">{label}</span>
+          {/* Wraps instead of truncating: a narrow card still names its count. */}
+          <span className="text-h5 text-text-primary wrap-break-word">
+            {label}
+          </span>
         </div>
       </div>
-      <div className="gap-row flex shrink-0 items-center pt-2">
+      <div className="gap-inline flex shrink-0 items-center">
         {changePercent !== null ? (
           <span dir="ltr" className="inline-flex items-center">
             <span

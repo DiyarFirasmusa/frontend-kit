@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/dialog/confirm-dialog';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { PageHeader } from '@/components/shared/page-header';
-import { DataTable } from '@/components/table/data-table';
+import { ClientDataTable } from '@/components/table/client-data-table';
 import { ExportExcelButton } from '@/components/table/export-excel-button';
 import { ListFiltersBar } from '@/components/table/list-filters-bar';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,7 @@ export default function WarehousesListContainer() {
 
       <div className="surface-card gap-card flex flex-col">
         <ListFiltersBar {...page.toolbar} />
-        <DataTable {...page.table} embedded />
+        <ClientDataTable {...page.table} embedded />
       </div>
 
       <WarehouseFormDialog dialog={page.formDialog} />

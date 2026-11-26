@@ -1,18 +1,20 @@
 import { describe, expect, it, vi } from 'vitest';
-import { PERMS } from '@/constants/permissions';
-import { signIn } from '@/test/fixtures/auth';
+import type { CanCheck } from '@/components/auth/can';
+import { PERMS, type Permission } from '@/constants/permissions';
 import { makeWarehouse } from '../warehouse-test-utils';
-import {
-  canDeleteWarehouse,
-  canEditWarehouse,
-  getWarehouseRowActions,
-} from './warehouse-actions';
+import { getWarehouseRowActions } from './warehouse-actions';
 
 const t = (key: string) => key;
 
-function actionIds(): string[] {
+const canWith =
+  (...granted: Permission[]): CanCheck =>
+  (permission) =>
+    granted.includes(permission);
+
+function actionIds(...granted: Permission[]): string[] {
   return getWarehouseRowActions({
     t,
+    can: canWith(...granted),
     row: makeWarehouse(),
     onView: vi.fn(),
     onEdit: vi.fn(),
@@ -22,50 +24,41 @@ function actionIds(): string[] {
 
 describe('warehouse actions', () => {
   it('read-only users cannot edit or delete', () => {
-    signIn({ roles: [], permissions: [PERMS.warehouse.read] });
-    expect(canEditWarehouse()).toBe(false);
-    expect(canDeleteWarehouse()).toBe(false);
-    expect(actionIds()).toEqual(['view']);
+    expect(actionIds(PERMS.warehouse.view)).toEqual(['view']);
   });
 
-  it('writers get edit but not delete', () => {
-    signIn({
-      roles: [],
-      permissions: [PERMS.warehouse.read, PERMS.warehouse.write],
-    });
-    expect(canEditWarehouse()).toBe(true);
-    expect(canDeleteWarehouse()).toBe(false);
-    expect(actionIds()).toEqual(['view', 'edit']);
+  it('update gives edit but not delete', () => {
+    expect(actionIds(PERMS.warehouse.view, PERMS.warehouse.update)).toEqual([
+      'view',
+      'edit',
+    ]);
+  });
+
+  it('create alone gives no edit (it is the page-level add button)', () => {
+    expect(actionIds(PERMS.warehouse.create)).toEqual(['view']);
   });
 
   it('deleters get delete without edit', () => {
-    signIn({ roles: [], permissions: [PERMS.warehouse.delete] });
-    expect(canEditWarehouse()).toBe(false);
-    expect(canDeleteWarehouse()).toBe(true);
-    expect(actionIds()).toEqual(['view', 'delete']);
+    expect(actionIds(PERMS.warehouse.delete)).toEqual(['view', 'delete']);
   });
 
   it('shows edit and delete for full warehouse permissions', () => {
-    signIn({
-      roles: [],
-      permissions: [
-        PERMS.warehouse.read,
-        PERMS.warehouse.write,
+    expect(
+      actionIds(
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
         PERMS.warehouse.delete,
-      ],
-    });
-    expect(actionIds()).toEqual(['view', 'edit', 'delete']);
+      ),
+    ).toEqual(['view', 'edit', 'delete']);
   });
 
   it('marks delete as destructive and calls the matching handler', () => {
-    signIn({
-      roles: [],
-      permissions: [PERMS.warehouse.write, PERMS.warehouse.delete],
-    });
     const onDelete = vi.fn();
     const row = makeWarehouse();
     const actions = getWarehouseRowActions({
       t,
+      can: canWith(PERMS.warehouse.update, PERMS.warehouse.delete),
       row,
       onView: vi.fn(),
       onEdit: vi.fn(),

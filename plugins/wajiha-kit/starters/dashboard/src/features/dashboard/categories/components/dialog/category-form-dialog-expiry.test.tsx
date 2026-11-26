@@ -48,7 +48,13 @@ describe('CategoryFormDialog expiry alert window', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
   });
 
   it('renders an empty field with the inherit hint in create mode', async () => {

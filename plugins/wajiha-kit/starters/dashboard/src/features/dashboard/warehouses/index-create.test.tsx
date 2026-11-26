@@ -39,11 +39,23 @@ describe('WarehousesListContainer create dialog', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.warehouse.read, PERMS.warehouse.write] });
+    signIn({
+      permissions: [
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
+      ],
+    });
   });
 
   it('creates a warehouse from the dialog and posts the exact payload', async () => {
-    signIn({ permissions: [PERMS.warehouse.read, PERMS.warehouse.write] });
+    signIn({
+      permissions: [
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
+      ],
+    });
     respondWith(rows);
     let body: unknown;
     server.use(

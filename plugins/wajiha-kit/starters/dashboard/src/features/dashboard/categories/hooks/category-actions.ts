@@ -1,26 +1,35 @@
+import type { CanCheck } from '@/components/auth/can';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import { PERMS } from '@/constants/permissions';
 import { ArrowRightLong, Ban, Pencil, Trash2 } from '@/lib/icons';
-import { hasPermission } from '@/store/permission-store';
 import type {
   CategoryAttributeResponse,
   ItemCategoryResponse,
 } from '@/types/api/catalog';
 
-export function canReadCategory(): boolean {
-  return hasPermission(PERMS.itemCategory.read);
+export interface CategoryAccess {
+  view: boolean;
+  create: boolean;
+  update: boolean;
+  delete: boolean;
 }
 
-export function canWriteCategory(): boolean {
-  return hasPermission(PERMS.itemCategory.write);
+/** What the user may do with categories; `can` comes from `useCan()`. */
+export function getCategoryAccess(can: CanCheck): CategoryAccess {
+  return {
+    view: can(PERMS.itemCategory.view),
+    create: can(PERMS.itemCategory.create),
+    update: can(PERMS.itemCategory.update),
+    delete: can(PERMS.itemCategory.delete),
+  };
 }
 
-export function canDeleteCategory(): boolean {
-  return hasPermission(PERMS.itemCategory.delete);
-}
-
-export function canWriteAssignment(row: CategoryAttributeResponse): boolean {
-  return canWriteCategory() && !row.inherited;
+/** Attaching, detaching and toggling assignments edits the category. */
+export function canWriteAssignment(
+  can: CanCheck,
+  row: CategoryAttributeResponse,
+): boolean {
+  return can(PERMS.itemCategory.update) && !row.inherited;
 }
 
 interface GetCategoryRowActionsArgs {

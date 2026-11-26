@@ -8,18 +8,29 @@ import type {
   WarehouseUserRoleRequest,
 } from '@/types/api/warehouses';
 
-export async function fetchWarehouse(id: string): Promise<WarehouseResponse> {
+/** `signal` comes from TanStack Query, so a cancelled query aborts the request. */
+interface RequestOptions {
+  signal?: AbortSignal;
+}
+
+export async function fetchWarehouse(
+  id: string,
+  options: RequestOptions = {},
+): Promise<WarehouseResponse> {
   const { data } = await privateApi.get<WarehouseResponse>(
     endpoints.warehouses.detail(id),
+    { signal: options.signal },
   );
   return data;
 }
 
 export async function fetchWarehouseMembers(
   id: string,
+  options: RequestOptions = {},
 ): Promise<WarehouseUserResponse[]> {
   const { data } = await privateApi.get<WarehouseUserResponse[]>(
     endpoints.warehouses.users(id),
+    { signal: options.signal },
   );
   return data;
 }
@@ -60,9 +71,11 @@ export async function removeWarehouseMember(
 
 export async function fetchWarehouseLocations(
   id: string,
+  options: RequestOptions = {},
 ): Promise<LocationResponse[]> {
   const { data } = await privateApi.get<LocationResponse[]>(
     endpoints.warehouses.locations(id),
+    { signal: options.signal },
   );
   return data;
 }

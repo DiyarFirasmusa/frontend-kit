@@ -1,19 +1,24 @@
+import type { CanCheck } from '@/components/auth/can';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import { PERMS } from '@/constants/permissions';
 import { Pencil, SlidersHorizontal, Trash2 } from '@/lib/icons';
-import { hasPermission } from '@/store/permission-store';
 import type { AttributeDefinitionResponse } from '@/types/api/catalog';
 
-export function canReadAttribute(): boolean {
-  return hasPermission(PERMS.attributeDefinition.read);
+export interface AttributeAccess {
+  view: boolean;
+  create: boolean;
+  update: boolean;
+  delete: boolean;
 }
 
-export function canWriteAttribute(): boolean {
-  return hasPermission(PERMS.attributeDefinition.write);
-}
-
-export function canDeleteAttribute(): boolean {
-  return hasPermission(PERMS.attributeDefinition.delete);
+/** What the user may do with attribute definitions; `can` comes from `useCan()`. */
+export function getAttributeAccess(can: CanCheck): AttributeAccess {
+  return {
+    view: can(PERMS.attributeDefinition.view),
+    create: can(PERMS.attributeDefinition.create),
+    update: can(PERMS.attributeDefinition.update),
+    delete: can(PERMS.attributeDefinition.delete),
+  };
 }
 
 export function isOptionAttribute(
@@ -23,9 +28,10 @@ export function isOptionAttribute(
 }
 
 export function canEditAttributeOptions(
+  can: CanCheck,
   attribute: AttributeDefinitionResponse,
 ): boolean {
-  return canWriteAttribute() && isOptionAttribute(attribute);
+  return can(PERMS.attributeDefinition.update) && isOptionAttribute(attribute);
 }
 
 interface GetAttributeRowActionsArgs {

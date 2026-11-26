@@ -20,10 +20,12 @@ import { useCategoriesPage } from './use-categories-page';
 
 const ALL_PERMISSIONS = [
   'item_category:read',
-  'item_category:write',
+  'item_category:create',
+  'item_category:update',
   'item_category:delete',
   'attribute_definition:read',
-  'attribute_definition:write',
+  'attribute_definition:create',
+  'attribute_definition:update',
   'attribute_definition:delete',
 ];
 
@@ -195,13 +197,18 @@ describe('useCategoriesPage', () => {
 
   it('hides the attributes tab without attribute_definition:read', () => {
     signIn({
-      permissions: ['item_category:read', 'item_category:write'],
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
       roles: [],
     });
     serveCatalog();
     const { result } = renderPage();
     expect(result.current.showAttributesTab).toBe(false);
-    expect(result.current.canWriteAttribute).toBe(false);
+    expect(result.current.canCreateAttribute).toBe(false);
+    expect(result.current.canUpdateAttribute).toBe(false);
   });
 
   it('builds the category tree from the list and filters it by search', async () => {

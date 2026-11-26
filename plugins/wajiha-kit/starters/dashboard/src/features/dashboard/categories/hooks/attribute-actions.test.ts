@@ -1,11 +1,17 @@
 import { describe, expect, it, vi } from 'vitest';
-import { PERMS } from '@/constants/permissions';
-import { signIn } from '@/test/fixtures/auth';
+import type { CanCheck } from '@/components/auth/can';
+import { PERMS, type Permission } from '@/constants/permissions';
 import type { AttributeDefinitionResponse } from '@/types/api/catalog';
 import {
   canEditAttributeOptions,
+  getAttributeAccess,
   getAttributeRowActions,
 } from './attribute-actions';
+
+const canWith =
+  (...granted: Permission[]): CanCheck =>
+  (permission) =>
+    granted.includes(permission);
 
 const t = (key: string) => key;
 
@@ -40,24 +46,44 @@ function actionIds(
 }
 
 describe('canEditAttributeOptions', () => {
-  it('is false for non-OPTION types even with write permission', () => {
-    signIn({ roles: [], permissions: [PERMS.attributeDefinition.write] });
-    expect(canEditAttributeOptions(makeAttribute({ dataType: 'TEXT' }))).toBe(
-      false,
-    );
-    expect(canEditAttributeOptions(makeAttribute({ dataType: 'NUMBER' }))).toBe(
-      false,
-    );
+  const canUpdate = canWith(PERMS.attributeDefinition.update);
+
+  it('is false for non-OPTION types even with update permission', () => {
+    expect(
+      canEditAttributeOptions(canUpdate, makeAttribute({ dataType: 'TEXT' })),
+    ).toBe(false);
+    expect(
+      canEditAttributeOptions(canUpdate, makeAttribute({ dataType: 'NUMBER' })),
+    ).toBe(false);
   });
 
-  it('is false without write permission for OPTION types', () => {
-    signIn({ roles: [], permissions: [PERMS.attributeDefinition.read] });
-    expect(canEditAttributeOptions(makeAttribute())).toBe(false);
+  it('is false without update permission for OPTION types', () => {
+    expect(
+      canEditAttributeOptions(
+        canWith(
+          PERMS.attributeDefinition.view,
+          PERMS.attributeDefinition.create,
+        ),
+        makeAttribute(),
+      ),
+    ).toBe(false);
   });
 
-  it('is true for OPTION types with write permission', () => {
-    signIn({ roles: [], permissions: [PERMS.attributeDefinition.write] });
-    expect(canEditAttributeOptions(makeAttribute())).toBe(true);
+  it('is true for OPTION types with update permission', () => {
+    expect(canEditAttributeOptions(canUpdate, makeAttribute())).toBe(true);
+  });
+});
+
+describe('getAttributeAccess', () => {
+  it('maps each permission to its own flag', () => {
+    expect(
+      getAttributeAccess(
+        canWith(
+          PERMS.attributeDefinition.view,
+          PERMS.attributeDefinition.delete,
+        ),
+      ),
+    ).toEqual({ view: true, create: false, update: false, delete: true });
   });
 });
 

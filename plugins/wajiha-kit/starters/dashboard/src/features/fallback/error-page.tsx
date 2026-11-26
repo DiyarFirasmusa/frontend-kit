@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
 import { directionOf } from '@/lib/i18n/languages';
 import { Home, LogIn, RefreshCw, type IconComponent } from '@/lib/icons';
-import { cn } from '@/lib/utils';
+import { ErrorDetailsSection } from './error-details-section';
 
 interface KindConfig {
   /** i18n key prefix holding code, title, subtitle, alert and tips copy. */
@@ -87,6 +87,9 @@ export function ErrorPage({
   const { t, i18n } = useTranslation();
   const config = ERROR_KIND[kind];
   const key = (name: string) => `${config.prefix}.${name}`;
+  // 403/404 explain the request in user terms; failed requests show
+  // technical data that only support needs, so it starts collapsed.
+  const isPageState = kind === 'forbidden' || kind === 'notFound';
 
   const content = (
     <section
@@ -136,65 +139,26 @@ export function ErrorPage({
       </div>
 
       {details.length > 0 ? (
-        <section
-          aria-labelledby="error-page-details"
-          className="surface-card gap-row flex flex-col"
-        >
-          <h2 id="error-page-details" className="text-h4 text-text-primary">
-            {t(
-              kind === 'forbidden' || kind === 'notFound'
-                ? key('detailsTitle')
-                : 'errorPages.details.title',
-            )}
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-xl border-separate border-spacing-0 text-start">
-              <thead>
-                <tr>
-                  {details.map((detail, index) => (
-                    <th
-                      key={detail.label}
-                      scope="col"
-                      className={cn(
-                        'bg-hover-row text-table-header text-text-muted h-11 px-3 text-start',
-                        index === 0 && 'rounded-s-(--radius-control)',
-                        index === details.length - 1 &&
-                          'rounded-e-(--radius-control)',
-                      )}
-                    >
-                      {detail.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {details.map((detail) => (
-                    <td
-                      key={detail.label}
-                      className="border-stroke-subtle text-b2 text-text-primary h-16 border-b px-3"
-                    >
-                      {renderDetailValue(detail)}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          {detailsAction ? (
-            <div>
+        <ErrorDetailsSection
+          title={t(
+            isPageState ? key('detailsTitle') : 'errorPages.details.title',
+          )}
+          details={details}
+          collapsible={!isPageState}
+          action={
+            detailsAction ? (
               <ActionButton
                 action={detailsAction}
                 variant="outline"
                 fallbackIcon={null}
               />
-            </div>
-          ) : null}
-        </section>
+            ) : null
+          }
+        />
       ) : null}
 
-      <section className="border-warning/60 gap-field p-card flex flex-col rounded-(--radius-modal) border">
-        <h2 className="text-h4 text-warning">{t(key('tipsTitle'))}</h2>
+      <section className="bg-brand-tint gap-field p-card flex flex-col rounded-(--radius-modal)">
+        <h2 className="text-h4 text-brand-text">{t(key('tipsTitle'))}</h2>
         <ul className="gap-field text-b2 text-text-secondary flex flex-col">
           {config.tips.map((tip) => (
             <li key={tip}>{t(key(tip))}</li>
@@ -214,25 +178,6 @@ export function ErrorPage({
       </div>
     </main>
   );
-}
-
-function renderDetailValue(detail: ErrorDetail): ReactNode {
-  const empty =
-    detail.value === null || detail.value === undefined || detail.value === '';
-  if (empty) {
-    return '—';
-  }
-  if (detail.mono || detail.ltr) {
-    return (
-      <span
-        dir="ltr"
-        className={detail.mono ? 'font-mono break-all' : undefined}
-      >
-        {detail.value}
-      </span>
-    );
-  }
-  return detail.value;
 }
 
 function ActionButton({

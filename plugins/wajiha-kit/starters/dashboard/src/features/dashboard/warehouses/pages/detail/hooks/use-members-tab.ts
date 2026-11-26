@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { useCan } from '@/components/auth/can';
+import { PERMS } from '@/constants/permissions';
 import type { WarehouseUserRole } from '@/types/api/enums';
 import type { WarehouseUserResponse } from '@/types/api/warehouses';
-import { canEditWarehouse } from '../../../hooks/warehouse-actions';
 import { useAddMemberForm } from './form/use-add-member-form';
 import {
   useChangeWarehouseMemberRole,
@@ -10,6 +11,8 @@ import {
 } from './query/use-warehouse-members';
 
 export function useMembersTab(warehouseId: string) {
+  // Managing members edits the warehouse.
+  const canManage = useCan(PERMS.warehouse.update);
   const query = useWarehouseMembers(warehouseId);
   const addDialog = useAddMemberForm(warehouseId);
   const remove = useRemoveWarehouseMember(warehouseId);
@@ -20,7 +23,7 @@ export function useMembersTab(warehouseId: string) {
   return {
     query,
     members: query.data ?? [],
-    canManage: canEditWarehouse(),
+    canManage,
     addDialog,
     roleChange: {
       pendingUserId: changeRole.isPending

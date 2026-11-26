@@ -42,7 +42,7 @@ describe('WarehouseDetailContainer access control', () => {
   });
 
   it('hides edit and delete for a read-only user', async () => {
-    signIn({ roles: ROLES, permissions: [PERMS.warehouse.read] });
+    signIn({ roles: ROLES, permissions: [PERMS.warehouse.view] });
     respond();
     await render();
 
@@ -63,7 +63,11 @@ describe('WarehouseDetailContainer access control', () => {
   it('shows edit but not delete for a user with write only', async () => {
     signIn({
       roles: ROLES,
-      permissions: [PERMS.warehouse.read, PERMS.warehouse.write],
+      permissions: [
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
+      ],
     });
     respond();
     await render();
@@ -81,7 +85,7 @@ describe('WarehouseDetailContainer access control', () => {
   it('opens the warehouse change log for a read-only user', async () => {
     signIn({
       roles: ROLES,
-      permissions: [PERMS.warehouse.read, PERMS.auditLog.read],
+      permissions: [PERMS.warehouse.view, PERMS.auditLog.view],
     });
     respond();
     const requests: URL[] = [];

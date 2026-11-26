@@ -1,6 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCan } from '@/components/auth/can';
 import type { SelectOption } from '@/components/fields/select-option';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import type { ItemCategoryResponse } from '@/types/api/catalog';
@@ -17,11 +18,7 @@ import {
 } from '../utils/category-tree';
 import type { CategoryFormValues } from '../validations/validations';
 import { toCategoryPayload } from '../validations/validations';
-import {
-  canDeleteCategory,
-  canWriteCategory,
-  getCategoryRowActions,
-} from './category-actions';
+import { getCategoryAccess, getCategoryRowActions } from './category-actions';
 import type { CategoriesConfirmTarget } from './confirm-target';
 import { useCategoryFormDialog } from './form/use-category-form-dialog';
 import {
@@ -196,8 +193,9 @@ export function useCategoryTreeSection({
     });
   };
 
-  const canWrite = canWriteCategory();
-  const canDelete = canDeleteCategory();
+  const access = getCategoryAccess(useCan());
+  const canWrite = access.update;
+  const canDelete = access.delete;
 
   const onDeactivateBlocked = () => {
     if (blockedCategory === null) {

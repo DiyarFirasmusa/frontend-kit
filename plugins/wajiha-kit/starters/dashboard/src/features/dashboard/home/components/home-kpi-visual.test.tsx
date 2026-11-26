@@ -19,8 +19,8 @@ describe('HomeKpiVisual', () => {
     );
     const bars = container.querySelectorAll('rect');
     expect(bars).toHaveLength(5);
-    expect(bars[4]).toHaveClass('fill-warning');
-    expect(bars[0]).not.toHaveClass('fill-warning');
+    expect(bars[4]).toHaveClass('fill-brand');
+    expect(bars[0]).not.toHaveClass('fill-brand');
   });
 
   it('fills the ring by the value against the trend peak', () => {

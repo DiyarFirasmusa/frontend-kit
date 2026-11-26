@@ -1,8 +1,14 @@
 import { RouterProvider } from '@tanstack/react-router';
-import { StrictMode } from 'react';
+import { StrictMode, type ReactNode } from 'react';
 import { createRoot, type Root, type RootOptions } from 'react-dom/client';
 import { envError } from '@/env';
-import { configureMonitoring, reportError } from '@/lib/monitoring';
+import { bootstrapSession } from '@/features/auth/session/bootstrap-session';
+import { installSessionHooks } from '@/features/auth/session/session-hooks';
+import {
+  EnvErrorScreen,
+  MockApiErrorScreen,
+} from '@/features/fallback/boot-error-screens';
+import { reportError, startMonitoring } from '@/lib/monitoring';
 import { registerServiceWorker } from '@/modules/pwa/register';
 import { getRouter } from './router';
 import '@/style/fonts';
@@ -14,37 +20,15 @@ if (!rootEl) {
   throw new Error('Root element #root not found in index.html');
 }
 
-/* Invalid configuration is a deploy mistake, not a user error — say so in
-   plain text before any of the app (router, i18n, API client) boots. */
-function EnvErrorScreen({ message }: { message: string }) {
-  return (
-    <main
-      dir="ltr"
-      className="bg-background text-text-primary grid min-h-svh place-items-center p-6"
-    >
-      <div className="surface-card max-w-xl space-y-4">
-        <h1 className="text-h3">Configuration error</h1>
-        <p className="text-b2 text-text-secondary">
-          The app cannot start because required environment variables are
-          missing or invalid. Fix the values below in <code>.env</code> (or the
-          build arguments) and rebuild.
-        </p>
-        <pre className="text-b3 overflow-x-auto rounded-xl bg-neutral-50 p-4 font-mono whitespace-pre-wrap">
-          {message}
-        </pre>
-      </div>
-    </main>
-  );
-}
-
-function reportRenderError(
-  error: unknown,
-  info: { componentStack?: string | null },
-): void {
-  void reportError(error, {
-    boundary: 'react',
-    componentStack: info.componentStack,
-  });
+/* Render errors caught by a boundary are reported by the router's boundaries
+   (onCatch on the root, _app and _auth routes); reporting them here as well
+   would send each one twice. Only what no boundary caught comes through here.
+   Recoverable errors are kept: React fixed them by re-rendering, so no
+   boundary ever sees them, and they still point at a real bug. */
+function reportRootError(boundary: 'uncaught' | 'recoverable') {
+  return (error: unknown, info: { componentStack?: string | null }) => {
+    void reportError(error, { boundary, componentStack: info.componentStack });
+  };
 }
 
 /* Hot reload can re-run this module; reusing the root it created keeps a
@@ -61,36 +45,61 @@ function getRoot(container: Element, options?: RootOptions): Root {
   return root;
 }
 
-/* Playground: the mock API (src/mocks) answers every request in the browser,
-   so the app runs with no backend. Turned on by VITE_USE_MOCK in .env.development. */
-async function startMockApi(): Promise<void> {
-  if (import.meta.env.VITE_USE_MOCK !== 'true') {
-    return;
-  }
-  const { worker } = await import('./mocks/browser');
-  await worker.start({ onUnhandledRequest: 'bypass', quiet: true });
+function renderScreen(container: Element, screen: ReactNode): void {
+  getRoot(container).render(<StrictMode>{screen}</StrictMode>);
 }
 
-await startMockApi();
-registerServiceWorker();
+/* Playground: the mock API (src/mocks) answers every request in the browser,
+   so the app runs with no backend. Turned on by VITE_USE_MOCK in .env.development.
+   'warn' makes an endpoint without a mock handler visible in the console
+   instead of silently going to the fake base URL. Resolves with the error
+   when the service worker could not start. */
+async function startMockApi(): Promise<Error | null> {
+  if (import.meta.env.VITE_USE_MOCK !== 'true') {
+    return null;
+  }
+  try {
+    const { worker } = await import('./mocks/browser');
+    await worker.start({ onUnhandledRequest: 'warn', quiet: true });
+    return null;
+  } catch (error) {
+    return error instanceof Error ? error : new Error(String(error));
+  }
+}
 
-if (envError) {
-  getRoot(rootEl).render(
-    <StrictMode>
-      <EnvErrorScreen message={envError} />
-    </StrictMode>,
-  );
-} else {
+async function start(container: Element): Promise<void> {
+  if (envError) {
+    renderScreen(container, <EnvErrorScreen message={envError} />);
+    return;
+  }
+  const mockError = await startMockApi();
+  if (mockError) {
+    renderScreen(
+      container,
+      <MockApiErrorScreen
+        port={window.location.port}
+        reason={mockError.message}
+      />,
+    );
+    return;
+  }
+  registerServiceWorker();
+
   const router = getRouter();
-  configureMonitoring(router);
+  startMonitoring(router);
+  installSessionHooks({ router });
+  // The access token lives in memory: restore it (and the permissions)
+  // before the first guard runs, or a reload would land on /login.
+  await bootstrapSession();
 
-  getRoot(rootEl, {
-    onCaughtError: reportRenderError,
-    onUncaughtError: reportRenderError,
-    onRecoverableError: reportRenderError,
+  getRoot(container, {
+    onUncaughtError: reportRootError('uncaught'),
+    onRecoverableError: reportRootError('recoverable'),
   }).render(
     <StrictMode>
       <RouterProvider router={router} />
     </StrictMode>,
   );
 }
+
+await start(rootEl);

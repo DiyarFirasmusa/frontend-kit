@@ -25,7 +25,13 @@ describe('MembersTab', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.warehouse.read, PERMS.warehouse.write] });
+    signIn({
+      permissions: [
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
+      ],
+    });
   });
 
   it('shows the loading state', () => {
@@ -91,7 +97,7 @@ describe('MembersTab', () => {
   });
 
   it('hides the add and remove actions without warehouse:write', async () => {
-    signIn({ permissions: [PERMS.warehouse.read], roles: [] });
+    signIn({ permissions: [PERMS.warehouse.view], roles: [] });
     respondWith([makeWarehouseMember({ userId: USER_A })]);
     renderWithProviders(<MembersTab warehouseId="wh-1" />);
 
@@ -134,7 +140,7 @@ describe('MembersTab', () => {
         name: tt('warehouses.members.remove'),
       }),
     );
-    const dialog = await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('alertdialog');
     await user.click(
       within(dialog).getByRole('button', {
         name: tt('warehouses.members.removeConfirm'),
@@ -145,7 +151,7 @@ describe('MembersTab', () => {
       expect(deletedPath).toBe(`/api/warehouses/wh-1/users/${USER_A}`);
     });
     await waitFor(() => {
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
     });
     expect(listCalls).toBeGreaterThanOrEqual(2);
     expect(

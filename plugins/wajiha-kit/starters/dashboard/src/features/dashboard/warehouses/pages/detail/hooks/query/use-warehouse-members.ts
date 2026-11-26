@@ -12,7 +12,7 @@ import {
 export function useWarehouseMembers(warehouseId: string) {
   return useQuery({
     queryKey: qk.warehouses.users(warehouseId),
-    queryFn: () => fetchWarehouseMembers(warehouseId),
+    queryFn: ({ signal }) => fetchWarehouseMembers(warehouseId, { signal }),
     enabled: warehouseId !== '',
   });
 }

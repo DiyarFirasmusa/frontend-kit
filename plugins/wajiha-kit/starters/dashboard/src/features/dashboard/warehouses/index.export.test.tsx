@@ -33,7 +33,7 @@ describe('WarehousesListContainer export', () => {
   });
 
   beforeEach(() => {
-    signIn({ roles: [], permissions: [PERMS.warehouse.read] });
+    signIn({ roles: [], permissions: [PERMS.warehouse.view] });
   });
 
   it('disables export when no rows are loaded', async () => {

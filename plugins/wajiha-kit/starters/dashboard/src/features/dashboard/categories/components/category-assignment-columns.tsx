@@ -35,7 +35,7 @@ export function getCategoryAssignmentColumns({
             {row.attributeName ?? '—'}
           </span>
           {row.inherited ? (
-            <span className="text-warning text-b3 inline-flex items-center gap-1">
+            <span className="text-brand-text text-b3 inline-flex items-center gap-1">
               <Lock className="size-3.5 shrink-0" aria-hidden />
               {t('categories.assignments.inheritedReadonly')}
             </span>
@@ -102,7 +102,7 @@ export function getCategoryAssignmentColumns({
           <Button
             variant="link"
             size="sm"
-            className="text-warning px-0"
+            className="text-brand-text px-0"
             onClick={() => {
               onEditOptions(row);
             }}

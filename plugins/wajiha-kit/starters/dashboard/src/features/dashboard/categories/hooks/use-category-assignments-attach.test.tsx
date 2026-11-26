@@ -51,7 +51,13 @@ describe('useCategoryAssignments attach and detach', () => {
   });
 
   it('calls onSuccess after the POST attach succeeds', async () => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
     mockList();
     let body: unknown = null;
     const gate = createGate();

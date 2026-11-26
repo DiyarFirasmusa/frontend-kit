@@ -44,7 +44,9 @@ describe('UnitOfMeasureFormDialog', () => {
   });
 
   it('shows the create title and save label in create mode', async () => {
-    signIn({ permissions: [PERMS.unitOfMeasure.write] });
+    signIn({
+      permissions: [PERMS.unitOfMeasure.create, PERMS.unitOfMeasure.update],
+    });
     const { user } = renderWithProviders(<Harness />);
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
@@ -60,7 +62,9 @@ describe('UnitOfMeasureFormDialog', () => {
   });
 
   it('shows the code and name errors when submitting an empty create form', async () => {
-    signIn({ permissions: [PERMS.unitOfMeasure.write] });
+    signIn({
+      permissions: [PERMS.unitOfMeasure.create, PERMS.unitOfMeasure.update],
+    });
     let posted = false;
     server.use(
       http.post(api(endpoints.unitsOfMeasure.create), () => {
@@ -88,7 +92,9 @@ describe('UnitOfMeasureFormDialog', () => {
   });
 
   it('shows the edit title and prefills the row after openEdit', async () => {
-    signIn({ permissions: [PERMS.unitOfMeasure.write] });
+    signIn({
+      permissions: [PERMS.unitOfMeasure.create, PERMS.unitOfMeasure.update],
+    });
     const { user } = renderWithProviders(<Harness />);
 
     await user.click(screen.getByRole('button', { name: 'open edit' }));
@@ -113,7 +119,9 @@ describe('UnitOfMeasureFormDialog', () => {
   });
 
   it('toggles the active switch', async () => {
-    signIn({ permissions: [PERMS.unitOfMeasure.write] });
+    signIn({
+      permissions: [PERMS.unitOfMeasure.create, PERMS.unitOfMeasure.update],
+    });
     const { user } = renderWithProviders(<Harness />);
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
@@ -129,7 +137,9 @@ describe('UnitOfMeasureFormDialog', () => {
   it('renders Arabic labels with literal Arabic strings when the language is ar', async () => {
     await setTestLanguage('ar');
     await loadFeatureLocale('dashboard/units-of-measure');
-    signIn({ permissions: [PERMS.unitOfMeasure.write] });
+    signIn({
+      permissions: [PERMS.unitOfMeasure.create, PERMS.unitOfMeasure.update],
+    });
     const { user } = renderWithProviders(<Harness />);
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
@@ -144,7 +154,9 @@ describe('UnitOfMeasureFormDialog', () => {
   });
 
   it('marks save busy and blocks Escape while the create request is pending', async () => {
-    signIn({ permissions: [PERMS.unitOfMeasure.write] });
+    signIn({
+      permissions: [PERMS.unitOfMeasure.create, PERMS.unitOfMeasure.update],
+    });
     let release: (() => void) | undefined;
     const gate = new Promise<void>((resolve) => {
       release = resolve;

@@ -1,53 +1,28 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import { getErrorStatus } from '@/api/error/api-error';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import i18n from '@/lib/i18n/i18n';
+import { queryClient as appQueryClient } from '@/lib/query-client';
 
 interface QueryProviderProps {
   children: React.ReactNode;
+  /** Defaults to the app singleton, the same one the router context carries. */
+  client?: QueryClient;
 }
 
-function retryOnceUnlessClientError(
-  failureCount: number,
-  error: unknown,
-): boolean {
-  const status = getErrorStatus(error) ?? 0;
-  if (status >= 400 && status < 500) {
-    return false;
-  }
-  return failureCount < 1;
-}
-
-export function QueryProvider({ children }: QueryProviderProps) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 5_000,
-            gcTime: 5_000,
-            retry: retryOnceUnlessClientError,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-          },
-          mutations: {
-            retry: 0,
-          },
-        },
-      }),
-  );
-
+export function QueryProvider({
+  children,
+  client = appQueryClient,
+}: QueryProviderProps) {
+  // Server messages and labels come back in the UI language, so refetch them.
   useEffect(() => {
     const onLanguageChanged = () => {
-      void queryClient.invalidateQueries();
+      void client.invalidateQueries();
     };
     i18n.on('languageChanged', onLanguageChanged);
     return () => {
       i18n.off('languageChanged', onLanguageChanged);
     };
-  }, [queryClient]);
+  }, [client]);
 
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }

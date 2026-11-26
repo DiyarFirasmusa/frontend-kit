@@ -1,6 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCan } from '@/components/auth/can';
 import type { AttributeDefinitionResponse } from '@/types/api/catalog';
 import type { Column } from '@/types/table';
 import { getAttributeDefinitionColumns } from '../components/attribute-definition-columns';
@@ -9,7 +10,7 @@ import type { AttributeOptionsDialogProps } from '../components/dialog/attribute
 import type { OptionChanges } from '../utils/option-order';
 import type { AttributeDefinitionFormValues } from '../validations/validations';
 import { toAttributeDefinitionPayload } from '../validations/validations';
-import { canDeleteAttribute, canWriteAttribute } from './attribute-actions';
+import { getAttributeAccess } from './attribute-actions';
 import type { CategoriesConfirmTarget } from './confirm-target';
 import { useAttributeFilters } from './filter/use-attribute-filters';
 import { useAttributeFormDialog } from './form/use-attribute-form-dialog';
@@ -66,8 +67,9 @@ export function useAttributePanel({
     definitions.find((definition) => definition.id === optionsAttributeId) ??
     null;
 
-  const canWrite = canWriteAttribute();
-  const canDelete = canDeleteAttribute();
+  const access = getAttributeAccess(useCan());
+  const canWrite = access.update;
+  const canDelete = access.delete;
   const { openEdit: openAttributeEdit } = attributeDialog;
   const { openFor: openOptionsFor } = optionsDialog;
 

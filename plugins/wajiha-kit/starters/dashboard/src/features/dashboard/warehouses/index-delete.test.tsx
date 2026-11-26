@@ -30,8 +30,9 @@ describe('WarehousesListContainer delete on the last page', () => {
   beforeEach(() => {
     signIn({
       permissions: [
-        PERMS.warehouse.read,
-        PERMS.warehouse.write,
+        PERMS.warehouse.view,
+        PERMS.warehouse.create,
+        PERMS.warehouse.update,
         PERMS.warehouse.delete,
       ],
     });
@@ -59,7 +60,7 @@ describe('WarehousesListContainer delete on the last page', () => {
         name: tt('warehouses.actions.delete'),
       })[0],
     );
-    const dialog = await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('alertdialog');
     await user.click(
       within(dialog).getByRole('button', {
         name: tt('warehouses.delete.confirm'),

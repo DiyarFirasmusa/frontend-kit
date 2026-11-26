@@ -25,7 +25,13 @@ const CATEGORY = {
 
 describe('categories.service', () => {
   beforeEach(() => {
-    signIn({ permissions: ['item_category:read', 'item_category:write'] });
+    signIn({
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
+    });
   });
 
   it('fetchItemCategories GETs the list endpoint', async () => {

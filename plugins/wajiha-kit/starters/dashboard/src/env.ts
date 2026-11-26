@@ -43,6 +43,13 @@ const envSchema = z
       .transform((v) => v.replace(/\/+$/, '')),
     VITE_SENTRY_DSN: z.string().trim().optional().default(''),
     VITE_APP_VERSION: z.string().trim().optional().default('0.0.0'),
+    /**
+     * Where the refresh token lives. "cookie": the backend sets an HttpOnly
+     * cookie and the refresh call sends credentials, not a token. "session":
+     * the token is kept in sessionStorage (the mock API and backends without
+     * cookie support). The access token is always in memory only.
+     */
+    VITE_AUTH_REFRESH: z.enum(['cookie', 'session']).default('session'),
   })
   .transform((e) => ({
     ...e,
@@ -58,6 +65,7 @@ function readRawEnv(): Record<string, string | undefined> {
     VITE_AUTH_BASE_URL: import.meta.env.VITE_AUTH_BASE_URL,
     VITE_SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
     VITE_APP_VERSION: import.meta.env.VITE_APP_VERSION,
+    VITE_AUTH_REFRESH: import.meta.env.VITE_AUTH_REFRESH || undefined,
   };
 }
 
@@ -83,4 +91,5 @@ export const env: Env = parsed.success
       VITE_AUTH_BASE_URL: '',
       VITE_SENTRY_DSN: '',
       VITE_APP_VERSION: '0.0.0',
+      VITE_AUTH_REFRESH: 'session',
     };

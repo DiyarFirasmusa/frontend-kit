@@ -80,7 +80,7 @@ describe('UnitsOfMeasureListContainer', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.unitOfMeasure.read] });
+    signIn({ permissions: [PERMS.unitOfMeasure.view] });
   });
 
   afterEach(() => {
@@ -116,7 +116,7 @@ describe('UnitsOfMeasureListContainer', () => {
   });
 
   it('shows the empty message and hides create without write permission', async () => {
-    signIn({ roles: [], permissions: [PERMS.unitOfMeasure.read] });
+    signIn({ roles: [], permissions: [PERMS.unitOfMeasure.view] });
     respondWith([]);
     await render();
 
@@ -184,7 +184,11 @@ describe('UnitsOfMeasureListContainer', () => {
   it('opens the create dialog from the create button', async () => {
     signIn({
       roles: [],
-      permissions: [PERMS.unitOfMeasure.read, PERMS.unitOfMeasure.write],
+      permissions: [
+        PERMS.unitOfMeasure.view,
+        PERMS.unitOfMeasure.create,
+        PERMS.unitOfMeasure.update,
+      ],
     });
     respondWith(rows);
     const { user } = await render();

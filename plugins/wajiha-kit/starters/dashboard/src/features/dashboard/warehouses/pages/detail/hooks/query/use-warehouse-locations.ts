@@ -5,7 +5,7 @@ import { fetchWarehouseLocations } from '../../services/warehouse-detail.service
 export function useWarehouseLocations(warehouseId: string) {
   return useQuery({
     queryKey: qk.warehouses.locations(warehouseId),
-    queryFn: () => fetchWarehouseLocations(warehouseId),
+    queryFn: ({ signal }) => fetchWarehouseLocations(warehouseId, { signal }),
     enabled: warehouseId !== '',
   });
 }

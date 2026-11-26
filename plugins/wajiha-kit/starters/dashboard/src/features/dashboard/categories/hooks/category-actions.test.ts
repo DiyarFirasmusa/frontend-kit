@@ -1,13 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { PERMS } from '@/constants/permissions';
-import { signIn } from '@/test/fixtures/auth';
+import { describe, expect, it } from 'vitest';
+import type { CanCheck } from '@/components/auth/can';
+import { PERMS, type Permission } from '@/constants/permissions';
 import type { CategoryAttributeResponse } from '@/types/api/catalog';
-import {
-  canDeleteCategory,
-  canReadCategory,
-  canWriteAssignment,
-  canWriteCategory,
-} from './category-actions';
+import { canWriteAssignment, getCategoryAccess } from './category-actions';
 
 function assignment(
   overrides: Partial<CategoryAttributeResponse> = {},
@@ -30,43 +25,54 @@ function assignment(
   };
 }
 
-describe('category actions', () => {
-  beforeEach(() => {
-    signIn({ roles: [], permissions: [] });
+const canWith =
+  (...granted: Permission[]): CanCheck =>
+  (permission) =>
+    granted.includes(permission);
+
+describe('getCategoryAccess', () => {
+  it('answers nothing without permissions', () => {
+    expect(getCategoryAccess(canWith())).toEqual({
+      view: false,
+      create: false,
+      update: false,
+      delete: false,
+    });
   });
 
-  it('reads the category permission from the store', () => {
-    expect(canReadCategory()).toBe(false);
-    signIn({ roles: [], permissions: [PERMS.itemCategory.read] });
-    expect(canReadCategory()).toBe(true);
+  it('keeps create, update and delete apart', () => {
+    expect(getCategoryAccess(canWith(PERMS.itemCategory.create))).toMatchObject(
+      { create: true, update: false, delete: false },
+    );
+    expect(getCategoryAccess(canWith(PERMS.itemCategory.update))).toMatchObject(
+      { create: false, update: true, delete: false },
+    );
+    expect(getCategoryAccess(canWith(PERMS.itemCategory.delete))).toMatchObject(
+      { create: false, update: false, delete: true },
+    );
+    expect(getCategoryAccess(canWith(PERMS.itemCategory.view)).view).toBe(true);
+  });
+});
+
+describe('canWriteAssignment', () => {
+  it('allows an own assignment with item_category:update', () => {
+    expect(
+      canWriteAssignment(canWith(PERMS.itemCategory.update), assignment()),
+    ).toBe(true);
   });
 
-  it('allows writing only with item_category:write', () => {
-    signIn({ roles: [], permissions: [PERMS.itemCategory.read] });
-    expect(canWriteCategory()).toBe(false);
-    signIn({ roles: [], permissions: [PERMS.itemCategory.write] });
-    expect(canWriteCategory()).toBe(true);
+  it('denies an inherited assignment even with update permission', () => {
+    expect(
+      canWriteAssignment(
+        canWith(PERMS.itemCategory.update),
+        assignment({ inherited: true }),
+      ),
+    ).toBe(false);
   });
 
-  it('allows deleting only with item_category:delete', () => {
-    signIn({ roles: [], permissions: [PERMS.itemCategory.write] });
-    expect(canDeleteCategory()).toBe(false);
-    signIn({ roles: [], permissions: [PERMS.itemCategory.delete] });
-    expect(canDeleteCategory()).toBe(true);
-  });
-
-  it('allows writing an own assignment with write permission', () => {
-    signIn({ roles: [], permissions: [PERMS.itemCategory.write] });
-    expect(canWriteAssignment(assignment())).toBe(true);
-  });
-
-  it('denies writing an inherited assignment even with write permission', () => {
-    signIn({ roles: [], permissions: [PERMS.itemCategory.write] });
-    expect(canWriteAssignment(assignment({ inherited: true }))).toBe(false);
-  });
-
-  it('denies writing an own assignment without write permission', () => {
-    signIn({ roles: [], permissions: [PERMS.itemCategory.read] });
-    expect(canWriteAssignment(assignment())).toBe(false);
+  it('denies an own assignment with create alone', () => {
+    expect(
+      canWriteAssignment(canWith(PERMS.itemCategory.create), assignment()),
+    ).toBe(false);
   });
 });

@@ -22,7 +22,7 @@ describe('WarehouseDetailContainer map card', () => {
 
   beforeEach(() => {
     locationCalls = 0;
-    signIn({ roles: ['STAFF'], permissions: [PERMS.warehouse.read] });
+    signIn({ roles: ['STAFF'], permissions: [PERMS.warehouse.view] });
     server.use(
       http.get(api(endpoints.warehouses.detail('wh-1')), () =>
         HttpResponse.json(makeWarehouse({ locationCount: 84 })),

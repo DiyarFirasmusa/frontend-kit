@@ -47,7 +47,7 @@ describe('WarehouseFormDialog manager', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.warehouse.write] });
+    signIn({ permissions: [PERMS.warehouse.create, PERMS.warehouse.update] });
   });
 
   it('shows the resolved manager name when editing', async () => {

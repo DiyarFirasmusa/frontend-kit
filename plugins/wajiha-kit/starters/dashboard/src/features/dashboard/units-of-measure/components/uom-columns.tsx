@@ -1,4 +1,5 @@
 import type { useTranslation as useTranslationType } from 'react-i18next';
+import type { CanCheck } from '@/components/auth/can';
 import { DataBadge } from '@/components/table/data-badge';
 import { DataTableRowActions } from '@/components/table/data-table-row-actions';
 import type { Column } from '@/types/table';
@@ -11,12 +12,15 @@ type TFn = ReturnType<typeof useTranslationType>['t'];
 
 interface GetUnitOfMeasureColumnsArgs {
   t: TFn;
+  /** From `useCan()`: the row menu shows only what the user may do. */
+  can: CanCheck;
   onEdit: (row: UnitOfMeasureRow) => void;
   onDelete: (row: UnitOfMeasureRow) => void;
 }
 
 export function getUnitOfMeasureColumns({
   t,
+  can,
   onEdit,
   onDelete,
 }: GetUnitOfMeasureColumnsArgs): Column<UnitOfMeasureRow>[] {
@@ -25,7 +29,7 @@ export function getUnitOfMeasureColumns({
       id: 'code',
       header: t('unitsOfMeasure.col.code'),
       accessor: (row) => row.code ?? '—',
-      cellClassName: 'text-table-id text-warning',
+      cellClassName: 'text-table-id text-text-primary',
     },
     {
       id: 'name',
@@ -63,7 +67,13 @@ export function getUnitOfMeasureColumns({
       align: 'end',
       cell: (row) => (
         <DataTableRowActions
-          actions={getUnitOfMeasureRowActions({ t, row, onEdit, onDelete })}
+          actions={getUnitOfMeasureRowActions({
+            t,
+            can,
+            row,
+            onEdit,
+            onDelete,
+          })}
         />
       ),
     },

@@ -46,7 +46,7 @@ describe('WarehousesListContainer', () => {
   });
 
   beforeEach(() => {
-    signIn({ roles: [], permissions: [PERMS.warehouse.read] });
+    signIn({ roles: [], permissions: [PERMS.warehouse.view] });
   });
 
   it('shows skeleton rows while the list is loading', async () => {

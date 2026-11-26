@@ -35,7 +35,7 @@ describe('UnitsOfMeasureListContainer export', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: [PERMS.unitOfMeasure.read] });
+    signIn({ permissions: [PERMS.unitOfMeasure.view] });
   });
 
   it('disables export when no units are loaded', async () => {

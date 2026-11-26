@@ -47,7 +47,11 @@ describe('CategoryFormDialog', () => {
 
   beforeEach(() => {
     signIn({
-      permissions: ['item_category:read', 'item_category:write'],
+      permissions: [
+        'item_category:read',
+        'item_category:create',
+        'item_category:update',
+      ],
     });
   });
 

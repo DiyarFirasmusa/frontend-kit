@@ -32,7 +32,13 @@ describe('CategoryBlockedDialog', () => {
   });
 
   beforeEach(() => {
-    signIn({ permissions: ['item_category:write', 'item_category:delete'] });
+    signIn({
+      permissions: [
+        'item_category:create',
+        'item_category:update',
+        'item_category:delete',
+      ],
+    });
   });
 
   it('shows the title, the reason text and the category name and path', async () => {

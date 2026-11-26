@@ -7,6 +7,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart-tooltip';
 import { Wrapper } from '@/components/wrapper/loading-wrapper';
+import { directionOf } from '@/lib/i18n/languages';
 import { cn } from '@/lib/utils';
 import { formatNumber } from '@/utils/format';
 import {
@@ -90,6 +91,7 @@ function Legend({ activity }: { activity: ActivityTrend }) {
 
 function ActivityAreaChart({ activity }: { activity: ActivityTrend }) {
   const { t, i18n } = useTranslation();
+  const isRtl = directionOf(i18n.language) === 'rtl';
   const gradientId = useId().replaceAll(/[^a-zA-Z0-9]/gu, '');
   const points = toChartPoints(activity.days ?? []);
   const max = Math.max(0, ...points.flatMap((p) => [p.created, p.updated]));
@@ -114,7 +116,7 @@ function ActivityAreaChart({ activity }: { activity: ActivityTrend }) {
     >
       <AreaChart
         data={points}
-        margin={{ top: 8, right: 0, bottom: 0, left: 24 }}
+        margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
       >
         <defs>
           <linearGradient id={`${gradientId}a`} x1="0" y1="0" x2="0" y2="1">
@@ -151,9 +153,12 @@ function ActivityAreaChart({ activity }: { activity: ActivityTrend }) {
           tickLine={false}
           axisLine={false}
           tickMargin={12}
+          // Room for the first and last date labels, which centre on the edge points.
+          padding={{ left: 32, right: 32 }}
         />
+        {/* Values sit on the reading start side: left in English, right in Arabic. */}
         <YAxis
-          orientation="right"
+          orientation={isRtl ? 'right' : 'left'}
           ticks={yTicks}
           domain={[0, yTicks.at(-1) ?? 'auto']}
           tickFormatter={(value: number) => formatNumber(value)}

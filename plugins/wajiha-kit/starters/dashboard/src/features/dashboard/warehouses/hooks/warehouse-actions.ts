@@ -1,19 +1,13 @@
+import type { CanCheck } from '@/components/auth/can';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import { PERMS } from '@/constants/permissions';
 import { Eye, Pencil, Trash2 } from '@/lib/icons';
-import { hasPermission } from '@/store/permission-store';
 import type { WarehouseResponse } from '@/types/api/warehouses';
-
-export function canEditWarehouse(): boolean {
-  return hasPermission(PERMS.warehouse.write);
-}
-
-export function canDeleteWarehouse(): boolean {
-  return hasPermission(PERMS.warehouse.delete);
-}
 
 interface GetWarehouseRowActionsArgs {
   t: (key: string) => string;
+  /** From `useCan()`, so the menu follows permission changes. */
+  can: CanCheck;
   row: WarehouseResponse;
   onView: (row: WarehouseResponse) => void;
   onEdit: (row: WarehouseResponse) => void;
@@ -22,6 +16,7 @@ interface GetWarehouseRowActionsArgs {
 
 export function getWarehouseRowActions({
   t,
+  can,
   row,
   onView,
   onEdit,
@@ -38,7 +33,7 @@ export function getWarehouseRowActions({
     },
   ];
 
-  if (canEditWarehouse()) {
+  if (can(PERMS.warehouse.update)) {
     actions.push({
       id: 'edit',
       label: t('warehouses.actions.edit'),
@@ -49,7 +44,7 @@ export function getWarehouseRowActions({
     });
   }
 
-  if (canDeleteWarehouse()) {
+  if (can(PERMS.warehouse.delete)) {
     actions.push({
       id: 'delete',
       label: t('warehouses.actions.delete'),

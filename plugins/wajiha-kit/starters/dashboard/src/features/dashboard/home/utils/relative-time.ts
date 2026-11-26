@@ -55,25 +55,10 @@ export function formatShortDate(
     : formatLongDate(date, language);
 }
 
-/** "10:32" (24 h), or "12:42 م" / "12:42 PM" with `hour12`. */
-export function formatClock(
-  value: DateInput,
-  language: string,
-  hour12 = false,
-): string {
+/** "10:32": every clock on the dashboard is 24 h, so two times on one page never disagree. */
+export function formatClock(value: DateInput): string {
   const date = toValidDate(value);
-  if (!date) {
-    return '—';
-  }
-  if (!hour12) {
-    return formatTime(date);
-  }
-  return new Intl.DateTimeFormat(language, {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-    numberingSystem: 'latn',
-  }).format(date);
+  return date ? formatTime(date) : '—';
 }
 
 /** "اليوم" / "أمس" / "18 مايو". */
@@ -99,7 +84,6 @@ export function formatRelativeDay(
 export function formatDayTime(
   value: DateInput,
   context: RelativeTimeContext,
-  hour12 = false,
 ): string {
   const date = toValidDate(value);
   if (!date) {
@@ -107,7 +91,7 @@ export function formatDayTime(
   }
   return context.t('home.time.dayTime', {
     day: formatRelativeDay(date, context),
-    time: formatClock(date, context.language, hour12),
+    time: formatClock(date),
   });
 }
 

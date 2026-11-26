@@ -14,7 +14,11 @@ import {
 
 const LIST = api(endpoints.itemCategories.attributes('cat-hand'));
 const OWN_PUT = api(endpoints.itemCategories.attribute('cat-hand', 'asg-2'));
-const PERMS = ['item_category:read', 'item_category:write'];
+const PERMS = [
+  'item_category:read',
+  'item_category:create',
+  'item_category:update',
+];
 
 describe('useCategoryAssignments race and in-flight handling', () => {
   it('keeps the pending flags until the refreshed list lands', async () => {

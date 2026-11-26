@@ -32,20 +32,20 @@ function Sparkline({ trend }: { trend: number[] | null }) {
       aria-hidden="true"
       focusable="false"
       data-kind="line"
-      className="text-warning h-5 w-14 shrink-0 overflow-visible"
+      className="h-5 w-14 shrink-0 overflow-visible"
     >
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="currentColor" stopOpacity={0.28} />
-          <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+          <stop offset="0%" stopColor="var(--brand)" stopOpacity={0.28} />
+          <stop offset="100%" stopColor="var(--brand)" stopOpacity={0} />
         </linearGradient>
       </defs>
       <polygon points={area} fill={`url(#${gradientId})`} />
       <polyline
         points={points}
         fill="none"
-        stroke="currentColor"
         strokeWidth={1.5}
+        className="stroke-brand"
         strokeLinejoin="round"
         strokeLinecap="round"
       />
@@ -78,7 +78,7 @@ function Bars({ trend }: { trend: number[] | null }) {
             height={barHeight}
             rx={2}
             className={cn(
-              index === heights.length - 1 ? 'fill-warning' : 'fill-primary/35',
+              index === heights.length - 1 ? 'fill-brand' : 'fill-brand/35',
             )}
           />
         );
@@ -120,7 +120,7 @@ function Ring({
         strokeLinecap="round"
         strokeDasharray={RING_CIRCUMFERENCE}
         strokeDashoffset={RING_CIRCUMFERENCE * (1 - ratio)}
-        className="stroke-warning"
+        className="stroke-brand"
       />
     </svg>
   );

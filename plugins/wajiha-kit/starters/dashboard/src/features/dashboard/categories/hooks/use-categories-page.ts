@@ -1,6 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCan } from '@/components/auth/can';
 import type { SelectOption } from '@/components/fields/select-option';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import type { ExportExcelButtonProps } from '@/components/table/export-excel-button';
@@ -27,12 +28,8 @@ import {
   getCategoryExportColumns,
 } from '../utils/category-export-columns';
 import type { AttachAttributeFormValues } from '../validations/validations';
-import {
-  canDeleteAttribute,
-  canReadAttribute,
-  canWriteAttribute,
-} from './attribute-actions';
-import { canDeleteCategory, canWriteCategory } from './category-actions';
+import { getAttributeAccess } from './attribute-actions';
+import { getCategoryAccess } from './category-actions';
 import type {
   CategoriesConfirmKind,
   CategoriesConfirmTarget,
@@ -61,9 +58,11 @@ export interface CategoriesPage {
   tab: CategoriesTab;
   setTab: (tab: CategoriesTab) => void;
   showAttributesTab: boolean;
-  canWriteCategory: boolean;
+  canCreateCategory: boolean;
+  canUpdateCategory: boolean;
   canDeleteCategory: boolean;
-  canWriteAttribute: boolean;
+  canCreateAttribute: boolean;
+  canUpdateAttribute: boolean;
   canDeleteAttribute: boolean;
   /** Excel export of the category tree (the categories tab). */
   exportExcel: ExportExcelButtonProps;
@@ -107,6 +106,9 @@ export interface CategoriesPage {
 
 export function useCategoriesPage(initialTab: CategoriesTab): CategoriesPage {
   const { t, i18n } = useTranslation();
+  const can = useCan();
+  const categoryAccess = getCategoryAccess(can);
+  const attributeAccess = getAttributeAccess(can);
   const [tab, setTab] = useState<CategoriesTab>(initialTab);
   const [target, setTarget] = useState<CategoriesConfirmTarget | null>(null);
 
@@ -218,11 +220,13 @@ export function useCategoriesPage(initialTab: CategoriesTab): CategoriesPage {
     dir: directionOf(i18n.language),
     tab,
     setTab,
-    showAttributesTab: canReadAttribute(),
-    canWriteCategory: canWriteCategory(),
-    canDeleteCategory: canDeleteCategory(),
-    canWriteAttribute: canWriteAttribute(),
-    canDeleteAttribute: canDeleteAttribute(),
+    showAttributesTab: attributeAccess.view,
+    canCreateCategory: categoryAccess.create,
+    canUpdateCategory: categoryAccess.update,
+    canDeleteCategory: categoryAccess.delete,
+    canCreateAttribute: attributeAccess.create,
+    canUpdateAttribute: attributeAccess.update,
+    canDeleteAttribute: attributeAccess.delete,
     exportExcel: {
       onExport: excel.exportExcel,
       isExporting: excel.isExporting,

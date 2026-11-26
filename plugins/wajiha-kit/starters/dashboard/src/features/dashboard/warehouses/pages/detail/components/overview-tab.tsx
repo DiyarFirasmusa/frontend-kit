@@ -57,7 +57,7 @@ export function OverviewTab({ warehouse }: OverviewTabProps) {
 function MapTile({ title, count }: { title: string; count: string }) {
   return (
     <div className="border-stroke-strong bg-surface-elevated gap-field p-panel flex min-h-60 flex-col items-center justify-center rounded-(--radius-kpi) border border-dashed text-center">
-      <Warehouse className="text-warning size-8" />
+      <Warehouse className="text-brand-text size-8" />
       <span className="text-b1 text-text-primary">{title}</span>
       <span className="text-b3 text-text-secondary tabular-nums">{count}</span>
     </div>

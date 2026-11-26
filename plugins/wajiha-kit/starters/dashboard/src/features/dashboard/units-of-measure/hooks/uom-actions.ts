@@ -1,19 +1,13 @@
+import type { CanCheck } from '@/components/auth/can';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import { PERMS } from '@/constants/permissions';
 import { Pencil, Trash2 } from '@/lib/icons';
-import { hasPermission } from '@/store/permission-store';
 import type { UnitOfMeasureRow } from '../types/types';
-
-export function canEditUnitOfMeasure(): boolean {
-  return hasPermission(PERMS.unitOfMeasure.write);
-}
-
-export function canDeleteUnitOfMeasure(): boolean {
-  return hasPermission(PERMS.unitOfMeasure.delete);
-}
 
 interface GetUnitOfMeasureRowActionsArgs {
   t: (key: string) => string;
+  /** From `useCan()`, so the menu follows permission changes. */
+  can: CanCheck;
   row: UnitOfMeasureRow;
   onEdit: (row: UnitOfMeasureRow) => void;
   onDelete: (row: UnitOfMeasureRow) => void;
@@ -21,13 +15,14 @@ interface GetUnitOfMeasureRowActionsArgs {
 
 export function getUnitOfMeasureRowActions({
   t,
+  can,
   row,
   onEdit,
   onDelete,
 }: GetUnitOfMeasureRowActionsArgs): RowAction[] {
   const actions: RowAction[] = [];
 
-  if (canEditUnitOfMeasure()) {
+  if (can(PERMS.unitOfMeasure.update)) {
     actions.push({
       id: 'edit',
       label: t('unitsOfMeasure.actions.edit'),
@@ -38,7 +33,7 @@ export function getUnitOfMeasureRowActions({
     });
   }
 
-  if (canDeleteUnitOfMeasure()) {
+  if (can(PERMS.unitOfMeasure.delete)) {
     actions.push({
       id: 'delete',
       label: t('unitsOfMeasure.actions.delete'),

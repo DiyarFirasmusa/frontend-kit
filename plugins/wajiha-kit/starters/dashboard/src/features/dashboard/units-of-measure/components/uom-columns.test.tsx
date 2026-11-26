@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { DataTable } from '@/components/table/data-table';
+import { ClientDataTable } from '@/components/table/client-data-table';
 import i18n, { loadFeatureLocale } from '@/lib/i18n/i18n';
 import { setTestLanguage, tt } from '@/test/i18n';
 import { renderWithProviders, screen } from '@/test/render';
@@ -11,6 +11,7 @@ import { getUnitOfMeasureColumns } from './uom-columns';
 function buildColumns() {
   return getUnitOfMeasureColumns({
     t: i18n.t,
+    can: () => true,
     onEdit: vi.fn(),
     onDelete: vi.fn(),
   });
@@ -26,7 +27,7 @@ function column(id: string): Column<UnitOfMeasureRow> {
 
 function renderColumns(ids: string[], rows: UnitOfMeasureRow[]) {
   return renderWithProviders(
-    <DataTable
+    <ClientDataTable
       data={rows}
       columns={ids.map((id) => column(id))}
       getRowId={(r) => r.id}

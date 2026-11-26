@@ -44,6 +44,13 @@ export function AppErrorView({ error }: AppErrorViewProps) {
   return (
     <ErrorPage
       kind={error.kind}
+      // A network error while the browser is online means the server is down
+      // or unreachable; "no internet" would contradict the status line.
+      title={
+        error.kind === 'network' && isOnline
+          ? t('errorPages.network.unreachableTitle')
+          : undefined
+      }
       primary={{ label: t('errorPages.retry'), onClick: retry }}
       secondary={{
         label: t('errorPages.goHome'),

@@ -65,7 +65,7 @@ describe('CategoriesContainer (delete)', () => {
     await user.click(
       await screen.findByRole('button', { name: tt('common.delete') }),
     );
-    const confirm = await screen.findByRole('dialog');
+    const confirm = await screen.findByRole('alertdialog');
     await user.click(
       within(confirm).getByRole('button', {
         name: tt('categories.delete.confirm'),

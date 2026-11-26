@@ -21,7 +21,12 @@ function SaveOptionsProbe({ seen }: { seen: Seen }) {
 
 describe('attribute option mutations', () => {
   it('useSaveAttributeOptions sends deletes, updates and creates in order and invalidates', async () => {
-    signIn({ permissions: [PERMS.attributeDefinition.write] });
+    signIn({
+      permissions: [
+        PERMS.attributeDefinition.create,
+        PERMS.attributeDefinition.update,
+      ],
+    });
     const calls: string[] = [];
     server.use(
       http.delete(
@@ -75,7 +80,12 @@ describe('attribute option mutations', () => {
   });
 
   it('invalidates even when a request of the batch fails', async () => {
-    signIn({ permissions: [PERMS.attributeDefinition.write] });
+    signIn({
+      permissions: [
+        PERMS.attributeDefinition.create,
+        PERMS.attributeDefinition.update,
+      ],
+    });
     server.use(
       http.post(api(endpoints.attributeDefinitions.options(definitionId)), () =>
         HttpResponse.json({ message: 'duplicate' }, { status: 409 }),
