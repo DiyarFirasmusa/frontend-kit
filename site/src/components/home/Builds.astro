@@ -36,8 +36,7 @@ const { locale } = Astro.props
                 </div>
               </div>
               <h3>{kind.tab[locale]}</h3>
-              <p class="kind-line">{kind.title[locale]}</p>
-              <p class="kind-text">{kind.text[locale]}</p>
+              <p class="kind-line">{home.builds.examples[kind.id as keyof typeof home.builds.examples]?.[locale]}</p>
             </li>
           ))
         }

@@ -58,9 +58,14 @@ export const home = {
   forLink: t('Build with AI and want it kept tidy? For developers', 'تبني بالذكاء الاصطناعي وتريد أن يبقى مشروعك مرتبا؟ للمطورين'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
-    lead: t('Pick one when Claude asks. The kit picks the tools, and may ask which framework.', 'اختر واحدا عندما يسألك Claude. تختار الإضافة الأدوات، وقد تسألك أي إطار.'),
+    lead: t('Three kinds of project. Claude asks which one you want.', 'ثلاثة أنواع من المشاريع، ويسألك Claude أيها تريد.'),
+    examples: {
+      website: t('Your shop, your restaurant menu, your portfolio', 'متجرك، قائمة مطعمك، معرض أعمالك'),
+      dashboard: t('Your orders, your customers, your stock', 'طلباتك، زبائنك، مخزونك'),
+      fullstack: t('A shop you add products to from your dashboard', 'متجر تضيف له منتجات من لوحتك'),
+    },
     say: t('You could say', 'يمكنك أن تقول'),
-    more: t('See the four kinds of project', 'شاهد الأنواع الأربعة للمشاريع'),
+    more: t('See every kind of project', 'شاهد كل أنواع المشاريع'),
   },
   see: t('See how it works, step by step', 'شاهد كيف يعمل، خطوة بخطوة'),
   docs: t('Read the guide', 'اقرأ الدليل'),

@@ -52,13 +52,6 @@
   line-height: 1.5;
 }
 
-.kind-text {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.875rem;
-  line-height: 1.6;
-  opacity: 0.85;
-}
 
 /* LIFE. Everything here answers the scroll and the hand:
    - the three come up one a little after the other as you scroll (reveal.ts sets --p);
