@@ -1,6 +1,6 @@
 ---
 name: web-seo-page
-description: "Website profile: SEO and share previews for one page of a TanStack Start site — head() title and description, canonical URL, Open Graph and Twitter tags so WhatsApp/Telegram/X/Facebook previews show the right title and image, JSON-LD (Product, BreadcrumbList, Organization, WebSite), noindex for private pages, robots.txt and sitemap routes, readable slugs with 301 on rename, hreflang. Use when the user says SEO, meta tags, title, description, share preview, WhatsApp/Telegram preview shows wrong image, og:image, structured data, rich results, Google, sitemap, robots, canonical, noindex, or adds a public page."
+description: Website profile - SEO and share previews for one TanStack Start page - head() title and description, canonical, Open Graph and Twitter tags (WhatsApp, Telegram previews), JSON-LD, noindex, robots, sitemap, hreflang. Use for SEO, meta tags, share preview, og:image, structured data, canonical.
 ---
 
 # SEO for a page (TanStack Start)

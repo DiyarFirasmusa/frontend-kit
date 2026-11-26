@@ -1,6 +1,6 @@
 ---
 name: refactor
-description: Refactor code without changing behaviour — split long files, separate view, state, data and logic, apply the project's own layout, extract services and hooks or their equivalents, remove duplication, finish JS→TS leftovers. Use when asked to clean up, restructure, split, simplify or migrate code.
+description: Refactor code without changing behaviour - split long files, separate view, state, data and logic, apply the project's layout, extract services and hooks, remove duplication, finish JS to TS leftovers. Use to clean up, restructure, split, simplify or migrate code.
 ---
 
 # Refactor

@@ -1,6 +1,6 @@
 ---
 name: dash-create-filter-bar
-description: "Dashboard profile: add a filter bar / toolbar above a list — debounced search box, status or enum selects, lookup selects (role, category), date range, toggles, active-filter count and clear-all — with every value stored in typed URL search params and the page reset to 1 on change. Use when the user asks for filters, search, a search box, filter by status / date / type, a toolbar, \"filter the table\", clear filters, or to keep filters after reload / in a shared link."
+description: Dashboard profile - add a filter bar or toolbar above a list - debounced search, selects, date range, toggles, clear-all - every value in typed URL search params, page reset on change. Use for filters, a search box, filter by status or date, 'filter the table', filters kept on reload.
 ---
 
 # Dashboard: create a filter bar

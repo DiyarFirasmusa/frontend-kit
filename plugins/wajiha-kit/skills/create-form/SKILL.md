@@ -1,6 +1,6 @@
 ---
 name: create-form
-description: Create a form in any frontend stack with the project's own form and validation tools (react-hook-form + zod 4 where installed) — schema, accessible labelled fields, inline errors, single-flight submit. Use for any input UI — login, phone, OTP, registration, address, profile, settings, filters, create/edit dialogs.
+description: Create a form in any frontend stack with the project's own form and validation tools (react-hook-form + zod where installed) - schema, labelled accessible fields, inline errors, single-flight submit. Use for any input UI - login, phone, OTP, registration, address, profile, create/edit dialogs.
 ---
 
 # Create form

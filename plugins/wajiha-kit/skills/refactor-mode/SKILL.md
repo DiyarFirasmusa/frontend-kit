@@ -84,7 +84,7 @@ Run the first pending phase of the approved plan:
 1. Confirm the gate is green before you touch anything.
 2. Do **only** that phase. Move code and change structure; never change behaviour, copy, styles or APIs in the same
    step. If you find a bug, note it in the plan under "found, not fixed" and keep going.
-3. Work in small steps; after each batch run the typecheck and the related tests. Use `fix-everywhere` for patterns.
+3. Work in small steps; after each batch run the typecheck and the related tests. For a pattern repeated in many files, grep it, fix each occurrence and prove none are left (`scope.md`).
 4. At the end run `verify` and report the real numbers against the audit baseline: same tests passing, same
    typecheck result, fewer findings.
 5. Compare the public surface against the audit's record; any difference is reported, not shipped. At a phase end run the

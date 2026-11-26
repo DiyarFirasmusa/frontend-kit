@@ -1,11 +1,8 @@
----
-name: tanstack-query-key-conventions
-description: Query and mutation key conventions — every key comes from the project's one query-key factory, grouped by domain so one `all` key invalidates a family. Use whenever writing or reviewing useQuery, useSuspenseQuery, useMutation, useInfiniteQuery, queryOptions, invalidateQueries, setQueryData, prefetchQuery, ensureQueryData or removeQueries, or when tempted to write an inline key array.
----
+# Query and mutation keys (TanStack Query only)
 
-# Query keys
-
-Only for a project with TanStack Query: with another data layer keep its own cache keys, and don't install Query.
+Read when writing or reviewing `useQuery`, `useSuspenseQuery`, `useMutation`, `useInfiniteQuery`, `queryOptions`,
+`invalidateQueries`, `setQueryData`, `prefetchQuery`, `ensureQueryData` or `removeQueries`, or when tempted to write an inline
+key array. With another data layer keep its own cache keys, and don't install Query.
 
 All keys come from one factory (its name and file are in `CLAUDE.md`, e.g.
 `qk` in `constants/query-keys.ts`). No inline arrays (`['orders']`,

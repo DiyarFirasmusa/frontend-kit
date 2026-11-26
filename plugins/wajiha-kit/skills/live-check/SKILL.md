@@ -1,6 +1,6 @@
 ---
 name: live-check
-description: Check a change in a real browser — the user's own logged-in Chrome through the Chrome MCP — against the local dev server or UAT, never the live site. Use when the user says "live check", "check in Chrome", "open chrome mcp", "test it as a real user", or a flow needs a real login (OTP, SSO, a payment or third-party flow on UAT).
+description: Check a change in the user's own logged-in Chrome through the Chrome MCP, against the local dev server or UAT, never the live site. Use for 'live check', 'check in Chrome', 'open chrome mcp', 'test it as a real user', or a flow needing a real login (OTP, SSO, a payment or third-party flow on UAT).
 ---
 
 # Live check (UAT / local only)

@@ -1,25 +1,38 @@
 ---
 name: sync-main
-description: Fetch origin and show how far the task branch is behind origin/<defaultBranch> and which incoming commits touch the same files. Rebases only when the user explicitly asks. Use when the user says "sync with main", "update from main", "is main ahead", "rebase on main".
+description: Where the task branch stands - branch, ahead/behind origin/<defaultBranch>, unpushed commits, uncommitted changes, incoming commits on the same files. Rebases only on request. Use for "which branch", "is it pushed", "what's left to commit", "sync with main", "update from main", "rebase".
 ---
 
 # Sync with <defaultBranch>
 
 Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `<liveHost>`, `<uatHost>`, …) are this project's: read them from `.claude/wajiha-kit.json` (`liveHosts[0]` for `<liveHost>`), else from `CLAUDE.md`.
 
-## Look (always)
+## Look (always, read-only)
 
 ```sh
 git fetch origin
 git branch --show-current
-git rev-list --left-right --count origin/<defaultBranch>...HEAD
-git log --oneline HEAD..origin/<defaultBranch>
+git rev-list --left-right --count origin/<defaultBranch>...HEAD   # behind ahead
+git rev-parse --abbrev-ref @{upstream}                  # may fail: not pushed yet
+git log --oneline @{upstream}..HEAD                     # unpushed commits
+git log --oneline HEAD..origin/<defaultBranch>          # incoming
 git diff --name-only HEAD...origin/<defaultBranch>
 git diff --name-only origin/<defaultBranch>...HEAD
+git status --short
 ```
 
-Report: N commits behind, the incoming commit headers, and the files changed
-on both sides (likely conflicts). Then stop and ask whether to rebase.
+Report in this shape (omit empty lines):
+
+```
+Branch: <branch> (from origin/<defaultBranch>, <N> ahead, <M> behind)
+Pushed: yes, up to date | no upstream yet | <K> commit(s) not pushed
+Uncommitted: <count> — <files, grouped: src / tests / locales / config>
+Incoming: <M> commit headers, and the files changed on both sides (likely conflicts)
+On a protected branch (<protectedBranches>): WARNING — these deploy; never work on them
+```
+
+If there are unpushed or uncommitted task changes, ask whether to commit and push
+(`commit-push`). If behind, stop and ask whether to rebase.
 
 ## Rebase (only after the user asks for it in this conversation)
 

@@ -1,6 +1,6 @@
 ---
 name: mode
-description: Turn a working mode on or off and see what is on — new, existing, maintenance, refactor, upgrade, freeze (project modes) and hotfix, read-only, prototype (this checkout only). Each mode changes what Claude may do; a guard holds the part a hook can see (a guard rail, not a sandbox) and the rest is instruction. Run with /wajiha-kit:mode.
+description: Turn a working mode on or off and see what is on - new, existing, maintenance, refactor, upgrade, freeze (project) and hotfix, read-only, prototype (this checkout). Each mode changes what Claude may do; a guard holds the part a hook can see, the rest is instruction. Run with /wajiha-kit:mode.
 argument-hint: "[status | list | off [mode|all] | <mode> [--days N | --until DATE] [--base REF] [--files N] [--note why]]"
 disable-model-invocation: true
 allowed-tools: Bash("${CLAUDE_PLUGIN_ROOT}/scripts/mode-switch.sh" *)

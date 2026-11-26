@@ -1,6 +1,6 @@
 ---
 name: create-store
-description: Create shared client state in any frontend stack (a store, slice, service, rune, signal or plain module) for a value that outlives a component, such as a preference (theme, language, sidebar), session, cart, draft or data handed between routes, persisted when needed, with sign-out cleanup. Use whenever the user asks to add global, shared or persisted client state, or a store.
+description: Create shared client state in any frontend stack (store, slice, service, signal or plain module) for a value that outlives a component - theme, language, sidebar, session, cart, draft - persisted when needed, with sign-out cleanup. Use to add global, shared or persisted state, or a store.
 ---
 
 # Create shared state

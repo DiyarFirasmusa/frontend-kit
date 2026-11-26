@@ -1,6 +1,6 @@
 ---
 name: dash-create-route
-description: "Dashboard profile: add a TanStack Router file route — a list, detail, create or edit page, a new layout group, or a guarded section — with a permission guard, a typed zod search schema, a loader that prefetches through the query client, and the sidebar nav entry. Use when the user asks to add a page, route, screen, URL, tab-in-the-URL, a new section in the sidebar, or to guard a route by role or permission."
+description: Dashboard profile - add a TanStack Router file route (list, detail, create, edit, layout group) with a permission guard, typed zod search schema, a prefetching loader and the sidebar entry. Use to add a page, route, screen, URL or sidebar section, or to guard a route by role or permission.
 ---
 
 # Dashboard: create a route

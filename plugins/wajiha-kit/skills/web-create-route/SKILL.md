@@ -1,6 +1,6 @@
 ---
 name: web-create-route
-description: "Website profile: add or change a page route in a TanStack Start site — the file route under src/routes, its loader (awaited vs streamed Query data), head() for title/description/canonical/share tags, notFound() with a real 404, 301 redirects for renamed slugs, errorComponent, pendingComponent, search-param validation, guards with beforeLoad, and the container wiring. Use when the user says new page, new route, add a URL, detail page, slug page, 404 for missing items, redirect old URLs, or a page loads data on the client that should be server-rendered."
+description: Website profile - add or change a page route in a TanStack Start site - file route, loader, head() tags, notFound() with a real 404, 301 redirects, error and pending components, search validation, beforeLoad guards. Use for a new page, route, URL, slug page, 404, or redirecting old URLs.
 ---
 
 # Create a route (TanStack Start)

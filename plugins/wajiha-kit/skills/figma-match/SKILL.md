@@ -1,6 +1,6 @@
 ---
 name: figma-match
-description: Build or fix UI so it matches a Figma frame exactly — spacing, sizes, colours, radii, type, states — using the project's tokens, in Arabic RTL and English LTR, phone and desktop, with no layout shift. Use when the user gives a figma.com link or says "like Figma", "follow Figma", "same as the design".
+description: Build or fix UI so it matches a Figma frame exactly (spacing, sizes, colours, radii, type, states) using the project's tokens, in each language and direction, phone and desktop, no layout shift. Use when given a figma.com link or told 'like Figma', 'follow Figma', 'same as the design'.
 argument-hint: "<figma url>"
 ---
 

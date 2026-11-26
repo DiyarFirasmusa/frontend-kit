@@ -1,6 +1,6 @@
 ---
 name: playwright-best-practices
-description: Use when writing Playwright tests, fixing flaky tests, debugging failures, implementing Page Object Model, configuring CI/CD, optimizing performance, mocking APIs, handling authentication or OAuth, testing accessibility (axe-core), file uploads/downloads, date/time mocking, WebSockets, geolocation, permissions, multi-tab/popup flows, mobile/responsive layouts, touch gestures, GraphQL, error handling, offline mode, multi-user collaboration, third-party services (payments, email verification), console error monitoring, global setup/teardown, test annotations (skip, fixme, slow), test tags (@smoke, @fast, @critical, filtering with --grep), project dependencies, security testing (XSS, CSRF, auth), performance budgets (Web Vitals, Lighthouse), iframes, component testing, canvas/WebGL, service workers/PWA, test coverage, i18n/localization, Electron apps, or browser extension testing. Covers E2E, component, API, visual, accessibility, security, Electron, and extension testing.
+description: Playwright testing guidance - writing tests, fixing flaky tests, debugging failures, Page Object Model, CI/CD, mocking APIs, auth, accessibility (axe-core), file uploads, WebSockets, mobile, visual, component and API testing, fixtures, tags, projects. Use for any Playwright or e2e test work.
 license: MIT
 metadata:
   author: currents.dev

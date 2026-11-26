@@ -1,6 +1,6 @@
 ---
 name: task
-description: "Start a new task on its own branch from origin/<defaultBranch>, implement it to the quality bar, verify it, then ask before commit/push. Use only when the user says \"task\", \"this is the task\", \"new task\", gives a ticket link (Jira, GitHub issue, Trello card, …), or runs /task. Not for a plain request to add a component, form, store, hook, page or route: those have their own skills (create-*, dash-*, web-*), use them directly. Never opens a PR, never merges."
+description: Start a new task on its own branch from origin/<defaultBranch>, implement, verify, then ask before commit/push. Use only for 'task', 'this is the task', 'new task', a ticket link (Jira, GitHub, Trello) or /task. Not for a plain component, form, hook, page or route. Never opens a PR.
 argument-hint: "[ticket-url or task description]"
 ---
 
@@ -39,11 +39,10 @@ project's `attribution` setting. Git details: `.claude/rules/git.md`. The bar:
 ## 3. Implement
 
 - Follow the matching skill (`create-component`, `create-form`, `create-hook`,
-  `create-store`, `refactor`, `i18n-conventions`, `performance`, and the
-  profile's `web-*` / `dash-*` skills) and the path rules that load with the
-  files.
-- Strings in Arabic and English together. Tests with the change. Fix a pattern
-  everywhere it occurs (`fix-everywhere`).
+  `create-store`, `refactor`, `performance`, and the profile's `web-*` /
+  `dash-*` skills) and the path rules that load with the files.
+- Strings in every shipped language together. Tests with the change. Fix a
+  pattern everywhere it occurs (`scope.md`: grep, fix each, prove none are left).
 - Missing or wrong backend behaviour: say so (and offer `backend-request`),
   don't fake it in the frontend.
 
@@ -59,8 +58,8 @@ translations, SEO or accessibility) and fix what it finds.
 
 ## 5. Report and ask
 
-3–6 lines: what changed for users, branch, files, how it was verified, what
-was not checked. Then ask exactly: **"Commit and push to `<branch>`?"**
+A short report (`scope.md`: 3–6 lines, what changed for users, branch, files,
+how it was verified, what was not checked). Then ask exactly: **"Commit and push to `<branch>`?"**
 On yes (a bare "commit" counts), use the `commit-push` skill.
 
 ## 6. Ticket update (only when asked)

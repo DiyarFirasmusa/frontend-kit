@@ -1,6 +1,6 @@
 ---
 name: dash-create-detail
-description: "Dashboard profile: add a detail page for an entity — header with status and permission-gated actions, tabs kept in the URL, sections (summary, items, history/notes), state transitions with confirm, and optimistic-locking conflict handling. Use when the user asks for a details / view / show page, an order or user page, a record with history, notes or status changes, or 'open the row'."
+description: Dashboard profile - add a detail page for an entity - header with status and gated actions, tabs kept in the URL, summary, items and history sections, state transitions with confirm, optimistic-lock conflicts. Use for a details, view or show page, an order or user page, a record with history.
 ---
 
 # Dashboard: detail page with actions

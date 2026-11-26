@@ -1,6 +1,6 @@
 ---
 name: dash-create-table
-description: "Dashboard profile: build a list page or data table for an entity on TanStack Table with server-side pagination, sorting and filters synced to the URL, a column factory, row actions, optional bulk selection, and designed loading / refetch / error / empty states. Use when the user asks for a list, table, grid, index page, \"show all X\", columns, sorting, pagination, row actions, bulk delete or select-all."
+description: Dashboard profile - build a list page or data table on TanStack Table with server-side pagination, sorting and URL-synced filters, column factory, row actions, bulk selection, loading, error and empty states. Use for a list, table, index page, 'show all X', sorting, pagination, bulk delete.
 ---
 
 # Dashboard: create a table

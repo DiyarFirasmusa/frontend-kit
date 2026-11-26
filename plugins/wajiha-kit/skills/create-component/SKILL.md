@@ -1,6 +1,6 @@
 ---
 name: create-component
-description: Create or extract a UI component in any frontend stack (React, Vue, Svelte, Angular, plain) — any new component, card, button, dialog, badge, section or other UI piece, even a small one. Use whenever the user asks to build, create, write, add or extract a component. Follows the project's own pattern (location by ownership, file style, tokens) with accessible markup and translated text. With a Figma link, run figma-match alongside.
+description: Create or extract a UI component in any frontend stack (React, Vue, Svelte, Angular, plain) - card, button, dialog, badge, section, any UI piece. Use when asked to build, create, add or extract a component. Follows the project's pattern; with a Figma link run figma-match too.
 ---
 
 # Create component

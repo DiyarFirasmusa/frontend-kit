@@ -1,6 +1,6 @@
 ---
 name: create-hook
-description: Create a hook or its equivalent in any frontend stack (React hook, Vue composable, Svelte rune module, Angular service) — data fetching (TanStack Query where installed), page orchestration or a small utility — where the project keeps it, with guards and tests. Use whenever the user asks to create, write, add or extract a hook or composable, or when a page or component is accumulating logic.
+description: Create a hook or composable (React hook, Vue composable, Svelte rune module, Angular service) for data fetching, page orchestration or a utility, with guards and tests; also query and mutation keys (the qk factory, invalidation). Use when asked to create or extract a hook, or a page piles up logic.
 ---
 
 # Create hook
@@ -28,7 +28,7 @@ With none to follow, read the one reference for the stack. With none, use the fr
 
 | Stack | Reference |
 | ----- | --------- |
-| `@tanstack/react-query` installed | `references/react-tanstack.md`, also beside an existing hook |
+| `@tanstack/react-query` installed | `references/react-tanstack.md`, also beside an existing hook; `references/query-keys.md` for any query or mutation key |
 | Any other | `references/other-stacks.md` |
 
 ## 2. Split it

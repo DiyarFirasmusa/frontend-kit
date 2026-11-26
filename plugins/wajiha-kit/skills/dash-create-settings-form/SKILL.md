@@ -1,6 +1,6 @@
 ---
 name: dash-create-settings-form
-description: "Dashboard profile: add a settings or profile page — one form of grouped sections saved with a single PATCH/PUT, loaded from a singleton endpoint, with optimistic locking, an unsaved-changes guard, per-section read-only mode by permission, and a visible saved state. Use when the user asks for a settings page, preferences, store/site configuration, a profile page, or a form that edits one record without a list."
+description: Dashboard profile - add a settings or profile page - one form of grouped sections saved with a single PATCH or PUT, loaded from a singleton endpoint, optimistic locking, unsaved-changes guard, read-only sections by permission. Use for a settings page, preferences, site config, a profile page.
 ---
 
 # Dashboard: settings form

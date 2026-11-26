@@ -32,7 +32,7 @@ export function useArchiveOrder() {
 }
 ```
 
-Keys from the project's factory (`tanstack-query-key-conventions`). If the API
+Keys from the project's factory (`query-keys.md`). If the API
 client toasts errors: no toasts, no `onError` here. No navigation — the page
 hook navigates. Session-only queries also check the session
 (`enabled: isAuthed && Boolean(id)`); public queries never do.

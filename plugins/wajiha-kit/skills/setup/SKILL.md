@@ -1,6 +1,6 @@
 ---
 name: setup
-description: Install wajiha-kit's project files into the current project — CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/wajiha-kit.json. Asks first whether it is a new project, an existing one, one in maintenance or a refactor, then the kind of project (website, dashboard, or any other frontend in any stack), maps where each role lives, and adapts the rules to both. Run with /wajiha-kit:setup.
+description: Install wajiha-kit's project files into the current project - CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/wajiha-kit.json. Asks if the project is new, existing, in maintenance or a refactor and what kind (website, dashboard, other frontend). Run with /wajiha-kit:setup.
 disable-model-invocation: true
 allowed-tools:
   - Read(/${CLAUDE_PLUGIN_ROOT}/templates/**)

@@ -1,6 +1,6 @@
 ---
 name: dash-create-crud
-description: "Dashboard profile: add create, edit and delete for an entity — a create/edit form dialog or page with react-hook-form + zod, mutation hooks that invalidate (or optimistic toggles), backend field errors mapped onto inputs, single-flight submit, and a confirm-before-delete dialog, all permission-gated. Use when the user asks for add / new / create / edit / update / delete / remove / archive / toggle active, a form dialog, a CRUD screen, or bulk delete."
+description: Dashboard profile - add create, edit and delete for an entity - form dialog or page (react-hook-form + zod), invalidating mutations, backend field errors on inputs, single-flight submit, confirm-before-delete, permission-gated. Use for add, new, edit, delete, archive, a form dialog, CRUD.
 ---
 
 # Dashboard: create / edit / delete

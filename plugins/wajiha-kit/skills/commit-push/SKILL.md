@@ -1,6 +1,6 @@
 ---
 name: commit-push
-description: Commit and push the current task branch after the user's explicit yes ("commit", "commit push", "commmit", "yes commit push", "yes" to "Commit and push?"), then print the GitHub compare link. Commits as the user (the co-author line follows the project's attribution setting), pushes only the task branch, never opens a PR, never merges.
+description: Commit and push the task branch after the user's explicit yes ("commit", "commmit", "commit push", "yes" to "Commit and push?"), then print the compare link. Also for "link pr", "pr link", "link" - print the link and a PR description. Never opens or merges a PR.
 ---
 
 # Commit & push
@@ -32,9 +32,9 @@ Values written `<name>` below (`<defaultBranch>`, `<devPort>`, `<githubRepo>`, `
      by default); nothing else about Claude or AI, and no session links
    Use `git commit -F - <<'EOF' … EOF` for a multi-line message.
 4. A pre-commit hook fails (lint-staged, commitlint): read the error, fix the
-   cause, stage again and commit again. Never `--no-verify`, `-n` or `HUSKY=0`.
-5. `git push -u origin <current-branch>`. Never force. If the push is rejected,
-   stop and tell the user (don't pull, rebase or merge on your own).
+   cause, stage again and commit again (never skip the hook, `.claude/rules/git.md`).
+5. `git push -u origin <current-branch>`. If it is rejected, stop and tell the
+   user (don't pull, rebase or merge on your own).
 6. `git status --short`: nothing from the task may be left. If something is,
    say so.
 
@@ -47,3 +47,35 @@ Left out: <files, or "nothing">
 ```
 
 Nothing happens after this: no PR, no merge, no ticket comment without a yes.
+
+## Link and PR text (when asked: "link pr", "pr link", "give me the link", "link")
+
+Read-only, no yes needed: nothing is committed, pushed, created or posted.
+
+1. `git branch --show-current`. On a protected branch (<protectedBranches>)
+   stop: there is no PR to open.
+2. `git fetch origin <defaultBranch> -q`, then `git rev-list --count @{upstream}..HEAD`.
+   No upstream or unpushed commits: say so and offer the commit and push above
+   (it needs the user's yes).
+3. Read what the PR contains: `git log --oneline origin/<defaultBranch>..HEAD` and
+   `git diff --stat origin/<defaultBranch>...HEAD`; open the diff for anything unclear.
+4. Print the compare link (as in the Report) and a PR description in plain words,
+   for a teammate, not for the user:
+
+```markdown
+## Summary
+<one or two sentences: what this PR does and why>
+
+## What changed for users
+- <visible behaviour, per screen; each language where it differs>
+
+## How it was tested
+- <gates that ran, with numbers: typecheck, lint, N tests, e2e, build>
+- <manual checks: pages, phone/desktop, languages, light/dark>
+
+## Risks
+- <what could break, what to look at in review; "none known" if so>
+```
+
+Title suggestion: the main commit header; the ticket link at the end when there is one.
+Never run `gh pr create` or post anything to GitHub.

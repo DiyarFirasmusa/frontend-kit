@@ -1,6 +1,6 @@
 ---
 name: performance
-description: Make the app faster on real phones and slow networks — route splitting, LCP images, layout shift, fonts, query caching, re-renders, bundle size, SSR data loading. Use when asked to speed up a page, reduce load time, fix layout shift, improve Lighthouse/Core Web Vitals, or review a change for performance.
+description: Make the app faster on real phones and slow networks - route splitting, LCP images, layout shift, fonts, query caching, re-renders, memoisation, bundle size, waterfalls, SSR loading. Use to speed up a page, cut load time, fix layout shift, improve Lighthouse, or review a React change for speed.
 ---
 
 # Performance
@@ -87,3 +87,8 @@ subset when the project allows.
 ## Report
 
 Before/after numbers for each change, ordered by impact for effort.
+
+## React rules
+
+For a React project asked for a performance audit (re-renders, memoisation, bundle size, waterfalls, slow interactions),
+read `${CLAUDE_SKILL_DIR}/references/react-rules.md` and apply only the rules that fit the project's stack.

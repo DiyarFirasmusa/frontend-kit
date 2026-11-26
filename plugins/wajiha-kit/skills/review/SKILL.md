@@ -1,6 +1,6 @@
 ---
 name: review
-description: Review the task branch (git diff origin/<defaultBranch>...HEAD plus uncommitted changes) on two separate axes — Standards (this repo's rules, performance, code smells) and Spec (the ticket or request) — with fresh sub-agents, and report findings without editing. Use when the user asks to review the code, wants a separate agent to review, or before asking to commit a non-trivial change.
+description: Review the task branch (diff against origin/<defaultBranch> plus uncommitted changes) on two axes, Standards (repo rules, performance, smells) and Spec (the ticket or request), with fresh sub-agents; reports, never edits. Use to review the code, or before committing a non-trivial change.
 argument-hint: "[base ref, default origin/<defaultBranch>] [ticket-url or spec path]"
 ---
 
@@ -41,7 +41,7 @@ None: the Spec axis reports "no spec available".
 above. Its brief: the repo's standards are `CLAUDE.md` and
 `.claude/rules/*.md` (`quality-bar.md` first), plus any structure doc
 `CLAUDE.md` points to. In a React project, performance from the
-`vercel-react-best-practices` skill, only the rules that fit the project's
+`performance` skill's `references/react-rules.md`, only the rules that fit the project's
 `stack` (TanStack Start: server rules for loaders and server functions, not
 the RSC ones; a client-only app: client-side rules only). Also flag these smells as
 judgement calls, never as violations, and only where no repo rule endorses
