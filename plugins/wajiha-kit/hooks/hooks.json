@@ -118,17 +118,6 @@
         ]
       }
     ],
-    "PostToolUseFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/tool-failure.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "SubagentStop": [
       {
         "matcher": "^(wajiha-kit:)?(frontend-dev|test-engineer|refactor-architect)$",
@@ -138,17 +127,6 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/subagent-gate.sh",
             "timeout": 180,
             "statusMessage": "Typecheck before the agent reports back"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/notify.sh",
-            "timeout": 10
           }
         ]
       }

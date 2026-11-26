@@ -47,7 +47,7 @@ if matches '^(contine|continue|contiue|contien|continw|contnue|contenue|cont|go 
 fi
 
 if matches '(link ?(off? |of |for |the )?pr|pr ?link|compare link|link to (open|make) (the )?pr|^link$)' "$BARE"; then
-  hint "\"Link PR\": print the GitHub compare link for the current branch (pr-link skill). The user opens the PR by hand; never run gh pr create."
+  hint "\"Link PR\": print the GitHub compare link for the current branch plus a PR description (the link section of the commit-push skill, no commit needed). The user opens the PR by hand; never run gh pr create."
 fi
 
 if matches '(trello\.com/c/|atlassian\.net/browse/|github\.com/[^ ]+/issues/[0-9]+)' "$PROMPT"; then
@@ -59,11 +59,11 @@ if matches 'figma\.com/(design|file|proto|make|board)/' "$PROMPT"; then
 fi
 
 if matches '^(why|ليش|لماذا|ليه|شنو سبب)( |$)' "$BARE"; then
-  hint "This is a question: answer and explain (explain skill). Don't edit files unless the user also asks for a change."
+  hint "This is a question: answer and explain (scope.md: a question gets an answer, not an edit). Don't edit files unless the user also asks for a change."
 fi
 
 if matches '(che?a?c?k (in )?all|\ball (the )?(places|placses|pages|page|screens|files)\b|every ?where|in all (places|placses|pages))' "$BARE"; then
-  hint "\"All\" means every occurrence repo-wide: find them all with grep, fix each, and prove it with a final grep (fix-everywhere skill)."
+  hint "\"All\" means every occurrence repo-wide: find them all with grep, fix each, and prove it with a final grep (scope.md)."
 fi
 
 finish

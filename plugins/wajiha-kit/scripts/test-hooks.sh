@@ -612,20 +612,9 @@ CODE=0
 CLAUDE_PROJECT_DIR="$FEATURE" bash -c 'set -u; . "$1/lib.sh"; exit 1' other-hook "$HOOKS" 2>/dev/null || CODE=$?
 [ "$CODE" -eq 1 ] && ok || ko "non-guard hooks keep their own exit codes" "exit $CODE"
 
-# --- Notification, PostToolUseFailure, SessionEnd ---------------------------------------------
+# --- SessionEnd -------------------------------------------------------------------------------
 
 export CLAUDE_PROJECT_DIR="$FEATURE"
-HOOK_NOTIFY=0 run_hook notify.sh '{"hook_event_name":"Notification","message":"Claude needs your permission to use Bash"}'
-[ "$CODE" -eq 0 ] && [ -z "$OUT" ] && ok || ko "notify exits quietly" "exit $CODE: $OUT"
-run_hook notify.sh 'not json'
-[ "$CODE" -eq 0 ] && ok || ko "notify survives bad input" "exit $CODE"
-
-rm -f "$FEATURE/.claude/state/tool-failures.log"
-run_hook tool-failure.sh '{"hook_event_name":"PostToolUseFailure","tool_name":"Bash","tool_input":{"command":"npm run build"},"error":"exit 1\nboom"}'
-if [ "$CODE" -eq 0 ] && grep -q $'\tBash\tnpm run build\texit 1 boom' "$FEATURE/.claude/state/tool-failures.log"; then ok; else ko "tool-failure logs tool, command and error on one line" "exit $CODE: $(cat "$FEATURE/.claude/state/tool-failures.log" 2>/dev/null)"; fi
-run_hook tool-failure.sh '{"hook_event_name":"PostToolUseFailure","tool_name":"Edit","tool_input":{"file_path":"src/a.ts"},"error":"old_string not found"}'
-grep -q $'\tEdit\tsrc/a.ts\told_string not found' "$FEATURE/.claude/state/tool-failures.log" && ok || ko "tool-failure logs the edited path"
-
 mkdir -p "$FEATURE/.claude/state/sessions"
 printf 'src/a.ts\n' >"$FEATURE/.claude/state/sessions/s-end.main-edits"
 printf 'src/b.ts\n' >"$FEATURE/.claude/state/sessions/s-other.main-edits"
@@ -667,7 +656,6 @@ expect_skill() { # <expected skill or "-" for none> <prompt>
 export CLAUDE_PROJECT_DIR="$SUGGEST"
 expect_skill "dash-create-table" "add a new table for the orders list"
 expect_skill "dash-create-settings-form" "اضافة صفحة اعدادات"
-expect_skill "i18n-conventions" "add the arabic text for this label"
 expect_skill "invoice-export" "export all invoices with totals per customer to a spreadsheet"
 expect_skill "-" "hello there my friend"
 expect_skill "-" "/dev restart"
@@ -738,18 +726,14 @@ web-create-feature|أنشئ خاصية السلة كاملة من واجهة ا�
 web-server-fn|أنشئ دالة على الخادم تخفي مفتاح الخدمة
 web-seo-page|حسّن ظهور الصفحة في نتائج محركات البحث
 create-store|أنشئ مخزنًا للحالة العامة لسلة الشراء
-tanstack-query-key-conventions|وحّد مفاتيح الاستعلامات وإبطال الكاش
+create-hook|وحّد مفاتيح الاستعلامات وإبطال الكاش
 frontend-design|صمّم صفحة هبوط مميزة للحملة
-web-design-guidelines|راجع واجهة المستخدم وفق إرشادات الويب
-vercel-react-best-practices|قلّل حجم الحزمة وإعادة التصيير
+performance|قلّل حجم الحزمة وإعادة التصيير
 performance|اجعل الصفحة أسرع
-typescript-advanced-types|اجعل الدالة آمنة الأنواع باستخدام الأنواع الشرطية
 refactor-mode|فعّل وضع إعادة الهيكلة
 refactor|أزل التكرار ونظّف الشيفرة
-fix-everywhere|طبّق الإصلاح في جميع المواضع
-explain|اشرح لي كيف يعمل تسجيل الدخول
 backend-request|نحتاج نقطة نهاية جديدة من فريق الخادم
-branch-status|ما الذي لم يُرفع بعد؟
+sync-main|ما الذي لم يُرفع بعد؟
 sync-main|هل الفرع متأخر عن الفرع الرئيسي؟
 live-check|تحقق من التغيير في المتصفح
 task|ابدأ مهمة جديدة من هذه التذكرة
@@ -764,17 +748,13 @@ dash-create-route|ضيف قسم التقارير بالسايدبار وبس ا�
 create-form|سويلي استمارة تسجيل
 create-component|ضيف دكمة مشاركة على الكارت
 create-store|احفظ اختيار الثيم حتى لو سوى ريلود
-i18n-conventions|الكلمات بعدها انكليزي، ترجمها
 ui-ux-pro-max|عندك فكرة أحلى لهالصفحة؟
 performance|الموقع ثكيل عالموبايل
 refactor|هالملف طويل كسمه
 review|شوفلي الكود قبل لا أرفعه
 verify|شغل كل التستات
-fix-everywhere|صلحها بكل الصفحات
-explain|ليش هالزر يدز ريكويستين؟
-explain|شلون يشتغل الكاش؟
 commit-push|ارفع الشغل عالبرانج
-branch-status|اني على يا برانج؟
+sync-main|اني على يا برانج؟
 dev|شغلي الموقع
 dev|البورت مشغول اطفيه
 CASES
@@ -791,10 +771,9 @@ create-hook|سوي هوك يجيب المنتجات
 create-hook|سوي useQuery للطلبات
 figma-match|خليها نفس فكما بالضبط
 playwright-best-practices|اكتب تستات بلايرايت للدفع
-typescript-advanced-types|سوي تايب جنرك يطلع الحقول من السكيما
 review|سوي ريفيو
 commit-push|كومت وبوش
-pr-link|انطيني لنك البي ار
+commit-push|انطيني لنك البي ار
 commit-push|سوي commit هسه
 create-form|سوي الـform مال التسجيل
 CASES
@@ -1418,7 +1397,7 @@ for cmd in 'git commit --no-verify -m x' 'git commit -nm x' 'git -c core.hooksPa
   run_hook guard-bash.sh "$(bash_input "$cmd" "$GB")"
   reason | grep -qiE 'husky|lint-staged|commitlint' && ko "the hook-skip message assumes husky: $cmd" "$(reason)" || ok
 done
-PL="$WORK/pr-link"
+PL="$WORK/pr-message"
 make_repo "$PL" fix/link
 rm "$PL/.claude/wajiha-kit.json"
 export CLAUDE_PROJECT_DIR="$PL"
@@ -2683,12 +2662,10 @@ HOOK_SETTLE_SECONDS=30 run_hook stop-gate.sh "$(stop_input t-agent false | jq '.
 HOOK_SETTLE_SECONDS=30 run_hook stop-gate.sh "$(stop_input t-edit false | jq '.background_tasks = [{id: "a1", type: "subagent", status: "running"}]')"
 [ "$CODE" -eq 2 ] && ok || ko "the main session's own work is still gated beside an agent" "exit $CODE"
 
-# The subagent's rules are the project's, the failure log keeps no secret (D27, D34).
+# The subagent's rules are the project's (D27, D34).
 export CLAUDE_PROJECT_DIR="$FX_PROJECT"
 run_hook subagent-context.sh '{"hook_event_name":"SubagentStart"}'
 printf '%s' "$OUT" | grep -qE 'Arabic|no any' && ko "subagent-context names no project's language or type rules" "$OUT" || ok
-run_hook tool-failure.sh "$(jq -n '{tool_name: "Bash", tool_input: {command: "curl -H \"Authorization: Bearer FAKE-123\" https://me:pw-456@x.test; API_TOKEN=abc-789 npm run x"}, error: "401 for token=err-000"}')"
-grep -qE 'FAKE-123|pw-456|abc-789|err-000' "$FX_PROJECT/.claude/state/tool-failures.log" && ko "the failure log keeps no secret" "$(tail -1 "$FX_PROJECT/.claude/state/tool-failures.log")" || ok
 
 # Detection and proposed scripts (D32, D33).
 SP="$FX/my app"
