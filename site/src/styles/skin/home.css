@@ -277,28 +277,6 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   }
 }
 
-/* "What can you build": the title and words of each kind sit inside the black block, above the drawing, so the part reads title, lead, board. */
-.show-caption {
-  display: grid;
-  gap: 0.35rem;
-  width: min(100%, 40rem);
-  margin: 0 auto 1rem;
-  text-align: start;
-}
-
-.show-caption h3 {
-  margin: 0;
-  color: var(--dark-ivory);
-  font-size: 1.125rem;
-}
-
-.show-caption p {
-  margin: 0;
-  color: var(--block-muted);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-}
-
 /* A board is its bar, one block and its note bar: no side column, so nothing pulls the eye from the block. */
 .board.no-side {
   grid-template-columns: minmax(0, 1fr);
@@ -321,7 +299,7 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   }
 }
 
-/* In "What can you build" the words and the window share one width and one left edge, and the window fills the block:
+/* In "What can you build" the window fills the block:
    its drawing is in em, so its text size follows the width it is given and the whole picture grows with it (taller, not
    left in the middle of an empty black block). */
 @media (width >= 48rem) {
@@ -329,14 +307,9 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
     container-type: inline-size;
   }
 
-  #builds .show-caption,
   #builds .board-main > .browser {
     width: min(100%, 66rem);
     margin-inline: auto;
-  }
-
-  #builds .show-caption p {
-    max-width: 44rem;
   }
 
   /* A wide, not tall, window: the drawing keeps the height its em layout needs (about 18.5em) and stretches across. */
