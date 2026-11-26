@@ -26,5 +26,6 @@ paths:
   `<style>` that `style-src 'self'` blocks; the two rules it needs live in `select.css`. No toast, tooltip or modal
   library that injects styles at runtime (the toaster is hand-written for that reason).
 - Two button systems exist: the site uses the constants in `components/common/button-styles.ts`; the admin and the shared
-  primitives use `components/ui/button.tsx` (`buttonVariants`). Use the second for anything new that both sides need.
+  primitives use `components/ui/button.tsx` (`buttonVariants`). Today only the admin uses `components/ui`, `table`, `dialog` and `fields` (the site never imports them and `check:bundle`
+  fails if they reach a public page). If the site ever needs a primitive, move it down into `components/common` first.
 - Fonts are local (Cairo, preloaded for Arabic pages). Images get width and height. No third-party fonts or CDNs.

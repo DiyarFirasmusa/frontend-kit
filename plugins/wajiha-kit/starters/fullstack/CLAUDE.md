@@ -16,9 +16,12 @@ Rules live in `.claude/rules/` and load by path: `routing`, `api-layer`, `i18n-r
 ## Hard rules
 
 - `src/features/site` and `src/features/admin` never import each other. `src/components`, `src/shared`,
-  `src/style`, `src/config` never import a feature or a route. Shared code goes down into `components`
+  `src/style`, `src/config` never import a feature or a route (and `components` no server code). Shared code goes down into `components`
   (UI) or `shared` (no UI). Lint enforces it for `@/` and for relative paths; `npm run check:boundaries` proves it.
-- `axios` only inside `src/features/admin/api`. No default import of `i18next`: use `useTranslation`.
+- `axios` only inside `src/features/admin/api`, and only `api/` and `<x>.service.ts` import `api/client` or
+  `api/endpoints`: pages, hooks and components go through the service. Only tests import `mocks/` or `src/test/`.
+  The site never imports TanStack Query or MSW; route files and `router.tsx` never import the admin statically.
+  No default import of `i18next`: use `useTranslation`.
 - Admin code must not reach the public pages. `src/routes/$locale_/admin.tsx` and the other admin route files
   are in the public entry chunk: import admin code there only through `import()` or the route's split
   properties (`component`, `notFoundComponent`). `npm run check:bundle` fails on a leak or a size regression.
@@ -34,7 +37,7 @@ Rules live in `.claude/rules/` and load by path: `routing`, `api-layer`, `i18n-r
 - No `any`, no `@ts-ignore`, no `!`, no `console.log`, files under 400 lines. Every async view handles
   loading, error and empty. A submit is single-flight.
 - Never edit: `src/routeTree.gen.ts`, `src/style/theme.css`, `src/style/preset.css` (generated), `.env*`,
-  `.github/`, `deploy/`, `public/mockServiceWorker.js`.
+  `.github/`, `deploy/`, `public/mockServiceWorker.js` (a build with the mock off drops it from `.output`).
 - Ask before every commit and push. Conventional commits (commitlint). One branch per task.
 
 ## Commands
@@ -45,9 +48,11 @@ npm run dev:api           # :5190, admin on the real API from .env.local (VITE_A
 npm run typecheck | lint:check | fmt (writes) | fmt:check | i18n:validate | test
 npm run tokens            # regenerate src/style/theme.css and preset.css from src/style/tokens
 npm run check             # everything above plus env, css, tooling, boundaries, unit tests
-npm run build             # then: npm run check:bundle  (public pages size budget + no admin code)
+npm run build             # production build in .output (no source maps)
+npm run build:proof       # the same plus hidden source maps; then run check:bundle, it checks every public page
+                          # (sitemap, both languages, not-found) stays in budget and loads no admin module
 npm run test:e2e          # builds, serves the production build on :5191 (E2E_PORT=5441 to change), Playwright
-npm run check:full        # check + build + check:bundle + test:e2e
+npm run check:full        # check + build:proof + check:bundle + test:e2e
 ```
 
 One test file: `npx vitest run path/to/file.test.tsx`. One e2e project: `npx playwright test --project=en-desktop`.
@@ -62,9 +67,10 @@ src/routes/            thin route files: path, search validation, guards, head()
   $locale.tsx $locale/ the public site (/ar, /en ...)  with the site header and footer
   $locale_/admin.tsx   the admin layout route (ssr: false), $locale_/admin/{login,_shell/*}
 src/features/site/     the public site: <page>/{index.tsx,<page>-head.ts,locales/}, layout, config/nav.config.ts, i18n/resources.ts
-src/features/admin/    the admin: <feature>/{index.tsx,use-<x>-page.ts,<x>.service.ts,use-<x>-queries.ts,validations.ts,locales/}
+src/features/admin/    the admin: <feature>/{index.tsx,use-<x>-page.ts,<x>.service.ts,use-<x>-queries.ts,prefetch.ts,validations.ts,locales/}
   api/ store/ guards/ layout/ constants/permissions.ts mocks/ i18n/ types/api.ts components/can.tsx locales/
-src/components/        shared UI: ui/ (primitives), table/, dialog/, fields/, common/, locales/
+src/components/        UI: common/ is the only folder the public site uses; ui/ (primitives), table/, dialog/, fields/ are the
+                       admin's kit (the site must not import them; check:bundle fails if they reach a public page); locales/
 src/shared/            shared code with no UI: env, i18n, seo, server (headers), store, hooks, utils
 src/style/             tokens/*.ts (source) -> theme.css, preset.css (generated); styles.css; component css
 src/test/              setup, MSW server, render helpers     e2e/  raw/ (server answers)  ui/ (browser)
@@ -75,7 +81,9 @@ src/test/              setup, MSW server, render helpers     e2e/  raw/ (server 
 `src/features/site/<page>/` with `index.tsx`, `<page>-head.ts` (copy `about/about-head.ts`) and `locales/{ar,en}.json`;
 register both locale files in `src/features/site/i18n/resources.ts`; add `src/routes/$locale/<page>.tsx`; run
 `npm run dev` once; for the menu, footer and sitemap add one `navItem` line in `nav.config.ts` and a `nav.<page>`
-key in `src/shared/locales/`; add the page to `PAGES` in `e2e/fixtures/app.ts`.
+key in `src/shared/locales/`; add the page to `PAGES` in `e2e/fixtures/app.ts`. A simple page is flat (copy `about/`);
+a page with a form or a server function splits into `components/`, `hooks/`, `server/`, `validations/` (copy `contact/`);
+a page with a detail route nests it (`news/pages/article/`). Admin entities are always flat (copy `suppliers/`).
 
 ## Add an admin entity
 
@@ -83,7 +91,8 @@ Copy `src/features/admin/suppliers/` to `<entity>/` and rename. Then: types in `
 `api/endpoints.ts`, keys in `api/query-keys.ts`, permissions in `constants/permissions.ts`, a route file
 `src/routes/$locale_/admin/_shell/<entity>.tsx` (copy `suppliers.tsx`), one line in `layout/nav-config.ts` plus the
 `admin.nav<Entity>` label in `features/admin/locales/{ar,en}.json`, mock data and handlers in `mocks/`
-(`seed.ts`, `db.ts`, `handlers.ts`), tests. Locale files are picked up by folder (no registration). The full
+(`seed.ts`, `db.ts`, `handlers.ts`), tests (the permission test `layout/nav-permissions.dom.test.ts` checks the new
+nav item against its route guard by itself). Locale files are picked up by folder (no registration). The full
 step list with the order and the traps is in `STRUCTURE.md`.
 
 ## Mock API users (`npm run dev` and e2e)
@@ -98,6 +107,11 @@ every request answers 401. `blocked`: the login answers 401. The mock enforces p
 - Every admin page sets `head: adminHead('<feature>.title')`. The page has one `<h1>`; `#admin-main` is the `<main>`.
 - List state (search, filter, page) lives in the URL and is validated in the route (`validateSearch`).
 - Errors from the API are toasted once by the API layer; a caller that shows the error itself passes
-  `silentError: true`. A success toast is `successMessage: '<key>'` on the request.
+  `silentError: true`. A success toast is `successMessage: '<key>'` on the request. A save form sends with
+  `silentError: true` and calls `reportSaveError(form, error, FIELDS)` (`lib/apply-field-errors.ts`): the backend's
+  field errors (Spring `errors[]`, Problem Details, a map; `api/problem.ts`) appear under their inputs, anything else is toasted.
+- The admin session is written only by `store/session.ts` (`startSession`, `endSession`); leaving it (sign-out, 401)
+  goes through `layout/end-session.ts`. One admin QueryClient (`getAdminQueryClient()`); route loaders only start
+  `prefetchQuery` (never await, never block the page).
 - Commit messages: `type(scope): subject`. Definition of done: `npm run check` (+ `npm run test:e2e` when a
   route or UI changed).

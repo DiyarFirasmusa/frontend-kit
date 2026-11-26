@@ -16,12 +16,17 @@ paths:
 - Hiding is cosmetic; the BACKEND decides (the mock API does too: 403). Three places say the same thing and must
   match: the route guard (`requirePermission(locale, PERMS.x.read)` in the route's `beforeLoad`), the nav item
   (`permission:` in `layout/nav-config.ts`), and the buttons (`<Can permission=...>` or `useCan`).
-  A new page that appears in the nav needs its guard in the route file.
+  A new page that appears in the nav needs its guard in the route file. `layout/nav-permissions.dom.test.ts` runs the
+  real route tree and fails when the menu and the guard disagree for any menu entry and any kind of user.
 - The session (user and token) and the permissions live in `sessionStorage` through two Zustand stores
-  (`admin-auth`, `admin-permissions`): closing the tab ends the session. Only `api/client.ts` reads the token.
+  (`admin-auth`, `admin-permissions`, each with `version: 1`: change the version when the stored shape changes) and are
+  written to start and end ONLY by `store/session.ts` (`startSession(loginResponse)`, `endSession()`; saving the profile only
+  renames the user with `setUser`). Closing the tab ends the session.
+  Only `api/client.ts` reads the token (and sign-out, which passes it explicitly).
   A real backend should set an HttpOnly cookie instead (see STRUCTURE.md).
-- Sign-out: send the logout request WITH the token (explicit header), cancel in-flight queries, clear the stores,
-  navigate to login, then clear the query cache. Session expiry (a 401): the API layer clears the session and
+- Sign-out: `auth/logout.service.ts` sends the logout request WITH the token (explicit header; it never throws or
+  toasts), and `useEndSession` / `endAdminSession` (`layout/end-session.ts`, the one place a session ends) cancels in-flight
+  queries, clears the stores, navigates to login, then clears the query cache. Session expiry (a 401): the API layer clears the session and
   `AdminRoot` navigates to `login?redirect=<page>&reason=expired`; the login page says the session ended.
 - Redirect after login: `safeReturnPath(locale, redirect)` accepts only a path inside `/{locale}/admin`, resolves `..`,
   never returns to the login page, and moves the other language's admin path into the current language.

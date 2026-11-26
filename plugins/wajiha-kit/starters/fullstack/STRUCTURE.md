@@ -42,14 +42,15 @@ npm run dev              # http://localhost:5190  (الموقع)  و  http://loc
 ```text
 npm run dev:api          # نفس المنفذ، لكن لوحة الإدارة تكلّم الـAPI الحقيقي (VITE_ADMIN_API_MOCK من .env.local)
 npm run build            # نسخة الإنتاج في .output/
-npm run check:bundle     # بعد build: حجم صفحات الموقع تحت الميزانية وبدون أي كود إدارة (انظر "الموقع لا يحمّل كود الإدارة")
+npm run build:proof      # نفس build مع source maps مخفية (لا تُنشر؛ الفحص التالي يقرؤها)
+npm run check:bundle     # بعد build:proof: حجم كل صفحات الموقع تحت الميزانية وبدون أي ملف إدارة (انظر "الموقع لا يحمّل كود الإدارة")
 npm start                # يشغّل نسخة الإنتاج على المنفذ 3000
 npm run tokens           # يولّد ملفات الألوان من src/style/tokens (بعد أي تغيير في الألوان أو المسافات)
 npm run fmt              # ينسّق الملفات (بعد توليد أو نسخ ملفات)
 npm run check            # الأنواع، اللنت، حدود الاستيراد، التنسيق، الترجمة، المتغيرات، CSS، الأدوات، اختبارات الوحدة
 npm run e2e:install      # مرة واحدة: متصفح Chromium للاختبارات
 npm run test:e2e         # يبني المشروع ويختبره في متصفح حقيقي (المنفذ 5191، أو E2E_PORT=5401 مثلاً)
-npm run check:full       # check ثم build ثم check:bundle ثم test:e2e
+npm run check:full       # check ثم build:proof ثم check:bundle ثم test:e2e
 ```
 
 ## المتغيرات (ملف `.env.local`)
@@ -95,18 +96,18 @@ fullstack/
 │   │       ├── overview/             → النظرة العامة (بطاقات أرقام + آخر التعديلات)
 │   │       ├── suppliers/            → الموردون (الميزة الكاملة: مثال لأي جدول تضيفه)
 │   │       ├── settings/             → الملف الشخصي
-│   │       ├── layout/               → الإطار، القائمة الجانبية، قائمة الموبايل، قائمة الحساب، رسائل الصفحة الكاملة، عنوان الصفحة (admin-head)
-│   │       ├── api/                  → عميل axios، العناوين، مفاتيح TanStack Query، رسائل الأخطاء
-│   │       ├── store/                → الجلسة والصلاحيات (Zustand)
+│   │       ├── layout/               → الإطار، القائمة الجانبية، قائمة الموبايل، قائمة الحساب، رسائل الصفحة الكاملة، عنوان الصفحة (admin-head)، وإنهاء الجلسة في مكان واحد (end-session.ts: للخروج ولرد 401)
+│   │       ├── api/                  → عميل axios، العناوين، مفاتيح TanStack Query، رسائل الأخطاء، وقراءة أخطاء الباكند (problem.ts: Spring وProblemDetail وأخطاء الحقول)
+│   │       ├── store/                → الجلسة والصلاحيات (Zustand): مخزنان يكتبهما `session.ts` وحده (`startSession` و`endSession`)
 │   │       ├── guards/               → حراس الصفحات (دخول، صلاحية، مسار العودة بعد الدخول)
 │   │       ├── components/can.tsx    → <Can> لإخفاء الأزرار حسب الصلاحية
 │   │       ├── constants/permissions.ts → كل الصلاحيات
-│   │       ├── lib/                  → QueryClient الإدارة وتنسيق الأرقام والتواريخ
+│   │       ├── lib/                  → QueryClient الإدارة (واحد لكل زيارة) وتنسيق الأرقام والتواريخ و`apply-field-errors.ts` (أخطاء الباكند تحت الحقول)
 │   │       ├── locales/              → النصوص العامة للإدارة (أسماء القائمة، صفحة "لا صلاحية"، رسائل الأخطاء)
 │   │       ├── mocks/                → الـAPI الوهمي (MSW): http.ts (الجلسة والصلاحيات)، crud.ts (قائمة/إضافة/تعديل/حذف جاهزة)، suppliers.ts، db.ts، seed.ts، handlers.ts
 │   │       ├── i18n/                 → تحميل نصوص الإدارة عند فتحها فقط (يجد مجلدات locales وحده)
 │   │       └── types/api.ts          → شكل البيانات بين الواجهة والباكند
-│   ├── components/                   → مكونات مشتركة يستعملها الجزءان
+│   ├── components/                   → مكونات الواجهة. للدقة: `common/` وحده يستعمله الموقع اليوم؛ `ui/` و`table/` و`dialog/` و`fields/` عُدّة لوحة الإدارة (الموقع لا يستوردها، و`npm run check:bundle` يفشل إن وصلت لصفحة عامة). الألوان والمسافات والخطوط هي المشترك الحقيقي
 │   │   ├── ui/                       → زر، حوار، قائمة منسدلة، حقل، جدول، Sheet، Toaster، أيقونات...
 │   │   ├── table/                    → DataTable، الترقيم، شريط البحث والفلاتر
 │   │   ├── dialog/  fields/          → حوار فورم، حوار تأكيد، حقول react-hook-form
@@ -118,7 +119,7 @@ fullstack/
 │   ├── router.tsx  start.ts          → إعداد الراوتر، وما يمر عليه كل طلب (CSRF، الهيدرز، noindex للإدارة)
 │   └── test/                         → إعداد الاختبارات، MSW للاختبارات، render مع المزوّدات، render مع راوتر (render-router.tsx)
 ├── e2e/                              → raw/ (رد السيرفر الخام) و ui/ (المتصفح، ومنها admin.spec.ts و admin-flows.spec.ts)
-├── public/                           → الصور، الأيقونة، mockServiceWorker.js (للـAPI الوهمي)
+├── public/                           → الصور، الأيقونة، mockServiceWorker.js (للـAPI الوهمي؛ لا يدخل نسخة الإنتاج إلا إذا كان الـAPI الوهمي مفعّلاً)
 ├── scripts/                          → توليد الألوان، فحص الترجمة والمتغيرات وCSS وحدود الاستيراد وحجم الحزمة، سيرفر e2e
 ├── deploy/nginx/  Dockerfile  docker-compose.yml
 └── .env.example
@@ -129,10 +130,12 @@ fullstack/
 - `features/site` لا يستورد من `features/admin`، والعكس.
 - `components` و `shared` و `style` و `config` لا تستورد من أي `features` أو `routes`.
 - إذا احتاج الجزءان نفس الشيء، انقله إلى `components` (إذا كان واجهة) أو `shared` (إذا لم يكن).
-- `axios` يُستورد فقط داخل `features/admin/api`، وطبقة الـAPI لا تستورد واجهة ولا راوتر.
+- `axios` يُستورد فقط داخل `features/admin/api`، وطبقة الـAPI لا تستورد واجهة ولا راوتر. وعميل الـAPI (`api/client`) والعناوين (`api/endpoints`) لا يستوردهما إلا `api/` وملفات `<x>.service.ts`: الصفحات والـhooks والمكونات تمر على الخدمة (مثل `auth/logout.service.ts` و`settings/settings.service.ts`).
+- لا يستورد `mocks/` ولا `src/test/` إلا الاختبارات (و`mocks/start-mocks.ts` عبر `import()` في الراوت). الموقع لا يستورد TanStack Query ولا MSW. `components/` لا يستورد `shared/server`. والـfeatures لا تستورد ملفات `routes/`.
+- ملفات `routes/` و`router.tsx` و`start.ts` لا تستورد الإدارة استيراداً ثابتاً (ملفات الإدارة نفسها `routes/$locale_/admin*` مستثناة لأن خصائصها المقسومة تبقيها خارج الملف الرئيسي، و`check:bundle` يثبت ذلك).
 - القاعدة تمنع الكتابتين: `@/features/admin/...` والمسار النسبي `../../../admin/...` بأي عمق.
 
-`npm run lint:check` يفشل إذا كُسرت قاعدة. و`npm run check:boundaries` يكتب ملفات اختبار مؤقتة (`.lint-probe/`) فيها استيرادات ممنوعة ومسموحة ويتأكد أن الممنوع يُحجب والمسموح يمر، حتى لا تتوقف القاعدة عن العمل بصمت. هو جزء من `npm run check` ومن CI.
+`npm run lint:check` يفشل إذا كُسرت قاعدة. و`npm run check:boundaries` يكتب ملفات اختبار مؤقتة (`.lint-probe/`) فيها نحو 60 استيراداً ممنوعاً ومسموحاً ويتأكد أن الممنوع يُحجب والمسموح يمر، حتى لا تتوقف القاعدة عن العمل بصمت. هو جزء من `npm run check` ومن CI.
 
 ### الموقع لا يحمّل كود الإدارة
 
@@ -140,7 +143,7 @@ fullstack/
 
 - لا تستورد كود الإدارة فيها بـ`import` ثابت. حمّله بـ`import()` داخل `beforeLoad` (هكذا يُحمَّل الحارس والنصوص والـAPI الوهمي)، أو ضعه في خصائص الراوت التي يقسمها المخطط وحده (`component`, `notFoundComponent`).
 - `layout/admin-loading.tsx` و`layout/admin-head.ts` بلا أي استيراد عن قصد.
-- `npm run check:bundle` (بعد `npm run build`) يشغّل السيرفر المبني ويقيس حجم gzip لما تحمّله `/ar` و`/ar/news` و`/ar/contact`، ويفشل إذا: تجاوزت صفحة ميزانيتها (الأرقام في أول `scripts/check-bundle-size.mjs`)، أو ظهر `axios` أو مخزن الجلسة أو نص الإدارة في ملف عام. الرقم المقاس عند كتابة هذا الدليل: الصفحة الرئيسية 167 KB gzip (كانت 254 KB حين كان `AdminLoading` داخل الملف الذي يستورد axios).
+- `npm run check:bundle` (بعد `npm run build:proof`) يشغّل السيرفر المبني ويفتح **كل** صفحة عامة في `sitemap.xml` بالعربية والإنجليزية مع صفحة 404، ويقرأ خريطة المصدر (source map) لكل ملف JS تحمّله الصفحة، ويفشل إذا: ظهر أي ملف من `src/features/admin` أو من مجلدات الواجهة التي تخص الإدارة وحدها (`components/table|dialog|fields|ui`) غير الأربعة المسموحة في `scripts/bundle-sources.ts`، أو ظهرت حزمة `axios` أو TanStack Query أو MSW، أو تجاوزت صفحة ميزانيتها (الأرقام في أول `scripts/check-bundle-size.mjs`؛ الصفحة التي بلا رقم خاص تأخذ أكبر رقم). اسم الملف الناتج لا يخدع الفحص لأنه يقرأ المصادر. أي ملف يُضاف للقائمة المسموحة يُكتب سببه في نفس الـcommit. الرقم المقاس عند كتابة هذا الدليل: الصفحة الرئيسية 167 KB gzip (كانت 254 KB حين كان `AdminLoading` داخل الملف الذي يستورد axios).
 
 ### كيف يعمل رابط الإدارة
 
@@ -163,7 +166,7 @@ fullstack/
 
 - بدون جلسة: `/ar/admin/suppliers?page=2` يذهب إلى `login?redirect=...`، وبعد الدخول يعود المستخدم إلى نفس الصفحة (مسار العودة يُفحص: داخل الإدارة فقط، بدون `..`، وبدون صفحة الدخول نفسها).
 - انتهاء الجلسة (رد `401` على طلب فيه الجلسة الحالية): تُمسح الجلسة ويذهب المستخدم إلى `login?redirect=<صفحته>&reason=expired`، وصفحة الدخول تقول "انتهت جلستك". `401` متأخر لطلب أُرسل قبل الخروج لا يفعل شيئاً.
-- الخروج: يرسل طلب `logout` **مع التوكن**، ثم يمسح الجلسة والكاش ويذهب إلى صفحة الدخول بلا رسالة.
+- الخروج: يرسل طلب `logout` **مع التوكن** (`auth/logout.service.ts`)، ثم يمسح الجلسة والكاش ويذهب إلى صفحة الدخول بلا رسالة. الخروج ورد `401` يمران على دالة واحدة (`layout/end-session.ts`: إلغاء الطلبات الجارية، مسح الجلسة، الانتقال، ثم مسح الكاش). الجلسة مخزنان (المستخدم والتوكن، والصلاحيات) يُكتبان معاً دائماً عبر `store/session.ts`، ولكل منهما `version` فتبويب بجلسة بشكل قديم يُسقَط ويسجّل المستخدم دخوله من جديد.
 - تبديل اللغة داخل الإدارة يحتفظ بالمسار وبـ`?q=&status=&page=` وبـ`?redirect=`.
 
 ## نظام تصميم واحد للجزأين
@@ -199,7 +202,7 @@ src/style/
 - الزر يُخفى بـ`<Can permission={PERMS.supplier.write}>`، أو `useCan(...)` في الكود.
 - الدور `admin` يمر من كل الفحوص. الإخفاء في الواجهة مجاملة فقط: **الباكند هو من يقرر**، والـAPI الوهمي يفعل ذلك أيضاً (`403`).
 - رد `403` على طلب تغيير يظهر رسالة خطأ (toast) بنص الباكند ويبقى الحوار مفتوحاً. و`403` على قائمة يعرض "لا صلاحية" بدل زر إعادة المحاولة.
-- ثلاثة أماكن تقول الشيء نفسه ويجب أن تتطابق: حارس الراوت، و`permission` في عنصر القائمة (`layout/nav-config.ts`)، والأزرار. صفحة تظهر في القائمة بلا حارس في ملف الراوت تُفتح لأي مستخدم بالرابط.
+- ثلاثة أماكن تقول الشيء نفسه ويجب أن تتطابق: حارس الراوت، و`permission` في عنصر القائمة (`layout/nav-config.ts`)، والأزرار. صفحة تظهر في القائمة بلا حارس في ملف الراوت تُفتح لأي مستخدم بالرابط. اختبار `layout/nav-permissions.dom.test.ts` يشغّل شجرة الراوتات الحقيقية: لكل عنصر في القائمة ولكل نوع مستخدم يتأكد أن القائمة تعرض العنصر تماماً حين يسمح الحارس، فإن اختلف الاثنان يفشل الاختبار.
 
 ## كيف تضيف صفحة للموقع
 
@@ -219,33 +222,33 @@ src/style/
 1. **الشكل**: أضف `Customer` و `CustomerRequest` في `features/admin/types/api.ts`.
 2. **العناوين والمفاتيح**: `customers` في `api/endpoints.ts`، و `qk.customers` في `api/query-keys.ts`.
 3. **الصلاحيات**: `customer: { read, write, delete }` في `constants/permissions.ts`. (مستخدم `viewer` الوهمي يأخذ كل صلاحيات `:read` تلقائياً.)
-4. **الميزة**: انسخ `features/admin/suppliers/` إلى `customers/` وبدّل الكلمات في كل الملفات وأسمائها (`Supplier`←`Customer`، `suppliers`←`customers`، `SUP-`←`CUS-`). ثم عدّل الحقول: `validations.ts`، `customer-columns.tsx`، `customer-form-dialog.tsx`، `locales/ar.json` و `en.json` (مجموعة `customers`، واسم المجموعة لا يتكرر في أي ملف لغة آخر). ملفات اللغة تُلتقط بمجلدها: لا تسجيل في أي مكان.
-5. **الصفحة**: انسخ `src/routes/$locale_/admin/_shell/suppliers.tsx` إلى `customers.tsx` وبدّل الكلمات (فيه `validateSearch` لحالة الجدول في الرابط، و`requirePermission`، و`head: adminHead('customers.title')`).
+4. **الميزة**: انسخ `features/admin/suppliers/` إلى `customers/` (فيها `customers.service.ts` للطلبات، و`use-customer-queries.ts` مع `queryOptions`، و`prefetch.ts` يبدأ جلب القائمة مع تحميل الصفحة) وبدّل الكلمات في كل الملفات وأسمائها (`Supplier`←`Customer`، `suppliers`←`customers`، `SUP-`←`CUS-`). ثم عدّل الحقول: `validations.ts`، `customer-columns.tsx`، `customer-form-dialog.tsx`، `locales/ar.json` و `en.json` (مجموعة `customers`، واسم المجموعة لا يتكرر في أي ملف لغة آخر). ملفات اللغة تُلتقط بمجلدها: لا تسجيل في أي مكان.
+5. **الصفحة**: انسخ `src/routes/$locale_/admin/_shell/suppliers.tsx` إلى `customers.tsx` وبدّل الكلمات (فيه `validateSearch` لحالة الجدول في الرابط، و`requirePermission`، و`head: adminHead('customers.title')`، و`loader` يستورد `prefetch.ts` بـ`import()` فلا يدخل الملف الرئيسي).
 6. **القائمة**: سطر في `features/admin/layout/nav-config.ts`، ومفتاح العنوان `admin.navCustomers` في `features/admin/locales/ar.json` و `en.json`. حقل `to` يُفحص مقابل الراوتات الفعلية: لا يُقبل قبل الخطوة 8.
 7. **الـAPI الوهمي**: صفوف العينة في `mocks/seed.ts` (دالة مثل `seedSuppliers`)، وقائمتها في `mocks/db.ts` (النوع و`resetMockDb`)، وانسخ `mocks/suppliers.ts` إلى `customers.ts` وعدّل الحقول والرسائل، وسطر `...customerHandlers` في `mocks/handlers.ts`. القائمة والإضافة والتعديل والحذف والبحث والترقيم والـ401 والـ403 كلها جاهزة في `crud.ts`.
 8. **شغّل `npm run dev` (أو `npm run build`) مرة**: يتحدث `src/routeTree.gen.ts` وحده. قبل ذلك يشتكي `tsc` من ثلاثة أخطاء في ملف الراوت الجديد وفي القائمة، وهذا متوقع.
-9. **الاختبارات**: انسخ `validations.test.ts` و `index.test.tsx` من الموردين (تعمل بعد تبديل الكلمات والخطوة 7)، وأضف حالة في `e2e/ui/admin.spec.ts`.
-10. شغّل `npm run fmt` (التبديل والنسخ يتركان تنسيقاً ناقصاً)، ثم `npm run check`، ثم `npm run build && npm run check:bundle`، ثم `npm run test:e2e`.
+9. **الاختبارات**: انسخ `validations.test.ts` و `index.test.tsx` من الموردين (تعمل بعد تبديل الكلمات والخطوة 7؛ فيها حالات خطأ الحقل تحت الإدخال، وخطأ بلا حقل كـtoast، وأخطاء Spring)، وأضف حالة في `e2e/ui/admin.spec.ts`. اختبار `nav-permissions` يلتقط العنصر الجديد من `ADMIN_NAV` وحده.
+10. شغّل `npm run fmt` (التبديل والنسخ يتركان تنسيقاً ناقصاً)، ثم `npm run check`، ثم `npm run build:proof && npm run check:bundle`، ثم `npm run test:e2e`.
 
 عدد الملفات: نحو 17 ملفاً جديداً (مجلد الميزة 15، والراوت، و`mocks/customers.ts`) وتعديل 10 ملفات موجودة (`types/api.ts`، `endpoints.ts`، `query-keys.ts`، `permissions.ts`، `nav-config.ts`، `locales/ar.json` و `en.json`، `seed.ts`، `db.ts`، `handlers.ts`)، والباقي يتولد. كان التعديل 12 ملفاً مع فخاخ (اتحاد أنواع القائمة، تسجيل النصوص)؛ الآن النوع يُشتق من الراوتات والنصوص تُلتقط بالمجلد.
 
-حالة الجدول (البحث، الفلتر، رقم الصفحة) في الرابط: `?q=...&status=inactive&page=2`. يمكن مشاركته وتحديثه وزر الرجوع يعمل. صفحة بعد الأخيرة (رابط مكتوب بيد، أو حذف آخر صف في آخر صفحة) تنقل المستخدم إلى آخر صفحة. لا يوجد تحميل مسبق للبيانات (`loader`): كل صفحة تجلب بياناتها بعد أن تظهر.
+حالة الجدول (البحث، الفلتر، رقم الصفحة) في الرابط: `?q=...&status=inactive&page=2`. يمكن مشاركته وتحديثه وزر الرجوع يعمل. صفحة بعد الأخيرة (رابط مكتوب بيد، أو حذف آخر صف في آخر صفحة) تنقل المستخدم إلى آخر صفحة. الـ`loader` في ملف الراوت لا يجلب ولا ينتظر: يبدأ الطلب فقط (`prefetchQuery` بلا await) عند فتح الصفحة وعند تمرير المؤشر على الرابط، والصفحة تظهر فوراً بحالات التحميل والخطأ والفراغ الخاصة بها وتجد الطلب شغّالاً. QueryClient الإدارة واحد (`getAdminQueryClient()`): لم يوضع في `router.tsx` لأن ذلك الملف في الملف الرئيسي العام وأضاف 4.6 KB لكل صفحة، ولم يوضع في سياق الراوت لأن TanStack Start يفحص ما يعيده `beforeLoad` على أنه قابل للتسلسل.
 
 ## ربط باكند حقيقي
 
 1. `VITE_ADMIN_API_MOCK=false` (هو الافتراضي) و `VITE_ADMIN_API_URL=` عنوان الـAPI، وشغّل بـ`npm run dev:api`.
-2. اجعل الباكند يرد بنفس الأشكال في `features/admin/types/api.ts` (أو عدّل الأنواع والخدمات). صفحة بعد الأخيرة ترد بـ`items: []` وبالمجموع الحقيقي، وليس بآخر صفحة.
+2. اجعل الباكند يرد بنفس الأشكال في `features/admin/types/api.ts` (أو عدّل الأنواع والخدمات: التحويل مكانه `<x>.service.ts`، فلا تغيّر أنواع الواجهة لترضي الباكند). **الأخطاء**: تُقرأ ثلاثة أشكال (`api/problem.ts`): خطأ Spring الافتراضي `{ message }`، وProblem Details (RFC 9457) `{ detail }`، وقائمة التحقق `{ errors: [{ field, defaultMessage | message }] }` أو خريطة `{ errors: { code: "..." } }` (على 400 و409 و422). حقل مذكور في الخطأ يظهر تحت إدخاله (`lib/apply-field-errors.ts`، والطلب يُرسل بـ`silentError: true`)، وخطأ بلا حقل يظهر toast. `title` لا يُعرض عمداً: عناوين Problem Details عبارات إنجليزية عامة. صفحة بعد الأخيرة ترد بـ`items: []` وبالمجموع الحقيقي، وليس بآخر صفحة.
 3. الدخول: `POST /auth/login` يرد `{ accessToken, user, roles, permissions }`. الطلبات بعدها ترسل `Authorization: Bearer ...`. أي رد 401 على طلب فيه الجلسة الحالية ينهي الجلسة ويعيد لصفحة الدخول مع رسالة. لا يوجد فحص لانتهاء التوكن في المتصفح ولا تجديد له: تبويب تُرك نائماً يعرض شاشات قديمة حتى أول طلب، فاجعل التوكن قصيراً وأضف تجديداً إن احتجت.
 4. الجلسة محفوظة في `sessionStorage` (تنتهي بإغلاق التبويب، لكن أي سكربت على نفس النطاق يقرؤها). للأمان الأعلى اجعل الباكند يضع التوكن في كوكي `HttpOnly` واحذف `accessToken` من `store/auth-store.ts`؛ عندها أضف `withCredentials` ورمز CSRF أو `SameSite=Strict` (الـCSRF الموجود في `start.ts` يغطي server functions فقط وليس `/api`).
 5. nginx: في `deploy/nginx/*.conf` مثال معلّق لتحديد معدل الدخول (`/api/auth/login`) وللتمرير إلى الباكند. الإقفال بعد محاولات فاشلة مكانه الباكند.
-6. احذف `public/mockServiceWorker.js` من نسخة الإنتاج إن لم تستعمل الـAPI الوهمي. وإذا بقي، فهو يُخدَّم بهيدر `nosniff`، ولوحة الإدارة تلغي تسجيل أي worker وهمي قديم عند الفتح بدون الـAPI الوهمي.
+6. `public/mockServiceWorker.js` لا يدخل نسخة الإنتاج وحده إذا كان `VITE_ADMIN_API_MOCK` غير `true` (خطّاف في `vite.config.ts` يحذفه مع نسخه المضغوطة، وسطر في `Dockerfile` يكرر ذلك). `npm run check:bundle` يتأكد في بناء بلا الـAPI الوهمي: لا ملف worker في `.output/public`، و`/mockServiceWorker.js` يرد 404، ولا MSW في أي ملف JS. ولوحة الإدارة تلغي تسجيل أي worker وهمي قديم عند الفتح بدون الـAPI الوهمي.
 
 ## الاختبارات
 
 | المجموعة | ماذا تفحص |
 | --- | --- |
-| اختبارات الوحدة (`npm run test`) | مشروعان في Vitest: `node` للدوال البحتة (`*.test.ts`) و`dom` للمكونات والـhooks (`*.test.tsx` و`*.dom.test.ts`، jsdom مشترك لكل worker فيسرّع التشغيل). تفحص: الدوال، الفورمات، التحقق، المكونات المشتركة، صفحة الموردين مع الـAPI الوهمي (ومنها صفحة بعد الأخيرة و403 وإعادة المحاولة)، صفحة الدخول، انتهاء الجلسة في `AdminRoot`، عميل الـAPI، الحراس ومسار العودة، صلاحيات الـAPI الوهمي، التباين |
-| `check:boundaries` و `check:bundle` | حدود الاستيراد تعمل، وصفحات الموقع صغيرة وبلا كود إدارة |
+| اختبارات الوحدة (`npm run test`) | مشروعان في Vitest: `node` للدوال البحتة (`*.test.ts`) و`dom` للمكونات والـhooks (`*.test.tsx` و`*.dom.test.ts`، jsdom مشترك لكل worker فيسرّع التشغيل). تفحص: الدوال، الفورمات، التحقق، المكونات المشتركة، صفحة الموردين مع الـAPI الوهمي (ومنها صفحة بعد الأخيرة و403 وإعادة المحاولة)، صفحة الدخول، الإعدادات، قائمة الحساب (الخروج)، انتهاء الجلسة في `AdminRoot`، اتفاق القائمة مع حراس الراوتات الحقيقية، قراءة أخطاء الباكند، عميل الـAPI، الحراس ومسار العودة، صلاحيات الـAPI الوهمي، التباين |
+| `check:boundaries` و `check:bundle` | حدود الاستيراد تعمل (نحو 60 استيراداً)، وكل صفحة عامة (sitemap باللغتين و404) صغيرة وبلا أي ملف إدارة (يقرأ source maps من `build:proof`)، وبناء بلا الـAPI الوهمي بلا MSW ولا worker |
 | `raw` | رد السيرفر الخام: SEO، sitemap، الهيدرز، الإدارة `noindex` وليست في الـsitemap، وروابط الإدارة الخاطئة (و`/fr/admin`) ترد `404` مع `noindex` |
 | `ar-desktop` `en-desktop` `ar-phone` `en-phone` `ar-dark` `en-dark` | صفحات الموقع، و: الدخول ← النظرة العامة، إضافة/بحث/تعديل/حذف مورد، الفلتر والصفحات في الرابط، مستخدم القراءة فقط، الإعدادات، الخروج، قائمة الموبايل، axe. وفي `admin-flows.spec.ts`: رابط إدارة خاطئ (404 محلّي بـ`<main>`)، انتهاء الجلسة والعودة، فشل الدخول، الخروج يرسل التوكن، صفحة "لا صلاحية"، 403 من السيرفر لمستخدم تلاعب بالواجهة، صفحة بعد الأخيرة، تبديل اللغة مع الاحتفاظ بالرابط، عنوان خاص لكل صفحة ونقل التركيز، فتح قائمة اختيار بلا مخالفة CSP |
 | `perf-ar-phone` `perf-en-desktop` | أن صفحات الموقع لا تقفز أثناء التحميل |
@@ -255,7 +258,7 @@ src/style/
 ## ملاحظات
 
 - الـToaster (رسائل "تم الحفظ") مكتوب داخل المشروع وليس مكتبة: مكتبات الـtoast المعروفة تضيف `<style>` وقت التشغيل، وCSP الصارم يمنعه. نفس رسالة الخطأ لا تظهر مرتين (إعادة المحاولة التلقائية لا تكدّس رسائل). الـToaster خارج الحوار المفتوح، فقارئ الشاشة لا يعلن رسالة تظهر خلف حوار مفتوح؛ الرسالة مرئية فقط.
-- `public/mockServiceWorker.js` من حزمة msw ويُنشر مع الموقع، لكنه لا يعمل إلا إذا بُني المشروع بـ`VITE_ADMIN_API_MOCK=true`.
+- `public/mockServiceWorker.js` من حزمة msw ويبقى في المجلد للتطوير، لكن البناء بـ`VITE_ADMIN_API_MOCK=true` وحده ينسخه إلى `.output`.
 - oxlint و oxfmt يتجاهلان المشروع إذا كان مجلده داخل مجلد مستبعد في `.gitignore` لمستودع أب. داخل مستودعك الخاص يعملان عادي.
 - زر الحساب في الشريط العلوي: اسم المستخدم المرئي هو بداية اسمه الصوتي (WCAG 2.5.3).
 

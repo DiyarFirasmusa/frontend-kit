@@ -19,6 +19,11 @@ paths:
 - Helpers: `renderWithProviders` (query client, i18n with the admin text, tooltips), `renderAtUrl` and `renderRoutes`
   (`src/test/render-router.tsx`: a memory router, for links, redirects and router state), `tt('group.key')` for
   expected text, `server.use(...)` (MSW) for one-off API answers. Never hardcode text that exists in a locale file.
+- Sign a test user in with `startSession(...)` (`store/session.ts`), not by writing the two stores. The mock answers in
+  the page language: set `document.documentElement.lang = 'en'` in the file when you assert on its message text. Form
+  labels come from the locale file: `new RegExp(`^${tt('group.key')}`, 'u')`.
+- A failing save needs a test for each way it can show: a field error under its input, an error with no field (toast),
+  and the dialog staying open with the typed values (copy the three cases from `suppliers/index.test.tsx`).
 - Test what a user sees and what the API receives, not implementation. Every new async view gets loading, error and
   empty; every new guard gets a signed-out and a no-permission case; every API-layer rule gets a unit test.
 - e2e (`e2e/raw` = server answers without a browser; `e2e/ui` = Chromium in six projects, ar and en on desktop, phone
@@ -30,5 +35,5 @@ paths:
   a page error or a CSP violation. API 4xx answers that a test provokes on purpose are allowed by the fixture.
 - Mock users for tests: `viewer` (403 on writes), `expired` (401 after sign-in), `blocked` (401 at login).
 - `npm run check:boundaries` writes probe files and proves the import rules in `oxlint.config.ts` fire;
-  `npm run check:bundle` proves the public pages stay small and free of admin code. Run both after touching
-  imports in route files.
+  `npm run build:proof && npm run check:bundle` proves every public page stays small and loads no admin module
+  (source-map based). Run both after touching imports in route files.
