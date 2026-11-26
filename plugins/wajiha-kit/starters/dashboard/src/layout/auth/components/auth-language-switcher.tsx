@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { setLanguage } from '@/lib/i18n/i18n';
-import { LANGUAGES, type SupportedLanguage } from '@/lib/i18n/languages';
+import { LANGUAGE_CODES, LANGUAGES } from '@/lib/i18n/languages';
 import { cn } from '@/lib/utils';
 
-const OPTIONS = (Object.keys(LANGUAGES) as SupportedLanguage[]).map((code) => ({
+const OPTIONS = LANGUAGE_CODES.map((code) => ({
   code,
   label: LANGUAGES[code].label,
 }));

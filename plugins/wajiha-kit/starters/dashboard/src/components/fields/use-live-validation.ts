@@ -10,7 +10,8 @@ import {
  * immediately instead of being silently dropped or waiting for submit.
  */
 export function useLiveValidation(name: string, enabled: boolean) {
-  const form = useFormContext() as UseFormReturn<FieldValues> | null;
+  // Outside a <Form> the context is null at runtime, whatever the typing says.
+  const form: UseFormReturn<FieldValues> | null = useFormContext();
 
   return () => {
     if (enabled && form) {

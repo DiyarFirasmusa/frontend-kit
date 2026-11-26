@@ -138,7 +138,7 @@ export function PersonSelectField<T extends FieldValues>({
           <FormControl>
             <PersonControl
               kind={kind}
-              value={(field.value as string | null | undefined) ?? ''}
+              value={typeof field.value === 'string' ? field.value : ''}
               onChange={field.onChange}
               label={label}
               placeholder={placeholder}

@@ -18,7 +18,10 @@ edit a matching file.
 ## Hard rules
 
 - Every file under `src/` is `.ts` / `.tsx`. No `any`, no `@ts-ignore`, no lint
-  disable comments, no `as` to silence the compiler: use `unknown` and narrow.
+  disable comments, no `as` to silence the compiler: use `unknown` and narrow
+  (a type guard, `isOneOf`, or a zod schema). `typescript/consistent-type-assertions`
+  enforces it; `as const` is fine. Off only for tests, `src/components/ui`,
+  `src/lib/vendor` and `src/mocks/core.ts` (`readJson`), set in `oxlint.config.ts`.
 - Files stay under 400 lines (tests under 600); lint fails above. Blank lines and
   comments do not count.
 - `src/routeTree.gen.ts`, `src/style/theme.css` and `src/style/preset.css` are

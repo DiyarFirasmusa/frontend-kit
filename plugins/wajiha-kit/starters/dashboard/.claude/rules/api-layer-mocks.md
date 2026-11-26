@@ -27,7 +27,11 @@ nothing upstream repeats them. `axios` is imported only inside `src/api`.
 - A service maps UI params to the backend in one `toXListQuery(params)`: 1-based
   page to `page=0`, `name.asc` to `sort=name,asc`, "all" filters left out.
   `fetchX(params, { signal })` forwards the query's `signal`, so leaving the page
-  or changing the filters cancels the request.
+  or changing the filters cancels the request. Every `queryFn` forwards it (a test
+  checks); the batched directory-entry lookup is the one exception.
+- A failed request is toasted once per message (the client sets the toast `id`), so
+  a query's one retry does not stack a second toast. Do not silence GET toasts:
+  `useListExport` relies on them.
 - `xListQueryOptions(params)` / `xDetailQueryOptions(id)` are shared by the route
   loader and the hook; lists use `placeholderData: keepPreviousData`.
 - Mutations invalidate in `onSuccess` and **return the promise**, so `isPending`

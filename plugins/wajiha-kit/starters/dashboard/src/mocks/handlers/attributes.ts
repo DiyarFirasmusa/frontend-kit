@@ -11,6 +11,7 @@ import {
   AttributeDataTypeValues,
   type AttributeDataType,
 } from '@/types/api/enums';
+import { isOneOf } from '@/utils/is-one-of';
 /** Attribute definitions and options. */
 import {
   api,
@@ -116,9 +117,10 @@ export const attributeHandlers = [
         'ATTR',
         attributeDefinitions.map((d) => d.code),
       );
-    const dataType: AttributeDataType = (
-      AttributeDataTypeValues as readonly string[]
-    ).includes(body.dataType)
+    const dataType: AttributeDataType = isOneOf(
+      AttributeDataTypeValues,
+      body.dataType,
+    )
       ? body.dataType
       : 'TEXT';
     const definition: AttributeDefinitionResponse = {

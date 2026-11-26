@@ -179,6 +179,14 @@ export default defineConfig({
 
     'typescript/consistent-type-imports': 'warn',
 
+    // CLAUDE.md "no `as` to silence the compiler": narrow with a type guard or
+    // zod instead. `as const` stays allowed. Vendored code and tests are
+    // switched off in the overrides below.
+    'typescript/consistent-type-assertions': [
+      'error',
+      { assertionStyle: 'never' },
+    ],
+
     // Pedantic rules that only add noise here.
     'eslint/require-unicode-regexp': 'off',
     'eslint/no-shadow': 'off',
@@ -252,6 +260,26 @@ export default defineConfig({
           { max: 600, skipBlankLines: true, skipComments: true },
         ],
       },
+    },
+    {
+      // Vendored shadcn/ui and third-party glue keep the upstream style, and a
+      // test may cast a fixture or a mock response; production code may not.
+      files: [
+        'src/components/ui/**',
+        'src/lib/vendor/**',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        'src/test/**',
+        'e2e/**',
+        'scripts/**',
+      ],
+      rules: { 'typescript/consistent-type-assertions': 'off' },
+    },
+    {
+      // The mock backend's one typed boundary: a request body is read as the
+      // contract type here, and every handler validates it before use.
+      files: ['src/mocks/core.ts'],
+      rules: { 'typescript/consistent-type-assertions': 'off' },
     },
     ...sharedOverrides(),
     ...featureOverrides(),

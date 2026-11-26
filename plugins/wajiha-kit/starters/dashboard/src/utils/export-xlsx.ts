@@ -216,12 +216,14 @@ function crc32(data: Uint8Array): number {
   return crc ^ 0xff_ff_ff_ff;
 }
 
-async function deflateRaw(data: Uint8Array): Promise<Uint8Array | null> {
+async function deflateRaw(
+  data: Uint8Array<ArrayBuffer>,
+): Promise<Uint8Array<ArrayBuffer> | null> {
   if (typeof CompressionStream === 'undefined') {
     return null;
   }
   try {
-    const stream = new Blob([data as BlobPart])
+    const stream = new Blob([data])
       .stream()
       .pipeThrough(new CompressionStream('deflate-raw'));
     return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -231,8 +233,8 @@ async function deflateRaw(data: Uint8Array): Promise<Uint8Array | null> {
 }
 
 interface ZipEntry {
-  name: Uint8Array;
-  data: Uint8Array;
+  name: Uint8Array<ArrayBuffer>;
+  data: Uint8Array<ArrayBuffer>;
   crc: number;
   size: number;
   method: 0 | 8;
@@ -245,7 +247,7 @@ export async function buildZip(
 ): Promise<Blob> {
   const encoder = new TextEncoder();
   const entries: ZipEntry[] = [];
-  const parts: Uint8Array[] = [];
+  const parts: Uint8Array<ArrayBuffer>[] = [];
   let offset = 0;
 
   for (const file of files) {
@@ -309,7 +311,7 @@ export async function buildZip(
   endView.setUint32(16, centralStart, true);
   parts.push(end);
 
-  return new Blob(parts as BlobPart[], { type: 'application/zip' });
+  return new Blob(parts, { type: 'application/zip' });
 }
 
 /** The XML parts of an .xlsx workbook, path → content. */

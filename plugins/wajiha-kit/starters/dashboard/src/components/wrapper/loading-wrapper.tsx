@@ -216,9 +216,8 @@ export function Wrapper<T>({
   }
 
   const emptyCheck = isEmpty ?? defaultIsEmpty;
-  const empty = data === null || data === undefined || emptyCheck(data as T);
 
-  if (empty) {
+  if (data === null || data === undefined || emptyCheck(data)) {
     if (hideEmpty) {
       return isFunction<T>(children) ? null : <>{children}</>;
     }
@@ -234,7 +233,7 @@ export function Wrapper<T>({
     );
   }
 
-  const content = isFunction<T>(children) ? children(data as T) : children;
+  const content = isFunction<T>(children) ? children(data) : children;
   return className ? (
     <div className={className}>{content}</div>
   ) : (

@@ -152,7 +152,12 @@ export const WAREHOUSE_SEEDS: WarehouseSeed[] = [
 
 export const warehouseId = (index: number): string => makeId(0xa0, index + 1);
 
-export const locationTypes: LocationTypeResponse[] = [
+export const locationTypes: [
+  LocationTypeResponse,
+  LocationTypeResponse,
+  LocationTypeResponse,
+  LocationTypeResponse,
+] = [
   {
     id: makeId(0xa1, 1),
     code: 'ZONE',
@@ -191,12 +196,7 @@ export const locationTypes: LocationTypeResponse[] = [
   },
 ];
 
-const [ZONE_TYPE, RACK_TYPE, BIN_TYPE, DOCK_TYPE] = locationTypes as [
-  LocationTypeResponse,
-  LocationTypeResponse,
-  LocationTypeResponse,
-  LocationTypeResponse,
-];
+const [ZONE_TYPE, RACK_TYPE, BIN_TYPE, DOCK_TYPE] = locationTypes;
 
 export const warehouses: WarehouseResponse[] = [];
 export const locations: LocationResponse[] = [];

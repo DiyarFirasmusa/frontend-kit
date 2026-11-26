@@ -22,7 +22,7 @@ import {
 } from '../core';
 import { auditLog } from '../seed/misc';
 import { notifications } from '../seed/notifications';
-import { directory, roles, type DirectoryKindKey } from '../seed/people';
+import { directory, roles } from '../seed/people';
 
 export const shellHandlers = [
   // ----- Directory -----
@@ -47,7 +47,7 @@ export const shellHandlers = [
 
   http.get(api(endpoints.directory.search), async ({ request }) => {
     const url = new URL(request.url);
-    const kind = (url.searchParams.get('kind') ?? 'USER') as DirectoryKindKey;
+    const kind = url.searchParams.get('kind') ?? 'USER';
     const q = textParam(url, 'q');
     const limit = intParam(url, 'limit', 20);
     const response: DirectoryEntryResponse[] = directory
