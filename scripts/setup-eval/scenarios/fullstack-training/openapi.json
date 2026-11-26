@@ -1,0 +1,303 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Training Centre Admin API",
+    "version": "1.0.0",
+    "description": "Admin API of a small fictional training centre: courses and enrolments."
+  },
+  "servers": [{ "url": "https://api.training-centre.test" }],
+  "security": [{ "bearer": [] }],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed in",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            }
+          },
+          "401": { "description": "Wrong name or password" }
+        }
+      }
+    },
+    "/courses": {
+      "get": {
+        "operationId": "listCourses",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/pageSize" },
+          { "name": "q", "in": "query", "schema": { "type": "string" }, "description": "Search by title or code" },
+          { "name": "level", "in": "query", "schema": { "$ref": "#/components/schemas/CourseLevel" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of courses",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CoursePage" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createCourse",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CourseRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Course" } }
+            }
+          },
+          "422": { "description": "Validation error" }
+        }
+      }
+    },
+    "/courses/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "operationId": "getCourse",
+        "responses": {
+          "200": {
+            "description": "One course",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Course" } }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateCourse",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CourseRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Course" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteCourse",
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    },
+    "/enrolments": {
+      "get": {
+        "operationId": "listEnrolments",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/pageSize" },
+          { "name": "q", "in": "query", "schema": { "type": "string" }, "description": "Search by student name or phone" },
+          { "name": "status", "in": "query", "schema": { "$ref": "#/components/schemas/EnrolmentStatus" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of enrolments",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EnrolmentPage" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createEnrolment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EnrolmentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Enrolment" } }
+            }
+          },
+          "422": { "description": "Validation error" }
+        }
+      }
+    },
+    "/enrolments/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "operationId": "getEnrolment",
+        "responses": {
+          "200": {
+            "description": "One enrolment",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Enrolment" } }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateEnrolment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EnrolmentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Enrolment" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEnrolment",
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": { "type": "http", "scheme": "bearer" }
+    },
+    "parameters": {
+      "id": { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+      "page": { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "default": 1 } },
+      "pageSize": { "name": "pageSize", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string", "format": "password" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "required": ["accessToken", "user", "roles", "permissions"],
+        "properties": {
+          "accessToken": { "type": "string" },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "username": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          },
+          "roles": { "type": "array", "items": { "type": "string" } },
+          "permissions": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "CourseLevel": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
+      "EnrolmentStatus": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
+      "Course": {
+        "type": "object",
+        "required": ["id", "code", "title", "level", "hours", "isPublished"],
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "code": { "type": "string", "example": "WEB-101" },
+          "title": { "type": "string" },
+          "level": { "$ref": "#/components/schemas/CourseLevel" },
+          "hours": { "type": "integer", "minimum": 1 },
+          "startDate": { "type": "string", "format": "date", "nullable": true },
+          "isPublished": { "type": "boolean" },
+          "updatedAt": { "type": "string", "format": "date-time", "readOnly": true }
+        }
+      },
+      "CourseRequest": {
+        "type": "object",
+        "required": ["code", "title", "level", "hours", "isPublished"],
+        "properties": {
+          "code": { "type": "string", "minLength": 2, "maxLength": 20 },
+          "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+          "level": { "$ref": "#/components/schemas/CourseLevel" },
+          "hours": { "type": "integer", "minimum": 1, "maximum": 500 },
+          "startDate": { "type": "string", "format": "date" },
+          "isPublished": { "type": "boolean" }
+        }
+      },
+      "Enrolment": {
+        "type": "object",
+        "required": ["id", "courseId", "studentName", "phone", "status"],
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "courseId": { "type": "string" },
+          "courseTitle": { "type": "string", "readOnly": true },
+          "studentName": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string", "format": "email", "nullable": true },
+          "status": { "$ref": "#/components/schemas/EnrolmentStatus" },
+          "updatedAt": { "type": "string", "format": "date-time", "readOnly": true }
+        }
+      },
+      "EnrolmentRequest": {
+        "type": "object",
+        "required": ["courseId", "studentName", "phone", "status"],
+        "properties": {
+          "courseId": { "type": "string" },
+          "studentName": { "type": "string", "minLength": 2, "maxLength": 120 },
+          "phone": { "type": "string", "pattern": "^\\+?[0-9 ]{7,20}$" },
+          "email": { "type": "string", "format": "email" },
+          "status": { "$ref": "#/components/schemas/EnrolmentStatus" }
+        }
+      },
+      "CoursePage": {
+        "type": "object",
+        "required": ["items", "total", "page", "pageSize"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/Course" } },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "pageSize": { "type": "integer" }
+        }
+      },
+      "EnrolmentPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "pageSize"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/Enrolment" } },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "pageSize": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

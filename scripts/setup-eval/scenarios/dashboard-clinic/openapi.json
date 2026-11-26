@@ -1,0 +1,431 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Clinic Desk API",
+    "version": "1.0.0",
+    "description": "Front desk of a small fictional clinic: patients, doctors and appointments."
+  },
+  "servers": [{ "url": "https://api.clinic-desk.test" }],
+  "security": [{ "bearer": [] }],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed in",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            }
+          },
+          "401": { "description": "Wrong name or password" }
+        }
+      }
+    },
+    "/patients": {
+      "get": {
+        "operationId": "listPatients",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/size" },
+          { "$ref": "#/components/parameters/sort" },
+          { "name": "q", "in": "query", "schema": { "type": "string" }, "description": "Search by name or file number" },
+          { "name": "gender", "in": "query", "schema": { "$ref": "#/components/schemas/Gender" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of patients",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PatientPage" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPatient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PatientRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Patient" } }
+            }
+          },
+          "422": { "description": "Validation error" }
+        }
+      }
+    },
+    "/patients/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "operationId": "getPatient",
+        "responses": {
+          "200": {
+            "description": "One patient",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Patient" } }
+            }
+          },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "operationId": "updatePatient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PatientRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Patient" } }
+            }
+          },
+          "422": { "description": "Validation error" }
+        }
+      },
+      "delete": {
+        "operationId": "deletePatient",
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    },
+    "/doctors": {
+      "get": {
+        "operationId": "listDoctors",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/size" },
+          { "$ref": "#/components/parameters/sort" },
+          { "name": "q", "in": "query", "schema": { "type": "string" } },
+          { "name": "specialty", "in": "query", "schema": { "$ref": "#/components/schemas/Specialty" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of doctors",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DoctorPage" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createDoctor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DoctorRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Doctor" } }
+            }
+          }
+        }
+      }
+    },
+    "/doctors/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "operationId": "getDoctor",
+        "responses": {
+          "200": {
+            "description": "One doctor",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Doctor" } }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateDoctor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DoctorRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Doctor" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteDoctor",
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    },
+    "/appointments": {
+      "get": {
+        "operationId": "listAppointments",
+        "parameters": [
+          { "$ref": "#/components/parameters/page" },
+          { "$ref": "#/components/parameters/size" },
+          { "$ref": "#/components/parameters/sort" },
+          { "name": "q", "in": "query", "schema": { "type": "string" }, "description": "Search by patient name" },
+          { "name": "status", "in": "query", "schema": { "$ref": "#/components/schemas/AppointmentStatus" } },
+          { "name": "doctorId", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of appointments",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AppointmentPage" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createAppointment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AppointmentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booked",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Appointment" } }
+            }
+          },
+          "422": { "description": "Validation error" }
+        }
+      }
+    },
+    "/appointments/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "operationId": "getAppointment",
+        "responses": {
+          "200": {
+            "description": "One appointment",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Appointment" } }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateAppointment",
+        "description": "Reschedule, or change the status. Cancelling is an update to status cancelled; appointments are never deleted.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AppointmentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Appointment" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "parameters": {
+      "id": { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+      "page": { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 0, "default": 0 } },
+      "size": { "name": "size", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } },
+      "sort": { "name": "sort", "in": "query", "schema": { "type": "string", "example": "name,asc" } }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string", "format": "password" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "required": ["access"],
+        "properties": {
+          "access": { "type": "string", "description": "JWT with roles and permissions claims" },
+          "refresh": { "type": "string" },
+          "userId": { "type": "string" },
+          "roles": { "type": "array", "items": { "type": "string" } },
+          "permissions": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "Gender": { "type": "string", "enum": ["male", "female"] },
+      "Specialty": {
+        "type": "string",
+        "enum": ["general", "pediatrics", "dermatology", "dentistry"]
+      },
+      "AppointmentStatus": {
+        "type": "string",
+        "enum": ["scheduled", "completed", "cancelled", "no_show"]
+      },
+      "Patient": {
+        "type": "object",
+        "required": ["id", "fileNumber", "fullName", "phone", "gender"],
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "fileNumber": { "type": "string", "example": "P-00042" },
+          "fullName": { "type": "string" },
+          "phone": { "type": "string" },
+          "gender": { "$ref": "#/components/schemas/Gender" },
+          "birthDate": { "type": "string", "format": "date", "nullable": true },
+          "notes": { "type": "string", "nullable": true },
+          "updatedAt": { "type": "string", "format": "date-time", "readOnly": true }
+        }
+      },
+      "PatientRequest": {
+        "type": "object",
+        "required": ["fileNumber", "fullName", "phone", "gender"],
+        "properties": {
+          "fileNumber": { "type": "string", "minLength": 1, "maxLength": 20 },
+          "fullName": { "type": "string", "minLength": 2, "maxLength": 120 },
+          "phone": { "type": "string", "pattern": "^\\+?[0-9 ]{7,20}$" },
+          "gender": { "$ref": "#/components/schemas/Gender" },
+          "birthDate": { "type": "string", "format": "date" },
+          "notes": { "type": "string", "maxLength": 500 }
+        }
+      },
+      "Doctor": {
+        "type": "object",
+        "required": ["id", "fullName", "specialty", "isActive"],
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "fullName": { "type": "string" },
+          "specialty": { "$ref": "#/components/schemas/Specialty" },
+          "phone": { "type": "string", "nullable": true },
+          "isActive": { "type": "boolean" },
+          "updatedAt": { "type": "string", "format": "date-time", "readOnly": true }
+        }
+      },
+      "DoctorRequest": {
+        "type": "object",
+        "required": ["fullName", "specialty", "isActive"],
+        "properties": {
+          "fullName": { "type": "string", "minLength": 2, "maxLength": 120 },
+          "specialty": { "$ref": "#/components/schemas/Specialty" },
+          "phone": { "type": "string" },
+          "isActive": { "type": "boolean" }
+        }
+      },
+      "Appointment": {
+        "type": "object",
+        "required": ["id", "patientId", "doctorId", "startsAt", "status"],
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "patientId": { "type": "string" },
+          "patientName": { "type": "string", "readOnly": true },
+          "doctorId": { "type": "string" },
+          "doctorName": { "type": "string", "readOnly": true },
+          "startsAt": { "type": "string", "format": "date-time" },
+          "status": { "$ref": "#/components/schemas/AppointmentStatus" },
+          "reason": { "type": "string", "nullable": true },
+          "updatedAt": { "type": "string", "format": "date-time", "readOnly": true }
+        }
+      },
+      "AppointmentRequest": {
+        "type": "object",
+        "required": ["patientId", "doctorId", "startsAt", "status"],
+        "properties": {
+          "patientId": { "type": "string" },
+          "doctorId": { "type": "string" },
+          "startsAt": { "type": "string", "format": "date-time" },
+          "status": { "$ref": "#/components/schemas/AppointmentStatus" },
+          "reason": { "type": "string", "maxLength": 300 }
+        }
+      },
+      "PatientPage": {
+        "allOf": [
+          { "$ref": "#/components/schemas/PageMeta" },
+          {
+            "type": "object",
+            "properties": {
+              "content": { "type": "array", "items": { "$ref": "#/components/schemas/Patient" } }
+            }
+          }
+        ]
+      },
+      "DoctorPage": {
+        "allOf": [
+          { "$ref": "#/components/schemas/PageMeta" },
+          {
+            "type": "object",
+            "properties": {
+              "content": { "type": "array", "items": { "$ref": "#/components/schemas/Doctor" } }
+            }
+          }
+        ]
+      },
+      "AppointmentPage": {
+        "allOf": [
+          { "$ref": "#/components/schemas/PageMeta" },
+          {
+            "type": "object",
+            "properties": {
+              "content": { "type": "array", "items": { "$ref": "#/components/schemas/Appointment" } }
+            }
+          }
+        ]
+      },
+      "PageMeta": {
+        "type": "object",
+        "required": ["totalElements", "totalPages", "number", "size"],
+        "properties": {
+          "totalElements": { "type": "integer" },
+          "totalPages": { "type": "integer" },
+          "number": { "type": "integer" },
+          "size": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

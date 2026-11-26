@@ -1,0 +1,24 @@
+{
+  "id": "dashboard-clinic",
+  "foundation": "dashboard",
+  "folder": "clinic-desk",
+  "files": { "docs/api/openapi.json": "openapi.json" },
+  "answers": [
+    "لوحة تحكم (لوحة إدارة).",
+    "عيادة صغيرة (اسمها عيادة الندى، اسم خيالي). موظف الاستقبال يسجّل المرضى (رقم الملف، الاسم، الهاتف، الجنس، تاريخ الميلاد، ملاحظات)، ويدير قائمة الأطباء (الاسم، الاختصاص، الهاتف، فعّال أم لا)، ويحجز المواعيد: مريض مع طبيب في تاريخ ووقت، مع حالة الموعد (مجدول، تم، ملغى، لم يحضر) وسبب الزيارة. إلغاء الموعد تغيير لحالته، المواعيد لا تُحذف. يحتاج تسجيل دخول.",
+    "لا يوجد تصميم ولا شعار: استخدم الشكل الافتراضي للكِت.",
+    "ملف OpenAPI موجود في هذا المجلد: docs/api/openapi.json",
+    "العربية فقط."
+  ],
+  "expect": {
+    "entities": [
+      { "name": "patients", "match": "patient" },
+      { "name": "doctors", "match": "doctor" },
+      { "name": "appointments", "match": "appointment" }
+    ],
+    "languages": ["ar", "en"],
+    "defaultLanguage": "ar",
+    "switcher": false,
+    "openapiPath": "/patients"
+  }
+}

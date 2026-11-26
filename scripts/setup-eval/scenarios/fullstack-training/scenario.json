@@ -1,0 +1,30 @@
+{
+  "id": "fullstack-training",
+  "foundation": "fullstack",
+  "folder": "training-centre",
+  "files": { "docs/api/openapi.json": "openapi.json" },
+  "answers": [
+    "Both in one project: a public website and an admin panel.",
+    "Bright Path Training Centre (fictional name; in Arabic: مركز المسار المضيء للتدريب), a small centre that runs short evening courses in web development, office skills and English. The public site has a home page, an about page (founded to help young people find their first job), a courses page that lists the three course areas above with one line each, and a contact page where people ask to be called back. Staff sign in to the admin to manage courses (code, title, level, hours, start date, published or not) and enrolments (which course, student name, phone, email, status: pending, confirmed or cancelled).",
+    "No design and no logo: keep the kit's default look.",
+    "The OpenAPI file is already in this folder: docs/api/openapi.json",
+    "Both Arabic and English, Arabic first."
+  ],
+  "expect": {
+    "pages": [
+      { "name": "home", "route": "index" },
+      { "name": "about", "match": "about" },
+      { "name": "courses", "match": "course" },
+      { "name": "contact", "match": "contact" }
+    ],
+    "gonePages": ["services", "news"],
+    "entities": [
+      { "name": "courses", "match": "course" },
+      { "name": "enrolments", "match": "enrol" }
+    ],
+    "languages": ["ar", "en"],
+    "defaultLanguage": "ar",
+    "switcher": true,
+    "openapiPath": "/courses"
+  }
+}

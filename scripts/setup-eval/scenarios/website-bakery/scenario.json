@@ -1,0 +1,26 @@
+{
+  "id": "website-bakery",
+  "foundation": "website",
+  "folder": "bakery-site",
+  "files": {},
+  "answers": [
+    "A website.",
+    "A small family bakery, Sunflower Crumb Bakery (fictional name; in Arabic: مخبز دوّار الشمس). Pages: a home page; our menu (three groups: breads - sourdough, whole-wheat loaf, sesame ka'ak; cakes - date cake, carrot cake, custom birthday cakes on order; pastries - cheese fatayer, zaatar manakish, croissants; short descriptions only, we do not publish prices); about us (a family bakery that opened in 2009, everything baked fresh every morning with no preservatives); news (two posts: 'Sourdough every Friday' - from this month we bake sourdough loaves every Friday morning; 'Ramadan hours' - during Ramadan we open from 2 pm to 1 am); and contact, where people send a message to ask about custom cake orders. Opening hours: every day 7 am to 9 pm.",
+    "No design and no logo: keep the kit's default look.",
+    "There is no backend and no OpenAPI. It does not need sign-in.",
+    "Both Arabic and English, Arabic first."
+  ],
+  "expect": {
+    "pages": [
+      { "name": "home", "route": "index" },
+      { "name": "menu", "match": "menu" },
+      { "name": "about", "match": "about" },
+      { "name": "news", "match": "news" },
+      { "name": "contact", "match": "contact" }
+    ],
+    "gonePages": ["services"],
+    "languages": ["ar", "en"],
+    "defaultLanguage": "ar",
+    "switcher": true
+  }
+}
