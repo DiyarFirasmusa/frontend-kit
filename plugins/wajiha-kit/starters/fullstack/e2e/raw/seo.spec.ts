@@ -1,0 +1,139 @@
+// What a crawler or a chat app receives: the server HTML, with no JavaScript. A page that only looks right
+// after hydration would pass a browser test and still fail here.
+import { expect, test } from '@playwright/test';
+import { ARTICLE, PAGES } from '../fixtures/app';
+import {
+  alternates,
+  allMeta,
+  canonical,
+  h1Count,
+  jsonLd,
+  metaContent,
+  tags,
+  titles,
+} from '../fixtures/html';
+
+const LANGUAGES = [
+  { language: 'ar', dir: 'rtl', hreflang: 'ar-IQ', ogLocale: 'ar_IQ' },
+  { language: 'en', dir: 'ltr', hreflang: 'en', ogLocale: 'en_US' },
+] as const;
+
+const cases = LANGUAGES.flatMap((lang) =>
+  PAGES.map((page) => ({ ...lang, page: page.name, path: `/${lang.language}${page.path}` })),
+);
+
+test.describe('server HTML of every public page', () => {
+  for (const item of cases) {
+    test(`${item.path}`, async ({ request, baseURL }) => {
+      const response = await request.get(item.path);
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type']).toContain('text/html');
+      const html = await response.text();
+
+      // Document language and direction are right in the first HTML: no flip after load.
+      const root = tags(html, 'html')[0];
+      expect(root?.['lang']).toBe(item.language);
+      expect(root?.['dir']).toBe(item.dir);
+
+      // One title, one h1, a real description.
+      expect(titles(html)).toHaveLength(1);
+      expect(titles(html)[0]?.length ?? 0).toBeGreaterThan(5);
+      expect(h1Count(html)).toBe(1);
+      expect((metaContent(html, 'name', 'description') ?? '').length).toBeGreaterThanOrEqual(40);
+
+      // Indexable, canonical to itself, absolute, same origin as the site.
+      expect(metaContent(html, 'name', 'robots')).toContain('index');
+      expect(metaContent(html, 'name', 'robots')).not.toContain('noindex');
+      expect(canonical(html)).toBe(`${baseURL}${item.path}`);
+
+      // Both languages and x-default; the page lists itself.
+      const alt = alternates(html);
+      expect(Object.keys(alt).toSorted()).toEqual(['ar-IQ', 'en', 'x-default']);
+      expect(alt[item.hreflang]).toBe(`${baseURL}${item.path}`);
+      expect(alt['x-default']).toBe(`${baseURL}${item.path.replace(/^\/(ar|en)/, '/ar')}`);
+
+      // Share tags.
+      expect(metaContent(html, 'property', 'og:title')).toBe(titles(html)[0]);
+      expect(metaContent(html, 'property', 'og:url')).toBe(`${baseURL}${item.path}`);
+      expect(metaContent(html, 'property', 'og:locale')).toBe(item.ogLocale);
+      expect(metaContent(html, 'property', 'og:image')).toBe(`${baseURL}/og-default.png`);
+      expect(metaContent(html, 'property', 'og:image:width')).toBe('1200');
+      expect(metaContent(html, 'property', 'og:image:height')).toBe('630');
+      expect(metaContent(html, 'name', 'twitter:card')).toBe('summary_large_image');
+      expect(allMeta(html, 'property', 'og:title')).toHaveLength(1);
+
+      // Structured data parses and is typed.
+      const blocks = jsonLd(html);
+      expect(blocks.length).toBeGreaterThan(0);
+      for (const block of blocks) {
+        expect(block['@context']).toBe('https://schema.org');
+        expect(typeof block['@type']).toBe('string');
+      }
+    });
+  }
+});
+
+test.describe('across pages', () => {
+  test('titles are unique within a language', async ({ request }) => {
+    for (const language of ['ar', 'en']) {
+      const seen = new Set<string>();
+      for (const page of PAGES) {
+        const html = await (await request.get(`/${language}${page.path}`)).text();
+        const title = titles(html)[0] ?? '';
+        expect(seen.has(title), `duplicate title "${title}" on /${language}${page.path}`).toBe(
+          false,
+        );
+        seen.add(title);
+      }
+    }
+  });
+
+  test('a page and its other-language version point at each other', async ({ request }) => {
+    for (const page of PAGES) {
+      const arHtml = await (await request.get(`/ar${page.path}`)).text();
+      const enHtml = await (await request.get(`/en${page.path}`)).text();
+      const arAlt = alternates(arHtml);
+      const enAlt = alternates(enHtml);
+      expect(arAlt['en']).toBe(canonical(enHtml));
+      expect(enAlt['ar-IQ']).toBe(canonical(arHtml));
+    }
+  });
+
+  test('tracking parameters do not change the canonical', async ({ request, baseURL }) => {
+    const html = await (await request.get('/en/about?utm_source=newsletter&x=1')).text();
+    expect(canonical(html)).toBe(`${baseURL}/en/about`);
+  });
+
+  test('the article carries Article and BreadcrumbList data and its publish date', async ({
+    request,
+  }) => {
+    const html = await (await request.get(`/en/news/${ARTICLE.slug}`)).text();
+    const types = jsonLd(html).map((block) => block['@type']);
+    expect(types).toEqual(expect.arrayContaining(['Article', 'BreadcrumbList']));
+    expect(metaContent(html, 'property', 'og:type')).toBe('article');
+    expect(metaContent(html, 'property', 'article:published_time')).toBe(ARTICLE.date);
+  });
+
+  test('the home page carries Organization and WebSite data', async ({ request }) => {
+    const html = await (await request.get('/ar')).text();
+    const types = jsonLd(html).map((block) => block['@type']);
+    expect(types).toEqual(expect.arrayContaining(['Organization', 'WebSite']));
+  });
+
+  test('every internal link in the server HTML stays inside a language prefix and returns 200', async ({
+    request,
+  }) => {
+    const html = await (await request.get('/en')).text();
+    const links = new Set(
+      tags(html, 'a')
+        .map((tag) => tag['href'] ?? '')
+        .filter((href) => href.startsWith('/') && !href.startsWith('//') && !href.startsWith('/#')),
+    );
+    expect(links.size).toBeGreaterThan(5);
+    for (const href of links) {
+      expect(href, 'internal links are language-prefixed').toMatch(/^\/(ar|en)(\/|$)/);
+      const response = await request.get(href, { maxRedirects: 0 });
+      expect(response.status(), href).toBe(200);
+    }
+  });
+});
