@@ -328,7 +328,6 @@
   }
 
   .example .road.is-scrolly .path-stop .road-screen > * {
-    opacity: calc(0.15 + var(--p) * 0.85);
     transform:
       translateX(calc((1 - var(--p)) * var(--from) * 6rem))
       rotateY(calc((1 - var(--p)) * var(--from) * -38deg))
@@ -336,7 +335,6 @@
   }
 
   .example .road.is-scrolly .path-stop .path-pick {
-    opacity: calc(var(--p) * 1.2 - 0.2);
     translate: calc((1 - var(--p)) * var(--from) * -3rem) 0;
   }
 

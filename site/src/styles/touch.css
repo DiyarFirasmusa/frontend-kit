@@ -101,15 +101,13 @@
   }
 
   /* Motion tied to the scroll (reveal.ts sets --p from 0 to 1 as a part comes up the screen, and --q as the opening screen
-     is scrolled away). Without the script, or for less motion, nothing is marked and nothing moves. */
+     is scrolled away). Things move, they never fade out or in. Without the script, or for less motion, nothing moves. */
   [data-scroll='rise'] {
-    opacity: calc(0.15 + var(--p, 1) * 0.85);
     transform: translateY(calc((1 - var(--p, 1)) * 4rem)) scale(calc(0.94 + var(--p, 1) * 0.06));
   }
 
   [data-scroll='flip'] {
     --side: 1;
-    opacity: calc(0.2 + var(--p, 1) * 0.8);
     transform:
       perspective(1100px)
       translateX(calc((1 - var(--p, 1)) * var(--side) * 5rem))
@@ -121,7 +119,6 @@
   }
 
   [data-scroll='leave'] {
-    opacity: calc(1 - var(--q, 0) * 0.5);
     transform:
       perspective(1200px)
       translateY(calc(var(--q, 0) * -2.5rem))
