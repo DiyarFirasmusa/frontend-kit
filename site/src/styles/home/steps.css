@@ -1,45 +1,89 @@
-/* HOW IT WORKS: THE ROAD. Four screens side by side, from the first message to the project you open, with one road between
-   them. Each screen has its number on the road, what it shows, and under it what happens and whose move it is: orange when
-   it is yours, turquoise when it is Claude's. The last screen, the project, is where the road arrives.
+/* HOW IT WORKS: THE ROAD. One road runs down the middle of the block, from the first message to the project you open. Its
+   four stops are numbered on it, and each step sits on the road with its screen on one side and, on the other, what happens
+   and whose move it is (orange when it is yours, turquoise when it is Claude's); the sides take turns. As the page scrolls,
+   the road fills, the step in the middle of the screen is the current one, and each step turns in from its side.
    Layer skin-page (home/index.css), so it replaces the older journey rules without !important. */
 .example .road {
-  --gap: clamp(2.25rem, 3.4vw, 3.75rem);
-  --screen: 17.5rem;
-  --pin: 2.25rem;
-  --dir: 1;
+  --screen: 15.5rem;
+  --pin: 2.5rem;
+  --road: 5rem;
   position: relative;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr);
-  column-gap: var(--gap);
-  row-gap: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(2.5rem, 5vw, 4.5rem);
   margin: 0;
-  padding-block: 1.75rem 1.25rem;
-  padding-inline: calc(var(--gap) / 2 + var(--pin) / 2 + 0.5rem) clamp(1.25rem, 2.4vw, 2.25rem);
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 3vw, 3rem);
   list-style: none;
 }
 
-[dir='rtl'] .example .road {
-  --dir: -1;
-}
-
-/* The older journey line is not used: the road is drawn between the screens. */
+/* The road: a dashed line between the first and the last stop (script.js measures them), lit as far as you have scrolled. */
 .example .road::before,
 .example .road::after {
-  content: none;
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: 0;
+  inset-block-start: var(--road-top, 0);
+  inset-inline-start: calc(50% - 1px);
+  inset-inline-end: auto;
+  inline-size: 2px;
+  block-size: var(--road-length, 0);
+  border-radius: 2px;
 }
 
+.example .road::before {
+  background: repeating-linear-gradient(rgb(var(--ink-rgb) / 0.38) 0 6px, transparent 6px 12px);
+}
+
+.example .road::after {
+  background: linear-gradient(var(--accent), var(--turq));
+  transform: scaleY(var(--fill, 0));
+  transform-origin: top;
+}
+
+/* A step: its screen, its stop on the road, its words. Odd steps have the screen first, even ones the words first. */
 .example .road .path-stop {
   position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-rows: var(--screen) auto;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: stretch;
-  gap: 1.1rem;
+  grid-template-columns: minmax(0, 1fr) var(--road) minmax(0, 1fr);
+  align-items: center;
   padding: 0;
   border: 0;
   background: none;
   text-align: start;
   cursor: pointer;
+}
+
+.example .road .road-screen {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: end;
+  inline-size: min(100%, 30rem);
+}
+
+.example .road .road-pin {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+}
+
+.example .road .path-pick {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: start;
+}
+
+.example .road .path-stop:nth-child(even) .road-screen {
+  grid-column: 3;
+  justify-self: start;
+}
+
+.example .road .path-stop:nth-child(even) .path-pick {
+  grid-column: 1;
+  justify-self: end;
+  justify-items: end;
+  text-align: end;
 }
 
 /* ---------- The screens ---------- */
@@ -104,7 +148,7 @@
   min-block-size: 0;
   aspect-ratio: auto;
   padding: 0.75rem;
-  font-size: calc(100cqw * 0.03);
+  font-size: calc(100cqw * 0.026);
 }
 
 .example .road-save {
@@ -141,23 +185,21 @@
   color: var(--muted);
 }
 
-/* ---------- The road and its numbers ---------- */
-/* Each number is a stop on the road, halfway along the stretch that leads into its screen. */
+/* ---------- The stops on the road ---------- */
 .example .road .road-pin {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  inset-block-start: calc(var(--screen) / 2 - var(--pin) / 2);
-  inset-inline-start: calc(var(--gap) / -2 - var(--pin) / 2);
   display: grid;
   place-items: center;
   inline-size: var(--pin);
   block-size: var(--pin);
-  border-radius: 0.6rem;
-  font: 700 0.9375rem/1 var(--code);
-  box-shadow: 0 0 0 4px #0c0c0c;
+  border-radius: 0.65rem;
+  font: 700 1rem/1 var(--code);
+  box-shadow: 0 0 0 5px #0c0c0c;
   transition:
     scale 0.4s var(--spring, ease),
-    box-shadow 0.4s;
+    box-shadow 0.4s,
+    background-color 0.4s;
 }
 
 .example .road .path-stop[data-who='you'] .road-pin {
@@ -170,38 +212,13 @@
   color: var(--on-accent);
 }
 
-/* The road between a screen and the next one: quiet until it is travelled, then orange to turquoise. */
-.example .road .path-stop:not(.is-last)::after {
-  content: '';
-  position: absolute;
-  z-index: 1;
-  inset-block-start: calc(var(--screen) / 2 - 1px);
-  inset-inline-start: 100%;
-  inline-size: var(--gap);
-  block-size: 2px;
-  background:
-    linear-gradient(90deg, var(--accent), var(--turq)) no-repeat 0 0 / var(--lit, 0%) 100%,
-    repeating-linear-gradient(90deg, rgb(var(--ink-rgb) / 0.3) 0 6px, transparent 6px 11px);
-  transition: --lit 0.6s var(--glide, ease);
+/* A stop not reached yet is quiet. */
+.example .road .path-stop:not(.is-current):not(.is-done) .road-pin {
+  background: #2a2926;
+  color: var(--block-muted);
 }
 
-[dir='rtl'] .example .road .path-stop:not(.is-last)::after {
-  background:
-    linear-gradient(270deg, var(--accent), var(--turq)) no-repeat 100% 0 / var(--lit, 0%) 100%,
-    repeating-linear-gradient(270deg, rgb(var(--ink-rgb) / 0.3) 0 6px, transparent 6px 11px);
-}
-
-@property --lit {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-.example .road .path-stop:is(.is-done, .is-current):not(.is-last)::after {
-  --lit: 100%;
-}
-
-/* ---------- Under each screen: what happens, and whose move it is ---------- */
+/* ---------- Beside each screen: what happens, and whose move it is ---------- */
 .example .road .path-pick {
   display: grid;
   justify-items: start;
@@ -223,16 +240,20 @@
   outline-offset: 4px;
 }
 
+.example .road .path-pick {
+  max-inline-size: 30rem;
+}
+
 .example .road .path-pick strong {
   color: var(--dark-ivory);
-  font-size: 1.125rem;
-  line-height: 1.3;
+  font-size: clamp(1.125rem, 0.9rem + 0.6vw, 1.5rem);
+  line-height: 1.25;
 }
 
 .example .road .path-text {
   color: var(--block-muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
+  font-size: 1.0625rem;
+  line-height: 1.55;
 }
 
 .example .road-move {
@@ -242,8 +263,8 @@
   padding-block-start: 0.6rem;
   border-block-start: 1px solid rgb(var(--dark-ink-rgb, 241 237 231) / 0.14);
   color: var(--dark-ivory);
-  font-size: 0.875rem;
-  line-height: 1.45;
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
 .example .road-move b {
@@ -281,132 +302,111 @@
     0 0 0 6px var(--dark-ivory);
 }
 
-/* ---------- Motion: the screens arrive along the road, one after another, and a traveller walks the current stretch ---------- */
+/* ---------- Motion: each step turns in from its side as it is scrolled to (board-life.ts adds is-in) ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  .example .road.has-started .path-stop {
-    animation: road-in 0.7s var(--glide, ease) both;
-    animation-delay: calc(var(--n, 0) * 0.22s);
+  .example .road.is-scrolly .path-stop .road-screen {
+    --from: -1;
+    perspective: 1100px;
   }
 
-  .example .road.has-started .path-stop:not(.is-last)::after {
-    animation: road-draw 0.6s var(--glide, ease) both;
-    animation-delay: calc(var(--n, 0) * 0.22s + 0.35s);
+  .example .road.is-scrolly .path-stop:nth-child(even) .road-screen {
+    --from: 1;
   }
 
-  /* The traveller: a small turquoise dot that walks from this screen to the next, again and again. */
-  .example .road .path-stop.is-current:not(.is-last)::before {
-    content: '';
-    position: absolute;
-    z-index: 3;
-    inset-block-start: calc(var(--screen) / 2 - 4px);
-    inset-inline-start: 100%;
-    inline-size: 8px;
-    block-size: 8px;
-    border-radius: 50%;
-    background: var(--turq);
-    box-shadow: 0 0 0 3px #0c0c0c;
-    animation: road-walk 1.5s var(--glide, ease) infinite;
+  [dir='rtl'] .example .road.is-scrolly .path-stop .road-screen {
+    --from: 1;
   }
 
-  html.is-paused .example .road .path-stop::before {
-    animation-play-state: paused;
+  [dir='rtl'] .example .road.is-scrolly .path-stop:nth-child(even) .road-screen {
+    --from: -1;
   }
 
-  @keyframes road-in {
-    from {
-      opacity: 0;
-      translate: calc(1.5rem * var(--dir)) 0;
-    }
+  .example .road.is-scrolly .path-stop .road-screen > *,
+  .example .road.is-scrolly .path-stop .path-pick,
+  .example .road.is-scrolly .path-stop .road-pin {
+    transition:
+      opacity 0.7s var(--glide, ease),
+      transform 0.9s var(--glide, ease),
+      translate 0.9s var(--glide, ease),
+      scale 0.5s var(--spring, ease),
+      box-shadow 0.4s,
+      background-color 0.4s;
   }
 
-  @keyframes road-draw {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-
-    to {
-      clip-path: inset(0 0 0 0);
-    }
+  .example .road.is-scrolly .path-stop:not(.is-in) .road-screen > * {
+    opacity: 0;
+    transform: translateX(calc(var(--from) * 4rem)) rotateY(calc(var(--from) * -28deg));
   }
 
-  @keyframes road-walk {
-    from {
-      translate: 0 0;
-      opacity: 0;
-    }
+  .example .road.is-scrolly .path-stop:not(.is-in) .path-pick {
+    opacity: 0;
+    translate: calc(var(--from) * -2.5rem) 0;
+  }
 
-    15% {
-      opacity: 1;
-    }
+  .example .road.is-scrolly .path-stop:not(.is-in) .road-pin {
+    scale: 0.4;
+    opacity: 0;
+  }
 
-    85% {
-      opacity: 1;
-    }
+  .example .road.is-scrolly .path-stop.is-in .path-pick {
+    transition-delay: 0.15s;
+  }
 
-    to {
-      translate: calc((var(--gap) - 8px) * var(--dir)) 0;
-      opacity: 0;
-    }
+  .example .road::after {
+    transition: transform 0.25s linear;
   }
 }
 
-[dir='rtl'] .example .road.has-started .path-stop:not(.is-last)::after {
-  animation-name: road-draw-rtl;
-}
-
-@keyframes road-draw-rtl {
-  from {
-    clip-path: inset(0 0 0 100%);
-  }
-
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-/* ---------- Tablets: two by two, the road runs along each row ---------- */
-@media (width < 62rem) {
-  .example .road {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 2.5rem;
-  }
-
-  .example .road .path-stop:nth-child(2)::after,
-  .example .road .path-stop:nth-child(2)::before {
-    display: none;
-  }
-}
-
-/* ---------- Phones: one screen under another, the road runs down beside them through the numbers ---------- */
+/* ---------- Phones: the road runs down the start side; each screen has its words under it ---------- */
 @media (width < 48rem) {
   .example .road {
     --screen: 15rem;
-    grid-template-columns: minmax(0, 1fr);
+    --road: 3rem;
     row-gap: 2.5rem;
-    padding-block: 1.25rem 1rem;
-    padding-inline: calc(var(--pin) + 1.25rem) 0.75rem;
+    padding: 1.25rem 0.75rem 1rem 0.25rem;
+    padding-inline: 0.25rem 0.75rem;
+  }
+
+  .example .road::before,
+  .example .road::after {
+    inset-inline-start: calc(var(--road) / 2 - 1px);
+  }
+
+  .example .road .path-stop,
+  .example .road .path-stop:nth-child(even) {
+    grid-template-columns: var(--road) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    row-gap: 1rem;
+    align-items: start;
   }
 
   .example .road .road-pin {
-    inset-block-start: 0.5rem;
-    inset-inline-start: calc(var(--pin) * -1 - 0.75rem);
+    grid-column: 1;
+    grid-row: 1;
+    margin-block-start: 0.5rem;
   }
 
-  .example .road .path-stop:nth-child(2)::after {
-    display: block;
+  .example .road .road-screen,
+  .example .road .path-stop:nth-child(even) .road-screen {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
+    inline-size: auto;
+    block-size: auto;
   }
 
-  .example .road .path-stop:not(.is-last)::after {
-    inset-block-start: calc(0.5rem + var(--pin));
-    inset-inline-start: calc(var(--pin) * -0.5 - 0.75rem - 1px);
-    inline-size: 2px;
-    block-size: calc(100% + 2.5rem - var(--pin));
-    background: linear-gradient(var(--accent), var(--turq));
-    opacity: 0.6;
-    animation: none;
+  /* On a phone a screen is as tall as its step, so nothing in it is cut off. */
+  .example .road-screen > :is(.chat, .browser) {
+    block-size: auto;
+    min-block-size: 10rem;
   }
 
-  .example .road .path-stop::before {
-    display: none;
+  .example .road .path-pick,
+  .example .road .path-stop:nth-child(even) .path-pick {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    justify-items: start;
+    text-align: start;
   }
 }
