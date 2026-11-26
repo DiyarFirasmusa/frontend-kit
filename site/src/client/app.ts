@@ -11,7 +11,6 @@ import { initChrome } from './page-chrome.ts'
 import { initShareLink } from './share-link.ts'
 import { initPointer } from './pointer.ts'
 import { initReveal } from './reveal.ts'
-import { initTabs } from './tabs.ts'
 import { initTilt } from './tilt.ts'
 import { initTheme } from './theme.ts'
 import { initToc } from './toc.ts'
@@ -32,7 +31,6 @@ document.addEventListener('astro:page-load', () => {
     ['tree', () => initTree(signal)],
     ['gate', initGate],
     ['life', () => initLife(signal)],
-    ['tabs', () => initTabs(signal)],
     ['alive', () => initAlive(signal)],
     ['warm', () => warmPages(signal)],
     ['toc', () => initToc(signal)],

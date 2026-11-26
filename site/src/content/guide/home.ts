@@ -56,17 +56,6 @@ export const home = {
   ],
   for: t('For people who do not code, for people who build with AI, and for developers who have a backend and need screens.', 'لمن لا يبرمج، ولمن يبني مع الذكاء الاصطناعي، وللمطورين الذين عندهم خادم ويحتاجون شاشات.'),
   forLink: t('Build with AI and want it kept tidy? For developers', 'تبني بالذكاء الاصطناعي وتريد أن يبقى مشروعك مرتبا؟ للمطورين'),
-  builds: {
-    title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
-    lead: t('Three kinds of project. Claude asks which one you want.', 'ثلاثة أنواع من المشاريع، ويسألك Claude أيها تريد.'),
-    examples: {
-      website: t('Your shop, your restaurant menu, your portfolio', 'متجرك، قائمة مطعمك، معرض أعمالك'),
-      dashboard: t('Your orders, your customers, your stock', 'طلباتك، زبائنك، مخزونك'),
-      fullstack: t('A shop you add products to from your dashboard', 'متجر تضيف له منتجات من لوحتك'),
-    },
-    say: t('You could say', 'يمكنك أن تقول'),
-    more: t('See every kind of project', 'شاهد كل أنواع المشاريع'),
-  },
   see: t('See how it works, step by step', 'شاهد كيف يعمل، خطوة بخطوة'),
   docs: t('Read the guide', 'اقرأ الدليل'),
 
