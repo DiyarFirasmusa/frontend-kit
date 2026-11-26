@@ -1,27 +1,50 @@
 :root {
-  --ink-rgb: 241 237 231;
+  /* THE TWO PALETTES BY NAME. Constants: they never change with the theme, so a dark surface that stays dark in light
+     mode (the Claude drawings, the black main block) and a paper surface that stays light (the light Claude windows,
+     code windows) take their colours from here instead of copying them. The theme tokens below point at them. */
+  --dark-ink-rgb: 241 237 231;
+  --dark-ivory: #f1ede7;
+  --dark-muted: #bcb8b1;
+  --dark-faint: #96938d;
+  --dark-accent: #d97757;
+  --dark-amber: #f2a183;
+  --dark-turq: #19abab;
+  --paper-ink-rgb: 20 20 19;
+  --paper-ink: #141413;
+  --paper: #fffdf9;
+  --paper-bar: #f4efe6;
+  --paper-sunk: #e8e2d8;
+  /* The black main block in light mode: its muted words a little lighter, its orange brighter. */
+  --block-muted: #cfcac2;
+  --block-faint: #a8a49d;
+  --block-accent: #ea6a40;
+  /* The bright orange of the mark (the main block's edge), and ink words on an orange or turquoise fill. */
+  --accent-bright: #e8643a;
+  --on-accent: #141413;
+
+  --ink-rgb: var(--dark-ink-rgb);
   --void-rgb: 5 6 7;
   --void: #050607;
   --raised: #0d0e10;
-  --ivory: #f1ede7;
-  --muted: #bcb8b1;
-  --faint: #96938d;
+  --ivory: var(--dark-ivory);
+  --muted: var(--dark-muted);
+  --faint: var(--dark-faint);
   --line: rgb(var(--ink-rgb) / 0.18);
   --bad: #e0776b;
 
   /* Claude's own orange, used in touches only: the star, the bullets, the line you have read, the focus. */
-  --accent: #d97757;
+  --accent: var(--dark-accent);
   --accent-soft: rgb(217 119 87 / 0.16);
 
   /* Only orange and black and white: its lighter and deeper tones, and white. */
-  --amber: #f2a183;
+  --amber: var(--dark-amber);
   --sand: #b85f3f;
   --teal: #f1ede7;
   --rose: var(--bad);
 
   /* Wajiha's own turquoise, made at the orange's lightness and strength. Orange is the request and the action;
      turquoise is the way around and the result (links, where you are, focus, steps, progress, checks). */
-  --turq: #19abab;
+  --turq: var(--dark-turq);
   --turq-deep: #006c6d;
   --turq-soft: rgb(25 171 171 / 0.16);
   /* The words of a go-there pill in a board's note bar. */

@@ -5,21 +5,21 @@
 /* ---------- Code windows ---------- */
 /* Light mode: paper, with the orange edge and the brighter orange pill. */
 html[data-theme='light'] .command {
-  --ink-rgb: 20 20 19;
-  --ivory: #141413;
+  --ink-rgb: var(--paper-ink-rgb);
+  --ivory: var(--paper-ink);
   --muted: #4a4741;
-  border-color: rgb(20 20 19 / 0.2);
-  background: #fffdf9;
-  color: #141413;
+  border-color: rgb(var(--paper-ink-rgb) / 0.2);
+  background: var(--paper);
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .command :is(code, span, pre) {
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .command button {
-  background: #e8643a;
-  color: #141413;
+  background: var(--accent-bright);
+  color: var(--on-accent);
 }
 
 html[data-theme='light'] .prompt > span {
@@ -208,7 +208,7 @@ html:not([data-theme='light']) .doc .hub-kinds a {
 }
 
 html[data-theme='light'] :is(.toc a:not([aria-current]), .toc-mini a, .doc .crumbs a, .tree a:not([aria-current])) {
-  color: rgb(20 20 19 / 0.74);
+  color: rgb(var(--paper-ink-rgb) / 0.74);
 }
 
 /* Light mode: the head's black block has light words. */
@@ -218,15 +218,15 @@ html[data-theme='light'] .doc-head .doc-summary {
 
 html[data-theme='light'] .doc-head .board-main h1,
 html[data-theme='light'] .doc-head .board-main h1 bdi {
-  color: #f1ede7;
+  color: var(--dark-ivory);
 }
 
 html[data-theme='light'] .doc-head .board-main h1 em {
-  color: #ea6a40;
+  color: var(--block-accent);
 }
 
 html[data-theme='light'] .doc-head .board-main .crumbs,
 html[data-theme='light'] .doc-head .board-main .crumbs a,
 html[data-theme='light'] .doc-head .board-main .crumbs span {
-  color: #cfcac2;
+  color: var(--block-muted);
 }

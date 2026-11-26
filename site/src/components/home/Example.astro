@@ -100,12 +100,12 @@ const { locale } = Astro.props
     /* Who acts at each step: you in orange, the kit in turquoise, dark digits on both. */
     .board .path .path-stop[data-who='you'] .path-dot {
       background: var(--accent);
-      color: #141413;
+      color: var(--on-accent);
     }
 
     .board .path .path-stop[data-who='kit'] .path-dot {
       background: var(--turq);
-      color: #141413;
+      color: var(--on-accent);
     }
 
     /* The question window shows two choices, so none is cut off. */

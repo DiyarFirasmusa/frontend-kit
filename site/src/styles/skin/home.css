@@ -4,14 +4,14 @@
    --------------------------------------------------------------------------------------------- */
 /* ---------- The windows: paper-white surfaces with ink words ---------- */
 html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint, .ce-shot) {
-  --ink-rgb: 20 20 19;
-  --ivory: #141413;
-  --line: rgb(20 20 19 / 0.16);
-  --accent: #e8643a;
+  --ink-rgb: var(--paper-ink-rgb);
+  --ivory: var(--paper-ink);
+  --line: rgb(var(--paper-ink-rgb) / 0.16);
+  --accent: var(--accent-bright);
   --amber: #c9502a;
   --turq: #0c8a8a;
   --turq-deep: #006c6d;
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 /* Small and muted words in the windows reach 4.5:1. */
@@ -26,18 +26,18 @@ html[data-theme='light'] :is(.chat, .start-window, .browser, .ba, .path-picture,
 }
 
 html[data-theme='light'] :is(.chat, .browser, .ba, .start-window) {
-  border-color: rgb(20 20 19 / 0.2);
-  background: #fffdf9;
+  border-color: rgb(var(--paper-ink-rgb) / 0.2);
+  background: var(--paper);
 }
 
 html[data-theme='light'] :is(.path-picture, .ce-shot, .show-tabs, .dash, .mock) {
-  border-color: rgb(20 20 19 / 0.12);
-  background: #f4efe6;
+  border-color: rgb(var(--paper-ink-rgb) / 0.12);
+  background: var(--paper-bar);
 }
 
 html[data-theme='light'] :is(.chat-bar, .browser-bar) {
-  border-color: rgb(20 20 19 / 0.12);
-  background: #f4efe6;
+  border-color: rgb(var(--paper-ink-rgb) / 0.12);
+  background: var(--paper-bar);
 }
 
 html[data-theme='light'] .browser-url {
@@ -50,76 +50,76 @@ html[data-theme='light'] :is(.ce-spark, .chat-title i) {
 
 /* Messages, inputs and chips inside the windows. */
 html[data-theme='light'] :is(.chat, .start-window) :is(.ce-user, .chat-input, .chat-tools, .msg-command, .start-message, .ce-ask, .ce-tool) {
-  border-color: rgb(20 20 19 / 0.16);
-  background: #f4efe6;
-  color: #141413;
+  border-color: rgb(var(--paper-ink-rgb) / 0.16);
+  background: var(--paper-bar);
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .start-window .start-text .msg-command,
 html[data-theme='light'] .start-window code {
   background: transparent;
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 /* Orange on a light surface that carries small text is ink instead. */
 html[data-theme='light'] :is(.chat, .start-window, .browser, .ba, .path-picture) :is(.ce-key, .jp-typed, .is-pick) {
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 /* ---------- The drawings: the parts that were hard-coded dark ---------- */
 html[data-theme='light'] .ba::before,
 html[data-theme='light'] [dir='rtl'] .ba::before {
-  border-block-end-color: rgb(20 20 19 / 0.12);
-  background-color: #f4efe6;
+  border-block-end-color: rgb(var(--paper-ink-rgb) / 0.12);
+  background-color: var(--paper-bar);
 }
 
 html[data-theme='light'] .dash-side,
 html[data-theme='light'] .is-broken .dash-side {
   background: #ece6da;
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .ba-tag.is-bad,
 html[data-theme='light'] .ba-cue {
-  border-color: #141413;
-  background: #141413;
-  color: #f1ede7;
+  border-color: var(--paper-ink);
+  background: var(--paper-ink);
+  color: var(--dark-ivory);
 }
 
 html[data-theme='light'] :is(.jp-input, .jp-ask, .jp-save, .jp-plan) {
-  border-color: rgb(20 20 19 / 0.16);
-  background: #fffdf9;
-  color: #141413;
+  border-color: rgb(var(--paper-ink-rgb) / 0.16);
+  background: var(--paper);
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] :is(.jp-input, .jp-ask, .jp-save) :is(p, span, li, strong) {
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] :is(.ce-ready, .ce-tool, .ce-user) {
-  background: #f4efe6;
-  color: #141413;
+  background: var(--paper-bar);
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .path-picture::before,
 html[data-theme='light'] [dir='rtl'] .path-picture::before {
-  background-color: #f4efe6;
-  border-block-end-color: rgb(20 20 19 / 0.12);
+  background-color: var(--paper-bar);
+  border-block-end-color: rgb(var(--paper-ink-rgb) / 0.12);
 }
 
 html[data-theme='light'] .jp-build li > span,
 html[data-theme='light'] .jp-build li {
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .jp-bar {
-  background: rgb(20 20 19 / 0.1);
+  background: rgb(var(--paper-ink-rgb) / 0.1);
 }
 
 /* The comparison reads at 4.5:1 or better. */
 html[data-theme='light'] .ba b,
 html[data-theme='light'] .ba .is-on {
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .ba .is-broken b {
@@ -175,20 +175,20 @@ html[data-theme='light'] .hero h1 > span + span {
 /* ---------- Number badges in light mode: dark digits on orange / turquoise ---------- */
 html[data-theme='light'] .board .board-main .path-dot,
 html[data-theme='light'] .board .board-main .start-line-dot {
-  color: #141413;
+  color: var(--on-accent);
 }
 
 html[data-theme='light'] .board .board-main .start-line-dot,
 html[data-theme='light'] #install .start-main .start-line-dot,
 html[data-theme='light'] .board .path-stop[data-who='you'] .path-dot {
-  background: #ea6a40;
-  border-color: #ea6a40;
-  color: #141413;
+  background: var(--block-accent);
+  border-color: var(--block-accent);
+  color: var(--on-accent);
 }
 
 html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
-  background: #19abab;
-  color: #141413;
+  background: var(--dark-turq);
+  color: var(--on-accent);
 }
 
 /* ---------- Sizes and hit areas (both themes) ---------- */
@@ -228,7 +228,7 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 .start-copy {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #141413;
+  color: var(--on-accent);
 }
 
 /* The hero board's side column is as wide as the others' minimum. */

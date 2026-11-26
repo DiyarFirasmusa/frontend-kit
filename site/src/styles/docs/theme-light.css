@@ -25,13 +25,13 @@ html[data-theme='light'] .doc-head h1 em {
 }
 
 html[data-theme='light'] .doc-head.board-head .board-top {
-  color: #141413;
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1,
 html[data-theme='light'] .doc-head.board-head.tone-ink .board-main h1 em {
-  color: #141413;
-  -webkit-text-fill-color: #141413;
+  color: var(--paper-ink);
+  -webkit-text-fill-color: var(--paper-ink);
 }
 
 html[data-theme='light'] .doc-head.board-head.tone-ink .board-main .doc-summary {
@@ -39,7 +39,7 @@ html[data-theme='light'] .doc-head.board-head.tone-ink .board-main .doc-summary 
 }
 
 html[data-theme='light'] .toc a[data-passed] {
-  color: rgb(20 20 19 / 0.5);
+  color: rgb(var(--paper-ink-rgb) / 0.5);
 }
 
 /* The grid is quieter behind the words you read. */
@@ -48,9 +48,9 @@ html[data-theme='light'] body:has(main.doc)::after {
 }
 
 html[data-theme='light'] .doc .pager {
-  border-color: rgb(20 20 19 / 0.14);
-  background: #e8e2d8;
-  color: #141413;
+  border-color: rgb(var(--paper-ink-rgb) / 0.14);
+  background: var(--paper-sunk);
+  color: var(--paper-ink);
 }
 
 html[data-theme='light'] .doc .pager a span {
@@ -58,13 +58,13 @@ html[data-theme='light'] .doc .pager a span {
 }
 
 html[data-theme='light'] .doc .pager .pager-next {
-  border-color: rgb(20 20 19 / 0.4);
+  border-color: rgb(var(--paper-ink-rgb) / 0.4);
 }
 
 html[data-theme='light'] .command {
-  --ink-rgb: 241 237 231;
-  --ivory: #f1ede7;
-  --muted: #bcb8b1;
-  --accent: #d97757;
-  color: #f1ede7;
+  --ink-rgb: var(--dark-ink-rgb);
+  --ivory: var(--dark-ivory);
+  --muted: var(--dark-muted);
+  --accent: var(--dark-accent);
+  color: var(--dark-ivory);
 }
