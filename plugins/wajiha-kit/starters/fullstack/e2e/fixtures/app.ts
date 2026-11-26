@@ -74,11 +74,27 @@ export const test = base.extend<AppOptions & AppFixtures>({
   guardConsole: [
     async ({ page }, provide) => {
       const problems: string[] = [];
+      // Report every Content-Security-Policy violation as a console error. Chrome's own console line for a
+      // blocked inline style or eval is not always an error, but a violation is always a bug here.
+      await page.addInitScript(() => {
+        document.addEventListener('securitypolicyviolation', (event) => {
+          console.error(
+            `CSP violation: ${event.violatedDirective} blocked ${event.blockedURI || 'inline'}`,
+          );
+        });
+      });
       // Chrome logs a page that answers 404 as a console error. A test that opens a 404 page on purpose
       // expects that one line; any other failed request is still a problem.
       const expectedNotFound = new Set<string>();
       page.on('response', (response) => {
-        if (response.status() === 404 && response.request().isNavigationRequest()) {
+        const request = response.request();
+        const isApiCall = ['fetch', 'xhr'].includes(request.resourceType());
+        // A page that answers 404, or an API call the test provoked on purpose (a 401, 403 or 409 from the
+        // mock API): Chrome logs the same "Failed to load resource" line for it.
+        if (
+          (response.status() === 404 && request.isNavigationRequest()) ||
+          (isApiCall && response.status() >= 400 && response.status() < 500)
+        ) {
           expectedNotFound.add(response.url());
         }
       });

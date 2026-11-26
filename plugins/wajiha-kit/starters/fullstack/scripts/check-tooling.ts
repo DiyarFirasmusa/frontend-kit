@@ -63,6 +63,8 @@ for (const command of [
   'check:tooling',
   'test',
   'build',
+  'check:bundle',
+  'check:boundaries',
   'test:e2e',
 ]) {
   need(scripts[command] !== undefined, `package.json has no "${command}" script`);
@@ -94,6 +96,47 @@ need(
   strayEnv.length === 0,
   `committed-style env files found: ${strayEnv.join(', ')} (use .env.local, which is ignored)`,
 );
+
+// 5. Every "npm run <script>" written in the docs, comments and messages exists. A guide that sends people
+// to a missing script (it happened with "npm run tokens") fails here, not in front of a beginner.
+function* filesUnder(dir: string): Generator<string> {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) {
+      if (entry.name !== 'node_modules' && entry.name !== '.output' && entry.name !== 'coverage') {
+        yield* filesUnder(path);
+      }
+    } else if (/\.(md|ts|tsx|mjs|css|json|yml|example)$/.test(entry.name)) {
+      yield path;
+    }
+  }
+}
+const documented = ['src', 'scripts', 'e2e', '.claude', '.github'].filter((dir) => existsSync(dir));
+const rootFiles = ['STRUCTURE.md', 'CLAUDE.md', '.env.example', 'oxfmt.config.ts'].filter((file) =>
+  existsSync(file),
+);
+const NPM_RUN = /npm run ([a-z][a-z0-9:-]*)/g;
+const reported = new Set<string>();
+const filesToScan = [...rootFiles];
+for (const dir of documented) {
+  for (const file of filesUnder(dir)) {
+    filesToScan.push(file);
+  }
+}
+for (const file of filesToScan) {
+  if (file.endsWith('scripts/check-tooling.ts')) {
+    continue;
+  }
+  for (const match of readFileSync(file, 'utf8').matchAll(NPM_RUN)) {
+    const name = match[1];
+    if (name !== undefined && scripts[name] === undefined && !reported.has(`${file}:${name}`)) {
+      reported.add(`${file}:${name}`);
+      problems.push(
+        `${file} tells people to run "npm run ${name}", which package.json does not have`,
+      );
+    }
+  }
+}
 
 if (problems.length > 0) {
   for (const problem of problems) {

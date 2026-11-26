@@ -27,6 +27,15 @@ for (const key of documented) {
   }
 }
 
+// The example must show the safe value of each switch, the same one the code defaults to: a copy of this
+// file (npm run setup:env) must never turn the mock API or indexing on by accident.
+for (const key of ['VITE_ADMIN_API_MOCK', 'VITE_ALLOW_INDEXING']) {
+  const value = new RegExp(`^${key}=(.*)$`, 'm').exec(text)?.[1]?.trim();
+  if (value !== 'false') {
+    problems.push(`${key} must be false in .env.example (the safe default), not "${value}"`);
+  }
+}
+
 if (problems.length > 0) {
   for (const problem of problems) {
     console.error(`error ${problem}`);

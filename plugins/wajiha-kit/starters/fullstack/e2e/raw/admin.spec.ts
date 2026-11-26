@@ -36,3 +36,24 @@ test.describe('admin: hidden from search engines', () => {
     expect(metaContent(await response.text(), 'name', 'robots')).not.toContain('noindex');
   });
 });
+
+// Unknown admin URLs are real 404s with noindex, never a soft 404 that a crawler could index. That includes
+// a wrong language in front of "admin" (/fr/admin), which used to answer 200 with an empty page.
+const UNKNOWN_ADMIN_PATHS = [
+  '/ar/admin/nope',
+  '/en/admin/nope/deep',
+  '/fr/admin',
+  '/xx/admin/login',
+  '/fr/admin/suppliers',
+];
+
+test.describe('admin: unknown URLs', () => {
+  for (const path of UNKNOWN_ADMIN_PATHS) {
+    test(`${path} answers 404 with noindex`, async ({ request }) => {
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status()).toBe(404);
+      expect(response.headers()['x-robots-tag']).toBe('noindex, nofollow');
+      expect(metaContent(await response.text(), 'name', 'robots')).toBe('noindex, nofollow');
+    });
+  }
+});

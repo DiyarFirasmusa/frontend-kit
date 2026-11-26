@@ -36,6 +36,8 @@ const env = {
   // The admin talks to the mock API inside the browser, so the tests need no backend.
   VITE_ADMIN_API_URL: '/api',
   VITE_ADMIN_API_MOCK: 'true',
+  // The build refuses "mock API + indexing on" (a real site must not accept any login); here it is on purpose.
+  ALLOW_MOCK_ON_REAL_SITE: '1',
 };
 
 if (process.env.E2E_SKIP_BUILD !== '1') {
