@@ -1,21 +1,18 @@
 import { expect, loginAs, test } from './fixtures/app';
-import { mockSuppliers, type SupplierMockState } from './fixtures/suppliers';
+
+/* Runs against the shared demo backend (src/mocks): 25 seeded suppliers,
+   SUP-001 to SUP-025, 10 per page. No fixture file of its own. */
 
 const TITLE = /^(Suppliers|الموردون)$/;
-const WRITE_TIMEOUT = { timeout: 15_000 };
+const CODE_HEADER = /^(Code|الرمز)/;
 
 test.describe('suppliers', () => {
-  test.setTimeout(60_000);
-
-  let state: SupplierMockState;
-
   test.beforeEach(async ({ page, mockApi }) => {
-    await mockApi.shell();
-    state = await mockSuppliers(page);
+    await mockApi.backend();
     await loginAs(page, mockApi);
   });
 
-  test('lists the suppliers and searches on the server', async ({
+  test('pages and sorts on the server, and the URL keeps the state', async ({
     page,
     dir,
   }) => {
@@ -25,53 +22,87 @@ test.describe('suppliers', () => {
       page.getByRole('heading', { level: 1, name: TITLE }),
     ).toBeVisible();
     const table = page.getByRole('table');
-    for (const code of ['SUP-001', 'SUP-002', 'SUP-003']) {
-      await expect(table.getByText(code, { exact: true })).toBeVisible();
-    }
+    await expect(table.getByText('SUP-001', { exact: true })).toBeVisible();
+
     await page
-      .getByPlaceholder(
-        /Search by code, name or phone|ابحث بالرمز أو الاسم أو الهاتف/,
-      )
-      .fill('SUP-002');
-    await expect.poll(() => state.lastQuery, WRITE_TIMEOUT).toBe('SUP-002');
-    await expect(table.getByText('SUP-001', { exact: true })).toBeHidden();
+      .getByRole('columnheader', { name: CODE_HEADER })
+      .getByRole('button')
+      .click();
+    await expect(page).toHaveURL(/sort=code\.asc/);
+    await page
+      .getByRole('columnheader', { name: CODE_HEADER })
+      .getByRole('button')
+      .click();
+    await expect(page).toHaveURL(/sort=code\.desc/);
+    await expect(table.getByText('SUP-025', { exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: '2', exact: true }).click();
+    await expect(page).toHaveURL(/page=2/);
+    await expect(table.getByText('SUP-015', { exact: true })).toBeVisible();
+
+    await page.goBack();
+    await expect(page).not.toHaveURL(/page=2/);
+    await expect(table.getByText('SUP-025', { exact: true })).toBeVisible();
   });
 
-  test('adds a supplier', async ({ page }) => {
+  test('a filtered view survives a reload', async ({ page }) => {
+    await page.goto('/suppliers');
+    await page.getByRole('searchbox').fill('SUP-002');
+    await expect(page).toHaveURL(/q=SUP-002/);
+    const table = page.getByRole('table');
+    await expect(table.getByText('SUP-001', { exact: true })).toBeHidden();
+    await page.reload();
+    await expect(table.getByText('SUP-002', { exact: true })).toBeVisible();
+    await expect(page.getByRole('searchbox')).toHaveValue('SUP-002');
+  });
+
+  test('adds, edits and deletes a supplier', async ({ page }) => {
     await page.goto('/suppliers');
     await page
       .getByRole('button', { name: /^(Add supplier|إضافة مورد)$/ })
       .click();
     const dialog = page.getByRole('dialog');
-    await dialog.getByLabel(/^(Code|الرمز)/).fill('SUP-010');
-    await dialog.getByLabel(/^(Name|الاسم)/).fill('شركة بابل');
+    await dialog.getByLabel(/^(Code|الرمز)/).fill('SUP-900');
+    await dialog.getByLabel(/^(Name|الاسم)/).fill('Demo Trading');
     await dialog
       .getByRole('button', { name: /^(Save supplier|حفظ المورد)$/ })
       .click();
-    await expect
-      .poll(() => state.writes.at(-1), WRITE_TIMEOUT)
-      .toMatchObject({
-        method: 'POST',
-        body: { code: 'SUP-010', name: 'شركة بابل' },
-      });
+    await expect(dialog).toBeHidden();
+
+    await page.getByRole('searchbox').fill('SUP-900');
+    const row = page.getByRole('row').filter({ hasText: 'SUP-900' });
+    await expect(row).toBeVisible();
+
+    await row.getByRole('button', { name: /^(Edit|تعديل) / }).click();
+    await expect(dialog.getByLabel(/^(Code|الرمز)/)).toHaveValue('SUP-900');
+    await dialog.getByLabel(/^(Name|الاسم)/).fill('Demo Trading Two');
+    await dialog
+      .getByRole('button', { name: /^(Save supplier|حفظ المورد)$/ })
+      .click();
+    await expect(row.getByText('Demo Trading Two')).toBeVisible();
+
+    await row.getByRole('button', { name: /^(Delete|حذف) / }).click();
+    const confirm = page.getByRole('alertdialog');
     await expect(
-      page.getByRole('table').getByText('SUP-010', { exact: true }),
-    ).toBeVisible(WRITE_TIMEOUT);
+      confirm.getByRole('button', { name: /^(Cancel|إلغاء)$/ }),
+    ).toBeFocused();
+    await confirm.getByRole('button', { name: /^(Delete|حذف)$/ }).click();
+    await expect(row).toHaveCount(0);
   });
 
-  test('deactivates a supplier that is on documents', async ({ page }) => {
+  test('a backend field error shows under the input', async ({ page }) => {
     await page.goto('/suppliers');
-    const row = page.getByRole('row').filter({ hasText: 'SUP-002' });
-    await row.getByRole('button', { name: /^(Deactivate|إيقاف)$/ }).click();
     await page
-      .getByRole('dialog')
-      .getByRole('button', { name: /^(Deactivate|إيقاف)$/ })
+      .getByRole('button', { name: /^(Add supplier|إضافة مورد)$/ })
       .click();
-    await expect
-      .poll(() => state.writes.at(-1), WRITE_TIMEOUT)
-      .toMatchObject({
-        method: 'PUT',
-        body: { code: 'SUP-002', isActive: false },
-      });
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel(/^(Code|الرمز)/).fill('SUP-001');
+    await dialog.getByLabel(/^(Name|الاسم)/).fill('Duplicate');
+    await dialog
+      .getByRole('button', { name: /^(Save supplier|حفظ المورد)$/ })
+      .click();
+    await expect(
+      dialog.getByText(/Supplier code already exists|رمز المورد مستخدم مسبقاً/),
+    ).toBeVisible();
   });
 });

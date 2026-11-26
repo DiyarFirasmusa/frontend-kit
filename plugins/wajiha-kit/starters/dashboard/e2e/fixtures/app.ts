@@ -1,6 +1,9 @@
-import { test as base, expect, type Page } from '@playwright/test';
+import { test as base, expect, type Page, type Route } from '@playwright/test';
+import { getResponse } from 'msw';
 import { endpoints } from '../../src/constants/api';
 import { PERMS } from '../../src/constants/permissions';
+import { mockHandlers } from '../../src/mocks';
+import { resetMockDb } from '../../src/mocks/seed/base';
 
 export type Language = 'ar' | 'en';
 export type Theme = 'light' | 'dark';
@@ -58,6 +61,37 @@ export function makeJwt(
     }),
   );
   return `${TOKEN_HEADER}.${payload}.sig`;
+}
+
+/** Answers a routed request with the shared MSW handlers of src/mocks. */
+async function fulfillFromMocks(route: Route): Promise<void> {
+  const sent = route.request();
+  const method = sent.method();
+  const request = new Request(sent.url(), {
+    method,
+    headers: await sent.allHeaders(),
+    body:
+      method === 'GET' || method === 'HEAD'
+        ? undefined
+        : (sent.postData() ?? undefined),
+  });
+  const response = await getResponse(mockHandlers, request);
+  if (!response) {
+    await route.fulfill({
+      status: 501,
+      json: { message: `No mock handler for ${method} ${sent.url()}` },
+    });
+    return;
+  }
+  await route.fulfill({
+    status: response.status,
+    headers: {
+      ...Object.fromEntries(response.headers),
+      'access-control-allow-origin': (await sent.headerValue('origin')) ?? '*',
+      'access-control-allow-credentials': 'true',
+    },
+    body: Buffer.from(await response.arrayBuffer()),
+  });
 }
 
 export class MockApi {
@@ -142,6 +176,18 @@ export class MockApi {
       totalElements: 0,
       totalPages: 0,
     });
+  }
+
+  /**
+   * The demo backend from src/mocks (the same MSW handlers the browser demo
+   * and the unit tests use) behind every API and auth request, starting from
+   * the seed data. Call it first: routes registered after it (login(),
+   * json(), a spec's own page.route) take precedence over it.
+   */
+  async backend(): Promise<void> {
+    resetMockDb();
+    await this.page.route(`${API_BASE_URL}/**`, fulfillFromMocks);
+    await this.page.route(`${AUTH_BASE_URL}/**`, fulfillFromMocks);
   }
 
   /** Generic JSON stub for any other endpoint. */

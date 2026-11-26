@@ -12,11 +12,13 @@ import { makeJwt, type MockApi, authUrl } from './app';
  * Permissions the categories and attributes pages are guarded by.
  */
 export const CATEGORY_PERMISSIONS: string[] = [
-  PERMS.itemCategory.read,
-  PERMS.itemCategory.write,
+  PERMS.itemCategory.view,
+  PERMS.itemCategory.create,
+  PERMS.itemCategory.update,
   PERMS.itemCategory.delete,
-  PERMS.attributeDefinition.read,
-  PERMS.attributeDefinition.write,
+  PERMS.attributeDefinition.view,
+  PERMS.attributeDefinition.create,
+  PERMS.attributeDefinition.update,
   PERMS.attributeDefinition.delete,
 ];
 
@@ -323,6 +325,12 @@ export async function signInWithPermissions(
     tenantId: 'tenant-1',
     roles: ['ADMIN'],
     permissions,
+  });
+  // A page.goto after sign-in reloads the app, which restores the session
+  // with one refresh (the access token lives in memory only).
+  await mockApi.json(`${authUrl(endpoints.auth.refresh)}`, {
+    access: makeJwt({ permissions }),
+    refresh: 'refresh-token',
   });
   await page.goto('/login');
   await page.getByLabel(/^(username|اسم المستخدم)\s*\*?$/i).fill('admin');

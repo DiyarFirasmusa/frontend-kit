@@ -19,7 +19,7 @@ const GROUP_BUTTONS = {
 } as const;
 const SUPPLIERS = /^(Suppliers|الموردون)$/;
 const UNITS_OF_MEASURE = /^(Units of measure|وحدات القياس)$/;
-const OPEN_NAV = /^(open|فتح)$/i;
+const OPEN_NAV = /^(open navigation menu|فتح قائمة التنقل)$/i;
 
 test.describe('sidebar accordion', () => {
   test.beforeEach(async ({ page, mockApi }) => {
@@ -81,7 +81,7 @@ test.describe('sidebar accordion', () => {
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page
-      .locator('header[data-slot="mobile-header"]')
+      .locator('header[data-slot="topbar"]')
       .getByRole('button', { name: OPEN_NAV })
       .click();
 

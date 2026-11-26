@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
@@ -33,6 +33,22 @@ export default defineConfig(({ mode }) => {
 
   if (pwa) {
     plugins.push(pwaPlugin());
+  }
+
+  // public/ ships the mock API's service worker; a build without mocks drops it.
+  if (env.VITE_USE_MOCK !== 'true') {
+    plugins.push({
+      name: 'drop-mock-service-worker',
+      apply: 'build',
+      closeBundle() {
+        rmSync(
+          fileURLToPath(
+            new URL('./dist/mockServiceWorker.js', import.meta.url),
+          ),
+          { force: true },
+        );
+      },
+    });
   }
 
   if (mode === 'analyze') {
@@ -81,7 +97,16 @@ export default defineConfig(({ mode }) => {
 
     server: {
       port: 3000,
+      // Listens on every interface (LAN, VPN) so a phone can open it. The mock
+      // API needs a service worker, which browsers allow only on localhost or
+      // https: from another device use https, or a real API (README).
       host: true,
+    },
+
+    // Found late (inside code-split routes), these would make Vite re-optimise
+    // and reload the first page; listing them keeps a cold start stable.
+    optimizeDeps: {
+      include: ['@tanstack/react-table'],
     },
 
     plugins,

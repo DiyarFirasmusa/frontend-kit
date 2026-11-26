@@ -6,13 +6,20 @@
 التشغيل: `npm install` ثم `npm run dev`، وبعدها `http://localhost:3000`.
 تسجيل الدخول يقبل أي اسم وكلمة مرور (لأن `VITE_USE_MOCK="true"` بملف `.env.development`).
 
+**للربط بباكند حقيقي:** بالتطوير Vite يقدّم `.env.development` على `.env` و`.env.local`، فضع قيمك بملف
+`.env.development.local` (يغلب الكل ومتجاهَل بـgit): `VITE_USE_MOCK="false"` و`VITE_API_BASE_URL` و`VITE_AUTH_REFRESH="cookie"`.
+للبناء: `.env.production.local` أو متغيرات CI. (تحققنا من الترتيب بـ`loadEnv` نفسه.)
+
+**من جهاز ثاني (شبكة محلية أو VPN):** الداتا الوهمية تحتاج service worker، والمتصفح يسمح به فقط على `localhost` أو `https`.
+على `http` بعنوان ثاني تطلع صفحة تشرح السبب بدل صفحة فاضية.
+
 ## الصفحات الخمس
 
 | الصفحة       | المسار                                     | فيها                                                                                                                |
 | ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
 | الرئيسية     | `/`                                        | أربع بطاقات (مستودعات، موردون، تصنيفات، وحدات) برسم صغير، رسم النشاط خلال 30 يوماً، آخر التغييرات                   |
 | المستودعات   | `/warehouses` و `/warehouses/$warehouseId` | جدول بفلاتر وبحث وتصدير Excel، إضافة وتعديل وحذف، صفحة تفاصيل بتبويبات (نظرة عامة، المواقع، الأعضاء، سجل التغييرات) |
-| الموردون     | `/suppliers`                               | جدول وفورم وحذف بتأكيد                                                                                              |
+| الموردون     | `/suppliers`                               | **الكيان المرجعي**: ترقيم وترتيب من السيرفر، الفلاتر بالرابط، فورم إضافة وتعديل، حذف بتأكيد، صلاحيات                |
 | التصنيفات    | `/categories`                              | شجرة تصنيفات بثلاث مستويات، خصائص مرتبطة وموروثة                                                                    |
 | الخصائص      | `/attributes`                              | التبويب الثاني لنفس ميزة التصنيفات: تعريف الخصائص وخياراتها بترتيب (له مسار وعنصر بالقائمة)                         |
 | وحدات القياس | `/units-of-measure`                        | جدول بفلاتر وفورم وحذف                                                                                              |
@@ -25,14 +32,15 @@
 | ---------------- | --------------------------------------------------------------------------------------------------- |
 | الإطار           | React 19 + Vite 8 (SPA) + TypeScript strict                                                         |
 | التوجيه          | TanStack Router (مسارات ملفات، `routeTree.gen.ts` مولّد)                                            |
-| بيانات السيرفر   | TanStack Query 5 + axios                                                                            |
+| بيانات السيرفر   | TanStack Query 5 + axios (`queryClient` واحد بـ`src/lib/query-client.ts`، يمر للراوتر كـcontext)    |
+| الجداول          | TanStack Table 9 (`DataTable`: الترقيم والترتيب من السيرفر والحالة بالرابط)                         |
 | حالة العميل      | Zustand 5                                                                                           |
 | الفورمات         | react-hook-form + zod 4                                                                             |
 | الواجهة          | Tailwind CSS 4 + Base UI + أيقونات Hugeicons + sonner                                               |
 | الرسوم           | Recharts                                                                                            |
 | اللغات           | i18next، القائمة كلها بملف واحد: `src/lib/i18n/languages.ts`                                        |
 | الخطوط           | Cairo و IBM Plex Sans و IBM Plex Sans Arabic و IBM Plex Mono، محلية من حزم `@fontsource` (بدون CDN) |
-| الداتا التجريبية | MSW 2 بالمتصفح (`src/mocks/`)                                                                       |
+| الداتا التجريبية | MSW 2 (`src/mocks/`): نفس الـhandlers للمتصفح واختبارات الوحدة وPlaywright                          |
 | المراقبة         | Sentry (يشتغل فقط لما يكون `VITE_SENTRY_DSN` موجود)                                                 |
 
 ## الأوامر
@@ -71,6 +79,8 @@ src/style/
 
 - **لا تعدّل `theme.css` ولا `preset.css` بيدك.** غيّر ملفات `tokens/` وشغّل `npm run tokens`. الاختبار يفشل إذا اختلفوا.
 - **ثيم جديد**: انسخ `presets/neutral.ts`، غيّر عائلة `primary-*`، أضفه لـ `presets/index.ts`، شغّل `npm run tokens` و `npm run test`.
+- **لون الهوية**: `brand` (`bg-brand` و`text-brand-text` و`bg-brand-tint`) لكل ثيم، للشعار والمسار والرسوم. ألوان الحالات (`warning` ...) للمعنى فقط.
+- **سلّم الخط كمتغيرات**: `--font-b2` وأخواتها، وملفات CSS المكونات تستخدم `font: var(--font-b2)` بدل أرقام منسوخة.
 - **قاعدة اللون**: `primary` لون تعبئة فقط. للنص استخدم `text-primary-text`. اختبار `conventions.test.ts` يمنع `text-primary` وأي لون hex داخل المكونات.
 - **اتجاه واحد منطقي**: `ms-` و `me-` و `ps-` و `pe-` و `start-` و `end-`. ممنوع `ml-` و `mr-` و `left-` و `right-` (نفس الاختبار).
 - **حلقة التركيز**: قاعدة واحدة عامة بـ `styles.css` باللون `--primary-highlight` (3:1 على كل الأسطح).
@@ -91,7 +101,7 @@ dashboard-starter/
 ├── vite/                        → pwa.ts (اختياري)، pwa-register-stub.ts، vendor-chunks.ts
 ├── src/
 │   ├── main.tsx  router.tsx  env.ts
-│   ├── routes/                  → ملفات رفيعة: _auth/login، _dashboard/ (كل صفحة تتحقق من الصلاحية)، (errors)/
+│   ├── routes/                  → ملفات رفيعة: _auth/login، _app/ (كل صفحة تتحقق من الصلاحية)، (errors)/
 │   ├── features/
 │   │   ├── auth/                → الدخول
 │   │   ├── fallback/            → صفحات الأخطاء والتحميل
@@ -110,8 +120,8 @@ dashboard-starter/
 │   ├── locales/                 → ar.json و en.json (النصوص العامة) + locales/ لكل ميزة
 │   ├── style/                   → فوق
 │   ├── modules/pwa/             → اختياري، مطفي افتراضياً
-│   ├── mocks/                   → core.ts، seed/ (داتا لكل مورد)، handlers/ (واحد لكل ميزة)، index.ts
-│   └── test/                    → setup، render، MSW للاختبارات، fixtures
+│   ├── mocks/                   → core.ts، seed/، handlers/ (واحد لكل ميزة)، index.ts: للمتصفح والاختبارات وPlaywright
+│   └── test/                    → setup، render (مكوّن لوحده)، render-app (التطبيق الحقيقي على مسار)، MSW، fixtures
 ├── PERMISSIONS.md               → من يشوف ويسوي شنو (4 طبقات + جدول لكل صفحة)
 └── .env.development             → عناوين وهمية + VITE_USE_MOCK=true (مرفوع بالمستودع، ما فيه أسرار)
 ```
@@ -120,23 +130,43 @@ dashboard-starter/
 
 ## هيكل الميزة الواحدة
 
-الشرح الكامل بـ `src/features/dashboard/README.md`. مثال الموردين:
+**الموردون هم الكيان المرجعي**، مطابق لقواعد قالب الكيت (`routing.md` و`data-tables.md` و`forms-crud.md` و`api-layer.md` و`permissions.md`).
+الشرح ملف بملف بـ `src/features/dashboard/README.md`. باختصار:
 
-```text
-features/dashboard/suppliers/
-├── index.tsx                              → JSX + استدعاء use-suppliers-list-page فقط
-├── hooks/use-suppliers-list-page.ts       → البحث والفلاتر والجدول والحذف
-├── hooks/query/use-suppliers-list.ts      → استعلامات TanStack Query
-├── hooks/supplier-actions.ts              → صلاحيات وأفعال كل صف
-├── components/supplier-columns.tsx  components/dialog/
-├── services/suppliers.service.ts  types/  validations/
-├── utils/supplier-status.ts  utils/supplier-export-columns.ts
-├── supplier-test-utils.ts
-└── locales/{ar,en}.json
-```
+- **الرابط يملك حالة القائمة**: الصفحة وحجمها والترتيب والبحث والفلاتر بـ`validations/search.ts` (كل حقل له `.catch()` وقيمة افتراضية)،
+  والقيم الافتراضية تنحذف من الرابط. لا `useState` للفلاتر ولا `useEffect` للمزامنة.
+- **السيرفر يرقّم ويرتّب**: الرد بشكل Spring `{content, totalElements, totalPages, number, size}` (`src/types/api/page.ts`)،
+  والخدمة تحوّل `page` من 1 إلى 0 و`name.asc` إلى `sort=name,asc` بدالة وحدة.
+- **`queryOptions` مشتركة** بين الـloader (يبدأ الطلب ولا ينتظره) والهوك، ومع `signal` حتى ينلغي الطلب لما تتغير الصفحة.
+- **جدول TanStack Table 9** (`src/components/table/data-table.tsx`): `manualPagination` و`manualSorting`، والأعمدة من `getXColumns`.
+- **حوار واحد للإضافة والتعديل** بحالة وحدة `closed | create | edit(id)`، والتعديل يقرأ السجل من السيرفر بالـid، وأخطاء الحقول من الباكند
+  (422 بشكل problem+json) تنزل تحت الحقل بـ`applyApiFieldErrors` (`src/api/error/field-errors.ts`).
+- **الصلاحيات تفاعلية**: `useCan()` يرجّع `can` ويمر للدوال الصافية بـ`*-actions.ts`. فعل مسموح عموماً بس مرفوض لهالصف
+  (مورد مستخدم بمستندات) يبقى ظاهر بـ`aria-disabled` مع السبب، والضغط عليه ما يرسل شي.
 
-أسماء الملفات فريدة بكل المشروع (`use-suppliers-list-page` مو `use-list-page`)، وحالة الحذف بكل الصفحات من `useDeleteTarget`:
-`deleteTarget` و `isDeleteOpen` و `openDelete` و `closeDelete`.
+باقي الصفحات (المستودعات، التصنيفات، الوحدات) أقدم: قوائمها ترقّم بالمتصفح (`ClientDataTable`). تبقى مرجعاً لأشياء ما بالموردين
+(صفحة تفاصيل بتبويبات، شجرة، مفاتيح داخل الجدول). انقلها لشكل الموردين لما تشتغل عليها.
+
+## إضافة كيان جديد
+
+مثال: كيان اسمه `customers`. **انسخ مجلد واحد وعدّل 11 ملف**:
+
+1. انسخ `src/features/dashboard/suppliers/` إلى `src/features/dashboard/customers/` وبدّل الأسماء (`supplier` ← `customer`).
+   عدّل الحقول حسب OpenAPI: `types/types.ts` و`validations/*` و`services/*` والأعمدة والحوار والترجمات.
+2. `src/types/api/customers.ts`: أنواع الطلب والرد (أو ولّدها: `npx openapi-typescript docs/api/openapi.json -o src/types/api/schema.ts`).
+3. `src/constants/api.ts`: العناوين.
+4. `src/constants/query-keys.ts`: `qk.customers` (`all` و`lists` و`list(params)` و`detail(id)`).
+5. `src/constants/permissions.ts`: `PERMS.customer` بالمفاتيح `view/create/update/delete` وقيم الباكند نفسها.
+6. `src/routes/_app/customers/index.tsx`: انسخ ملف مسار الموردين (حارس + `validateSearch` + `loaderDeps` + `loader`).
+7. `src/layout/dashboard/sidebar/config/nav-config.ts`: عنصر القائمة مع `permission`.
+8. و 9. `src/locales/ar.json` و`en.json`: `nav.customers`.
+9. `PERMISSIONS.md`: سطر بالجدول (اختبار `route-guards.test.ts` يفشل بدونه).
+10. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين؛ الجدول `seedTable(() => [...])` ممكن يكون بنفس الملف)
+    وأضفه بـ`src/mocks/index.ts`. إذا الباكند جاهز تقدر تتخطى هالخطوة.
+
+الاختبارات: انسخ `e2e/suppliers.spec.ts` وأضف صفحة بـ`e2e/a11y-pages/`؛ الاثنين يستخدمون `mockApi.backend()` (نفس handlers
+`src/mocks`)، فما تحتاج ملف fixture خاص. اختبارات الوحدة بالمجلد المنسوخ تستخدم `server.use(...customerHandlers)` و`renderApp('/customers')`
+(المسار الحقيقي مع الحارس والـloader).
 
 ## الوحدات الاختيارية (مطفية افتراضياً)
 
@@ -150,6 +180,12 @@ PWA: الألوان من الثيم الافتراضي، أيقونات PNG 192 
 الخريطة (Leaflet) ما أُضيفت بهالنسخة.
 
 ## الداتا التجريبية (src/mocks)
+
+- **طبقة وحدة**: نفس handlers تخدم المتصفح (`npm run dev`)، واختبارات الوحدة (`server.use(...supplierHandlers)`)،
+  وPlaywright (`mockApi.backend()` يمرر كل طلب لـ`getResponse` من MSW). المسارات تطابق أي origin (`*/api/...`).
+  `resetMockDb()` يرجّع الجداول للبداية قبل كل اختبار. ملفات `e2e/fixtures/` للصفحات القديمة باقية لحد ما تنتقل.
+- **شكل الردود مثل باكند OpenAPI عادي**: القوائم مرقّمة (`?page=0&size=10&sort=name,asc` ← `{content, totalElements, ...}`)،
+  التحقق 422 بشكل problem+json مع `errors: { field: [..] }`، 404 لسجل غير موجود، 409 لما قاعدة ترفض.
 
 - 7 مستودعات مع مواقع وأعضاء، و25 مورداً، و12 وحدة قياس، و31 تصنيفاً بشجرة، و13 خاصية.
 - الرئيسية: الأرقام من عدد السجلات الفعلية، والنشاط رسم ثابت لكل يوم، وآخر التغييرات من داتا ثابتة مع أي تعديل تسويه على المستودعات.
@@ -189,15 +225,16 @@ PWA: الألوان من الثيم الافتراضي، أيقونات PNG 192 
 - `route-guards.test.ts` (كل صفحة لها حارس، وكل صفحة مذكورة بـ `PERMISSIONS.md`).
 - `contrast.test.ts` على كل ثيم، و`tokens.test.ts` (الملفات المولّدة محدثة)، واختبارات `theme-init.js` و`cn` و`<Can>`.
 
-## حالة الفحوصات (آخر تشغيل فعلي، ويندوز 11، Node 26)
+## حالة الفحوصات (آخر تشغيل فعلي، ويندوز 11)
 
 - `npm run typecheck`: يمر.
-- `npm run lint:check` (`--deny-warnings`): يمر بصفر تحذيرات.
-- `npm run fmt:check`: يمر.
-- `npm run test`: 229 ملفاً و1287 اختباراً، كلها تمر (حوالي 400 ثانية).
-- `npm run build`: يمر، وبـ `VITE_PWA=true` يولّد `manifest.webmanifest` و`sw.js`.
-- `npm run test:e2e`: 272 اختباراً (4 مشاريع). التشغيل الكامل: 268 يمر و4 تنتهي مهلتها عند `waitForLoadState('networkidle')` بملف `a11y.spec.ts` تحت ضغط 6 عمال على سيرفر Vite بارد.
-  إعادة تشغيل `a11y` لوحده: 64 من 64 تمر. شغّل بـ `--workers=4` إذا جهازك أبطأ.
+- `npm run lint:check` (`--deny-warnings`) و`npm run fmt:check`: يمرون (على نسخة خارج المستودع، شوف الملاحظة تحت).
+- `npm run test`: 235 ملفاً و1428 اختباراً، كلها تمر بحوالي 45 ثانية (كانت 333 ثانية).
+  السبب: `isolate: false` بـ`vitest.config.ts` (الوحدات تنحمّل مرة لكل عامل)، و`src/test/setup.ts` يرجّع بعد كل اختبار
+  المخازن والتخزين وhandlers الـMSW وقاعدة الداتا الوهمية ومؤقتات vitest وحالة الاتصال بـTanStack Query.
+  لا تستخدم `vi.mock` (يتسرّب بين الملفات بهالوضع).
+- `npm run build`: يمر. أول تحميل حوالي 290 كيلوبايت JS مضغوط. بدون الداتا الوهمية يُحذف `mockServiceWorker.js` من `dist`.
+- `npm run test:e2e`: 288 اختباراً (4 مشاريع)، كلها تمر بحوالي 5 دقائق. `e2e/global-setup.ts` يسخّن سيرفر Vite قبل العمّال.
 
 ملاحظة: oxlint يتجاهل ملفات المجلد إذا كان المجلد داخل `.gitignore` لمستودع أب (مثل `playground/` بمستودع الكيت).
 داخل مستودعك الخاص يشتغل عادي.

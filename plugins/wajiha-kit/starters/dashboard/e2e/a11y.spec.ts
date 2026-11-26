@@ -19,6 +19,9 @@ import { expect, loginAs, test } from './fixtures/app';
  * mock is fixed in the page entry rather than hidden by the scan.
  */
 
+/** A dev server under six workers can take a while to serve a route's modules. */
+const READY = { timeout: 15_000 };
+
 const PAGE_DIR = fileURLToPath(new URL('./a11y-pages/', import.meta.url));
 
 const pageFiles = readdirSync(PAGE_DIR)
@@ -87,8 +90,12 @@ for (const { name, path, guarded, mocks } of PAGES) {
        page under test. */
     unmocked.length = 0;
     await page.goto(path);
-    await page.waitForLoadState('networkidle');
+    /* A ready page, not "network idle" (polling and slow dev-server
+       modules made that flaky): the root has rendered, a heading is
+       visible and no skeleton is left. */
     await expect(page.locator('#root')).not.toBeEmpty();
+    await expect(page.getByRole('heading').first()).toBeVisible(READY);
+    await expect(page.locator('[data-slot="skeleton"]')).toHaveCount(0, READY);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.addStyleTag({
       content:

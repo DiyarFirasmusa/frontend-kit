@@ -25,7 +25,7 @@ test('loads Sentry only after a component error and sends the exception', async 
     (request) =>
       request.url().includes('/api/1/envelope/') &&
       !!request.postData()?.includes('Deferred Sentry browser probe') &&
-      !!request.postData()?.includes('"boundary":"react"'),
+      !!request.postData()?.includes('"boundary":"root"'),
   );
   const dsn = `http://public@${new URL(baseURL!).host}/1`;
   await page.evaluate(
@@ -54,6 +54,6 @@ test('loads Sentry only after a component error and sends the exception', async 
   });
   expect(
     JSON.parse(lines[2]!) as { extra: Record<string, unknown> },
-  ).toMatchObject({ extra: { boundary: 'react' } });
+  ).toMatchObject({ extra: { boundary: 'root' } });
   expect(sdkRequests.length).toBeGreaterThan(0);
 });

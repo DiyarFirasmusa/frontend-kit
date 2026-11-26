@@ -39,6 +39,9 @@ export default defineConfig({
     'eslint/no-await-in-loop': 'off',
     'eslint/no-negated-condition': 'off',
     'unicorn/no-negated-condition': 'off',
+    // Built for window.postMessage; BroadcastChannel.postMessage (the cross-tab
+    // session sync) takes no target origin, so every call would be flagged.
+    'unicorn/require-post-message-target-origin': 'off',
     'eslint/require-await': 'off',
 
     // Files stay under 400 lines (blank lines and comments do not count).
@@ -108,7 +111,7 @@ export default defineConfig({
                   '@/components/*',
                 ],
                 message:
-                  'The API layer must not import UI, hooks or features. Announce events (see api/auth/session-events.ts) instead.',
+                  'The API layer must not import UI, hooks or features. Announce events (see api/auth/session-hooks.ts) instead.',
               },
             ],
           },

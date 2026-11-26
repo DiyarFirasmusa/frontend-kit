@@ -27,23 +27,20 @@ test.describe('logout', () => {
     await expect(page).toHaveURL(/\/login\/?$/);
 
     const storage = await page.evaluate(() => ({
-      auth: localStorage.getItem('app-auth'),
-      perms: localStorage.getItem('app-permissions'),
+      local: Object.keys(localStorage),
+      session: sessionStorage.getItem('app-auth'),
     }));
-    const authState = storage.auth
-      ? (JSON.parse(storage.auth) as {
-          state: { accessToken: string | null; refreshToken: string | null };
+    // Tokens never touch localStorage; the sessionStorage copy is emptied.
+    expect(storage.local).not.toContain('app-auth');
+    expect(storage.local).not.toContain('app-permissions');
+    const authState = storage.session
+      ? (JSON.parse(storage.session) as {
+          state: { refreshToken: string | null; user: unknown };
         })
       : null;
-    expect(authState?.state.accessToken ?? null).toBeFalsy();
-    expect(authState?.state.refreshToken ?? null).toBeFalsy();
-    const permsState = storage.perms
-      ? (JSON.parse(storage.perms) as {
-          state: { roles: string[]; permissions: string[] };
-        })
-      : null;
-    expect(permsState?.state.roles ?? []).toEqual([]);
-    expect(permsState?.state.permissions ?? []).toEqual([]);
+    expect(authState?.state.refreshToken ?? null).toBeNull();
+    expect(authState?.state.user ?? null).toBeNull();
+    expect(storage.session ?? '').not.toContain('accessToken');
 
     await page.goBack({ waitUntil: 'commit' });
     await expect(page).toHaveURL(/\/login\/?$/);

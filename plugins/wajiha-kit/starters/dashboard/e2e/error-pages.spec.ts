@@ -2,6 +2,8 @@ import { expect, loginAs, test } from './fixtures/app';
 
 const SERVER_TITLE = /The server ran into a problem|حدثت مشكلة في الخادم/;
 const NETWORK_TITLE = /No internet connection|لا يوجد اتصال بالإنترنت/;
+// A failed request while the browser is online names the server, not the internet.
+const UNREACHABLE_TITLE = /The server can't be reached|يتعذّر الوصول إلى الخادم/;
 const UOM_TITLE = /Units of measure|وحدات القياس/;
 
 test.describe('error pages', () => {
@@ -20,7 +22,7 @@ test.describe('error pages', () => {
     await page.goto('/units-of-measure');
 
     await expect(
-      page.getByRole('heading', { level: 1, name: NETWORK_TITLE }),
+      page.getByRole('heading', { level: 1, name: UNREACHABLE_TITLE }),
     ).toBeVisible();
   });
 

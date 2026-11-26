@@ -56,6 +56,8 @@ export function pwaPlugin(): PluginOption {
     },
     workbox: {
       globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+      // The mock API's worker is a dev/demo tool, never part of the offline app.
+      globIgnores: ['**/mockServiceWorker.js'],
       // Single-page app: unknown paths get index.html, but never the API or the mock worker.
       navigateFallback: '/index.html',
       navigateFallbackDenylist: [/^\/api\//u, /^\/mockServiceWorker\.js$/u],

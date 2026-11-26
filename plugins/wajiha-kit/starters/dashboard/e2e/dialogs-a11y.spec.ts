@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, loginAs, test } from './fixtures/app';
 
-const OPEN_NAV = /^(open|فتح)$/i;
+const OPEN_NAV = /^(open navigation menu|فتح قائمة التنقل)$/i;
 // Topbar trigger is named by the display name from the shell's /me mock.
 const USER_MENU = /Ali Karkhi/i;
 
@@ -23,7 +23,7 @@ test.describe('dialog accessibility', () => {
         '*, *::before, *::after { transition: none; animation-duration: 0s; animation-delay: 0s; }',
     });
     await page
-      .locator('header[data-slot="mobile-header"]')
+      .locator('header[data-slot="topbar"]')
       .getByRole('button', { name: OPEN_NAV })
       .click();
     await expect(page.getByRole('dialog')).toBeVisible();

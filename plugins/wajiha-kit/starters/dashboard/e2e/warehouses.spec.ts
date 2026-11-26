@@ -78,7 +78,7 @@ test.describe('warehouses', () => {
       .first()
       .click();
     await page.getByRole('menuitem', { name: /^(Remove|إزالة)$/ }).click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('alertdialog');
     await expect(dialog).toBeVisible();
     await dialog.getByRole('button', { name: /^(Remove|إزالة)$/ }).click();
 
