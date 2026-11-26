@@ -7,8 +7,8 @@ import {
 } from '@tanstack/react-router';
 import { useEffect, type ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
-import { SITE } from '@/config/site.config';
 import type { RouterContext } from '@/router';
+import { ThemeColorMeta } from '@/shared/components/theme-color-meta';
 import { getFixedT } from '@/shared/lib/i18n/create-i18n';
 import { DEFAULT_LOCALE, directionOf, localeFromPath, toLocale } from '@/shared/lib/i18n/languages';
 import { failedMeta, failureOf } from '@/shared/lib/seo/failed-page';
@@ -25,16 +25,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       meta: [
         { charSet: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        {
-          name: 'theme-color',
-          content: SITE.themeColor.light,
-          media: '(prefers-color-scheme: light)',
-        },
-        {
-          name: 'theme-color',
-          content: SITE.themeColor.dark,
-          media: '(prefers-color-scheme: dark)',
-        },
+        // theme-color is not here: head() keeps one meta per name (see ThemeColorMeta).
         // Real pages set their own title and robots through seo(); a failed page (404, error) is never indexed.
         ...failedMeta(failureOf(matches), (key) => t(key)),
       ],
@@ -65,6 +56,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     // data-theme is set by the inline script before first paint, so React must not complain about it.
     <html lang={locale} dir={directionOf(locale)} suppressHydrationWarning>
       <head>
+        <ThemeColorMeta />
         <HeadContent />
       </head>
       <body>

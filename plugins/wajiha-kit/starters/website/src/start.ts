@@ -1,11 +1,11 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from '@tanstack/react-start';
-import { PAGE_SEGMENTS } from '@/config/nav.config';
+import { CANONICAL_SITE } from '@/config/canonical-site';
 import { publicEnv } from '@/shared/env/public-env';
+import { canonicalRedirectIfExists } from '@/shared/server/canonical-redirect';
 import { getServerEnv } from '@/shared/server/env.server';
 import {
   bodySizeProblem,
   cacheControlFor,
-  canonicalRedirect,
   createNonce,
   rememberNonce,
   robotsHeader,
@@ -21,10 +21,10 @@ const bodyLimitMiddleware = createMiddleware().server(async ({ next, request }) 
   return next();
 });
 
-/** Applies the canonical URL redirect and the security headers to every response. */
+/** Applies the canonical URL redirect (only to a page that exists) and the security headers to every response. */
 const securityMiddleware = createMiddleware().server(async ({ next, request }) => {
   const url = new URL(request.url);
-  const redirectTo = canonicalRedirect(url, request.method, PAGE_SEGMENTS);
+  const redirectTo = await canonicalRedirectIfExists(url, request.method, CANONICAL_SITE);
   if (redirectTo !== undefined) {
     return new Response(null, { status: 301, headers: { Location: redirectTo } });
   }

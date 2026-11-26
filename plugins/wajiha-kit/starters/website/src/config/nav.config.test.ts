@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getFixedT } from '@/shared/lib/i18n/create-i18n';
 import { LOCALES } from '@/shared/lib/i18n/languages';
-import { NAV, navItem, navItemFor, PAGE_SEGMENTS } from './nav.config';
+import { NAV, navItem, navItemFor, PAGE_PATHS, PAGE_SEGMENTS } from './nav.config';
 
 describe('NAV', () => {
   it('works out the language-free path and the id from the route', () => {
@@ -51,8 +51,19 @@ describe('NAV', () => {
   });
 });
 
-describe('PAGE_SEGMENTS', () => {
-  it('holds the static segments of NAV: what canonicalRedirect lowercases', () => {
-    expect([...PAGE_SEGMENTS].toSorted()).toEqual(['about', 'contact', 'news', 'services']);
+// Both sets are worked out from NAV, so adding a page to NAV never needs an edit here.
+describe('PAGE_SEGMENTS and PAGE_PATHS', () => {
+  it('PAGE_SEGMENTS holds every static segment of NAV: what canonicalRedirect lowercases', () => {
+    const expected = new Set(NAV.flatMap((item) => item.path.split('/').filter(Boolean)));
+    expect(PAGE_SEGMENTS).toEqual(expected);
+    expect(PAGE_SEGMENTS.size).toBeGreaterThan(0);
+    for (const segment of PAGE_SEGMENTS) {
+      expect(segment).toBe(segment.toLowerCase());
+    }
+  });
+
+  it('PAGE_PATHS holds the language-free path of every NAV page, the home page included', () => {
+    expect([...PAGE_PATHS].toSorted()).toEqual(NAV.map((item) => item.path).toSorted());
+    expect(PAGE_PATHS.has('')).toBe(true);
   });
 });

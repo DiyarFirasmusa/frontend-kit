@@ -13,6 +13,10 @@ import {
   toLocale,
 } from './languages';
 
+// Not a real language code: the 'unsupported language' of these tests must stay unsupported when a real language
+// (fr, de, ...) is added to LOCALES.
+const UNSUPPORTED = 'zz';
+
 describe('languages', () => {
   it('Arabic is the default and right-to-left; English is left-to-right', () => {
     expect(DEFAULT_LOCALE).toBe('ar');
@@ -23,16 +27,19 @@ describe('languages', () => {
   it('isLocale and toLocale only accept supported languages', () => {
     expect(isLocale('ar')).toBe(true);
     expect(isLocale('en')).toBe(true);
-    expect(isLocale('fr')).toBe(false);
+    for (const locale of LOCALES) {
+      expect(isLocale(locale)).toBe(true);
+      expect(toLocale(locale)).toBe(locale);
+    }
+    // UNSUPPORTED is not a real language, so adding any real one to LOCALES never breaks this test.
+    expect(isLocale(UNSUPPORTED)).toBe(false);
     expect(isLocale(undefined)).toBe(false);
-    expect(toLocale('fr')).toBe('ar');
-    expect(toLocale('en')).toBe('en');
+    expect(toLocale(UNSUPPORTED)).toBe(DEFAULT_LOCALE);
   });
 
   it('otherLocales lists every other language, in registry order', () => {
-    expect(otherLocales('ar')).toEqual(['en']);
-    expect(otherLocales('en')).toEqual(['ar']);
     for (const locale of LOCALES) {
+      expect(otherLocales(locale)).toEqual(LOCALES.filter((candidate) => candidate !== locale));
       expect(otherLocales(locale)).toHaveLength(LOCALES.length - 1);
       expect(otherLocales(locale)).not.toContain(locale);
     }
@@ -67,7 +74,7 @@ describe('languages', () => {
   it('swapLocaleInPath keeps the page and changes the language', () => {
     expect(swapLocaleInPath('/ar/news/some-slug', 'en')).toBe('/en/news/some-slug');
     expect(swapLocaleInPath('/en', 'ar')).toBe('/ar');
-    expect(swapLocaleInPath('/zz/page', 'en')).toBe('/en');
+    expect(swapLocaleInPath(`/${UNSUPPORTED}/page`, 'en')).toBe('/en');
   });
 
   describe('negotiateLocale', () => {
@@ -77,12 +84,14 @@ describe('languages', () => {
     });
 
     it('matches a regional tag by its language', () => {
-      expect(negotiateLocale('ar-IQ')).toBe('ar');
-      expect(negotiateLocale('EN-gb')).toBe('en');
+      for (const locale of LOCALES) {
+        expect(negotiateLocale(LANGUAGES[locale].hreflang)).toBe(locale);
+        expect(negotiateLocale(`${locale.toUpperCase()}-gb`)).toBe(locale);
+      }
     });
 
     it('ignores unsupported languages and zero weights', () => {
-      expect(negotiateLocale('fr-FR,de;q=0.8')).toBeUndefined();
+      expect(negotiateLocale(`${UNSUPPORTED}-ZZ,xx;q=0.8`)).toBeUndefined();
       expect(negotiateLocale('ar;q=0, en;q=0.1')).toBe('en');
     });
 

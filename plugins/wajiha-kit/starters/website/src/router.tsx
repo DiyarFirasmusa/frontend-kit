@@ -27,6 +27,9 @@ export function getRouter() {
   return createRouter({
     routeTree,
     context: { i18n: createI18n(initialLocale()) } satisfies RouterContext,
+    // The router's own trailing-slash redirect (307) would send an unknown URL to another unknown URL before
+    // its 404. The one canonical spelling is enforced earlier, in src/start.ts, and only for pages that exist.
+    trailingSlash: 'preserve',
     scrollRestoration: true,
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,

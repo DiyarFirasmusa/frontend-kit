@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_LOCALE, LANGUAGES, LOCALES } from '@/shared/lib/i18n/languages';
 import { absoluteUrl, alternateLinks, canonicalUrl, localizedPath, normalizePath } from './site';
 
 const SITE = 'https://example.test';
@@ -51,18 +52,21 @@ describe('localizedPath and canonicalUrl', () => {
 });
 
 describe('alternateLinks', () => {
-  it('lists both languages and x-default (the default language)', () => {
+  it('lists every language and x-default (the default language)', () => {
     expect(alternateLinks(SITE, '/about')).toEqual([
-      { hrefLang: 'ar-IQ', href: 'https://example.test/ar/about' },
-      { hrefLang: 'en', href: 'https://example.test/en/about' },
-      { hrefLang: 'x-default', href: 'https://example.test/ar/about' },
+      ...LOCALES.map((locale) => ({
+        hrefLang: LANGUAGES[locale].hreflang,
+        href: `https://example.test/${locale}/about`,
+      })),
+      { hrefLang: 'x-default', href: `https://example.test/${DEFAULT_LOCALE}/about` },
     ]);
   });
 
   it('is the same list from either language, so the pairs link back to each other', () => {
     expect(alternateLinks(SITE, '/services')).toEqual(alternateLinks(SITE, '/services'));
     const hrefs = alternateLinks(SITE, '').map((link) => link.href);
-    expect(hrefs).toContain(canonicalUrl(SITE, 'ar', ''));
-    expect(hrefs).toContain(canonicalUrl(SITE, 'en', ''));
+    for (const locale of LOCALES) {
+      expect(hrefs).toContain(canonicalUrl(SITE, locale, ''));
+    }
   });
 });

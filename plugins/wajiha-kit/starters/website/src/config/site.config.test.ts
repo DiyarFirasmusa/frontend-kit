@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { LOCALES } from '@/shared/lib/i18n/languages';
+import { DEFAULT_LOCALE, directionOf, LOCALES } from '@/shared/lib/i18n/languages';
 import { SITE, siteName } from './site.config';
 
 const tokens = readFileSync(join(process.cwd(), 'src/shared/style/tokens.css'), 'utf8');
@@ -26,6 +26,24 @@ describe('SITE', () => {
   it('themeColor is the palette: --primary in light, --bg in dark (no third copy that can drift)', () => {
     expect(SITE.themeColor.light).toBe(pair('primary')[0]);
     expect(SITE.themeColor.dark).toBe(pair('bg')[1]);
+  });
+});
+
+describe('public/site.webmanifest', () => {
+  const manifest = JSON.parse(
+    readFileSync(join(process.cwd(), 'public/site.webmanifest'), 'utf8'),
+  ) as Record<string, string>;
+
+  it('takes its colours from the palette: theme_color is SITE.themeColor.light, background_color is --bg (light)', () => {
+    expect(manifest['theme_color']).toBe(SITE.themeColor.light);
+    expect(manifest['background_color']).toBe(pair('bg')[0]);
+  });
+
+  it('starts at the default language and carries its site name, language and direction', () => {
+    expect(manifest['start_url']).toBe(`/${DEFAULT_LOCALE}`);
+    expect(manifest['name']).toBe(siteName(DEFAULT_LOCALE));
+    expect(manifest['lang']).toBe(DEFAULT_LOCALE);
+    expect(manifest['dir']).toBe(directionOf(DEFAULT_LOCALE));
   });
 });
 

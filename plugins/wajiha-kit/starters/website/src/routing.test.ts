@@ -1,31 +1,9 @@
 // The real route tree, loaded in memory (no server): what each kind of URL matches, which status the matches
 // carry, and what the root head puts in the title and robots meta. This is what makes a 404 for an unmatched
 // URL keep its title and `noindex`, without reading any private router field (see failed-page.ts).
-import { createMemoryHistory, createRouter } from '@tanstack/react-router';
 import { describe, expect, it } from 'vitest';
 import { ARTICLE_META } from '@/content/articles.data';
-import { routeTree } from '@/routeTree.gen';
-import { createI18n } from '@/shared/lib/i18n/create-i18n';
-import { localeFromPath } from '@/shared/lib/i18n/languages';
-import { failureOf } from '@/shared/lib/seo/failed-page';
-
-async function load(path: string) {
-  const router = createRouter({
-    routeTree,
-    history: createMemoryHistory({ initialEntries: [path] }),
-    context: { i18n: createI18n(localeFromPath(path) ?? 'ar') },
-  });
-  await router.load();
-  const matches = router.state.matches;
-  const metas = matches.flatMap((match) => match.meta ?? []);
-  return {
-    router,
-    matches,
-    failure: failureOf(matches),
-    title: metas.find((meta) => meta !== undefined && 'title' in meta),
-    robots: metas.find((meta) => meta !== undefined && 'name' in meta && meta.name === 'robots'),
-  };
-}
+import { loadRoute as load } from '@/test/load-route';
 
 describe('route tree', () => {
   it('a real page is not a failure, and carries a typed locale param', async () => {
@@ -52,7 +30,7 @@ describe('route tree', () => {
   });
 
   it('an unknown language is not a /$locale match: it falls to the root splat and is a notFound failure', async () => {
-    for (const path of ['/fr/about', '/fr', '/zz/news/x', '/EN/about']) {
+    for (const path of ['/zz/about', '/zz', '/xx/news/x', '/EN/about']) {
       const result = await load(path);
       expect(
         result.matches.some((match) => match.routeId === '/$locale'),

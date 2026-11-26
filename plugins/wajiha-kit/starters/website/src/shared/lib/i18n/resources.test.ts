@@ -3,7 +3,7 @@ import { join, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { NAV } from '@/config/nav.config';
 import { createI18n, getFixedT } from './create-i18n';
-import { DEFAULT_LOCALE, LOCALES, type Locale } from './languages';
+import { DEFAULT_LOCALE, LOCALES, otherLocales, type Locale } from './languages';
 import { buildResources, resources, type Bundle } from './resources';
 
 const SRC = join(process.cwd(), 'src');
@@ -83,18 +83,21 @@ describe('registration: every bundle on disk is loaded', () => {
 });
 
 describe('buildResources', () => {
-  const pair = (dir: string, ar: Bundle, en: Bundle): Record<string, Bundle> => ({
-    [`${dir}/ar.json`]: ar,
-    [`${dir}/en.json`]: en,
-  });
+  // One file per language in LOCALES (whatever they are), the default language holding `ar`, the others `en`.
+  const pair = (dir: string, ar: Bundle, en: Bundle): Record<string, Bundle> =>
+    Object.fromEntries(
+      LOCALES.map((locale) => [`${dir}/${locale}.json`, locale === DEFAULT_LOCALE ? ar : en]),
+    );
 
   it('merges bundles key by key: a second bundle never replaces a group', () => {
     const built = buildResources({
       ...pair('/src/a/locales', { page: { one: 'ا' } }, { page: { one: 'a' } }),
       ...pair('/src/b/locales', { page: { two: 'ب' } }, { page: { two: 'b' } }),
     });
-    expect(built.en.translation['page']).toEqual({ one: 'a', two: 'b' });
-    expect(built.ar.translation['page']).toEqual({ one: 'ا', two: 'ب' });
+    expect(built[DEFAULT_LOCALE].translation['page']).toEqual({ one: 'ا', two: 'ب' });
+    for (const locale of otherLocales(DEFAULT_LOCALE)) {
+      expect(built[locale].translation['page']).toEqual({ one: 'a', two: 'b' });
+    }
   });
 
   it('throws when a key is defined in two bundles', () => {
@@ -116,9 +119,10 @@ describe('buildResources', () => {
   });
 
   it('throws when a folder lacks one language', () => {
-    expect(() => buildResources({ '/src/a/locales/ar.json': { page: { one: 'ا' } } })).toThrow(
-      /\/src\/a\/locales\/en\.json is missing/,
-    );
+    const [missing] = otherLocales(DEFAULT_LOCALE);
+    expect(() =>
+      buildResources({ [`/src/a/locales/${DEFAULT_LOCALE}.json`]: { page: { one: 'ا' } } }),
+    ).toThrow(`/src/a/locales/${missing}.json is missing`);
   });
 
   it('throws on a path that is not locales/<language>.json', () => {

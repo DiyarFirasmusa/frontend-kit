@@ -59,11 +59,15 @@ export function breadcrumbJsonLd(
   };
 }
 
+/** Image types Google accepts for rich results (an SVG is refused, so it never goes into Article.image). */
+const RASTER_IMAGE = /.(png|jpe?g|webp|gif|avif)$/i;
+
 export type ArticleInput = {
   headline: string;
   description: string;
   path: string;
   datePublished: string;
+  /** Path of the article's cover. A cover that is not a raster image (an SVG) is replaced by the share image. */
   image: string;
 };
 
@@ -75,7 +79,10 @@ export function articleJsonLd(siteUrl: string, locale: Locale, article: ArticleI
     description: article.description,
     inLanguage: locale,
     datePublished: article.datePublished,
-    image: absoluteUrl(siteUrl, article.image),
+    image: absoluteUrl(
+      siteUrl,
+      RASTER_IMAGE.test(article.image) ? article.image : SITE.ogImage.path,
+    ),
     mainEntityOfPage: canonicalUrl(siteUrl, locale, article.path),
     author: { '@type': 'Organization', name: siteName(locale) },
     publisher: { '@type': 'Organization', name: siteName(locale) },

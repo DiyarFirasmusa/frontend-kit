@@ -2,7 +2,7 @@ import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { LOCALES } from '@/shared/lib/i18n/languages';
-import { getArticle, listArticleEntries, listArticles } from './articles';
+import { getArticle, listArticleEntries, listArticles, resolveArticleSlug } from './articles';
 import { ARTICLE_META } from './articles.data';
 
 describe('article data', () => {
@@ -84,6 +84,29 @@ describe('getArticle', () => {
       `${meta?.slug ?? ''}/`,
     ]) {
       expect(await getArticle(slug, 'en'), slug).toBeUndefined();
+    }
+  });
+});
+
+describe('resolveArticleSlug', () => {
+  it('finds the stored spelling of a slug whatever its case, and returns an exact slug unchanged', async () => {
+    for (const { slug } of ARTICLE_META) {
+      expect(await resolveArticleSlug(slug)).toBe(slug);
+      expect(await resolveArticleSlug(slug.toUpperCase())).toBe(slug);
+    }
+  });
+
+  it('returns undefined for a slug nothing has, and for anything path-like', async () => {
+    const slug = ARTICLE_META[0]?.slug ?? 'x';
+    for (const bad of ['nope', '', '__proto__', '../articles', `${slug}/`, `${slug} `]) {
+      expect(await resolveArticleSlug(bad), bad).toBeUndefined();
+    }
+  });
+
+  it('agrees with getArticle: a resolved slug always has an article to show', async () => {
+    for (const { slug } of ARTICLE_META) {
+      const stored = await resolveArticleSlug(slug.toUpperCase());
+      expect(await getArticle(stored ?? '', 'en')).toBeDefined();
     }
   });
 });

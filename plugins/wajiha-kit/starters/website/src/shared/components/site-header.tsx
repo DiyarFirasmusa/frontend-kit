@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAV } from '@/config/nav.config';
@@ -15,8 +15,17 @@ const linkClass =
 
 export function SiteHeader({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
-  // Phone menu: UI state of this one component, so it is plain state, not a store.
-  const [open, setOpen] = useState(false);
+  // Phone menu: UI state of this one component, so it is plain state, not a store. It remembers the page it
+  // was opened on and closes when the page changes, so the browser's Back and Forward buttons close it too (a
+  // menu left open over the new page would hide it). Adjusting state while rendering is React's way to reset
+  // state when an input changes, with no extra render pass through an effect.
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const [openOn, setOpenOn] = useState<string | undefined>(undefined);
+  if (openOn !== undefined && openOn !== pathname) {
+    setOpenOn(undefined);
+  }
+  const open = openOn !== undefined;
+  const setOpen = (next: boolean) => setOpenOn(next ? pathname : undefined);
   const toggleButton = useRef<HTMLButtonElement>(null);
 
   // Escape closes the open phone menu and puts focus back on its button.
@@ -26,13 +35,13 @@ export function SiteHeader({ locale }: { locale: Locale }) {
     }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false);
+        setOpenOn(undefined);
         toggleButton.current?.focus();
       }
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [open, setOpen]);
+  }, [open]);
 
   return (
     <header className="border-border bg-bg sticky top-0 z-40 border-b">
@@ -75,7 +84,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <button
             ref={toggleButton}
             type="button"
-            onClick={() => setOpen((value) => !value)}
+            onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-controls="site-nav"
             aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}

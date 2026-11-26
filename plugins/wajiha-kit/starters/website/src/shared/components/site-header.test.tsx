@@ -14,7 +14,7 @@ import { LANGUAGES, LOCALES, otherLocales, type Locale } from '@/shared/lib/i18n
 import { SiteHeader } from './site-header';
 
 /** The header inside a tiny router (one splat page for every path), so its links render as in the app. */
-async function renderHeader(locale: Locale, path = `/${locale}/about`) {
+async function renderHeader(locale: Locale, path = `/${locale}/about`, history: string[] = [path]) {
   const root = createRootRoute();
   const page = createRoute({
     getParentRoute: () => root,
@@ -23,16 +23,17 @@ async function renderHeader(locale: Locale, path = `/${locale}/about`) {
   });
   const router = createRouter({
     routeTree: root.addChildren([page]),
-    history: createMemoryHistory({ initialEntries: [path] }),
+    history: createMemoryHistory({ initialEntries: history, initialIndex: history.length - 1 }),
   });
   await act(async () => {
     await router.load();
   });
-  return render(
+  const view = render(
     <I18nextProvider i18n={createI18n(locale)}>
       <RouterProvider router={router} />
     </I18nextProvider>,
   );
+  return { ...view, router };
 }
 
 describe('SiteHeader', () => {
@@ -57,6 +58,33 @@ describe('SiteHeader', () => {
       'false',
     );
     expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus();
+  });
+
+  it('the browser Back button closes the open menu (it must not stay open over the previous page)', async () => {
+    const user = userEvent.setup();
+    const { router } = await renderHeader('en', '/en/about', ['/en', '/en/about']);
+    await user.click(await screen.findByRole('button', { name: 'Open menu' }));
+    expect(screen.getByRole('button', { name: 'Close menu' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
+
+    await act(async () => {
+      router.history.back();
+    });
+    expect(router.state.location.pathname).toBe('/en');
+    expect(await screen.findByRole('button', { name: 'Open menu' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+    // Going forward again does not bring the old menu back either.
+    await act(async () => {
+      router.history.forward();
+    });
+    expect(await screen.findByRole('button', { name: 'Open menu' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
   });
 
   it('clicking a menu link closes the menu', async () => {

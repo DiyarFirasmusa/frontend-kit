@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { LANGUAGES, LOCALES } from '@/shared/lib/i18n/languages';
 import { seo, type HeadParts } from './seo';
 
 const env = { siteUrl: 'https://example.test', allowIndexing: true };
@@ -31,16 +32,25 @@ describe('seo()', () => {
     expect(parts.links).toContainEqual({ rel: 'canonical', href: 'https://example.test/en' });
   });
 
-  it('adds hreflang for both languages and x-default', () => {
+  it('adds hreflang for every language and x-default', () => {
     const alternates = seo(base, env).links.filter((link) => link.rel === 'alternate');
-    expect(alternates.map((link) => link.hrefLang)).toEqual(['ar-IQ', 'en', 'x-default']);
+    expect(alternates.map((link) => link.hrefLang)).toEqual([
+      ...LOCALES.map((locale) => LANGUAGES[locale].hreflang),
+      'x-default',
+    ]);
   });
 
-  it('sets the Open Graph locale per language and lists the other one as an alternate', () => {
-    const arabic = seo({ ...base, locale: 'ar' }, env);
-    expect(meta(arabic, 'property', 'og:locale')).toBe('ar_IQ');
-    expect(meta(arabic, 'property', 'og:locale:alternate')).toBe('en_US');
-    expect(meta(seo(base, env), 'property', 'og:locale')).toBe('en_US');
+  it('sets the Open Graph locale per language and lists every other language as an alternate', () => {
+    for (const locale of LOCALES) {
+      const parts = seo({ ...base, locale }, env);
+      expect(meta(parts, 'property', 'og:locale')).toBe(LANGUAGES[locale].ogLocale);
+      const alternates = parts.meta
+        .filter((entry) => 'property' in entry && entry.property === 'og:locale:alternate')
+        .map((entry) => ('content' in entry ? entry.content : ''));
+      expect(alternates).toEqual(
+        LOCALES.filter((other) => other !== locale).map((other) => LANGUAGES[other].ogLocale),
+      );
+    }
   });
 
   it('uses an absolute share image with its size, and the big card', () => {

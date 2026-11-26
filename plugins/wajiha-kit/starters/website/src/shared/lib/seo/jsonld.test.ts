@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { SITE as SITE_CONFIG } from '@/config/site.config';
 import {
   articleJsonLd,
   breadcrumbJsonLd,
@@ -63,14 +64,26 @@ describe('builders', () => {
       description: 'Summary',
       path: '/news/title',
       datePublished: '2026-01-01',
-      image: '/images/a.svg',
+      image: '/images/a.png',
     });
     expect(article).toMatchObject({
       '@type': 'Article',
       headline: 'Title',
       datePublished: '2026-01-01',
-      image: 'https://example.test/images/a.svg',
+      image: 'https://example.test/images/a.png',
       mainEntityOfPage: 'https://example.test/en/news/title',
     });
+  });
+
+  it('never puts an SVG cover in Article.image: Google rejects it, so the share image is used', () => {
+    const input = { headline: 'T', description: 'S', path: '/news/t', datePublished: '2026-01-01' };
+    for (const cover of ['/images/a.svg', '/images/A.SVG', '/images/a']) {
+      const { image } = articleJsonLd(SITE, 'en', { ...input, image: cover }) as { image: string };
+      expect(image, cover).toBe(`${SITE}${SITE_CONFIG.ogImage.path}`);
+    }
+    for (const cover of ['/images/a.jpg', '/images/a.JPEG', '/images/a.webp']) {
+      const { image } = articleJsonLd(SITE, 'en', { ...input, image: cover }) as { image: string };
+      expect(image, cover).toBe(`${SITE}${cover}`);
+    }
   });
 });

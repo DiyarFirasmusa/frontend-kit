@@ -100,14 +100,46 @@ export function nonceFor(request: Request): string | undefined {
   return nonces.get(request);
 }
 
+/** True for a request the canonical URL rules apply to: GET or HEAD of a page, not an asset, file or server function. */
+export function isPageRequest(method: string, pathname: string): boolean {
+  return (
+    (method === 'GET' || method === 'HEAD') &&
+    !pathname.startsWith('/assets/') &&
+    !pathname.toLowerCase().startsWith('/_serverfn') &&
+    !/\.[a-z0-9]+$/i.test(pathname)
+  );
+}
+
 /**
- * Where a request for a page should really go, in one 301 hop: repeated slashes and a trailing slash are
- * removed, the language prefix and the static page segments (`staticSegments`: 'about', 'news', from NAV) are
- * lowercased, and the hex of percent-escapes is uppercased (the one spelling of an encoded slug).
- *
- * The case policy is deliberately narrow: every other segment is a slug and keeps its case, so a CMS slug
- * like `Q4-Plan` or an Arabic one is never rewritten (and `canonicalUrl` never lowercases it either). A slug
- * is looked up exactly as written; see .claude/rules/content.md.
+ * The structural canonical spelling of a page path: repeated slashes and a trailing slash are removed, the
+ * language prefix and the static page segments (`staticSegments`: 'about', 'news', from NAV) are lowercased,
+ * and the hex of percent-escapes is uppercased (the one spelling of an encoded slug). Every other segment is a
+ * slug and keeps its case here: whether it exists, and in which spelling, is the content layer's answer
+ * (see canonical-redirect.ts).
+ */
+export function canonicalPath(pathname: string, staticSegments: ReadonlySet<string>): string {
+  // Collapse repeated slashes, the leading ones above all: a Location of "//evil.example" would be read as
+  // another host.
+  let target = pathname.replace(/\/{2,}/g, '/');
+  if (target.length > 1) {
+    target = target.replace(/\/+$/, '');
+  }
+  return target
+    .split('/')
+    .map((segment, index) => {
+      const lower = segment.toLowerCase();
+      // Index 1 is the language prefix. Static page segments are lowercase; anything else is a slug.
+      return index === 1 || staticSegments.has(lower)
+        ? lower
+        : segment.replace(/%[0-9a-f]{2}/gi, (escape) => escape.toUpperCase());
+    })
+    .join('/');
+}
+
+/**
+ * The structural redirect on its own (slashes, case of the language and static segments, hex), in one 301
+ * hop. It does not know whether the target exists: the server uses `canonicalRedirectIfExists`
+ * (canonical-redirect.ts), which never redirects to a page that would answer 404.
  *
  * Returns undefined when the path is already canonical, is not a page (assets, server functions and files
  * keep their case: hashed file names are case-sensitive), or the method is not GET or HEAD (a 301 turns a
@@ -119,30 +151,10 @@ export function canonicalRedirect(
   staticSegments: ReadonlySet<string> = new Set(),
 ): string | undefined {
   const { pathname, search } = url;
-  const isPage =
-    (method === 'GET' || method === 'HEAD') &&
-    !pathname.startsWith('/assets/') &&
-    !pathname.toLowerCase().startsWith('/_serverfn') &&
-    !/\.[a-z0-9]+$/i.test(pathname);
-  if (!isPage) {
+  if (!isPageRequest(method, pathname)) {
     return undefined;
   }
-  // Collapse repeated slashes, the leading ones above all: a Location of "//evil.example" would be read as
-  // another host.
-  let target = pathname.replace(/\/{2,}/g, '/');
-  if (target.length > 1) {
-    target = target.replace(/\/+$/, '');
-  }
-  target = target
-    .split('/')
-    .map((segment, index) => {
-      const lower = segment.toLowerCase();
-      // Index 1 is the language prefix. Static page segments are lowercase; anything else is a slug.
-      return index === 1 || staticSegments.has(lower)
-        ? lower
-        : segment.replace(/%[0-9a-f]{2}/gi, (escape) => escape.toUpperCase());
-    })
-    .join('/');
+  const target = canonicalPath(pathname, staticSegments);
   return target === pathname ? undefined : `${target}${search}`;
 }
 

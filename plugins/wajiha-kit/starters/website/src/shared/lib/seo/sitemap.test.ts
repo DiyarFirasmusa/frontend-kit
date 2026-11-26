@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { LANGUAGES, LOCALES } from '@/shared/lib/i18n/languages';
 import { buildRobotsTxt, buildSitemapXml, escapeXml } from './sitemap';
 
 const SITE = 'https://example.test';
@@ -10,14 +11,18 @@ describe('buildSitemapXml', () => {
   );
 
   it('lists one URL per language', () => {
-    expect(xml).toContain('<loc>https://example.test/ar/about</loc>');
-    expect(xml).toContain('<loc>https://example.test/en/about</loc>');
+    for (const locale of LOCALES) {
+      expect(xml).toContain(`<loc>https://example.test/${locale}/about</loc>`);
+    }
   });
 
-  it('gives every URL both alternates and x-default', () => {
-    expect(xml.match(/hreflang="ar-IQ"/g)).toHaveLength(2);
-    expect(xml.match(/hreflang="en"/g)).toHaveLength(2);
-    expect(xml.match(/hreflang="x-default"/g)).toHaveLength(2);
+  it('gives every URL an alternate for every language, and x-default', () => {
+    // One <url> per language, each carrying the whole set of alternates.
+    for (const hreflang of [...LOCALES.map((locale) => LANGUAGES[locale].hreflang), 'x-default']) {
+      expect(xml.match(new RegExp(`hreflang="${hreflang}"`, 'g')), hreflang).toHaveLength(
+        LOCALES.length,
+      );
+    }
   });
 
   it('includes lastmod only when given', () => {

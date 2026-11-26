@@ -5,19 +5,19 @@ export type SeoEnv = { siteUrl: string; allowIndexing: boolean };
 /**
  * The one spelling of a URL path for canonical, alternate and sitemap URLs: no query, no hash, no trailing
  * slash ("/" stays "/"), and each segment percent-encoded with uppercase hex, the form a browser sends and
- * canonicalRedirect accepts. Case is kept: only the language prefix and the static page segments are
- * lowercase by policy, and those come from NAV already lowercase; a slug is never rewritten.
+ * canonicalRedirectIfExists accepts. A slug keeps the spelling it is given, which must be its stored one (the
+ * server redirects any other case to it, see .claude/rules/content.md).
  */
 export function normalizePath(path: string): string {
   const withoutQuery = path.split(/[?#]/)[0] ?? '';
   const withSlash =
     withoutQuery.startsWith('/') || withoutQuery === '' ? withoutQuery : `/${withoutQuery}`;
-  const encoded = withSlash.split('/').map(encodeSegment).join('/');
+  const encoded = withSlash.split('/').map(encodePathSegment).join('/');
   return encoded.length > 1 ? encoded.replace(/\/+$/, '') : encoded;
 }
 
 /** Encodes what is not URL-safe (Arabic letters, spaces) and keeps existing %XX escapes, uppercased. */
-function encodeSegment(segment: string): string {
+export function encodePathSegment(segment: string): string {
   return segment
     .split(/(%[0-9a-fA-F]{2})/)
     .map((part, index) => (index % 2 === 1 ? part.toUpperCase() : encodeURI(part)))
