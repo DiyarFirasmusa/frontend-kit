@@ -299,22 +299,22 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   line-height: 1.6;
 }
 
-/* The parts alternate: 1 and 3 have the black block first and the side column after it; 2 and 4 are mirrored (side column first, block after it). */
+/* The parts alternate, starting from the reading start (right): 1 and 3 have the orange block on the right and the side column on the left; 2 and 4 are mirrored. */
 @media (width >= 48rem) {
-  html #example .board.side-ink,
-  html #install .board.side-ink {
+  html #builds .board.side-ink,
+  html #why .board.side-ink {
     grid-template-columns: 19rem minmax(0, 1fr);
   }
 
-  #example .board .board-side,
-  #install .board .board-side {
+  #builds .board .board-side,
+  #why .board .board-side {
     grid-column: 1;
   }
 
-  #example .board .board-main,
-  #example .board .board-note,
-  #install .board .board-main,
-  #install .board .board-note {
+  #builds .board .board-main,
+  #builds .board .board-note,
+  #why .board .board-main,
+  #why .board .board-note {
     grid-column: 2;
   }
 }
