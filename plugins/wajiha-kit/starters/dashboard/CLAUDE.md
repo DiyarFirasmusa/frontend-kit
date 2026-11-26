@@ -34,10 +34,13 @@ edit a matching file.
   or a route; a feature never imports another feature (except `features/fallback`)
   and never leaves its folder with a relative path. `npm run lint:probe` proves it.
 - Only the API clients (`src/api`) toast API results, unwrap responses and handle 401. `axios` is imported only inside `src/api`.
+  (`use-excel-export` also toasts a row-cap warning: that is a message about the export, not an API result.)
 - Every route behind login has `requirePermission(PERMS.x.view)`; every action is
   gated with `useCan()` / `<Can>`. The backend still decides.
-- A submit or a destructive action is single-flight; delete asks to confirm and
-  focus starts on Cancel.
+- A submit or a destructive action is single-flight with `useSingleFlight()` (a ref, not
+  `mutation.isPending`, which is stale for the first milliseconds); delete asks to confirm and
+  focus starts on Cancel. A delete never `removeQueries` a query a mounted component watches
+  (`forgetQueries` in `src/lib`).
 - No hardcoded user-facing strings: every string goes in both `ar` and `en`.
 - Logical CSS only (`ms-`, `pe-`, `start-`, `text-start`); no hex colours in
   components; `text-primary-text` for text, `primary` is a fill.
@@ -90,16 +93,56 @@ Copy `src/features/dashboard/suppliers/` and rename it, then touch these 11 file
 3. `src/constants/query-keys.ts` (`qk.customers`)
 4. `src/constants/permissions.ts` (`PERMS.customer`)
 5. `src/routes/_app/customers/index.tsx` (guard, `validateSearch`, loader)
-6. `src/layout/dashboard/sidebar/config/nav-config.ts` (the `to` is checked against the route tree)
+6. `src/layout/dashboard/sidebar/config/nav-config.ts` (the `to` is checked against the route tree, so
+   `typecheck` is red until `npm run fix` has generated the tree: expected). Put the item in a
+   group (`products` for catalogue data, `warehouses` for sites; a new group needs its own `permission`
+   and `nav.groups.<id>` in both locale files), with `permission: PERMS.customer.view` and an icon
+   imported from `@/lib/icons` (it re-exports a curated Hugeicons list: add the icon there if it is missing)
 7. `src/locales/ar.json` (`nav.customers`)
 8. `src/locales/en.json` (`nav.customers`)
 9. `PERMISSIONS.md` (a row; `route-guards.test.ts` fails without it)
-10. `src/mocks/handlers/customers.ts` (+ `src/mocks/seed/customers.ts`)
+10. `src/mocks/handlers/customers.ts` (+ `src/mocks/seed/customers.ts`: change the `makeId(0xe0, ...)` group to an unused
+    number, or the ids collide with the suppliers' ids, and the `SUP-` code prefix, which the unit and e2e tests also use)
 11. `src/mocks/index.ts` (register the handlers)
 
 Then `npm run fix` (route tree, lint fix, format), `npx vitest run src/constants -u` (the
 PERMS snapshot pins the list on purpose) and `npm run check`. Tests: copy
 `e2e/suppliers.spec.ts` and `e2e/a11y-pages/suppliers.ts` (a11y pages are auto-discovered).
+
+### After the rename: no supplier copy may stay
+
+Renaming `supplier` to `customer` leaves the domain wording of the original. Reword it in the
+copied locales (`ar` and `en`: titles, descriptions, hints, the search placeholder, messages, the
+`nav` and `search.groups` entries you add), the mock handler's error messages and seed names, the
+copied e2e spec (it hard-codes Arabic and English strings in its regexes) and the unit tests.
+Nothing but this grep catches it (it also looks for the old domain's other words and the `SUP-` code
+prefix); it must print nothing:
+
+```sh
+grep -rniE "supplier|مورد|receipt|landed|purchas|payment terms|on documents|مستند|سندات|المشتريات|supplies|sup-" src/features/dashboard/customers src/types/api/customers.ts src/routes/_app/customers src/mocks/handlers/customers.ts src/mocks/seed/customers.ts e2e/customers.spec.ts e2e/a11y-pages/customers.ts
+```
+
+### Fewer fields than the reference (name, phone, status instead of seven)
+
+Deleting a field touches every place that names it (suppliers has 7 optional ones: `contactName`,
+`email`, `taxNumber`, `address`, `notes`, `inUse` besides code, name, phone). Grep each removed name
+(`grep -rn "taxNumber" src e2e`) and clear all of these:
+
+1. `types/api/customers.ts` (response and request types) and `types/types.ts` (row and form types)
+2. `validations/validations.ts` (schema, `default…Form`, `to…Payload`, `to…FormValues`, the field-name list
+   for `applyApiFieldErrors`) and `validations/validations.test.ts`
+3. `components/…-columns.tsx` (the cell and its `hideBelow`) and its test
+4. `components/dialog/…-form-dialog.tsx` (the input) and `…-filter-bar.tsx` (a filter on it)
+5. `utils/…-export-columns.ts` and its test (an Excel column per field)
+6. `locales/{ar,en}.json` (`fields.*`, `columns.*`, the search placeholder `Search by code, name or phone`
+   must name only fields that remain)
+7. `…-test-utils.ts` (the fixture row) and `index.test.tsx`
+8. `src/mocks/handlers/customers.ts` (`validate()`, the search that matches fields, sort keys) and
+   `src/mocks/seed/customers.ts`
+9. `e2e/customers.spec.ts` (inputs it fills and regexes it reads)
+
+`inUse` (the "cannot delete: on documents" rule) is a field too: drop it from the actions test, the
+`disabledReason` in `…-actions.ts`, the mock's 409 and the locale text, or keep it on purpose.
 
 ### Show the entity in search, notifications and the home page
 
@@ -108,13 +151,15 @@ Not part of the 11 files; do them when the entity should appear there (the demo'
 
 - Search (the group key is the response key, for example `customers`). In `src/layout/dashboard/topbar/`: `types/types.ts` (`GlobalSearchGroup`),
   `utils/search-options.ts` (`SEARCH_GROUP_ORDER`), `hooks/use-global-search.ts` (the `switch` that navigates), `components/global-search.tsx` (icon map).
-  Also `src/locales/{ar,en}.json` (`search.groups.<key>` and `search.placeholder`) and `src/mocks/handlers/search.ts` (one `hits(...)` line).
+  Also `src/locales/{ar,en}.json` (`search.groups.<key>` and `search.placeholder`; this is the second place, after `nav.customers`, that names the entity in the global locale files) and `src/mocks/handlers/search.ts` (one `hits(...)` line).
   Tests: `utils/search-options.test.ts`, `components/global-search.test.tsx` (same topbar folder), `e2e/global-search.spec.ts`.
 - Notifications: `src/mocks/seed/notifications.ts` (`entityType` and `entityId` of each row); in `src/layout/dashboard/topbar/`: `utils/notification-target.ts` (the `switch`)
   and `NotificationTarget` in `types/types.ts`. Tests: `utils/notification-target.test.ts`, `components/notifications-menu.test.tsx` (topbar folder), `e2e/notifications.spec.ts`.
 - Home: `src/types/api/overview.ts` (`OverviewSummary` key, `ChangeResource`), `src/mocks/handlers/overview.ts` (`kpi(...)`),
   `src/mocks/seed/activity.ts` (a row per resource), `src/features/dashboard/home/components/home-kpi-grid.tsx` (a card),
-  `home-recent-changes-table.tsx` (`RESOURCE_LINK`), `src/features/dashboard/home/locales/{ar,en}.json`. Tests: `e2e/home.spec.ts`, `e2e/fixtures/home.ts`.
+  `home-recent-changes-table.tsx` (`RESOURCE_LINK`), `src/features/dashboard/home/hooks/home-access.ts` (the entity's read
+  permission: Home shows a card or a change only to users who may read that resource), `src/features/dashboard/home/locales/{ar,en}.json`.
+  Tests: `src/features/dashboard/home/index.test.tsx`, `e2e/home.spec.ts`, `e2e/fixtures/home.ts`.
 - Audit log, only when the backend's audit knows the entity: `src/types/api/enums.ts` (`AuditEntity`),
   `src/constants/audit-entities.ts`, `auditLog.entities.*` in both locale files.
 

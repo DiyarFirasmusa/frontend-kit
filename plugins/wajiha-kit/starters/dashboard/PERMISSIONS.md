@@ -43,13 +43,18 @@ In JSX use `<Can>` (`src/components/auth/can.tsx`):
 
 | Page                                              | Route                      | Route guard                 | Buttons and tabs                                                                                |
 | ------------------------------------------------- | -------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------- |
-| Home                                              | `/`                        | signed in only              | none                                                                                            |
+| Home                                              | `/`                        | signed in only              | each KPI card and recent-change row: its resource's `:read`; activity chart: all four `:read`   |
 | Warehouses                                        | `/warehouses`              | `warehouse:read`            | add: `warehouse:create`; edit: `warehouse:update`; delete: `warehouse:delete`                   |
 | Warehouse details                                 | `/warehouses/$warehouseId` | `warehouse:read`            | edit and members: `warehouse:update`; delete: `warehouse:delete`; change log: `audit_log:read`  |
 | Suppliers                                         | `/suppliers`               | `supplier:read`             | add: `supplier:create`; edit: `supplier:update`; delete: `supplier:delete`                      |
 | Categories                                        | `/categories`              | `item_category:read`        | add: `item_category:create`; edit: `:update`; delete: `:delete`                                 |
 | Attributes (second tab of the categories feature) | `/attributes`              | `attribute_definition:read` | add: `attribute_definition:create`; edit: `:update`; delete: `:delete`                          |
 | Units of measure                                  | `/units-of-measure`        | `unit_of_measure:read`      | add: `unit_of_measure:create`; edit: `unit_of_measure:update`; delete: `unit_of_measure:delete` |
+
+Home is open to any signed-in user, so it applies layer 3 itself: a card or a recent
+change of a resource the user cannot read is not rendered, and with no read permission
+at all the page says so and fetches nothing. The backend's `/overview/*` endpoints
+must filter the same way; the client check only hides.
 
 ## Adding a resource
 

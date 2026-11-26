@@ -23,7 +23,12 @@ Use all four layers on every page:
 1. **Sidebar**: `permission: PERMS.x.view` (or `permissions: [...]`, any one) on the
    item in `nav-config.ts`.
 2. **Route**: `beforeLoad: () => { requirePermission(PERMS.x.view); }` sends the user to `/403`.
-3. **Tabs and sections**: `useCan(PERMS.x.view)` or `<Can permission={...}>`.
+3. **Tabs and sections**: `useCan(PERMS.x.view)` or `<Can permission={...}>`. This
+   includes widgets that show other resources' data: Home gates each KPI card and
+   each recent-change row on its resource's read permission (`getHomeAccess`,
+   `filterReadableChanges` in `features/dashboard/home/hooks/home-access.ts`) and the
+   activity chart (which counts every kind with no split) on all of them. A new
+   resource on Home adds its line there.
 4. **Buttons and row actions**: `useCan()` returns a reactive `can(permission)`;
    pass it into the pure `getXRowActions(row, { can, ... })`. `hasPermission()` is
    for event handlers only, never render (a token refresh can change the list).

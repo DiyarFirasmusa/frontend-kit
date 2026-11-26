@@ -14,7 +14,7 @@
 **من جهاز ثاني (شبكة محلية أو VPN):** الداتا الوهمية تحتاج service worker، والمتصفح يسمح به فقط على `localhost` أو `https`.
 على `http` بعنوان ثاني تطلع صفحة تشرح السبب بدل صفحة فاضية.
 
-## الصفحات الخمس
+## الصفحات (الرئيسية وخمس صفحات موارد)
 
 | الصفحة       | المسار                                     | فيها                                                                                                                           |
 | ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -177,17 +177,25 @@ dashboard-starter/
 
 1. انسخ `src/features/dashboard/suppliers/` إلى `src/features/dashboard/customers/` وبدّل الأسماء بالمجلد كله (أسماء الملفات والمحتوى: `supplier` ← `customer`).
    عدّل الحقول حسب OpenAPI: `types/types.ts` و`validations/*` و`services/*` والأعمدة والحوار والترجمات.
+   **بعد الاستبدال لازم تعيد صياغة كلام المجال**: نصوص `ar` و`en` للكيان (العناوين والوصف والتلميحات وحقل البحث والرسائل) ورسائل الـmock والداتا الأولية
+   وسلاسل النص المكتوبة بيدك بملف الـe2e المنسوخ. ما فيه فحص يمسكها غير هالأمر، ولازم يطلع فاضي:
+   `grep -rniE "supplier|مورد|receipt|landed|purchas|payment terms|on documents|مستند|سندات|المشتريات|supplies|sup-" src/features/dashboard/customers src/types/api/customers.ts src/routes/_app/customers src/mocks/handlers/customers.ts src/mocks/seed/customers.ts e2e/customers.spec.ts e2e/a11y-pages/customers.ts`
+   (الأقسام الأخرى بالملفات العامة، مثل `nav.customers` و`search.groups`، تنضاف أسطر ولا تنسخ كلام الموردين).
+   **حقول أقل من المرجع** (مثلاً اسم وهاتف وحالة بدل سبعة): كل حقل تحذفه له قائمة أماكن تتبعه (الأنواع، `validations`، الأعمدة، الحوار، أعمدة التصدير، الترجمات
+   وحقل البحث، `validate()` بالـmock والداتا الأولية، `…-test-utils.ts` وملفات الاختبار والـe2e)؛ القائمة الكاملة بـ`CLAUDE.md` (قسم "Fewer fields than the reference").
 2. `src/types/api/customers.ts`: أنواع الطلب والرد (أو ولّدها: `npx openapi-typescript docs/api/openapi.json -o src/types/api/schema.ts`).
 3. `src/constants/api.ts`: العناوين.
 4. `src/constants/query-keys.ts`: `qk.customers` (`all` و`lists` و`list(params)` و`detail(id)`).
 5. `src/constants/permissions.ts`: `PERMS.customer` بالمفاتيح `view/create/update/delete` وقيم الباكند نفسها.
 6. `src/routes/_app/customers/index.tsx`: انسخ ملف مسار الموردين (حارس + `validateSearch` + `loaderDeps` + `loader`).
-7. `src/layout/dashboard/sidebar/config/nav-config.ts`: عنصر القائمة مع `permission`. المسار `to` نوعه مأخوذ من شجرة المسارات المولّدة (`StaticRoutePath`)،
-   فالغلط بالمسار يفشل الـ`typecheck` وما تحتاج تحدّث قائمة أنواع بيدك.
-8. `src/locales/ar.json`: `nav.customers`.
+7. `src/layout/dashboard/sidebar/config/nav-config.ts`: عنصر القائمة مع `permission` داخل مجموعة: `products` لبيانات الكتالوج (التصنيفات، الموردون، الوحدات)
+   و`warehouses` للمواقع؛ المجموعة الجديدة تحتاج `permission` ومفتاح `nav.groups.<id>` بملفَّي اللغة. الأيقونة من `@/lib/icons` (قائمة Hugeicons منتقاة، أضف أيقونتك فيه إذا ناقصة).
+   المسار `to` نوعه مأخوذ من شجرة المسارات المولّدة (`StaticRoutePath`)، فالغلط بالمسار يفشل الـ`typecheck`؛
+   **وقبل أول `npm run fix` يكون الـ`typecheck` أحمر على هالسطر وهذا متوقع** (الشجرة ما اتولّدت بعد).
+8. `src/locales/ar.json`: `nav.customers` (واسم الكيان بـ`search.groups` اختياري، بالقسم الأخير تحت).
 9. `src/locales/en.json`: `nav.customers`.
 10. `PERMISSIONS.md`: سطر بالجدول (اختبار `route-guards.test.ts` يفشل بدونه).
-11. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين مع جدول `seed/`). إذا الباكند جاهز تقدر تتخطى هالخطوة والخطوة اللي بعدها.
+11. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين مع جدول `seed/`؛ بدّل مجموعة `makeId(0xe0, ...)` برقم غير مستخدم وإلا تتصادم المعرّفات مع الموردين، وبدّل بادئة الرمز `SUP-` بالداتا والاختبارات). إذا الباكند جاهز تقدر تتخطى هالخطوة والخطوة اللي بعدها.
 12. `src/mocks/index.ts`: سجّل الـhandlers.
 
 ثم: **`npm run fix`** يولّد `routeTree.gen.ts` (بدون تشغيل Vite) ويصلح اللنت ويكتب التنسيق، وبعده `npm run check`.
@@ -198,11 +206,11 @@ dashboard-starter/
 `src/mocks`)، فما تحتاج ملف fixture خاص. اختبارات الوحدة بالمجلد المنسوخ تستخدم `server.use(...customerHandlers)` و`renderApp('/customers')`
 (المسار الحقيقي مع الحارس والـloader).
 
-عدد الملفات: **11 ملفاً خارج المجلد المنسوخ (الخطوات 2 إلى 12)** (كان 11 أيضاً لكن بعدها أمران بيدك: تشغيل خادم التطوير أو البناء لتوليد شجرة المسارات، وتنسيق الملفات).
-الآن الأمران صارا `npm run fix`، وقائمة التنقل ما عاد لها نوع مكتوب بيدك.
+عدد الملفات: **11 ملفاً خارج المجلد المنسوخ (الخطوات 2 إلى 12)**، وأمر واحد بعدها (`npm run fix`) يولّد شجرة المسارات ويصلح اللنت ويكتب التنسيق.
+قائمة التنقل ما لها نوع مكتوب بيدك.
 
-**أماكن ثانية تذكر الكيان وما هي ضمن الـ11 ملفاً**: البحث العام (`topbar/types/types.ts` و`utils/search-options.ts` و`hooks/use-global-search.ts` و`components/global-search.tsx` و`search.groups` بالترجمات و`mocks/handlers/search.ts`)،
-الإشعارات (`mocks/seed/notifications.ts` و`utils/notification-target.ts`)، الرئيسية (`types/api/overview.ts` و`mocks/handlers/overview.ts` و`mocks/seed/activity.ts` و`home-kpi-grid.tsx` و`home-recent-changes-table.tsx`)،
+**أماكن ثانية تذكر الكيان وما هي ضمن الـ11 ملفاً**: البحث العام (`topbar/types/types.ts` و`utils/search-options.ts` و`hooks/use-global-search.ts` و`components/global-search.tsx` و`search.groups` بملفَّي الترجمة العامين، وهو المكان الثاني الذي يسمّي الكيان بعد `nav.*`، و`mocks/handlers/search.ts`)،
+الإشعارات (`mocks/seed/notifications.ts` و`utils/notification-target.ts`)، الرئيسية (`types/api/overview.ts` و`mocks/handlers/overview.ts` و`mocks/seed/activity.ts` و`home-kpi-grid.tsx` و`home-recent-changes-table.tsx` و`hooks/home-access.ts`: الرئيسية تعرض البطاقة أو التغيير فقط لمن يملك صلاحية قراءة ذلك المورد)،
 وسجل التدقيق (`types/api/enums.ts` و`constants/audit-entities.ts`). القائمة الكاملة بملفات الاختبار بـ`CLAUDE.md` (قسم "Show the entity in search, notifications and the home page").
 كيان بدون حذف، ومنتقي فوق كيان ثاني، وحقل التاريخ والوقت: بـ`CLAUDE.md` أيضاً. لا يوجد حقل تاريخ ووقت بحقل واحد: التاريخ حقل والوقت حقل.
 

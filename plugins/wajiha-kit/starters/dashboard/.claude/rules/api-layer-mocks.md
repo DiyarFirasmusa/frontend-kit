@@ -35,8 +35,11 @@ nothing upstream repeats them. `axios` is imported only inside `src/api`.
 - `xListQueryOptions(params)` / `xDetailQueryOptions(id)` are shared by the route
   loader and the hook; lists use `placeholderData: keepPreviousData`.
 - Mutations invalidate in `onSuccess` and **return the promise**, so `isPending`
-  lasts until the list has refetched. Delete removes the detail query first, then
-  invalidates `lists()`. Optimistic updates only for single-row toggles.
+  lasts until the list has refetched. Delete calls `forgetQueries` (cancel in-flight,
+  drop unwatched: `src/lib/forget-queries.ts`) for the record's own keys, then
+  invalidates `lists()`; `removeQueries` on a key a mounted component watches would
+  fetch the deleted record and toast "Record not found" (move the selection off it
+  first). Optimistic updates only for single-row toggles.
 - Success toasts come from `successMessage: '<x>.messages.created'` on the request;
   field errors from a 422 go under the inputs with `applyApiFieldErrors`
   (`src/api/error/field-errors.ts`) and the form never toasts.

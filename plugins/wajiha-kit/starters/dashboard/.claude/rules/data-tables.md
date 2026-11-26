@@ -28,7 +28,10 @@ total and the URL state, and gets a table back.
   built with `createColumnHelper<DataTableFeatures, XRow>()` and memoised in the
   page hook. A sortable column's `id` is the backend sort key; everything else has
   `enableSorting: false`. Empty cells render `'—'`; codes and phones are `dir="ltr"`.
-  Layout extras (`align`, `hideBelow`) go in `meta`, typed in `src/types/table.ts`.
+  Layout extras (`align`, `hideBelow`, `primary`) go in `meta`, typed in
+  `src/types/table.ts`. Mark the name column `primary: true`: on a phone it takes the
+  leftover width and ellipsizes (give a title), so it is not cut mid-word under the
+  sticky actions column; its cell content must be able to truncate.
 - **States**: `toTableStatus(query)` gives `loading` (skeleton rows), `refetching`
   (old rows plus a thin bar, `aria-busy`), `error` (inline retry) or `ready`. The
   empty row says "nothing yet" or "no results" and offers create or clear filters.
