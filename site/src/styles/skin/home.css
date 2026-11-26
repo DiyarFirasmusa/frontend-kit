@@ -304,12 +304,8 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* WHAT FILLS A BLOCK. With no side column a board is as wide as its content needs and no wider, centred under its title,
-   so the content fills it instead of floating in the middle of a very wide black block. */
-.home section:not(#intro) .board {
-  max-width: 64rem;
-  margin-inline: auto;
-}
+/* WHAT FILLS A BLOCK. Every board is as wide as the page column, like the opening screen; its drawing is centred in it and
+   grows with the block up to about 66rem, so the content fills the block instead of floating in the middle. */
 
 /* The comparison is drawn in em, 61.8em wide and about 36em tall: its text size follows the width it is given (not the
    screen's), so the whole drawing always fits its window, whatever the screen. */
@@ -335,7 +331,8 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 
   #builds .show-caption,
   #builds .board-main > .browser {
-    width: 100%;
+    width: min(100%, 66rem);
+    margin-inline: auto;
   }
 
   #builds .show-caption p {
@@ -345,7 +342,7 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   /* A wide, not tall, window: the drawing keeps the height its em layout needs (about 18.5em) and stretches across. */
   #builds .board-main > .browser .browser-page {
     aspect-ratio: 16 / 6.9;
-    font-size: calc(100cqw * 0.0195);
+    font-size: calc(min(100cqw, 66rem) * 0.0195);
   }
 }
 
