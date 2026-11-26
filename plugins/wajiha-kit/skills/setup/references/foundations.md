@@ -73,6 +73,9 @@ Order: (1) the user's entities exist; (2) rewrite what is listed under "Rewrite"
   `api/**/*.test.ts`, `components/{auth,dialog,fields,shared,table,ui,wrapper}/**/*.test.tsx` (and the doc comments in `components/auth/can.tsx`, `components/shared/page-header.tsx`, `components/table/data-table.tsx`),
   `features/auth/**`, `features/fallback/record-not-found.tsx` (comments), `guards/route-guards.test.ts`, `hooks/**` (`use-current-user.test.tsx`, `lookups/use-directory-search.test.tsx`, `use-excel-export.ts`),
   `layout/dashboard/sidebar/**`, `layout/dashboard/topbar/**`, `store/permission-store.test.ts`, `test/fixtures/auth.ts` (`INVENTORY_USER`), `test/msw/handlers.ts`, `utils/format.test.ts`.
+  These shared tests, the e2e specs and `STRUCTURE.md` hold about 300 demo words in 60 files (the sweep after the entities exist): it is the
+  largest step of the strip, so do it in bulk, one whole-word mapping per demo word (`sed -i -E 's/\bwarehouse\b/patient/g; s/\bWarehouse\b/Patient/g' $(grep -rlE '<word>' src e2e)`,
+  Arabic words too), then run the tests and fix what the bulk replace broke; editing 60 files one by one runs out of budget before the end.
   Not a plain replace: `src/router.test.ts` (asserts that two warehouse routes exist: assert two routes of the user's), the sidebar tests that need two nav groups (`nav.groups`), tests that need two different entities.
 - Shared words in docs: `CLAUDE.md`, `STRUCTURE.md`, `.claude/rules/*.md`, `README.md`, `src/features/dashboard/README.md` (rewrite or delete).
 
