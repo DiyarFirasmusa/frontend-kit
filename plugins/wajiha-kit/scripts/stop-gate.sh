@@ -96,7 +96,14 @@ done <<<"$CHANGED"
 # {"stopGate": {"tests": "all"}} runs the whole unit suite (commands.allTests, default `vitest run`)
 # instead of only the tests related to the changed files.
 ALL_CMD=""
-if [ "$(kit_get '.stopGate.tests' 'related')" = all ]; then
+# A big change (a new project, a wide rename) lists so many files that the related-tests command line passes the
+# Windows limit (about 8,000 characters) and fails before any test runs. Past that size, run the whole suite instead,
+# which is also the right check for a change that wide. Only for a single-app project: apps keep their own commands.
+RELATED_CHARS=0
+for file in ${TEST_FILES[@]+"${TEST_FILES[@]}"}; do RELATED_CHARS=$((RELATED_CHARS + ${#file} + 1)); done
+WIDE_CHANGE=""
+[ "$RELATED_CHARS" -gt 6000 ] && [ -z "$(kit_get '.apps' '')" ] && WIDE_CHANGE=1
+if [ "$(kit_get '.stopGate.tests' 'related')" = all ] || [ -n "$WIDE_CHANGE" ]; then
   ALL_CMD="$(kit_get '.commands.allTests' '')"
   if [ -z "$ALL_CMD" ]; then
     case "$(kit_tool vitest jest)" in
