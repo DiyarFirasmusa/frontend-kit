@@ -154,6 +154,7 @@ fullstack/
 
 - `X-Robots-Tag: noindex, nofollow` و `<meta name="robots" content="noindex, nofollow">` دائماً، حتى على الموقع الحقيقي.
 - نفس هيدرز الأمان ونفس CSP الصارم للموقع.
+- `Cache-Control: private, no-store` على كل رابط إدارة (الدخول وصفحة 404 داخلها أيضاً): لا يحفظها متصفح ولا وسيط. صفحات الموقع `private, no-cache` (فيها nonce خاص بكل رد فلا يخزّنها وسيط)، والصفحات الفاشلة وردود الـserver function `no-store`، وملفات `/assets` المبصومة `immutable` لسنة. السيرفر يرسلها بنفسه (`cacheControlFor` في `src/shared/server/security-headers.ts`)، فتصح بدون nginx أيضاً.
 - لا تظهر في الـsitemap، ولا تُمنع في robots.txt (المنع يخفي الـnoindex عن Google).
 
 الروابط الخاطئة:

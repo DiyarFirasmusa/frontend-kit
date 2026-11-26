@@ -28,8 +28,11 @@ paths:
   A redirect after login goes through `safeReturnPath` (only paths inside the admin).
 - Every admin page sets `head: adminHead('<feature>.title')`. An unknown admin URL renders `AdminMessage kind="notFound"`
   (its own `<main>`, texts from `src/shared/locales`, because the admin bundle is not loaded for it).
-- Server middleware (`src/start.ts`): body limit, CSRF, canonical redirect, CSP with a per-request nonce, `X-Robots-Tag`.
-  Security headers are set in one place (`src/shared/server/security-headers.ts`); do not add them in nginx.
+- Server middleware (`src/start.ts`): body limit, CSRF, canonical redirect, CSP with a per-request nonce, `X-Robots-Tag`,
+  `Cache-Control`. Security headers are set in one place (`src/shared/server/security-headers.ts`); do not add them in nginx.
+- Caching (`cacheControlFor`, so a Node-only deploy is covered): every `/{lang}/admin` URL (login and its 404s too) is
+  `private, no-store`; public pages carry a per-response nonce, so `private, no-cache`; failed pages and server function
+  answers `no-store`; hashed `/assets/**` are `immutable` for a year (Nitro); `robots.txt` and `sitemap.xml` set their own.
 - Module top-level code must be SSR-safe: no `window` or `document` outside effects and handlers. No module-level
   state shared between requests (the router, the i18n instance and the nonce are per request). Exceptions that are safe
   because they are only ever written in the browser: the Zustand stores in `shared/store` and `features/admin/store`,

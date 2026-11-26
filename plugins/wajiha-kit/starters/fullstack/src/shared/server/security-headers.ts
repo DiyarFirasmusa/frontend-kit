@@ -183,6 +183,32 @@ export const STATIC_IMAGE_HEADERS: Record<string, string> = {
 };
 
 /**
+ * Cache-Control for a response the request middleware handles, so a Node-only deploy (no nginx, no CDN) is
+ * as safe as one behind them. Pages carry a per-response CSP nonce, so a shared cache must never keep them
+ * ("private"), and the browser asks again before reusing one ("no-cache"). The admin (every /{lang}/admin URL,
+ * login and its 404s included) and server function answers are never stored ("no-store"), nor is a failed
+ * response. Other responses (robots.txt, sitemap.xml, the "/" redirect) keep the header they already have;
+ * the admin always gets its own. Hashed /assets/** never reach the middleware: Nitro serves them immutable.
+ */
+export function cacheControlFor(input: {
+  pathname: string;
+  status: number;
+  contentType: string | null;
+  existing: string | null;
+}): string | undefined {
+  if (isAdminPath(input.pathname)) {
+    return 'private, no-store';
+  }
+  if (input.existing !== null) {
+    return undefined;
+  }
+  if (input.pathname.toLowerCase().startsWith('/_serverfn') || input.status >= 400) {
+    return 'no-store';
+  }
+  return input.contentType?.startsWith('text/html') === true ? 'private, no-cache' : undefined;
+}
+
+/**
  * X-Robots-Tag: a copy of the page's robots meta for crawlers that read headers, and the only signal
  * that works for non-HTML files. Failed responses, non-production sites and the admin are never indexed.
  * The admin is not disallowed in robots.txt on purpose: a crawler that may not fetch a page never sees

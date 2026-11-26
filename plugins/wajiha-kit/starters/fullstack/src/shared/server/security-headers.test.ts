@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   bodySizeProblem,
+  cacheControlFor,
   canonicalRedirect,
   MAX_SERVER_FN_BODY_BYTES,
   contentSecurityPolicy,
@@ -161,6 +162,56 @@ describe('robotsHeader', () => {
     expect(
       robotsHeader({ allowIndexing: true, status: 200, pathname: '/en/about' }),
     ).toBeUndefined();
+  });
+});
+
+describe('cacheControlFor', () => {
+  const html = {
+    pathname: '/en/about',
+    status: 200,
+    contentType: 'text/html; charset=utf-8',
+    existing: null,
+  };
+
+  it('lets the browser keep a public page but never a shared cache (the nonce is per response)', () => {
+    expect(cacheControlFor(html)).toBe('private, no-cache');
+    expect(cacheControlFor({ ...html, pathname: '/ar' })).toBe('private, no-cache');
+  });
+
+  it('never stores a failed page or a server function answer', () => {
+    expect(cacheControlFor({ ...html, status: 404 })).toBe('no-store');
+    expect(cacheControlFor({ ...html, status: 500 })).toBe('no-store');
+    expect(
+      cacheControlFor({ ...html, pathname: '/_serverFn/abc', contentType: 'application/json' }),
+    ).toBe('no-store');
+  });
+
+  it('never stores any admin response: pages, login, its 404s and a wrong language', () => {
+    for (const pathname of [
+      '/ar/admin',
+      '/en/admin/login',
+      '/en/admin/suppliers',
+      '/ar/admin/nope',
+      '/fr/admin',
+    ]) {
+      expect(cacheControlFor({ ...html, pathname })).toBe('private, no-store');
+      expect(cacheControlFor({ ...html, pathname, status: 404 })).toBe('private, no-store');
+    }
+    expect(
+      cacheControlFor({ ...html, pathname: '/en/admin', existing: 'public, max-age=60' }),
+    ).toBe('private, no-store');
+  });
+
+  it('keeps a header the response set itself, and leaves non-HTML alone', () => {
+    expect(
+      cacheControlFor({
+        ...html,
+        pathname: '/robots.txt',
+        contentType: 'text/plain',
+        existing: 'public, max-age=0, s-maxage=3600',
+      }),
+    ).toBeUndefined();
+    expect(cacheControlFor({ ...html, contentType: 'application/json' })).toBeUndefined();
   });
 });
 

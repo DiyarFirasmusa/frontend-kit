@@ -15,6 +15,7 @@ test.describe('admin: hidden from search engines', () => {
       expect(metaContent(html, 'name', 'robots')).toBe('noindex, nofollow');
       expect(response.headers()['content-security-policy']).toContain("script-src 'self' 'nonce-");
       expect(response.headers()['x-frame-options']).toBe('DENY');
+      expect(response.headers()['cache-control']).toBe('private, no-store');
     });
   }
 
@@ -53,6 +54,7 @@ test.describe('admin: unknown URLs', () => {
       const response = await request.get(path, { maxRedirects: 0 });
       expect(response.status()).toBe(404);
       expect(response.headers()['x-robots-tag']).toBe('noindex, nofollow');
+      expect(response.headers()['cache-control']).toBe('private, no-store');
       expect(metaContent(await response.text(), 'name', 'robots')).toBe('noindex, nofollow');
     });
   }
