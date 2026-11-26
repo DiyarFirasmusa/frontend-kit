@@ -1,6 +1,7 @@
 ---
+import Board from './Board.astro'
 import Mock from './Mock.astro'
-import { getsWords as g } from '../../content/guide/home.ts'
+import { getsWords as g, home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
 
 interface Props {
@@ -10,13 +11,14 @@ interface Props {
 const { locale } = Astro.props
 ---
 
-<!-- What you get: four things you have at the end, each with a small window that shows it. Same page ground as the road. -->
+<!-- What you get: a board like "Start" (its bar, its block with the orange edge, its note bar), holding four small windows. -->
 <section id="get" class="gets">
   <div class="column section-head">
     <h2>{g.title[locale]}</h2>
     <p>{g.lead[locale]}</p>
   </div>
   <div class="column">
+    <Board locale={locale} part={2} label={g.title[locale]} tone="orange">
     <ul class="gets-list">
       {
         g.items.map((item, i) => (
@@ -73,5 +75,10 @@ const { locale } = Astro.props
         ))
       }
     </ul>
+      <div slot="note">
+        <p>{g.note[locale]}</p>
+        <a class="hero-start" href="#install">{home.start[locale]}</a>
+      </div>
+    </Board>
   </div>
 </section>

@@ -174,5 +174,6 @@ export const getsWords = {
     { kind: 'report', title: home.board.get[1]!, text: home.board.getDetail[1]! },
     { kind: 'languages', title: t('In Arabic and English', 'بالعربية والإنجليزية'), text: t('Both languages, each in its own direction.', 'اللغتان، وكل واحدة باتجاهها.') },
   ],
+  note: t('Made-up sample, to show the idea.', 'نموذج متخيَّل لتوضيح الفكرة.'),
   checks: [t('Mistakes: none', 'الأخطاء: لا شيء'), t('Tests: passed', 'الاختبارات: نجحت'), t('Reviewer: done', 'المراجِع: تم')],
 }

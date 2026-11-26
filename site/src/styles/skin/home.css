@@ -313,7 +313,7 @@ html[data-theme='light'] [dir='rtl'] .hero h1 > span:last-child {
 
 /* "Start" sits on the page: no black ground under its steps and window, only the orange edge (in light mode the page's
    own colours come back, so the words stay readable). */
-html #install .board .board-main {
+html :is(#install, #get) .board .board-main {
   background: none;
   --ink-rgb: inherit;
   --ivory: inherit;
