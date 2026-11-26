@@ -20,7 +20,8 @@ paths:
   router gives) and use `@testing-library/user-event`.
 - Test what a visitor sees and what the server receives. A new form field gets a schema test and a form test; a new
   server-side rule gets a unit test; a new page gets an entry in `PAGES` (`e2e/fixtures/app.ts`), which puts it in the
-  SEO, axe, layout-shift and smoke loops.
+  SEO, axe, layout-shift and smoke loops. `src/routing-head.test.ts` walks the real route tree and fails for a public
+  route without title, description, canonical and alternates (a page not in `NAV` is the usual cause).
 - Playwright (`e2e/raw` = the server's raw answers, no browser; `e2e/ui` = Chromium, one project per language in
   `LOCALES` on desktop, phone and dark, built in `playwright.config.ts`, with axe) runs against the production build served on its own port by
   `scripts/e2e-server.mjs`: `npm run test:e2e`, or
@@ -33,8 +34,12 @@ paths:
 - The `perf-*` projects (layout shift: each language on desktop and phone) run last and alone; do not make them
   parallel.
 - Tests that read copy or the registry take them from `resources`, `LANGUAGES`, `SITE` or the `t` fixture, so renaming
-  the demo company or adding a language does not break them. Component tests that render a router (`site-header.test.tsx`)
-  build a tiny one; `src/routing.test.ts` loads the real route tree.
+  the demo company or adding a language does not break them. They never hard-code "exactly two languages", and the
+  "unsupported language" in a test is the fake code `zz`, never a real one such as `fr`: adding a language must need no
+  test edit (`npm run check` is the proof: adding `fr` to a copy of this starter leaves the whole suite green).
+  The same goes for pages: a test derives its list from `NAV`, the route tree or `PAGES`, not from a literal list.
+  Component tests that render a router (`site-header.test.tsx`) build a tiny one; `src/routing.test.ts` and
+  `src/routing-head.test.ts` load the real route tree (`src/test/load-route.ts`).
 - `npm run check:bundle` (after `npm run build`) starts the built server and proves `/ar`, `/ar/news` and `/ar/contact`
   stay under their gzip budgets and that react-hook-form and zod stay on `/ar/contact`. Raise a budget only on
   purpose, in the same commit, with the reason.

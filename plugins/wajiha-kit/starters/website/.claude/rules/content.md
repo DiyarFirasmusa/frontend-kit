@@ -4,6 +4,7 @@ paths:
   - 'src/features/website/news/**'
   - 'src/routes/$locale/news/**'
   - 'src/shared/lib/seo/site.ts'
+  - 'src/config/canonical-site.ts'
   - 'src/shared/server/security-headers.ts'
 ---
 
@@ -24,10 +25,14 @@ paths:
   rate-limits `/_serverFn/` for the contact form (10 requests a minute): a server function used for navigation needs
   its own limit there.
 - Slug policy: **lowercase ASCII kebab-case** (`plan-your-first-quarter`), the same in every language, stable once
-  published. The demo tests enforce it. The server only changes the case of the language prefix and the static page
-  segments of `NAV` (`canonicalRedirect`, `PAGE_SEGMENTS`) and the hex of percent-escapes; a slug segment is never
-  lowercased or decoded, and `canonicalUrl` / `normalizePath` keep its case and encode non-ASCII letters with
-  uppercase hex. So a CMS whose slugs are mixed case or Arabic works if the lookup compares the slug exactly as
-  written (`/en/news/Q4-Plan` is looked up as `Q4-Plan`; `/en/news/q4-plan` is a different, missing page).
+  published. The demo tests enforce it. The stored spelling is the canonical one: `canonicalUrl`, the sitemap and the
+  redirects all print it (non-ASCII letters encoded with uppercase hex). The server answers a URL in a different
+  spelling in one of two ways, never a chain: when the page exists (`resolveArticleSlug`, case-insensitive, decoded)
+  it is **one 301** to the stored spelling (`/EN/NEWS/PLAN-YOUR-FIRST-QUARTER/` goes straight to
+  `/en/news/plan-your-first-quarter`); when no article has the slug it is a **direct 404** with no redirect in front
+  of it. `getArticle` itself matches the slug exactly. A CMS with mixed-case or Arabic slugs works the same: make
+  `resolveArticleSlug` return the stored spelling (an exact match wins over a case-insensitive one) and answer it
+  from a cache, because it runs once per article URL request. A new kind of slug page needs one line in
+  `src/config/canonical-site.ts` (`routing-head.test.ts` fails without it).
 - Every article has a title, summary, cover alt and paragraphs in every language (`LOCALES`): the types make a missing
   language a compile error. Paragraphs of one article are unique (they are React keys).

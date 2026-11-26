@@ -36,10 +36,16 @@ paths:
 - Add a language, one registry: (1) add the code to `LOCALES` and an entry to `LANGUAGES` (label, `dir`, `hreflang`,
   `ogLocale`, `dateTag`) in `languages.ts`; (2) `npm run typecheck` now lists what is left: `SITE.names`
   (`site.config.ts`), `PRELOAD_FONTS` (`src/shared/style/fonts.ts`), each article's `text` and `bodies/<slug>.ts`;
-  (3) add `<code>.json` beside every `ar.json` (`npm run i18n:validate` names the missing ones; it also reads `LOCALES`);
-  (4) `npm run test` and `npm run test:e2e` already cover it: the switcher, sitemap, hreflang, validator and the
-  Playwright projects are built from `LOCALES`. Check `deploy/` and `public/` for anything language-specific (`public/site.webmanifest` starts at the
-  default language). Arabic plural forms: counted nouns need all six; another language needs its own forms.
+  (3) add `<code>.json` beside every `ar.json`, in every `locales/` folder (`npm run i18n:validate` names the missing
+  ones; it also reads `LOCALES`); (4) run `npm run check` and `npm run test:e2e`: they need NO test edit, because the
+  tests read `LOCALES` and `LANGUAGES` (the switcher, sitemap, hreflang, validator, fixtures and the Playwright
+  projects are all built from them) and use the fake code `zz` for "an unsupported language". A test that goes red
+  after a new language is hard-coding the old list: make it read `LOCALES`, never delete the assertion, and never use
+  a real language code (`fr`, `de`) as the unsupported one. Read `deploy/` and `public/` for anything
+  language-specific (`public/site.webmanifest` carries the default language's name; a test ties it to `SITE`); you edit
+  `public/`, not `deploy/`. Arabic plural forms: counted nouns need all six; another language needs its own forms.
+  Cost: every language's text is bundled into the entry script (about 0.3 to 1.3 KB gzip each; see "الأداء" in
+  `STRUCTURE.md` for the budget headroom).
 - RTL: logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `border-s`, `rounded-s`).
   A pointing icon carries `icon-directional` (mirrored in RTL) or `rotate-180`. Latin text and numbers inside Arabic
   need `dir="ltr"` only where the order matters (phone, codes). `npm run check:css` fails on physical directions; a

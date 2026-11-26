@@ -2,6 +2,8 @@
 paths:
   - 'src/shared/style/**'
   - 'src/shared/components/**'
+  - 'src/features/**/*.tsx'
+  - 'public/site.webmanifest'
   - '**/*.css'
 ---
 
@@ -17,7 +19,9 @@ paths:
 - Changing a colour: edit its `light-dark(light, dark)` pair in `tokens.css` (one palette, no second copy of the dark
   values: `color-scheme: light dark` follows the system and `data-theme` forces a side). If it is `--primary` (light) or
   `--bg` (dark), update `themeColor` in `src/config/site.config.ts` (`site.config.test.ts` fails when they drift), and
-  keep text contrast at AA (4.5:1): `e2e/ui/a11y.spec.ts` runs axe in light and dark.
+  keep text contrast at AA (4.5:1): `e2e/ui/a11y.spec.ts` runs axe in light and dark. `public/site.webmanifest` repeats
+  both colours (`theme_color` is `SITE.themeColor.light`, `background_color` is `--bg` in light): `site.config.test.ts`
+  fails when they drift.
 - A coloured block that holds buttons or links uses the `surface-primary` utility, not `bg-primary`: it also sets
   `--focus`, so the focus ring stays visible inside it.
 - Buttons and cards: the class constants in `src/shared/components/button-styles.ts` (`buttonPrimary`,

@@ -21,7 +21,8 @@ Rules live in `.claude/rules/` and load by path: `routing-seo`, `i18n-rtl`, `con
 - Logical CSS only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`): no `ml-`, `mr-`, `left`, `right`.
 - Colours and fonts come from `src/shared/style/tokens.css` utilities (`bg-surface`, `text-muted`, `text-primary`).
   No hex, no inline `style=`. A block filled with the brand colour uses `surface-primary`, not `bg-primary`.
-- No `<title>` or `<meta>` in components: every page declares them in `head()` through `seo()`.
+- No `<title>` or `<meta>` in components: every page declares them in `head()` through `seo()`. The one exception is
+  `ThemeColorMeta` in the root document (the router keeps one meta per name, so two `theme-color` tags cannot go in `head()`).
 - Images go through `Picture` (width, height and alt are required). An article or page that is missing throws
   `notFound()` (a real 404), never a "not found" text with a 200.
 - The CSP is strict (`style-src 'self'`, no inline script without the request nonce, no eval): no library that injects
@@ -37,14 +38,15 @@ Rules live in `.claude/rules/` and load by path: `routing-seo`, `i18n-rtl`, `con
   `LOCALES` / `LANGUAGES` (`src/shared/lib/i18n/languages.ts`). `params.locale` is already a `Locale`: no `toLocale`.
 - Article text is read only through `src/content/articles.ts` (async, per language), never imported by a page.
 - A submit is single-flight (`createSingleFlight`) and handles loading, error and success.
-- Never edit: `src/routeTree.gen.ts` (generated), `.env*`, `.github/`, `deploy/`.
+- Never edit: `src/routeTree.gen.ts` (generated: `npm run routes`), `.env*`, `.github/`, `deploy/` (read it, do not change it).
 - Ask before every commit and push. Conventional commits (commitlint). One branch per task.
 
 ## Commands
 
 ```text
 npm run setup:env         # once: copies .env.example to .env.local (build and dev read it)
-npm run dev               # http://localhost:5190 (fixed port: strictPort)
+npm run dev               # http://localhost:5190 (fixed port: strictPort). A server: it never exits, so do not run it in the foreground of a script
+npm run routes            # regenerates src/routeTree.gen.ts from src/routes and exits (1-2 s): run it after adding a route file
 npm run typecheck | lint:check | fmt (writes) | fmt:check | i18n:validate | check:env | check:css | check:tooling | test
 npm run check             # all of the above in one run
 VITE_SITE_URL=https://example.com npm run build   # then: npm run check:bundle (page size budget, form libs only on /contact)
@@ -53,8 +55,8 @@ npm run check:full        # check + build + check:bundle + test:e2e
 ```
 
 One unit file: `npx vitest run path/to/file.test.ts`. One e2e project: `npx playwright test --project=en-desktop`;
-`E2E_SKIP_BUILD=1` reuses the last build. After adding a route file run `npm run dev` or `npm run build` once: it
-regenerates `src/routeTree.gen.ts`. After renaming or copying files run `npm run fmt`.
+`E2E_SKIP_BUILD=1` reuses the last build. After adding a route file run `npm run routes` (it exits; `npm run dev` would
+not). After adding, renaming or copying files run `npm run fmt`.
 
 ## Folder map
 
@@ -70,7 +72,8 @@ src/features/website/<page>/   index.tsx, locales/<language>.json, use-<page>-pa
   contact/{components,hooks,server,validations}   news/pages/article/ (the head and page of one article)
 src/content/           the CMS seam: articles.ts (async API), articles.data.ts + bodies/<slug>.ts (demo data), types.ts
 src/features/fallback/  not-found and route-error pages
-src/config/            site.config.ts (name, email, phone, share image) and nav.config.ts (menu, footer, sitemap)
+src/config/            site.config.ts (name, email, phone, share image), nav.config.ts (menu, footer, sitemap) and
+                       canonical-site.ts (the pages and slug routes the server may redirect to)
 src/shared/            components/ (header, footer, Picture, ArticleCard), env/, lib/i18n (registry, resources, key
                        types), lib/seo (seo, pageHead), lib/zod.ts, server/ (security headers, env check, "/" redirect),
                        style/ (tokens, fonts), utils/ (theme, dates), locales/
@@ -81,19 +84,38 @@ scripts/               checks (env, css, i18n, tooling, bundle) and the e2e serv
 
 ## Add a page
 
-`src/features/website/<page>/` with `index.tsx` and `locales/<language>.json` for every language (loaded by a glob:
-no registration; the validator checks them); add `import type x from '@/features/website/<page>/locales/<default>.json'`
-and `& typeof x` in `src/shared/lib/i18n/i18next.d.ts` (the typed keys; the validator fails if you forget);
-add `src/routes/$locale/<page>.tsx` (copy `about.tsx`: its head is `pageHead(params.locale, '/$locale/<page>')`); run
-`npm run dev` once; add one `navItem(...)` in `src/config/nav.config.ts` (menu, footer, sitemap and head: `labelKey`,
-`metaTitleKey`, `metaDescriptionKey`) with the `nav.<page>` key in `src/shared/locales/`; add the page to `PAGES` in
-`e2e/fixtures/app.ts`. Then `npm run check` and `npm run test:e2e`.
+Every file an added page touches, in order (nothing else: the tests read NAV, the route tree and `PAGES`):
+
+1. `src/features/website/<page>/index.tsx` and `locales/<language>.json` for every language (loaded by a glob: no
+   registration; the validator checks them).
+2. `src/shared/lib/i18n/i18next.d.ts`: `import type x from '@/features/website/<page>/locales/<default>.json'` and
+   `& typeof x` (the typed keys; the validator fails if you forget).
+3. `src/routes/$locale/<page>.tsx`: copy `about.tsx`; its head is `pageHead(params.locale, '/$locale/<page>')`.
+4. `npm run routes` (regenerates `src/routeTree.gen.ts` and exits), then `npm run fmt`.
+5. `src/config/nav.config.ts`: one `navItem(...)` (menu, footer, sitemap and head: `labelKey`, `metaTitleKey`,
+   `metaDescriptionKey`), and the `nav.<page>` key in `src/shared/locales/<language>.json`. Without it the page
+   would ship with no title, description or canonical, so `npm run typecheck` fails (the error names the route) and
+   `src/routing-head.test.ts` fails too.
+6. `e2e/fixtures/app.ts`: add the page to `PAGES` (SEO, axe, layout-shift and smoke loops).
+
+A page with a slug (`/$locale/<parent>/$slug`, like an article) is not in NAV: its head is its own `*-head.ts`, its
+sitemap entries come from `src/content/sitemap-entries.ts`, and it needs one line in `src/config/canonical-site.ts`
+(`slugRoutes`) so a link in another case is redirected to the stored spelling; `routing-head.test.ts` fails
+without it, and its `SAMPLE_PARAMS` needs a sample for a new parameter name.
+Then `npm run check` and `npm run test:e2e`.
 
 ## Add a language
 
-One registry, `src/shared/lib/i18n/languages.ts`; see "Add a language" in `.claude/rules/i18n-rtl.md` for the steps. In
-short: add the code to `LOCALES` and an entry to `LANGUAGES`, run `npm run typecheck` (it lists every place that needs
-the new code), add a `<code>.json` beside every `locales/ar.json` (`npm run i18n:validate` lists the missing ones).
+One registry, `src/shared/lib/i18n/languages.ts`. Every file an added language touches (the full steps are in
+`.claude/rules/i18n-rtl.md`); no test file is on this list, because tests are built from `LOCALES`:
+
+1. `languages.ts`: the code in `LOCALES` and an entry in `LANGUAGES`. Then `npm run typecheck` lists the rest:
+2. `src/config/site.config.ts` (`SITE.names`), `src/shared/style/fonts.ts` (`PRELOAD_FONTS`),
+   `src/content/articles.data.ts` (each article's `text`) and each `src/content/bodies/<slug>.ts`.
+3. `<code>.json` beside every `locales/ar.json`, in every folder (`npm run i18n:validate` lists the missing ones).
+4. `npm run check` (add `npm run test:e2e`): green with no edit to a test. A test that fails after a new language
+   was hard-coding the old list: fix the test to read `LOCALES`, never delete the assertion. Tests use `zz`, not a
+   real code, for "an unsupported language", so no real language collides with them.
 
 ## Add a language string
 
