@@ -340,3 +340,29 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
     font-size: 1rem;
   }
 }
+
+/* THE HEADLINE'S SECOND LINE runs from orange (what you do) to turquoise (what you get), as one linear gradient across the
+   words themselves (never behind them). The line is as wide as its words, so the whole gradient shows in them. */
+.hero h1 > span:last-child {
+  width: fit-content;
+  background-image: linear-gradient(in oklab 90deg, var(--accent-bright) 36%, var(--dark-turq) 64%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+[dir='rtl'] .hero h1 > span:last-child {
+  background-image: linear-gradient(in oklab 270deg, var(--accent-bright) 36%, var(--dark-turq) 64%);
+}
+
+html[data-theme='light'] .hero h1 > span:last-child {
+  background-image: linear-gradient(in oklab 90deg, #b8461f 36%, var(--turq-deep) 64%);
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme='light'][dir='rtl'] .hero h1 > span:last-child,
+html[data-theme='light'] [dir='rtl'] .hero h1 > span:last-child {
+  background-image: linear-gradient(in oklab 270deg, #b8461f 36%, var(--turq-deep) 64%);
+}
