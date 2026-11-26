@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import type { AppOptions } from './e2e/fixtures/app';
+import { LANGUAGES, LOCALES } from './src/shared/lib/i18n/languages';
 
 // Runs against a production build served by the built server (SSR, head(), status codes, headers and
 // hydration only behave for real there), on its own port. Never attaches to a server you started by hand.
@@ -10,7 +11,38 @@ const BASE_URL = EXTERNAL_URL ?? `http://localhost:${PORT}`;
 const CI = Boolean(process.env.CI);
 
 const ui = { testMatch: /e2e\/ui\/.*\.spec\.ts/, testIgnore: /layout-shift/ };
-const UI_PROJECTS = ['ar-desktop', 'en-desktop', 'ar-phone', 'en-phone', 'ar-dark', 'en-dark'];
+
+// Projects are built from the language registry, so a new language in LOCALES gets its own without an edit
+// here. The language is the URL prefix; `locale` is the browser's own language.
+const DEVICES = [
+  { suffix: 'desktop', device: devices['Desktop Chrome'], dark: false },
+  { suffix: 'phone', device: devices['Pixel 7'], dark: false },
+  { suffix: 'dark', device: devices['Desktop Chrome'], dark: true },
+] as const;
+
+const UI_PROJECTS = LOCALES.flatMap((language) =>
+  DEVICES.map((entry) => ({
+    name: `${language}-${entry.suffix}`,
+    ...ui,
+    use: {
+      ...entry.device,
+      language,
+      locale: LANGUAGES[language].hreflang,
+      ...(entry.dark ? { colorScheme: 'dark' as const } : {}),
+    },
+  })),
+);
+
+// Performance budgets run last and alone: a busy machine delays font downloads and would measure the machine.
+const PERF_PROJECTS = LOCALES.flatMap((language) =>
+  DEVICES.filter((entry) => !entry.dark).map((entry) => ({
+    name: `perf-${language}-${entry.suffix}`,
+    testMatch: /e2e\/ui\/layout-shift\.spec\.ts/,
+    dependencies: ['raw', ...UI_PROJECTS.map((project) => project.name)],
+    fullyParallel: false,
+    use: { ...entry.device, language, locale: LANGUAGES[language].hreflang },
+  })),
+);
 
 export default defineConfig<AppOptions>({
   testDir: './e2e',
@@ -34,46 +66,8 @@ export default defineConfig<AppOptions>({
   projects: [
     // Language-free checks on the raw server response: no browser, no JavaScript, like a crawler.
     { name: 'raw', testMatch: /e2e\/raw\/.*\.spec\.ts/ },
-
-    // Language x device x theme. The language is the URL prefix, so each project visits its own language.
-    {
-      name: 'ar-desktop',
-      ...ui,
-      use: { ...devices['Desktop Chrome'], language: 'ar', locale: 'ar' },
-    },
-    {
-      name: 'en-desktop',
-      ...ui,
-      use: { ...devices['Desktop Chrome'], language: 'en', locale: 'en-US' },
-    },
-    { name: 'ar-phone', ...ui, use: { ...devices['Pixel 7'], language: 'ar', locale: 'ar' } },
-    { name: 'en-phone', ...ui, use: { ...devices['Pixel 7'], language: 'en', locale: 'en-US' } },
-    {
-      name: 'ar-dark',
-      ...ui,
-      use: { ...devices['Desktop Chrome'], language: 'ar', locale: 'ar', colorScheme: 'dark' },
-    },
-    {
-      name: 'en-dark',
-      ...ui,
-      use: { ...devices['Desktop Chrome'], language: 'en', locale: 'en-US', colorScheme: 'dark' },
-    },
-
-    // Performance budgets run last and alone: a busy machine delays font downloads and would measure the machine.
-    {
-      name: 'perf-ar-phone',
-      testMatch: /e2e\/ui\/layout-shift\.spec\.ts/,
-      dependencies: ['raw', ...UI_PROJECTS],
-      fullyParallel: false,
-      use: { ...devices['Pixel 7'], language: 'ar', locale: 'ar' },
-    },
-    {
-      name: 'perf-en-desktop',
-      testMatch: /e2e\/ui\/layout-shift\.spec\.ts/,
-      dependencies: ['raw', ...UI_PROJECTS],
-      fullyParallel: false,
-      use: { ...devices['Desktop Chrome'], language: 'en', locale: 'en-US' },
-    },
+    ...UI_PROJECTS,
+    ...PERF_PROJECTS,
   ],
   webServer: EXTERNAL_URL
     ? undefined

@@ -1,3 +1,4 @@
+import { LANGUAGES, otherLocales } from '../../src/shared/lib/i18n/languages';
 import { ARTICLE, expect, test } from '../fixtures/app';
 
 test.describe('navigation', () => {
@@ -154,20 +155,16 @@ test.describe('language switch', () => {
     open,
     language,
     context,
-    t,
     isMobile,
   }) => {
     test.skip(isMobile, 'covered on desktop');
-    const other = language === 'ar' ? 'en' : 'ar';
+    const [other = language] = otherLocales(language);
     await open(`/news/${ARTICLE.slug}`);
-    await page
-      .getByRole('banner')
-      .getByRole('link', { name: t('common.switchLanguage') })
-      .click();
+    await page.getByRole('banner').getByRole('link', { name: LANGUAGES[other].label }).click();
 
     await expect(page).toHaveURL(new RegExp(`/${other}/news/${ARTICLE.slug}$`));
     await expect(page.locator('html')).toHaveAttribute('lang', other);
-    await expect(page.locator('html')).toHaveAttribute('dir', other === 'ar' ? 'rtl' : 'ltr');
+    await expect(page.locator('html')).toHaveAttribute('dir', LANGUAGES[other].dir);
 
     const cookies = await context.cookies();
     expect(cookies.find((cookie) => cookie.name === 'lang')?.value).toBe(other);

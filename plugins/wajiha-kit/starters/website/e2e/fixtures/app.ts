@@ -2,9 +2,10 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, test as base, type Response } from '@playwright/test';
-import { ARTICLES } from '../../src/features/website/news/data/articles';
+import { ARTICLE_META } from '../../src/content/articles.data';
+import type { Locale } from '../../src/shared/lib/i18n/languages';
 
-export type Language = 'ar' | 'en';
+export type Language = Locale;
 
 export type AppOptions = {
   /** The language this project visits (the URL prefix). */
@@ -106,11 +107,9 @@ export const test = base.extend<AppOptions & AppFixtures>({
 
 export { expect };
 
-const firstArticle = ARTICLES[0];
+const firstArticle = ARTICLE_META[0];
 if (firstArticle === undefined) {
-  throw new Error(
-    'the e2e tests need at least one article in src/features/website/news/data/articles.ts',
-  );
+  throw new Error('the e2e tests need at least one article in src/content/articles.data.ts');
 }
 
 /** The first article in the data, so replacing the demo articles does not break the tests. */

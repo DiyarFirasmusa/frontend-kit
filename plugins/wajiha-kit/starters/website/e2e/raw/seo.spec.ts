@@ -1,6 +1,7 @@
 // What a crawler or a chat app receives: the server HTML, with no JavaScript. A page that only looks right
 // after hydration would pass a browser test and still fail here.
 import { expect, test } from '@playwright/test';
+import { DEFAULT_LOCALE, LANGUAGES, LOCALES } from '../../src/shared/lib/i18n/languages';
 import { ARTICLE, PAGES } from '../fixtures/app';
 import {
   alternates,
@@ -13,13 +14,13 @@ import {
   titles,
 } from '../fixtures/html';
 
-const LANGUAGES = [
-  { language: 'ar', dir: 'rtl', hreflang: 'ar-IQ', ogLocale: 'ar_IQ' },
-  { language: 'en', dir: 'ltr', hreflang: 'en', ogLocale: 'en_US' },
-] as const;
-
-const cases = LANGUAGES.flatMap((lang) =>
-  PAGES.map((page) => ({ ...lang, page: page.name, path: `/${lang.language}${page.path}` })),
+const cases = LOCALES.flatMap((language) =>
+  PAGES.map((page) => ({
+    ...LANGUAGES[language],
+    language,
+    page: page.name,
+    path: `/${language}${page.path}`,
+  })),
 );
 
 test.describe('server HTML of every public page', () => {
@@ -48,9 +49,13 @@ test.describe('server HTML of every public page', () => {
 
       // Both languages and x-default; the page lists itself.
       const alt = alternates(html);
-      expect(Object.keys(alt).toSorted()).toEqual(['ar-IQ', 'en', 'x-default']);
+      expect(Object.keys(alt).toSorted()).toEqual(
+        [...LOCALES.map((locale) => LANGUAGES[locale].hreflang), 'x-default'].toSorted(),
+      );
       expect(alt[item.hreflang]).toBe(`${baseURL}${item.path}`);
-      expect(alt['x-default']).toBe(`${baseURL}${item.path.replace(/^\/(ar|en)/, '/ar')}`);
+      expect(alt['x-default']).toBe(
+        `${baseURL}${item.path.replace(`/${item.language}`, `/${DEFAULT_LOCALE}`)}`,
+      );
 
       // Share tags.
       expect(metaContent(html, 'property', 'og:title')).toBe(titles(html)[0]);
@@ -75,7 +80,7 @@ test.describe('server HTML of every public page', () => {
 
 test.describe('across pages', () => {
   test('titles are unique within a language', async ({ request }) => {
-    for (const language of ['ar', 'en']) {
+    for (const language of LOCALES) {
       const seen = new Set<string>();
       for (const page of PAGES) {
         const html = await (await request.get(`/${language}${page.path}`)).text();
@@ -90,12 +95,17 @@ test.describe('across pages', () => {
 
   test('a page and its other-language version point at each other', async ({ request }) => {
     for (const page of PAGES) {
-      const arHtml = await (await request.get(`/ar${page.path}`)).text();
-      const enHtml = await (await request.get(`/en${page.path}`)).text();
-      const arAlt = alternates(arHtml);
-      const enAlt = alternates(enHtml);
-      expect(arAlt['en']).toBe(canonical(enHtml));
-      expect(enAlt['ar-IQ']).toBe(canonical(arHtml));
+      const htmls = await Promise.all(
+        LOCALES.map(async (locale) => (await request.get(`/${locale}${page.path}`)).text()),
+      );
+      for (const [index, locale] of LOCALES.entries()) {
+        const own = alternates(htmls[index] ?? '');
+        for (const [otherIndex, other] of LOCALES.entries()) {
+          expect(own[LANGUAGES[other].hreflang], `${locale} to ${other} on ${page.path}`).toBe(
+            canonical(htmls[otherIndex] ?? ''),
+          );
+        }
+      }
     }
   });
 
@@ -131,7 +141,9 @@ test.describe('across pages', () => {
     );
     expect(links.size).toBeGreaterThan(5);
     for (const href of links) {
-      expect(href, 'internal links are language-prefixed').toMatch(/^\/(ar|en)(\/|$)/);
+      expect(href, 'internal links are language-prefixed').toMatch(
+        new RegExp(`^/(${LOCALES.join('|')})(/|$)`),
+      );
       const response = await request.get(href, { maxRedirects: 0 });
       expect(response.status(), href).toBe(200);
     }

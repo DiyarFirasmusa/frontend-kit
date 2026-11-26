@@ -33,13 +33,28 @@ test.describe('redirects', () => {
     for (const [from, to] of [
       ['/AR/About', '/ar/about'],
       ['/en/', '/en'],
-      [`/en/news/${ARTICLE.slug.toUpperCase()}/`, `/en/news/${ARTICLE.slug}`],
+      ['/EN/NEWS/', '/en/news'],
+      [`/en/News/${ARTICLE.slug}/`, `/en/news/${ARTICLE.slug}`],
+      ['/ar/news/%d9%85%d9%82%d8%a7%d9%84', '/ar/news/%D9%85%D9%82%D8%A7%D9%84'],
       ['/en/news/?page=2', '/en/news?page=2'],
       ['/AR//About//', '/ar/about'],
     ] as const) {
       const response = await request.get(from, { maxRedirects: 0 });
       expect(response.status(), from).toBe(301);
       expect(response.headers()['location'], from).toBe(to);
+    }
+  });
+
+  test('a slug keeps its case: it is never rewritten, so a mixed-case or encoded slug is looked up as written', async ({
+    request,
+  }) => {
+    for (const path of [
+      `/en/news/${ARTICLE.slug.toUpperCase()}`,
+      '/ar/news/%D9%85%D9%82%D8%A7%D9%84',
+      '/ar/news/مقال',
+    ]) {
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status(), path).toBe(404);
     }
   });
 
@@ -56,6 +71,8 @@ test.describe('not found', () => {
   for (const path of [
     '/zz',
     '/zz/about',
+    '/fr/about',
+    '/en/nothing/extra',
     '/ar/does-not-exist',
     '/en/news/no-such-article',
     '/ar/news/x/y',

@@ -17,7 +17,8 @@ paths:
   (`server/deliver-contact.server.ts`, the webhook). Components never call `fetch`.
 - The schema `validations/contact-schema.ts` is shared by the browser and the server: the browser check is for the
   visitor, the server check is the one that counts. Import `z` from `@/shared/lib/zod` (jitless: no eval under the
-  CSP). Error messages are locale keys, translated where they are shown.
+  CSP). Error messages are typed locale keys (`CONTACT_MESSAGES`; add a new one there too), translated where they are
+  shown.
 - The server function validates again and answers a plain `{ ok: false }` for bad input, never the details. It is
   same-origin only (CSRF middleware in `src/start.ts`) and capped at 16 KB (`MAX_SERVER_FN_BODY_BYTES`).
 - The `<form>` has `method="post"` and its button stays disabled until hydration (`useHydrated`): an early submit must

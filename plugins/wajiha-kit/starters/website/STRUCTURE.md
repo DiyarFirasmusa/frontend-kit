@@ -73,7 +73,7 @@ npm run check:full       # check ثم build ثم check:bundle ثم test:e2e
 | اللغة | TypeScript صارم |
 | التصميم | Tailwind CSS 4، والألوان والخطوط في ملف واحد `src/shared/style/tokens.css` |
 | الترجمة | i18next + react-i18next |
-| حالة المتصفح | Zustand (الثيم وقائمة الموبايل فقط) |
+| حالة المتصفح | لا مكتبة حالة: الثيم هو الخاصية `data-theme` على `<html>`، وقائمة الموبايل `useState` |
 | الفورم | react-hook-form + zod (نفس التحقق في المتصفح وفي السيرفر). استورد `z` من `src/shared/lib/zod.ts` وليس من `'zod'` |
 | الفحوص | oxlint، oxfmt، Vitest، Playwright + axe |
 
@@ -87,10 +87,12 @@ website/
 │   ├── routes/                  → ملف لكل صفحة، رفيع: head() والمكوّن فقط
 │   │   ├── __root.tsx           → <html lang dir>، الستايل، الخطوط
 │   │   ├── index.tsx            → "/" يحوّل إلى اللغة
-│   │   ├── $locale.tsx          → يتحقق من اللغة ويرسم الهيدر والفوتر
+│   │   ├── $locale.tsx          → اللغة معرّفة بنوع `Locale` (لغة غير معروفة لا تطابق المسار) ويرسم الهيدر والفوتر
+│   │   ├── $.tsx  $locale/$.tsx → أي رابط لا تطابقه صفحة يعطي 404 حقيقياً بعنوان و`noindex`
 │   │   └── $locale/             → index، about، services، contact، news/index، news/$slug
 │   ├── routeTree.gen.ts         → يتولّد وحده من routes/ عند dev وbuild. لا تعدّله
-│   ├── features/website/<اسم>/ → كل صفحة في مجلدها: index.tsx، use-<اسم>-page.ts، <اسم>-head.ts، locales/
+│   ├── features/website/<اسم>/ → كل صفحة في مجلدها: index.tsx، locales/<لغة>.json (و`use-<اسم>-page.ts` فقط للصفحة التي تحمّل بيانات)
+│   ├── content/                 → المحتوى خلف واجهة واحدة `articles.ts` (async، لكل لغة): البيانات التجريبية في `articles.data.ts` و`bodies/<slug>.ts`. هنا تستبدلها بـCMS
 │   ├── features/fallback/       → صفحة 404 وصفحة الخطأ
 │   ├── config/
 │   │   ├── site.config.ts       → اسم الشركة، البريد، الهاتف، صورة المشاركة
@@ -98,14 +100,13 @@ website/
 │   ├── shared/
 │   │   ├── components/          → الهيدر، الفوتر، الأزرار، بطاقة المقال، Picture، ...
 │   │   ├── env/                 → schema.ts (فحص كل المتغيرات) و public-env.ts (ما يصل للمتصفح)
-│   │   ├── lib/i18n/            → languages.ts (اللغات) و resources.ts (ملفات الترجمة)
-│   │   ├── lib/seo/             → seo() و sitemap و JSON-LD
+│   │   ├── lib/i18n/            → languages.ts (سجل اللغات الوحيد) و resources.ts (يحمّل كل ملفات الترجمة بـglob) و i18next.d.ts (يكتب مفاتيح `t()`)
+│   │   ├── lib/seo/             → seo() و pageHead() و sitemap و JSON-LD
 │   │   ├── lib/zod.ts           → zod مضبوط على `jitless` (يمنع eval الذي يرفضه CSP)
 │   │   ├── server/              → هيدرز الأمان، متغيرات السيرفر، فحص المتغيرات عند التشغيل
 │   │   ├── locales/             → النصوص العامة (الهيدر، الفوتر، الأخطاء)
-│   │   ├── store/               → الثيم وقائمة الموبايل
-│   │   ├── style/               → tokens.css و styles.css
-│   │   └── utils/               → دوال صغيرة
+│   │   ├── style/               → tokens.css (لوحة ألوان واحدة بـ`light-dark()`) و styles.css و fonts.ts
+│   │   └── utils/               → دوال صغيرة، ومنها theme.ts (تبديل الثيم)
 │   ├── router.tsx               → إعداد الراوتر
 │   └── start.ts                 → ما يمر عليه كل طلب: حماية CSRF، حد الحجم، التحويلات، هيدرز الأمان
 ├── e2e/                         → اختبارات المتصفح: raw/ (رد السيرفر الخام) و ui/ (الصفحات في متصفح)
@@ -129,7 +130,7 @@ website/
 8. **أسماء الملفات kebab-case**، وكل ملف أقل من 400 سطر، وبدون `any`.
 9. **الاختبار بجانب الكود**: `x.ts` واختباره `x.test.ts` في نفس المجلد. اختبار يحتاج المتصفح (`window` أو التخزين) اسمه `x.dom.test.ts`.
 10. **zod من `src/shared/lib/zod.ts` فقط.** الاستيراد المباشر من `'zod'` يفشل في `npm run lint:check`.
-11. **مكوّن المشاركة يأخذ قيماً بسيطة**: بطاقة المقال تستقبل `articleCard(article, locale)` (في `news/data/articles.ts`)، فلا تنسخ تحويل المقال إلى بطاقة في مكان آخر.
+11. **مكوّن المشاركة يأخذ قيماً بسيطة**: بطاقة المقال تستقبل `ArticleCardData` (من `listArticles(locale)` في `src/content/articles.ts`)، فلا تنسخ تحويل المقال إلى بطاقة في مكان آخر.
 
 ## كيف تضيف صفحة
 
@@ -137,18 +138,39 @@ website/
 
 1. أنشئ المجلد `src/features/website/faq/` وفيه:
    - `index.tsx`: الصفحة (JSX فقط).
-   - `faq-head.ts`: يستدعي `seo()` بالعنوان والوصف (انسخ `about/about-head.ts` وعدّله).
-   - `locales/ar.json` و `locales/en.json`: نصوص الصفحة تحت مجموعة واحدة، مثل `{ "faq": { "title": "..." } }`.
-2. سجّل ملفي اللغة في `src/shared/lib/i18n/resources.ts` (سطر import لكل لغة، وأضفهما إلى `merge`).
-3. أنشئ ملف الراوت `src/routes/$locale/faq.tsx` (انسخ `about.tsx` وغيّر الاسم).
+   - `locales/ar.json` و `locales/en.json` (ملف لكل لغة في `LOCALES`): نصوص الصفحة تحت مجموعة واحدة، مثل `{ "faq": { "title": "...", "metaTitle": "...", "metaDescription": "..." } }`. لا حاجة لتسجيلهما: `resources.ts` يحمّل كل `locales/*.json` وحده، والفحص يفشل إذا نقص ملف لغة.
+2. أضف سطر `import type` وحداً وعبارة `& typeof` في `src/shared/lib/i18n/i18next.d.ts` ليصير الخطأ في اسم المفتاح خطأ كتابة وقت الفحص (`npm run i18n:validate` يفشل إذا نسيته).
+3. أنشئ ملف الراوت `src/routes/$locale/faq.tsx` (انسخ `about.tsx` وغيّر الاسم): العنوان والوصف والفتات من `pageHead(params.locale, '/$locale/faq')`، ولا يوجد ملف `*-head.ts`.
 4. شغّل `npm run dev` مرة: يُحدَّث `routeTree.gen.ts` وحده بالصفحة الجديدة.
 5. لتظهر في القائمة والفوتر والـsitemap أضف سطراً واحداً في `src/config/nav.config.ts`:
    ```ts
-   navItem({ to: '/$locale/faq', labelKey: 'nav.faq', changefreq: 'monthly', priority: 0.5 }),
+   navItem({
+     to: '/$locale/faq',
+     labelKey: 'nav.faq',
+     metaTitleKey: 'faq.metaTitle',
+     metaDescriptionKey: 'faq.metaDescription',
+     changefreq: 'monthly',
+     priority: 0.5,
+   }),
    ```
    وأضف المفتاح `nav.faq` في `src/shared/locales/ar.json` و `en.json`. الحقل `to` يُفحص مع الصفحات الموجودة فعلاً، فالخطأ في الاسم يظهر في `npm run typecheck`.
 6. أضف الصفحة إلى `PAGES` في `e2e/fixtures/app.ts`: تدخل فوراً في فحوص SEO وaxe والشكل.
 7. شغّل `npm run check` ثم `npm run test:e2e`.
+
+## كيف تضيف لغة
+
+سجل اللغات في مكان واحد: `src/shared/lib/i18n/languages.ts`.
+
+1. أضف الرمز إلى `LOCALES` وإدخالاً في `LANGUAGES` (الاسم بلغته، الاتجاه، hreflang، ogLocale، وقالب التاريخ `dateTag`).
+2. شغّل `npm run typecheck`: يعدّد لك ما بقي (اسم الشركة في `site.config.ts`، الخطوط في `src/shared/style/fonts.ts`، ونص كل مقال وجسمه).
+3. أضف `<الرمز>.json` بجانب كل `ar.json` (`npm run i18n:validate` يسمّي الناقص).
+4. زر اللغة وhreflang وsitemap ومشاريع Playwright والفحص كلها تُبنى من `LOCALES`، فلا تعدّلها. راجع `deploy/` و`public/site.webmanifest` إن كان فيهما ما يخص لغة بعينها.
+
+## كيف تضيف مقالاً أو تربط CMS
+
+- المقالات تُقرأ فقط من `src/content/articles.ts` (`listArticles` و`getArticle` و`listArticleEntries`، كلها async وتأخذ اللغة). مُحمِّل المسار يعيد المقال نفسه (وليس رابطه فقط)، والعنوان والصفحة يقرآن نفس البيانات.
+- مقال جديد: إدخال في `articles.data.ts` وملف بنفس الاسم في `bodies/` (الاختبار يفشل إذا نقص أو زاد ملف). الأجسام تُحمَّل عند فتح المقال فقط فلا تثقل الملف الأول الذي تحمّله كل صفحة.
+- لـCMS استبدل الدوال الثلاث وأبقِ الأنواع (`types.ts`). الروابط (slugs): أحرف إنكليزية صغيرة بشرطات، وتُقارَن كما هي: لا يغيّر السيرفر حالة الـslug (انظر `.claude/rules/content.md`).
 
 ## كيف تضيف نصاً (ترجمة)
 
@@ -207,7 +229,9 @@ website/
 | `ar-desktop` `en-desktop` | كل الصفحات، التنقل، الفورم، إمكانية الوصول (axe)، الثيم |
 | `ar-phone` `en-phone` | نفس الشيء على شاشة موبايل مع قائمة الموبايل |
 | `ar-dark` `en-dark` | نفس الشيء بالمظهر الداكن |
-| `perf-ar-phone` `perf-en-desktop` | أن الصفحة لا تقفز أثناء التحميل |
+| `perf-ar-phone` `perf-ar-desktop` `perf-en-phone` `perf-en-desktop` | أن الصفحة لا تقفز أثناء التحميل |
+
+المشاريع تُبنى في `playwright.config.ts` من `LOCALES`: لغة جديدة تحصل على مشاريعها وحدها.
 
 - اختبارات الواجهة تفشل إذا ظهر أي خطأ في الكونسول، أو خطأ غير ملتقط، أو مخالفة CSP.
 - اختبارات الوحدة مقسومة إلى مشروعين: `node` للدوال (`*.test.ts`) و`dom` للمكوّنات (`*.test.tsx` و`*.dom.test.ts`)، فلا تدفع الدوال البسيطة ثمن بيئة المتصفح.
@@ -218,14 +242,14 @@ website/
 ## العمل مع Claude Code
 
 - `CLAUDE.md` في جذر المشروع: ملخص قصير للمكدّس والقواعد الصارمة وخريطة المجلدات وخطوات إضافة صفحة ونص وحقل فورم.
-- `.claude/rules/`: ست قواعد قصيرة تُحمَّل حسب مسار الملف الذي يعمل عليه Claude: `routing-seo` و`i18n-rtl` و`styles-tokens` و`contact-form` و`security-headers` و`testing`.
+- `.claude/rules/`: سبع قواعد قصيرة تُحمَّل حسب مسار الملف الذي يعمل عليه Claude: `routing-seo` و`i18n-rtl` و`content` و`styles-tokens` و`contact-form` و`security-headers` و`testing`.
 - عند تغيير بنية المشروع (مجلد أو أمر أو قاعدة) حدّث `CLAUDE.md` والقاعدة المعنية مع هذا الدليل. `npm run check:tooling` يفشل إذا ذكرتَ فيها أمر `npm run` غير موجود.
 
 ## استبدال الشركة التجريبية بشركتك
 
 - `src/config/site.config.ts`: الاسم، البريد، الهاتف، لون الثيم.
 - ملفات `locales/*.json` (العامة وفي كل ميزة): كل النصوص.
-- `src/features/website/news/data/articles.ts`: المقالات (أو اربطها بـCMS).
+- `src/content/` (`articles.data.ts` و`bodies/`): المقالات، أو اربطها بـCMS من `articles.ts`.
 - `public/favicon.svg` و `public/images/` و `public/og-default.png` (أعد توليدها بـ`node scripts/generate-og-image.mjs` أو ضع صورتك 1200×630).
 - `public/site.webmanifest`: الاسم والاسم القصير.
 - `src/shared/style/tokens.css`: الألوان والخطوط (وغيّر `themeColor` في `site.config.ts` معها).

@@ -6,17 +6,18 @@ form, a server function that posts to a webhook. The long guide for people is `S
 the short version for you. The demo company is fictional: replace it, never invent a real name.
 
 Stack: React 19, TanStack Start + Router (file routes, Nitro server), TypeScript strict, Tailwind v4 with one token
-file, i18next (one instance per request, in the router context), react-hook-form + zod 4 (contact form only),
-Zustand (theme and phone menu only). Tests: Vitest + Testing Library, Playwright + axe. oxlint, oxfmt, husky,
-commitlint. Package manager: npm. Node 24+ (`.nvmrc`, `engines`, `engine-strict`).
+file, i18next (one instance per request, in the router context, typed keys), react-hook-form + zod 4 (contact form
+only). No state library: the theme is the `data-theme` attribute, the phone menu is `useState`. Tests: Vitest +
+Testing Library, Playwright + axe. oxlint, oxfmt, husky, commitlint. Package manager: npm. Node 24+ (`.nvmrc`, `engines`, `engine-strict`).
 No TanStack Query, axios, MSW or Base UI: the content is static and the form is one server function.
 
-Rules live in `.claude/rules/` and load by path: `routing-seo`, `i18n-rtl`, `styles-tokens`, `contact-form`,
-`security-headers`, `testing`.
+Rules live in `.claude/rules/` and load by path: `routing-seo`, `i18n-rtl`, `content`, `styles-tokens`,
+`contact-form`, `security-headers`, `testing`.
 
 ## Hard rules
 
-- No user-facing string in code: `t('group.key')`, both `ar` and `en` in the same change.
+- No user-facing string in code: `t('group.key')`, every language (`LOCALES`) in the same change. Keys are typed: a
+  typo fails `npm run typecheck`.
 - Logical CSS only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`): no `ml-`, `mr-`, `left`, `right`.
 - Colours and fonts come from `src/shared/style/tokens.css` utilities (`bg-surface`, `text-muted`, `text-primary`).
   No hex, no inline `style=`. A block filled with the brand colour uses `surface-primary`, not `bg-primary`.
@@ -32,6 +33,9 @@ Rules live in `.claude/rules/` and load by path: `routing-seo`, `i18n-rtl`, `sty
 - No default import of `i18next`: use `useTranslation` (components) or `getFixedT` (outside React).
 - No module-level state shared between requests: the router, the i18n instance and the CSP nonce are per request.
 - No `any`, no `@ts-ignore`, no `!`, no `console.log`, files under 400 lines, kebab-case file names.
+- Nothing hardcodes `'ar'` or `'en'`: the language list, direction, hreflang, fonts and date format come from
+  `LOCALES` / `LANGUAGES` (`src/shared/lib/i18n/languages.ts`). `params.locale` is already a `Locale`: no `toLocale`.
+- Article text is read only through `src/content/articles.ts` (async, per language), never imported by a page.
 - A submit is single-flight (`createSingleFlight`) and handles loading, error and success.
 - Never edit: `src/routeTree.gen.ts` (generated), `.env*`, `.github/`, `deploy/`.
 - Ask before every commit and push. Conventional commits (commitlint). One branch per task.
@@ -57,16 +61,19 @@ regenerates `src/routeTree.gen.ts`. After renaming or copying files run `npm run
 ```text
 src/routes/            thin route files: path, head(), loader, the component import
   __root.tsx           <html lang dir>, CSS, fonts, theme init script, robots meta for failed pages
-  $locale.tsx          language check (else 404), i18n language, header + footer (LocaleLayout)
+  $locale.tsx          typed language param (`params.parse`: an unknown language does not match), header + footer
+  $.tsx  $locale/$.tsx splat routes: any unmatched URL is a real 404 (title and noindex come from its status)
   $locale/             index, about, services, contact, news/index, news/$slug
   index.tsx            "/" redirects to a language (cookie, Accept-Language, default)
   robots[.]txt.ts  sitemap[.]xml.ts
-src/features/website/<page>/   index.tsx, <page>-head.ts, use-<page>-page.ts, locales/{ar,en}.json
-  contact/{components,hooks,server,validations}   news/data/articles.ts + pages/article/
+src/features/website/<page>/   index.tsx, locales/<language>.json, use-<page>-page.ts only when the page loads data
+  contact/{components,hooks,server,validations}   news/pages/article/ (the head and page of one article)
+src/content/           the CMS seam: articles.ts (async API), articles.data.ts + bodies/<slug>.ts (demo data), types.ts
 src/features/fallback/  not-found and route-error pages
 src/config/            site.config.ts (name, email, phone, share image) and nav.config.ts (menu, footer, sitemap)
-src/shared/            components/ (header, footer, Picture, ArticleCard), env/, lib/i18n, lib/seo, lib/zod.ts,
-                       server/ (security headers, env check, "/" redirect), store/, style/, utils/, locales/
+src/shared/            components/ (header, footer, Picture, ArticleCard), env/, lib/i18n (registry, resources, key
+                       types), lib/seo (seo, pageHead), lib/zod.ts, server/ (security headers, env check, "/" redirect),
+                       style/ (tokens, fonts), utils/ (theme, dates), locales/
 src/start.ts           request middleware: body limit, CSRF, canonical redirect, security + cache headers
 src/test/              setup.ts, render.tsx      e2e/  raw/ (server answers)  ui/ (browser)  fixtures/
 scripts/               checks (env, css, i18n, tooling, bundle) and the e2e server
@@ -74,31 +81,40 @@ scripts/               checks (env, css, i18n, tooling, bundle) and the e2e serv
 
 ## Add a page
 
-`src/features/website/<page>/` with `index.tsx`, `<page>-head.ts` (copy `about/about-head.ts`) and
-`locales/{ar,en}.json`; import both locale files in `src/shared/lib/i18n/resources.ts` (one line each, plus the two
-`merge(...)` lists); add `src/routes/$locale/<page>.tsx` (copy `about.tsx`); run `npm run dev` once; for the menu,
-footer and sitemap add one `navItem(...)` line in `src/config/nav.config.ts` and a `nav.<page>` key in
-`src/shared/locales/{ar,en}.json`; add the page to `PAGES` in `e2e/fixtures/app.ts`. Then `npm run check` and
-`npm run test:e2e`.
+`src/features/website/<page>/` with `index.tsx` and `locales/<language>.json` for every language (loaded by a glob:
+no registration; the validator checks them); add `import type x from '@/features/website/<page>/locales/<default>.json'`
+and `& typeof x` in `src/shared/lib/i18n/i18next.d.ts` (the typed keys; the validator fails if you forget);
+add `src/routes/$locale/<page>.tsx` (copy `about.tsx`: its head is `pageHead(params.locale, '/$locale/<page>')`); run
+`npm run dev` once; add one `navItem(...)` in `src/config/nav.config.ts` (menu, footer, sitemap and head: `labelKey`,
+`metaTitleKey`, `metaDescriptionKey`) with the `nav.<page>` key in `src/shared/locales/`; add the page to `PAGES` in
+`e2e/fixtures/app.ts`. Then `npm run check` and `npm run test:e2e`.
+
+## Add a language
+
+One registry, `src/shared/lib/i18n/languages.ts`; see "Add a language" in `.claude/rules/i18n-rtl.md` for the steps. In
+short: add the code to `LOCALES` and an entry to `LANGUAGES`, run `npm run typecheck` (it lists every place that needs
+the new code), add a `<code>.json` beside every `locales/ar.json` (`npm run i18n:validate` lists the missing ones).
 
 ## Add a language string
 
-Page text: `src/features/website/<page>/locales/{ar,en}.json`. Text used everywhere (nav, footer, errors):
+Page text: `src/features/website/<page>/locales/<language>.json`. Text used everywhere (nav, footer, errors):
 `src/shared/locales/`. Same key, same `{{variables}}` in both files, shape `group.key`. Use `t('group.key')` with a
 literal key. `npm run i18n:validate` checks it.
 
 ## Add a contact form field
 
 `validations/contact-schema.ts` (schema and `EMPTY_CONTACT`), `components/contact-form.tsx` (label, input,
-`aria-invalid`, `aria-describedby`), the error and label keys in the feature's `locales/`,
+`aria-invalid`, `aria-describedby`), the error and label keys in the feature's `locales/` (a new error message
+also goes into `CONTACT_MESSAGES`, so the form can translate it with a typed key),
 `server/deliver-contact.server.ts` (the JSON posted to the webhook), and the tests next to them. Keep the honeypot
 `contactRef` and its odd name.
 
 ## Conventions
 
-- Every page: `head: ({ params }) => <page>Head(toLocale(params.locale))`. One `<h1>` per page; `<main id="main">`
-  comes from `LocaleLayout`. Pages and hooks take plain data (`articleCard(article, locale)`), cards and components
-  in `src/shared` take plain props and import no feature.
+- Every plain page: `head: ({ params }) => pageHead(params.locale, '/$locale/<page>')`. One `<h1>` per page;
+  `<main id="main">` comes from `LocaleLayout`. A page that reads content gets it from its route `loader`
+  (`getArticle(params.slug, params.locale)`), and head and component read the same `loaderData`. Cards and
+  components in `src/shared` take plain props and import no feature.
 - Tests sit next to the file. A test that needs the browser (`window`, storage) is named `*.dom.test.ts`.
 - Commit messages: `type(scope): subject`. Definition of done: `npm run check` (+ `npm run build`,
   `npm run check:bundle` and `npm run test:e2e` when a route, a header or the UI changed).

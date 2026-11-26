@@ -1,3 +1,4 @@
+import { LANGUAGES, otherLocales } from '../../src/shared/lib/i18n/languages';
 import { expect, NOT_FOUND_PATH, PAGES, test } from '../fixtures/app';
 
 test.describe('every page renders in the project language and fits the screen', () => {
@@ -7,7 +8,7 @@ test.describe('every page renders in the project language and fits the screen', 
 
       const html = browser.locator('html');
       await expect(html).toHaveAttribute('lang', language);
-      await expect(html).toHaveAttribute('dir', language === 'ar' ? 'rtl' : 'ltr');
+      await expect(html).toHaveAttribute('dir', LANGUAGES[language].dir);
       await expect(browser.getByRole('heading', { level: 1 })).toHaveCount(1);
       await expect(browser.getByRole('banner')).toBeVisible();
       await expect(browser.getByRole('contentinfo')).toBeVisible();
@@ -45,18 +46,18 @@ test.describe('every page renders in the project language and fits the screen', 
     page,
     localized,
     language,
-    t,
   }) => {
     await page.goto(localized(''));
     const header = page.getByRole('banner');
-    const switcher = header.getByRole('link', { name: t('common.switchLanguage') });
+    const [other = language] = otherLocales(language);
+    const switcher = header.getByRole('link', { name: LANGUAGES[other].label });
     const logo = header.getByRole('link').first();
     const [logoBox, switcherBox] = await Promise.all([logo.boundingBox(), switcher.boundingBox()]);
     expect(logoBox).not.toBeNull();
     expect(switcherBox).not.toBeNull();
     if (logoBox && switcherBox) {
       // The logo is at the start (right in Arabic, left in English); the language link is at the other side.
-      if (language === 'ar') {
+      if (LANGUAGES[language].dir === 'rtl') {
         expect(logoBox.x).toBeGreaterThan(switcherBox.x);
       } else {
         expect(logoBox.x).toBeLessThan(switcherBox.x);
