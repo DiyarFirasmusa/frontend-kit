@@ -1,212 +1,224 @@
-import type { UserEvent } from '@testing-library/user-event';
-import { HttpResponse, delay, http, type JsonBodyType } from 'msw';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { HttpResponse, http } from 'msw';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { endpoints } from '@/constants/api';
-import { PERMS } from '@/constants/permissions';
-import { loadFeatureLocale } from '@/lib/i18n/i18n';
+import { PERMS, type Permission } from '@/constants/permissions';
+import { unitHandlers } from '@/mocks/handlers/units';
+import { resetMockDb } from '@/mocks/seed/base';
 import { signIn } from '@/test/fixtures/auth';
-import { setTestLanguage, tt } from '@/test/i18n';
+import { tt } from '@/test/i18n';
 import { api } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
-import { renderWithRouter, screen, waitFor } from '@/test/render';
-import UnitsOfMeasureListContainer from './index';
-import { makeUnitOfMeasure } from './uom-test-utils';
-const listUrl = api(endpoints.unitsOfMeasure.list);
-const unit = (id: string, code: string, name: string, decimals: number) =>
-  makeUnitOfMeasure({ id, code, name, decimalPlaces: decimals });
+import { screen, waitFor, within } from '@/test/render';
+import { renderApp } from '@/test/render-app';
 
-const rows = [
-  unit('uom-1', 'PCS', 'Piece', 0),
-  unit('uom-2', 'KG', 'Kilogram', 3),
-  unit('uom-3', 'MTR', 'Meter', 2),
+const ALL: Permission[] = [
+  PERMS.unitOfMeasure.view,
+  PERMS.unitOfMeasure.create,
+  PERMS.unitOfMeasure.update,
+  PERMS.unitOfMeasure.delete,
 ];
+const WAIT = { timeout: 5000 };
 
-const pagedRows = Array.from({ length: 25 }, (_, i) =>
-  unit(`uom-${i}`, `C${i}`, `Unit ${i}`, i < 15 ? 0 : 2),
-);
+/** Every units request the page sends, as `METHOD path?query`. */
+let requests: string[] = [];
+function onRequest({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  if (url.pathname.startsWith('/api/units-of-measure')) {
+    requests.push(
+      `${request.method} ${url.pathname}${decodeURIComponent(url.search)}`,
+    );
+  }
+}
 
-function respondWith(body: JsonBodyType, status = 200) {
-  const requests: URL[] = [];
-  server.use(
-    http.get(listUrl, ({ request }) => {
-      const url = new URL(request.url);
-      requests.push(url);
-      const decimals = url.searchParams.get('decimalPlaces');
-      if (decimals !== null && Array.isArray(body)) {
-        return HttpResponse.json(
-          body.filter(
-            (row) =>
-              (row as { decimalPlaces: number }).decimalPlaces ===
-              Number(decimals),
-          ),
-        );
-      }
-      return HttpResponse.json(body, { status });
-    }),
+async function openList(url = '/units-of-measure', permissions = ALL) {
+  signIn({ roles: [], permissions });
+  const view = await renderApp(url);
+  await screen.findByRole(
+    'heading',
+    { level: 1, name: tt('unitsOfMeasure.title') },
+    WAIT,
   );
-  return requests;
+  return view;
 }
 
-function render() {
-  return renderWithRouter(<UnitsOfMeasureListContainer />, {
-    path: '/units-of-measure',
-  });
+function table() {
+  return screen.getByRole('table', { name: tt('unitsOfMeasure.caption') });
 }
 
-function expectTitle(name = tt('unitsOfMeasure.title')) {
-  expect(screen.getByRole('heading', { level: 1, name })).toBeInTheDocument();
-}
-
-async function chooseDecimals(user: UserEvent, value: string) {
-  await user.click(
-    screen.getByRole('combobox', {
-      name: tt('unitsOfMeasure.list.decimalsFilter'),
-    }),
-  );
-  await user.click(await screen.findByRole('option', { name: value }));
-}
-
-describe('UnitsOfMeasureListContainer', () => {
-  beforeAll(async () => {
-    await loadFeatureLocale('dashboard/units-of-measure');
-  });
-
+describe('units of measure list (real route, shared mock backend)', () => {
   beforeEach(() => {
-    signIn({ permissions: [PERMS.unitOfMeasure.view] });
+    resetMockDb();
+    requests = [];
+    server.use(...unitHandlers);
+    server.events.on('request:start', onRequest);
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    server.events.removeListener('request:start', onRequest);
   });
 
-  it('shows skeleton rows while loading', async () => {
+  it('shows the first server page and pages through the URL', async () => {
+    const { user, router } = await openList();
+    expect(await within(table()).findByText('PCS', {}, WAIT)).toBeVisible();
+    expect(within(table()).queryByText('DOZ')).toBeNull();
+    expect(requests[0]).toBe('GET /api/units-of-measure?page=0&size=10');
+
+    await user.click(screen.getByRole('button', { name: '2' }));
+    expect(await within(table()).findByText('DOZ', {}, WAIT)).toBeVisible();
+    expect(router.state.location.search).toMatchObject({ page: 2 });
+    expect(requests).toContain('GET /api/units-of-measure?page=1&size=10');
+  });
+
+  it('sorts on the server when a header is clicked', async () => {
+    const { user, router } = await openList();
+    await within(table()).findByText('PCS', {}, WAIT);
+    const header = screen.getByRole('columnheader', {
+      name: new RegExp(tt('unitsOfMeasure.columns.code')),
+    });
+    await user.click(within(header).getByRole('button'));
+    await waitFor(() => {
+      expect(router.state.location.search).toMatchObject({ sort: 'code.asc' });
+    });
+    await user.click(within(header).getByRole('button'));
+    expect(await within(table()).findByText('TON', {}, WAIT)).toBeVisible();
+    expect(header).toHaveAttribute('aria-sort', 'descending');
+    expect(requests.at(-1)).toBe(
+      'GET /api/units-of-measure?page=0&size=10&sort=code,desc',
+    );
+  });
+
+  it('reads filters from a shared link and clears them', async () => {
+    const { user, router } = await openList(
+      '/units-of-measure?status=inactive&decimals=3',
+    );
+    expect(await within(table()).findByText('TON', {}, WAIT)).toBeVisible();
+    expect(within(table()).queryByText('PCS')).toBeNull();
+    expect(requests[0]).toBe(
+      'GET /api/units-of-measure?page=0&size=10&isActive=false&decimalPlaces=3',
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: tt('table.clearFilters') }),
+    );
+    expect(await within(table()).findByText('PCS', {}, WAIT)).toBeVisible();
+    expect(router.state.location.search).toEqual({});
+  });
+
+  it('shows the filtered empty state with a clear button', async () => {
+    await openList('/units-of-measure?q=zzz');
+    expect(
+      await screen.findByText(tt('unitsOfMeasure.emptyFiltered'), {}, WAIT),
+    ).toBeVisible();
+  });
+
+  it('shows the error row and retries', async () => {
+    let calls = 0;
     server.use(
-      http.get(listUrl, async () => {
-        await delay('infinite');
-        return HttpResponse.json([]);
+      http.get(api(endpoints.unitsOfMeasure.list), () => {
+        calls += 1;
+        return calls === 1
+          ? HttpResponse.json({ message: 'down' }, { status: 503 })
+          : undefined;
       }),
     );
-    await render();
-
-    expectTitle();
-    expect(document.querySelector('[data-slot="skeleton"]')).not.toBeNull();
-  });
-
-  it('shows the load error and retries the request', async () => {
-    const requests = respondWith({ message: 'boom' }, 500);
-    const { user } = await render();
-
-    expect(await screen.findByText(tt('common.loadError'))).toBeInTheDocument();
-    const before = requests.length;
+    const { user } = await openList();
     await user.click(
-      await screen.findByRole('button', { name: tt('common.tryAgain') }),
+      await screen.findByRole('button', { name: tt('common.tryAgain') }, WAIT),
     );
-
-    await waitFor(() => {
-      expect(requests.length).toBeGreaterThan(before);
-    });
+    expect(await within(table()).findByText('PCS', {}, WAIT)).toBeVisible();
   });
 
-  it('shows the empty message and hides create without write permission', async () => {
-    signIn({ roles: [], permissions: [PERMS.unitOfMeasure.view] });
-    respondWith([]);
-    await render();
-
+  it('deletes after a confirm that starts on Cancel', async () => {
+    const { user } = await openList('/units-of-measure?q=SET');
+    const row = (await within(table()).findByText('SET', {}, WAIT)).closest(
+      'tr',
+    );
+    if (!row) {
+      throw new Error('row not found');
+    }
+    await user.click(within(row).getByRole('button', { name: /^Delete / }));
+    const confirm = await screen.findByRole('alertdialog');
     expect(
-      await screen.findByText(tt('unitsOfMeasure.list.empty')),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: tt('unitsOfMeasure.add') }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('shows rows with examples, then asks the server to narrow by decimals', async () => {
-    const requests = respondWith(rows);
-    const { user } = await render();
-    expect(await screen.findByText('PCS')).toBeInTheDocument();
-    expect(screen.getByText('KG')).toBeInTheDocument();
-    expect(screen.getByText('12.346')).toBeInTheDocument();
-    const before = requests.length;
-
-    await chooseDecimals(user, '3');
-
-    await waitFor(() => {
-      expect(screen.queryByText('PCS')).not.toBeInTheDocument();
-    });
-    expect(screen.getByText('KG')).toBeInTheDocument();
-    expect(requests.length).toBeGreaterThan(before);
-    expect(requests.at(-1)?.searchParams.get('decimalPlaces')).toBe('3');
-  });
-
-  it('resets to the first page when the decimals filter changes', async () => {
-    respondWith(pagedRows);
-    const { user } = await render();
-    await screen.findByText('C0');
-
-    await user.click(screen.getByRole('button', { name: tt('common.next') }));
-    expect(await screen.findByText('11–20')).toBeInTheDocument();
-
-    await chooseDecimals(user, '0');
-
-    expect(await screen.findByText('1–10')).toBeInTheDocument();
-    expect(screen.queryByText('11–15')).not.toBeInTheDocument();
-  });
-
-  it('sends the debounced search term to the server as q', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    const requests = respondWith(rows);
-    const { user } = await render();
-    await screen.findByText('KG');
-
-    await user.type(
-      screen.getByRole('searchbox', { name: tt('common.search') }),
-      'kilo',
-    );
-    vi.advanceTimersByTime(400);
-
-    await waitFor(() => {
-      expect(requests.at(-1)?.searchParams.get('q')).toBe('kilo');
-    });
-    const partial = requests.some((url) =>
-      ['k', 'ki', 'kil'].includes(url.searchParams.get('q') ?? ''),
-    );
-    expect(partial).toBe(false);
-  });
-
-  it('opens the create dialog from the create button', async () => {
-    signIn({
-      roles: [],
-      permissions: [
-        PERMS.unitOfMeasure.view,
-        PERMS.unitOfMeasure.create,
-        PERMS.unitOfMeasure.update,
-      ],
-    });
-    respondWith(rows);
-    const { user } = await render();
-
+      within(confirm).getByRole('button', { name: tt('common.cancel') }),
+    ).toHaveFocus();
     await user.click(
-      await screen.findByRole('button', { name: tt('unitsOfMeasure.add') }),
+      within(confirm).getByRole('button', { name: tt('common.delete') }),
     );
-
     expect(
-      await screen.findByText(tt('unitsOfMeasure.form.createTitle')),
-    ).toBeInTheDocument();
+      await screen.findByText(tt('unitsOfMeasure.emptyFiltered'), {}, WAIT),
+    ).toBeVisible();
+    expect(requests.filter((line) => line.startsWith('DELETE'))).toHaveLength(
+      1,
+    );
   });
 
-  it('renders the page title in Arabic', async () => {
-    await setTestLanguage('ar');
-    await loadFeatureLocale('dashboard/units-of-measure');
-    respondWith([]);
-    await render();
-    expectTitle('وحدات القياس');
+  it('refuses to delete a unit used by items without a request', async () => {
+    const { user } = await openList('/units-of-measure?q=PCS');
+    await within(table()).findByText('PCS', {}, WAIT);
+    const button = screen.getAllByRole('button', { name: /^Delete / })[0];
+    if (!button) {
+      throw new Error('delete action missing');
+    }
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(button).toHaveAccessibleDescription(
+      tt('unitsOfMeasure.actions.deleteBlocked'),
+    );
+    await user.click(button);
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+    expect(requests.some((line) => line.startsWith('DELETE'))).toBe(false);
+  });
+
+  it('hides actions the user may not use', async () => {
+    await openList('/units-of-measure', [PERMS.unitOfMeasure.view]);
+    await within(table()).findByText('PCS', {}, WAIT);
+    expect(screen.queryByRole('button', { name: /^Delete / })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: tt('unitsOfMeasure.create') }),
+    ).toBeNull();
+  });
+
+  it('puts a backend field error under the input', async () => {
+    const { user } = await openList();
+    await within(table()).findByText('PCS', {}, WAIT);
+    await user.click(
+      screen.getByRole('button', { name: tt('unitsOfMeasure.create') }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await user.type(within(dialog).getByLabelText(/^Code/), 'pcs');
+    await user.type(within(dialog).getByLabelText(/^Name/), 'Copy');
+    await user.click(
+      within(dialog).getByRole('button', {
+        name: tt('unitsOfMeasure.dialog.save'),
+      }),
+    );
+    expect(
+      await within(dialog).findByText(
+        /Unit code already exists|رمز الوحدة مستخدم مسبقاً/,
+        {},
+        WAIT,
+      ),
+    ).toBeVisible();
+    expect(within(dialog).getByLabelText(/^Code/)).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+    expect(requests.filter((line) => line.startsWith('POST'))).toHaveLength(1);
+  });
+
+  it('edits the record loaded by id', async () => {
+    const { user } = await openList('/units-of-measure?q=KG');
+    await within(table()).findByText('KG', {}, WAIT);
+    await user.click(
+      screen.getAllByRole('button', { name: /^Edit / })[0] ?? table(),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await waitFor(() => {
+      expect(within(dialog).getByLabelText(/^Code/)).toHaveValue('KG');
+    }, WAIT);
+    expect(
+      requests.some((line) =>
+        /^GET \/api\/units-of-measure\/[\w-]+$/.test(line),
+      ),
+    ).toBe(true);
   });
 });

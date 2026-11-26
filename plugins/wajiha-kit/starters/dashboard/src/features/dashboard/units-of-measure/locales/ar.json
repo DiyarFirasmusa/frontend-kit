@@ -2,56 +2,61 @@
   "unitsOfMeasure": {
     "title": "وحدات القياس",
     "subtitle": "تعريف الوحدات ودقة الكسور المستخدمة في حركة المخزون",
-    "add": "إنشاء وحدة",
-    "list": {
-      "searchPlaceholder": "ابحث بالاسم أو الرمز",
-      "decimalsFilter": "المنازل العشرية",
-      "empty": "لا توجد وحدات مطابقة لبحثك."
-    },
-    "col": {
+    "caption": "وحدات القياس، صفحة من القائمة بعد التصفية",
+    "create": "إنشاء وحدة",
+    "empty": "لا توجد وحدات قياس بعد",
+    "emptyFiltered": "لا توجد وحدات مطابقة لهذه الفلاتر",
+    "columns": {
       "code": "الرمز",
       "name": "الاسم",
       "decimalPlaces": "المنازل العشرية",
       "example": "مثال العرض",
-      "status": "الحالة",
-      "actions": "الإجراءات"
+      "inUse": "مستخدمة في مواد",
+      "status": "الحالة"
     },
-    "status": {
-      "active": "نشطة",
-      "inactive": "غير نشطة"
+    "inUse": {
+      "yes": "نعم",
+      "no": "لا"
+    },
+    "filters": {
+      "label": "تصفية وحدات القياس",
+      "searchPlaceholder": "ابحث بالاسم أو الرمز",
+      "status": "الحالة",
+      "decimals": "المنازل العشرية"
     },
     "actions": {
-      "edit": "تعديل",
-      "delete": "حذف"
+      "editRow": "تعديل {{name}}",
+      "deleteRow": "حذف {{name}}",
+      "deleteBlocked": "مستخدمة في مواد فلا يمكن حذفها. عدّلها وأوقف خيار \"نشطة\" بدلاً من ذلك."
     },
-    "form": {
+    "dialog": {
       "createTitle": "إنشاء وحدة قياس",
       "editTitle": "تعديل وحدة القياس",
+      "description": "الرمز والاسم يعرّفان الوحدة، والمنازل العشرية تحدد دقة الكميات",
       "code": "الرمز",
       "codePlaceholder": "مثال: PCS",
       "name": "الاسم",
       "namePlaceholder": "مثال: قطعة",
       "decimalPlaces": "المنازل العشرية (0–6)",
       "decimalPlacesPlaceholder": "مثال: 0",
-      "active": "نشطة",
-      "submit": "حفظ الوحدة",
-      "errors": {
-        "code": "أدخل رمز الوحدة",
-        "codeLength": "لا يتجاوز الرمز 20 حرفاً",
-        "name": "أدخل اسم الوحدة",
-        "nameLength": "لا يتجاوز الاسم 100 حرف",
-        "decimalPlaces": "اختر رقماً صحيحاً من 0 إلى 6"
-      }
+      "isActive": "نشطة",
+      "save": "حفظ الوحدة"
     },
     "delete": {
       "title": "حذف وحدة القياس",
-      "description": "سيُحذف «{{name}}» نهائياً ولا يمكن التراجع عن ذلك.",
-      "confirm": "حذف"
+      "description": "سيتم حذف «{{name}}». لا يمكن التراجع عن هذا الإجراء."
     },
-    "toasts": {
+    "messages": {
       "created": "تمت إضافة وحدة القياس",
       "updated": "تم تحديث وحدة القياس",
       "deleted": "تم حذف وحدة القياس"
+    },
+    "validation": {
+      "codeRequired": "أدخل رمز الوحدة",
+      "codeMax": "لا يتجاوز الرمز 20 حرفاً",
+      "nameRequired": "أدخل اسم الوحدة",
+      "nameMax": "لا يتجاوز الاسم 100 حرف",
+      "decimalPlaces": "اختر رقماً صحيحاً من 0 إلى 6"
     }
   }
 }

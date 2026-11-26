@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import type {
   AttributeDefinitionRequest,
+  AttributeDefinitionResponse,
   ItemCategoryRequest,
+  ItemCategoryResponse,
 } from '@/types/api/catalog';
 import { AttributeDataTypeValues } from '@/types/api/enums';
 
@@ -27,6 +29,9 @@ export const categorySchema = z.object({
 
 export type CategoryFormValues = z.infer<typeof categorySchema>;
 
+/** The fields of the form, for mapping backend field errors onto inputs. */
+export const CATEGORY_FORM_FIELDS = categorySchema.keyof().options;
+
 export const defaultCategoryForm: CategoryFormValues = {
   code: '',
   name: '',
@@ -34,6 +39,21 @@ export const defaultCategoryForm: CategoryFormValues = {
   isActive: true,
   expiryAlertDays: undefined,
 };
+
+export function toCategoryFormValues(
+  detail: ItemCategoryResponse,
+): CategoryFormValues {
+  return {
+    code: detail.code ?? '',
+    name: detail.name ?? '',
+    parentId: detail.parentId ?? '',
+    isActive: detail.isActive ?? true,
+    expiryAlertDays:
+      typeof detail.expiryAlertDays === 'number' && detail.expiryAlertDays > 0
+        ? detail.expiryAlertDays
+        : undefined,
+  };
+}
 
 /**
  * An emptied expiry window is left out, so the category keeps inheriting; when
@@ -82,6 +102,9 @@ export type AttributeDefinitionFormValues = z.infer<
   typeof attributeDefinitionSchema
 >;
 
+/** The fields of the form, for mapping backend field errors onto inputs. */
+export const ATTRIBUTE_FORM_FIELDS = attributeDefinitionSchema.keyof().options;
+
 export const defaultAttributeDefinitionForm: AttributeDefinitionFormValues = {
   code: '',
   name: '',
@@ -89,6 +112,18 @@ export const defaultAttributeDefinitionForm: AttributeDefinitionFormValues = {
   unitLabel: '',
   status: 'ACTIVE',
 };
+
+export function toAttributeFormValues(
+  detail: AttributeDefinitionResponse,
+): AttributeDefinitionFormValues {
+  return {
+    code: detail.code ?? '',
+    name: detail.name ?? '',
+    dataType: detail.dataType ?? 'TEXT',
+    unitLabel: detail.dataType === 'NUMBER' ? (detail.unitLabel ?? '') : '',
+    status: detail.isActive === false ? 'INACTIVE' : 'ACTIVE',
+  };
+}
 
 export function toAttributeDefinitionPayload(
   values: AttributeDefinitionFormValues,

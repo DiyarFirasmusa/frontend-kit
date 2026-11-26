@@ -1,151 +1,131 @@
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { toast } from 'sonner';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { endpoints } from '@/constants/api';
 import { api } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
-import type {
-  AttributeDefinitionResponse,
-  AttributeOptionResponse,
-} from '@/types/api/catalog';
+import type { AttributeListParams } from '../types/types';
+import type { OptionChanges } from '../utils/option-order';
 import {
   createAttributeOption,
-  deleteAttributeOption,
   fetchAttributeDefinitions,
-  updateAttributeOption,
+  saveAttributeOptions,
+  toAttributeListQuery,
 } from './attributes.service';
 
-const definitionId = 'attr-color';
-const optionId = 'opt-black';
-
-const option: AttributeOptionResponse = {
-  id: optionId,
-  code: 'BLACK',
-  label: 'أسود',
-  sortOrder: 1,
-  isActive: true,
+const DEFAULTS: AttributeListParams = {
+  page: 1,
+  pageSize: 10,
+  sort: '',
+  q: '',
+  dataType: 'all',
+  status: 'all',
 };
 
-const definition: AttributeDefinitionResponse = {
-  id: definitionId,
-  code: 'COLOR',
-  name: 'اللون',
-  dataType: 'OPTION',
-  unitLabel: null,
-  isActive: true,
-  options: [option],
-};
-
-describe('attribute definitions service', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
+describe('toAttributeListQuery', () => {
+  it('sends 0-based paging and leaves default filters out', () => {
+    expect(toAttributeListQuery(DEFAULTS)).toEqual({ page: 0, size: 10 });
   });
 
-  it('sends only the list params that are set', async () => {
-    const seen: URLSearchParams[] = [];
+  it('maps sort, search, type and status to the backend names', () => {
+    expect(
+      toAttributeListQuery({
+        page: 2,
+        pageSize: 20,
+        sort: 'dataType.desc',
+        q: 'col',
+        dataType: 'OPTION',
+        status: 'inactive',
+      }),
+    ).toEqual({
+      page: 1,
+      size: 20,
+      sort: 'dataType,desc',
+      q: 'col',
+      dataType: 'OPTION',
+      isActive: false,
+    });
+  });
+});
+
+describe('attributes.service', () => {
+  it('fetchAttributeDefinitions sends the query and forwards the signal', async () => {
+    let search = '';
     server.use(
       http.get(api(endpoints.attributeDefinitions.list), ({ request }) => {
-        seen.push(new URL(request.url).searchParams);
-        return HttpResponse.json([definition]);
+        search = new URL(request.url).search;
+        return HttpResponse.json({ content: [] });
       }),
     );
-
-    expect(await fetchAttributeDefinitions()).toEqual([definition]);
-    expect(
-      await fetchAttributeDefinitions({ q: 'col', dataType: 'OPTION' }),
-    ).toEqual([definition]);
-    expect(await fetchAttributeDefinitions({ isActive: false })).toEqual([
-      definition,
-    ]);
-
-    expect([...seen[0].keys()]).toEqual([]);
-    expect(seen[1].get('q')).toBe('col');
-    expect(seen[1].get('dataType')).toBe('OPTION');
-    expect(seen[1].has('isActive')).toBe(false);
-    expect(seen[2].get('isActive')).toBe('false');
-    expect(seen[2].has('q')).toBe(false);
-    expect(seen[2].has('dataType')).toBe(false);
+    const controller = new AbortController();
+    await fetchAttributeDefinitions(
+      { ...DEFAULTS, q: 'col' },
+      { signal: controller.signal },
+    );
+    expect(search).toBe('?page=0&size=10&q=col');
   });
 
-  it('creates an option by POST to the nested options path', async () => {
-    const bodies: unknown[] = [];
+  it('createAttributeOption stays silent when asked', async () => {
+    const success = vi.spyOn(toast, 'success');
     server.use(
-      http.post(
-        api(endpoints.attributeDefinitions.options(definitionId)),
-        async ({ request }) => {
-          bodies.push(await request.json());
-          return HttpResponse.json(option, { status: 201 });
-        },
+      http.post(api(endpoints.attributeDefinitions.options('attr-color')), () =>
+        HttpResponse.json({ id: 'opt-1' }, { status: 201 }),
       ),
     );
-
-    const payload = { code: 'BLACK', label: 'أسود', sortOrder: 1 };
-    expect(await createAttributeOption(definitionId, payload)).toEqual(option);
-    expect(bodies).toEqual([payload]);
-  });
-
-  it('updates an option by PUT to the nested option path', async () => {
-    const methods: string[] = [];
-    server.use(
-      http.put(
-        api(endpoints.attributeDefinitions.option(definitionId, optionId)),
-        async ({ request }) => {
-          methods.push(request.method);
-          expect(await request.json()).toEqual({
-            code: 'BLACK',
-            label: 'أسود',
-            sortOrder: 2,
-            isActive: true,
-          });
-          return HttpResponse.json({ ...option, sortOrder: 2 });
-        },
-      ),
+    await createAttributeOption(
+      'attr-color',
+      { label: 'Red' },
+      { silent: true },
     );
-
-    const result = await updateAttributeOption(definitionId, optionId, {
-      code: 'BLACK',
-      label: 'أسود',
-      sortOrder: 2,
-      isActive: true,
-    });
-    expect(result.sortOrder).toBe(2);
-    expect(methods).toEqual(['PUT']);
+    expect(success).not.toHaveBeenCalled();
   });
+});
 
-  it('deletes an option by DELETE to the nested option path', async () => {
-    const methods: string[] = [];
+describe('saveAttributeOptions', () => {
+  it('sends removals, updates, creations, then one reorder, with one toast', async () => {
+    const success = vi.spyOn(toast, 'success');
+    const seen: string[] = [];
     server.use(
       http.delete(
-        api(endpoints.attributeDefinitions.option(definitionId, optionId)),
-        ({ request }) => {
-          methods.push(request.method);
+        api(endpoints.attributeDefinitions.option('attr-1', 'old')),
+        () => {
+          seen.push('delete');
           return new HttpResponse(null, { status: 204 });
         },
       ),
-    );
-
-    await expect(
-      deleteAttributeOption(definitionId, optionId),
-    ).resolves.toBeUndefined();
-    expect(methods).toEqual(['DELETE']);
-  });
-
-  it('suppresses the success toast when updating silently', async () => {
-    server.use(
       http.put(
-        api(endpoints.attributeDefinitions.option(definitionId, optionId)),
-        () => HttpResponse.json(option),
+        api(endpoints.attributeDefinitions.option('attr-1', 'kept')),
+        () => {
+          seen.push('update');
+          return HttpResponse.json({ id: 'kept' });
+        },
+      ),
+      http.post(api(endpoints.attributeDefinitions.options('attr-1')), () => {
+        seen.push('create');
+        return HttpResponse.json({ id: 'created' }, { status: 201 });
+      }),
+      http.put(
+        api(endpoints.attributeDefinitions.optionsOrder('attr-1')),
+        async ({ request }) => {
+          const body: unknown = await request.json();
+          seen.push(`order:${JSON.stringify(body)}`);
+          return HttpResponse.json([]);
+        },
       ),
     );
-    const successSpy = vi.spyOn(toast, 'success');
-    const payload = { code: 'BLACK', label: 'أسود', sortOrder: 1 };
-
-    await updateAttributeOption(definitionId, optionId, payload, {
-      silent: true,
-    });
-    expect(successSpy).not.toHaveBeenCalled();
-
-    await updateAttributeOption(definitionId, optionId, payload);
-    expect(successSpy).toHaveBeenCalledTimes(1);
+    const changes: OptionChanges = {
+      deletes: ['old'],
+      updates: [{ id: 'kept', payload: { label: 'Kept' } }],
+      creates: [{ label: 'New' }],
+      order: ['kept', 0],
+    };
+    await saveAttributeOptions('attr-1', changes);
+    expect(seen).toEqual([
+      'delete',
+      'update',
+      'create',
+      'order:{"optionIds":["kept","created"]}',
+    ]);
+    expect(success).toHaveBeenCalledTimes(1);
   });
 });

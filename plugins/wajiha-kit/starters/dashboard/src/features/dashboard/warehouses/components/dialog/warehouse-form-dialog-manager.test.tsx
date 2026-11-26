@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw';
+import { useState } from 'react';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { Button } from '@/components/ui/button';
 import { endpoints } from '@/constants/api';
@@ -14,31 +15,45 @@ import { api } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
 import { pickPerson } from '@/test/pick-person';
 import { renderWithProviders, screen, waitFor } from '@/test/render';
-import { useWarehouseFormDialog } from '../../hooks/form/use-warehouse-form-dialog';
+import type { WarehouseDialogState } from '../../hooks/form/use-warehouse-form-dialog';
 import { makeWarehouse } from '../../warehouse-test-utils';
 import { WarehouseFormDialog } from './warehouse-form-dialog';
 
 const MANAGER = '6f1d2c3a-0000-4000-8000-000000000001';
 
 function Harness() {
-  const dialog = useWarehouseFormDialog();
+  const [mode, setMode] = useState<WarehouseDialogState>({ kind: 'closed' });
   return (
     <>
-      <Button onClick={dialog.openCreate}>open create</Button>
       <Button
         onClick={() => {
-          dialog.openEdit(makeWarehouse());
+          setMode({ kind: 'create' });
+        }}
+      >
+        open create
+      </Button>
+      <Button
+        onClick={() => {
+          setMode({ kind: 'edit', warehouseId: 'wh-1' });
         }}
       >
         open edit
       </Button>
-      <WarehouseFormDialog dialog={dialog} />
+      {mode.kind === 'closed' ? null : (
+        <WarehouseFormDialog
+          key={mode.kind}
+          mode={mode}
+          onClose={() => {
+            setMode({ kind: 'closed' });
+          }}
+        />
+      )}
     </>
   );
 }
 
 function managerLabel(): RegExp {
-  return new RegExp(tt('warehouses.form.managerUserId'));
+  return new RegExp(tt('warehouses.dialog.managerUserId'));
 }
 
 describe('WarehouseFormDialog manager', () => {
@@ -48,6 +63,12 @@ describe('WarehouseFormDialog manager', () => {
 
   beforeEach(() => {
     signIn({ permissions: [PERMS.warehouse.create, PERMS.warehouse.update] });
+    // Edit loads the record by id.
+    server.use(
+      http.get(api(endpoints.warehouses.detail(':id')), () =>
+        HttpResponse.json(makeWarehouse()),
+      ),
+    );
   });
 
   it('shows the resolved manager name when editing', async () => {
@@ -75,20 +96,20 @@ describe('WarehouseFormDialog manager', () => {
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
     await user.type(
-      await screen.findByLabelText(new RegExp(tt('warehouses.form.name'))),
+      await screen.findByLabelText(new RegExp(tt('warehouses.dialog.name'))),
       'North depot',
     );
     await user.type(
-      screen.getByLabelText(new RegExp(tt('warehouses.form.code'))),
+      screen.getByLabelText(new RegExp(tt('warehouses.dialog.code'))),
       'WH-09',
     );
     await user.type(
-      screen.getByLabelText(new RegExp(tt('warehouses.form.address'))),
+      screen.getByLabelText(new RegExp(tt('warehouses.dialog.address'))),
       'Karbala',
     );
     await pickPerson(user, managerLabel(), /Sara Ali/);
     await user.click(
-      screen.getByRole('button', { name: tt('warehouses.form.submit') }),
+      screen.getByRole('button', { name: tt('warehouses.dialog.save') }),
     );
 
     await waitFor(() => {

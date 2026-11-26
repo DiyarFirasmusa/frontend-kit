@@ -45,7 +45,7 @@ describe('categories locales', () => {
       'categories.delete.description',
       'categories.blocked.title',
       'categories.assignments.col.variantAxis',
-      'categories.attributes.filter.allStatuses',
+      'categories.attributes.filters.status',
       'categories.attributeForm.usageNote',
       'categories.options.title',
       'categories.options.moveDown',

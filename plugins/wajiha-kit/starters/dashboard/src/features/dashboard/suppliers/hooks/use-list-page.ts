@@ -1,17 +1,11 @@
-import { getRouteApi } from '@tanstack/react-router';
-import type { PaginationState, SortingState } from '@tanstack/react-table';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCan } from '@/components/auth/can';
 import { PERMS } from '@/constants/permissions';
-import { useDeleteTarget } from '@/hooks/use-delete-target';
-import { useExcelExport } from '@/hooks/use-excel-export';
-import {
-  toPaginationState,
-  toSortingState,
-  toSortParam,
-  toTableStatus,
-} from '@/utils/table-state';
+import { useDeleteDialog } from '@/hooks/use-delete-dialog';
+import { useListExport } from '@/hooks/use-list-export';
+import { useClampPage } from '@/hooks/use-list-search';
+import { toTableStatus } from '@/utils/table-state';
 import { getSupplierColumns } from '../components/supplier-columns';
 import { fetchSuppliers } from '../services/suppliers.service';
 import type { SupplierRow } from '../types/types';
@@ -23,10 +17,7 @@ import { useDeleteSupplier } from './query/use-supplier-mutations';
 import { useSuppliersList } from './query/use-suppliers-list';
 import { getSupplierRowActions } from './supplier-actions';
 
-const routeApi = getRouteApi('/_app/suppliers/');
 const NO_ROWS: SupplierRow[] = [];
-/** One request for the whole filtered set; the backend caps `size`. */
-const EXPORT_PAGE_SIZE = 1000;
 
 export function getSupplierRowId(row: SupplierRow): string {
   return row.id;
@@ -35,22 +26,16 @@ export function getSupplierRowId(row: SupplierRow): string {
 /** Everything the suppliers list needs; the container only renders it. */
 export function useSuppliersListPage() {
   const { t } = useTranslation();
-  const search = routeApi.useSearch();
-  const navigate = routeApi.useNavigate();
   const can = useCan();
   const filters = useSupplierFilters();
-  const params = toSupplierListParams(search);
+  const params = toSupplierListParams(filters.search);
   const query = useSuppliersList(params);
-  const remove = useDeleteSupplier();
   const [dialog, setDialog] = useState<SupplierDialogState>({ kind: 'closed' });
-  const { deleteTarget, isDeleteOpen, openDelete, closeDelete } =
-    useDeleteTarget<SupplierRow>();
-
-  const pagination = useMemo(
-    () => toPaginationState(search.page, search.pageSize),
-    [search.page, search.pageSize],
+  const remove = useDeleteDialog(
+    useDeleteSupplier(),
+    (row: SupplierRow) => row.name ?? row.code ?? '',
   );
-  const sorting = useMemo(() => toSortingState(search.sort), [search.sort]);
+  const { openDelete } = remove;
 
   const getActions = useCallback(
     (row: SupplierRow) =>
@@ -69,64 +54,17 @@ export function useSuppliersListPage() {
     [t, getActions],
   );
 
-  const setPagination = (next: PaginationState) => {
-    void navigate({
-      search: (prev) => ({
-        ...prev,
-        pageSize: next.pageSize,
-        // A new page size starts over; otherwise go to the requested page.
-        page: next.pageSize === prev.pageSize ? next.pageIndex + 1 : 1,
-      }),
-    });
-  };
-  const setSorting = (next: SortingState) => {
-    void navigate({
-      search: (prev) => ({ ...prev, sort: toSortParam(next), page: 1 }),
-    });
-  };
-
-  // A shared link or deleting the last row can leave the page past the end.
-  const totalPages = query.data?.totalPages;
-  useEffect(() => {
-    if (
-      totalPages !== undefined &&
-      totalPages > 0 &&
-      search.page > totalPages
-    ) {
-      void navigate({
-        search: (prev) => ({ ...prev, page: totalPages }),
-        replace: true,
-      });
-    }
-  }, [totalPages, search.page, navigate]);
+  useClampPage(filters.search.page, query.data?.totalPages, filters.goToPage);
 
   const exportColumns = useMemo(() => getSupplierExportColumns(t), [t]);
-  const excel = useExcelExport({
+  const exportExcel = useListExport({
     fileName: 'suppliers',
     sheetName: t('suppliers.title'),
     columns: exportColumns,
-    // The export covers the filtered set, not the page on screen.
-    load: async () => {
-      const all = await fetchSuppliers({
-        ...params,
-        page: 1,
-        pageSize: EXPORT_PAGE_SIZE,
-      });
-      return {
-        rows: all.content,
-        total: all.totalElements,
-        isTruncated: all.totalElements > all.content.length,
-      };
-    },
+    params,
+    fetchAll: fetchSuppliers,
+    total: query.data?.totalElements,
   });
-
-  const confirmDelete = () => {
-    // Single-flight: the confirm button is disabled too, this covers Enter.
-    if (!deleteTarget || remove.isPending) {
-      return;
-    }
-    remove.mutate(deleteTarget.id, { onSuccess: closeDelete });
-  };
 
   return {
     t,
@@ -137,11 +75,11 @@ export function useSuppliersListPage() {
       void query.refetch();
     },
     columns,
-    pagination,
-    sorting,
-    setPagination,
-    setSorting,
-    hasFilters: filters.activeCount > 0,
+    pagination: filters.pagination,
+    sorting: filters.sorting,
+    setPagination: filters.setPagination,
+    setSorting: filters.setSorting,
+    hasFilters: filters.hasFilters,
     clearFilters: filters.clear,
     canCreate: can(PERMS.supplier.create),
     openCreate: () => {
@@ -151,21 +89,7 @@ export function useSuppliersListPage() {
     closeDialog: () => {
       setDialog({ kind: 'closed' });
     },
-    exportExcel: {
-      onExport: excel.exportExcel,
-      isExporting: excel.isExporting,
-      disabled: (query.data?.totalElements ?? 0) === 0,
-    },
-    deleteDialog: {
-      open: isDeleteOpen,
-      name: deleteTarget?.name ?? '',
-      isPending: remove.isPending,
-      onOpenChange: (open: boolean) => {
-        if (!open && !remove.isPending) {
-          closeDelete();
-        }
-      },
-      onConfirm: confirmDelete,
-    },
+    exportExcel,
+    deleteDialog: remove.dialog,
   };
 }

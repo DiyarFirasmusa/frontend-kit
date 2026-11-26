@@ -4,7 +4,11 @@ import {
   type UnitOfMeasureRequest,
   type UnitOfMeasureResponse,
 } from '@/types/api/catalog';
-/** Units of measure. */
+/**
+ * Units of measure: a paged list (`?page=0&size=10&sort=name,asc`), 404 for a
+ * missing id, 422 problem+json with field errors, 409 when a rule refuses the
+ * action. Same shape as the suppliers mock.
+ */
 import {
   api,
   boolParam,
@@ -14,16 +18,65 @@ import {
   noContent,
   notFound,
   ok,
+  paginate,
   param,
   readJson,
   sameCode,
+  sortBy,
   textParam,
+  validationProblem,
 } from '../core';
 import { newId } from '../seed/base';
 import { unitsOfMeasure } from '../seed/units';
 
+const SORTABLE = {
+  code: (row: UnitOfMeasureResponse) => row.code,
+  name: (row: UnitOfMeasureResponse) => row.name,
+  decimalPlaces: (row: UnitOfMeasureResponse) => row.decimalPlaces,
+};
+
+/** A malformed body (readJson returns {}) must fail validation, not throw. */
+function text(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function validate(
+  request: Request,
+  body: UnitOfMeasureRequest,
+  current: UnitOfMeasureResponse | null,
+): Promise<Response> | null {
+  const errors: { field: string; ar: string; en: string }[] = [];
+  if (!text(body.code)) {
+    errors.push({ field: 'code', ar: 'الرمز مطلوب', en: 'Code is required' });
+  } else if (
+    unitsOfMeasure.some(
+      (u) => u.id !== current?.id && sameCode(u.code, body.code),
+    )
+  ) {
+    errors.push({
+      field: 'code',
+      ar: 'رمز الوحدة مستخدم مسبقاً',
+      en: 'Unit code already exists',
+    });
+  }
+  if (!text(body.name)) {
+    errors.push({ field: 'name', ar: 'الاسم مطلوب', en: 'Name is required' });
+  }
+  if (
+    current?.inUse === true &&
+    body.decimalPlaces !== undefined &&
+    body.decimalPlaces < (current.decimalPlaces ?? 0)
+  ) {
+    errors.push({
+      field: 'decimalPlaces',
+      ar: 'لا يمكن تقليل المنازل العشرية لوحدة مستخدمة',
+      en: 'Decimal places of a unit in use cannot be reduced',
+    });
+  }
+  return errors.length > 0 ? validationProblem(request, errors) : null;
+}
+
 export const unitHandlers = [
-  // ----- Units of measure -----
   http.get(api(endpoints.unitsOfMeasure.list), async ({ request }) => {
     const url = new URL(request.url);
     const q = textParam(url, 'q');
@@ -31,34 +84,36 @@ export const unitHandlers = [
     const decimals = url.searchParams.has('decimalPlaces')
       ? intParam(url, 'decimalPlaces', -1)
       : undefined;
-    const response: UnitOfMeasureResponse[] = unitsOfMeasure.filter(
+    const filtered = unitsOfMeasure.filter(
       (u) =>
         matches(q, u.code, u.name) &&
         (isActive === undefined || u.isActive === isActive) &&
         (decimals === undefined || u.decimalPlaces === decimals),
     );
-    return ok(response);
+    return ok(
+      paginate(
+        sortBy(filtered, url, SORTABLE),
+        intParam(url, 'page', 0),
+        intParam(url, 'size', 10),
+      ),
+    );
   }),
 
   http.post(api(endpoints.unitsOfMeasure.create), async ({ request }) => {
     const body = await readJson<UnitOfMeasureRequest>(request);
-    if (unitsOfMeasure.some((u) => sameCode(u.code, body.code))) {
-      return fail(
-        request,
-        409,
-        'رمز الوحدة مستخدم مسبقاً',
-        'Unit code already exists',
-      );
+    const invalid = validate(request, body, null);
+    if (invalid) {
+      return invalid;
     }
     const uom: UnitOfMeasureResponse = {
       id: newId(),
-      code: body.code,
-      name: body.name,
+      code: text(body.code),
+      name: text(body.name),
       decimalPlaces: body.decimalPlaces ?? 0,
       isActive: body.isActive ?? true,
       inUse: false,
     };
-    unitsOfMeasure.push(uom);
+    unitsOfMeasure.unshift(uom);
     return ok(uom, 201);
   }),
 
@@ -78,33 +133,13 @@ export const unitHandlers = [
         return notFound(request);
       }
       const body = await readJson<UnitOfMeasureRequest>(request);
-      if (
-        unitsOfMeasure.some(
-          (u) => u.id !== uom.id && sameCode(u.code, body.code),
-        )
-      ) {
-        return fail(
-          request,
-          409,
-          'رمز الوحدة مستخدم مسبقاً',
-          'Unit code already exists',
-        );
-      }
-      if (
-        uom.inUse === true &&
-        body.decimalPlaces !== undefined &&
-        body.decimalPlaces < (uom.decimalPlaces ?? 0)
-      ) {
-        return fail(
-          request,
-          409,
-          'لا يمكن تقليل المنازل العشرية لوحدة مستخدمة',
-          'Decimal places of a unit in use cannot be reduced',
-        );
+      const invalid = validate(request, body, uom);
+      if (invalid) {
+        return invalid;
       }
       Object.assign(uom, {
-        code: body.code ?? uom.code,
-        name: body.name ?? uom.name,
+        code: text(body.code),
+        name: text(body.name),
         decimalPlaces: body.decimalPlaces ?? uom.decimalPlaces,
         isActive: body.isActive ?? uom.isActive,
       } satisfies Partial<UnitOfMeasureResponse>);
@@ -122,6 +157,7 @@ export const unitHandlers = [
       if (!uom) {
         return notFound(request);
       }
+      // The UI already blocks this; the backend still decides.
       if (uom.inUse === true) {
         return fail(
           request,

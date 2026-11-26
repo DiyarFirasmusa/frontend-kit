@@ -1,4 +1,4 @@
-import type { RecentChange } from '@/features/dashboard/home/types/types';
+import type { RecentChange } from '@/types/api/overview';
 import { isoDaysAgo } from './base';
 /** Recent changes shown on the home page. Warehouse changes made in the UI are added by the audit log. */
 import { categories } from './categories';

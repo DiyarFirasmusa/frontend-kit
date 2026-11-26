@@ -2,56 +2,61 @@
   "unitsOfMeasure": {
     "title": "Units of measure",
     "subtitle": "Define units and the decimal precision used in stock movements",
-    "add": "Create unit",
-    "list": {
-      "searchPlaceholder": "Search by name or code",
-      "decimalsFilter": "Decimal places",
-      "empty": "No units match your search."
-    },
-    "col": {
+    "caption": "Units of measure, one page of the filtered list",
+    "create": "Create unit",
+    "empty": "No units of measure yet",
+    "emptyFiltered": "No units match these filters",
+    "columns": {
       "code": "Code",
       "name": "Name",
       "decimalPlaces": "Decimal places",
       "example": "Display example",
-      "status": "Status",
-      "actions": "Actions"
+      "inUse": "Used by items",
+      "status": "Status"
     },
-    "status": {
-      "active": "Active",
-      "inactive": "Inactive"
+    "inUse": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "filters": {
+      "label": "Filter units of measure",
+      "searchPlaceholder": "Search by name or code",
+      "status": "Status",
+      "decimals": "Decimal places"
     },
     "actions": {
-      "edit": "Edit",
-      "delete": "Delete"
+      "editRow": "Edit {{name}}",
+      "deleteRow": "Delete {{name}}",
+      "deleteBlocked": "Used by items, so it cannot be deleted. Edit it and switch off Active instead."
     },
-    "form": {
+    "dialog": {
       "createTitle": "Create unit of measure",
       "editTitle": "Edit unit of measure",
+      "description": "Code and name identify the unit; decimal places set the precision of quantities",
       "code": "Code",
       "codePlaceholder": "e.g. PCS",
       "name": "Name",
       "namePlaceholder": "e.g. Piece",
       "decimalPlaces": "Decimal places (0–6)",
       "decimalPlacesPlaceholder": "e.g. 0",
-      "active": "Active",
-      "submit": "Save unit",
-      "errors": {
-        "code": "Enter the unit code",
-        "codeLength": "The code can be at most 20 characters",
-        "name": "Enter the unit name",
-        "nameLength": "The name can be at most 100 characters",
-        "decimalPlaces": "Choose a whole number from 0 to 6"
-      }
+      "isActive": "Active",
+      "save": "Save unit"
     },
     "delete": {
       "title": "Delete unit of measure",
-      "description": "“{{name}}” will be removed permanently. This can't be undone.",
-      "confirm": "Delete"
+      "description": "“{{name}}” will be deleted. This cannot be undone."
     },
-    "toasts": {
+    "messages": {
       "created": "Unit of measure created",
       "updated": "Unit of measure updated",
       "deleted": "Unit of measure deleted"
+    },
+    "validation": {
+      "codeRequired": "Enter the unit code",
+      "codeMax": "The code can be at most 20 characters",
+      "nameRequired": "Enter the unit name",
+      "nameMax": "The name can be at most 100 characters",
+      "decimalPlaces": "Choose a whole number from 0 to 6"
     }
   }
 }

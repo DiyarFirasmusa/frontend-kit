@@ -1,28 +1,28 @@
 import { z } from 'zod';
-import type {
-  UnitOfMeasureRequest,
-  UnitOfMeasureResponse,
-} from '@/types/api/catalog';
+import type { UnitOfMeasureDetail, UnitOfMeasurePayload } from '../types/types';
 
 export const unitOfMeasureSchema = z.object({
   code: z
     .string()
     .trim()
-    .min(1, { message: 'unitsOfMeasure.form.errors.code' })
-    .max(20, { message: 'unitsOfMeasure.form.errors.codeLength' }),
+    .min(1, { message: 'unitsOfMeasure.validation.codeRequired' })
+    .max(20, { message: 'unitsOfMeasure.validation.codeMax' }),
   name: z
     .string()
     .trim()
-    .min(1, { message: 'unitsOfMeasure.form.errors.name' })
-    .max(100, { message: 'unitsOfMeasure.form.errors.nameLength' }),
+    .min(1, { message: 'unitsOfMeasure.validation.nameRequired' })
+    .max(100, { message: 'unitsOfMeasure.validation.nameMax' }),
   decimalPlaces: z
     .string()
     .trim()
-    .regex(/^[0-6]$/, { message: 'unitsOfMeasure.form.errors.decimalPlaces' }),
+    .regex(/^[0-6]$/, { message: 'unitsOfMeasure.validation.decimalPlaces' }),
   isActive: z.boolean(),
 });
 
 export type UnitOfMeasureValues = z.infer<typeof unitOfMeasureSchema>;
+
+/** The fields of the form, for mapping backend field errors onto inputs. */
+export const UOM_FORM_FIELDS = unitOfMeasureSchema.keyof().options;
 
 export const defaultUnitOfMeasureForm: UnitOfMeasureValues = {
   code: '',
@@ -32,19 +32,19 @@ export const defaultUnitOfMeasureForm: UnitOfMeasureValues = {
 };
 
 export function toUnitOfMeasureValues(
-  row: UnitOfMeasureResponse,
+  detail: UnitOfMeasureDetail,
 ): UnitOfMeasureValues {
   return {
-    code: row.code ?? '',
-    name: row.name ?? '',
-    decimalPlaces: String(row.decimalPlaces ?? 0),
-    isActive: row.isActive ?? true,
+    code: detail.code ?? '',
+    name: detail.name ?? '',
+    decimalPlaces: String(detail.decimalPlaces ?? 0),
+    isActive: detail.isActive ?? true,
   };
 }
 
 export function toUnitOfMeasurePayload(
   values: UnitOfMeasureValues,
-): UnitOfMeasureRequest {
+): UnitOfMeasurePayload {
   return {
     code: values.code.trim().toUpperCase(),
     name: values.name.trim(),

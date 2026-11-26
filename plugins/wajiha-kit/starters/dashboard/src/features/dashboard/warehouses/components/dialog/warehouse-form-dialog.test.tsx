@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw';
+import { useState } from 'react';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { Button } from '@/components/ui/button';
 import { endpoints } from '@/constants/api';
@@ -9,23 +10,37 @@ import { tt } from '@/test/i18n';
 import { api } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
 import { renderWithProviders, screen, waitFor } from '@/test/render';
-import { useWarehouseFormDialog } from '../../hooks/form/use-warehouse-form-dialog';
+import type { WarehouseDialogState } from '../../hooks/form/use-warehouse-form-dialog';
 import { makeWarehouse } from '../../warehouse-test-utils';
 import { WarehouseFormDialog } from './warehouse-form-dialog';
 
 function Harness() {
-  const dialog = useWarehouseFormDialog();
+  const [mode, setMode] = useState<WarehouseDialogState>({ kind: 'closed' });
   return (
     <>
-      <Button onClick={dialog.openCreate}>open create</Button>
       <Button
         onClick={() => {
-          dialog.openEdit(makeWarehouse());
+          setMode({ kind: 'create' });
+        }}
+      >
+        open create
+      </Button>
+      <Button
+        onClick={() => {
+          setMode({ kind: 'edit', warehouseId: 'wh-1' });
         }}
       >
         open edit
       </Button>
-      <WarehouseFormDialog dialog={dialog} />
+      {mode.kind === 'closed' ? null : (
+        <WarehouseFormDialog
+          key={mode.kind}
+          mode={mode}
+          onClose={() => {
+            setMode({ kind: 'closed' });
+          }}
+        />
+      )}
     </>
   );
 }
@@ -37,6 +52,12 @@ describe('WarehouseFormDialog', () => {
 
   beforeEach(() => {
     signIn({ permissions: [PERMS.warehouse.create, PERMS.warehouse.update] });
+    // Edit loads the record by id.
+    server.use(
+      http.get(api(endpoints.warehouses.detail(':id')), () =>
+        HttpResponse.json(makeWarehouse()),
+      ),
+    );
   });
 
   it('shows the required-field message when the name is cleared', async () => {
@@ -44,13 +65,13 @@ describe('WarehouseFormDialog', () => {
     await user.click(screen.getByRole('button', { name: 'open create' }));
 
     const name = await screen.findByLabelText(
-      new RegExp(tt('warehouses.form.name')),
+      new RegExp(tt('warehouses.dialog.name')),
     );
     await user.type(name, 'x');
     await user.clear(name);
 
     expect(
-      await screen.findByText(tt('warehouses.form.errors.name')),
+      await screen.findByText(tt('warehouses.validation.name')),
     ).toBeInTheDocument();
   });
 
@@ -59,13 +80,13 @@ describe('WarehouseFormDialog', () => {
     await user.click(screen.getByRole('button', { name: 'open create' }));
 
     const code = await screen.findByLabelText(
-      new RegExp(tt('warehouses.form.code')),
+      new RegExp(tt('warehouses.dialog.code')),
     );
     await user.type(code, 'x');
     await user.clear(code);
 
     expect(
-      await screen.findByText(tt('warehouses.form.errors.code')),
+      await screen.findByText(tt('warehouses.validation.code')),
     ).toBeInTheDocument();
   });
 
@@ -81,19 +102,19 @@ describe('WarehouseFormDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
     await user.type(
-      await screen.findByLabelText(new RegExp(tt('warehouses.form.name'))),
+      await screen.findByLabelText(new RegExp(tt('warehouses.dialog.name'))),
       '  North depot  ',
     );
     await user.type(
-      screen.getByLabelText(new RegExp(tt('warehouses.form.code'))),
+      screen.getByLabelText(new RegExp(tt('warehouses.dialog.code'))),
       'wh-09',
     );
     await user.type(
-      screen.getByLabelText(new RegExp(tt('warehouses.form.address'))),
+      screen.getByLabelText(new RegExp(tt('warehouses.dialog.address'))),
       '  Karbala, industrial zone ',
     );
     await user.click(
-      screen.getByRole('button', { name: tt('warehouses.form.submit') }),
+      screen.getByRole('button', { name: tt('warehouses.dialog.save') }),
     );
 
     await waitFor(() => {
@@ -124,10 +145,10 @@ describe('WarehouseFormDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'open edit' }));
     expect(
-      await screen.findByLabelText(new RegExp(tt('warehouses.form.name'))),
+      await screen.findByLabelText(new RegExp(tt('warehouses.dialog.name'))),
     ).toHaveValue('Baghdad central warehouse');
     await user.click(
-      screen.getByRole('button', { name: tt('warehouses.form.submit') }),
+      screen.getByRole('button', { name: tt('warehouses.dialog.save') }),
     );
 
     await waitFor(() => {
@@ -148,7 +169,7 @@ describe('WarehouseFormDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
     expect(
-      await screen.findByLabelText(new RegExp(tt('warehouses.form.code'))),
+      await screen.findByLabelText(new RegExp(tt('warehouses.dialog.code'))),
     ).toBeEnabled();
     await user.keyboard('{Escape}');
     await waitFor(() => {
@@ -157,7 +178,7 @@ describe('WarehouseFormDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'open edit' }));
     expect(
-      await screen.findByLabelText(new RegExp(tt('warehouses.form.code'))),
+      await screen.findByLabelText(new RegExp(tt('warehouses.dialog.code'))),
     ).toBeDisabled();
   });
 
@@ -166,16 +187,19 @@ describe('WarehouseFormDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'open create' }));
     await user.type(
-      await screen.findByLabelText(new RegExp(tt('warehouses.form.name'))),
+      await screen.findByLabelText(new RegExp(tt('warehouses.dialog.name'))),
       'North depot',
     );
     await user.type(
-      screen.getByLabelText(new RegExp(tt('warehouses.form.code'))),
+      screen.getByLabelText(new RegExp(tt('warehouses.dialog.code'))),
       'WH-09',
     );
 
+    await user.click(
+      screen.getByRole('button', { name: tt('warehouses.dialog.save') }),
+    );
     expect(
-      screen.getByRole('button', { name: tt('warehouses.form.submit') }),
-    ).toBeDisabled();
+      await screen.findByText(tt('warehouses.validation.address')),
+    ).toBeInTheDocument();
   });
 });

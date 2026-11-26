@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { loadFeatureLocale } from '@/lib/i18n/i18n';
 import { setTestLanguage } from '@/test/i18n';
-import { renderWithProviders, screen } from '@/test/render';
+import { renderWithProviders, screen, waitFor } from '@/test/render';
 import type { CategoryTreeNode } from '../types/types';
 import { CategoryTree } from './category-tree';
 
@@ -143,14 +143,18 @@ describe('CategoryTree', () => {
     ).toBeInTheDocument();
   });
 
-  it('forwards search input changes', async () => {
+  it('commits the search text once typing pauses', async () => {
     const onSearchChange = vi.fn();
     const { user } = renderTree({ onSearchChange });
     await user.type(
       screen.getByRole('searchbox', { name: 'Search categories' }),
       'h',
     );
-    expect(onSearchChange).toHaveBeenCalledWith('h');
+    expect(onSearchChange).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onSearchChange).toHaveBeenCalledWith('h');
+    });
+    expect(onSearchChange).toHaveBeenCalledTimes(1);
   });
 
   it('renders Arabic labels in RTL language', async () => {

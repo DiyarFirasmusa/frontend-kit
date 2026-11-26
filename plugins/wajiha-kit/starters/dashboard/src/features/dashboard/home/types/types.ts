@@ -1,49 +1,17 @@
-/** A number with how it moved: one card on the home page. */
-export interface KpiCard {
-  value: number | null;
-  previousValue: number | null;
-  changePercent: number | null;
-  trend: number[] | null;
-}
+export type {
+  ActivityDay,
+  ActivityTrend,
+  ChangeAction,
+  ChangeResource,
+  KpiCard,
+  OverviewSummary,
+  RecentChange,
+} from '@/types/api/overview';
+import type { StaticRoutePath } from '@/types/routes';
 
-export interface OverviewSummary {
-  generatedAt: string | null;
-  warehouses: KpiCard | null;
-  suppliers: KpiCard | null;
-  categories: KpiCard | null;
-  units: KpiCard | null;
-}
-
-export interface ActivityDay {
-  date: string | null;
-  created: number;
-  updated: number;
-}
-
-export interface ActivityTrend {
-  from: string | null;
-  to: string | null;
-  created: number;
-  updated: number;
-  changePercent: number | null;
-  days: ActivityDay[] | null;
-}
-
-export type ChangeResource = 'warehouse' | 'supplier' | 'category' | 'unit';
-export type ChangeAction = 'created' | 'updated' | 'deleted';
-
-export interface RecentChange {
-  id: string;
-  resource: ChangeResource;
-  recordId: string;
-  name: string;
-  action: ChangeAction;
-  at: string;
-}
-
-/** Where a home card or panel link goes: always one of the list pages. */
+/** Where a home card or panel link goes: a page without parameters (from the route tree). */
 export interface HomeLink {
-  to: '/warehouses' | '/suppliers' | '/categories' | '/units-of-measure';
+  to: StaticRoutePath;
 }
 
 export interface HomeWidgetState<T> {

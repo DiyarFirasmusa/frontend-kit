@@ -1,47 +1,70 @@
+import { useTable } from '@tanstack/react-table';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { loadFeatureLocale } from '@/lib/i18n/i18n';
-import i18n from '@/lib/i18n/i18n';
-import { setTestLanguage, tt } from '@/test/i18n';
+import { dataTableFeatures } from '@/components/table/table-features';
+import i18n, { loadFeatureLocale } from '@/lib/i18n/i18n';
 import { renderWithProviders, screen } from '@/test/render';
 import type { AssignmentRow } from '../types/types';
 import { getCategoryAssignmentColumns } from './category-assignment-columns';
 
-function makeRow(overrides: Partial<AssignmentRow> = {}): AssignmentRow {
+const t = i18n.t.bind(i18n);
+
+function row(overrides: Partial<AssignmentRow> = {}): AssignmentRow {
   return {
-    id: 'asg-2',
+    id: 'asg-1',
     sourceCategoryId: 'cat-hand',
-    sourceCategoryName: null,
-    unitLabel: null,
-    options: null,
+    sourceCategoryName: 'Hand protection',
     inherited: false,
     attributeDefinitionId: 'attr-color',
     attributeCode: 'COLOR',
-    attributeName: 'اللون',
+    attributeName: 'Color',
     dataType: 'OPTION',
+    unitLabel: null,
+    options: [],
     isRequired: false,
-    isVariantAxis: true,
-    sortOrder: 2,
-    sourceName: 'حماية اليدين',
+    isVariantAxis: false,
+    sortOrder: 1,
+    sourceName: 'Hand protection',
     ...overrides,
   };
 }
 
-function build(
-  overrides: Partial<Parameters<typeof getCategoryAssignmentColumns>[0]> = {},
-) {
-  return getCategoryAssignmentColumns({
-    t: i18n.t,
-    canWrite: true,
+function Cells({
+  data,
+  canWrite,
+  handlers,
+}: {
+  data: AssignmentRow[];
+  canWrite: boolean;
+  handlers: Parameters<typeof getCategoryAssignmentColumns>[0];
+}) {
+  const columns = getCategoryAssignmentColumns({ ...handlers, canWrite });
+  const table = useTable({ features: dataTableFeatures, columns, data });
+  return (
+    <div>
+      {table.getRowModel().rows.map((r) =>
+        r.getVisibleCells().map((cell) => (
+          <div key={cell.id}>
+            <table.FlexRender cell={cell} />
+          </div>
+        )),
+      )}
+    </div>
+  );
+}
+
+function renderRow(data: AssignmentRow, canWrite = true) {
+  const handlers = {
+    t,
+    canWrite,
     onToggleRequired: vi.fn(),
     onToggleVariantAxis: vi.fn(),
     onEditOptions: vi.fn(),
     onDetach: vi.fn(),
-    ...overrides,
-  });
-}
-
-function byId(columns: ReturnType<typeof build>) {
-  return Object.fromEntries(columns.map((c) => [c.id, c]));
+  };
+  const view = renderWithProviders(
+    <Cells data={[data]} canWrite={canWrite} handlers={handlers} />,
+  );
+  return { ...view, handlers };
 }
 
 describe('getCategoryAssignmentColumns', () => {
@@ -49,130 +72,54 @@ describe('getCategoryAssignmentColumns', () => {
     await loadFeatureLocale('dashboard/categories');
   });
 
-  it('defines the columns in display order', () => {
-    expect(build().map((c) => c.id)).toEqual([
-      'attribute',
-      'dataType',
-      'source',
-      'required',
-      'variantAxis',
-      'options',
-      'actions',
-    ]);
-  });
-
-  it('shows the inherited read-only label and disables switches for inherited rows', () => {
-    const cols = byId(build());
-    const row = makeRow({
-      inherited: true,
-      isRequired: true,
-      dataType: 'TEXT',
+  it('ends with the actions column and sorts nothing', () => {
+    const columns = getCategoryAssignmentColumns({
+      t,
+      canWrite: true,
+      onToggleRequired: vi.fn(),
+      onToggleVariantAxis: vi.fn(),
+      onEditOptions: vi.fn(),
+      onDetach: vi.fn(),
     });
-    const { unmount } = renderWithProviders(
-      <>
-        {cols.attribute?.cell?.(row)}
-        {cols.required?.cell?.(row)}
-        {cols.variantAxis?.cell?.(row)}
-      </>,
+    expect(columns.at(-1)?.id).toBe('actions');
+    expect(columns.every((column) => column.enableSorting === false)).toBe(
+      true,
     );
+  });
+
+  it('toggles the flags and names the row on detach', async () => {
+    const { user, handlers } = renderRow(row());
+    const [required, axis] = screen.getAllByRole('switch');
+    if (!required || !axis) {
+      throw new Error('switches missing');
+    }
+    await user.click(required);
+    expect(handlers.onToggleRequired).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'asg-1' }),
+      true,
+    );
+    await user.click(axis);
+    expect(handlers.onToggleVariantAxis).toHaveBeenCalledOnce();
+    await user.click(screen.getByRole('button', { name: /^Detach Color/ }));
+    expect(handlers.onDetach).toHaveBeenCalledOnce();
+  });
+
+  it('locks an inherited row and hides detach', () => {
+    renderRow(row({ inherited: true }));
+    for (const toggle of screen.getAllByRole('switch')) {
+      expect(toggle).toHaveAttribute('aria-disabled', 'true');
+    }
+    expect(screen.queryByRole('button', { name: /^Detach/ })).toBeNull();
     expect(
-      screen.getByText(tt('categories.assignments.inheritedReadonly')),
+      screen.getByText('Inherited attribute, read-only'),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('switch', {
-        name: tt('categories.assignments.col.required'),
-      }),
-    ).toHaveAttribute('aria-disabled', 'true');
-    expect(
-      screen.getByRole('switch', {
-        name: tt('categories.assignments.col.variantAxis'),
-      }),
-    ).toHaveAttribute('aria-disabled', 'true');
-    unmount();
   });
 
-  it('renders no detach button for inherited rows', () => {
-    const cols = byId(build());
-    const { unmount } = renderWithProviders(
-      <>{cols.actions?.cell?.(makeRow({ inherited: true }))}</>,
-    );
-    expect(
-      screen.queryByRole('button', {
-        name: tt('categories.assignments.detach'),
-      }),
-    ).not.toBeInTheDocument();
-    unmount();
-  });
-
-  it('calls onDetach for an own row when the detach button is clicked', async () => {
-    const onDetach = vi.fn();
-    const cols = byId(build({ onDetach }));
-    const row = makeRow();
-    const { user, unmount } = renderWithProviders(
-      <>{cols.actions?.cell?.(row)}</>,
-    );
-    await user.click(
-      screen.getByRole('button', { name: tt('categories.assignments.detach') }),
-    );
-    expect(onDetach).toHaveBeenCalledWith(row);
-    unmount();
-  });
-
-  it('calls onToggleRequired with the new value for an own row', async () => {
-    const onToggleRequired = vi.fn();
-    const cols = byId(build({ onToggleRequired }));
-    const row = makeRow({ isRequired: false });
-    const { user, unmount } = renderWithProviders(
-      <>{cols.required?.cell?.(row)}</>,
-    );
-    await user.click(
-      screen.getByRole('switch', {
-        name: tt('categories.assignments.col.required'),
-      }),
-    );
-    expect(onToggleRequired).toHaveBeenCalledWith(row, true);
-    unmount();
-  });
-
-  it('shows the options button only for OPTION attributes when writable', () => {
-    const cols = byId(build());
-    const { rerender } = renderWithProviders(
-      <>{cols.options?.cell?.(makeRow({ dataType: 'OPTION' }))}</>,
-    );
-    expect(
-      screen.getByRole('button', {
-        name: tt('categories.assignments.editOptions'),
-      }),
-    ).toBeInTheDocument();
-
-    rerender(<>{cols.options?.cell?.(makeRow({ dataType: 'TEXT' }))}</>);
-    expect(
-      screen.queryByRole('button', {
-        name: tt('categories.assignments.editOptions'),
-      }),
-    ).not.toBeInTheDocument();
-    expect(screen.getByText('—')).toBeInTheDocument();
-  });
-
-  it('renders an em dash for a missing data type and attribute name', () => {
-    const cols = byId(build());
-    const row = makeRow({ dataType: null, attributeName: null });
-    renderWithProviders(
-      <>
-        {cols.attribute?.cell?.(row)}
-        {cols.dataType?.cell?.(row)}
-      </>,
-    );
-    expect(screen.getAllByText('—')).toHaveLength(2);
-  });
-
-  it('uses English headers and switches to Arabic headers', async () => {
-    expect(byId(build()).attribute?.header).toBe('Attribute');
-    expect(byId(build()).source?.header).toBe('Source');
-
-    await setTestLanguage('ar');
-    await loadFeatureLocale('dashboard/categories');
-    expect(byId(build()).attribute?.header).toBe('الخاصية');
-    expect(byId(build()).source?.header).toBe('المصدر');
+  it('locks everything without the update permission', () => {
+    renderRow(row(), false);
+    for (const toggle of screen.getAllByRole('switch')) {
+      expect(toggle).toHaveAttribute('aria-disabled', 'true');
+    }
+    expect(screen.queryByRole('button', { name: /Edit options/ })).toBeNull();
   });
 });

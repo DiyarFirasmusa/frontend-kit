@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router';
 import { useCallback } from 'react';
+import { useListSearch, type UpdateSearch } from '@/hooks/use-list-search';
 import {
   SUPPLIER_STATUSES,
   type SupplierStatusFilter,
@@ -11,47 +12,33 @@ import {
 
 const routeApi = getRouteApi('/_app/suppliers/');
 
-type FilterPatch = Partial<Pick<SupplierSearch, 'q' | 'status'>>;
+const FILTER_KEYS = ['q', 'status'] as const;
 
 export function toSupplierStatusFilter(value: string): SupplierStatusFilter {
   return SUPPLIER_STATUSES.find((status) => status === value) ?? 'all';
 }
 
-/** Reads and writes the list's filters; the URL is the only copy. */
+/** The URL state of the list: pagination, sorting and filters (the URL is the only copy). */
 export function useSupplierFilters() {
   const search = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
-
-  const setFilters = useCallback(
-    (patch: FilterPatch) => {
-      void navigate({
-        search: (prev) => ({ ...prev, ...patch, page: 1 }),
-        // Typing a search must not add a history entry per pause.
-        replace: patch.q !== undefined,
-      });
+  const update: UpdateSearch<SupplierSearch> = (updater, options) => {
+    void navigate({ search: updater, replace: options?.replace });
+  };
+  const goToPage = useCallback(
+    (page: number) => {
+      void navigate({ search: (prev) => ({ ...prev, page }), replace: true });
     },
     [navigate],
   );
-
-  const clear = useCallback(() => {
-    void navigate({
-      search: (prev) => ({
-        ...prev,
-        q: defaultSupplierSearch.q,
-        status: defaultSupplierSearch.status,
-        page: 1,
-      }),
-    });
-  }, [navigate]);
-
-  const activeCount =
-    Number(search.q !== defaultSupplierSearch.q) +
-    Number(search.status !== defaultSupplierSearch.status);
-
   return {
-    values: { q: search.q, status: search.status },
-    setFilters,
-    clear,
-    activeCount,
+    search,
+    goToPage,
+    ...useListSearch({
+      search,
+      defaults: defaultSupplierSearch,
+      filterKeys: FILTER_KEYS,
+      update,
+    }),
   };
 }

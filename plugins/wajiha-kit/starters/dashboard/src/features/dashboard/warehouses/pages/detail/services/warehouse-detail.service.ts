@@ -2,7 +2,6 @@ import { privateApi } from '@/api/client/private/private';
 import { endpoints } from '@/constants/api';
 import type {
   LocationResponse,
-  WarehouseResponse,
   WarehouseUserRequest,
   WarehouseUserResponse,
   WarehouseUserRoleRequest,
@@ -11,17 +10,6 @@ import type {
 /** `signal` comes from TanStack Query, so a cancelled query aborts the request. */
 interface RequestOptions {
   signal?: AbortSignal;
-}
-
-export async function fetchWarehouse(
-  id: string,
-  options: RequestOptions = {},
-): Promise<WarehouseResponse> {
-  const { data } = await privateApi.get<WarehouseResponse>(
-    endpoints.warehouses.detail(id),
-    { signal: options.signal },
-  );
-  return data;
 }
 
 export async function fetchWarehouseMembers(
@@ -42,7 +30,7 @@ export async function addWarehouseMember(
   const { data } = await privateApi.post<WarehouseUserResponse>(
     endpoints.warehouses.users(id),
     payload,
-    { successMessage: 'warehouses.toasts.memberAdded' },
+    { successMessage: 'warehouses.messages.memberAdded' },
   );
   return data;
 }
@@ -55,7 +43,7 @@ export async function changeWarehouseMemberRole(
   const { data } = await privateApi.put<WarehouseUserResponse>(
     endpoints.warehouses.changeUserRole(id, userId),
     payload,
-    { successMessage: 'warehouses.toasts.memberRoleChanged' },
+    { successMessage: 'warehouses.messages.memberRoleChanged' },
   );
   return data;
 }
@@ -65,7 +53,7 @@ export async function removeWarehouseMember(
   userId: string,
 ): Promise<void> {
   await privateApi.delete(endpoints.warehouses.removeUser(id, userId), {
-    successMessage: 'warehouses.toasts.memberRemoved',
+    successMessage: 'warehouses.messages.memberRemoved',
   });
 }
 

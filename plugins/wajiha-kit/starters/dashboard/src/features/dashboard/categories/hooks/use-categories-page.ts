@@ -1,127 +1,90 @@
-import type { UseQueryResult } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCan } from '@/components/auth/can';
-import type { SelectOption } from '@/components/fields/select-option';
 import type { RowAction } from '@/components/table/data-table-row-actions';
-import type { ExportExcelButtonProps } from '@/components/table/export-excel-button';
+import { useDeleteDialog } from '@/hooks/use-delete-dialog';
 import { useExcelExport } from '@/hooks/use-excel-export';
-import { directionOf } from '@/lib/i18n/languages';
-import type {
-  AttributeDefinitionResponse,
-  ItemCategoryResponse,
-} from '@/types/api/catalog';
-import type { Column } from '@/types/table';
 import { getCategoryAssignmentColumns } from '../components/category-assignment-columns';
-import type { AttachAttributeDialogProps } from '../components/dialog/attach-attribute-dialog';
-import type { AttributeFormDialogProps } from '../components/dialog/attribute-form-dialog';
-import type { AttributeOptionsDialogProps } from '../components/dialog/attribute-options-dialog';
-import type { CategoryBlockedDialogProps } from '../components/dialog/category-blocked-dialog';
-import type { CategoryFormDialogProps } from '../components/dialog/category-form-dialog';
-import type {
-  AssignmentRow,
-  CategoriesTab,
-  CategoryTreeNode,
+import {
+  ALL_CATEGORIES,
+  type AssignmentRow,
+  type CategoryRow,
 } from '../types/types';
 import {
   flattenCategoryTree,
   getCategoryExportColumns,
 } from '../utils/category-export-columns';
-import type { AttachAttributeFormValues } from '../validations/validations';
-import { getAttributeAccess } from './attribute-actions';
-import { getCategoryAccess } from './category-actions';
-import type {
-  CategoriesConfirmKind,
-  CategoriesConfirmTarget,
-} from './confirm-target';
-import type { useAttributeFilters } from './filter/use-attribute-filters';
-import { useAttachAttributeDialog } from './form/use-attach-attribute-dialog';
-import { useDetachCategoryAttribute } from './query/use-category-mutations';
-import { useAttributePanel } from './use-attribute-panel';
-import type { CategoryAssignmentsView } from './use-category-assignments';
+import {
+  buildCategoryTree,
+  getCategoryPath,
+  getChildCount,
+  isCategoryInUse,
+} from '../utils/category-tree';
+import { getCategoryAccess, getCategoryRowActions } from './category-actions';
+import { useCategoryFilters } from './filter/use-category-filters';
+import type { CategoryDialogState } from './form/use-category-form-dialog';
+import { useCategoriesList } from './query/use-categories-list';
+import {
+  useDeleteCategory,
+  useDetachCategoryAttribute,
+  useUpdateCategory,
+} from './query/use-category-mutations';
 import { useCategoryAssignments } from './use-category-assignments';
-import { useCategoryTreeSection } from './use-category-tree-section';
 
-export type { CategoriesConfirmKind } from './confirm-target';
+const NO_CATEGORIES: CategoryRow[] = [];
 
-export interface CategoriesConfirmState {
-  open: boolean;
-  kind: CategoriesConfirmKind;
-  name: string;
-  isPending: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+/** Sum of the root categories' item counts; null when the API sends none. */
+function sumRootItemCounts(categories: CategoryRow[]): number | null {
+  const roots = categories.filter(
+    (category) =>
+      category.parentId === null ||
+      category.parentId === undefined ||
+      !categories.some((other) => other.id === category.parentId),
+  );
+  if (!roots.some((root) => typeof root.itemCount === 'number')) {
+    return null;
+  }
+  return roots.reduce((sum, root) => sum + (root.itemCount ?? 0), 0);
 }
 
-export interface CategoriesPage {
-  dir: 'rtl' | 'ltr';
-  tab: CategoriesTab;
-  setTab: (tab: CategoriesTab) => void;
-  showAttributesTab: boolean;
-  canCreateCategory: boolean;
-  canUpdateCategory: boolean;
-  canDeleteCategory: boolean;
-  canCreateAttribute: boolean;
-  canUpdateAttribute: boolean;
-  canDeleteAttribute: boolean;
-  /** Excel export of the category tree (the categories tab). */
-  exportExcel: ExportExcelButtonProps;
-  onAddCategory: () => void;
-  onAddAttribute: () => void;
-  categories: {
-    query: UseQueryResult<ItemCategoryResponse[]>;
-    nodes: CategoryTreeNode[];
-    search: string;
-    setSearch: (value: string) => void;
-    isSearching: boolean;
-    selectedId: string | null;
-    selectedCategory: ItemCategoryResponse | null;
-    selectedPath: string;
-    select: (id: string) => void;
-    isAllSelected: boolean;
-    selectAll: () => void;
-    totalItemCount: number | null;
-    getNodeActions: (id: string) => RowAction[];
-    onEditSelected: () => void;
-    onMoveSelected: () => void;
-    onDeleteSelected: () => void;
-  };
-  assignments: CategoryAssignmentsView & {
-    columns: Column<AssignmentRow>[];
-    onAttachClick: () => void;
-  };
-  attributes: {
-    query: UseQueryResult<AttributeDefinitionResponse[]>;
-    rows: AttributeDefinitionResponse[];
-    columns: Column<AttributeDefinitionResponse>[];
-    filters: ReturnType<typeof useAttributeFilters>;
-  };
-  categoryDialog: CategoryFormDialogProps;
-  blockedDialog: CategoryBlockedDialogProps;
-  attachDialog: AttachAttributeDialogProps;
-  attributeDialog: AttributeFormDialogProps;
-  optionsDialog: AttributeOptionsDialogProps;
-  confirm: CategoriesConfirmState;
-}
-
-export function useCategoriesPage(initialTab: CategoriesTab): CategoriesPage {
-  const { t, i18n } = useTranslation();
+/** Everything the categories tree page needs; the container only renders it. */
+export function useCategoriesPage() {
+  const { t } = useTranslation();
   const can = useCan();
-  const categoryAccess = getCategoryAccess(can);
-  const attributeAccess = getAttributeAccess(can);
-  const [tab, setTab] = useState<CategoriesTab>(initialTab);
-  const [target, setTarget] = useState<CategoriesConfirmTarget | null>(null);
+  const access = getCategoryAccess(can);
+  const filters = useCategoryFilters();
+  const { q, category: picked } = filters.search;
+  const [dialog, setDialog] = useState<CategoryDialogState>({ kind: 'closed' });
+  const closeDialog = useCallback(() => {
+    setDialog({ kind: 'closed' });
+  }, []);
 
-  const tree = useCategoryTreeSection({ requestDelete: setTarget });
-  const panel = useAttributePanel({ requestDelete: setTarget });
-  const attachDialog = useAttachAttributeDialog();
+  // `view` is the tree on screen (narrowed by the search); `full` is the whole
+  // tree, which the parent choices, paths and selection read.
+  const view = useCategoriesList({ q });
+  const full = useCategoriesList({ q: '' });
+  const categories = full.data?.content ?? NO_CATEGORIES;
+  const nodes = useMemo(
+    () => buildCategoryTree(view.data?.content ?? NO_CATEGORIES),
+    [view.data],
+  );
+
+  // Until the user picks one, the first category of the tree is selected. A
+  // picked id that no longer exists (deleted, stale link) falls back too.
+  const isAllSelected = picked === ALL_CATEGORIES;
+  const pickedExists = categories.some((category) => category.id === picked);
+  const selectedId = isAllSelected
+    ? null
+    : pickedExists
+      ? picked
+      : (nodes[0]?.id ?? null);
+  const selectedCategory =
+    categories.find((category) => category.id === selectedId) ?? null;
 
   const assignments = useCategoryAssignments({
-    categoryId: tree.selectedId,
-    categories: tree.categories,
+    categoryId: selectedId,
+    categories,
   });
-  const detachAssignment = useDetachCategoryAttribute(tree.selectedId ?? '');
-
   const linkedIds = useMemo(
     () =>
       new Set(
@@ -131,50 +94,91 @@ export function useCategoriesPage(initialTab: CategoriesTab): CategoriesPage {
       ),
     [assignments.rows],
   );
-  const attachOptions = useMemo<SelectOption[]>(
-    () =>
-      panel.definitions
-        .filter(
-          (definition) =>
-            definition.isActive === true && !linkedIds.has(definition.id),
-        )
-        .map((definition) => ({
-          value: definition.id,
-          label: `${definition.name ?? ''} (${definition.code ?? ''})`,
-        })),
-    [panel.definitions, linkedIds],
-  );
 
+  const update = useUpdateCategory();
+  const removeCategory = useDeleteDialog(
+    useDeleteCategory(),
+    (category: CategoryRow) => category.name ?? '',
+  );
+  const detach = useDeleteDialog(
+    useDetachCategoryAttribute(selectedId ?? ''),
+    (row: AssignmentRow) => row.attributeName ?? '',
+  );
+  const { openDelete: openDeleteCategory } = removeCategory;
+  const { openDelete: openDetach } = detach;
   const { setRequired, setVariantAxis } = assignments;
-  const { openOptionsFor } = panel;
-  const assignmentWrite = tree.canWrite;
+
+  const requestDelete = (id: string) => {
+    const category = categories.find((item) => item.id === id);
+    if (!category) {
+      return;
+    }
+    if (isCategoryInUse(category, categories)) {
+      setDialog({ kind: 'blocked', categoryId: id });
+      return;
+    }
+    openDeleteCategory(category);
+  };
+
+  const setActive = (category: CategoryRow, isActive: boolean) => {
+    update.mutate({
+      id: category.id,
+      payload: {
+        code: category.code ?? '',
+        name: category.name ?? '',
+        parentId: category.parentId ?? undefined,
+        isActive,
+      },
+    });
+  };
+
+  const getNodeActions = (id: string): RowAction[] => {
+    const category = categories.find((item) => item.id === id);
+    if (!category) {
+      return [];
+    }
+    return getCategoryRowActions({
+      t,
+      category,
+      canWrite: access.update,
+      canDelete: access.delete,
+      onEdit: (target) => {
+        setDialog({ kind: 'edit', categoryId: target });
+      },
+      onToggleActive: () => {
+        setActive(category, category.isActive === false);
+      },
+      onMove: (target) => {
+        setDialog({ kind: 'move', categoryId: target });
+      },
+      onDelete: requestDelete,
+    });
+  };
+
   const assignmentColumns = useMemo(
     () =>
       getCategoryAssignmentColumns({
         t,
-        canWrite: assignmentWrite,
+        canWrite: access.update,
         onToggleRequired: setRequired,
         onToggleVariantAxis: setVariantAxis,
         onEditOptions: (row) => {
           if (row.attributeDefinitionId) {
-            openOptionsFor(row.attributeDefinitionId);
+            setDialog({
+              kind: 'options',
+              attributeId: row.attributeDefinitionId,
+            });
           }
         },
-        onDetach: (row) => {
-          setTarget({
-            kind: 'assignment',
-            id: row.id,
-            name: row.attributeName ?? '',
-          });
-        },
+        onDetach: openDetach,
       }),
-    [t, assignmentWrite, setRequired, setVariantAxis, openOptionsFor],
+    [t, access.update, setRequired, setVariantAxis, openDetach],
   );
 
   const exportColumns = useMemo(() => getCategoryExportColumns(t), [t]);
   const exportRows = useMemo(
-    () => flattenCategoryTree(tree.nodes, tree.categories),
-    [tree.nodes, tree.categories],
+    () => flattenCategoryTree(nodes, categories),
+    [nodes, categories],
   );
   const excel = useExcelExport({
     fileName: 'categories',
@@ -183,115 +187,116 @@ export function useCategoriesPage(initialTab: CategoriesTab): CategoriesPage {
     load: () => exportRows,
   });
 
-  const onSubmitAttach = (values: AttachAttributeFormValues) => {
-    assignments.attach(
-      {
-        attributeDefinitionId: values.attributeDefinitionId,
-        isRequired: values.isRequired,
-        isVariantAxis: values.isVariantAxis,
-        sortOrder: assignments.rows.length,
-      },
-      () => {
-        attachDialog.close();
-      },
-    );
-  };
-
-  const clearTarget = () => {
-    setTarget(null);
-  };
-
-  const onConfirm = () => {
-    if (target === null) {
-      return;
-    }
-    if (target.kind === 'category') {
-      tree.removeCategory(target.id, clearTarget);
-      return;
-    }
-    if (target.kind === 'assignment') {
-      detachAssignment.mutate(target.id, { onSuccess: clearTarget });
-      return;
-    }
-    panel.removeAttribute(target.id, clearTarget);
-  };
+  const blocked =
+    dialog.kind === 'blocked'
+      ? (categories.find((category) => category.id === dialog.categoryId) ??
+        null)
+      : null;
 
   return {
-    dir: directionOf(i18n.language),
-    tab,
-    setTab,
-    showAttributesTab: attributeAccess.view,
-    canCreateCategory: categoryAccess.create,
-    canUpdateCategory: categoryAccess.update,
-    canDeleteCategory: categoryAccess.delete,
-    canCreateAttribute: attributeAccess.create,
-    canUpdateAttribute: attributeAccess.update,
-    canDeleteAttribute: attributeAccess.delete,
+    t,
+    tree: {
+      query: view,
+      nodes,
+      search: q,
+      setSearch: filters.setQuery,
+      isSearching: q !== '',
+      selectedId,
+      select: filters.select,
+      isAllSelected,
+      selectAll: filters.selectAll,
+      totalItemCount: sumRootItemCounts(categories),
+      getNodeActions,
+    },
+    selected: {
+      category: selectedCategory,
+      path: selectedId === null ? '' : getCategoryPath(selectedId, categories),
+    },
+    can: {
+      create: access.create,
+      update: access.update,
+      delete: access.delete,
+    },
+    assignments: {
+      query: assignments.query,
+      rows: assignments.rows,
+      columns: assignmentColumns,
+      canAttach: access.update && selectedId !== null,
+    },
     exportExcel: {
       onExport: excel.exportExcel,
       isExporting: excel.isExporting,
       disabled: exportRows.length === 0,
     },
-    onAddCategory: tree.onAddCategory,
-    onAddAttribute: panel.onAddAttribute,
-    categories: {
-      query: tree.query,
-      nodes: tree.nodes,
-      search: tree.search,
-      setSearch: tree.setSearch,
-      isSearching: tree.isSearching,
-      selectedId: tree.selectedId,
-      selectedCategory: tree.selectedCategory,
-      selectedPath: tree.selectedPath,
-      select: tree.select,
-      isAllSelected: tree.isAllSelected,
-      selectAll: tree.selectAll,
-      totalItemCount: tree.totalItemCount,
-      getNodeActions: tree.getNodeActions,
-      onEditSelected: tree.onEditSelected,
-      onMoveSelected: tree.onMoveSelected,
-      onDeleteSelected: tree.onDeleteSelected,
+    categories,
+    linkedIds,
+    dialog,
+    closeDialog,
+    openCreate: () => {
+      setDialog({ kind: 'create', parentId: selectedId ?? '' });
     },
-    assignments: {
-      ...assignments,
-      columns: assignmentColumns,
-      onAttachClick: () => {
-        if (tree.selectedId !== null) {
-          attachDialog.openAttach();
-        }
-      },
+    openEditSelected: () => {
+      if (selectedId !== null) {
+        setDialog({ kind: 'edit', categoryId: selectedId });
+      }
     },
-    attributes: {
-      query: panel.query,
-      rows: panel.rows,
-      columns: panel.columns,
-      filters: panel.filters,
+    openMoveSelected: () => {
+      if (selectedId !== null) {
+        setDialog({ kind: 'move', categoryId: selectedId });
+      }
     },
-    categoryDialog: tree.categoryDialog,
-    blockedDialog: tree.blockedDialog,
-    attachDialog: {
-      open: attachDialog.open,
-      onOpenChange: attachDialog.onOpenChange,
-      attributeOptions: attachOptions,
-      isPending: assignments.isAttaching,
-      onSubmit: onSubmitAttach,
+    deleteSelected: () => {
+      if (selectedId !== null) {
+        requestDelete(selectedId);
+      }
     },
-    attributeDialog: panel.attributeDialog,
-    optionsDialog: panel.optionsDialog,
-    confirm: {
-      open: target !== null,
-      kind: target?.kind ?? 'category',
-      name: target?.name ?? '',
-      isPending:
-        tree.isDeletingCategory ||
-        detachAssignment.isPending ||
-        panel.isDeletingAttribute,
+    openAttach: () => {
+      setDialog({ kind: 'attach' });
+    },
+    /** After a save: a new category becomes the selection. */
+    onCategorySaved: (id: string) => {
+      if (dialog.kind === 'create') {
+        filters.select(id);
+      }
+      closeDialog();
+    },
+    deleteCategoryDialog: removeCategory.dialog,
+    detachDialog: detach.dialog,
+    blockedDialog: {
+      open: blocked !== null,
       onOpenChange: (open: boolean) => {
         if (!open) {
-          setTarget(null);
+          closeDialog();
         }
       },
-      onConfirm,
+      categoryName: blocked?.name ?? '',
+      itemCount:
+        typeof blocked?.itemCount === 'number' ? blocked.itemCount : null,
+      childCount: blocked ? getChildCount(blocked, categories) : null,
+      isActive: blocked?.isActive !== false,
+      categoryPath: blocked ? getCategoryPath(blocked.id, categories) : '',
+      canDeactivate:
+        access.update && blocked !== null && blocked.isActive !== false,
+      isPending: update.isPending,
+      onDeactivate: () => {
+        if (blocked === null || update.isPending) {
+          return;
+        }
+        update.mutate(
+          {
+            id: blocked.id,
+            payload: {
+              code: blocked.code ?? '',
+              name: blocked.name ?? '',
+              parentId: blocked.parentId ?? undefined,
+              isActive: false,
+            },
+          },
+          { onSuccess: closeDialog },
+        );
+      },
     },
   };
 }
+
+export type CategoriesPage = ReturnType<typeof useCategoriesPage>;

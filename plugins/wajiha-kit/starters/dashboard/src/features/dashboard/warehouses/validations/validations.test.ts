@@ -28,33 +28,33 @@ describe('warehouseSchema', () => {
   it('requires a name and a code with i18n-key messages', () => {
     const result = warehouseSchema.safeParse(defaultWarehouseForm);
     const messages = result.error?.issues.map((issue) => issue.message);
-    expect(messages).toContain('warehouses.form.errors.name');
-    expect(messages).toContain('warehouses.form.errors.code');
+    expect(messages).toContain('warehouses.validation.name');
+    expect(messages).toContain('warehouses.validation.code');
   });
 
   it('rejects a name longer than 200 characters', () => {
     expect(firstMessage({ ...valid, name: 'a'.repeat(201) })).toBe(
-      'warehouses.form.errors.nameMax',
+      'warehouses.validation.nameMax',
     );
     expect(firstMessage({ ...valid, name: 'a'.repeat(200) })).toBeUndefined();
   });
 
   it('rejects a code longer than 30 characters', () => {
     expect(firstMessage({ ...valid, code: 'C'.repeat(31) })).toBe(
-      'warehouses.form.errors.codeMax',
+      'warehouses.validation.codeMax',
     );
     expect(firstMessage({ ...valid, code: 'C'.repeat(30) })).toBeUndefined();
   });
 
   it('requires an address', () => {
     expect(firstMessage({ ...valid, address: '   ' })).toBe(
-      'warehouses.form.errors.address',
+      'warehouses.validation.address',
     );
   });
 
   it('rejects an address longer than 300 characters', () => {
     expect(firstMessage({ ...valid, address: 'a'.repeat(301) })).toBe(
-      'warehouses.form.errors.addressMax',
+      'warehouses.validation.addressMax',
     );
   });
 
@@ -68,7 +68,7 @@ describe('warehouseSchema', () => {
       'managerUserId',
     ] as const) {
       expect(firstMessage({ ...valid, [field]: 'not-a-uuid' })).toBe(
-        'warehouses.form.errors.uuid',
+        'warehouses.validation.uuid',
       );
     }
   });

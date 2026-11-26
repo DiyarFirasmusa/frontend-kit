@@ -19,14 +19,14 @@ describe('getWarehouseExportColumns', () => {
     });
 
     expect(columns.map((column) => column.header)).toEqual([
-      tt('warehouses.col.code'),
-      tt('warehouses.col.name'),
-      tt('warehouses.col.address'),
-      tt('warehouses.col.manager'),
-      tt('warehouses.col.members'),
-      tt('warehouses.col.locations'),
-      tt('warehouses.col.type'),
-      tt('warehouses.col.status'),
+      tt('warehouses.columns.code'),
+      tt('warehouses.columns.name'),
+      tt('warehouses.columns.address'),
+      tt('warehouses.columns.manager'),
+      tt('warehouses.columns.members'),
+      tt('warehouses.columns.locations'),
+      tt('warehouses.columns.type'),
+      tt('warehouses.columns.status'),
     ]);
     expect(toExportMatrix([row], columns)[0]).toEqual([
       'BGD-01',

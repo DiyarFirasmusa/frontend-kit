@@ -16,19 +16,71 @@ import {
   api,
   boolParam,
   fail,
+  intParam,
   matches,
   nextCode,
   noContent,
   notFound,
   ok,
+  paginate,
   param,
   readJson,
   sameCode,
+  sortBy,
   textParam,
+  validationProblem,
 } from '../core';
 import { newId } from '../seed/base';
 import { attributeDefinitions, categoryAssignments } from '../seed/categories';
 import { sortedOptions, toAttribute } from './categories';
+
+const SORTABLE = {
+  name: (row: AttributeDefinitionResponse) => row.name,
+  code: (row: AttributeDefinitionResponse) => row.code,
+  dataType: (row: AttributeDefinitionResponse) => row.dataType,
+};
+
+/** A malformed body (readJson returns {}) must fail validation, not throw. */
+function text(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+/** 422 with field errors: the name is required and unique. */
+function validateAttribute(
+  request: Request,
+  body: AttributeDefinitionRequest,
+  current: AttributeDefinitionResponse | null,
+): Promise<Response> | null {
+  const errors: { field: string; ar: string; en: string }[] = [];
+  const name = text(body.name);
+  if (!name) {
+    errors.push({ field: 'name', ar: 'الاسم مطلوب', en: 'Name is required' });
+  } else if (
+    attributeDefinitions.some(
+      (d) => d.id !== current?.id && sameCode(d.name, name),
+    )
+  ) {
+    errors.push({
+      field: 'name',
+      ar: 'اسم الخاصية مستخدم مسبقاً',
+      en: 'Attribute name already exists',
+    });
+  }
+  const code = body.code?.trim() || null;
+  if (
+    code !== null &&
+    attributeDefinitions.some(
+      (d) => d.id !== current?.id && sameCode(d.code, code),
+    )
+  ) {
+    errors.push({
+      field: 'code',
+      ar: 'رمز الخاصية مستخدم مسبقاً',
+      en: 'Attribute code already exists',
+    });
+  }
+  return errors.length > 0 ? validationProblem(request, errors) : null;
+}
 
 export const attributeHandlers = [
   // ----- Attribute definitions and options -----
@@ -37,33 +89,33 @@ export const attributeHandlers = [
     const q = textParam(url, 'q');
     const dataType = textParam(url, 'dataType');
     const isActive = boolParam(url, 'isActive');
-    const response: AttributeDefinitionResponse[] = attributeDefinitions
-      .filter(
-        (d) =>
-          matches(q, d.code, d.name) &&
-          (dataType === '' || d.dataType === dataType) &&
-          (isActive === undefined || d.isActive === isActive),
-      )
-      .map((d) => toAttribute(d));
-    return ok(response);
+    const filtered = attributeDefinitions.filter(
+      (d) =>
+        matches(q, d.code, d.name) &&
+        (dataType === '' || d.dataType === dataType) &&
+        (isActive === undefined || d.isActive === isActive),
+    );
+    return ok(
+      paginate(
+        sortBy(filtered, url, SORTABLE).map((d) => toAttribute(d)),
+        intParam(url, 'page', 0),
+        intParam(url, 'size', 10),
+      ),
+    );
   }),
 
   http.post(api(endpoints.attributeDefinitions.create), async ({ request }) => {
     const body = await readJson<AttributeDefinitionRequest>(request);
+    const invalid = validateAttribute(request, body, null);
+    if (invalid) {
+      return invalid;
+    }
     const code =
       body.code?.trim() ||
       nextCode(
         'ATTR',
         attributeDefinitions.map((d) => d.code),
       );
-    if (attributeDefinitions.some((d) => sameCode(d.code, code))) {
-      return fail(
-        request,
-        409,
-        'رمز الخاصية مستخدم مسبقاً',
-        'Attribute code already exists',
-      );
-    }
     const dataType: AttributeDataType = (
       AttributeDataTypeValues as readonly string[]
     ).includes(body.dataType)
@@ -72,7 +124,7 @@ export const attributeHandlers = [
     const definition: AttributeDefinitionResponse = {
       id: newId(),
       code,
-      name: body.name,
+      name: text(body.name),
       dataType,
       unitLabel: body.unitLabel?.trim() || null,
       isActive: body.isActive ?? true,
@@ -102,22 +154,14 @@ export const attributeHandlers = [
         return notFound(request);
       }
       const body = await readJson<AttributeDefinitionRequest>(request);
-      const code = body.code?.trim() || definition.code;
-      if (
-        attributeDefinitions.some(
-          (d) => d.id !== definition.id && sameCode(d.code, code),
-        )
-      ) {
-        return fail(
-          request,
-          409,
-          'رمز الخاصية مستخدم مسبقاً',
-          'Attribute code already exists',
-        );
+      const invalid = validateAttribute(request, body, definition);
+      if (invalid) {
+        return invalid;
       }
+      const code = body.code?.trim() || definition.code;
       Object.assign(definition, {
         code,
-        name: body.name ?? definition.name,
+        name: text(body.name),
         dataType: body.dataType ?? definition.dataType,
         unitLabel: body.unitLabel?.trim() || null,
         isActive: body.isActive ?? definition.isActive,

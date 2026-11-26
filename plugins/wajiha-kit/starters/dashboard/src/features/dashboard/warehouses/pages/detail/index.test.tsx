@@ -212,7 +212,7 @@ describe('WarehouseDetailContainer', () => {
     const dialog = await screen.findByRole('alertdialog');
     await user.click(
       within(dialog).getByRole('button', {
-        name: tt('warehouses.delete.confirm'),
+        name: tt('common.delete'),
       }),
     );
 

@@ -1,87 +1,43 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { CanCheck } from '@/components/auth/can';
 import { PERMS, type Permission } from '@/constants/permissions';
+import i18n from '@/lib/i18n/i18n';
 import { makeUnitOfMeasure } from '../uom-test-utils';
 import { getUnitOfMeasureRowActions } from './uom-actions';
 
-const t = (key: string) => key;
+const t = i18n.t.bind(i18n);
 
-const canWith =
-  (...granted: Permission[]): CanCheck =>
-  (permission) =>
-    granted.includes(permission);
-
-function actionIds(...granted: Permission[]): string[] {
-  return getUnitOfMeasureRowActions({
+function actionsFor(granted: Permission[], inUse = false) {
+  const onEdit = vi.fn();
+  const onDelete = vi.fn();
+  const actions = getUnitOfMeasureRowActions(makeUnitOfMeasure({ inUse }), {
     t,
-    can: canWith(...granted),
-    row: makeUnitOfMeasure(),
-    onEdit: vi.fn(),
-    onDelete: vi.fn(),
-  }).map((action) => action.id);
+    can: (permission) => granted.includes(permission),
+    onEdit,
+    onDelete,
+  });
+  return { actions, onEdit, onDelete };
 }
 
-describe('unit of measure actions', () => {
-  it('read-only users get no row actions', () => {
-    expect(actionIds(PERMS.unitOfMeasure.view)).toEqual([]);
+describe('getUnitOfMeasureRowActions', () => {
+  it('renders nothing with view only', () => {
+    expect(actionsFor([PERMS.unitOfMeasure.view]).actions).toEqual([]);
   });
 
-  it('update gives edit but not delete', () => {
-    expect(
-      actionIds(PERMS.unitOfMeasure.view, PERMS.unitOfMeasure.update),
-    ).toEqual(['edit']);
+  it('offers edit with update only', () => {
+    const { actions, onEdit } = actionsFor([PERMS.unitOfMeasure.update]);
+    expect(actions.map((action) => action.id)).toEqual(['edit']);
+    actions[0]?.onSelect();
+    expect(onEdit).toHaveBeenCalledOnce();
   });
 
-  it('create alone gives no row action (it is the page-level add button)', () => {
-    expect(actionIds(PERMS.unitOfMeasure.create)).toEqual([]);
+  it('offers delete with delete only', () => {
+    const { actions } = actionsFor([PERMS.unitOfMeasure.delete]);
+    expect(actions.map((action) => action.id)).toEqual(['delete']);
+    expect(actions[0]?.disabledReason).toBeUndefined();
   });
 
-  it('deleters get delete but not edit', () => {
-    expect(actionIds(PERMS.unitOfMeasure.delete)).toEqual(['delete']);
-  });
-
-  it('never includes a view action', () => {
-    const ids = actionIds(
-      PERMS.unitOfMeasure.view,
-      PERMS.unitOfMeasure.create,
-      PERMS.unitOfMeasure.update,
-      PERMS.unitOfMeasure.delete,
-    );
-    expect(ids).toEqual(['edit', 'delete']);
-    expect(ids).not.toContain('view');
-  });
-
-  it('marks delete as destructive and calls the matching handler', () => {
-    const onDelete = vi.fn();
-    const onEdit = vi.fn();
-    const row = makeUnitOfMeasure();
-    const actions = getUnitOfMeasureRowActions({
-      t,
-      can: canWith(PERMS.unitOfMeasure.update, PERMS.unitOfMeasure.delete),
-      row,
-      onEdit,
-      onDelete,
-    });
-    const remove = actions.find((action) => action.id === 'delete');
-    expect(remove?.variant).toBe('destructive');
-    expect(remove?.separatorBefore).toBe(true);
-    expect(remove?.label).toBe('unitsOfMeasure.actions.delete');
-    remove?.onSelect();
-    expect(onDelete).toHaveBeenCalledWith(row);
-    expect(onEdit).not.toHaveBeenCalled();
-  });
-
-  it('calls onEdit with the row when edit is selected', () => {
-    const onEdit = vi.fn();
-    const row = makeUnitOfMeasure();
-    const actions = getUnitOfMeasureRowActions({
-      t,
-      can: canWith(PERMS.unitOfMeasure.update),
-      row,
-      onEdit,
-      onDelete: vi.fn(),
-    });
-    actions.find((action) => action.id === 'edit')?.onSelect();
-    expect(onEdit).toHaveBeenCalledWith(row);
+  it('keeps delete for a unit used by items, with the reason', () => {
+    const { actions } = actionsFor([PERMS.unitOfMeasure.delete], true);
+    expect(actions[0]?.disabledReason).toBeTruthy();
   });
 });

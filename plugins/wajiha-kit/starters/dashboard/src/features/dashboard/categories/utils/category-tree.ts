@@ -88,46 +88,6 @@ export function buildCategoryTree(
   return nodes;
 }
 
-function matchesQuery(category: ItemCategoryResponse, query: string): boolean {
-  const name = (category.name ?? '').toLowerCase();
-  const code = (category.code ?? '').toLowerCase();
-  return name.includes(query) || code.includes(query);
-}
-
-function filterNode(
-  node: CategoryTreeNode,
-  query: string,
-): CategoryTreeNode | null {
-  if (matchesQuery(node.category, query)) {
-    return node;
-  }
-  const children = node.children
-    .map((child) => filterNode(child, query))
-    .filter((child): child is CategoryTreeNode => child !== null);
-  if (children.length === 0) {
-    return null;
-  }
-  return { ...node, children };
-}
-
-/**
- * Keeps nodes that match the query (name or code, case-insensitive) together
- * with their ancestors. A matching node keeps its whole subtree so its children
- * stay reachable. An empty query returns the input unchanged.
- */
-export function filterCategoryTree(
-  nodes: CategoryTreeNode[],
-  query: string,
-): CategoryTreeNode[] {
-  const normalized = query.trim().toLowerCase();
-  if (normalized === '') {
-    return nodes;
-  }
-  return nodes
-    .map((node) => filterNode(node, normalized))
-    .filter((node): node is CategoryTreeNode => node !== null);
-}
-
 /** Names from the root down to the node, joined with ' / '. '' when not found. */
 export function getCategoryPath(
   categoryId: string,

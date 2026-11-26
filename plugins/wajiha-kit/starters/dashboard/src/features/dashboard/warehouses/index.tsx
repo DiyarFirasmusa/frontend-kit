@@ -1,21 +1,31 @@
-import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/dialog/confirm-dialog';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { PageHeader } from '@/components/shared/page-header';
-import { ClientDataTable } from '@/components/table/client-data-table';
+import { DataTable } from '@/components/table/data-table';
 import { ExportExcelButton } from '@/components/table/export-excel-button';
-import { ListFiltersBar } from '@/components/table/list-filters-bar';
 import { Button } from '@/components/ui/button';
 import { Plus } from '@/lib/icons';
+import { PAGE_SIZES } from '@/lib/list-search';
 import { WarehouseFormDialog } from './components/dialog/warehouse-form-dialog';
-import { useWarehousesListPage } from './hooks/use-warehouses-list-page';
+import { WarehouseFilterBar } from './components/warehouse-filter-bar';
+import {
+  getWarehouseRowId,
+  useWarehousesListPage,
+} from './hooks/use-list-page';
 
 export default function WarehousesListContainer() {
-  const { t } = useTranslation();
   const page = useWarehousesListPage();
+  const { t } = page;
+
+  const createButton = page.canCreate ? (
+    <Button type="button" onClick={page.openCreate}>
+      <Plus className="size-4" />
+      {t('warehouses.create')}
+    </Button>
+  ) : null;
 
   return (
-    <section dir={page.dir} className="gap-card flex flex-col">
+    <section className="gap-card flex flex-col">
       <PageHeader
         breadcrumb={
           <Breadcrumb current={t('warehouses.title')}>
@@ -27,22 +37,58 @@ export default function WarehousesListContainer() {
         actions={
           <>
             <ExportExcelButton {...page.exportExcel} />
-            {page.canCreate ? (
-              <Button type="button" onClick={page.formDialog.openCreate}>
-                <Plus className="size-4" />
-                {t('warehouses.add')}
-              </Button>
-            ) : null}
+            {createButton}
           </>
         }
       />
 
       <div className="surface-card gap-card flex flex-col">
-        <ListFiltersBar {...page.toolbar} />
-        <ClientDataTable {...page.table} embedded />
+        <WarehouseFilterBar />
+        <DataTable
+          caption={t('warehouses.caption')}
+          columns={page.columns}
+          rows={page.rows}
+          rowCount={page.rowCount}
+          getRowId={getWarehouseRowId}
+          pagination={page.pagination}
+          sorting={page.sorting}
+          onPaginationChange={page.setPagination}
+          onSortingChange={page.setSorting}
+          pageSizeOptions={PAGE_SIZES}
+          status={page.status}
+          onRetry={page.retry}
+          emptyLabel={
+            page.hasFilters
+              ? t('warehouses.emptyFiltered')
+              : t('warehouses.empty')
+          }
+          emptyAction={
+            page.hasFilters ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={page.clearFilters}
+              >
+                {t('table.clearFilters')}
+              </Button>
+            ) : (
+              createButton
+            )
+          }
+        />
       </div>
 
-      <WarehouseFormDialog dialog={page.formDialog} />
+      {page.dialog.kind === 'closed' ? null : (
+        <WarehouseFormDialog
+          key={
+            page.dialog.kind === 'edit'
+              ? `edit:${page.dialog.warehouseId}`
+              : 'create'
+          }
+          mode={page.dialog}
+          onClose={page.closeDialog}
+        />
+      )}
 
       <ConfirmDialog
         open={page.deleteDialog.open}
@@ -51,9 +97,10 @@ export default function WarehousesListContainer() {
         description={t('warehouses.delete.description', {
           name: page.deleteDialog.name,
         })}
-        confirmLabel={t('warehouses.delete.confirm')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
         destructive
-        isLoading={page.deleteDialog.isPending}
+        isLoading={page.deleteDialog.isLoading}
         onConfirm={page.deleteDialog.onConfirm}
       />
     </section>

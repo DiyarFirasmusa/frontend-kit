@@ -4,35 +4,29 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { qk } from '@/constants/query-keys';
-import type { WarehouseRequest } from '@/types/api/warehouses';
 import {
   createWarehouse,
   deleteWarehouse,
   updateWarehouse,
 } from '../../services/warehouses.service';
+import type { WarehousePayload } from '../../types/types';
 
-function invalidateWarehouseMasterData(qc: ReturnType<typeof useQueryClient>) {
-  void qc.invalidateQueries({ queryKey: qk.warehouses.all });
-}
-
+// Returning the promise keeps `isPending` true until the list has refetched,
+// so the dialog closes on fresh data and a second click cannot slip in.
 export function useCreateWarehouse() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: WarehouseRequest) => createWarehouse(payload),
-    onSuccess: () => {
-      invalidateWarehouseMasterData(qc);
-    },
+    mutationFn: (payload: WarehousePayload) => createWarehouse(payload),
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.warehouses.all }),
   });
 }
 
 export function useUpdateWarehouse() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (vars: { id: string; payload: WarehouseRequest }) =>
+    mutationFn: (vars: { id: string; payload: WarehousePayload }) =>
       updateWarehouse(vars.id, vars.payload),
-    onSuccess: () => {
-      invalidateWarehouseMasterData(qc);
-    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.warehouses.all }),
   });
 }
 
@@ -58,7 +52,7 @@ function forgetDeletedWarehouse(qc: QueryClient, id: string) {
     void qc.cancelQueries({ queryKey });
     qc.removeQueries({ queryKey, type: 'inactive' });
   }
-  void qc.invalidateQueries({
+  return qc.invalidateQueries({
     queryKey: qk.warehouses.all,
     predicate: (query) => !query.queryKey.includes(id),
   });
@@ -68,8 +62,6 @@ export function useDeleteWarehouse() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteWarehouse(id),
-    onSuccess: (_data, id) => {
-      forgetDeletedWarehouse(qc, id);
-    },
+    onSuccess: (_data, id) => forgetDeletedWarehouse(qc, id),
   });
 }

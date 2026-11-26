@@ -2,36 +2,41 @@
   "warehouses": {
     "title": "Warehouses",
     "subtitle": "Manage warehouses, their members and locations",
-    "add": "Add warehouse",
-    "list": {
-      "searchPlaceholder": "Search by name or code...",
-      "empty": "No warehouses match your search or filters.",
-      "filterType": "Warehouse type",
-      "filterStatus": "Status",
-      "filterManager": "Manager"
+    "caption": "Warehouses, one page of the filtered list",
+    "create": "Add warehouse",
+    "empty": "No warehouses yet",
+    "emptyFiltered": "No warehouses match these filters",
+    "columns": {
+      "code": "Code",
+      "name": "Warehouse",
+      "address": "Address",
+      "manager": "Manager",
+      "members": "Members",
+      "locations": "Locations",
+      "type": "Type",
+      "status": "Status"
     },
     "type": {
       "regular": "Regular",
       "transitBadge": "Transit warehouse",
       "transit": "Transit"
     },
-    "col": {
-      "name": "Warehouse",
-      "code": "Code",
-      "type": "Type",
-      "address": "Address",
-      "manager": "Manager",
+    "filters": {
+      "label": "Filter warehouses",
+      "searchPlaceholder": "Search by code, name, address or manager",
       "status": "Status",
-      "actions": "Actions",
-      "locations": "Locations",
-      "members": "Members"
+      "type": "Warehouse type"
     },
     "actions": {
       "view": "View details",
+      "viewRow": "View {{name}}",
+      "editRow": "Edit {{name}}",
+      "deleteRow": "Delete {{name}}",
+      "deleteBlocked": "It has locations, so it cannot be deleted. Edit it and switch off Active instead.",
       "edit": "Edit",
       "delete": "Delete"
     },
-    "form": {
+    "dialog": {
       "createTitle": "Add warehouse",
       "editTitle": "Edit warehouse",
       "description": "Enter the warehouse's basic information.",
@@ -45,21 +50,28 @@
       "managerUserIdPlaceholder": "Search for a user",
       "isTransit": "Transit warehouse",
       "isActive": "Active",
-      "submit": "Save warehouse",
-      "errors": {
-        "name": "Enter the warehouse name",
-        "nameMax": "Use at most 200 characters",
-        "code": "Enter the warehouse code",
-        "address": "Enter the warehouse address",
-        "codeMax": "Use at most 30 characters",
-        "addressMax": "Use at most 300 characters",
-        "uuid": "Enter a valid ID (UUID)"
-      }
+      "save": "Save warehouse"
     },
     "delete": {
       "title": "Delete warehouse",
-      "description": "“{{name}}” will be removed permanently. This can't be undone.",
-      "confirm": "Delete"
+      "description": "“{{name}}” will be deleted. This cannot be undone."
+    },
+    "messages": {
+      "created": "Warehouse created",
+      "updated": "Warehouse updated",
+      "deleted": "Warehouse deleted",
+      "memberAdded": "Member added",
+      "memberRemoved": "Member removed",
+      "memberRoleChanged": "Member role updated"
+    },
+    "validation": {
+      "name": "Enter the warehouse name",
+      "nameMax": "Use at most 200 characters",
+      "code": "Enter the warehouse code",
+      "address": "Enter the warehouse address",
+      "codeMax": "Use at most 30 characters",
+      "addressMax": "Use at most 300 characters",
+      "uuid": "Enter a valid ID (UUID)"
     },
     "detail": {
       "title": "Warehouse",
@@ -122,14 +134,6 @@
       "childCount": "{{count}} sub-locations",
       "empty": "This warehouse has no locations yet.",
       "blocked": "Blocked"
-    },
-    "toasts": {
-      "created": "Warehouse created",
-      "updated": "Warehouse updated",
-      "deleted": "Warehouse deleted",
-      "memberAdded": "Member added",
-      "memberRemoved": "Member removed",
-      "memberRoleChanged": "Member role updated"
     }
   }
 }

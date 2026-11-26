@@ -34,7 +34,7 @@ export function OverviewTab({ warehouse }: OverviewTabProps) {
           value={warehouse.name}
         />
         <ReadOnlyField
-          label={t('warehouses.col.address')}
+          label={t('warehouses.columns.address')}
           value={warehouse.address}
         />
         <ReadOnlyField

@@ -1,6 +1,6 @@
 {
   "categories": {
-    "title": "Categories and attributes",
+    "title": "Categories",
     "subtitle": "Manage the category hierarchy, directly linked and inherited attributes",
     "actions": {
       "addCategory": "Add category",
@@ -83,7 +83,10 @@
         "variantAxis": "Variant axis?",
         "options": "Options",
         "actions": "Actions"
-      }
+      },
+      "caption": "Attributes linked to the selected category",
+      "detachRow": "Detach {{name}}",
+      "editOptionsRow": "Edit options of {{name}}"
     },
     "detach": {
       "title": "Detach attribute?",
@@ -103,14 +106,7 @@
     "attributes": {
       "title": "Attribute definitions",
       "description": "Define attributes once, then link them to categories.",
-      "searchPlaceholder": "Search attributes",
-      "empty": "No attributes match your search.",
-      "filter": {
-        "dataType": "Type",
-        "allTypes": "All types",
-        "status": "Status",
-        "allStatuses": "All statuses"
-      },
+      "empty": "No attributes yet",
       "col": {
         "name": "Attribute",
         "code": "Code",
@@ -119,6 +115,19 @@
         "options": "Options",
         "status": "Status",
         "actions": "Actions"
+      },
+      "caption": "Attribute definitions, one page of the filtered list",
+      "emptyFiltered": "No attributes match these filters",
+      "filters": {
+        "label": "Filter attributes",
+        "searchPlaceholder": "Search by name or code",
+        "dataType": "Type",
+        "status": "Status"
+      },
+      "actions": {
+        "editRow": "Edit {{name}}",
+        "optionsRow": "Edit options of {{name}}",
+        "deleteRow": "Delete {{name}}"
       }
     },
     "attributeForm": {

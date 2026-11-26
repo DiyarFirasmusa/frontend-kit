@@ -13,15 +13,18 @@ import {
   api,
   boolParam,
   fail,
+  intParam,
   matches,
   nextCode,
   noContent,
   notFound,
   ok,
+  paginate,
   param,
   readJson,
   sameCode,
   textParam,
+  validationProblem,
 } from '../core';
 import { newId } from '../seed/base';
 import {
@@ -121,55 +124,115 @@ function assignmentsFor(
   );
 }
 
+/** A malformed body (readJson returns {}) must fail validation, not throw. */
+function text(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+/** 422 with field errors: name required and unique among siblings, parent valid. */
+function validateCategory(
+  request: Request,
+  body: ItemCategoryRequest,
+  current: ItemCategoryResponse | null,
+): Promise<Response> | null {
+  const errors: { field: string; ar: string; en: string }[] = [];
+  const name = text(body.name);
+  const parentId = body.parentId ?? null;
+  if (!name) {
+    errors.push({ field: 'name', ar: 'الاسم مطلوب', en: 'Name is required' });
+  } else if (
+    categories.some(
+      (c) =>
+        c.id !== current?.id &&
+        c.parentId === parentId &&
+        sameCode(c.name, name),
+    )
+  ) {
+    errors.push({
+      field: 'name',
+      ar: 'يوجد تصنيف بهذا الاسم في نفس المكان',
+      en: 'A category with this name already exists here',
+    });
+  }
+  const code = body.code?.trim() || null;
+  if (
+    code !== null &&
+    categories.some((c) => c.id !== current?.id && sameCode(c.code, code))
+  ) {
+    errors.push({
+      field: 'code',
+      ar: 'رمز التصنيف مستخدم مسبقاً',
+      en: 'Category code already exists',
+    });
+  }
+  if (parentId !== null && !categories.some((c) => c.id === parentId)) {
+    errors.push({
+      field: 'parentId',
+      ar: 'التصنيف الأم غير موجود',
+      en: 'Parent category not found',
+    });
+  } else if (
+    parentId !== null &&
+    current !== null &&
+    (parentId === current.id || isDescendant(parentId, current.id))
+  ) {
+    errors.push({
+      field: 'parentId',
+      ar: 'لا يمكن نقل التصنيف تحت نفسه أو تحت أحد تصنيفاته الفرعية',
+      en: 'A category cannot be moved under itself or one of its subcategories',
+    });
+  }
+  return errors.length > 0 ? validationProblem(request, errors) : null;
+}
+
 export const categoryHandlers = [
   // ----- Item categories -----
+  // The whole hierarchy in one Spring page (a tree is never paged). With `q`
+  // the matches come with their ancestors, so every path stays intact.
   http.get(api(endpoints.itemCategories.list), async ({ request }) => {
     const url = new URL(request.url);
     const q = textParam(url, 'q');
     const parentId = textParam(url, 'parentId');
     const rootOnly = boolParam(url, 'rootOnly') === true;
     const isActive = boolParam(url, 'isActive');
-    const response: ItemCategoryResponse[] = categories
-      .filter(
-        (c) =>
-          matches(q, c.code, c.name) &&
-          (parentId === '' || c.parentId === parentId) &&
-          (!rootOnly || c.parentId === null) &&
-          (isActive === undefined || c.isActive === isActive),
-      )
-      .map((c) => toCategory(c));
-    return ok(response);
+    const matched = categories.filter(
+      (c) =>
+        matches(q, c.code, c.name) &&
+        (parentId === '' || c.parentId === parentId) &&
+        (!rootOnly || c.parentId === null) &&
+        (isActive === undefined || c.isActive === isActive),
+    );
+    const visible =
+      q === ''
+        ? matched
+        : categories.filter((c) =>
+            matched.some((m) => m.id === c.id || isDescendant(m.id, c.id)),
+          );
+    return ok(
+      paginate(
+        visible.map((c) => toCategory(c)),
+        intParam(url, 'page', 0),
+        intParam(url, 'size', 10),
+      ),
+    );
   }),
 
   http.post(api(endpoints.itemCategories.create), async ({ request }) => {
     const body = await readJson<ItemCategoryRequest>(request);
-    const code =
-      body.code?.trim() ||
-      nextCode(
-        'CAT',
-        categories.map((c) => c.code),
-      );
-    if (categories.some((c) => sameCode(c.code, code))) {
-      return fail(
-        request,
-        409,
-        'رمز الفئة مستخدم مسبقاً',
-        'Category code already exists',
-      );
-    }
-    if (body.parentId && !categories.some((c) => c.id === body.parentId)) {
-      return fail(
-        request,
-        400,
-        'الفئة الأم غير موجودة',
-        'Parent category not found',
-      );
+    const invalid = validateCategory(request, body, null);
+    if (invalid) {
+      return invalid;
     }
     const category: ItemCategoryResponse = {
       id: newId(),
       parentId: body.parentId ?? null,
-      code,
-      name: body.name,
+      code:
+        body.code?.trim() ||
+        nextCode(
+          'CAT',
+          categories.map((c) => c.code),
+        ),
+      name: text(body.name),
       isActive: body.isActive ?? true,
       itemCount: 0,
       childCount: 0,
@@ -195,33 +258,14 @@ export const categoryHandlers = [
         return notFound(request);
       }
       const body = await readJson<ItemCategoryRequest>(request);
-      const code = body.code?.trim() || category.code;
-      if (
-        categories.some((c) => c.id !== category.id && sameCode(c.code, code))
-      ) {
-        return fail(
-          request,
-          409,
-          'رمز الفئة مستخدم مسبقاً',
-          'Category code already exists',
-        );
-      }
-      const parentId = body.parentId ?? null;
-      if (
-        parentId !== null &&
-        (parentId === category.id || isDescendant(parentId, category.id))
-      ) {
-        return fail(
-          request,
-          400,
-          'لا يمكن نقل الفئة تحت نفسها أو تحت إحدى فئاتها الفرعية',
-          'A category cannot be moved under itself or one of its subcategories',
-        );
+      const invalid = validateCategory(request, body, category);
+      if (invalid) {
+        return invalid;
       }
       Object.assign(category, {
-        code,
-        name: body.name ?? category.name,
-        parentId,
+        code: body.code?.trim() || category.code,
+        name: text(body.name),
+        parentId: body.parentId ?? null,
         isActive: body.isActive ?? category.isActive,
         expiryAlertDays:
           body.expiryAlertDays === undefined

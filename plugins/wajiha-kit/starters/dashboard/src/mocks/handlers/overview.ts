@@ -7,7 +7,7 @@ import type {
   KpiCard,
   OverviewSummary,
   RecentChange,
-} from '@/features/dashboard/home/types/types';
+} from '@/types/api/overview';
 import { api, intParam, nowIso, ok } from '../core';
 import { seededChanges } from '../seed/activity';
 import { DAY_MS, hashString, seededRandom, toLocalDate } from '../seed/base';

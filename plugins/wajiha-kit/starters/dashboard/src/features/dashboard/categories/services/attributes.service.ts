@@ -1,14 +1,22 @@
 import { privateApi } from '@/api/client/private/private';
 import { endpoints } from '@/constants/api';
 import type {
-  AttributeDefinitionRequest,
-  AttributeDefinitionResponse,
   AttributeOptionRequest,
   AttributeOptionResponse,
   OptionOrderRequest,
 } from '@/types/api/catalog';
-import type { AttributeDefinitionListParams } from '../types/types';
+import { toBackendSort } from '@/utils/table-state';
+import type {
+  AttributeListParams,
+  AttributeListResponse,
+  AttributePayload,
+  AttributeRow,
+} from '../types/types';
 import type { OptionChanges } from '../utils/option-order';
+
+interface RequestOptions {
+  signal?: AbortSignal;
+}
 
 /** `silent` skips the success toast; `successMessage` replaces the default one. */
 interface OptionRequestConfig {
@@ -16,30 +24,56 @@ interface OptionRequestConfig {
   successMessage?: string;
 }
 
-export async function fetchAttributeDefinitions(
-  params: AttributeDefinitionListParams = {},
-): Promise<AttributeDefinitionResponse[]> {
-  const query: Record<string, string | boolean> = {};
-  if (params.q !== undefined && params.q !== '') {
+/** UI params -> the backend's names: 0-based `page`, `size`, `sort=name,asc`. */
+export function toAttributeListQuery(
+  params: AttributeListParams,
+): Record<string, string | number | boolean> {
+  const query: Record<string, string | number | boolean> = {
+    page: params.page - 1,
+    size: params.pageSize,
+  };
+  const sort = toBackendSort(params.sort);
+  if (sort) {
+    query.sort = sort;
+  }
+  if (params.q) {
     query.q = params.q;
   }
-  if (params.dataType !== undefined) {
+  if (params.dataType !== 'all') {
     query.dataType = params.dataType;
   }
-  if (params.isActive !== undefined) {
-    query.isActive = params.isActive;
+  if (params.status !== 'all') {
+    query.isActive = params.status === 'active';
   }
-  const { data } = await privateApi.get<AttributeDefinitionResponse[]>(
+  return query;
+}
+
+export async function fetchAttributeDefinitions(
+  params: AttributeListParams,
+  options?: RequestOptions,
+): Promise<AttributeListResponse> {
+  const { data } = await privateApi.get<AttributeListResponse>(
     endpoints.attributeDefinitions.list,
-    { params: query },
+    { params: toAttributeListQuery(params), signal: options?.signal },
+  );
+  return data;
+}
+
+export async function fetchAttributeDefinition(
+  id: string,
+  options?: RequestOptions,
+): Promise<AttributeRow> {
+  const { data } = await privateApi.get<AttributeRow>(
+    endpoints.attributeDefinitions.detail(id),
+    { signal: options?.signal },
   );
   return data;
 }
 
 export async function createAttributeDefinition(
-  payload: AttributeDefinitionRequest,
-): Promise<AttributeDefinitionResponse> {
-  const { data } = await privateApi.post<AttributeDefinitionResponse>(
+  payload: AttributePayload,
+): Promise<AttributeRow> {
+  const { data } = await privateApi.post<AttributeRow>(
     endpoints.attributeDefinitions.create,
     payload,
     { successMessage: 'categories.toasts.attributeCreated' },
@@ -49,9 +83,9 @@ export async function createAttributeDefinition(
 
 export async function updateAttributeDefinition(
   id: string,
-  payload: AttributeDefinitionRequest,
-): Promise<AttributeDefinitionResponse> {
-  const { data } = await privateApi.put<AttributeDefinitionResponse>(
+  payload: AttributePayload,
+): Promise<AttributeRow> {
+  const { data } = await privateApi.put<AttributeRow>(
     endpoints.attributeDefinitions.update(id),
     payload,
     { successMessage: 'categories.toasts.attributeUpdated' },
@@ -65,21 +99,24 @@ export async function deleteAttributeDefinition(id: string): Promise<void> {
   });
 }
 
+function toOptionConfig(
+  options: OptionRequestConfig | undefined,
+  fallbackMessage: string,
+): OptionRequestConfig {
+  return options?.silent
+    ? { silent: true }
+    : { successMessage: options?.successMessage ?? fallbackMessage };
+}
+
 export async function createAttributeOption(
   definitionId: string,
   payload: AttributeOptionRequest,
   options?: OptionRequestConfig,
 ): Promise<AttributeOptionResponse> {
-  const config = options?.silent
-    ? { silent: true }
-    : {
-        successMessage:
-          options?.successMessage ?? 'categories.toasts.optionCreated',
-      };
   const { data } = await privateApi.post<AttributeOptionResponse>(
     endpoints.attributeDefinitions.options(definitionId),
     payload,
-    config,
+    toOptionConfig(options, 'categories.toasts.optionCreated'),
   );
   return data;
 }
@@ -90,16 +127,10 @@ export async function updateAttributeOption(
   payload: AttributeOptionRequest,
   options?: OptionRequestConfig,
 ): Promise<AttributeOptionResponse> {
-  const config = options?.silent
-    ? { silent: true }
-    : {
-        successMessage:
-          options?.successMessage ?? 'categories.toasts.optionUpdated',
-      };
   const { data } = await privateApi.put<AttributeOptionResponse>(
     endpoints.attributeDefinitions.option(definitionId, optionId),
     payload,
-    config,
+    toOptionConfig(options, 'categories.toasts.optionUpdated'),
   );
   return data;
 }
@@ -109,15 +140,9 @@ export async function deleteAttributeOption(
   optionId: string,
   options?: OptionRequestConfig,
 ): Promise<void> {
-  const config = options?.silent
-    ? { silent: true }
-    : {
-        successMessage:
-          options?.successMessage ?? 'categories.toasts.optionDeleted',
-      };
   await privateApi.delete(
     endpoints.attributeDefinitions.option(definitionId, optionId),
-    config,
+    toOptionConfig(options, 'categories.toasts.optionDeleted'),
   );
 }
 
@@ -126,17 +151,11 @@ export async function reorderAttributeOptions(
   optionIds: string[],
   options?: OptionRequestConfig,
 ): Promise<AttributeOptionResponse[]> {
-  const config = options?.silent
-    ? { silent: true }
-    : {
-        successMessage:
-          options?.successMessage ?? 'categories.toasts.optionsSaved',
-      };
   const payload: OptionOrderRequest = { optionIds };
   const { data } = await privateApi.put<AttributeOptionResponse[]>(
     endpoints.attributeDefinitions.optionsOrder(definitionId),
     payload,
-    config,
+    toOptionConfig(options, 'categories.toasts.optionsSaved'),
   );
   return data;
 }

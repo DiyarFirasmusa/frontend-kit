@@ -3,7 +3,6 @@ import type { ItemCategoryResponse } from '@/types/api/catalog';
 import type { CategoryTreeNode } from '../types/types';
 import {
   buildCategoryTree,
-  filterCategoryTree,
   getCategoryName,
   getCategoryPath,
   getDescendantIds,
@@ -79,40 +78,6 @@ describe('buildCategoryTree', () => {
 
   it('returns an empty tree for an empty list', () => {
     expect(buildCategoryTree([])).toEqual([]);
-  });
-});
-
-describe('filterCategoryTree', () => {
-  const tree = buildCategoryTree([safety, hand, gloves, storage]);
-
-  it('returns the input unchanged for an empty or blank query', () => {
-    expect(filterCategoryTree(tree, '')).toBe(tree);
-    expect(filterCategoryTree(tree, '   ')).toBe(tree);
-  });
-
-  it('keeps ancestors of a matching descendant', () => {
-    const result = filterCategoryTree(tree, 'gloves');
-    expect(names(result)).toEqual(['Safety']);
-    expect(names(result[0]?.children ?? [])).toEqual(['Hand protection']);
-    expect(names(result[0]?.children[0]?.children ?? [])).toEqual(['Gloves']);
-  });
-
-  it('keeps the whole subtree of a matching node', () => {
-    const result = filterCategoryTree(tree, 'safety');
-    expect(names(result)).toEqual(['Safety']);
-    expect(names(result[0]?.children ?? [])).toEqual(['Hand protection']);
-    expect(names(result[0]?.children[0]?.children ?? [])).toEqual(['Gloves']);
-  });
-
-  it('matches case-insensitively on code', () => {
-    const result = filterCategoryTree(tree, ' storage ');
-    expect(names(result)).toEqual(['Storage']);
-    const byCode = filterCategoryTree(tree, 'saf-hand');
-    expect(names(byCode)).toEqual(['Safety']);
-  });
-
-  it('returns an empty list when nothing matches', () => {
-    expect(filterCategoryTree(tree, 'zzz')).toEqual([]);
   });
 });
 

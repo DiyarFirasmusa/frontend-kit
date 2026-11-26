@@ -78,7 +78,7 @@ describe('WarehouseDetailContainer delete', () => {
       const dialog = await screen.findByRole('alertdialog');
       await user.click(
         within(dialog).getByRole('button', {
-          name: tt('warehouses.delete.confirm'),
+          name: tt('common.delete'),
         }),
       );
 
@@ -92,7 +92,7 @@ describe('WarehouseDetailContainer delete', () => {
       expect(readsAfterDelete).toEqual([]);
       expect(errorToast).not.toHaveBeenCalled();
       expect(successToast).toHaveBeenCalledExactlyOnceWith(
-        tt('warehouses.toasts.deleted'),
+        tt('warehouses.messages.deleted'),
       );
     },
   );

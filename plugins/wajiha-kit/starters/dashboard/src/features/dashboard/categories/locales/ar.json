@@ -1,6 +1,6 @@
 {
   "categories": {
-    "title": "التصنيفات والخصائص",
+    "title": "التصنيفات",
     "subtitle": "إدارة الهيكل الهرمي والخصائص المباشرة والموروثة",
     "actions": {
       "addCategory": "إضافة تصنيف",
@@ -83,7 +83,10 @@
         "variantAxis": "محور متغير؟",
         "options": "الخيارات",
         "actions": "الإجراءات"
-      }
+      },
+      "caption": "الخصائص المرتبطة بالتصنيف المحدد",
+      "detachRow": "فك ربط {{name}}",
+      "editOptionsRow": "تحرير خيارات {{name}}"
     },
     "detach": {
       "title": "فصل الخاصية؟",
@@ -103,14 +106,7 @@
     "attributes": {
       "title": "تعريفات الخصائص",
       "description": "عرّف الخاصية مرة واحدة، ثم اربطها بالتصنيفات.",
-      "searchPlaceholder": "ابحث عن خاصية",
-      "empty": "لا توجد خصائص مطابقة للبحث.",
-      "filter": {
-        "dataType": "النوع",
-        "allTypes": "كل الأنواع",
-        "status": "الحالة",
-        "allStatuses": "كل الحالات"
-      },
+      "empty": "لا توجد خصائص بعد",
       "col": {
         "name": "الخاصية",
         "code": "الرمز",
@@ -119,6 +115,19 @@
         "options": "الخيارات",
         "status": "الحالة",
         "actions": "الإجراءات"
+      },
+      "caption": "تعريفات الخصائص، صفحة من القائمة بعد التصفية",
+      "emptyFiltered": "لا توجد خصائص مطابقة لهذه الفلاتر",
+      "filters": {
+        "label": "تصفية الخصائص",
+        "searchPlaceholder": "ابحث بالاسم أو الرمز",
+        "dataType": "النوع",
+        "status": "الحالة"
+      },
+      "actions": {
+        "editRow": "تعديل {{name}}",
+        "optionsRow": "تحرير خيارات {{name}}",
+        "deleteRow": "حذف {{name}}"
       }
     },
     "attributeForm": {

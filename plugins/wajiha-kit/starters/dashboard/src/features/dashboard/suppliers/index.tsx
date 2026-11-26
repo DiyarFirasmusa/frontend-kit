@@ -98,7 +98,7 @@ export default function SuppliersListContainer() {
         confirmLabel={t('common.delete')}
         cancelLabel={t('common.cancel')}
         destructive
-        isLoading={page.deleteDialog.isPending}
+        isLoading={page.deleteDialog.isLoading}
         onConfirm={page.deleteDialog.onConfirm}
       />
     </section>

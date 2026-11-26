@@ -123,7 +123,17 @@ export default function WarehouseDetailContainer({ warehouseId, tab }: Props) {
         <LocationsTab warehouseId={warehouseId} />
       </TabPanel>
 
-      <WarehouseFormDialog dialog={page.formDialog} />
+      {page.dialog.kind === 'closed' ? null : (
+        <WarehouseFormDialog
+          key={
+            page.dialog.kind === 'edit'
+              ? `edit:${page.dialog.warehouseId}`
+              : 'create'
+          }
+          mode={page.dialog}
+          onClose={page.closeDialog}
+        />
+      )}
 
       <ConfirmDialog
         open={page.deleteDialog.open}
@@ -132,7 +142,7 @@ export default function WarehouseDetailContainer({ warehouseId, tab }: Props) {
         description={t('warehouses.delete.description', {
           name: page.deleteDialog.name,
         })}
-        confirmLabel={t('warehouses.delete.confirm')}
+        confirmLabel={t('common.delete')}
         destructive
         isLoading={page.deleteDialog.isPending}
         onConfirm={page.deleteDialog.onConfirm}

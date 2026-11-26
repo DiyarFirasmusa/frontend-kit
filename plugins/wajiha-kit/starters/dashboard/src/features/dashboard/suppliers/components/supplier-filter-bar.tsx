@@ -18,7 +18,7 @@ export function SupplierFilterBar() {
       className="gap-field flex flex-wrap items-center"
     >
       <SearchField
-        value={filters.values.q}
+        value={filters.search.q}
         onCommit={(q) => {
           filters.setFilters({ q });
         }}
@@ -27,7 +27,7 @@ export function SupplierFilterBar() {
       <ListFilterSelect
         id="filter-status"
         label={t('suppliers.filters.status')}
-        value={filters.values.status === 'all' ? '' : filters.values.status}
+        value={filters.search.status === 'all' ? '' : filters.search.status}
         options={[
           { value: 'active', label: t('common.active') },
           { value: 'inactive', label: t('common.inactive') },

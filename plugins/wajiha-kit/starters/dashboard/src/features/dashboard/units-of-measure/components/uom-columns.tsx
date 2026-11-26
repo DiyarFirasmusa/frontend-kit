@@ -1,81 +1,93 @@
-import type { useTranslation as useTranslationType } from 'react-i18next';
-import type { CanCheck } from '@/components/auth/can';
+import { createColumnHelper } from '@tanstack/react-table';
+import type { TFunction } from 'i18next';
 import { DataBadge } from '@/components/table/data-badge';
-import { DataTableRowActions } from '@/components/table/data-table-row-actions';
-import type { Column } from '@/types/table';
-import { getUnitOfMeasureRowActions } from '../hooks/uom-actions';
+import {
+  DataTableRowActions,
+  type RowAction,
+} from '@/components/table/data-table-row-actions';
+import type { DataTableFeatures } from '@/components/table/table-features';
+import { activeBadge } from '@/utils/status-tones';
 import type { UnitOfMeasureRow } from '../types/types';
 import { formatDecimalExample } from '../utils/decimal-example';
-import { unitOfMeasureActiveBadge } from '../utils/uom-status';
 
-type TFn = ReturnType<typeof useTranslationType>['t'];
+const helper = createColumnHelper<DataTableFeatures, UnitOfMeasureRow>();
 
-interface GetUnitOfMeasureColumnsArgs {
-  t: TFn;
-  /** From `useCan()`: the row menu shows only what the user may do. */
-  can: CanCheck;
-  onEdit: (row: UnitOfMeasureRow) => void;
-  onDelete: (row: UnitOfMeasureRow) => void;
+interface UnitOfMeasureColumnsDeps {
+  t: TFunction;
+  getActions: (row: UnitOfMeasureRow) => RowAction[];
 }
 
+/**
+ * Column ids that sort are the backend's sort keys (`code`, `name`,
+ * `decimalPlaces`), so the URL sort maps straight through.
+ */
 export function getUnitOfMeasureColumns({
   t,
-  can,
-  onEdit,
-  onDelete,
-}: GetUnitOfMeasureColumnsArgs): Column<UnitOfMeasureRow>[] {
-  return [
-    {
+  getActions,
+}: UnitOfMeasureColumnsDeps) {
+  return helper.columns([
+    helper.accessor('code', {
       id: 'code',
-      header: t('unitsOfMeasure.col.code'),
-      accessor: (row) => row.code ?? '—',
-      cellClassName: 'text-table-id text-text-primary',
-    },
-    {
+      header: t('unitsOfMeasure.columns.code'),
+      cell: ({ getValue }) => (
+        <span className="text-table-id text-text-primary" dir="ltr">
+          {getValue()?.trim() || '—'}
+        </span>
+      ),
+    }),
+    helper.accessor('name', {
       id: 'name',
-      header: t('unitsOfMeasure.col.name'),
-      accessor: (row) => row.name ?? '—',
-    },
-    {
+      header: t('unitsOfMeasure.columns.name'),
+      cell: ({ getValue }) => getValue()?.trim() || '—',
+    }),
+    helper.accessor('decimalPlaces', {
       id: 'decimalPlaces',
-      header: t('unitsOfMeasure.col.decimalPlaces'),
-      accessor: (row) => row.decimalPlaces ?? '—',
-      cellClassName: 'text-h5 tabular-nums',
-    },
-    {
+      header: t('unitsOfMeasure.columns.decimalPlaces'),
+      cell: ({ getValue }) => (
+        <span className="tabular-nums">{getValue() ?? '—'}</span>
+      ),
+    }),
+    helper.display({
       id: 'example',
-      header: t('unitsOfMeasure.col.example'),
-      accessor: (row) => formatDecimalExample(row.decimalPlaces),
-      cellClassName: 'tabular-nums',
-    },
-    {
+      enableSorting: false,
+      header: t('unitsOfMeasure.columns.example'),
+      cell: ({ row }) => (
+        <span className="tabular-nums" dir="ltr">
+          {formatDecimalExample(row.original.decimalPlaces)}
+        </span>
+      ),
+      meta: { hideBelow: 'md' },
+    }),
+    helper.accessor('inUse', {
+      header: t('unitsOfMeasure.columns.inUse'),
+      enableSorting: false,
+      cell: ({ getValue }) =>
+        getValue() === true
+          ? t('unitsOfMeasure.inUse.yes')
+          : t('unitsOfMeasure.inUse.no'),
+      meta: { hideBelow: 'lg' },
+    }),
+    helper.accessor('isActive', {
       id: 'status',
-      header: t('unitsOfMeasure.col.status'),
-      accessor: (row) => t(unitOfMeasureActiveBadge(row.isActive).labelKey),
-      cell: (row) => {
-        const badge = unitOfMeasureActiveBadge(row.isActive);
+      header: t('unitsOfMeasure.columns.status'),
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const badge = activeBadge(getValue());
         return (
           <DataBadge tone={badge.tone} shape="pill">
             {t(badge.labelKey)}
           </DataBadge>
         );
       },
-    },
-    {
+    }),
+    helper.display({
       id: 'actions',
-      header: t('unitsOfMeasure.col.actions'),
-      align: 'end',
-      cell: (row) => (
-        <DataTableRowActions
-          actions={getUnitOfMeasureRowActions({
-            t,
-            can,
-            row,
-            onEdit,
-            onDelete,
-          })}
-        />
+      enableSorting: false,
+      header: () => <span className="sr-only">{t('common.actions')}</span>,
+      cell: ({ row }) => (
+        <DataTableRowActions actions={getActions(row.original)} />
       ),
-    },
-  ];
+      meta: { align: 'end' },
+    }),
+  ]);
 }

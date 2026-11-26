@@ -5,87 +5,83 @@ import {
   toUnitOfMeasurePayload,
   toUnitOfMeasureValues,
   unitOfMeasureSchema,
-  type UnitOfMeasureValues,
 } from './validations';
 
-const valid: UnitOfMeasureValues = {
-  ...defaultUnitOfMeasureForm,
-  code: 'PCS',
-  name: 'Piece',
-};
-
-function firstMessage(values: unknown): string | undefined {
-  return unitOfMeasureSchema.safeParse(values).error?.issues[0]?.message;
+function issues(values: Partial<typeof defaultUnitOfMeasureForm>) {
+  const result = unitOfMeasureSchema.safeParse({
+    ...defaultUnitOfMeasureForm,
+    ...values,
+  });
+  return result.success
+    ? []
+    : result.error.issues.map((issue) => issue.message);
 }
 
 describe('unitOfMeasureSchema', () => {
-  it('accepts the minimal valid form', () => {
-    expect(unitOfMeasureSchema.safeParse(valid).success).toBe(true);
+  it('requires code and name', () => {
+    expect(issues({})).toEqual([
+      'unitsOfMeasure.validation.codeRequired',
+      'unitsOfMeasure.validation.nameRequired',
+    ]);
   });
 
-  it('requires a code and a name with i18n-key messages', () => {
-    const result = unitOfMeasureSchema.safeParse(defaultUnitOfMeasureForm);
-    const messages = result.error?.issues.map((issue) => issue.message);
-    expect(messages).toContain('unitsOfMeasure.form.errors.code');
-    expect(messages).toContain('unitsOfMeasure.form.errors.name');
+  it('accepts a valid unit', () => {
+    expect(issues({ code: 'PCS', name: 'Piece' })).toEqual([]);
   });
 
-  it('rejects a code longer than 20 characters', () => {
-    expect(firstMessage({ ...valid, code: 'C'.repeat(21) })).toBe(
-      'unitsOfMeasure.form.errors.codeLength',
-    );
-    expect(firstMessage({ ...valid, code: 'C'.repeat(20) })).toBeUndefined();
+  it('enforces the backend lengths', () => {
+    expect(issues({ code: 'x'.repeat(21), name: 'x'.repeat(101) })).toEqual([
+      'unitsOfMeasure.validation.codeMax',
+      'unitsOfMeasure.validation.nameMax',
+    ]);
   });
 
-  it('rejects a name longer than 100 characters', () => {
-    expect(firstMessage({ ...valid, name: 'a'.repeat(101) })).toBe(
-      'unitsOfMeasure.form.errors.nameLength',
-    );
-  });
-
-  it('accepts decimal places 0 through 6 only', () => {
-    for (const decimalPlaces of ['0', '1', '3', '5', '6']) {
-      expect(
-        unitOfMeasureSchema.safeParse({ ...valid, decimalPlaces }).success,
-      ).toBe(true);
+  it('accepts decimal places 0 to 6 only', () => {
+    for (const decimalPlaces of ['0', '3', '6']) {
+      expect(issues({ code: 'A', name: 'B', decimalPlaces })).toEqual([]);
     }
-    for (const decimalPlaces of ['7', '-1', '']) {
-      expect(firstMessage({ ...valid, decimalPlaces })).toBe(
-        'unitsOfMeasure.form.errors.decimalPlaces',
-      );
+    for (const decimalPlaces of ['7', '-1', '1.5', '', 'x']) {
+      expect(issues({ code: 'A', name: 'B', decimalPlaces })).toEqual([
+        'unitsOfMeasure.validation.decimalPlaces',
+      ]);
     }
   });
 });
 
-describe('toUnitOfMeasurePayload', () => {
-  it('uppercases the code, trims the name and maps decimal places to a number', () => {
-    expect(
-      toUnitOfMeasurePayload({
-        code: ' kg ',
-        name: ' Kilogram ',
-        decimalPlaces: '3',
-        isActive: false,
-      }),
-    ).toEqual({
-      code: 'KG',
-      name: 'Kilogram',
-      decimalPlaces: 3,
-      isActive: false,
-    });
-  });
-});
-
-describe('toUnitOfMeasureValues', () => {
-  it('maps a row to form values', () => {
-    expect(toUnitOfMeasureValues(makeUnitOfMeasure())).toEqual({
+describe('unit of measure form mappers', () => {
+  it('round-trips a record through the form', () => {
+    const values = toUnitOfMeasureValues(makeUnitOfMeasure());
+    expect(values).toEqual({
       code: 'KG',
       name: 'Kilogram',
       decimalPlaces: '3',
       isActive: true,
     });
+    expect(toUnitOfMeasurePayload(values)).toEqual({
+      code: 'KG',
+      name: 'Kilogram',
+      decimalPlaces: 3,
+      isActive: true,
+    });
   });
 
-  it('maps null fields to safe defaults', () => {
+  it('upper-cases the code and trims', () => {
+    expect(
+      toUnitOfMeasurePayload({
+        code: ' pcs ',
+        name: ' Piece ',
+        decimalPlaces: '0',
+        isActive: false,
+      }),
+    ).toEqual({
+      code: 'PCS',
+      name: 'Piece',
+      decimalPlaces: 0,
+      isActive: false,
+    });
+  });
+
+  it('fills defaults for a record with nulls', () => {
     expect(
       toUnitOfMeasureValues(
         makeUnitOfMeasure({
@@ -95,6 +91,6 @@ describe('toUnitOfMeasureValues', () => {
           isActive: null,
         }),
       ),
-    ).toEqual({ code: '', name: '', decimalPlaces: '0', isActive: true });
+    ).toEqual(defaultUnitOfMeasureForm);
   });
 });

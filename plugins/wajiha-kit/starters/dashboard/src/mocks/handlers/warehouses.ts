@@ -8,22 +8,31 @@ import {
   type WarehouseUserResponse,
   type WarehouseUserRoleRequest,
 } from '@/types/api/warehouses';
-/** Warehouses, their locations and members. */
+/**
+ * Warehouses, their locations and members. The list is paged
+ * (`?page=0&size=10&sort=name,asc`), 404 for a missing id, 422 problem+json
+ * with field errors, 409 when a rule refuses the action (same shape as the
+ * suppliers mock).
+ */
 import {
   api,
   audit,
   boolParam,
   diff,
   fail,
+  intParam,
   matches,
   noContent,
   notFound,
   nowIso,
   ok,
+  paginate,
   param,
   readJson,
   sameCode,
+  sortBy,
   textParam,
+  validationProblem,
 } from '../core';
 import { newId } from '../seed/base';
 import { directoryName } from '../seed/people';
@@ -40,6 +49,42 @@ function toWarehouse(w: WarehouseResponse): WarehouseResponse {
     managerName:
       directoryName(w.managerUserId) ?? directoryName(w.managerEmployeeId),
   };
+}
+
+const SORTABLE = {
+  code: (row: WarehouseResponse) => row.code,
+  name: (row: WarehouseResponse) => row.name,
+  address: (row: WarehouseResponse) => row.address,
+  locationCount: (row: WarehouseResponse) => row.locationCount,
+  memberCount: (row: WarehouseResponse) => row.memberCount,
+};
+
+/** A malformed body (readJson returns {}) must fail validation, not throw. */
+function text(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function validate(
+  request: Request,
+  body: WarehouseRequest,
+  id: string | null,
+): Promise<Response> | null {
+  const errors: { field: string; ar: string; en: string }[] = [];
+  if (!text(body.code)) {
+    errors.push({ field: 'code', ar: 'الرمز مطلوب', en: 'Code is required' });
+  } else if (
+    warehouses.some((w) => w.id !== id && sameCode(w.code, body.code))
+  ) {
+    errors.push({
+      field: 'code',
+      ar: 'رمز المستودع مستخدم مسبقاً',
+      en: 'Warehouse code already exists',
+    });
+  }
+  if (!text(body.name)) {
+    errors.push({ field: 'name', ar: 'الاسم مطلوب', en: 'Name is required' });
+  }
+  return errors.length > 0 ? validationProblem(request, errors) : null;
 }
 
 function toLocation(l: LocationResponse): LocationResponse {
@@ -71,32 +116,34 @@ export const warehouseHandlers = [
     const q = textParam(url, 'q');
     const isActive = boolParam(url, 'isActive');
     const isTransit = boolParam(url, 'isTransit');
-    const response: WarehouseResponse[] = warehouses
+    const filtered = warehouses
+      .map((w) => toWarehouse(w))
       .filter(
         (w) =>
-          matches(q, w.code, w.name, w.address) &&
+          matches(q, w.code, w.name, w.address, w.managerName) &&
           (isActive === undefined || w.isActive === isActive) &&
           (isTransit === undefined || w.isTransit === isTransit),
-      )
-      .map((w) => toWarehouse(w));
-    return ok(response);
+      );
+    return ok(
+      paginate(
+        sortBy(filtered, url, SORTABLE),
+        intParam(url, 'page', 0),
+        intParam(url, 'size', 10),
+      ),
+    );
   }),
 
   http.post(api(endpoints.warehouses.create), async ({ request }) => {
     const body = await readJson<WarehouseRequest>(request);
-    if (warehouses.some((w) => sameCode(w.code, body.code))) {
-      return fail(
-        request,
-        409,
-        'رمز المستودع مستخدم مسبقاً',
-        'Warehouse code already exists',
-      );
+    const invalid = validate(request, body, null);
+    if (invalid) {
+      return invalid;
     }
     const now = nowIso();
     const warehouse: WarehouseResponse = {
       id: newId(),
-      code: body.code,
-      name: body.name,
+      code: text(body.code),
+      name: text(body.name),
       address: body.address ?? null,
       hrOrgUnitId: body.hrOrgUnitId ?? null,
       managerEmployeeId: body.managerEmployeeId ?? null,
@@ -109,7 +156,7 @@ export const warehouseHandlers = [
       memberCount: 0,
       managerName: null,
     };
-    warehouses.push(warehouse);
+    warehouses.unshift(warehouse);
     audit('WAREHOUSE', warehouse.id, 'CREATE', [
       { field: 'code', oldValue: null, newValue: warehouse.code },
       { field: 'name', oldValue: null, newValue: warehouse.name },
@@ -133,22 +180,14 @@ export const warehouseHandlers = [
         return notFound(request);
       }
       const body = await readJson<WarehouseRequest>(request);
-      if (
-        warehouses.some(
-          (w) => w.id !== warehouse.id && sameCode(w.code, body.code),
-        )
-      ) {
-        return fail(
-          request,
-          409,
-          'رمز المستودع مستخدم مسبقاً',
-          'Warehouse code already exists',
-        );
+      const invalid = validate(request, body, warehouse.id);
+      if (invalid) {
+        return invalid;
       }
       const before = { ...warehouse };
       Object.assign(warehouse, {
-        code: body.code,
-        name: body.name,
+        code: text(body.code),
+        name: text(body.name),
         address: body.address ?? null,
         hrOrgUnitId: body.hrOrgUnitId ?? null,
         managerEmployeeId: body.managerEmployeeId ?? null,

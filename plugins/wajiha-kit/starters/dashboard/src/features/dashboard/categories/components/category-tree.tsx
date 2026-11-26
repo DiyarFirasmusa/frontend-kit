@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SearchField } from '@/components/filters/search-field';
 import type { RowAction } from '@/components/table/data-table-row-actions';
 import { DataTableRowActions } from '@/components/table/data-table-row-actions';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ChevronDown, Layers, Search, Tag } from '@/lib/icons';
+import { ChevronDown, Layers, Tag } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { CategoryTreeNode } from '../types/types';
 
@@ -12,7 +12,9 @@ export interface CategoryTreeProps {
   nodes: CategoryTreeNode[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  /** The committed search text (the URL's `q`). */
   search: string;
+  /** Called once typing pauses; the page writes it to the URL. */
   onSearchChange: (value: string) => void;
   isSearching: boolean;
   /** The "All items" root row (11.01); omitted when the tree has no total. */
@@ -198,22 +200,12 @@ export function CategoryTree({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative">
-        <Search
-          className="text-text-secondary pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2"
-          aria-hidden
-        />
-        <Input
-          type="search"
-          value={search}
-          placeholder={t('categories.tree.searchPlaceholder')}
-          aria-label={t('categories.tree.searchPlaceholder')}
-          className="ps-9"
-          onChange={(event) => {
-            onSearchChange(event.target.value);
-          }}
-        />
-      </div>
+      <SearchField
+        value={search}
+        onCommit={onSearchChange}
+        placeholder={t('categories.tree.searchPlaceholder')}
+        label={t('categories.tree.searchPlaceholder')}
+      />
       {allRow && !isSearching ? (
         <button
           type="button"

@@ -6,13 +6,13 @@ import { getErrorStatus } from '@/api/error/api-error';
 import { useCan } from '@/components/auth/can';
 import { PERMS } from '@/constants/permissions';
 import { directionOf } from '@/lib/i18n/languages';
-import { useWarehouseFormDialog } from '../../../hooks/form/use-warehouse-form-dialog';
+import type { WarehouseDialogState } from '../../../hooks/form/use-warehouse-form-dialog';
+import { useWarehouseDetail } from '../../../hooks/query/use-warehouse-detail';
 import {
   useDeleteWarehouse,
   warehouseRecordKeys,
 } from '../../../hooks/query/use-warehouse-mutations';
 import type { WarehouseDetailTab } from '../types/types';
-import { useWarehouseDetails } from './query/use-warehouse-details';
 
 export function useWarehouseDetailPage(
   warehouseId: string,
@@ -22,9 +22,11 @@ export function useWarehouseDetailPage(
   const navigate = useNavigate();
   const can = useCan();
   const queryClient = useQueryClient();
-  const query = useWarehouseDetails(warehouseId);
+  const query = useWarehouseDetail(warehouseId);
   const remove = useDeleteWarehouse();
-  const formDialog = useWarehouseFormDialog();
+  const [dialog, setDialog] = useState<WarehouseDialogState>({
+    kind: 'closed',
+  });
   const [isDeleteOpen, setDeleteOpen] = useState(false);
 
   const goToList = () => {
@@ -58,7 +60,10 @@ export function useWarehouseDetailPage(
     },
     title: warehouse?.name || t('warehouses.detail.title'),
     subtitle,
-    formDialog,
+    dialog,
+    closeDialog: () => {
+      setDialog({ kind: 'closed' });
+    },
     canEdit: warehouse !== undefined && can(PERMS.warehouse.update),
     canDelete: warehouse !== undefined && can(PERMS.warehouse.delete),
     onTabChange: (next: WarehouseDetailTab) => {
@@ -71,7 +76,7 @@ export function useWarehouseDetailPage(
     onBack: goToList,
     onEdit: () => {
       if (warehouse) {
-        formDialog.openEdit(warehouse);
+        setDialog({ kind: 'edit', warehouseId: warehouse.id });
       }
     },
     deleteDialog: {

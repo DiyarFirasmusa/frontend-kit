@@ -1,78 +1,75 @@
-import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { applyApiFieldErrors } from '@/api/error/field-errors';
 import { zodResolver } from '@/lib/vendor/zod-resolver';
-import type { UnitOfMeasureRow } from '../../types/types';
 import {
   defaultUnitOfMeasureForm,
   toUnitOfMeasurePayload,
   toUnitOfMeasureValues,
+  UOM_FORM_FIELDS,
   unitOfMeasureSchema,
   type UnitOfMeasureValues,
 } from '../../validations/validations';
+import { useUnitOfMeasureDetail } from '../query/use-uom-detail';
 import {
   useCreateUnitOfMeasure,
   useUpdateUnitOfMeasure,
 } from '../query/use-uom-mutations';
 
-export function useUnitOfMeasureFormDialog() {
-  const [open, setOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+/** Which dialog is open: one union, never three booleans. */
+export type UnitOfMeasureDialogState =
+  | { kind: 'closed' }
+  | { kind: 'create' }
+  | { kind: 'edit'; unitId: string };
+
+/**
+ * The create/edit form. Mounted per opening (keyed by mode and id), so each
+ * opening starts clean. Edit loads the record by id and fills the form when
+ * it arrives; submit stays off until then.
+ */
+export function useUnitOfMeasureFormDialog(
+  mode: Exclude<UnitOfMeasureDialogState, { kind: 'closed' }>,
+  onDone: () => void,
+) {
+  const editId = mode.kind === 'edit' ? mode.unitId : null;
+  const detail = useUnitOfMeasureDetail(editId);
   const create = useCreateUnitOfMeasure();
   const update = useUpdateUnitOfMeasure();
-
   const form = useForm<UnitOfMeasureValues>({
     resolver: zodResolver(unitOfMeasureSchema),
     defaultValues: defaultUnitOfMeasureForm,
-    mode: 'onChange',
+    // `values` resets the form once when the record arrives.
+    values: detail.data ? toUnitOfMeasureValues(detail.data) : undefined,
+    resetOptions: { keepDirtyValues: true },
   });
-
   const isPending = create.isPending || update.isPending;
+  const isLoading = editId !== null && detail.isPending;
 
-  const close = useCallback(() => {
-    setOpen(false);
-    setEditingId(null);
-    form.reset(defaultUnitOfMeasureForm);
-  }, [form]);
+  const onError = (error: unknown) => {
+    // The client already toasted the summary; put field messages under the inputs.
+    applyApiFieldErrors(error, form.setError, UOM_FORM_FIELDS);
+  };
 
-  const openCreate = useCallback(() => {
-    setEditingId(null);
-    form.reset(defaultUnitOfMeasureForm);
-    setOpen(true);
-  }, [form]);
-
-  const openEdit = useCallback(
-    (row: UnitOfMeasureRow) => {
-      setEditingId(row.id);
-      form.reset(toUnitOfMeasureValues(row));
-      setOpen(true);
-    },
-    [form],
-  );
+  const submit = form.handleSubmit((values) => {
+    // Enter or a double click while a request is in flight sends nothing.
+    if (isPending || isLoading) {
+      return;
+    }
+    const payload = toUnitOfMeasurePayload(values);
+    if (editId !== null) {
+      update.mutate({ id: editId, payload }, { onSuccess: onDone, onError });
+      return;
+    }
+    create.mutate(payload, { onSuccess: onDone, onError });
+  });
 
   return {
     form,
-    open,
-    isEditing: editingId !== null,
+    isEditing: editId !== null,
+    isLoading,
     isPending,
-    canSubmit: !isPending,
-    openCreate,
-    openEdit,
-    onOpenChange: (next: boolean) => {
-      if (!next) {
-        close();
-      }
+    loadFailed: detail.isError,
+    submit: () => {
+      void submit();
     },
-    onSubmit: form.handleSubmit((values) => {
-      const payload = toUnitOfMeasurePayload(values);
-      if (editingId) {
-        update.mutate({ id: editingId, payload }, { onSuccess: close });
-        return;
-      }
-      create.mutate(payload, { onSuccess: close });
-    }),
   };
 }
-
-export type UnitOfMeasureFormDialogState = ReturnType<
-  typeof useUnitOfMeasureFormDialog
->;

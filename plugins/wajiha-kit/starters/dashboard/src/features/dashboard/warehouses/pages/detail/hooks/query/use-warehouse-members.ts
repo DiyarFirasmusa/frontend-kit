@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { qk } from '@/constants/query-keys';
 import type { WarehouseUserRole } from '@/types/api/enums';
 import type { WarehouseUserRequest } from '@/types/api/warehouses';
@@ -9,10 +14,16 @@ import {
   removeWarehouseMember,
 } from '../../services/warehouse-detail.service';
 
-export function useWarehouseMembers(warehouseId: string) {
-  return useQuery({
+export function warehouseMembersQueryOptions(warehouseId: string) {
+  return queryOptions({
     queryKey: qk.warehouses.users(warehouseId),
     queryFn: ({ signal }) => fetchWarehouseMembers(warehouseId, { signal }),
+  });
+}
+
+export function useWarehouseMembers(warehouseId: string) {
+  return useQuery({
+    ...warehouseMembersQueryOptions(warehouseId),
     enabled: warehouseId !== '',
   });
 }

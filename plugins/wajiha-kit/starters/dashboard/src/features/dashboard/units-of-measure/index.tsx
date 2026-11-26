@@ -1,21 +1,31 @@
-import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/dialog/confirm-dialog';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { PageHeader } from '@/components/shared/page-header';
-import { ClientDataTable } from '@/components/table/client-data-table';
+import { DataTable } from '@/components/table/data-table';
 import { ExportExcelButton } from '@/components/table/export-excel-button';
-import { ListFiltersBar } from '@/components/table/list-filters-bar';
 import { Button } from '@/components/ui/button';
 import { Plus } from '@/lib/icons';
+import { PAGE_SIZES } from '@/lib/list-search';
 import { UnitOfMeasureFormDialog } from './components/dialog/uom-form-dialog';
-import { useUnitsOfMeasureListPage } from './hooks/use-units-of-measure-list-page';
+import { UnitOfMeasureFilterBar } from './components/uom-filter-bar';
+import {
+  getUnitOfMeasureRowId,
+  useUnitsOfMeasureListPage,
+} from './hooks/use-list-page';
 
 export default function UnitsOfMeasureListContainer() {
-  const { t } = useTranslation();
   const page = useUnitsOfMeasureListPage();
+  const { t } = page;
+
+  const createButton = page.canCreate ? (
+    <Button type="button" onClick={page.openCreate}>
+      <Plus className="size-4" />
+      {t('unitsOfMeasure.create')}
+    </Button>
+  ) : null;
 
   return (
-    <section dir={page.dir} className="gap-card flex flex-col">
+    <section className="gap-card flex flex-col">
       <PageHeader
         breadcrumb={
           <Breadcrumb current={t('unitsOfMeasure.title')}>
@@ -27,22 +37,58 @@ export default function UnitsOfMeasureListContainer() {
         actions={
           <>
             <ExportExcelButton {...page.exportExcel} />
-            {page.canCreate ? (
-              <Button type="button" onClick={page.formDialog.openCreate}>
-                <Plus className="size-4" />
-                {t('unitsOfMeasure.add')}
-              </Button>
-            ) : null}
+            {createButton}
           </>
         }
       />
 
       <div className="surface-card gap-card flex flex-col">
-        <ListFiltersBar {...page.toolbar} />
-        <ClientDataTable {...page.table} embedded />
+        <UnitOfMeasureFilterBar />
+        <DataTable
+          caption={t('unitsOfMeasure.caption')}
+          columns={page.columns}
+          rows={page.rows}
+          rowCount={page.rowCount}
+          getRowId={getUnitOfMeasureRowId}
+          pagination={page.pagination}
+          sorting={page.sorting}
+          onPaginationChange={page.setPagination}
+          onSortingChange={page.setSorting}
+          pageSizeOptions={PAGE_SIZES}
+          status={page.status}
+          onRetry={page.retry}
+          emptyLabel={
+            page.hasFilters
+              ? t('unitsOfMeasure.emptyFiltered')
+              : t('unitsOfMeasure.empty')
+          }
+          emptyAction={
+            page.hasFilters ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={page.clearFilters}
+              >
+                {t('table.clearFilters')}
+              </Button>
+            ) : (
+              createButton
+            )
+          }
+        />
       </div>
 
-      <UnitOfMeasureFormDialog dialog={page.formDialog} />
+      {page.dialog.kind === 'closed' ? null : (
+        <UnitOfMeasureFormDialog
+          key={
+            page.dialog.kind === 'edit'
+              ? `edit:${page.dialog.unitId}`
+              : 'create'
+          }
+          mode={page.dialog}
+          onClose={page.closeDialog}
+        />
+      )}
 
       <ConfirmDialog
         open={page.deleteDialog.open}
@@ -51,9 +97,10 @@ export default function UnitsOfMeasureListContainer() {
         description={t('unitsOfMeasure.delete.description', {
           name: page.deleteDialog.name,
         })}
-        confirmLabel={t('unitsOfMeasure.delete.confirm')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
         destructive
-        isLoading={page.deleteDialog.isPending}
+        isLoading={page.deleteDialog.isLoading}
         onConfirm={page.deleteDialog.onConfirm}
       />
     </section>

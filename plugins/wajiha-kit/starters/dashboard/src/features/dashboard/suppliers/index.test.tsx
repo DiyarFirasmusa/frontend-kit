@@ -118,7 +118,7 @@ describe('suppliers list (real route, shared mock backend)', () => {
       expect(router.state.location.search).toMatchObject({ q: 'SUP-003' });
     }, WAIT);
     expect(await within(table()).findByText('SUP-003')).toBeVisible();
-    expect(requests.filter((line) => line.includes('q=SUP'))).toEqual([
+    expect(requests.filter((line) => line.includes('q='))).toEqual([
       'GET /api/suppliers?page=0&size=10&q=SUP-003',
     ]);
   });

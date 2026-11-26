@@ -177,7 +177,7 @@ export function paginate<T>(
   page: number,
   size: number,
 ): PageResponse<T> & { page: number } {
-  const safeSize = Math.min(200, Math.max(1, size));
+  const safeSize = Math.min(1000, Math.max(1, size));
   const safePage = Math.max(0, page);
   return {
     content: rows.slice(safePage * safeSize, safePage * safeSize + safeSize),

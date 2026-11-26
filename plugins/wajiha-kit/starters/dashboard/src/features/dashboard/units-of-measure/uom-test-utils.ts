@@ -9,7 +9,7 @@ export function makeUnitOfMeasure(
     name: 'Kilogram',
     decimalPlaces: 3,
     isActive: true,
-    inUse: null,
+    inUse: false,
     ...overrides,
   };
 }
