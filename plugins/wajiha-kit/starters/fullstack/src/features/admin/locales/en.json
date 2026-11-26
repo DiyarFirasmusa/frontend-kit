@@ -1,0 +1,26 @@
+{
+  "admin": {
+    "title": "Admin",
+    "navLabel": "Admin pages",
+    "navOverview": "Overview",
+    "navSuppliers": "Suppliers",
+    "navSettings": "Settings",
+    "menu": "Admin menu",
+    "openMenu": "Open the menu",
+    "accountMenu": "Account",
+    "signOut": "Sign out",
+    "forbiddenTitle": "No access",
+    "forbiddenText": "Your account cannot open this page. Ask an administrator if you need it.",
+    "backToOverview": "Back to the overview",
+    "notFoundTitle": "Page not found",
+    "notFoundText": "This admin page does not exist."
+  },
+  "adminErrors": {
+    "network": "No connection to the server. Check the network and try again.",
+    "forbidden": "Your account cannot do this.",
+    "notFound": "This record no longer exists.",
+    "conflict": "This conflicts with existing data.",
+    "server": "The server had a problem. Try again in a moment.",
+    "generic": "The request failed. Try again."
+  }
+}

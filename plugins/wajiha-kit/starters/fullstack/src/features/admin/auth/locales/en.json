@@ -1,0 +1,12 @@
+{
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Sign in to manage the site's data.",
+    "username": "User name",
+    "password": "Password",
+    "submit": "Sign in",
+    "usernameRequired": "Enter your user name",
+    "passwordRequired": "Enter your password",
+    "demoHint": "Demo mode: any user name and password work. The user name \"viewer\" can look but not change."
+  }
+}

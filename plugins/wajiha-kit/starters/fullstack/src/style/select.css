@@ -1,0 +1,192 @@
+/* Shared dropdown popup + option styling for Select, Combobox, and
+   table filter popovers. Trigger chrome stays on `.control` (input.css).
+   Option rows: 40px, 13px body text, 8px radius; highlight = --hover-row;
+   selected = --primary-light with a check at the end side. */
+
+@layer components {
+  .select-popup {
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    z-index: 50;
+    max-height: min(18rem, var(--available-height, 18rem));
+    min-width: var(--anchor-width, 8rem);
+    width: var(--anchor-width, max-content);
+    overflow: hidden;
+    border-radius: var(--radius);
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: var(--shadow-large);
+    border: 1px solid var(--stroke);
+    transform-origin: var(--transform-origin);
+  }
+
+  .select-popup-list {
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 4px;
+  }
+
+  .select-item {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 40px;
+    align-items: center;
+    gap: 8px;
+    padding-block: 8px;
+    padding-inline: 8px 32px;
+    border-radius: 8px;
+    font: 400 13px / 19.5px var(--font-sans);
+    color: var(--text-primary);
+    text-align: start;
+    cursor: default;
+    outline: none;
+    user-select: none;
+  }
+
+  .select-item:hover,
+  .select-item[data-highlighted],
+  .select-item:focus-visible {
+    background-color: var(--hover-row);
+  }
+
+  .select-item-selected,
+  .select-item[data-selected],
+  .select-item[aria-selected='true'] {
+    background-color: var(--primary-light);
+  }
+
+  .select-item-selected:hover,
+  .select-item[data-selected]:hover,
+  .select-item[aria-selected='true']:hover,
+  .select-item-selected[data-highlighted],
+  .select-item[data-selected][data-highlighted],
+  .select-item[aria-selected='true'][data-highlighted] {
+    background-color: var(--primary-light);
+  }
+
+  .select-item:disabled,
+  .select-item[data-disabled],
+  .select-item[aria-disabled='true'] {
+    color: var(--text-muted);
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .select-item-check {
+    position: absolute;
+    inset-inline-end: 8px;
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-text);
+    pointer-events: none;
+  }
+
+  .select-item-label {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .select-item-description {
+    display: block;
+    font: 400 12px / 18px var(--font-sans);
+    color: var(--text-muted);
+  }
+
+  .select-search {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--spacing-field);
+    margin: 4px;
+    height: var(--field-h);
+    padding-inline: var(--spacing-row);
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-control);
+  }
+
+  .select-search:focus-within {
+    border-color: var(--primary-highlight);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary-highlight) 20%, transparent);
+  }
+
+  .select-search-input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font: 400 13px / 19.5px var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  .select-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .select-empty {
+    padding-block: 1.5rem;
+    text-align: center;
+    font: 400 13px / 19.5px var(--font-sans);
+    color: var(--text-secondary);
+  }
+
+  .select-trigger-compact {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  /* Clear button laid over a dropdown trigger, just before its chevron. */
+  .control-clearable {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .control-clearable[data-clearable] > .control .control-chevron {
+    margin-inline-start: 24px;
+  }
+
+  .control-clear {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(var(--spacing-row) + 22px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    translate: 0 -50%;
+    border-radius: var(--radius-kbd);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition:
+      color 150ms,
+      background-color 150ms;
+  }
+
+  /* Taller hit area without covering the trigger text. */
+  .control-clear::before {
+    content: '';
+    position: absolute;
+    inset-block: -8px;
+    inset-inline: -2px;
+  }
+
+  .control-clear:hover {
+    background-color: var(--hover-row);
+    color: var(--text-primary);
+  }
+
+  .control-clear:focus-visible {
+    outline: 2px solid var(--primary-highlight);
+    outline-offset: 1px;
+  }
+}

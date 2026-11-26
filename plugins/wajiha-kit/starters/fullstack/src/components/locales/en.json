@@ -1,0 +1,32 @@
+{
+  "ui": {
+    "actions": "Actions",
+    "active": "Active",
+    "all": "All",
+    "cancel": "Cancel",
+    "clearSelection": "Clear selection",
+    "clearValue": "Clear selection",
+    "close": "Close",
+    "columns": "Columns",
+    "confirm": "Confirm",
+    "error": "An error occurred",
+    "hidePassword": "Hide password",
+    "inactive": "Inactive",
+    "next": "Next",
+    "noResults": "No results",
+    "of": "of",
+    "page": "Page",
+    "previous": "Previous",
+    "reset": "Reset",
+    "save": "Save",
+    "search": "Search",
+    "selectAll": "Select all",
+    "selectRow": "Select row",
+    "selectedCount": "{{count}} selected",
+    "showPassword": "Show password",
+    "showing": "Showing",
+    "tryAgain": "Try again",
+    "unknown": "Unknown",
+    "scrollRegion": "Scrollable table"
+  }
+}

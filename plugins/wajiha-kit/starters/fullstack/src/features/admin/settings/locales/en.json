@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Your own details. Other users see your name.",
+    "profileTitle": "Profile",
+    "name": "Name",
+    "email": "E-mail",
+    "jobTitle": "Job title",
+    "saved": "Profile saved.",
+    "loadError": "Your profile could not be loaded.",
+    "nameRequired": "Enter your name",
+    "nameMax": "The name can be at most 120 characters",
+    "emailMax": "The e-mail can be at most 150 characters",
+    "emailInvalid": "Enter a valid e-mail address",
+    "jobTitleMax": "The job title can be at most 120 characters"
+  }
+}

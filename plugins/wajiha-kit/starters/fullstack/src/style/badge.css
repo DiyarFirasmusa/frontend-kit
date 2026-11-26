@@ -1,0 +1,102 @@
+/* Badges / tags — design system spec (docs/design/design-system.md §4).
+   Status badge (`.badge-status`, a pill with a dot): 4–6px dot plus text in
+   the semantic colour with no visible tint, as the ds-badges sheet and the
+   table frames draw it. Every tag text clears 4.5:1 straight on the canvas
+   and surfaces (tokens-contrast.test.ts). Chips and tags keep the 8–9% tint.
+   Neutral text = secondary.
+   Compose as `.badge .badge-green` (+ `.badge-sm` / `.badge-pill`). */
+
+@layer components {
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-field);
+    width: fit-content;
+    flex-shrink: 0;
+    height: 26px;
+    padding-inline: var(--spacing-inline);
+    border-radius: var(--radius-pill);
+    font: 600 12px / 1 var(--font-sans);
+    white-space: nowrap;
+  }
+
+  .badge > svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+
+  .badge-sm {
+    height: 22px;
+    padding-inline: var(--spacing-field);
+    gap: 4px;
+    font: 600 11px / 1 var(--font-sans);
+  }
+  .badge-sm > svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .badge-pill {
+    border-radius: var(--radius-pill);
+  }
+
+  .badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-pill);
+    background-color: currentcolor;
+    flex-shrink: 0;
+  }
+
+  /* ── Tones (container tint + semantic text) ── */
+  .badge-green {
+    background-color: var(--tag-green-container);
+    color: var(--tag-green);
+  }
+  .badge-red {
+    background-color: var(--tag-red-container);
+    color: var(--tag-red);
+  }
+  .badge-yellow {
+    background-color: var(--tag-yellow-container);
+    color: var(--tag-yellow);
+  }
+  .badge-orange {
+    background-color: var(--tag-orange-container);
+    color: var(--tag-orange);
+  }
+  .badge-cyan {
+    background-color: var(--tag-cyan-container);
+    color: var(--tag-cyan);
+  }
+  .badge-purple {
+    background-color: var(--tag-purple-container);
+    color: var(--tag-purple);
+  }
+  .badge-blue {
+    background-color: var(--tag-blue-container);
+    color: var(--tag-blue);
+  }
+  .badge-brand {
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary-text);
+  }
+  .badge-neutral {
+    background-color: var(--tag-neutral-container);
+    color: var(--text-secondary);
+  }
+
+  /* Status pill: dot + coloured text, no container (beats the tone tint). */
+  .badge.badge-status {
+    background-color: transparent;
+    padding-inline: 0;
+  }
+
+  /* Outlined variant — same tones, transparent container. */
+  .badge-outline {
+    background-color: transparent;
+    border: 1px solid currentcolor;
+  }
+}

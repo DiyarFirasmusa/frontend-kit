@@ -1,0 +1,13 @@
+{
+  "overview": {
+    "title": "نظرة عامة",
+    "greeting": "أهلاً {{name}}، هذا وضع البيانات الآن.",
+    "totalSuppliers": "الموردون",
+    "activeSuppliers": "موردون نشطون",
+    "inactiveSuppliers": "موردون غير نشطين",
+    "recentTitle": "آخر الموردين تعديلاً",
+    "recentEmpty": "لا يوجد موردون بعد.",
+    "viewAll": "كل الموردين",
+    "loadError": "تعذّر تحميل النظرة العامة."
+  }
+}

@@ -1,0 +1,173 @@
+/*
+  The one stylesheet of the project, shared by the public site and the admin.
+  Colours, spacing, radii, type and motion come from src/style/tokens (TypeScript) through the two generated
+  files theme.css and preset.css: run `npm run tokens` after changing a token, never edit those two by hand.
+  Components use token utilities (bg-surface, text-text-muted, border-stroke, p-card ...) and never write a
+  colour, a font or a physical direction (left/right) themselves.
+
+  Light is the default. Dark follows the system unless the visitor chose a theme (data-theme on <html>, set
+  before first paint by the inline script in __root.tsx).
+*/
+@import 'tailwindcss' source('..');
+@import 'tw-animate-css';
+@import '@fontsource-variable/cairo/wght.css';
+@import './theme.css';
+@import './preset.css';
+@import './button.css';
+@import './badge.css';
+@import './input.css';
+@import './select.css';
+@import './pagination.css';
+@import './actions.css';
+
+/* Tailwind looks for class names in src/ only (source('..') above). Without it, it scans the whole folder:
+   node_modules (tailwind-merge lists every utility name), the build output and test reports, and the CSS
+   grows by hundreds of kilobytes or links a file from an older build. */
+
+/* dark: matches a saved dark choice, or the system setting when nothing is saved (same rule as preset.css). */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-block-start: 5rem;
+  }
+
+  body {
+    min-block-size: 100dvh;
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-weight: 700;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One visible focus ring for everything focusable. Component rules (.btn, .control ...) may refine it;
+     none removes it. --primary-highlight reaches 3:1 on every surface in every preset
+     (tokens/contrast.test.ts). A coloured block can change it for its children: see surface-primary. */
+  :focus-visible {
+    outline: 3px solid var(--primary-highlight);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Headings and <main> only receive focus from code (after a page change or a sent form), so a screen
+     reader starts there. They are not controls, so they draw no ring. */
+  main:focus-visible,
+  [tabindex='-1']:is(h1, h2):focus-visible {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  /* Header cells follow the reading direction like their data cells. */
+  th {
+    text-align: start;
+  }
+
+  /* Numbers stay Western Arabic in both languages. */
+  :where(input, textarea, table, .tabular) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Every animation and transition collapses for people who ask for less motion, including the
+     tw-animate-css classes the admin dialogs and menus use. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Content surfaces. `.card` carries no padding so callers set their own; `.surface-card` is padded. */
+  .card {
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+  }
+
+  .surface-card {
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-modal);
+    padding: var(--spacing-panel);
+  }
+
+  .page-title {
+    @apply text-h1;
+    color: var(--text-primary);
+  }
+
+  .page-subtitle {
+    @apply text-b2;
+    color: var(--text-secondary);
+  }
+}
+
+/* The theme button holds both icons; the theme decides which one shows. No JavaScript, no hydration mismatch. */
+.theme-icon-dark {
+  display: none;
+}
+
+:root[data-theme='dark'] .theme-icon-light {
+  display: none;
+}
+
+:root[data-theme='dark'] .theme-icon-dark {
+  display: inline;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-icon-light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .theme-icon-dark {
+    display: inline;
+  }
+}
+
+/* A block in the primary colour. Its children get a focus ring in the foreground colour, because a ring in
+   the highlight colour may vanish on it. Use this class (not bg-primary) for any coloured block that holds
+   links or buttons. */
+@utility surface-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  --primary-highlight: var(--primary-foreground);
+}
+
+/* Directional icons mirror in RTL (arrows, chevrons). */
+[dir='rtl'] .icon-directional {
+  transform: scaleX(-1);
+}

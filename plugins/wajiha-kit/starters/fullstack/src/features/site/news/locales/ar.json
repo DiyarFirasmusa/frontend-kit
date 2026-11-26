@@ -1,0 +1,17 @@
+{
+  "news": {
+    "metaTitle": "الأخبار",
+    "metaDescription": "أخبار ونصائح قصيرة من فريق شركة المثال للأعمال الصغيرة. محتوى تجريبي.",
+    "title": "الأخبار",
+    "lead": "أخبار الشركة ونصائح قصيرة تفيد عملك.",
+    "publishedOn": "نُشر في {{date}}",
+    "readTime_zero": "أقل من دقيقة قراءة",
+    "readTime_one": "دقيقة قراءة",
+    "readTime_two": "دقيقتان قراءة",
+    "readTime_few": "{{count}} دقائق قراءة",
+    "readTime_many": "{{count}} دقيقة قراءة",
+    "readTime_other": "{{count}} دقيقة قراءة",
+    "backToList": "العودة إلى الأخبار",
+    "related": "اقرأ أيضاً"
+  }
+}

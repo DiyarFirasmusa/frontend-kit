@@ -1,0 +1,29 @@
+{
+  "home": {
+    "metaTitle": "Example Company: consulting, training and support for small businesses",
+    "metaDescription": "A fictional company that helps small businesses with planning, training and everyday support. This is a demo site with made-up content.",
+    "heroTitle": "We help your small business grow in clear steps",
+    "heroText": "Short consulting sessions, hands-on training and daily support. We explain everything in plain words and work with you step by step.",
+    "heroPrimary": "Get in touch",
+    "heroSecondary": "See our services",
+    "servicesTitle": "What we offer",
+    "servicesLead": "Three services that cover most of what a small business needs at the start.",
+    "service1Title": "Consulting",
+    "service1Text": "Short sessions where we review your business and leave you with a clear written plan.",
+    "service2Title": "Training",
+    "service2Text": "Practical courses for your team, using examples from your own work, not from textbooks.",
+    "service3Title": "Support",
+    "service3Text": "A team that answers your everyday questions and follows up after the project ends.",
+    "statsTitle": "In numbers (sample figures)",
+    "stat1Value": "120",
+    "stat1Label": "projects completed",
+    "stat2Value": "40",
+    "stat2Label": "training courses",
+    "stat3Value": "9",
+    "stat3Label": "years of experience",
+    "newsTitle": "Latest news",
+    "ctaTitle": "Have a question or an idea?",
+    "ctaText": "Send us a short message and we will reply within one working day.",
+    "ctaButton": "Write to us"
+  }
+}

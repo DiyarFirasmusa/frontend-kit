@@ -1,0 +1,9 @@
+{
+  "name": "Example Company",
+  "short_name": "Example",
+  "start_url": "/ar",
+  "display": "standalone",
+  "background_color": "#f6f7f8",
+  "theme_color": "#18181b",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

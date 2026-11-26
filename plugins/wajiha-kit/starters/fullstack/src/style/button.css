@@ -1,0 +1,187 @@
+/* Buttons — design system spec (docs/design/design-system.md §4).
+   Geometry: 38px default page action, 44px lg, 32px sm, 28px xs, 10px radius
+   (--radius-control). Icon-only default is 40px per design §4; lg/sm/xs icon
+   squares follow the button heights (44/32/28). Pill = 40px top-bar CTA.
+   Button text: IBM Plex Sans SemiBold 13px (text-button-2).
+   Tone classes are additive: `.btn .btn-primary .btn-sm`. */
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-field);
+    height: var(--control-h);
+    padding-inline: 16px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-control);
+    font: 600 13px / 19.5px var(--font-sans);
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard);
+  }
+
+  .btn > svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--primary-highlight);
+    outline-offset: 2px;
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled='true'],
+  .btn-disabled {
+    background-color: var(--disabled-container);
+    border-color: transparent;
+    box-shadow: none;
+    color: var(--text-inactive);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* ── Sizes ── */
+  .btn-lg {
+    height: var(--control-h-lg);
+    padding-inline: 20px;
+  }
+  .btn-sm {
+    height: var(--control-h-sm);
+    padding-inline: var(--spacing-row);
+  }
+  .btn-sm > svg {
+    width: 16px;
+    height: 16px;
+  }
+  .btn-xs {
+    height: var(--control-h-xs);
+    padding-inline: var(--spacing-inline);
+    border-radius: var(--radius-control);
+    font: 600 12px / 18px var(--font-sans);
+  }
+  .btn-xs > svg {
+    width: 14px;
+    height: 14px;
+  }
+  /* Icon-only default is 40px per design §4; lg/sm/xs icon squares follow the button heights (44/32/28). */
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+    padding-inline: 0;
+  }
+  .btn-icon.btn-lg {
+    width: 44px;
+    height: var(--control-h-lg);
+  }
+  .btn-icon.btn-sm {
+    width: 32px;
+    height: var(--control-h-sm);
+  }
+  .btn-icon.btn-xs {
+    width: 28px;
+    height: var(--control-h-xs);
+  }
+  .btn-pill {
+    height: 40px;
+    padding-inline: 20px;
+    border-radius: var(--radius-pill);
+  }
+  .btn-block {
+    width: 100%;
+  }
+
+  /* ── Tones ── */
+  /* Primary: brand fill with the Primary Action glow. */
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: var(--shadow-primary);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-navy {
+    background-color: var(--primary-container);
+    color: var(--primary-foreground);
+  }
+  .btn-navy:hover:not(:disabled) {
+    background-color: color-mix(in oklab, var(--primary-container) 88%, var(--primary-foreground));
+  }
+
+  .btn-outline-primary {
+    background-color: transparent;
+    border-color: var(--primary-highlight);
+    color: var(--primary-text);
+  }
+  .btn-outline-primary:hover:not(:disabled) {
+    background-color: var(--primary-light);
+  }
+
+  /* Secondary: white 5–7% fill with a 1px stroke. */
+  .btn-outline {
+    background-color: color-mix(in oklab, var(--text-primary) 6%, transparent);
+    border-color: var(--stroke);
+    color: var(--text-primary);
+  }
+  .btn-outline:hover:not(:disabled) {
+    background-color: var(--hover-row);
+  }
+
+  /* Solid destructive (confirm actions). */
+  .btn-danger {
+    background-color: var(--danger);
+    color: var(--danger-foreground);
+  }
+  .btn-danger:hover:not(:disabled) {
+    background-color: color-mix(in oklab, var(--danger) 88%, var(--text-primary));
+  }
+
+  /* Destructive: 8–9% red tint with red text. Text uses --tag-red, which is
+     lifted in dark mode to clear 4.5:1 on the tint (--danger does not). */
+  .btn-soft-danger {
+    background-color: var(--tag-red-container);
+    color: var(--tag-red);
+  }
+  /* Hover keeps the same hue at a slightly stronger tint (no solid mix) so the
+     --tag-red text stays at or above 4.5:1 on the hovered background. */
+  .btn-soft-danger:hover:not(:disabled) {
+    background-color: color-mix(in oklab, var(--tag-red) 12%, transparent);
+  }
+
+  .btn-soft-primary {
+    background-color: var(--primary-light);
+    color: var(--primary-text);
+  }
+  .btn-soft-primary:hover:not(:disabled) {
+    background-color: color-mix(in oklab, var(--primary-light) 85%, var(--primary-highlight));
+  }
+
+  /* Ghost: no fill, warning (amber) text with a leading arrow. */
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--warning);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--hover-row);
+  }
+
+  .btn-link {
+    height: auto;
+    padding: 0;
+    background: none;
+    color: var(--primary-text);
+    text-underline-offset: 4px;
+  }
+  .btn-link:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+}

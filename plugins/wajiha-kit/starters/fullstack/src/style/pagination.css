@@ -1,0 +1,91 @@
+/* Pagination — design system spec (docs/design/design-system.md §4).
+   Row: result summary on one side, controls on the other.
+   Page box = 29px square, 7px radius (--radius-pagination); others sit on a
+   white 5% fill with a 1px stroke; active page = --primary fill, bold text;
+   arrows sit in neutral boxes and dim when unavailable. */
+
+@layer components {
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-row);
+    flex-wrap: wrap;
+  }
+
+  .pagination-summary {
+    font: 400 13px / 19.5px var(--font-sans);
+    color: var(--text-secondary);
+  }
+
+  .pagination-list {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-field);
+  }
+
+  .page-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 29px;
+    height: 29px;
+    padding-inline: 6px;
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-pagination);
+    background-color: color-mix(in oklab, var(--text-primary) 5%, transparent);
+    color: var(--text-primary);
+    font: 600 13px / 1 var(--font-sans);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+
+  .page-box:hover:not(:disabled):not([aria-current='page']) {
+    background-color: var(--hover-row);
+  }
+
+  .page-box[aria-current='page'] {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .page-box:focus-visible {
+    outline: 2px solid var(--primary-highlight);
+    outline-offset: 2px;
+  }
+
+  .page-ellipsis {
+    color: var(--text-inactive);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .page-arrow {
+    background-color: color-mix(in oklab, var(--text-primary) 5%, transparent);
+    color: var(--text-primary);
+  }
+  .page-arrow > svg {
+    width: 16px;
+    height: 16px;
+  }
+  .page-arrow:hover:not(:disabled) {
+    background-color: var(--hover-row);
+  }
+  .page-arrow:disabled {
+    background-color: transparent;
+    color: var(--text-inactive);
+    cursor: not-allowed;
+  }
+
+  /* Page-size selector sitting next to the summary. */
+  .page-size {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-field);
+    font: 400 13px / 19.5px var(--font-sans);
+    color: var(--text-secondary);
+  }
+}

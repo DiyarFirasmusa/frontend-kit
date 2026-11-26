@@ -1,0 +1,13 @@
+{
+  "overview": {
+    "title": "Overview",
+    "greeting": "Welcome, {{name}}. Here is where things stand.",
+    "totalSuppliers": "Suppliers",
+    "activeSuppliers": "Active suppliers",
+    "inactiveSuppliers": "Inactive suppliers",
+    "recentTitle": "Recently updated suppliers",
+    "recentEmpty": "No suppliers yet.",
+    "viewAll": "All suppliers",
+    "loadError": "The overview could not be loaded."
+  }
+}

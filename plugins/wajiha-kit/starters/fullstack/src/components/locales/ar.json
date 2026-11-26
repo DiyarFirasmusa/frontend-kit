@@ -1,0 +1,32 @@
+{
+  "ui": {
+    "actions": "إجراءات",
+    "active": "نشط",
+    "all": "الكل",
+    "cancel": "إلغاء",
+    "clearSelection": "إلغاء التحديد",
+    "clearValue": "مسح الاختيار",
+    "close": "إغلاق",
+    "columns": "الأعمدة",
+    "confirm": "تأكيد",
+    "error": "حدث خطأ",
+    "hidePassword": "إخفاء كلمة السر",
+    "inactive": "غير نشط",
+    "next": "التالي",
+    "noResults": "لا توجد نتائج",
+    "of": "من",
+    "page": "صفحة",
+    "previous": "السابق",
+    "reset": "إعادة تعيين",
+    "save": "حفظ",
+    "search": "بحث",
+    "selectAll": "تحديد الكل",
+    "selectRow": "تحديد الصف",
+    "selectedCount": "تم تحديد {{count}}",
+    "showPassword": "إظهار كلمة السر",
+    "showing": "عرض",
+    "tryAgain": "حاول مرة أخرى",
+    "unknown": "غير معروف",
+    "scrollRegion": "جدول قابل للتمرير"
+  }
+}
