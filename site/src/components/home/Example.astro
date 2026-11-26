@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const last = w.stops.length - 1
+const last = h.steps.length - 1
 ---
 
 <section id="example" class="example">
@@ -20,16 +20,16 @@ const last = w.stops.length - 1
   <h2 class="sr-only">{home.example[locale]}</h2>
   <div class="column">
     <Board locale={locale} part={1} label={locale === 'ar' ? 'كيف تعمل' : 'How it works'} tone="orange" bare>
-      <!-- Four screens side by side, one road between them, from the first message to the project you open. -->
+      <!-- The whole first run on one road, from the first message to the project you open. Each step explains itself. -->
       <ol class="path road" data-alive>
         {
-          w.stops.map((stop, i) => (
-            <li class:list={['path-stop', { 'is-current': i === 0, 'is-last': i === last }]} data-who={i === 2 ? 'kit' : 'you'} style={`--n:${i}`}>
+          h.steps.map((step, i) => (
+            <li class:list={['path-stop', { 'is-current': i === 0, 'is-last': i === last }]} data-who={step.who} style={`--n:${i}`}>
               <span class="road-pin path-dot">{i + 1}</span>
               <div class="road-screen" aria-hidden="true">
-                {i < last ? (
-                  <ChatWindow locale={locale} label={stop[locale]}>
-                    {h.chat[i]!.map((event) => <ChatEvent locale={locale} event={event} />)}
+                {step.chat ? (
+                  <ChatWindow locale={locale} label={step.title[locale]}>
+                    {step.chat.map((event) => <ChatEvent locale={locale} event={event} />)}
                   </ChatWindow>
                 ) : (
                   <div class="browser">
@@ -45,9 +45,9 @@ const last = w.stops.length - 1
                 )}
               </div>
               <button type="button" class="path-pick">
-                <strong>{stop[locale]}</strong>
-                <span class="path-text">{w.details[i]![locale]}</span>
-                <span class="road-move"><b>{i === 2 ? h.kit[locale] : h.move[locale]}</b>{h.youDo[i]![locale]}</span>
+                <strong>{step.title[locale]}</strong>
+                <span class="path-text">{step.text[locale]}</span>
+                <span class="road-move"><b>{step.who === 'kit' ? h.kit[locale] : h.move[locale]}</b>{step.move[locale]}</span>
               </button>
             </li>
           ))

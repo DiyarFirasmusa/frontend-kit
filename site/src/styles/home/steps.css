@@ -4,7 +4,7 @@
    the road fills, the step in the middle of the screen is the current one, and each step turns in from its side.
    Layer skin-page (home/index.css), so it replaces the older journey rules without !important. */
 .example .road {
-  --screen: 15.5rem;
+  --screen: 17rem;
   --pin: 2.5rem;
   --road: 5rem;
   position: relative;

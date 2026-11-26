@@ -254,51 +254,88 @@ export const compare = {
   ],
 }
 
-/**
- * "How it works": a row of four steps, and under it two windows that change with the step: the Claude chat (what you do)
- * and the project (what you get).
- */
+/** "How it works": the whole first run, step by step, on one road. Each step has its screen, a line on what happens, and whose move it is. */
+export interface HowStep {
+  who: 'you' | 'kit'
+  title: Bilingual
+  text: Bilingual
+  move: Bilingual
+  /** What the Claude window shows; the last step shows the project instead. */
+  chat?: import('./chat.ts').ChatEvent[]
+}
+
 export const howWords = {
-  you: t('What you do', 'ما تفعله'),
-  get: t('What you get', 'ما تحصل عليه'),
-  /** What the chat window shows at each step. */
-  chat: [
-    [
-      { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع.') },
-      { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
-    ],
-    [
-      { kind: 'claude', text: t('A few quick questions, nothing technical.', 'بضعة أسئلة سريعة، ولا شيء تقني.') },
-      { kind: 'ask', question: t('What are we building?', 'ماذا سنبني؟'), options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')], picked: 0 },
-    ],
-    [
-      { kind: 'user', text: t('Yes, start', 'نعم، ابدأ') },
-      { kind: 'tool', text: t('Made the pages and sign-in', 'أنشأت الصفحات والدخول'), mark: 'ok' },
-      { kind: 'tool', text: t('Tested it: all passed', 'اختبرته: نجح كله'), mark: 'ok' },
-    ],
-    [
-      { kind: 'claude', text: t('Your dashboard is ready. Open it and click around.', 'لوحتك جاهزة. افتحها وتصفحها.') },
-      { kind: 'ask', question: t('Save this version?', 'هل أحفظ هذه النسخة؟'), options: [t('Yes, save it', 'نعم، احفظها'), t('Not yet', 'ليس الآن')], picked: 0 },
-    ],
-  ] as import('./chat.ts').ChatEvent[][],
-  /** What you do at each step, in one line under the chat. */
   move: t('Your move', 'دورك'),
   kit: t('Claude’s turn', 'دور Claude'),
-  youDo: [
-    t('Paste one message into the Claude app.', 'الصق رسالة واحدة في تطبيق Claude.'),
-    t('Pick the answers that fit your project.', 'اختر الإجابات التي تناسب مشروعك.'),
-    t('Builds the pages, tests them and fixes what fails.', 'يبني الصفحات ويختبرها ويصلح ما يفشل.'),
-    t('Read the short report, then choose what to keep.', 'اقرأ التقرير القصير، ثم اختر ما تحتفظ به.'),
-  ],
-  /** What the project looks like at each step, with one line under it. */
-  result: [
-    { title: t('An empty folder', 'مجلد فارغ'), text: t('You start in a folder on your computer, like “my-shop”.', 'تبدأ من مجلد على حاسوبك، مثل «my-shop».') },
-    { title: t('A short plan', 'خطة قصيرة'), text: t('You see the plan before anything is made.', 'ترى الخطة قبل أن يُصنع أي شيء.') },
-    { title: t('Your project takes shape', 'مشروعك يتشكل'), text: t('Real pages with sample data, tested as they are made.', 'صفحات حقيقية ببيانات تجريبية، تُختبر أثناء صنعها.') },
-    { title: t('A project you can open', 'مشروع تفتحه'), text: t('It opens on your computer. Keep it, change it or start over.', 'يفتح على حاسوبك. احتفظ به أو عدّله أو ابدأ من جديد.') },
-  ],
-  folder: t('empty', 'فارغ'),
-  plan: t('Plan', 'الخطة'),
-  planItems: [t('Orders, customers, products', 'الطلبات والعملاء والمنتجات'), t('Arabic and English', 'العربية والإنجليزية'), t('Light and dark', 'فاتح وداكن')],
-  built: t('Built', 'تم'),
+  steps: [
+    {
+      who: 'you',
+      title: t('You send one message', 'ترسل رسالة واحدة'),
+      text: t('You paste it into the Claude app, and Claude installs the kit for you.', 'تلصقها في تطبيق Claude، فيثبّت لك الإضافة.'),
+      move: t('Paste one message.', 'الصق رسالة واحدة.'),
+      chat: [
+        { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع.') },
+        { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
+        { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
+      ],
+    },
+    {
+      who: 'you',
+      title: t('You pick what to build', 'تختار ما تبنيه'),
+      text: t('A dashboard, a website, or both in one project.', 'لوحة تحكم، أو موقع، أو الاثنان في مشروع واحد.'),
+      move: t('Pick one answer.', 'اختر إجابة واحدة.'),
+      chat: [
+        { kind: 'claude', text: t('Let’s set up your project. A few quick questions, nothing technical.', 'لنجهز مشروعك. بضعة أسئلة سريعة، ولا شيء تقني.') },
+        { kind: 'ask', question: t('What are we building?', 'ماذا سنبني؟'), options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')], picked: 0 },
+      ],
+    },
+    {
+      who: 'you',
+      title: t('You describe your project', 'تصف مشروعك'),
+      text: t('In your own words: what it holds, and what people do in it.', 'بكلماتك: ماذا يحتوي، وماذا يفعل الناس فيه.'),
+      move: t('Write a few lines, as you would to a person.', 'اكتب بضعة أسطر، كما تكتب لشخص.'),
+      chat: [
+        { kind: 'claude', text: t('Tell me about your project: what it contains and what people can do in it.', 'حدّثني عن مشروعك: ماذا يحتوي، وماذا يستطيع الناس أن يفعلوا فيه.') },
+        { kind: 'user', text: t('My team sees the orders, changes their status, and manages customers and products.', 'يرى فريقي الطلبات ويغير حالتها، ويدير العملاء والمنتجات.') },
+      ],
+    },
+    {
+      who: 'you',
+      title: t('Design and languages', 'التصميم واللغات'),
+      text: t('Share a design or a site you like, and choose Arabic, English or both.', 'شارك تصميما أو موقعا يعجبك، واختر العربية أو الإنجليزية أو الاثنتين.'),
+      move: t('Answer two quick questions.', 'أجب عن سؤالين سريعين.'),
+      chat: [
+        { kind: 'ask', question: t('Do you have a design?', 'هل عندك تصميم؟'), options: [t('A Figma link or pictures', 'رابط Figma أو صور'), t('A site I like', 'موقع يعجبني'), t('Not yet', 'ليس بعد')], picked: 1 },
+        { kind: 'ask', question: t('Which languages?', 'أي لغات؟'), options: [t('Arabic', 'العربية'), t('English', 'الإنجليزية'), t('Both', 'الاثنتان')], picked: 2 },
+      ],
+    },
+    {
+      who: 'you',
+      title: t('You approve the plan', 'توافق على الخطة'),
+      text: t('You see a short plan first. Nothing starts before your yes.', 'ترى خطة قصيرة أولا. ولا يبدأ شيء قبل موافقتك.'),
+      move: t('Say yes, or ask for a change.', 'قل نعم، أو اطلب تعديلا.'),
+      chat: [
+        { kind: 'claude', text: t('The plan: a shop dashboard with orders, customers and products, in Arabic and English, light and dark. Shall I start?', 'الخطة: لوحة متجر فيها الطلبات والعملاء والمنتجات، بالعربية والإنجليزية، بوضع فاتح وداكن. هل أبدأ؟') },
+        { kind: 'user', text: t('Yes, start', 'نعم، ابدأ') },
+      ],
+    },
+    {
+      who: 'kit',
+      title: t('Claude builds and checks', 'يبني Claude ويفحص'),
+      text: t('Pages, forms and sign-in, with sample data. It tests the work and fixes what fails.', 'صفحات ونماذج وتسجيل دخول، ببيانات تجريبية. ويختبر العمل ويصلح ما يفشل.'),
+      move: t('Wait a few minutes. It asks you before any risky step.', 'انتظر بضع دقائق. ويسألك قبل أي خطوة خطرة.'),
+      chat: [
+        { kind: 'tool', text: t('Made the pages and the sign-in screen', 'أنشأت الصفحات وشاشة الدخول'), mark: 'ok' },
+        { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
+        { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
+        { kind: 'tool', text: t('A reviewer read the work', 'قرأ مراجع العمل'), mark: 'ok' },
+      ],
+    },
+    {
+      who: 'you',
+      title: t('You open it and decide', 'تفتحه وتقرر'),
+      text: t('It opens on your computer. You click around, then keep it, change it or start over.', 'يفتح على حاسوبك. تتصفحه، ثم تحتفظ به أو تعدّله أو تبدأ من جديد.'),
+      move: t('Look around, then choose what to keep.', 'تصفحه، ثم اختر ما تحتفظ به.'),
+    },
+  ] as HowStep[],
 }
