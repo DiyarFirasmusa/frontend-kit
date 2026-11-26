@@ -8,11 +8,15 @@ export function initShareLink(signal: AbortSignal): void {
       'click',
       async () => {
         const data = { title: document.title, url: location.href.split('#')[0] ?? location.href }
+        let shared = false
         try {
           try {
-            if (navigator.share) await navigator.share(data)
-            else if (navigator.clipboard) await navigator.clipboard.writeText(data.url)
-            else {
+            if (navigator.share) {
+              await navigator.share(data)
+              shared = true
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(data.url)
+            } else {
               // A plain-http address has neither: copy through a hidden text box, the oldest way that still works.
               const box = document.createElement('textarea')
               box.value = data.url
@@ -31,8 +35,15 @@ export function initShareLink(signal: AbortSignal): void {
             if (navigator.clipboard) await navigator.clipboard.writeText(data.url)
             else throw error
           }
-          button.textContent = button.dataset['done'] ?? label
-          setTimeout(() => (button.textContent = label), 3000)
+          // What was done is said in the button and in a status line a screen reader hears: sent through the share sheet, or copied.
+          const said = (shared ? button.dataset['shared'] : button.dataset['done']) ?? button.dataset['done'] ?? label
+          button.textContent = said
+          const status = button.parentElement?.querySelector<HTMLElement>('[data-share-status]')
+          if (status) status.textContent = said
+          setTimeout(() => {
+            button.textContent = label
+            if (status) status.textContent = ''
+          }, 3000)
         } catch {
           // Neither sharing nor copying was allowed: the link is still in the address bar.
         }

@@ -76,7 +76,10 @@
   .ce-spark.is-busy,
   .chat.is-playing [data-ev].is-in,
   .path-stop .path-picture,
-  .path-stop .path-label {
+  .path-stop .path-label,
+  .path-dot,
+  .theme-toggle svg,
+  [data-theme-toggle] svg {
     animation: none !important;
     transition: none !important;
   }

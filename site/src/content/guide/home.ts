@@ -48,6 +48,7 @@ export const home = {
   phoneCopy: t('Send this page to my computer', 'أرسل هذه الصفحة إلى حاسوبي'),
   phoneOr: t('Or see how it works first', 'أو اطّلع على الطريقة أولا'),
   phoneDone: t('Copied. Open it on your computer.', 'نُسخ. افتحه على حاسوبك.'),
+  phoneShared: t('Sent. Open it on your computer.', 'أُرسل. افتحه على حاسوبك.'),
   audience: [
     { label: t('I do not code', 'لا أبرمج'), to: '#example' },
     { label: t('I build with AI', 'أبني بالذكاء الاصطناعي'), to: 'developers#who' },

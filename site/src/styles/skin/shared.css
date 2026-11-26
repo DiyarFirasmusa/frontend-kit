@@ -157,3 +157,15 @@ html[data-theme='light'] .board .board-main :is(h1 em, .hero h1 span + span) {
 html[data-theme='light'] .board .board-main a:not(.hero-start) {
   text-decoration-color: rgb(241 237 231 / 0.6);
 }
+
+/* ---------- Round 9 polish ---------- */
+/* Links in a note bar: deeper turquoise on paper, a little heavier, so they do not look thin. */
+html[data-theme='light'] .board-note a:not(.hero-start) {
+  color: #005a5b;
+  font-weight: 500;
+}
+
+/* The small key badges in the chat drawing are 12px, never 10. */
+.ce-key {
+  font-size: 0.75rem;
+}

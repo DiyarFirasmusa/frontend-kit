@@ -209,3 +209,25 @@ html[data-theme='light'] .doc-head .board-main .crumbs a,
 html[data-theme='light'] .doc-head .board-main .crumbs span {
   color: #cfcac2;
 }
+
+/* ---------- Arabic and RTL polish (round 9) ---------- */
+/* A one-line code window in Arabic: the copy button sits at the end side (left), the command keeps its left-to-right text. */
+@media (min-width: 40.01rem) {
+  [dir='rtl'] .doc-article .command:not(.is-message) {
+    flex-direction: row-reverse;
+  }
+}
+
+/* Arabic card descriptions in the guide hub have the same line height as Arabic prose. */
+:lang(ar) .hub-kind-about {
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* On a phone the side-column description uses the whole line. */
+@media (max-width: 30rem) {
+  .board-list li small,
+  .board-list li {
+    max-width: none;
+  }
+}

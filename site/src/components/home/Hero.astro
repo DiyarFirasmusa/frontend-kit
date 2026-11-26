@@ -21,7 +21,8 @@ const { locale } = Astro.props
     <div class="hero-phone enter" data-hero-phone>
       <strong>{home.phoneTitle[locale]}</strong>
       <span>{home.phoneBody[locale]}</span>
-      <button type="button" data-share-link data-done={home.phoneDone[locale]}>{home.phoneCopy[locale]}</button>
+      <button type="button" data-share-link data-done={home.phoneDone[locale]} data-shared={home.phoneShared[locale]}>{home.phoneCopy[locale]}</button>
+      <span class="sr-only" role="status" data-share-status></span>
       <a href="#example">{home.phoneOr[locale]}</a>
     </div>
     <p class="hero-actions enter">

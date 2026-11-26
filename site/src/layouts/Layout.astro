@@ -129,8 +129,8 @@ const trail =
     {locale === 'ar' && <link rel="preload" as="font" type="font/woff2" href={arabic400} crossorigin />}
     {locale === 'ar' && <link rel="preload" as="font" type="font/woff2" href={arabic500} crossorigin />}
     <ClientRouter fallback="swap" />
-    {home && <script type="application/ld+json" set:html={product} />}
-    {trail && <script type="application/ld+json" set:html={trail} />}
+    {home && <script type="application/ld+json" set:html={product.replace(/</g, '\\u003c')} />}
+    {trail && <script type="application/ld+json" set:html={trail.replace(/</g, '\\u003c')} />}
     <script is:inline>
       document.documentElement.classList.add('js')
       // A page swapped in without a reload brings its own <html>: mark it again, or the tabs show every panel.
