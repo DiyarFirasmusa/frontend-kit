@@ -1,0 +1,48 @@
+# The site behind nginx. Start with:  docker compose up --build
+# Set VITE_SITE_URL to the public origin before building a real image (it is baked into the browser bundle).
+services:
+  app:
+    build:
+      context: .
+      args:
+        VITE_SITE_URL: ${VITE_SITE_URL:-http://localhost:8080}
+        VITE_ALLOW_INDEXING: ${VITE_ALLOW_INDEXING:-false}
+        VITE_ADMIN_API_URL: ${VITE_ADMIN_API_URL:-/api}
+        # "true" gives a demo admin (any login, demo data) without a backend.
+        VITE_ADMIN_API_MOCK: ${VITE_ADMIN_API_MOCK:-false}
+    # Read when the container starts. With VITE_ALLOW_INDEXING=true the server refuses to start
+    # without CONTACT_WEBHOOK_URL, so a real site can never lose contact messages.
+    environment:
+      CSP_MODE: ${CSP_MODE:-enforce}
+      CONTACT_WEBHOOK_URL: ${CONTACT_WEBHOOK_URL:-}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000/robots.txt').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    # The unprivileged image runs nginx as a normal user and listens on 8080 (see deploy/nginx/site.conf).
+    image: nginxinc/nginx-unprivileged:1.28-alpine
+    ports: ['8080:8080']
+    volumes:
+      - ./deploy/nginx/site.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
