@@ -3,6 +3,21 @@
 Versions are the `version` in `plugins/frontend-kit/.claude-plugin/plugin.json`. A project only receives an update when
 that number changes.
 
+## Unreleased
+A smaller kit: fewer overlapping skills, less always-loaded text.
+
+- **Skills 41 to 32.** Removed `typescript-advanced-types`, `web-design-guidelines`, `explain`, `fix-everywhere` and
+  `i18n-conventions` (their short essentials moved into `scope.md` and `i18n.md`). Merged `branch-status` into `sync-main`,
+  `pr-link` into `commit-push` ("link pr" prints the compare link and a PR description, no commit needed),
+  `tanstack-query-key-conventions` into `create-hook` (`references/query-keys.md`) and `vercel-react-best-practices` into
+  `performance` (`references/react-rules.md`, the rules that fit Vite and TanStack Start). The old trigger phrases, Arabic
+  included, now fire the surviving skill.
+- **Hooks 10 events to 8.** Removed the failed-tool log (nothing read it) and the macOS-only desktop alert.
+- Every skill description is 300 characters or fewer; two agents no longer list their MCP tools twice.
+- The `react` profile's `forms`, `data-and-state` and `routing` rules load only for matching files. `quality-bar.md` lost
+  its repeated "before you say done" list; `scope.md` states the live site and deploy config once, in `CLAUDE.md`.
+- Run `/wajiha-kit:setup` again to get the changed rules: copied rules don't update by themselves.
+
 ## 1.16.0
 Run `/frontend-kit:setup` again to get the new rules: copied rules don't update by themselves.
 

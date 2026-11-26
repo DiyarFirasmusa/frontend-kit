@@ -74,7 +74,7 @@ Values come from the project's `.claude/wajiha-kit.json` (written by setup):
   words in Arabic letters, however they are spelled or joined. It matches words, so it can miss a phrasing; a hint never
   blocks (`hooks.skillSuggest: false` turns it off).
 - Warns before a `git commit` that has not passed the gate.
-- Desktop alert when Claude waits for you; a log of failed tools; session clean-up.
+- Session clean-up when a session ends.
 
 Self-test, from a clone of the repository: `KIT_TEST_PROJECT=/path/to/project bash plugins/wajiha-kit/scripts/test-hooks.sh`.
 

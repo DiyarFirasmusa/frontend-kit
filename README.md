@@ -18,9 +18,9 @@ frontend team would write down, and enforces the ones that can be enforced.
 
 | What | Count |
 | ---- | ----- |
-| Skills (create a component, form, table, route, store, hook; verify, review, refactor, commit, modes, ...) | 41 |
+| Skills (create a component, form, table, route, store, hook; verify, review, refactor, commit, modes, ...) | 32 |
 | Agents (reviewer, bug hunter, security, SEO and accessibility auditors, planner, test engineer, ...) | 14 |
-| Hooks (guards, format + lint on edit, quality gate, code review, skill suggestions) | 10 events |
+| Hooks (guards, format + lint on edit, quality gate, code review, skill suggestions) | 8 events |
 | Project profiles | `website`, `dashboard` (Vite, Next.js or TanStack Start), `react` (any stack), `fullstack` (site + admin in one tree) |
 
 ## Install
@@ -83,7 +83,7 @@ phase at a time with behaviour frozen and the gate green in between. See [`examp
 | [`CHANGELOG.md`](CHANGELOG.md) | what changed in each version |
 
 Measured so far: on two small tasks in a Vite project, code written with the kit scored 90/90 on a nine-point rubric against
-81/90 without it, at about 1.5 times the cost; at 1.14.0, 60 of the then 62 passed (average score 97.1%). The suite now has a total of 66 development evals; the four newest have not been run.
+81/90 without it, at about 1.5 times the cost; at 1.14.0, 60 of the then 62 passed (average score 97.1%). The suite now has a total of 61 development evals; the four newest have not been run.
 Small samples from one project: a direction, not proof.
 
 Third-party skills and their licences: [`plugins/wajiha-kit/THIRD_PARTY_NOTICES.md`](plugins/wajiha-kit/THIRD_PARTY_NOTICES.md).
