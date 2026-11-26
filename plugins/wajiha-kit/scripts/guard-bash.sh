@@ -91,6 +91,12 @@ REMOTE_WRITES=""
 kit_switch remoteWrites && REMOTE_WRITES=1
 ROOT_REAL="$(cd -P -- "$HOOK_ROOT" 2>/dev/null && pwd)" || ROOT_REAL=""
 [ -n "$ROOT_REAL" ] || ROOT_REAL="$HOOK_ROOT"
+# Git Bash: cygpath may spell the project through a mount (/tmp/proj for C:\Users\me\AppData\Local\Temp\proj); a
+# command can still name it by drive (/c/Users/me/AppData/Local/Temp/proj). Both are the project.
+ROOT_DRIVE=""
+if ROOT_W="$(cd -- "$HOOK_ROOT" 2>/dev/null && pwd -W 2>/dev/null)" && case "$ROOT_W" in [A-Za-z]:/*) true ;; *) false ;; esac; then
+  ROOT_DRIVE="/$(printf %s "${ROOT_W%%:*}" | tr 'A-Z' 'a-z')${ROOT_W#?:}"
+fi
 START_CWD="$CWD"
 # How $CLAUDE_PROJECT_DIR is written. The Bash tool doesn't define it: it is only read as the project where that
 # can't delete anything.
@@ -205,7 +211,7 @@ locate() {
   PLACE=outside
   INSIDE_REL=""
   shopt -s nocasematch # macOS file names
-  for root in "$HOOK_ROOT" "$ROOT_REAL"; do
+  for root in "$HOOK_ROOT" "$ROOT_REAL" ${ROOT_DRIVE:+"$ROOT_DRIVE"}; do
     case "$1" in
       "$root") PLACE=root; break ;;
       "$root"/*) PLACE=inside; INSIDE_REL="${1:${#root}+1}"; break ;;
