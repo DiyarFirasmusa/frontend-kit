@@ -21,6 +21,12 @@ Git Bash, PowerShell, Linux and macOS.
    `--allowedTools` list (file tools; `npm`, `npx`, `node`, `git`, `tar`, `mkdir`, `cp`, `mv`, `rm`, `ls`, `cat` and a few
    read-only helpers), `--max-budget-usd` and a timeout. The kit's guard hooks stay on. The run skips the dev server and
    Playwright (nobody is there to look); everything else in the flow is required.
+   Claude Code always asks before a write to `CLAUDE.md` or `.claude/` (a "sensitive file"), and in `-p` only a person
+   or a permission handler can say yes (allow rules cannot). `approver.mjs` is that handler (`--permission-prompt-tool`),
+   playing a cooperative user at the keyboard: yes to Write/Edit of `CLAUDE.md` and `.claude/**` in the project, and to
+   shell commands that stay in the project or only read the plugin folder (a `$locale` route path, `tar -C <plugin>`,
+   `find | wc`); no to network tools, `git commit/push/reset`, `npm install/ci/uninstall/publish` (the kit's ask list),
+   other shells, `..`, outside paths, unknown `$VARS` and writes into the plugin. It logs each request to `approvals.jsonl`.
 3. Grades the folder (`grade.mjs`) and appends one JSON line to `results.jsonl`.
 
 ## Checks (each `true`, `false`, or `null` when it does not apply)
@@ -38,7 +44,7 @@ Git Bash, PowerShell, Linux and macOS.
 | `demoGone` | the demo feature, route, mock and e2e paths listed in `foundations.md` are deleted |
 | `leakSweep` | the sweep of `new-project-flow.md` (same pattern, same noise filter) prints nothing |
 | `languages` | the languages list, the default language and the language switcher match the answer |
-| `noOutsideWrites` | the file tools wrote only inside the project, nothing appeared next to it, the plugin folder is unchanged |
+| `noOutsideWrites` | the file tools wrote only inside the project, nothing appeared next to it, the plugin's `starters/` are unchanged |
 | `typecheck`, `lint`, `fmt`, `tests`, `i18n`, `boundaries`, `build` | the foundation's own scripts exit 0 (`build` for website and fullstack with `VITE_SITE_URL`) |
 
 ## Output

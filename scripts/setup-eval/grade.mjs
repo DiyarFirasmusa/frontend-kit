@@ -19,8 +19,8 @@ const STARTER_NAMES = ['my-dashboard', 'wajiha-website-starter', 'my-project'];
 const SWEEP =
   /warehouse|supplier|\bcategor(y|ies)\b|units?[-_ ]?of[-_ ]?measure|\buom\b|\battribute[-_ ]?(definition|data)|inventory|\bstock\b|stock_controller|storekeeper|example company|playground|مستودع|مخزون|مخازن|مخزن|تصنيف|الموردون|الموردين|وحدات القياس|شركة المثال/i;
 const SWEEP_NOISE =
-  /oxlint\.config\.ts:|monitoring\.test\.ts:.*category|stock Tailwind|probe-lint-boundaries\.ts:|download-file\.test\.ts:/;
-const SWEEP_SKIP_DIRS = new Set(['node_modules', '.git', '.output', 'dist', '.tanstack', 'test-results']);
+  /oxlint\.config\.ts:|monitoring\.test\.ts:.*category|validate-i18n\.ts:.*missing category|stock Tailwind|probe-lint-boundaries\.ts:|download-file\.test\.ts:/;
+const SWEEP_SKIP_DIRS = new Set(['node_modules', '.git', '.output', '.proof-maps', 'dist', '.tanstack', 'test-results']);
 const SWEEP_SKIP_FILES = new Set(['package-lock.json', 'routeTree.gen.ts']);
 // Not in the documented sweep: the kit's own session state (git-ignored, written by its hooks while it works).
 const SWEEP_SKIP_PATHS = ['.claude/state/'];
@@ -393,7 +393,7 @@ export function grade({ project, scenarioDir, transcript, logs, skipCommands = f
       const extra = list(sandbox).filter((e) => e !== path.basename(project));
       if (extra.length) why.push(`new next to the project: ${extra.join(', ')}`);
     }
-    if (pluginBefore && pluginAfter && pluginBefore !== pluginAfter) why.push('the plugin folder (starters, skills) changed');
+    if (pluginBefore && pluginAfter && pluginBefore !== pluginAfter) why.push('the starters folder of the plugin changed');
     set('noOutsideWrites', why.length === 0, why.join('; '));
   }
 

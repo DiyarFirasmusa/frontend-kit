@@ -120,6 +120,17 @@ function killTree(child) {
   }
 }
 
+function readLines(file) {
+  if (!fs.existsSync(file)) return [];
+  return fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).flatMap((l) => {
+    try {
+      return [JSON.parse(l)];
+    } catch {
+      return [];
+    }
+  });
+}
+
 function lastResult(transcript) {
   let result = null;
   const text = fs.existsSync(transcript) ? fs.readFileSync(transcript, 'utf8') : '';
@@ -159,14 +170,31 @@ async function runOne(scenarioId, n) {
 
   const text = prompt(scenario);
   fs.writeFileSync(path.join(runDir, 'prompt.txt'), `${text}\n`);
+  // Writes to CLAUDE.md and .claude/ always prompt ("sensitive file"), and only a person or a permission handler can
+  // say yes: approver.mjs plays the user for exactly those, inside this project, and refuses every other prompt.
+  const approvals = path.join(runDir, 'approvals.jsonl');
+  const mcpConfig = path.join(runDir, 'mcp.json');
+  fs.writeFileSync(mcpConfig, JSON.stringify({
+    mcpServers: {
+      approver: {
+        type: 'stdio',
+        command: process.execPath,
+        args: [path.join(HERE, 'approver.mjs')],
+        env: { SETUP_EVAL_PROJECT: project, SETUP_EVAL_PLUGIN: PLUGIN, SETUP_EVAL_APPROVALS: approvals },
+      },
+    },
+  }, null, 2));
   const args = [
     '-p', text, '--output-format', 'stream-json', '--verbose', '--permission-mode', 'acceptEdits',
-    '--setting-sources', 'project', '--strict-mcp-config', '--no-session-persistence',
+    '--setting-sources', 'project', '--strict-mcp-config', '--mcp-config', mcpConfig,
+    '--permission-prompt-tool', 'mcp__approver__approve', '--no-session-persistence',
     '--max-budget-usd', String(opts.budget), '--plugin-dir', PLUGIN, '--allowedTools', ...ALLOWED,
   ];
   if (opts.model) args.push('--model', opts.model);
 
-  const pluginBefore = treeHash(PLUGIN);
+  // The starters the child copies from: a stray install or edit there changes this hash (skills are left out, so a
+  // maintainer can fix a reference while runs are going).
+  const pluginBefore = treeHash(path.join(PLUGIN, 'starters'));
   const transcript = path.join(runDir, 'transcript.jsonl');
   const started = Date.now();
   log(`${runId}: started in ${project}`);
@@ -197,7 +225,7 @@ async function runOne(scenarioId, n) {
     });
   });
   const minutes = Math.round((Date.now() - started) / 600) / 100;
-  const pluginAfter = treeHash(PLUGIN);
+  const pluginAfter = treeHash(path.join(PLUGIN, 'starters'));
   const res = lastResult(transcript) ?? {};
   log(`${runId}: session ended after ${minutes} min, ${res.total_cost_usd ?? '?'} USD; grading`);
 
@@ -218,6 +246,8 @@ async function runOne(scenarioId, n) {
     isError: res.is_error ?? null,
     models: Object.keys(res.modelUsage ?? {}),
     permissionDenials: (res.permission_denials ?? []).map((d) => `${d.tool_name}: ${JSON.stringify(d.tool_input).slice(0, 160)}`),
+    approved: readLines(approvals).filter((a) => a.behavior === 'allow').length,
+    refusedPrompts: readLines(approvals).filter((a) => a.behavior !== 'allow').map((a) => `${a.tool}: ${String(a.what).slice(0, 160)}`),
     details: graded.details,
     finalMessage: typeof res.result === 'string' ? res.result.slice(0, 1500) : null,
     project: opts.keep ? project : null,
