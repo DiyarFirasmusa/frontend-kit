@@ -8,6 +8,7 @@ import { initLife } from './life.ts'
 import { initBeforeAfter } from './before-after.ts'
 import { initChrome } from './page-chrome.ts'
 import { initShareLink } from './share-link.ts'
+import { initReveal } from './reveal.ts'
 import { initTabs } from './tabs.ts'
 import { initTheme } from './theme.ts'
 import { initToc } from './toc.ts'
@@ -36,6 +37,7 @@ document.addEventListener('astro:page-load', () => {
     ['share', () => initShareLink(signal)],
     ['theme', () => initTheme(signal)],
     ['boards', () => initBoardLife(signal)],
+    ['reveal', () => initReveal(signal)],
   ]
   for (const [name, start] of starters) {
     try {

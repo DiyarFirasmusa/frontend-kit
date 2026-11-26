@@ -1,6 +1,6 @@
 /* The guide's own styles: the parts of each stylesheet that only guide pages use, in the same order,
    then the skin's guide part. The layer order is the one site.css explains. */
-@layer astro, shared, page, skin, skin-page;
+@layer astro, shared, page, skin, skin-page, touch;
 
 @import './base.css' layer(page);
 @import './details.css' layer(page);

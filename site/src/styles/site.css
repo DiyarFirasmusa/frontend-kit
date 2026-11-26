@@ -5,9 +5,10 @@
      page       one page kind's own rules (home/index.css or docs/index.css)
      skin       the board skin and light mode, every page (skin/shared.css)
      skin-page  the skin's page-kind part (skin/home.css or skin/docs.css)
+     touch      press, hover and arrival motion for every page (touch.css), last so it only adds
    A later layer wins over an earlier one whatever the selectors, so nothing here needs !important to win;
    the few !important left are for [hidden], reduced or paused motion, and focus rings. */
-@layer astro, shared, page, skin, skin-page;
+@layer astro, shared, page, skin, skin-page, touch;
 
 /* BREAKPOINTS. One list for every stylesheet (and the <style> blocks of components). Media queries cannot read custom
    properties, so the steps live here as a list and every query uses exactly these values, in range syntax and rem:
@@ -47,3 +48,4 @@
 @import './theme-light.css' layer(shared);
 @import './docs-law.css' layer(shared);
 @import './skin/shared.css' layer(skin);
+@import './touch.css' layer(touch);

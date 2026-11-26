@@ -1,6 +1,6 @@
 /* The home page's own styles: the parts of each stylesheet that only the home page uses, in the same order,
    then the skin's home part. The layer order is the one site.css explains. */
-@layer astro, shared, page, skin, skin-page;
+@layer astro, shared, page, skin, skin-page, touch;
 
 @import './home.css' layer(page);
 @import './colour.css' layer(page);
