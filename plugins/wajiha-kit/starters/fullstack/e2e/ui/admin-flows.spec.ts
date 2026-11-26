@@ -170,7 +170,7 @@ test.describe('admin: session and access', () => {
     await page.evaluate(() => {
       sessionStorage.setItem(
         'admin-permissions',
-        JSON.stringify({ state: { roles: ['admin'], permissions: [] }, version: 0 }),
+        JSON.stringify({ state: { roles: ['admin'], permissions: [] }, version: 1 }),
       );
     });
     await page.goto(localized('/admin/suppliers'));
