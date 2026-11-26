@@ -325,10 +325,42 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   }
 }
 
-/* In "What can you build" the words and the window share one width and one left edge, and fill most of the block. */
+/* In "What can you build" the words and the window share one width and one left edge, and the window fills the block:
+   its drawing is in em, so its text size follows the width it is given and the whole picture grows with it (taller, not
+   left in the middle of an empty black block). */
 @media (width >= 48rem) {
+  #builds .board-main {
+    container-type: inline-size;
+  }
+
   #builds .show-caption,
   #builds .board-main > .browser {
-    width: min(100%, 40rem);
+    width: 100%;
+  }
+
+  #builds .show-caption p {
+    max-width: 44rem;
+  }
+
+  /* A wide, not tall, window: the drawing keeps the height its em layout needs (about 18.5em) and stretches across. */
+  #builds .board-main > .browser .browser-page {
+    aspect-ratio: 16 / 6.9;
+    font-size: calc(100cqw * 0.0195);
+  }
+}
+
+/* The parts of the home page have about the same height: the journey's windows grow to match the others. */
+@media (width >= 62rem) {
+  #example .path-picture {
+    height: 16rem;
+    font-size: 1.15rem;
+  }
+
+  #example .path-label strong {
+    font-size: 1.125rem;
+  }
+
+  #example .path-label p {
+    font-size: 1rem;
   }
 }
