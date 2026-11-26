@@ -21,7 +21,7 @@
 .make-tabs {
   position: relative;
   display: grid;
-  gap: 1.25rem;
+  gap: 2rem;
 }
 
 .make-track {
@@ -72,15 +72,37 @@
 
 .make-name {
   color: var(--ivory);
-  font-size: var(--sub);
+  font-size: clamp(1.25rem, 1rem + 0.6vw, 1.6rem);
   font-weight: 500;
   line-height: 1.35;
   transition: color 0.3s;
 }
 
+/* The examples, each a small tag: quick to read at a glance. */
 .make-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-start: 0.35rem;
+}
+
+.make-examples > span {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid rgb(var(--ink-rgb) / 0.12);
+  border-radius: 999px;
   color: var(--muted);
-  line-height: 1.55;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  transition:
+    border-color 0.3s,
+    color 0.3s,
+    background-color 0.3s;
+}
+
+.make-tab[aria-selected='true'] .make-examples > span {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--ivory);
 }
 
 .make-tab:not([aria-selected='true']) .make-name {
@@ -112,7 +134,7 @@ html[data-theme='light'] .make-tab[aria-selected='true'] .make-number {
 /* On the line, from the picked kind's square down: full when picked by hand, filling while the kinds take turns. */
 .make-time {
   position: absolute;
-  inset-block: 1.875rem -1.25rem;
+  inset-block: 1.875rem -2rem;
   inset-inline-start: calc(0.9375rem - 1px);
   inline-size: 2px;
   background: var(--accent);
@@ -143,6 +165,10 @@ html[data-theme='light'] .make-tab[aria-selected='true'] .make-number {
   min-inline-size: 0;
 }
 
+.make-panel:not([data-hidden]) {
+  z-index: 1;
+}
+
 .make.is-live .make-panel[data-hidden] {
   visibility: hidden;
 }
@@ -160,7 +186,25 @@ html[data-theme='light'] .make-tab[aria-selected='true'] .make-number {
   overflow: hidden;
   padding: 0.9rem;
   container-type: inline-size;
+}
+
+/* Sizes in the drawing are in em: its font size follows the window (a container is measured by its children). */
+.make-page > .mock-stage {
   font-size: calc(100cqw * 0.022);
+}
+
+/* Beside the kinds the window is exactly as tall as the block of "Start" allows (reveal.ts sets --start-height), so
+   the whole part fits one screen like "Start" does; its drawing scales to fit both ways. */
+@media (width >= 56.25rem) {
+  .make-page {
+    aspect-ratio: auto;
+    block-size: calc(var(--start-height, 30rem) - 7.5rem);
+    container-type: size;
+  }
+
+  .make-page > .mock-stage {
+    font-size: min(calc(100cqw * 0.022), calc(100cqh * 0.036));
+  }
 }
 
 .make-caption {
@@ -189,14 +233,14 @@ html[data-theme='light'] .make-tab[aria-selected='true'] .make-number {
   }
 
   .make.is-live .make-panel[data-hidden] {
-    transform: translateX(calc(var(--side, 1) * 108%)) rotateY(calc(var(--side, 1) * -28deg)) scale(0.88);
+    transform: translateX(calc(var(--side, 1) * 70%)) rotateY(calc(var(--side, 1) * -35deg)) scale(0.8);
     transition:
       transform 0.7s var(--glide, ease),
       visibility 0s linear 0.7s;
   }
 
   [dir='rtl'] .make.is-live .make-panel[data-hidden] {
-    transform: translateX(calc(var(--side, 1) * -108%)) rotateY(calc(var(--side, 1) * 28deg)) scale(0.88);
+    transform: translateX(calc(var(--side, 1) * -70%)) rotateY(calc(var(--side, 1) * 35deg)) scale(0.8);
   }
 
   /* The window leans toward the pointer (tilt.ts sets --rx and --ry on the stage). */

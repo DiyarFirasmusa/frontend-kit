@@ -41,7 +41,9 @@ const examples = home.builds.examples as Record<string, { en: string; ar: string
               >
                 <span class="make-number">{i + 1}</span>
                 <span class="make-name">{kind.tab[locale]}</span>
-                <span class="make-examples">{examples[kind.id]?.[locale]}</span>
+                <span class="make-examples">
+                  {(examples[kind.id]?.[locale] ?? '').split(/[،,]\s*/).map((example) => <span>{example}</span>)}
+                </span>
                 <i class="make-time" aria-hidden="true"></i>
               </button>
             ))
