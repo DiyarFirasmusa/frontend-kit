@@ -1,6 +1,5 @@
 /* WHAT CAN YOU BUILD: inside the board (like "Start", and as tall as it), the three kinds side by side: a window that shows
-   the kind, its name, one line, and something you could say to Claude to get it (orange: it is what you do). The windows
-   are the site's one window, so light mode follows. Layer skin-page (home/index.css). */
+   the kind, its name and one line. The windows are the site's one window, so light mode follows. Layer skin-page (home/index.css). */
 #builds .board-main {
   box-sizing: border-box;
   min-block-size: var(--start-height, 30rem);
@@ -12,7 +11,7 @@
   align-items: start;
   gap: clamp(1rem, 2.5vw, 2rem);
   margin: 0;
-  padding: 0.5rem clamp(0.75rem, 2vw, 1.5rem);
+  padding: 1.25rem clamp(0.75rem, 2vw, 1.5rem);
   list-style: none;
 }
 
@@ -32,7 +31,7 @@
 
 .kind-page {
   display: flex;
-  aspect-ratio: 16 / 8.2;
+  aspect-ratio: 16 / 11;
   overflow: hidden;
   padding: 0.7rem;
   container-type: inline-size;
@@ -53,27 +52,48 @@
   line-height: 1.5;
 }
 
-.kind-say {
-  display: grid;
-  gap: 0.15rem;
-  margin: 0.35rem 0 0;
-  padding-block-start: 0.6rem;
-  border-block-start: 1px solid rgb(var(--ink-rgb) / 0.14);
-  color: var(--ivory);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.kind-say span {
-  color: var(--accent);
-  font-size: 0.8125rem;
-  font-weight: 700;
-}
-
-/* With the scroll (reveal.ts sets --p): the three come up one a little after the other. */
+/* LIFE. Everything here answers the scroll and the hand:
+   - the three come up one a little after the other as you scroll (reveal.ts sets --p);
+   - the line under each name is drawn as you scroll;
+   - the drawings play while they are on screen (alive.ts): the cursor clicks, the products shine, the chart breathes, an
+     order turns to done, the dashboard floats in front of its site (loops.css);
+   - a window leans toward the pointer and lifts when you point at it (tilt.ts sets --rx and --ry). */
 @media (prefers-reduced-motion: no-preference) {
   .kind[data-scroll='rise'] {
     transform: translateY(calc((1 - var(--p, 1)) * (3rem + var(--k, 0) * 2.5rem)));
+  }
+
+  .kind h3 {
+    justify-self: start;
+    padding-block-end: 0.2rem;
+    background: linear-gradient(90deg, var(--accent), var(--turq)) no-repeat 0 100% / calc(var(--p, 1) * 100%) 2px;
+  }
+
+  [dir='rtl'] .kind h3 {
+    background-image: linear-gradient(270deg, var(--accent), var(--turq));
+    background-position: 100% 100%;
+  }
+
+  .kind-window {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0));
+    transition:
+      transform 0.5s var(--glide, ease),
+      box-shadow 0.4s;
+  }
+
+  .kind:hover .kind-window {
+    --lift: -6px;
+    box-shadow: 0 0 0 1.5px var(--accent-bright);
+    transition-duration: 0.15s, 0.4s;
+  }
+
+  .kind.is-fullstack:hover .kind-window,
+  .kind.is-dashboard:hover .kind-window {
+    box-shadow: 0 0 0 1.5px var(--dark-turq);
+  }
+
+  .kind:hover h3 {
+    color: var(--turq);
   }
 }
 

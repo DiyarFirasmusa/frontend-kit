@@ -11,11 +11,10 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const say = { en: 'You could say', ar: 'يمكنك أن تقول' }
 ---
 
 <!-- What can you build: a board like "Start" (as tall as it), with the three kinds side by side. Each has a window that shows
-     it, its name, one line, and something you could say to Claude to get it. -->
+     it, its name and one line. -->
 <section id="builds" class="builds">
   <div class="column section-head">
     <h2>{home.builds.title[locale]}</h2>
@@ -23,10 +22,10 @@ const say = { en: 'You could say', ar: 'يمكنك أن تقول' }
   </div>
   <div class="column">
     <Board locale={locale} part={1} label={home.types[locale]} tone="orange">
-      <ul class="kinds">
+      <ul class="kinds" data-alive>
         {
           showcase.map((kind, i) => (
-            <li class={`kind is-${kind.id}`} style={`--k:${i}`}>
+            <li class={`kind is-${kind.id}`} style={`--k:${i}`} data-tilt>
               <div class="browser kind-window" aria-hidden="true">
                 <div class="browser-bar">
                   <span class="chat-lights"><i></i><i></i><i></i></span>
@@ -38,10 +37,6 @@ const say = { en: 'You could say', ar: 'يمكنك أن تقول' }
               </div>
               <h3>{kind.tab[locale]}</h3>
               <p class="kind-line">{kind.title[locale]}</p>
-              <p class="kind-say">
-                <span>{say[locale]}</span>
-                {kind.say[locale]}
-              </p>
             </li>
           ))
         }

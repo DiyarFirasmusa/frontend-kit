@@ -12,6 +12,7 @@ import { initShareLink } from './share-link.ts'
 import { initPointer } from './pointer.ts'
 import { initReveal } from './reveal.ts'
 import { initTabs } from './tabs.ts'
+import { initTilt } from './tilt.ts'
 import { initTheme } from './theme.ts'
 import { initToc } from './toc.ts'
 import { initTopSearch } from './top-search.ts'
@@ -42,6 +43,7 @@ document.addEventListener('astro:page-load', () => {
     ['boards', () => initBoardLife(signal)],
     ['reveal', () => initReveal(signal)],
     ['pointer', () => initPointer(signal)],
+    ['tilt', () => initTilt(signal)],
   ]
   for (const [name, start] of starters) {
     try {
