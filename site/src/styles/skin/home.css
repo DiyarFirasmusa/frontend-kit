@@ -298,3 +298,23 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   font-size: 0.9375rem;
   line-height: 1.6;
 }
+
+/* The parts alternate: 1 and 3 have the black block first and the side column after it; 2 and 4 are mirrored (side column first, block after it). */
+@media (width >= 48rem) {
+  html #example .board.side-ink,
+  html #install .board.side-ink {
+    grid-template-columns: 19rem minmax(0, 1fr);
+  }
+
+  #example .board .board-side,
+  #install .board .board-side {
+    grid-column: 1;
+  }
+
+  #example .board .board-main,
+  #example .board .board-note,
+  #install .board .board-main,
+  #install .board .board-note {
+    grid-column: 2;
+  }
+}
