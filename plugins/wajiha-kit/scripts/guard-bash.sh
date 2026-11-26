@@ -158,6 +158,10 @@ is_protected_branch() {
 # Sets RESOLVED: the path against a base, lexically (no symlinks; . .. and ~ handled).
 resolve_path() {
   local base="$1" path="$2" out="" part
+  # On Windows the hook's cwd (C:\proj) and a cd to C:/proj come in Windows spelling: read them as /c/proj, the
+  # spelling of HOOK_ROOT, or a delete inside the project is judged outside it (/C:\proj/src).
+  case "$base" in [A-Za-z]:[\\/]* | [A-Za-z]:) base="$(hook_unix_path "$base")" ;; esac
+  case "$path" in [A-Za-z]:[\\/]* | [A-Za-z]:) path="$(hook_unix_path "$path")" ;; esac
   # shellcheck disable=SC2088 # "~" here is the literal text of the command, expanded by hand below
   case "$path" in
     "~") path="${HOME:-/}" ;;
