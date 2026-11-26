@@ -31,6 +31,8 @@ export function initBoardLife(signal: AbortSignal): void {
   if (!path) return
   const root = document.documentElement
   const stops = all<HTMLElement>('.path-stop', path)
+  const section = path.closest<HTMLElement>('section') ?? document.body
+  const turn = section.querySelector('[data-step]') ? 5500 : 2600 // a window to read takes longer than a drawing
   if (stops.length === 0) return
   let current = -1
   let chosen = false // a step chosen by a click stays; hover only holds the turn while the pointer is on it
@@ -45,6 +47,8 @@ export function initBoardLife(signal: AbortSignal): void {
       else stop.removeAttribute('aria-current')
     })
     path.style.setProperty('--current', String(index))
+    // The windows under the row show the same step.
+    for (const panel of all<HTMLElement>('[data-step]', section)) panel.classList.toggle('is-current', Number(panel.dataset['step']) === index)
   }
   stops.forEach((stop, i) => {
     stop.addEventListener(
@@ -74,6 +78,6 @@ export function initBoardLife(signal: AbortSignal): void {
     // The opening screen's pause button stops every moving thing on the page.
     if (!visible || chosen || hovering || document.hidden || root.classList.contains('is-paused')) return
     show((current + 1) % stops.length)
-  }, 2600)
+  }, turn)
   signal.addEventListener('abort', () => (watcher.disconnect(), clearInterval(timer)))
 }

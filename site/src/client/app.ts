@@ -2,6 +2,7 @@ import { initAlive } from './alive.ts'
 import { initBoardLife } from './board-life.ts'
 import { initCopy } from './copy-button.ts'
 import { initTree } from './docs-tree.ts'
+import { initExternalLinks } from './external-links.ts'
 import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
@@ -25,6 +26,7 @@ document.addEventListener('astro:page-load', () => {
   const starters: [string, () => void][] = [
     ['chrome', () => initChrome(signal)],
     ['copy', initCopy],
+    ['external', initExternalLinks],
     ['finder', initFinder],
     ['tree', () => initTree(signal)],
     ['gate', initGate],

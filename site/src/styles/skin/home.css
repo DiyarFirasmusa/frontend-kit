@@ -285,28 +285,6 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 /* WHAT FILLS A BLOCK. Every board is as wide as the page column, like the opening screen; its drawing is centred in it and
    grows with the block up to about 66rem, so the content fills the block instead of floating in the middle. */
 
-/* The parts of the home page have about the same height: the journey's windows grow to match the others. */
-@media (width >= 62rem) {
-  #example .path-picture {
-    height: 16rem;
-    font-size: 1.15rem;
-  }
-
-  /* The line runs through the numbers, which sit under the (16rem tall) windows. */
-  #example .path::before,
-  #example .path::after {
-    inset-block-start: calc(16rem + 1.25rem + 0.9375rem);
-  }
-
-  #example .path-label strong {
-    font-size: 1.125rem;
-  }
-
-  #example .path-label p {
-    font-size: 1rem;
-  }
-}
-
 /* THE HEADLINE'S SECOND LINE runs from orange (what you do) to turquoise (what you get), as one linear gradient across the
    words themselves (never behind them). The line is as wide as its words, so the whole gradient shows in them. */
 .hero h1 > span:last-child {

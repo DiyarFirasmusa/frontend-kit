@@ -253,3 +253,54 @@ export const compare = {
     },
   ],
 }
+
+/**
+ * "How it works": a row of four steps, and under it two windows that change with the step: the Claude chat (what you do)
+ * and the project (what you get).
+ */
+export const howWords = {
+  you: t('What you do', 'ما تفعله'),
+  get: t('What you get', 'ما تحصل عليه'),
+  /** What the chat window shows at each step. */
+  chat: [
+    [
+      { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project. First check that jq, Node and git are installed. Then start setting it up.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع. تحقق أولا أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ مثبّتة، ثم ابدأ بتجهيزه.') },
+      { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
+      { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
+    ],
+    [
+      { kind: 'claude', text: t('Let’s set up your project. A few quick questions, nothing technical.', 'لنجهز مشروعك. بضعة أسئلة سريعة، ولا شيء تقني.') },
+      { kind: 'ask', question: t('What are we building?', 'ماذا سنبني؟'), options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')], picked: 0 },
+    ],
+    [
+      { kind: 'claude', text: t('The plan: orders, customers and products, in Arabic and English. Shall I start?', 'الخطة: الطلبات والعملاء والمنتجات، بالعربية والإنجليزية. هل أبدأ؟') },
+      { kind: 'user', text: t('Yes, start', 'نعم، ابدأ') },
+      { kind: 'tool', text: t('Made the pages and the sign-in screen', 'أنشأت الصفحات وشاشة الدخول'), mark: 'ok' },
+      { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
+      { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
+    ],
+    [
+      { kind: 'claude', text: t('Your dashboard is ready. Open it in your browser and click around.', 'لوحتك جاهزة. افتحها في المتصفح وتصفحها.') },
+      { kind: 'ask', question: t('Save this version?', 'هل أحفظ هذه النسخة؟'), options: [t('Yes, save it', 'نعم، احفظها'), t('Not yet', 'ليس الآن')], picked: 0 },
+    ],
+  ] as import('./chat.ts').ChatEvent[][],
+  /** What you do at each step, in one line under the chat. */
+  move: t('Your move', 'دورك'),
+  youDo: [
+    t('Paste one message into the Claude app.', 'الصق رسالة واحدة في تطبيق Claude.'),
+    t('Pick the answers that fit your project.', 'اختر الإجابات التي تناسب مشروعك.'),
+    t('Say yes to the plan, then wait while Claude works.', 'قل نعم للخطة، ثم انتظر بينما يعمل Claude.'),
+    t('Read the short report, then choose what to keep.', 'اقرأ التقرير القصير، ثم اختر ما تحتفظ به.'),
+  ],
+  /** What the project looks like at each step, with one line under it. */
+  result: [
+    { title: t('An empty folder', 'مجلد فارغ'), text: t('You start in a folder on your computer, like “my-shop”.', 'تبدأ من مجلد على حاسوبك، مثل «my-shop».') },
+    { title: t('A short plan', 'خطة قصيرة'), text: t('You see the plan before anything is made.', 'ترى الخطة قبل أن يُصنع أي شيء.') },
+    { title: t('Your project takes shape', 'مشروعك يتشكل'), text: t('Real pages with sample data, tested as they are made.', 'صفحات حقيقية ببيانات تجريبية، تُختبر أثناء صنعها.') },
+    { title: t('A project you can open', 'مشروع تفتحه'), text: t('It opens on your computer. Keep it, change it or start over.', 'يفتح على حاسوبك. احتفظ به أو عدّله أو ابدأ من جديد.') },
+  ],
+  folder: t('empty', 'فارغ'),
+  plan: t('Plan', 'الخطة'),
+  planItems: [t('Orders, customers, products', 'الطلبات والعملاء والمنتجات'), t('Arabic and English', 'العربية والإنجليزية'), t('Light and dark', 'فاتح وداكن')],
+  built: t('Built', 'تم'),
+}

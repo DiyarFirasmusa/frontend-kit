@@ -13,3 +13,4 @@
 @import './theme-light.css' layer(page);
 @import './docs-law.css' layer(page);
 @import '../skin/home.css' layer(skin-page);
+@import './steps.css' layer(skin-page);

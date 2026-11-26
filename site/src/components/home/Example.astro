@@ -1,7 +1,10 @@
 ---
 import Board from './Board.astro'
+import ChatEvent from './ChatEvent.astro'
+import ChatWindow from './ChatWindow.astro'
+import Mock from './Mock.astro'
 import { home } from '../../content/guide/home.ts'
-import { journeyWords as w } from '../../content/guide/showcase.ts'
+import { howWords as h, journeyWords as w } from '../../content/guide/showcase.ts'
 import type { Locale } from '../../content/types.ts'
 
 interface Props {
@@ -18,99 +21,78 @@ const { locale } = Astro.props
   </div>
   <div class="column">
     <Board locale={locale} part={1} label={locale === 'ar' ? 'كيف تعمل' : 'How it works'} tone="orange">
-    <ol class="path" data-alive>
-      <li class="path-track" role="presentation" aria-hidden="true"><i></i></li>
-      {
-        w.stops.map((stop, i) => (
-          <li class="path-stop" data-who={i === 2 ? 'kit' : 'you'} style={`--n:${i}`}>
-            <div class="path-picture" aria-hidden="true">
-              {i === 0 && (
-                <div class="jp-input">
-                  <span class="jp-typed">{w.install[locale]}</span>
-                  <i class="chat-send">↑</i>
+      <div class="hw">
+        <!-- The four steps, in a row. Pointing at one, or pressing it, shows it in both windows below. -->
+        <ol class="path">
+          {
+            w.stops.map((stop, i) => (
+              <li class:list={['path-stop', { 'is-current': i === 0 }]} data-who={i === 2 ? 'kit' : 'you'} style={`--n:${i}`}>
+                <button type="button" class="path-pick">
+                  <span class="path-dot" dir="ltr">{i + 1}</span>
+                  <strong>{stop[locale]}</strong>
+                  <span class="path-text">{w.details[i]![locale]}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="hw-stage" aria-hidden="true">
+          <div class="hw-pane is-you">
+            <p class="hw-label">{h.you[locale]}</p>
+            <ChatWindow locale={locale} label={h.you[locale]}>
+              <div class="hw-steps">
+                {
+                  h.chat.map((events, i) => (
+                    <div class:list={['hw-step', { 'is-current': i === 0 }]} data-step={i}>
+                      <div class="hw-events">{events.map((event) => <ChatEvent locale={locale} event={event} />)}</div>
+                      <p class="hw-cap is-you"><strong>{h.move[locale]}</strong>{h.youDo[i]![locale]}</p>
+                    </div>
+                  ))
+                }
+              </div>
+            </ChatWindow>
+          </div>
+          <div class="hw-pane is-get">
+            <p class="hw-label">{h.get[locale]}</p>
+            <div class="browser">
+              <div class="browser-bar">
+                <span class="chat-lights"><i></i><i></i><i></i></span>
+                <span class="browser-url" dir="ltr">my-shop</span>
+              </div>
+              <div class="browser-page hw-steps">
+                <div class="hw-step is-current" data-step="0">
+                  <div class="hw-folder" dir="ltr">
+                    <p>my-shop/</p>
+                    <span>{h.folder[locale]}</span>
+                  </div>
+                  <p class="hw-cap"><strong>{h.result[0]!.title[locale]}</strong>{h.result[0]!.text[locale]}</p>
                 </div>
-              )}
-              {i === 1 && (
-                <div class="jp-ask">
-                  <p>{w.ask[locale]}</p>
-                  <ul>
-                    {w.options.map((option, n) => (
-                      <li class:list={{ 'is-pick': n === 0 }} style={`--o:${n}`}>
-                        <span class="ce-key" dir="ltr">{n + 1}</span>
-                        {option[locale]}
-                      </li>
-                    ))}
-                  </ul>
+                <div class="hw-step" data-step="1">
+                  <div class="hw-plan">
+                    <p>{h.plan[locale]}</p>
+                    <ul>
+                      {h.planItems.map((item) => <li>{item[locale]}</li>)}
+                    </ul>
+                  </div>
+                  <p class="hw-cap"><strong>{h.result[1]!.title[locale]}</strong>{h.result[1]!.text[locale]}</p>
                 </div>
-              )}
-              {i === 2 && (
-                <ul class="jp-build">
-                  {w.pages.map((page, n) => (
-                    <li style={`--o:${n}`}>
-                      <span>{page[locale]}</span>
-                      <i class="jp-bar"><b></b></i>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {i === 3 && (
-                <div class="jp-save">
-                  <p>{w.save[locale]}</p>
-                  <span class="jp-pill jp-yes">{w.yes[locale]}</span>
-                  <span class="jp-pill is-quiet">{w.no[locale]}</span>
+                <div class="hw-step" data-step="2">
+                  <div class="hw-shot"><Mock kind="dashboard" /></div>
+                  <p class="hw-cap"><strong>{h.result[2]!.title[locale]}</strong>{h.result[2]!.text[locale]}</p>
                 </div>
-              )}
+                <div class="hw-step" data-step="3">
+                  <div class="hw-shot"><Mock kind="dashboard" /></div>
+                  <p class="hw-cap"><strong>{h.result[3]!.title[locale]}</strong>{h.result[3]!.text[locale]}</p>
+                </div>
+              </div>
             </div>
-            <div class="path-label">
-              <span class="path-dot" dir="ltr">{i + 1}</span>
-              <strong>{stop[locale]}</strong>
-              <p>{w.details[i]![locale]}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
+          </div>
+        </div>
+      </div>
       <div slot="note">
         <p>{w.noteLine[locale]}</p>
         <a class="hero-start" href="#install">{home.start[locale]}</a>
       </div>
     </Board>
   </div>
-
 </section>
-
-<style is:global>
-  /* In the home page's layer (the order is explained in styles/site.css; it is repeated here in case this loads first),
-     so these rules compete with the home page's own by specificity, like every other page rule. */
-  @layer astro, shared, page, skin, skin-page;
-
-  @layer page {
-    /* Four steps, four windows: you send, you answer, Claude builds, you decide. */
-    ol.path {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1.5rem;
-    }
-
-    /* Who acts at each step: you in orange, the kit in turquoise, dark digits on both. */
-    .board .path .path-stop[data-who='you'] .path-dot {
-      background: var(--accent);
-      color: var(--on-accent);
-    }
-
-    .board .path .path-stop[data-who='kit'] .path-dot {
-      background: var(--turq);
-      color: var(--on-accent);
-    }
-
-    /* The question window shows two choices, so none is cut off. */
-    .jp-ask ul li:nth-child(n + 3) {
-      display: none;
-    }
-
-    @media (width < 48rem) {
-      ol.path {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-  }
-</style>

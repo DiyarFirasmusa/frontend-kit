@@ -1,0 +1,387 @@
+/* HOW IT WORKS: a row of four steps, and under it two windows that follow the step you are on: the Claude chat (what you
+   do, orange) and the project (what you get, turquoise). One layer, last (skin-page), so it replaces the older picture rules. */
+.example .hw {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.25rem clamp(0.75rem, 2vw, 1.5rem) 1.5rem;
+  direction: inherit;
+}
+
+/* ---------- The row of steps ---------- */
+.example .path {
+  --dot: 2rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The line runs through the dots; the part you have reached is lit, from orange to turquoise. */
+.example .path::before,
+.example .path::after {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(var(--dot) / 2 - 1px);
+  inset-inline: 12.5%;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.example .path::before {
+  background: rgb(var(--ink-rgb) / 0.16);
+}
+
+.example .path::after {
+  background: linear-gradient(90deg, var(--accent), var(--turq));
+  transform-origin: left;
+  transform: scaleX(calc(var(--current, 0) / 3));
+  transition: transform 0.6s var(--glide, ease);
+}
+
+[dir='rtl'] .example .path::after {
+  background: linear-gradient(270deg, var(--accent), var(--turq));
+  transform-origin: right;
+}
+
+.example .path-stop {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: center;
+}
+
+.example .path-pick {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.4rem;
+  inline-size: 100%;
+  padding: 0 0.5rem 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.example .path-pick:focus-visible {
+  outline: 2px solid var(--turq);
+  outline-offset: 3px;
+}
+
+.example .path-dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--dot);
+  block-size: var(--dot);
+  border-radius: 0.5rem;
+  font: 700 0.9375rem/1 var(--code);
+  box-shadow: 0 0 0 4px #0c0c0c;
+}
+
+.example .path-stop[data-who='you'] .path-dot {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.example .path-stop[data-who='kit'] .path-dot {
+  background: var(--turq);
+  color: var(--on-accent);
+}
+
+.example .path-pick strong {
+  color: var(--dark-ivory);
+  font-size: 1.1875rem;
+  line-height: 1.3;
+}
+
+.example .path-text {
+  max-inline-size: 16rem;
+  color: var(--block-muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* The steps you are not on are quiet; the current one is clear. */
+.example .path-stop:not(.is-current) .path-pick > :not(.path-dot) {
+  opacity: 0.55;
+}
+
+.example .path-stop .path-pick > * {
+  transition: opacity 0.35s;
+}
+
+.example .path-stop.is-current .path-dot {
+  box-shadow:
+    0 0 0 4px #0c0c0c,
+    0 0 0 6px var(--dark-ivory);
+}
+
+.example .path-pick:hover > :not(.path-dot) {
+  opacity: 1;
+}
+
+/* ---------- The two windows ---------- */
+.example .hw-stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.example .hw-pane {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.6rem;
+  container-type: inline-size;
+}
+
+.example .hw-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--block-muted);
+  font: 600 0.8125rem/1.2 var(--code);
+  letter-spacing: 0.06em;
+}
+
+:lang(ar) .example .hw-label {
+  font-family: var(--type);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+}
+
+.example .hw-label::before {
+  content: '';
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: 0.15rem;
+  background: var(--accent);
+}
+
+.example .is-get .hw-label::before {
+  background: var(--turq);
+}
+
+.example .hw-pane > :is(.chat, .browser) {
+  min-block-size: 0;
+  border-radius: 1rem;
+}
+
+/* Every step of a window is in the same place; only the current one shows, and the window is as tall as the tallest. */
+.example .hw-steps {
+  display: grid;
+}
+
+.example .hw-step {
+  grid-area: 1 / 1;
+  align-content: start;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.example .hw-step.is-current {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* A step arrives: its window fades in and its lines are dealt out one after another (the dealt keyframes: motion.css). */
+@media (prefers-reduced-motion: no-preference) {
+  .example .hw-step {
+    translate: 0 0.5rem;
+    transition:
+      opacity 0.35s,
+      translate 0.5s var(--glide),
+      visibility 0s 0.35s;
+  }
+
+  .example .hw-step.is-current {
+    translate: none;
+    transition-delay: 0s;
+  }
+
+  .example .hw-step.is-current .ce,
+  .example .hw-step.is-current .hw-folder,
+  .example .hw-step.is-current .hw-plan,
+  .example .hw-step.is-current .hw-shot,
+  .example .hw-step.is-current .hw-cap {
+    animation: dealt 0.55s var(--glide) both;
+  }
+
+  .example .hw-step.is-current .ce:nth-child(2) { animation-delay: 0.12s; }
+  .example .hw-step.is-current .ce:nth-child(3) { animation-delay: 0.24s; }
+  .example .hw-step.is-current .ce:nth-child(4) { animation-delay: 0.36s; }
+  .example .hw-step.is-current .ce:nth-child(5) { animation-delay: 0.48s; }
+  .example .hw-step.is-current .hw-cap { animation-delay: 0.3s; }
+}
+
+.example .chat-body {
+  display: grid;
+  align-content: start;
+  padding: 1rem 1rem 0.5rem;
+}
+
+.example .chat-body .hw-step {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+}
+
+.example .hw-events {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.example .chat-body .hw-steps {
+  block-size: 100%;
+}
+
+.example .browser {
+  display: flex;
+  flex-direction: column;
+}
+
+.example .browser-page {
+  flex: 1 1 auto;
+  aspect-ratio: auto;
+  padding: 1rem;
+  font-size: calc(100cqw * 0.034);
+}
+
+.example .browser-page .hw-step {
+  display: grid;
+  gap: 0.9rem;
+  align-content: center;
+}
+
+.example .hw-shot {
+  border: 1px solid rgb(var(--ink-rgb) / 0.12);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.example .hw-cap {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.example .hw-cap strong {
+  color: var(--ivory);
+  font-size: 1rem;
+}
+
+/* Under the chat: what you do in this step, set apart from the conversation, with the orange of what you do. */
+.example .hw-cap.is-you {
+  margin-block-start: 0.25rem;
+  padding-block-start: 0.75rem;
+  border-block-start: 1px solid rgb(var(--ink-rgb) / 0.16);
+}
+
+.example .hw-cap.is-you strong {
+  color: var(--accent);
+}
+
+/* An empty folder, and the plan you see before anything is made. */
+.example .hw-folder,
+.example .hw-plan {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem;
+  border: 1px dashed rgb(var(--ink-rgb) / 0.3);
+  border-radius: 0.75rem;
+  color: var(--ivory);
+}
+
+.example .hw-folder p,
+.example .hw-plan p {
+  margin: 0;
+  font: 600 0.9375rem/1.3 var(--code);
+}
+
+.example .hw-folder span {
+  color: var(--muted);
+  font: 400 0.875rem/1.4 var(--code);
+}
+
+.example .hw-plan {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
+}
+
+.example .hw-plan ul {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.example .hw-plan li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.9375rem;
+}
+
+.example .hw-plan li::before {
+  content: '✓';
+  color: var(--turq);
+  font-weight: 700;
+}
+
+/* ---------- Narrow screens: the row is a list, and only the project window stays (the steps say what you do) ---------- */
+@media (width < 48rem) {
+  .example .path {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+
+  .example .path::before,
+  .example .path::after {
+    display: none;
+  }
+
+  .example .path-pick {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    column-gap: 0.75rem;
+    row-gap: 0.15rem;
+    padding: 0.5rem;
+    text-align: start;
+  }
+
+  .example .path-dot {
+    grid-row: 1 / 3;
+    box-shadow: none;
+  }
+
+  .example .path-text {
+    max-inline-size: none;
+  }
+
+  .example .hw-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .example .hw-pane.is-you {
+    display: none;
+  }
+
+  .example .browser-page {
+    font-size: calc(100cqw * 0.036);
+  }
+}
