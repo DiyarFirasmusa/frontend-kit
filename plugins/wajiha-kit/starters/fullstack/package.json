@@ -6,7 +6,8 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --mode mock",
+    "dev:api": "vite dev",
     "build": "vite build",
     "start": "node --env-file-if-exists=.env.local .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
@@ -25,11 +26,14 @@
     "check:env": "node scripts/check-env-example.ts",
     "check:css": "node scripts/check-logical-css.ts",
     "check:tooling": "node scripts/check-tooling.ts",
-    "check": "npm run typecheck && npm run lint:check && npm run fmt:check && npm run i18n:validate && npm run check:env && npm run check:css && npm run check:tooling && npm run test",
-    "check:full": "npm run check && npm run build && npm run test:e2e",
+    "check:bundle": "node scripts/check-bundle-size.mjs",
+    "check": "npm run typecheck && npm run lint:check && npm run check:boundaries && npm run fmt:check && npm run i18n:validate && npm run check:env && npm run check:css && npm run check:tooling && npm run test",
+    "check:full": "npm run check && npm run build && npm run check:bundle && npm run test:e2e",
     "audit": "npm audit --audit-level=high",
+    "tokens": "node scripts/generate-tokens.ts",
     "setup:env": "node scripts/setup-env.mjs",
-    "prepare": "node scripts/prepare.mjs"
+    "prepare": "node scripts/prepare.mjs",
+    "check:boundaries": "node scripts/check-lint-boundaries.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

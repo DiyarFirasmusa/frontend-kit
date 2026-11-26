@@ -16,3 +16,6 @@ blob-report/
 
 .DS_Store
 Thumbs.db
+
+# Temporary files of npm run check:boundaries
+.lint-probe/
