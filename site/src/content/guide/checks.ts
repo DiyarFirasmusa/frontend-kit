@@ -7,10 +7,8 @@ export const hookEffects: Record<HookEvent, Bilingual> = {
   UserPromptSubmit: t('Adds background information', 'يضيف معلومات خلفية'),
   PreToolUse: t('Can refuse the action', 'يستطيع أن يرفض الإجراء'),
   PostToolUse: t('Sends errors back to the assistant', 'يرجع الأخطاء إلى المساعد'),
-  PostToolUseFailure: t('Writes a log', 'يكتب سجلا'),
   SubagentStart: t('Adds background information', 'يضيف معلومات خلفية'),
   SubagentStop: t('Can send the work back', 'يستطيع أن يعيده إلى العمل'),
-  Notification: t('Alerts you (on macOS)', 'ينبهك (على macOS)'),
   Stop: t('Can send the work back', 'يستطيع أن يعيده إلى العمل'),
   SessionEnd: t('Cleans up', 'ينظف'),
 }

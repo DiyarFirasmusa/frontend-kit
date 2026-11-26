@@ -29,10 +29,12 @@ const words = {
           <li>
             <h3>{want[locale]}</h3>
             <Prompt text={say[locale]} />
-            <p>
-              <span>{ui.use[locale]}</span>
-              {skills.map((name) => <a href={skillUrl(locale, name)}><bdi>{name}</bdi></a>)}
-            </p>
+            {skills.length > 0 && (
+              <p>
+                <span>{ui.use[locale]}</span>
+                {skills.map((name) => <a href={skillUrl(locale, name)}><bdi>{name}</bdi></a>)}
+              </p>
+            )}
           </li>
         ))}
       </ul>

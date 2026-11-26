@@ -19,7 +19,7 @@ export const skillPurpose: Record<string, Purpose> = {
   },
   'create-hook': {
     why: t('Logic piles up inside the pieces of a screen until nobody can test it. This skill moves it into its own small reusable piece (a React “hook”), in the right place, with the right keys, safeguards and tests.', 'المنطق يتراكم داخل أجزاء الشاشة حتى يصعب اختباره. تنقله هذه المهارة إلى قطعة صغيرة مستقلة يمكن إعادة استخدامها (تسمى في React «hook»)، في المكان الصحيح، مع المفاتيح وشروط الحماية والاختبارات.'),
-    when: t('Loading data, changing data, the logic of a page, a small helper, or a screen piece that is getting heavy.', 'تحميل بيانات، أو تعديل بيانات، أو منطق صفحة، أو أداة صغيرة مساعدة، أو جزء من الشاشة صار ثقيلا.'),
+    when: t('Loading data, changing data, the logic of a page, a small helper, or a screen piece that is getting heavy. It also keeps the keys of saved data (the names TanStack Query finds each copy by) in one factory, so a whole family can be refreshed at once.', 'تحميل بيانات، أو تعديل بيانات، أو منطق صفحة، أو أداة صغيرة مساعدة، أو جزء من الشاشة صار ثقيلا. وتجمع أيضا مفاتيح البيانات المحفوظة (الأسماء التي تجد بها ⁦TanStack Query⁩ كل نسخة) في مصنع واحد، فتحدّث مجموعة كاملة مرة واحدة.'),
   },
   'create-store': {
     why: t('Information shared by the whole app is easy to add and hard to remove. This skill first asks whether you need a shared place for it at all, then handles saving it and clearing it when someone signs out.', 'المعلومات المشتركة بين كل التطبيق سهلة الإضافة وصعبة الحذف. تسأل هذه المهارة أولا: هل تحتاج إلى مكان مشترك لها أصلا؟ ثم تتولى حفظها وتنظيفها عند تسجيل الخروج.'),
@@ -36,18 +36,6 @@ export const skillPurpose: Record<string, Purpose> = {
   'ui-ux-pro-max': {
     why: t('Design advice from memory repeats itself. This skill searches a catalogue of styles, colour sets, font pairs and usability guidelines (how to make a screen easy to use) instead.', 'النصائح التصميمية من الذاكرة تتكرر. لذلك تبحث هذه المهارة في فهرس فيه الأساليب ومجموعات الألوان وأزواج الخطوط وإرشادات سهولة الاستخدام.'),
     when: t('You ask for ideas, alternatives or a better experience. Not when a design already exists.', 'تطلب أفكارا أو بدائل أو تجربة استخدام أفضل. لا تناسب حالة وجود تصميم جاهز.'),
-  },
-  'i18n-conventions': {
-    why: t('i18n means making the app work in several languages. Translations go bad quietly: a missing language, a badly built key (the name each text is saved under), a key put together while the app runs. One fixed convention keeps every text easy to find and check.', 'i18n تعني أن يعمل التطبيق بعدة لغات. والترجمات تفسد بصمت: لغة ناقصة، أو مفتاح مبني بشكل سيئ (المفتاح هو الاسم الذي يحفظ به كل نص)، أو مفتاح يتكون أثناء تشغيل التطبيق. أسلوب ثابت واحد يجعل كل نص سهل الإيجاد والفحص.'),
-    when: t('Any change to visible text, a translation file or a translation call.', 'أي تغيير في نص ظاهر أو ملف ترجمة أو استدعاء ترجمة.'),
-  },
-  'tanstack-query-key-conventions': {
-    why: t('TanStack Query keeps saved copies of data from your backend, and finds each copy by a key. A key written by hand in each place is a mistake waiting to happen. One factory (a single place that makes all the keys) lets you mark a whole family of copies as outdated, so they reload, and the whole family is marked.', 'تحتفظ TanStack Query بنسخ محفوظة من بيانات الخادم الخلفي، وتجد كل نسخة بمفتاح. كتابة المفتاح يدويا في كل مكان خطأ ينتظر أن يقع. مصنع واحد (مكان واحد يصنع كل المفاتيح) يجعل تعليم مجموعة كاملة من النسخ على أنها قديمة، حتى تعاد تحميلها، يعمل.'),
-    when: t('Writing or reviewing anything that loads, changes, preloads or refreshes data with TanStack Query.', 'عند كتابة أو مراجعة أي كود يحمل البيانات أو يعدلها أو يجلبها مسبقا أو يحدّثها باستخدام TanStack Query.'),
-  },
-  'typescript-advanced-types': {
-    why: t('TypeScript describes what kind of data each part of the code expects. When that gets hard, it is tempting to write any (which switches the checking off) or to force a type with a cast. This reference shows the exact type to use instead.', 'تصف TypeScript نوع البيانات الذي يتوقعه كل جزء من الكود. وعندما يصعب ذلك، يغري كتابة any (التي توقف الفحص) أو فرض نوع بالقوة بما يسمى cast. يعرض هذا المرجع النوع الدقيق بدلا منهما.'),
-    when: t('Advanced typing: types that depend on other types (generic, conditional or mapped types), or a reusable type helper.', 'كتابة أنواع متقدمة: أنواع تعتمد على أنواع أخرى (generic وconditional وmapped)، أو أداة أنواع تعيد استخدامها.'),
   },
   'dash-create-route': {
     why: t('An admin page is more than one file: a page address, a guard (a check on who may enter), a description of the search values it accepts, a data loader and a menu entry. If you forget one, data can leak or a link can break.', 'صفحة في لوحة التحكم أكثر من ملف واحد: عنوان للصفحة، وحارس (فحص لمن يحق له الدخول)، ووصف لقيم البحث التي تقبلها، ومحمل للبيانات، وعنصر في القائمة. إذا نسيت واحدا منها قد تتسرب البيانات أو ينكسر رابط.'),
@@ -93,10 +81,6 @@ export const skillPurpose: Record<string, Purpose> = {
     why: t('Work that starts on the wrong branch (a separate line of work) or ends without being checked costs you an extra review round. This skill runs a ticket from the branch to the final question.', 'العمل الذي يبدأ على فرع خاطئ (الفرع خط عمل منفصل) أو ينتهي بلا تحقق يكلفك جولة مراجعة إضافية. تنفذ هذه المهارة التذكرة من الفرع حتى السؤال الأخير.'),
     when: t('A new task or a link to a ticket. A single screen piece or a form has its own skill.', 'مهمة جديدة أو رابط تذكرة. أما الجزء الواحد من الشاشة أو النموذج الواحد فلكل منهما مهارته.'),
   },
-  explain: {
-    why: t('A question should get an answer, not an edit. This skill finds the real cause in the code and changes nothing.', 'السؤال يحتاج جوابا لا تعديلا. تجد هذه المهارة السبب الحقيقي في الكود ولا تغير شيئا.'),
-    when: t('You ask why, how or which endpoint (backend address), or you need a note for someone else.', 'تسأل لماذا أو كيف أو أي endpoint (عنوان في الخادم الخلفي)، أو تحتاج ملاحظة لشخص آخر.'),
-  },
   dev: {
     why: t('A busy port (the number the app listens on) or an old saved copy wastes minutes and leads to wrong conclusions. This skill checks first, then waits until the app answers.', 'منفذ مشغول (الرقم الذي يستمع عليه التطبيق) أو نسخة محفوظة قديمة يضيع دقائق ويعطي استنتاجات خاطئة. تفحص هذه المهارة أولا ثم تنتظر حتى يرد التطبيق.'),
     when: t('Starting, stopping or restarting the app, or when it shows old code.', 'تشغيل التطبيق أو إيقافه أو إعادة تشغيله، أو عندما يعرض كودا قديما.'),
@@ -109,21 +93,9 @@ export const skillPurpose: Record<string, Purpose> = {
     why: t('A whole old project cannot be fixed in one change. This skill (“fix an old project”) measures the project, then rebuilds it phase by phase with your approval.', 'لا يمكن إصلاح مشروع قديم كامل بتغيير واحد. تقيس هذه المهارة («إصلاح مشروع قديم») المشروع ثم تعيد بناءه مرحلة بعد مرحلة بموافقتك.'),
     when: t('An old project that is far from the standards. Only you can start it, by name.', 'مشروع قديم بعيد عن المعايير. وأنت وحدك تشغلها، باسمها.'),
   },
-  'fix-everywhere': {
-    why: t('The assistant fixes the one case you showed and leaves the rest. This skill finds them all and searches again at the end to check that none are left.', 'يصلح المساعد الحالة الوحيدة التي أريتها له ويترك الباقي. تجد هذه المهارة كل الحالات، وتبحث مرة أخيرة لتتأكد أنه لم تبق أي حالة.'),
-    when: t('You say all, every or other pages, or a bug turns out to be a pattern that repeats.', 'تقول «الكل» أو «كل الصفحات» أو «باقي الصفحات»، أو يتضح أن الخلل نمط يتكرر.'),
-  },
   performance: {
     why: t('Speed work without measuring is guesswork. This skill starts from a budget (limits you set) and real numbers from a slow phone.', 'تحسين السرعة بلا قياس مجرد تخمين. تبدأ هذه المهارة من ميزانية أداء (حدود تضعها) وأرقام حقيقية من هاتف بطيء.'),
-    when: t('A slow page, a layout that jumps while loading, a falling Lighthouse score (Google’s speed grade) or a heavy new feature.', 'صفحة بطيئة، أو تخطيط يقفز أثناء التحميل، أو نتيجة Lighthouse تنخفض (Lighthouse تقييم السرعة من Google)، أو ميزة جديدة ثقيلة.'),
-  },
-  'vercel-react-best-practices': {
-    why: t('React, the tool this kit uses to build screens, slows down in well-known ways. This skill is Vercel’s ordered list of those ways, so you can check your project against it.', 'React هي الأداة التي تبني بها الإضافة الشاشات، ولبطئها أسباب معروفة. هذه المهارة هي قائمة Vercel المرتبة لتلك الأسباب، لتفحص مشروعك بها.'),
-    when: t('You ask for a React speed audit, or during a review. The performance skill comes first.', 'عندما تطلب فحص سرعة React، أو ضمن مراجعة. ومهارة performance تأتي أولا.'),
-  },
-  'web-design-guidelines': {
-    why: t('A screen can work well and still break many small rules of good use. This skill checks your files against Vercel’s guidelines.', 'قد تعمل الشاشة جيدا وهي تخالف مع ذلك قواعد استخدام صغيرة كثيرة. تفحص هذه المهارة الملفات حسب إرشادات Vercel.'),
-    when: t('You ask for an audit of an existing screen against good practice.', 'تطلب فحص شاشة موجودة حسب أفضل الممارسات.'),
+    when: t('A slow page, a layout that jumps while loading, a falling Lighthouse score (Google’s speed grade), a heavy new feature, or a speed review of a React change.', 'صفحة بطيئة، أو تخطيط يقفز أثناء التحميل، أو نتيجة Lighthouse تنخفض (Lighthouse تقييم السرعة من Google)، أو ميزة جديدة ثقيلة، أو مراجعة سرعة تغيير في ⁦React⁩.'),
   },
   'playwright-best-practices': {
     why: t('An end-to-end test clicks through the real app like a person. One that fails at random is worse than none, because people stop trusting it. This is the reference for writing stable ones with Playwright.', 'اختبار end-to-end يتنقل في التطبيق الحقيقي مثل شخص حقيقي. والاختبار الذي يفشل عشوائيا أسوأ من عدم وجوده، لأن الناس يتوقفون عن الثقة به. وهذا مرجع لكتابة اختبارات مستقرة بأداة Playwright.'),
@@ -143,19 +115,11 @@ export const skillPurpose: Record<string, Purpose> = {
   },
   'commit-push': {
     why: t('Mistakes in git (the tool that stores the versions of your work) are visible to everyone. This skill saves a version (commits) only after your yes, only on the task’s own branch, and stops at a link.', 'أخطاء git (الأداة التي تخزن نسخ عملك) يراها الجميع. تحفظ هذه المهارة نسخة (commit) بعد موافقتك فقط، وعلى فرع المهمة فقط، وتتوقف عند الرابط.'),
-    when: t('You say commit, push (upload), or yes to the question at the end of a task.', 'تقول «احفظ» (commit) أو «ارفع» (push)، أو توافق على السؤال في نهاية المهمة.'),
-  },
-  'pr-link': {
-    why: t('Opening the pull request (a request to merge your changes into the main work) is your decision. This skill prepares everything up to the click.', 'فتح الـ pull request (طلب دمج تغييراتك في النسخة الرئيسية) قرارك أنت. تجهز هذه المهارة كل شيء حتى لحظة الضغط.'),
-    when: t('You ask for the link or a ready description to paste.', 'تطلب الرابط، أو وصفا جاهزا تلصقه.'),
+    when: t('You say commit, push (upload), or yes to the question at the end of a task. Say link pr to get only the link and a ready description for the pull request. Opening it stays your click.', 'تقول «احفظ» (commit) أو «ارفع» (push)، أو توافق على السؤال في نهاية المهمة. وقل ⁦link pr⁩ لتحصل على الرابط ووصف جاهز للـ ⁦pull request⁩ فقط، ويبقى فتحه بضغطتك.'),
   },
   'sync-main': {
-    why: t('Rebasing (moving your work on top of the latest main version) blindly creates conflicts you did not expect. This skill shows what is coming before it touches anything.', 'عمل rebase (نقل عملك فوق آخر نسخة رئيسية) دون معرفة ما ينتظرك يسبب تعارضات لم تتوقعها. تريك هذه المهارة ما سيحدث قبل أن تغير أي شيء.'),
-    when: t('The main branch has moved on, or you ask to update from it.', 'النسخة الرئيسية تغير، أو تطلب التحديث منه.'),
-  },
-  'branch-status': {
-    why: t('You should know where your work stands without reading git output. This skill answers in plain words and changes nothing.', 'يجب أن تعرف أين وصل عملك دون قراءة مخرجات git. تجيبك هذه المهارة بكلمات بسيطة ولا تغير شيئا.'),
-    when: t('You ask which branch you are on, whether it is uploaded (pushed), or what is left to save.', 'تسأل أي فرع أنت عليه، وهل تم رفعه (push)، وما الذي بقي دون حفظ.'),
+    why: t('Rebasing (moving your work on top of the latest main version) blindly creates conflicts you did not expect. This skill shows what is coming before it touches anything, and tells you in plain words where your branch stands.', 'عمل rebase (نقل عملك فوق آخر نسخة رئيسية) دون معرفة ما ينتظرك يسبب تعارضات لم تتوقعها. تريك هذه المهارة ما سيحدث قبل أن تغير أي شيء، وتخبرك بكلمات بسيطة أين وصل فرعك.'),
+    when: t('The main branch has moved on, or you ask to update from it. Also when you ask which branch you are on, whether it is uploaded (pushed), or what is left to save.', 'النسخة الرئيسية تغيرت، أو تطلب التحديث منها. وأيضا عندما تسأل أي فرع أنت عليه، وهل تم رفعه (push)، وما الذي بقي دون حفظ.'),
   },
   'backend-request': {
     why: t('What the screens need from your backend gets lost in chat. This skill keeps one readable list in the project folder.', 'ما تحتاجه الشاشات من الخادم الخلفي يضيع في المحادثات. تحفظ هذه المهارة قائمة واحدة واضحة داخل مجلد المشروع.'),
@@ -285,10 +249,8 @@ export const hookPurpose: Record<HookEvent, Bilingual> = {
   UserPromptSubmit: t('Short requests are ambiguous, and the assistant does not always notice the skill that fits. This safety check names it before work starts.', 'الطلبات القصيرة غير واضحة، والمساعد لا ينتبه دائما إلى المهارة المناسبة. يسميها فحص الأمان هذا قبل بدء العمل.'),
   PreToolUse: t('An instruction can be forgotten. A refusal before the assistant uses a tool cannot be, so the known dangerous actions are stopped here.', 'التعليمات قد تنسى، أما الرفض قبل أن يستخدم المساعد الأداة فلا ينسى. لذلك يوقف فحص الأمان هذا هنا الأوامر الخطرة المعروفة.'),
   PostToolUse: t('A mistake is cheapest to fix the second it is written. This safety check returns it to the assistant at once.', 'أرخص وقت لإصلاح الخطأ هو لحظة كتابته. يعيده فحص الأمان هذا إلى المساعد فورا.'),
-  PostToolUseFailure: t('One failure is noise and five are a pattern. This safety check keeps the record that shows the difference.', 'فشل واحد قد يكون عابرا، وخمس مرات فشل تعني نمطا. يحتفظ فحص الأمان هذا بالسجل الذي يبين الفرق.'),
   SubagentStart: t('A specialist the assistant starts never sees the opening briefing of the session. Without this safety check it would not know the branch rules, the live sites or the mode.', 'المختص الذي يشغله المساعد لا يرى الشرح الذي بدأت به الجلسة. بدون فحص الأمان هذا لن يعرف قواعد الفروع ولا عناوين المواقع المباشرة ولا النمط.'),
   SubagentStop: t('Broken code from a specialist would spread into the main session. The specialist has to pass the code check (the typecheck) first.', 'كود معطوب من مختص سينتقل إلى الجلسة الرئيسية. لذلك على المختص أن يمر أولا بفحص الكود (فحص الأنواع).'),
-  Notification: t('A long run waiting for your answer looks like one that is still working. An alert tells you which.', 'التشغيل الطويل الذي ينتظر جوابك يبدو وكأنه ما زال يعمل. والتنبيه يقول لك ما الذي يحدث.'),
   Stop: t('The assistant says it is done before it is. This safety check makes it prove that with your own checks, then have another specialist read its work.', 'يقول المساعد إنه انتهى قبل أن ينتهي فعلا. يجعله فحص الأمان هذا يثبت ذلك بفحوصك أنت، ثم يقرأ مختص آخر عمله.'),
   SessionEnd: t('Working files of old sessions would pile up in your project. This safety check clears them.', 'ملفات عمل الجلسات القديمة تتراكم في مشروعك. ينظفها فحص الأمان هذا.'),
 }

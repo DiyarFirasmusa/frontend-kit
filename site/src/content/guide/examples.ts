@@ -5,6 +5,7 @@ interface Recipe {
   want: Bilingual
   /** The sentence you type, in plain words. */
   say: Bilingual
+  /** Empty when a plain request is enough. */
   skills: string[]
 }
 
@@ -25,9 +26,9 @@ export const recipes: { title: Bilingual; items: Recipe[] }[] = [
     title: t('Change something', 'غيّر شيئا'),
     items: [
       { want: t('The colours and fonts', 'الألوان والخطوط'), say: t('change the colours to green and white', 'غيّر الألوان إلى الأخضر والأبيض'), skills: ['frontend-design'] },
-      { want: t('Another language', 'لغة أخرى'), say: t('make it work in Arabic, from right to left', 'اجعله يعمل بالعربية، من اليمين إلى اليسار'), skills: ['i18n-conventions'] },
+      { want: t('Another language', 'لغة أخرى'), say: t('make it work in Arabic, from right to left', 'اجعله يعمل بالعربية، من اليمين إلى اليسار'), skills: ['task'] },
       { want: t('A slow page', 'صفحة بطيئة'), say: t('the products page is slow, make it faster', 'صفحة المنتجات بطيئة، اجعلها أسرع'), skills: ['performance'] },
-      { want: t('The same problem everywhere', 'المشكلة نفسها في كل مكان'), say: t('dates show in the wrong order on every page, fix it everywhere', 'التواريخ تظهر بترتيب خاطئ في كل صفحة، أصلح ذلك في كل مكان'), skills: ['fix-everywhere'] },
+      { want: t('The same problem everywhere', 'المشكلة نفسها في كل مكان'), say: t('dates show in the wrong order on every page, fix it everywhere', 'التواريخ تظهر بترتيب خاطئ في كل صفحة، أصلح ذلك في كل مكان'), skills: ['task'] },
       { want: t('A wrong picture when I share a link', 'صورة خاطئة عند مشاركة رابط'), say: t('when I share the home page link, the picture is wrong, fix it', 'عندما أشارك رابط الصفحة الرئيسية تظهر صورة خاطئة، أصلح ذلك'), skills: ['web-seo-page'] },
       { want: t('A check that sometimes fails', 'فحص ينجح أحيانا ويفشل أحيانا'), say: t('one browser check fails now and then, find out why and make it steady', 'فحص في المتصفح يفشل بين حين وآخر، اعرف السبب واجعله ثابتا'), skills: ['playwright-best-practices'] },
       { want: t('Messy code', 'كود فوضوي'), say: t('this folder is messy, tidy it without changing how it works', 'هذا المجلد فوضوي، رتّبه دون أن تغير طريقة عمله'), skills: ['refactor', 'refactor-mode'] },
@@ -39,7 +40,7 @@ export const recipes: { title: Bilingual; items: Recipe[] }[] = [
       { want: t('That everything works', 'أن كل شيء يعمل'), say: t('check that everything still works', 'تأكد أن كل شيء ما زال يعمل'), skills: ['verify'] },
       { want: t('My changes, looked at by someone else', 'تغييراتي، بعين شخص آخر'), say: t('review what I changed, like a careful colleague would', 'راجع ما غيّرته، كما يفعل زميل دقيق'), skills: ['review'] },
       { want: t('The page, in a real browser', 'الصفحة، في متصفح حقيقي'), say: t('open the page, click through it and tell me what is broken', 'افتح الصفحة وجرّبها بالنقر، وأخبرني بما هو معطل'), skills: ['live-check', 'dev'] },
-      { want: t('Why something works the way it does', 'لماذا يعمل شيء بهذه الطريقة'), say: t('explain what this page does, in simple words', 'اشرح ما تفعله هذه الصفحة بكلمات بسيطة'), skills: ['explain'] },
+      { want: t('Why something works the way it does', 'لماذا يعمل شيء بهذه الطريقة'), say: t('explain what this page does, in simple words', 'اشرح ما تفعله هذه الصفحة بكلمات بسيطة'), skills: [] },
     ],
   },
   {
@@ -47,8 +48,8 @@ export const recipes: { title: Bilingual; items: Recipe[] }[] = [
     items: [
       { want: t('A whole job, start to finish', 'مهمة كاملة، من أولها إلى آخرها'), say: t('add a search box to the orders page, from start to finish', 'أضف مربع بحث إلى صفحة الطلبات، من البداية إلى النهاية'), skills: ['task'] },
       { want: t('Save a version and upload it', 'حفظ نسخة ورفعها'), say: t('save a version of my work and upload it', 'احفظ نسخة من عملي وارفعها'), skills: ['commit-push'] },
-      { want: t('A request to merge my changes', 'طلب لدمج تغييراتي'), say: t('give me the link to ask for my changes to be merged', 'أعطني رابط طلب دمج تغييراتي'), skills: ['pr-link'] },
-      { want: t('The latest changes from my team', 'آخر تغييرات فريقي'), say: t('bring in the latest changes from the main version', 'أدخل آخر التغييرات من النسخة الرئيسية'), skills: ['sync-main', 'branch-status'] },
+      { want: t('A request to merge my changes', 'طلب لدمج تغييراتي'), say: t('give me the link to ask for my changes to be merged', 'أعطني رابط طلب دمج تغييراتي'), skills: ['commit-push'] },
+      { want: t('The latest changes from my team', 'آخر تغييرات فريقي'), say: t('bring in the latest changes from the main version', 'أدخل آخر التغييرات من النسخة الرئيسية'), skills: ['sync-main'] },
       { want: t('A note for the backend team', 'ملاحظة لفريق الخادم الخلفي'), say: t('write a note to the backend team: I need the order date in the orders list', 'اكتب ملاحظة لفريق الخادم الخلفي: أحتاج تاريخ الطلب في قائمة الطلبات'), skills: ['backend-request'] },
     ],
   },

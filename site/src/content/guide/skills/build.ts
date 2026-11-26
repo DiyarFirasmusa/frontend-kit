@@ -43,7 +43,7 @@ export const build: Record<string, SkillGuide> = {
       t('Tests with correct and with wrong input', 'اختبارات للمدخلات الصحيحة والخاطئة'),
     ],
     limits: [t('Does not add a new form tool to your project without asking you first.', 'لا يضيف أداة نماذج جديدة إلى مشروعك قبل أن يسألك.')],
-    related: ['create-hook', 'i18n-conventions', 'dash-create-crud'],
+    related: ['create-hook', 'dash-create-crud'],
   },
   'create-hook': {
     plain: t(
@@ -53,13 +53,13 @@ export const build: Record<string, SkillGuide> = {
     ask: [t('create a hook that loads the order details', 'أنشئ hook يجلب تفاصيل الطلب'), t('move the logic out of this page', 'انقل المنطق خارج هذه الصفحة')],
     steps: [
       t('Picks the kind: loading data, running a page, or a small helper.', 'يختار النوع: تحميل بيانات، أو تشغيل صفحة، أو أداة مساعدة صغيرة.'),
-      t('For data, it uses the way your project already loads data. If TanStack Query is installed (a tool that remembers loaded data), it also uses one single place that names every piece of loaded data.', 'للبيانات يستخدم الطريقة التي يحمل بها مشروعك بياناته. وإذا كانت TanStack Query مثبتة (وهي أداة تتذكر البيانات المحملة)، فهو يستخدم أيضا مكانا واحدا يسمي كل بيان محمل.'),
+      t('For data, it uses the way your project already loads data. If TanStack Query is installed (a tool that remembers loaded data), it also uses one single place that names every piece of loaded data, so after a change the whole related group can be marked out of date and loaded again.', 'للبيانات يستخدم الطريقة التي يحمل بها مشروعك بياناته. وإذا كانت TanStack Query مثبتة (وهي أداة تتذكر البيانات المحملة)، فهو يستخدم أيضا مكانا واحدا يسمي كل بيان محمل، فيمكن بعد أي تغيير تعليم المجموعة المرتبطة كلها بأنها قديمة لتحمل من جديد.'),
       t('For a page, it checks the values in the address (such as ?page=2) and hands the page one tidy object.', 'للصفحة يتحقق من القيم الموجودة في الرابط (مثل ‎?page=2) ويسلم الصفحة كائنا واحدا مرتبا.'),
       t('Tests it.', 'يختبره.'),
     ],
     result: [t('A clearly named hook, or its equivalent, in the folder where your project keeps them', 'hook باسم واضح، أو ما يشبهه، في المجلد الذي يضع فيه مشروعك هذه الملفات'), t('A test', 'اختبار')],
     limits: [t('If your project already has a way to load data, it does not load data in an effect (a bit of code that runs by itself after the screen shows).', 'إذا كان في مشروعك طريقة لجلب البيانات، فلا يجلبها داخل effect (قطعة كود تعمل وحدها بعد ظهور الشاشة).')],
-    related: ['tanstack-query-key-conventions', 'create-component', 'refactor'],
+    related: ['create-component', 'refactor'],
   },
   'create-store': {
     plain: t(
@@ -121,7 +121,7 @@ export const build: Record<string, SkillGuide> = {
     ],
     result: [t('Design options, each with its reason', 'خيارات تصميم مع أسبابها')],
     limits: [t('Suggestions never override your colours, fonts or pieces.', 'الاقتراحات لا تغير ألوانك ولا خطوطك ولا أجزاءك.')],
-    related: ['frontend-design', 'web-design-guidelines'],
+    related: ['frontend-design'],
     needs: t('Python 3 (a programming tool that must be on your computer), for its search.', 'يحتاج إلى Python 3 (أداة برمجة يجب أن تكون على جهازك) لعمل البحث.'),
   },
 }

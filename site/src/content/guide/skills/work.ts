@@ -37,7 +37,7 @@ export const work: Record<string, SkillGuide> = {
     ],
     result: [t('A checked task branch', 'فرع للمهمة بعد التحقق منه'), t('A short report that says what was not checked', 'تقرير قصير يذكر ما لم يفحصه')],
     limits: [t('Does not open or merge a pull request (a request to merge your changes): the safety checks refuse the common ways.', 'لا يفتح الـ pull request (طلب دمج تغييراتك) ولا يدمجه، وترفض فحوص الأمان الطرق المعتادة لذلك.'), t('Never saves a version without your yes.', 'لا يحفظ نسخة دون موافقتك.')],
-    related: ['verify', 'commit-push', 'pr-link'],
+    related: ['verify', 'commit-push', 'review'],
   },
   dev: {
     plain: t('Starts your app on its port (its numbered door on your computer) and tells you when it really answers.', 'يشغل تطبيقك على منفذه (بابه المرقم على جهازك) ويخبرك عندما يرد فعلا.'),
@@ -52,18 +52,6 @@ export const work: Record<string, SkillGuide> = {
     limits: [t('Never connects the app to your live site.', 'لا يربط التطبيق بموقعك الحي أبدا.')],
     related: ['live-check', 'verify'],
   },
-  explain: {
-    plain: t('You ask a question and get an answer, not a change to your code.', 'تسأل، فتحصل على جواب لا على تغيير في الكود.'),
-    ask: [t('why does the cart load its data twice?', 'لماذا تجلب السلة بياناتها مرتين؟'), t('what endpoint does checkout use? explain for the team', 'ما الـ endpoint الذي يستخدمه الدفع؟ اشرحه للفريق')],
-    steps: [
-      t('Follows the code that really runs, all the way to the backend address it calls (the endpoint).', 'يتتبع الكود الذي يعمل فعلا، حتى العنوان الذي يستدعيه في الخادم (الـ endpoint).'),
-      t('Reads the history of changes (git history) when you ask why something is the way it is.', 'يقرأ تاريخ التغييرات (تاريخ git) إذا سألت عن سبب وضع ما.'),
-      t('Answers first, then shows the files and lines.', 'يجيب أولا، ثم يعرض الملفات والأسطر.'),
-    ],
-    result: [t('A plain answer with evidence', 'جواب واضح مع الدليل')],
-    limits: [t('Edits nothing, even when it spots a bug. It offers to fix it instead.', 'لا يعدل شيئا حتى لو رأى خطأ، بل يعرض عليك إصلاحه.')],
-    related: ['backend-request'],
-  },
   refactor: {
     plain: t('Tidies the code while it keeps doing exactly what it did before. This is what the word refactor means.', 'يرتب الكود ويجعله أنظف، ويبقى يفعل ما كان يفعله تماما. وهذا هو معنى كلمة refactor.'),
     ask: [t('split this 700-line page', 'قسم هذه الصفحة، طولها 700 سطر'), t('clean up and remove the duplication', 'نظّفه وأزل التكرار')],
@@ -75,7 +63,7 @@ export const work: Record<string, SkillGuide> = {
     ],
     result: [t('Smaller files and the same behaviour', 'ملفات أصغر وسلوك كما هو'), t('Checks that pass', 'فحوص ناجحة')],
     limits: [t('A change in behaviour becomes a separate task.', 'أي تغيير في السلوك يصبح مهمة منفصلة.')],
-    related: ['refactor-mode', 'fix-everywhere'],
+    related: ['refactor-mode', 'verify'],
   },
   'refactor-mode': {
     plain: t('Brings a whole old project up to a good standard, in phases (steps) that you approve. In the kit this is called “fix an old project”.', 'يوصل مشروعا قديما كاملا إلى مستوى جيد، على مراحل توافق عليها. وتسمى هذه الميزة في الإضافة «إصلاح مشروع قديم».'),
@@ -134,19 +122,6 @@ export const work: Record<string, SkillGuide> = {
     ],
     related: ['mode', 'verify'],
   },
-  'fix-everywhere': {
-    plain: t('For “fix all of them”. It proves that none is left.', 'لطلب «أصلحها كلها». ويثبت لك أنه لم يبق شيء.'),
-    ask: [t('fix this dropdown on every page', 'أصلح هذه القائمة المنسدلة في كل الصفحات'), t('check all, did you forget any?', 'افحص الكل، هل نسيت شيئا؟')],
-    steps: [
-      t('Writes down what counts as one occurrence of the problem.', 'يكتب ما الذي يحسب موضعا للمشكلة.'),
-      t('Searches all of the code and shows you the list.', 'يبحث في كل الكود ويعرض لك القائمة.'),
-      t('Asks first when the list is long or needs a decision about the product.', 'يسألك أولا إذا كانت القائمة طويلة أو تحتاج قرارا يخص المنتج.'),
-      t('Fixes each one, then runs the same search again.', 'يصلح كل موضع، ثم يعيد البحث نفسه.'),
-    ],
-    result: [t('The number fixed, and a final search with no results', 'عدد ما أصلحه، وبحث أخير بلا نتائج')],
-    limits: [t('Keeps everything else in each place the same.', 'يبقي باقي سلوك كل موضع كما هو.')],
-    related: ['refactor', 'verify'],
-  },
   'backend-request': {
     plain: t('A document you can send as it is to the people who build your backend. It says what your screens need that the backend does not offer yet.', 'مستند ترسله كما هو إلى من يبنون الخادم عندك. يقول ما تحتاجه شاشاتك مما لا يقدمه الخادم بعد.'),
     ask: [t('note that the API has no slug field', 'سجل أن الـ API ليس فيه حقل slug'), t('prepare the missing endpoints for the backend', 'جهّز الـ endpoints الناقصة لفريق الخادم')],
@@ -157,6 +132,6 @@ export const work: Record<string, SkillGuide> = {
     ],
     result: [t('docs/backend-requests.md, written for colleagues', 'docs/backend-requests.md، مكتوب للزملاء')],
     limits: [t('It has no file paths or internal names from the screens side, so the backend team can read it without knowing your code.', 'لا يكتب فيه مسارات ملفات ولا أسماء داخلية من جهة الشاشات، ليقرأه فريق الخادم دون أن يعرف كودك.')],
-    related: ['explain'],
+    related: ['task'],
   },
 }
