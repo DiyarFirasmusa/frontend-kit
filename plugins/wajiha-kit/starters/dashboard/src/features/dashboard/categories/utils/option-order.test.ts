@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { AttributeOptionResponse } from '@/types/api/catalog';
 import {
+  adoptCreatedOptions,
   diffOptions,
   hasOptionChanges,
   moveDraft,
@@ -107,5 +108,47 @@ describe('option-order', () => {
       'a',
     ]);
     expect(reorderDraft(drafts, 1, 1)).toBe(drafts);
+  });
+});
+
+const draft = (key: string, label: string): OptionDraft => ({
+  key,
+  id: null,
+  code: '',
+  label,
+  isActive: true,
+});
+
+describe('adoptCreatedOptions', () => {
+  it('gives a new draft the id of the option the failed save created', () => {
+    const drafts = [draft('new-1', 'Red'), draft('new-2', 'Blue')];
+    const fresh = [stored('opt-red', 1, { label: 'Red' })];
+
+    const adopted = adoptCreatedOptions(drafts, fresh);
+
+    expect(adopted.map((item) => item.id)).toEqual(['opt-red', null]);
+    expect(adopted[0]?.key).toBe('new-1');
+  });
+
+  it('turns the retry into one create instead of a delete and two creates', () => {
+    const afterFailure = [stored('opt-red', 1, { label: 'Red' })];
+    const adopted = adoptCreatedOptions(
+      [draft('new-1', 'Red'), draft('new-2', 'Blue')],
+      afterFailure,
+    );
+
+    const changes = diffOptions(afterFailure, adopted);
+
+    expect(changes.deletes).toEqual([]);
+    expect(changes.updates).toEqual([]);
+    expect(changes.creates.map((create) => create.label)).toEqual(['Blue']);
+  });
+
+  it('never gives one stored option to two drafts', () => {
+    const drafts = [draft('new-1', 'Red'), draft('new-2', 'Red')];
+    const adopted = adoptCreatedOptions(drafts, [
+      stored('opt-red', 1, { label: 'Red' }),
+    ]);
+    expect(adopted.map((item) => item.id)).toEqual(['opt-red', null]);
   });
 });

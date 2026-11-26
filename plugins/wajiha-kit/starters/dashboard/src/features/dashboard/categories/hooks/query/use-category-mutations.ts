@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { qk } from '@/constants/query-keys';
+import { forgetQueries } from '@/lib/forget-queries';
 import type { CategoryAttributeRequest } from '@/types/api/catalog';
 import {
   attachCategoryAttribute,
@@ -30,15 +31,22 @@ export function useUpdateCategory() {
   });
 }
 
-export function useDeleteCategory() {
+/**
+ * `onDeleted` runs before the lists refetch: the page moves its selection off
+ * the deleted record there. The assignments table still watches that record's
+ * attributes, so they are cancelled, never removed (see `forgetQueries`).
+ */
+export function useDeleteCategory(onDeleted?: (id: string) => void) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteItemCategory(id),
-    onSuccess: (_data, id) => {
-      // Drop the deleted record's own queries first: refetching them would 404.
-      qc.removeQueries({ queryKey: qk.categories.detail(id) });
-      qc.removeQueries({ queryKey: qk.categories.attributes(id) });
-      return qc.invalidateQueries({ queryKey: qk.categories.lists() });
+    onSuccess: async (_data, id) => {
+      await forgetQueries(qc, [
+        qk.categories.detail(id),
+        qk.categories.attributes(id),
+      ]);
+      onDeleted?.(id);
+      await qc.invalidateQueries({ queryKey: qk.categories.lists() });
     },
   });
 }

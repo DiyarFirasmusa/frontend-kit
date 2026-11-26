@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { qk } from '@/constants/query-keys';
+import { forgetQueries } from '@/lib/forget-queries';
 import {
   createSupplier,
   deleteSupplier,
@@ -30,10 +31,10 @@ export function useDeleteSupplier() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteSupplier(id),
-    onSuccess: (_data, id) => {
-      // Drop the deleted record first: invalidating it would refetch a 404.
-      qc.removeQueries({ queryKey: qk.suppliers.detail(id) });
-      return qc.invalidateQueries({ queryKey: qk.suppliers.lists() });
+    onSuccess: async (_data, id) => {
+      // The deleted record's own query must not refetch (it would 404).
+      await forgetQueries(qc, [qk.suppliers.detail(id)]);
+      await qc.invalidateQueries({ queryKey: qk.suppliers.lists() });
     },
   });
 }

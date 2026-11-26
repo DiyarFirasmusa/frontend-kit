@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { qk } from '@/constants/query-keys';
+import { forgetQueries } from '@/lib/forget-queries';
 import {
   createAttributeDefinition,
   deleteAttributeDefinition,
@@ -39,10 +40,10 @@ export function useDeleteAttributeDefinition() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteAttributeDefinition(id),
-    onSuccess: (_data, id) => {
-      // Drop the deleted record first: invalidating it would refetch a 404.
-      qc.removeQueries({ queryKey: qk.attributes.detail(id) });
-      return Promise.all([
+    onSuccess: async (_data, id) => {
+      // The deleted record's own query must not refetch (it would 404).
+      await forgetQueries(qc, [qk.attributes.detail(id)]);
+      await Promise.all([
         qc.invalidateQueries({ queryKey: qk.attributes.lists() }),
         qc.invalidateQueries({ queryKey: qk.categories.all }),
       ]);

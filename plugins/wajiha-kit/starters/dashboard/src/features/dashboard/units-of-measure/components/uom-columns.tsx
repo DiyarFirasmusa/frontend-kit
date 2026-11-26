@@ -39,6 +39,7 @@ export function getUnitOfMeasureColumns({
       id: 'name',
       header: t('unitsOfMeasure.columns.name'),
       cell: ({ getValue }) => getValue()?.trim() || '—',
+      meta: { primary: true },
     }),
     helper.accessor('decimalPlaces', {
       id: 'decimalPlaces',

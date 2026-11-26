@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSingleFlight } from '@/hooks/use-single-flight';
 import { zodResolver } from '@/lib/vendor/zod-resolver';
 import {
   addMemberSchema,
@@ -12,6 +13,7 @@ import { useAddWarehouseMember } from '../query/use-warehouse-members';
 export function useAddMemberForm(warehouseId: string) {
   const [open, setOpen] = useState(false);
   const add = useAddWarehouseMember(warehouseId);
+  const flight = useSingleFlight();
 
   const form = useForm<AddMemberValues>({
     resolver: zodResolver(addMemberSchema),
@@ -41,7 +43,14 @@ export function useAddMemberForm(warehouseId: string) {
       setOpen(next);
     },
     onSubmit: form.handleSubmit((values) => {
-      add.mutate(toAddMemberPayload(values), { onSuccess: close });
+      // Enter or a double click sends once: the ref flips before `isPending`.
+      if (!flight.start()) {
+        return;
+      }
+      add.mutate(toAddMemberPayload(values), {
+        onSuccess: close,
+        onSettled: flight.end,
+      });
     }),
   };
 }

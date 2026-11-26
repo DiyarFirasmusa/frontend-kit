@@ -8,7 +8,7 @@ import { signIn } from '@/test/fixtures/auth';
 import { tt } from '@/test/i18n';
 import { api } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
-import { screen, waitFor, within } from '@/test/render';
+import { act, fireEvent, screen, waitFor, within } from '@/test/render';
 import { renderApp } from '@/test/render-app';
 
 const ALL: Permission[] = [
@@ -213,6 +213,36 @@ describe('suppliers list (real route, shared mock backend)', () => {
       'aria-invalid',
       'true',
     );
+    expect(requests.filter((line) => line.startsWith('POST'))).toHaveLength(1);
+  });
+
+  it('sends one request for three submits in the same tick', async () => {
+    const { user } = await openList();
+    await within(table()).findByText('SUP-001', {}, WAIT);
+    await user.click(
+      screen.getByRole('button', { name: tt('suppliers.create') }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    await user.type(within(dialog).getByLabelText(/^Code/), 'SUP-777');
+    await user.type(within(dialog).getByLabelText(/^Name/), 'Quick taps');
+    const form = dialog.querySelector('form');
+    if (!form) {
+      throw new Error('form not found');
+    }
+
+    // Before the first render after `mutate`, `isPending` is still false.
+    await act(async () => {
+      fireEvent.submit(form);
+      fireEvent.submit(form);
+      fireEvent.submit(form);
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 0);
+      });
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).toBeNull();
+    }, WAIT);
+
     expect(requests.filter((line) => line.startsWith('POST'))).toHaveLength(1);
   });
 

@@ -17,12 +17,20 @@ export default function HomeContainer() {
           dateLabel={page.dateLabel}
         />
       </div>
-      <HomeKpiGrid state={page.summary} />
-      <HomeActivityChart
-        state={page.activity}
-        days={HOME_QUERY_DEFAULTS.activityDays}
-      />
-      <HomeRecentChangesTable state={page.recent} />
+      {page.showSummary ? (
+        <HomeKpiGrid state={page.summary} access={page.access} />
+      ) : (
+        <p role="status" className="text-b2 text-text-secondary">
+          {page.noAccessLabel}
+        </p>
+      )}
+      {page.showChart ? (
+        <HomeActivityChart
+          state={page.activity}
+          days={HOME_QUERY_DEFAULTS.activityDays}
+        />
+      ) : null}
+      {page.showRecent ? <HomeRecentChangesTable state={page.recent} /> : null}
       <footer className="text-b3 text-text-secondary mt-2">
         {page.syncLabel}
       </footer>

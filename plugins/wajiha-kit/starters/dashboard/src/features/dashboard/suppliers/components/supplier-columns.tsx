@@ -38,14 +38,20 @@ export function getSupplierColumns({ t, getActions }: SupplierColumnsDeps) {
       header: t('suppliers.columns.name'),
       cell: ({ row }) => (
         <span className="flex flex-col">
-          <span className="text-text-primary">{text(row.original.name)}</span>
+          <span
+            title={text(row.original.name)}
+            className="text-text-primary truncate"
+          >
+            {text(row.original.name)}
+          </span>
           {row.original.contactName?.trim() ? (
-            <span className="text-b3 text-text-secondary">
+            <span className="text-b3 text-text-secondary truncate">
               {row.original.contactName.trim()}
             </span>
           ) : null}
         </span>
       ),
+      meta: { primary: true },
     }),
     helper.accessor('phone', {
       header: t('suppliers.columns.phone'),

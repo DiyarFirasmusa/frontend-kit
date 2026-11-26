@@ -165,3 +165,32 @@ export function hasOptionChanges(changes: OptionChanges): boolean {
     changes.order !== null
   );
 }
+
+/**
+ * After a save that failed half way, the refetched definition holds options
+ * the server already created while their drafts still have no id. Giving a
+ * draft the id of the stored option it produced (same label, first match)
+ * makes the retry resume: the option is kept and updated if needed, not
+ * deleted and created again under a new id.
+ */
+export function adoptCreatedOptions(
+  drafts: OptionDraft[],
+  fresh: AttributeOptionResponse[],
+): OptionDraft[] {
+  const taken = new Set<string>();
+  return drafts.map((draft) => {
+    if (draft.id !== null) {
+      return draft;
+    }
+    const label = draft.label.trim();
+    const match = fresh.find(
+      (option) =>
+        !taken.has(option.id) && (option.label ?? '').trim() === label,
+    );
+    if (!match) {
+      return draft;
+    }
+    taken.add(match.id);
+    return { ...draft, id: match.id, code: match.code ?? '' };
+  });
+}

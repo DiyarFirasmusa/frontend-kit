@@ -63,6 +63,13 @@ describe('CategoryTree', () => {
     expect(screen.getByTitle('STORAGE')).toBeVisible();
   });
 
+  it('keeps the search field out of the column flex-basis (it would become a height)', () => {
+    renderTree();
+    const field = screen.getByRole('searchbox').parentElement;
+    expect(field).toHaveClass('flex-none', 'basis-auto');
+    expect(field).not.toHaveClass('basis-56');
+  });
+
   it('selects a row by id and marks it pressed', async () => {
     const onSelect = vi.fn();
     const { user } = renderTree({ onSelect, selectedId: 'cat-storage' });

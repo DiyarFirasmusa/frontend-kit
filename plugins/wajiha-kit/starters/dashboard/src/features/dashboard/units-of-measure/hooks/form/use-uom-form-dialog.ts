@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { applyApiFieldErrors } from '@/api/error/field-errors';
+import { useSingleFlight } from '@/hooks/use-single-flight';
 import { zodResolver } from '@/lib/vendor/zod-resolver';
 import {
   defaultUnitOfMeasureForm,
@@ -41,6 +42,7 @@ export function useUnitOfMeasureFormDialog(
     values: detail.data ? toUnitOfMeasureValues(detail.data) : undefined,
     resetOptions: { keepDirtyValues: true },
   });
+  const flight = useSingleFlight();
   const isPending = create.isPending || update.isPending;
   const isLoading = editId !== null && detail.isPending;
 
@@ -50,16 +52,21 @@ export function useUnitOfMeasureFormDialog(
   };
 
   const submit = form.handleSubmit((values) => {
-    // Enter or a double click while a request is in flight sends nothing.
-    if (isPending || isLoading) {
+    // Enter or a double click while a request is in flight sends nothing. The
+    // ref flips at once; `isPending` only after the next render.
+    if (isLoading || !flight.start()) {
       return;
     }
+    const settle = { onSettled: flight.end };
     const payload = toUnitOfMeasurePayload(values);
     if (editId !== null) {
-      update.mutate({ id: editId, payload }, { onSuccess: onDone, onError });
+      update.mutate(
+        { id: editId, payload },
+        { onSuccess: onDone, onError, ...settle },
+      );
       return;
     }
-    create.mutate(payload, { onSuccess: onDone, onError });
+    create.mutate(payload, { onSuccess: onDone, onError, ...settle });
   });
 
   return {

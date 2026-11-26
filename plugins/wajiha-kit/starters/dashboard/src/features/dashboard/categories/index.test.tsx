@@ -1,4 +1,4 @@
-import { HttpResponse, http } from 'msw';
+import { HttpResponse, delay, http } from 'msw';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { endpoints } from '@/constants/api';
 import { PERMS, type Permission } from '@/constants/permissions';
@@ -276,7 +276,8 @@ describe('categories tree page (real route, shared mock backend)', () => {
   });
 
   it('deletes an unused category after a confirm that starts on Cancel', async () => {
-    const { user } = await openTree(`/categories?category=${idOf('PKG')}`);
+    const id = idOf('PKG');
+    const { user } = await openTree(`/categories?category=${id}`);
     await within(detail()).findByRole('table', {}, WAIT);
     await user.click(
       within(detail()).getByRole('button', { name: tt('common.delete') }),
@@ -287,6 +288,15 @@ describe('categories tree page (real route, shared mock backend)', () => {
         within(confirm).getByRole('button', { name: tt('common.cancel') }),
       ).toHaveFocus();
     });
+    // A slow list refetch leaves time for the page to re-render with the
+    // deleted category still selected (the case that used to fetch it again).
+    server.use(
+      http.get(api(endpoints.itemCategories.list), async () => {
+        if (requests.some((line) => line.startsWith('DELETE'))) {
+          await delay(250);
+        }
+      }),
+    );
     await user.click(
       within(confirm).getByRole('button', { name: tt('common.delete') }),
     );
@@ -296,6 +306,16 @@ describe('categories tree page (real route, shared mock backend)', () => {
     expect(requests.filter((line) => line.startsWith('DELETE'))).toHaveLength(
       1,
     );
+    // The selected record is gone: nothing may ask for it again (that would
+    // 404 and toast a false "Record not found"), and the URL drops its id.
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 300);
+    });
+    const afterDelete = requests.slice(
+      requests.findIndex((line) => line.startsWith('DELETE')) + 1,
+    );
+    expect(afterDelete.filter((line) => line.includes(id))).toEqual([]);
+    expect(window.location.search).not.toContain(id);
   });
 
   it('blocks deleting a category that has items, without a request', async () => {

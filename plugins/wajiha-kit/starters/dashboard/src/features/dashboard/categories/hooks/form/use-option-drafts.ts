@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@/lib/vendor/zod-resolver';
 import type { AttributeDefinitionResponse } from '@/types/api/catalog';
 import {
+  adoptCreatedOptions,
   diffOptions,
   hasOptionChanges,
   moveDraft,
@@ -43,16 +44,34 @@ export function useOptionDrafts(
   // The draft starts from the stored options each time the dialog opens for an
   // attribute; later refetches (e.g. after a failed save) do not wipe it.
   const initializedFor = useRef<string | null>(null);
+  // Ids of the stored options the dialog has seen: a new one after a failed
+  // save was created by that save, so its draft adopts the id (a retry then
+  // resumes instead of deleting it and creating it again).
+  const knownIds = useRef(new Set<string>());
   useEffect(() => {
     if (!open) {
       initializedFor.current = null;
+      knownIds.current = new Set();
       return;
     }
-    if (attribute && initializedFor.current !== attribute.id) {
+    if (!attribute) {
+      return;
+    }
+    const options = attribute.options ?? [];
+    if (initializedFor.current !== attribute.id) {
       initializedFor.current = attribute.id;
-      setDrafts(toDrafts(attribute.options ?? []));
+      knownIds.current = new Set(options.map((option) => option.id));
+      setDrafts(toDrafts(options));
       setMode({ kind: 'closed' });
       form.reset(defaultAttributeOptionForm);
+      return;
+    }
+    const fresh = options.filter((option) => !knownIds.current.has(option.id));
+    if (fresh.length > 0) {
+      for (const option of fresh) {
+        knownIds.current.add(option.id);
+      }
+      setDrafts((current) => adoptCreatedOptions(current, fresh));
     }
   }, [open, attribute, form]);
 

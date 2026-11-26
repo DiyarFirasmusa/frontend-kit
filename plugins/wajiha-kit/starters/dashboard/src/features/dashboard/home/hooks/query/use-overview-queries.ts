@@ -6,22 +6,25 @@ import {
   fetchRecentChanges,
 } from '../../services/overview.service';
 
-export function useOverviewSummary() {
+export function useOverviewSummary(enabled = true) {
   return useQuery({
+    enabled,
     queryKey: qk.overview.summary,
     queryFn: ({ signal }) => fetchOverviewSummary({ signal }),
   });
 }
 
-export function useActivityTrend(days: number) {
+export function useActivityTrend(days: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: qk.overview.activity(days),
     queryFn: ({ signal }) => fetchActivity(days, { signal }),
   });
 }
 
-export function useRecentChanges(limit: number) {
+export function useRecentChanges(limit: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: qk.overview.recent(limit),
     queryFn: ({ signal }) => fetchRecentChanges(limit, { signal }),
   });

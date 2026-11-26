@@ -46,19 +46,21 @@ export function getWarehouseColumns({ t, getActions }: WarehouseColumnsDeps) {
         <span className="gap-inline flex min-w-0 items-center">
           <span
             aria-hidden
-            className="bg-brand-tint text-brand-text inline-flex size-9 shrink-0 items-center justify-center rounded-(--radius-control)"
+            className="bg-brand-tint text-brand-text hidden size-9 shrink-0 items-center justify-center rounded-(--radius-control) sm:inline-flex"
           >
             <Warehouse className="size-4" />
           </span>
           <Link
             to="/warehouses/$warehouseId"
             params={{ warehouseId: row.original.id }}
+            title={text(row.original.name)}
             className="text-text-primary text-h5 truncate hover:underline"
           >
             {text(row.original.name)}
           </Link>
         </span>
       ),
+      meta: { primary: true },
     }),
     helper.accessor('address', {
       id: 'address',

@@ -30,6 +30,7 @@ export function getAttributeColumns({ t, getActions }: AttributeColumnsDeps) {
           {getValue()?.trim() || '—'}
         </span>
       ),
+      meta: { primary: true },
     }),
     helper.accessor('code', {
       id: 'code',

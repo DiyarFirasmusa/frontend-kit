@@ -20,6 +20,8 @@ interface UseCategoryDialogsOptions {
   canUpdate: boolean;
   /** Called with the id of a category that was just created. */
   onCreated: (id: string) => void;
+  /** Called when the selected category was deleted, before the lists refetch. */
+  onSelectedDeleted: () => void;
 }
 
 /** The payload that sets only a category's active flag, keeping the rest. */
@@ -42,6 +44,7 @@ export function useCategoryDialogs({
   selectedId,
   canUpdate,
   onCreated,
+  onSelectedDeleted,
 }: UseCategoryDialogsOptions) {
   const [dialog, setDialog] = useState<CategoryDialogState>({ kind: 'closed' });
   const closeDialog = useCallback(() => {
@@ -55,7 +58,11 @@ export function useCategoryDialogs({
 
   const update = useUpdateCategory();
   const removeCategory = useDeleteDialog(
-    useDeleteCategory(),
+    useDeleteCategory((id) => {
+      if (id === selectedId) {
+        onSelectedDeleted();
+      }
+    }),
     (category: CategoryRow) => category.name ?? '',
   );
   const detach = useDeleteDialog(

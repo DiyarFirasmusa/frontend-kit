@@ -31,5 +31,14 @@ export function useCategoryFilters() {
     select(ALL_CATEGORIES);
   }, [select]);
 
-  return { search, setQuery, select, selectAll };
+  // An empty pick means "the first category", so a deleted selection leaves
+  // no dead id in the URL.
+  const clearSelection = useCallback(() => {
+    void navigate({
+      search: (prev) => ({ ...prev, category: '' }),
+      replace: true,
+    });
+  }, [navigate]);
+
+  return { search, setQuery, select, selectAll, clearSelection };
 }

@@ -1,3 +1,4 @@
+import { useSingleFlight } from '@/hooks/use-single-flight';
 import { useAttributeDefinitionDetail } from '../../hooks/query/use-attribute-definitions';
 import { useSaveAttributeOptions } from '../../hooks/query/use-attribute-mutations';
 import type { OptionChanges } from '../../utils/option-order';
@@ -19,13 +20,17 @@ export function AttributeOptionsManager({
 }: AttributeOptionsManagerProps) {
   const detail = useAttributeDefinitionDetail(attributeId);
   const save = useSaveAttributeOptions();
+  const flight = useSingleFlight();
 
   const onSave = (changes: OptionChanges) => {
     // Single-flight: a second click while the batch runs sends nothing.
-    if (save.isPending) {
+    if (!flight.start()) {
       return;
     }
-    save.mutate({ definitionId: attributeId, changes }, { onSuccess: onClose });
+    save.mutate(
+      { definitionId: attributeId, changes },
+      { onSuccess: onClose, onSettled: flight.end },
+    );
   };
 
   return (

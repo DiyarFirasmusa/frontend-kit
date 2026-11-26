@@ -8,6 +8,7 @@
     },
     "subtitle": "A summary of your records and what changed lately.",
     "lastSync": "Last sync: {{time}}",
+    "noAccess": "Nothing to show yet: your account cannot read any of these records. Ask an administrator for access.",
     "loadError": "Could not load this section",
     "kpi": {
       "warehouses": "Warehouses",

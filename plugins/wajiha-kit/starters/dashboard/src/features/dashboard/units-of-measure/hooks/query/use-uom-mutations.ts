@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { qk } from '@/constants/query-keys';
+import { forgetQueries } from '@/lib/forget-queries';
 import {
   createUnitOfMeasure,
   deleteUnitOfMeasure,
@@ -30,10 +31,10 @@ export function useDeleteUnitOfMeasure() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteUnitOfMeasure(id),
-    onSuccess: (_data, id) => {
-      // Drop the deleted record first: invalidating it would refetch a 404.
-      qc.removeQueries({ queryKey: qk.unitsOfMeasure.detail(id) });
-      return qc.invalidateQueries({ queryKey: qk.unitsOfMeasure.lists() });
+    onSuccess: async (_data, id) => {
+      // The deleted record's own query must not refetch (it would 404).
+      await forgetQueries(qc, [qk.unitsOfMeasure.detail(id)]);
+      await qc.invalidateQueries({ queryKey: qk.unitsOfMeasure.lists() });
     },
   });
 }

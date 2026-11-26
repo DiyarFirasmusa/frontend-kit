@@ -1,9 +1,13 @@
 import { useDeleteTarget } from '@/hooks/use-delete-target';
+import { useSingleFlight } from '@/hooks/use-single-flight';
 
 /** The part of a delete mutation the dialog needs (`useMutation`'s result fits). */
 interface DeleteMutation {
   isPending: boolean;
-  mutate: (id: string, options?: { onSuccess?: () => void }) => void;
+  mutate: (
+    id: string,
+    options?: { onSuccess?: () => void; onSettled?: () => void },
+  ) => void;
 }
 
 /**
@@ -17,6 +21,7 @@ export function useDeleteDialog<T extends { id: string }>(
 ) {
   const { deleteTarget, isDeleteOpen, openDelete, closeDelete } =
     useDeleteTarget<T>();
+  const flight = useSingleFlight();
 
   return {
     openDelete,
@@ -30,10 +35,13 @@ export function useDeleteDialog<T extends { id: string }>(
         }
       },
       onConfirm: () => {
-        if (!deleteTarget || remove.isPending) {
+        if (!deleteTarget || !flight.start()) {
           return;
         }
-        remove.mutate(deleteTarget.id, { onSuccess: closeDelete });
+        remove.mutate(deleteTarget.id, {
+          onSuccess: closeDelete,
+          onSettled: flight.end,
+        });
       },
     },
   };

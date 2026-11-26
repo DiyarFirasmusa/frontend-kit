@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { SelectOption } from '@/components/fields/select-option';
+import { useSingleFlight } from '@/hooks/use-single-flight';
 import { useAttributeLookup } from '../../hooks/query/use-attribute-definitions';
 import { useAttachCategoryAttribute } from '../../hooks/query/use-category-mutations';
 import type { AttachAttributeFormValues } from '../../validations/validations';
@@ -23,6 +24,7 @@ export function AttachAttributeManager({
 }: AttachAttributeManagerProps) {
   const lookup = useAttributeLookup(true);
   const attach = useAttachCategoryAttribute(categoryId);
+  const flight = useSingleFlight();
 
   const attributeOptions = useMemo<SelectOption[]>(
     () =>
@@ -37,7 +39,7 @@ export function AttachAttributeManager({
 
   const onSubmit = (values: AttachAttributeFormValues) => {
     // Single-flight: a second click while the request runs sends nothing.
-    if (attach.isPending) {
+    if (!flight.start()) {
       return;
     }
     attach.mutate(
@@ -47,7 +49,7 @@ export function AttachAttributeManager({
         isVariantAxis: values.isVariantAxis,
         sortOrder,
       },
-      { onSuccess: onClose },
+      { onSuccess: onClose, onSettled: flight.end },
     );
   };
 

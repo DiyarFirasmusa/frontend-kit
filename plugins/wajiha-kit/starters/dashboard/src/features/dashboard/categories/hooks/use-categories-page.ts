@@ -46,6 +46,7 @@ export function useCategoriesPage() {
     selectedId,
     canUpdate: access.update,
     onCreated: filters.select,
+    onSelectedDeleted: filters.clearSelection,
   });
   const { openOptions, openDetach } = dialogs;
   const { setRequired, setVariantAxis } = assignments;

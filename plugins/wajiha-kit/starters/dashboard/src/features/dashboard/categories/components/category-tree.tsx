@@ -205,6 +205,8 @@ export function CategoryTree({
         onCommit={onSearchChange}
         placeholder={t('categories.tree.searchPlaceholder')}
         label={t('categories.tree.searchPlaceholder')}
+        // In a column the default flex-basis would become a height.
+        className="min-w-0 flex-none basis-auto"
       />
       {allRow && !isSearching ? (
         <button
