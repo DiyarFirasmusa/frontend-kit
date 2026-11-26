@@ -9,7 +9,9 @@ import { all } from './dom.ts'
  * For a visitor who asked for less motion nothing is marked, so nothing moves.
  */
 const kinds: [string, string][] = [
-  ['main.home > section:not(#intro, #example) > .column', 'rise'],
+  ['main.home > section:not(#intro, #example, #get) > .column', 'rise'],
+  ['main.home #get > .section-head', 'rise'],
+  ['main.home #get .gets-item', 'rise'],
   ['main.home #install .start-window', 'flip'],
   ['main.home #intro .hero-side', 'leave'],
   ['main.doc .doc-article > section.block', 'rise'],

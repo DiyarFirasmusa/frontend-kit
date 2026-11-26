@@ -1,0 +1,77 @@
+---
+import Mock from './Mock.astro'
+import { getsWords as g } from '../../content/guide/home.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<!-- What you get: four things you have at the end, each with a small window that shows it. Same page ground as the road. -->
+<section id="get" class="gets">
+  <div class="column section-head">
+    <h2>{g.title[locale]}</h2>
+    <p>{g.lead[locale]}</p>
+  </div>
+  <div class="column">
+    <ul class="gets-list">
+      {
+        g.items.map((item, i) => (
+          <li class={`gets-item is-${item.kind}`} style={`--k:${i}`}>
+            <div class="browser gets-shot" aria-hidden="true">
+              <div class="browser-bar">
+                <span class="chat-lights"><i></i><i></i><i></i></span>
+                <span class="browser-url" dir="ltr">my-shop</span>
+              </div>
+              <div class="gets-body">
+                {item.kind === 'folder' && (
+                  <ul class="gets-tree" dir="ltr">
+                    <li class="is-root">my-shop/</li>
+                    <li>pages/</li>
+                    <li>components/</li>
+                    <li>messages/</li>
+                    <li class="is-last">README.md</li>
+                  </ul>
+                )}
+                {item.kind === 'page' && (
+                  <div class="gets-page">
+                    <Mock kind="website" />
+                  </div>
+                )}
+                {item.kind === 'report' && (
+                  <ul class="gets-report">
+                    {g.checks.map((check) => (
+                      <li>
+                        <b>✓</b>
+                        {check[locale]}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {item.kind === 'languages' && (
+                  <div class="gets-languages">
+                    <p dir="rtl" lang="ar">
+                      <strong>مرحبا</strong>
+                      <i></i>
+                      <i></i>
+                    </p>
+                    <p dir="ltr" lang="en">
+                      <strong>Hello</strong>
+                      <i></i>
+                      <i></i>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <h3>{item.title[locale]}</h3>
+            <p>{item.text[locale]}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

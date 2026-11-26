@@ -15,3 +15,4 @@
 @import '../skin/home.css' layer(skin-page);
 @import './steps.css' layer(skin-page);
 @import './hero-build.css' layer(skin-page);
+@import './gets.css' layer(skin-page);

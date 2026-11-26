@@ -163,3 +163,16 @@ export const home = {
   install: t('Start in two steps.', 'ابدأ بخطوتين.'),
   types: t('What you can build', 'ماذا تستطيع أن تبني'),
 }
+
+/** "What you get": what is in your hands at the end, the same promises the opening screen makes. */
+export const getsWords = {
+  title: t('What you get', 'ما تحصل عليه'),
+  lead: t('Everything stays in a folder on your computer until you say so.', 'كل شيء يبقى في مجلد على حاسوبك حتى تقول.'),
+  items: [
+    { kind: 'folder', title: home.board.get[0]!, text: home.board.getDetail[0]! },
+    { kind: 'page', title: home.board.get[2]!, text: home.board.getDetail[2]! },
+    { kind: 'report', title: home.board.get[1]!, text: home.board.getDetail[1]! },
+    { kind: 'languages', title: t('In Arabic and English', 'بالعربية والإنجليزية'), text: t('Both languages, each in its own direction.', 'اللغتان، وكل واحدة باتجاهها.') },
+  ],
+  checks: [t('Mistakes: none', 'الأخطاء: لا شيء'), t('Tests: passed', 'الاختبارات: نجحت'), t('Reviewer: done', 'المراجِع: تم')],
+}
