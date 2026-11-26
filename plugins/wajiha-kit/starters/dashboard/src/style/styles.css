@@ -55,6 +55,13 @@
   th {
     text-align: start;
   }
+  /* An ltr field (code, phone, email) in an Arabic form: while it is empty its
+     Arabic placeholder reads right to left and lines up with the label; the
+     typed value is ltr again as soon as there is one. */
+  [dir='rtl'] :is(input, textarea)[dir='ltr']:placeholder-shown {
+    direction: rtl;
+    text-align: start;
+  }
   /* Numbers stay Western Arabic in both languages. */
   :where(input, textarea, table, .tabular) {
     font-variant-numeric: tabular-nums;

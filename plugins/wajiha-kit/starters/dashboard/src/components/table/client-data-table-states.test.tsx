@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { renderWithProviders, screen } from '@/test/render';
 import type { Column } from '@/types/table';
-import { DataTable } from './data-table';
+import { ClientDataTable } from './client-data-table';
 
 interface Row {
   id: string;
@@ -17,10 +17,14 @@ const rows: Row[] = [
   { id: '2', name: 'Amir' },
 ];
 
-describe('DataTable success state', () => {
+describe('ClientDataTable success state', () => {
   it('renders one body row per record in order', () => {
     renderWithProviders(
-      <DataTable data={rows} columns={columns} getRowId={(row) => row.id} />,
+      <ClientDataTable
+        data={rows}
+        columns={columns}
+        getRowId={(row) => row.id}
+      />,
     );
 
     const bodyRows = screen.getAllByRole('row').slice(1);

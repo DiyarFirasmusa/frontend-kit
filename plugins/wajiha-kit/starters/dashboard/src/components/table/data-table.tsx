@@ -1,408 +1,250 @@
-import type { ReactNode } from 'react';
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  functionalUpdate,
+  useTable,
+  type PaginationState,
+  type RowData,
+  type SortDirection,
+  type SortingState,
+} from '@tanstack/react-table';
+import type { AriaAttributes, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  ChevronDown,
-  ChevronsUpDown,
-  ChevronUp,
-  SlidersHorizontal,
-} from '@/lib/icons';
+import { ChevronDown, ChevronsUpDown, ChevronUp } from '@/lib/icons';
 import { cn } from '@/lib/utils';
-import type { Column, ServerPagination } from '@/types/table';
+import type { ColumnAlign } from '@/types/table';
 import { DataTableEmpty } from './data-table-empty';
 import { DataTableError } from './data-table-error';
 import { DataTablePagination } from './data-table-pagination';
-import { alignClass, DataTableRow, TABLE_HEADER_TINT } from './data-table-row';
-import { filterRows, sortRows } from './data-table-rows';
+import {
+  alignClass,
+  STICKY_ACTIONS_CELL_CLASS,
+  TABLE_HEADER_TINT,
+} from './data-table-row';
 import { DataTableSkeleton } from './data-table-skeleton';
+import {
+  dataTableFeatures,
+  type DataTableColumn,
+  type TableStatus,
+} from './table-features';
 
-type SortDir = 'asc' | 'desc';
-
-export interface TableSort {
-  id: string;
-  dir: SortDir;
+export interface DataTableProps<TRow extends RowData> {
+  caption: string;
+  columns: DataTableColumn<TRow>[];
+  /** Must keep its identity between renders (query data or a module constant). */
+  rows: TRow[];
+  /** Total across every page, from the response (`totalElements`). */
+  rowCount: number | undefined;
+  getRowId: (row: TRow) => string;
+  pagination: PaginationState;
+  sorting: SortingState;
+  onPaginationChange: (next: PaginationState) => void;
+  onSortingChange: (next: SortingState) => void;
+  pageSizeOptions?: readonly number[];
+  status: TableStatus;
+  onRetry: () => void;
+  /** Message when the page has no rows: "nothing yet" or "no results". */
+  emptyLabel: string;
+  /** Action under the empty message: create, or clear filters. */
+  emptyAction?: ReactNode;
 }
 
-interface TableSelection {
-  selectedIds: Set<string>;
-  onChange: (ids: Set<string>) => void;
+const ACTIONS_COLUMN_ID = 'actions';
 
-  bulkActions?: ReactNode;
-  /** Where the checkbox column sits: first (default) or last, as in 07.04. */
-  position?: 'start' | 'end';
-  /** Hide the header "select all" checkbox. */
-  hideSelectAll?: boolean;
+/** The part of `ColumnMeta` (augmented in src/types/table.ts) the table reads. */
+interface ColumnLayout {
+  align?: ColumnAlign;
+  hideBelow?: 'md' | 'lg';
 }
 
-interface DataTableProps<T> {
-  data: T[];
-  columns: Column<T>[];
-  getRowId: (row: T) => string;
-  search?: string;
-  isLoading?: boolean;
-  skeletonRows?: number;
+const HIDE_BELOW: Record<NonNullable<ColumnLayout['hideBelow']>, string> = {
+  md: 'hidden md:table-cell',
+  lg: 'hidden lg:table-cell',
+};
 
-  isError?: boolean;
-  errorLabel?: string;
-  onRetry?: () => void;
-
-  serverPagination?: ServerPagination;
-  /** With server pagination, sort is applied by the request. Pass `onSortChange` to keep the header control. */
-  sortState?: TableSort | null;
-  onSortChange?: (sort: TableSort) => void;
-
-  selection?: TableSelection;
-
-  enableColumnVisibility?: boolean;
-  onRowClick?: (row: T) => void;
-  noResultsLabel?: string;
-  /** Panel title shown above the table, with the row count beside it. */
-  title?: string;
-  /**
-   * Drop the table's own bordered, padded panel. Use when the table sits
-   * inside a `surface-card` that already provides the border and padding.
-   */
-  embedded?: boolean;
-  /** Classes added to every selected row (with `selection`). */
-  selectedRowClassName?: string;
-  /** Extra classes per row, e.g. to mark the active row without selection. */
-  rowClassName?: (row: T) => string | undefined;
-  /** Accessible name of the table. */
-  'aria-label'?: string;
-  className?: string;
+function toAriaSort(
+  canSort: boolean,
+  sorted: false | SortDirection,
+): AriaAttributes['aria-sort'] {
+  if (!canSort) {
+    return undefined;
+  }
+  if (sorted === 'asc') {
+    return 'ascending';
+  }
+  return sorted === 'desc' ? 'descending' : 'none';
 }
 
-const SELECT_COLUMN_ID = '__select__';
+function metaClass(id: string, meta: ColumnLayout | undefined): string {
+  return cn(
+    alignClass(meta?.align),
+    meta?.hideBelow ? HIDE_BELOW[meta.hideBelow] : undefined,
+    id === ACTIONS_COLUMN_ID && 'sticky end-0',
+  );
+}
 
-export function DataTable<T>({
-  data,
-  columns,
-  getRowId,
-  search,
-  isLoading,
-  skeletonRows = 6,
-  isError,
-  errorLabel,
-  onRetry,
-  serverPagination,
-  sortState,
-  onSortChange,
-  selection,
-  enableColumnVisibility,
-  onRowClick,
-  noResultsLabel,
-  title,
-  embedded = false,
-  selectedRowClassName,
-  rowClassName,
-  'aria-label': ariaLabel,
-  className,
-}: DataTableProps<T>) {
+function SortIcon({ direction }: { direction: false | SortDirection }) {
+  if (direction === 'asc') {
+    return <ChevronUp aria-hidden className="size-3.5" />;
+  }
+  if (direction === 'desc') {
+    return <ChevronDown aria-hidden className="size-3.5" />;
+  }
+  return <ChevronsUpDown aria-hidden className="size-3.5 opacity-50" />;
+}
+
+/**
+ * The list table: TanStack Table with the server doing the paging and
+ * sorting. Pagination and sorting are derived from the URL by the page hook;
+ * this component resolves TanStack's updaters and hands the result up, it
+ * keeps no list state of its own (data-tables.md).
+ */
+export function DataTable<TRow extends RowData>(props: DataTableProps<TRow>) {
   const { t } = useTranslation();
-
-  const [clientSort, setClientSort] = useState<TableSort | null>(null);
-  const [hidden, setHidden] = useState<Set<string>>(new Set());
-  const serverSorted = Boolean(serverPagination);
-  const sortInteractive = serverSorted ? Boolean(onSortChange) : true;
-  const sort = serverSorted ? (sortState ?? null) : clientSort;
-
-  const toggleSort = (col: Column<T>) => {
-    if (!col.sortable || !sortInteractive) {
-      return;
-    }
-    const next: TableSort =
-      sort?.id === col.id
-        ? { id: col.id, dir: sort.dir === 'asc' ? 'desc' : 'asc' }
-        : { id: col.id, dir: 'asc' };
-    if (serverSorted) {
-      onSortChange?.(next);
-      return;
-    }
-    setClientSort(next);
-  };
-
-  const filtered = useMemo(
-    () => (serverPagination ? data : filterRows(data, columns, search)),
-    [data, search, columns, serverPagination],
-  );
-
-  const sorted = useMemo(
-    () => (serverSorted ? filtered : sortRows(filtered, columns, clientSort)),
-    [filtered, clientSort, columns, serverSorted],
-  );
-
-  const stateRows = serverPagination
-    ? Math.min(skeletonRows, Math.max(serverPagination.pageSize, 1))
-    : skeletonRows;
-
-  const allIds = useMemo(
-    () => sorted.map((row) => getRowId(row)),
-    [sorted, getRowId],
-  );
-  const selectedCount = selection
-    ? allIds.filter((id) => selection.selectedIds.has(id)).length
-    : 0;
-  const allSelected = selectedCount > 0 && selectedCount === allIds.length;
-
-  const toggleAll = () => {
-    if (!selection) {
-      return;
-    }
-    selection.onChange(allSelected ? new Set() : new Set(allIds));
-  };
-  const toggleRow = (id: string) => {
-    if (!selection) {
-      return;
-    }
-    const next = new Set(selection.selectedIds);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-    selection.onChange(next);
-  };
-
-  const visibleColumns = columns.filter((c) => !hidden.has(c.id));
-  const renderColumns = useMemo<Column<T>[]>(() => {
-    if (!selection) {
-      return visibleColumns;
-    }
-    const selectCol: Column<T> = {
-      id: SELECT_COLUMN_ID,
-      className: 'w-10',
-      header: selection.hideSelectAll ? (
-        <span className="sr-only">{t('common.selectRow')}</span>
-      ) : (
-        <Checkbox
-          checked={allSelected}
-          onCheckedChange={toggleAll}
-          aria-label={t('common.selectAll')}
-        />
-      ),
-      cell: (row) => (
-        <span
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <Checkbox
-            checked={selection.selectedIds.has(getRowId(row))}
-            onCheckedChange={() => {
-              toggleRow(getRowId(row));
-            }}
-            aria-label={t('common.selectRow')}
-          />
-        </span>
-      ),
-    };
-    return selection.position === 'end'
-      ? [...visibleColumns, selectCol]
-      : [selectCol, ...visibleColumns];
-  }, [selection, visibleColumns, allSelected, getRowId, t]);
-
-  const toggleableColumns = columns.filter(
-    (c) => c.id !== 'actions' && c.id !== SELECT_COLUMN_ID,
-  );
-  const hasTopBar = Boolean(
-    enableColumnVisibility || (selection && selectedCount > 0),
-  );
-
-  const count = serverPagination?.total ?? sorted.length;
+  const table = useTable({
+    features: dataTableFeatures,
+    columns: props.columns,
+    data: props.rows,
+    getRowId: props.getRowId,
+    rowCount: props.rowCount ?? 0,
+    manualPagination: true,
+    manualSorting: true,
+    enableMultiSort: false,
+    state: { pagination: props.pagination, sorting: props.sorting },
+    onPaginationChange: (updater) => {
+      props.onPaginationChange(functionalUpdate(updater, props.pagination));
+    },
+    onSortingChange: (updater) => {
+      props.onSortingChange(functionalUpdate(updater, props.sorting));
+    },
+  });
+  const columns = table.getVisibleLeafColumns();
+  const rows = table.getRowModel().rows;
+  const total = props.rowCount ?? 0;
+  const busy = props.status === 'loading' || props.status === 'refetching';
+  const showPagination = props.status !== 'loading' && total > 0;
 
   return (
-    <div
-      data-slot="data-table"
-      data-embedded={embedded || undefined}
-      className={cn(
-        'space-y-row min-w-0',
-        !embedded &&
-          'border-stroke bg-surface p-panel rounded-(--radius-modal) border',
-        className,
-      )}
-    >
-      {title ? (
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-h4 text-text-primary">{title}</h2>
-          <span className="text-b3 text-text-muted tabular-nums">{count}</span>
-        </div>
+    <div data-slot="data-table" className="space-y-row relative min-w-0">
+      {props.status === 'refetching' ? (
+        <div
+          aria-hidden
+          className="bg-primary absolute inset-x-0 top-0 z-10 h-0.5 animate-pulse"
+        />
       ) : null}
-      {hasTopBar ? (
-        <div className="flex min-h-9 flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {selection && selectedCount > 0 ? (
-              <>
-                <span className="text-text-secondary text-sm">
-                  {t('common.selectedCount', { count: selectedCount })}
-                </span>
-                {selection.bulkActions}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    selection.onChange(new Set());
-                  }}
-                >
-                  {t('common.clearSelection')}
-                </Button>
-              </>
-            ) : null}
-          </div>
-          {enableColumnVisibility ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={cn(
-                  buttonVariants({ variant: 'outline', size: 'sm' }),
-                  'h-9 gap-2',
-                )}
-                data-slot="button"
-              >
-                <SlidersHorizontal className="size-4 opacity-70" />
-                {t('common.columns')}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44">
-                <DropdownMenuLabel>{t('common.columns')}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {toggleableColumns.map((col) => (
-                  <DropdownMenuCheckboxItem
-                    key={col.id}
-                    checked={!hidden.has(col.id)}
-                    onCheckedChange={(show) => {
-                      setHidden((prev) => {
-                        const next = new Set(prev);
-                        if (show) {
-                          next.delete(col.id);
-                        } else {
-                          next.add(col.id);
-                        }
-                        return next;
-                      });
-                    }}
-                  >
-                    {typeof col.header === 'string' ? col.header : col.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : null}
-        </div>
-      ) : null}
-
       <div className="overflow-hidden rounded-xl">
-        <Table className="border-collapse" aria-label={ariaLabel}>
+        <Table className="border-collapse" aria-busy={busy}>
+          <caption className="sr-only">{props.caption}</caption>
           <TableHeader
             className={cn(TABLE_HEADER_TINT, '[&_tr:hover]:bg-transparent')}
           >
-            <TableRow className="border-stroke-subtle">
-              {renderColumns.map((col) => {
-                const active = sort?.id === col.id;
-                const canSort = Boolean(col.sortable && sortInteractive);
-                return (
-                  <TableHead
-                    key={col.id}
-                    aria-sort={
-                      canSort
-                        ? active
-                          ? sort.dir === 'asc'
-                            ? 'ascending'
-                            : 'descending'
-                          : 'none'
-                        : undefined
-                    }
-                    className={cn(
-                      'text-table-header text-text-muted h-9 px-4 select-none',
-                      alignClass(col.align),
-                      col.id === 'actions' &&
-                        `sticky end-0 ${TABLE_HEADER_TINT}`,
-                      col.className,
-                    )}
-                  >
-                    {canSort ? (
-                      <button
-                        type="button"
-                        onClick={() => toggleSort(col)}
-                        className="hover:text-text-primary inline-flex items-center gap-1"
-                      >
-                        {col.header}
-                        {active ? (
-                          sort.dir === 'asc' ? (
-                            <ChevronUp className="size-3.5" />
-                          ) : (
-                            <ChevronDown className="size-3.5" />
-                          )
-                        ) : (
-                          <ChevronsUpDown className="size-3.5 opacity-50" />
-                        )}
-                      </button>
-                    ) : (
-                      col.header
-                    )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
+            {table.getHeaderGroups().map((group) => (
+              <TableRow key={group.id} className="border-stroke-subtle">
+                {group.headers.map((header) => {
+                  const canSort = header.column.getCanSort();
+                  const sorted = header.column.getIsSorted();
+                  return (
+                    <TableHead
+                      key={header.id}
+                      scope="col"
+                      aria-sort={toAriaSort(canSort, sorted)}
+                      className={cn(
+                        'text-table-header text-text-muted h-9 px-4 select-none',
+                        metaClass(
+                          header.column.id,
+                          header.column.columnDef.meta,
+                        ),
+                        header.column.id === ACTIONS_COLUMN_ID &&
+                          TABLE_HEADER_TINT,
+                      )}
+                    >
+                      {header.isPlaceholder ? null : canSort ? (
+                        <button
+                          type="button"
+                          onClick={header.column.getToggleSortingHandler()}
+                          className="hover:text-text-primary inline-flex min-h-9 items-center gap-1"
+                        >
+                          <table.FlexRender header={header} />
+                          <SortIcon direction={sorted} />
+                        </button>
+                      ) : (
+                        <table.FlexRender header={header} />
+                      )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              <DataTableSkeleton columns={renderColumns} rows={stateRows} />
-            ) : isError ? (
+            {props.status === 'loading' ? (
+              <DataTableSkeleton
+                columns={columns.map((column) => ({
+                  id: column.id,
+                  header: null,
+                  cellClassName: metaClass(column.id, column.columnDef.meta),
+                }))}
+                rows={props.pagination.pageSize}
+              />
+            ) : props.status === 'error' ? (
               <DataTableError
-                colSpan={renderColumns.length}
-                label={errorLabel}
-                onRetry={onRetry}
+                colSpan={columns.length}
+                label={t('common.loadError')}
+                onRetry={props.onRetry}
               />
-            ) : sorted.length === 0 ? (
-              <DataTableEmpty
-                colSpan={renderColumns.length}
-                label={noResultsLabel}
-              />
+            ) : rows.length === 0 ? (
+              <DataTableEmpty colSpan={columns.length} label={props.emptyLabel}>
+                {props.emptyAction}
+              </DataTableEmpty>
             ) : (
-              sorted.map((row) => {
-                const id = getRowId(row);
-                const isSelected = selection?.selectedIds.has(id) ?? false;
-                return (
-                  <DataTableRow
-                    key={id}
-                    row={row}
-                    columns={renderColumns}
-                    onRowClick={onRowClick}
-                    selected={isSelected}
-                    className={cn(
-                      isSelected && selectedRowClassName,
-                      rowClassName?.(row),
-                    )}
-                  />
-                );
-              })
+              rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className="group/row border-stroke-subtle h-[62px] border-b transition-colors duration-150 last:border-0"
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const meta = cell.column.columnDef.meta;
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          'text-b2 text-text-primary h-[62px] px-4 py-2 align-middle',
+                          metaClass(cell.column.id, meta),
+                          cell.column.id === ACTIONS_COLUMN_ID &&
+                            STICKY_ACTIONS_CELL_CLASS,
+                          meta?.cellClassName,
+                        )}
+                      >
+                        <table.FlexRender cell={cell} />
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>
       </div>
 
-      {!isError && serverPagination ? (
+      {showPagination && props.status !== 'error' ? (
         <DataTablePagination
-          page={serverPagination.page}
-          totalPages={serverPagination.totalPages}
-          total={serverPagination.total}
-          pageSize={serverPagination.pageSize}
-          onPageChange={serverPagination.onPageChange}
+          page={props.pagination.pageIndex}
+          totalPages={Math.max(1, table.getPageCount())}
+          total={total}
+          pageSize={props.pagination.pageSize}
+          onPageChange={(pageIndex) => {
+            table.setPageIndex(pageIndex);
+          }}
+          pageSizeOptions={props.pageSizeOptions}
+          onPageSizeChange={(size) => {
+            table.setPageSize(size);
+          }}
         />
       ) : null}
     </div>

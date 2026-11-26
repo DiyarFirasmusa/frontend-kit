@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useAppErrorStore } from '@/store/app-error-store';
 import { tt } from '@/test/i18n';
 import { renderWithRouter, screen, waitFor } from '@/test/render';
@@ -15,6 +15,10 @@ function renderLayout() {
 }
 
 describe('DashboardLayout page-level errors', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('replaces the page with the server error page and keeps the shell', async () => {
     await renderLayout();
     expect(screen.getByRole('main')).toHaveTextContent('page content');
@@ -39,6 +43,7 @@ describe('DashboardLayout page-level errors', () => {
 
   it('shows the network error page as soon as the browser goes offline', async () => {
     await renderLayout();
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
 
     act(() => {
       window.dispatchEvent(new Event('offline'));
@@ -50,5 +55,30 @@ describe('DashboardLayout page-level errors', () => {
       ).toBeInTheDocument();
     });
     expect(useAppErrorStore.getState().error?.kind).toBe('network');
+  });
+
+  it('names the server, not the internet, when a network error happens online', async () => {
+    await renderLayout();
+
+    act(() => {
+      useAppErrorStore.getState().setError({
+        kind: 'network',
+        status: null,
+        method: 'GET',
+        path: '/api/items',
+        correlationId: null,
+        occurredAt: '2026-10-17T08:30:00Z',
+      });
+    });
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: tt('errorPages.network.unreachableTitle'),
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(tt('errorPages.network.online')),
+    ).toBeInTheDocument();
   });
 });

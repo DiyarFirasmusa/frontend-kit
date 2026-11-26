@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDown } from '@/lib/icons';
+import { ChevronDown } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import {
   findActiveGroupId,
@@ -141,7 +141,7 @@ function AccordionGroup({
       : 'text-b1 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
   );
   const arrow = (
-    <ArrowDown
+    <ChevronDown
       aria-hidden
       className={cn(
         'text-text-secondary size-4 shrink-0 transition-transform duration-200 ease-out motion-reduce:transition-none',

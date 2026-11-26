@@ -8,7 +8,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LANGUAGES, type SupportedLanguage } from '@/lib/i18n/languages';
+import {
+  LANGUAGE_CODES,
+  LANGUAGES,
+  type SupportedLanguage,
+} from '@/lib/i18n/languages';
 import { Check, Globe } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 
@@ -17,12 +21,10 @@ interface LanguageMenuProps {
   onChange: (language: SupportedLanguage) => void;
 }
 
-const OPTIONS = (Object.keys(LANGUAGES) as SupportedLanguage[]).map(
-  (value) => ({
-    value,
-    nameKey: LANGUAGES[value].nameKey,
-  }),
-);
+const OPTIONS = LANGUAGE_CODES.map((value) => ({
+  value,
+  nameKey: LANGUAGES[value].nameKey,
+}));
 
 export function LanguageMenu({
   language,

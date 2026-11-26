@@ -201,7 +201,8 @@
       "tip2": "If you use a VPN or a proxy, check that it is connected.",
       "tip3": "The page reloads automatically as soon as the connection is back.",
       "offline": "Offline — waiting for the connection",
-      "online": "You're online — the server can't be reached"
+      "online": "You're online — the server can't be reached",
+      "unreachableTitle": "The server can't be reached"
     },
     "server": {
       "code": "500",
@@ -226,7 +227,10 @@
     "signInAgain": "Sign in again"
   },
   "table": {
-    "scrollRegion": "Scrollable table"
+    "scrollRegion": "Scrollable table",
+    "rowsPerPage": "Rows per page",
+    "clearFilters": "Clear filters",
+    "pageStatus": "Page {{page}} of {{pages}}, {{count}} results"
   },
   "enums": {
     "AttributeDataType": {
@@ -245,6 +249,7 @@
     "sidebar": {
       "collapse": "Collapse sidebar",
       "expand": "Expand sidebar",
+      "openMenu": "Open navigation menu",
       "title": "Dashboard"
     },
     "workspace": {
@@ -272,6 +277,7 @@
   },
   "search": {
     "label": "Global search",
+    "open": "Open search",
     "placeholder": "Search warehouses, suppliers, categories, units...",
     "results": "Search results",
     "loading": "Searching...",

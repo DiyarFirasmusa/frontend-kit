@@ -29,6 +29,11 @@ export function allColourTokenNames(): string[] {
   return [...PRESET_TOKEN_NAMES, ...status, ...Object.keys(ALIAS_TOKENS)];
 }
 
+/** `text-b2` -> `font-b2`: the CSS variable behind a type-ramp utility. */
+export function rampVar(utility: string): string {
+  return `font-${utility.replace(/^text-/u, '')}`;
+}
+
 function declarations(values: Readonly<Record<string, string>>): string {
   return Object.entries(values)
     .map(([name, value]) => `  --${name}: ${value};`)
@@ -63,11 +68,14 @@ export function generateTheme(): string {
     .map(([key, value]) => `  --shadow-${key}: ${value};`)
     .join('\n');
 
-  const ramp = Object.entries(TYPE_RAMP)
+  const rampVars = Object.entries(TYPE_RAMP)
     .map(
       ([name, s]) =>
-        `@utility ${name} {\n  font: ${s.weight} ${s.size}px / ${s.line}px var(--font-${s.family});\n}`,
+        `  --${rampVar(name)}: ${s.weight} ${s.size}px / ${s.line}px var(--font-${s.family});`,
     )
+    .join('\n');
+  const ramp = Object.keys(TYPE_RAMP)
+    .map((name) => `@utility ${name} {\n  font: var(--${rampVar(name)});\n}`)
     .join('\n');
 
   return `${HEADER}
@@ -106,6 +114,10 @@ ${shadows}
   --duration-fast: ${MOTION['duration-fast']};
   --duration-base: ${MOTION['duration-base']};
   --duration-slow: ${MOTION['duration-slow']};
+
+  /* Type ramp as font shorthands: component CSS writes font: var(--font-b2)
+     and follows TYPE_RAMP like the text-b2 utility does. */
+${rampVars}
 
   /* Density (comfortable is the default) */
 ${declarations(DENSITY.comfortable)}

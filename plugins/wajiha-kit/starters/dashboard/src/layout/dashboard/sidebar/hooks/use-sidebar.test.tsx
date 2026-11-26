@@ -42,27 +42,27 @@ describe('useCan', () => {
   });
 
   it('denies a permission the user does not hold', () => {
-    const { result } = renderHook(() => useCan(PERMS.supplier.read));
+    const { result } = renderHook(() => useCan(PERMS.supplier.view));
     expect(result.current).toBe(false);
   });
 
   it('grants a held permission', () => {
-    usePermissionStore.setState({ permissions: [PERMS.supplier.read] });
-    const { result } = renderHook(() => useCan(PERMS.supplier.read));
+    usePermissionStore.setState({ permissions: [PERMS.supplier.view] });
+    const { result } = renderHook(() => useCan(PERMS.supplier.view));
     expect(result.current).toBe(true);
   });
 
   it('grants every permission to a SUPERADMIN', () => {
     usePermissionStore.setState({ permissions: [], roles: ['SUPERADMIN'] });
-    const { result } = renderHook(() => useCan(PERMS.supplier.read));
+    const { result } = renderHook(() => useCan(PERMS.supplier.view));
     expect(result.current).toBe(true);
   });
 
   it('re-renders when the permissions change in the store', () => {
-    const { result } = renderHook(() => useCan(PERMS.supplier.read));
+    const { result } = renderHook(() => useCan(PERMS.supplier.view));
     expect(result.current).toBe(false);
     act(() => {
-      usePermissionStore.setState({ permissions: [PERMS.supplier.read] });
+      usePermissionStore.setState({ permissions: [PERMS.supplier.view] });
     });
     expect(result.current).toBe(true);
   });

@@ -1,7 +1,8 @@
 /* Shared dropdown popup + option styling for Select, Combobox, and
    table filter popovers. Trigger chrome stays on `.control` (input.css).
-   Option rows: 40px, 13px body text, 8px radius; highlight = --hover-row;
-   selected = --primary-light with a check at the end side. */
+   Option rows: 40px, 13px body text, 8px radius; highlight = --hover-row
+   plus a start-edge bar; selected = --primary-light with a check at the end
+   side. */
 
 @layer components {
   .select-popup {
@@ -34,11 +35,11 @@
     width: 100%;
     min-height: 40px;
     align-items: center;
-    gap: 8px;
-    padding-block: 8px;
-    padding-inline: 8px 32px;
+    gap: var(--spacing-field);
+    padding-block: var(--spacing-field);
+    padding-inline: var(--spacing-field) 32px;
     border-radius: 8px;
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     color: var(--text-primary);
     text-align: start;
     cursor: default;
@@ -50,6 +51,23 @@
   .select-item[data-highlighted],
   .select-item:focus-visible {
     background-color: var(--hover-row);
+  }
+
+  /* The highlighted option or menu item also gets a bar on its start edge.
+     The fill alone is about 1.2:1 on the popover and is the same colour as a
+     selected row; the bar uses the focus colour, which reaches 3:1 on the
+     popover and on both fills (tokens/contrast.test.ts). `.menu-item` is the
+     dropdown-menu row (components/ui/dropdown-menu.tsx). */
+  .select-item:focus-visible::before,
+  .select-item[data-highlighted]::before,
+  .menu-item[data-highlighted]::before {
+    content: '';
+    position: absolute;
+    inset-block: 6px;
+    inset-inline-start: 0;
+    inline-size: 3px;
+    border-radius: var(--radius-pill);
+    background-color: var(--primary-highlight);
   }
 
   .select-item-selected,
@@ -94,7 +112,7 @@
 
   .select-item-description {
     display: block;
-    font: 400 12px / 18px var(--font-sans);
+    font: var(--font-b3);
     color: var(--text-muted);
   }
 
@@ -123,7 +141,7 @@
     background: transparent;
     border: none;
     outline: none;
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     color: var(--text-primary);
   }
 
@@ -134,7 +152,7 @@
   .select-empty {
     padding-block: 1.5rem;
     text-align: center;
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     color: var(--text-secondary);
   }
 

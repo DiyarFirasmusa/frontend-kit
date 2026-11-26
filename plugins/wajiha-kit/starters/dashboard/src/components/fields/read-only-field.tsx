@@ -43,7 +43,7 @@ export function ReadOnlyField({
         {label}
         {locked ? (
           <>
-            <Lock className="text-warning size-3.5" aria-hidden />
+            <Lock className="text-brand-text size-3.5" aria-hidden />
             <span className="sr-only">{locked}</span>
           </>
         ) : null}

@@ -19,7 +19,7 @@ import { AuditLogButton } from './audit-log-button';
 
 describe('audit log labels', () => {
   beforeEach(() => {
-    signIn({ permissions: [PERMS.auditLog.read] });
+    signIn({ permissions: [PERMS.auditLog.view] });
   });
 
   it('has an English and Arabic label for every entity and action in the spec', () => {

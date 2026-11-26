@@ -7,10 +7,29 @@ import { setTestLanguage, tt } from '@/test/i18n';
 import { api } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
 import { renderWithRouter, screen, waitFor, within } from '@/test/render';
+import { INLINE_SEARCH_QUERY, PHONE_QUERY } from '../hooks/use-media-query';
+import { mockSearch } from '../topbar-test-utils';
 import { DashboardTopbar } from './topbar';
+
+const WAIT = { timeout: 3000 };
+
+const originalMatchMedia = window.matchMedia;
+
+/** Makes window.matchMedia answer `true` for the queries `matches` accepts. */
+function mediaMatches(matches: (query: string) => boolean): void {
+  window.matchMedia = (query: string) =>
+    Object.assign(new EventTarget(), {
+      matches: matches(query),
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+    });
+}
 
 describe('DashboardTopbar', () => {
   afterEach(async () => {
+    window.matchMedia = originalMatchMedia;
     if (i18n.language !== 'en') {
       await i18n.changeLanguage('en');
     }
@@ -148,6 +167,101 @@ describe('DashboardTopbar', () => {
     expect(
       screen.getByRole('combobox', { name: tt('search.label') }),
     ).toBeInTheDocument();
+  });
+
+  it('keeps the shortcut chip at the end edge in Arabic (dir only on its text)', async () => {
+    await setTestLanguage('ar');
+    await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    const kbd = document.querySelector('kbd[data-slot="kbd"]');
+    expect(kbd).not.toHaveAttribute('dir');
+    expect(kbd?.querySelector('span')).toHaveAttribute('dir', 'ltr');
+  });
+
+  it('opens the search dialog from the search button', async () => {
+    mockSearch();
+    const { user } = await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    await user.click(screen.getByRole('button', { name: tt('search.open') }));
+
+    const dialog = await screen.findByRole('dialog', {
+      name: tt('search.label'),
+    });
+    const field = within(dialog).getByRole('combobox', {
+      name: tt('search.label'),
+    });
+    await waitFor(() => {
+      expect(field).toHaveFocus();
+    });
+    await user.type(field, 'ce');
+    expect(
+      await within(dialog).findByText('Central warehouse', {}, WAIT),
+    ).toBeInTheDocument();
+  });
+
+  it('opens the search dialog on Ctrl+K when the field is not on screen', async () => {
+    const { user } = await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    await user.keyboard('{Control>}k{/Control}');
+
+    expect(
+      await screen.findByRole('dialog', { name: tt('search.label') }),
+    ).toBeInTheDocument();
+  });
+
+  it('focuses the field on Ctrl+K when the field is on screen', async () => {
+    mediaMatches((query) => query === INLINE_SEARCH_QUERY);
+    const { user } = await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    await user.keyboard('{Control>}k{/Control}');
+
+    expect(
+      screen.getByRole('combobox', { name: tt('search.label') }),
+    ).toHaveFocus();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('names the phone menu button for what it opens', async () => {
+    await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    expect(
+      screen.getByRole('button', { name: tt('shell.sidebar.openMenu') }),
+    ).toBeInTheDocument();
+  });
+
+  it('moves theme and language into the account menu on phones', async () => {
+    mediaMatches((query) => query === PHONE_QUERY);
+    signIn({ roles: ['ADMIN'] });
+    const { user } = await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    await user.click(await screen.findByRole('button', { name: /Ali Karkhi/ }));
+    const menu = await screen.findByRole('menu');
+    await user.click(
+      within(menu).getByRole('menuitemradio', { name: tt('common.dark') }),
+    );
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
+    });
+
+    // Radio items keep the menu open, so the language is one more click.
+    await user.click(
+      within(menu).getByRole('menuitemradio', {
+        name: tt('shell.language.arabic'),
+      }),
+    );
+    await waitFor(() => {
+      expect(i18n.resolvedLanguage ?? i18n.language).toBe('ar');
+    });
+  });
+
+  it('keeps theme and language out of the account menu on wider screens', async () => {
+    signIn({ roles: ['ADMIN'] });
+    const { user } = await renderWithRouter(<DashboardTopbar />, { path: '/' });
+
+    await user.click(await screen.findByRole('button', { name: /Ali Karkhi/ }));
+    await screen.findByRole('menu');
+
+    expect(screen.queryByRole('menuitemradio')).not.toBeInTheDocument();
   });
 
   it('renders the notifications button next to the language button', async () => {

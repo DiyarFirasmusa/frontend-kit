@@ -31,6 +31,9 @@ interface DataTablePaginationProps {
   total: number;
   pageSize: number;
   onPageChange: (p: number) => void;
+  /** With both, a "rows per page" select is shown. */
+  pageSizeOptions?: readonly number[];
+  onPageSizeChange?: (size: number) => void;
 }
 
 export function DataTablePagination({
@@ -39,6 +42,8 @@ export function DataTablePagination({
   total,
   pageSize,
   onPageChange,
+  pageSizeOptions,
+  onPageSizeChange,
 }: DataTablePaginationProps) {
   const { t } = useTranslation();
   const from = total === 0 ? 0 : page * pageSize + 1;
@@ -50,7 +55,8 @@ export function DataTablePagination({
 
   return (
     <nav className="pagination" aria-label={t('common.page')}>
-      <p className="pagination-summary">
+      {/* Announced once per page change, not per keystroke (the table owns the live region). */}
+      <p className="pagination-summary" aria-live="polite">
         {t('common.showing')}{' '}
         <span className="text-text-primary font-medium tabular-nums">
           {from}–{to}
@@ -60,6 +66,25 @@ export function DataTablePagination({
           {total}
         </span>
       </p>
+
+      {pageSizeOptions && onPageSizeChange ? (
+        <label className="text-b3 text-text-secondary flex items-center gap-2">
+          {t('table.rowsPerPage')}
+          <select
+            className="control h-(--control-h-sm) w-auto px-2 tabular-nums"
+            value={pageSize}
+            onChange={(event) => {
+              onPageSizeChange(Number(event.target.value));
+            }}
+          >
+            {pageSizeOptions.map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
 
       <div className="pagination-list">
         <button

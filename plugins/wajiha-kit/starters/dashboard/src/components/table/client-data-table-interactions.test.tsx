@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen } from '@/test/render';
 import type { Column, ServerPagination } from '@/types/table';
-import { DataTable } from './data-table';
+import { ClientDataTable } from './client-data-table';
 
 interface Row {
   id: string;
@@ -37,10 +37,14 @@ const serverPage: ServerPagination = {
   onPageChange: vi.fn(),
 };
 
-describe('DataTable sort', () => {
+describe('ClientDataTable sort', () => {
   it('sorts a fully loaded table in the browser', async () => {
     const { user } = renderWithProviders(
-      <DataTable data={rows} columns={columns} getRowId={(row) => row.id} />,
+      <ClientDataTable
+        data={rows}
+        columns={columns}
+        getRowId={(row) => row.id}
+      />,
     );
 
     expect(order()[0]).toContain('Zara');
@@ -51,7 +55,7 @@ describe('DataTable sort', () => {
 
   it('does not offer a sort control for a server page without onSortChange', () => {
     renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={rows}
         columns={columns}
         getRowId={(row) => row.id}
@@ -69,7 +73,7 @@ describe('DataTable sort', () => {
   it('reports a server sort without reordering the current page', async () => {
     const onSortChange = vi.fn();
     const { user } = renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={rows}
         columns={columns}
         getRowId={(row) => row.id}
@@ -89,13 +93,13 @@ describe('DataTable sort', () => {
   });
 });
 
-describe('DataTable empty values', () => {
+describe('ClientDataTable empty values', () => {
   it('renders an em dash for a cell whose accessor returns null', () => {
     const nullable: Column<Row>[] = [
       { id: 'name', header: 'Name', accessor: () => null },
     ];
     renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={[rows[0]!]}
         columns={nullable}
         getRowId={(row) => row.id}
@@ -107,11 +111,11 @@ describe('DataTable empty values', () => {
   });
 });
 
-describe('DataTable row interactions', () => {
+describe('ClientDataTable row interactions', () => {
   it('keeps row and cell roles and opens via keyboard on the row', async () => {
     const onRowClick = vi.fn();
     const { user } = renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={rows}
         columns={columns}
         getRowId={(row) => row.id}
@@ -140,7 +144,7 @@ describe('DataTable row interactions', () => {
       { id: 'meta', header: 'Meta', accessor: () => 'extra' },
     ];
     const { user } = renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={rows}
         columns={withMeta}
         getRowId={(row) => row.id}

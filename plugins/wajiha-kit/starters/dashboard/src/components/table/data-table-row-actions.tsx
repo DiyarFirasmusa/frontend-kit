@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
@@ -30,6 +30,12 @@ export interface RowAction {
   variant?: RowActionVariant;
   disabled?: boolean;
   title?: string;
+  /**
+   * Allowed in general but not for this row: the control stays focusable
+   * (`aria-disabled`), does nothing, and this text explains why to screen
+   * readers (inline) and on screen (menu).
+   */
+  disabledReason?: string;
 
   separatorBefore?: boolean;
 }
@@ -104,21 +110,83 @@ function RowActionsMenu({
               {action.separatorBefore ? <DropdownMenuSeparator /> : null}
               <DropdownMenuItem
                 disabled={action.disabled}
+                aria-disabled={action.disabledReason ? true : undefined}
                 title={action.title}
                 variant={
-                  action.variant === 'destructive' ? 'destructive' : 'default'
+                  action.variant === 'destructive' && !action.disabledReason
+                    ? 'destructive'
+                    : 'default'
                 }
-                className={menuItemTone(action.variant)}
-                onClick={action.onSelect}
+                className={cn(
+                  menuItemTone(action.variant),
+                  action.disabledReason && 'text-text-inactive items-start',
+                )}
+                onClick={() => {
+                  if (!action.disabledReason) {
+                    action.onSelect();
+                  }
+                }}
               >
                 {Icon ? <Icon /> : null}
-                {action.label}
+                {action.disabledReason ? (
+                  <span className="flex flex-col">
+                    {action.label}
+                    <span className="text-b3 text-text-secondary max-w-56 whitespace-normal">
+                      {action.disabledReason}
+                    </span>
+                  </span>
+                ) : (
+                  action.label
+                )}
               </DropdownMenuItem>
             </Fragment>
           );
         })}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function InlineRowAction({ action }: { action: RowAction }) {
+  const reasonId = useId();
+  const Icon = action.icon;
+  const blocked = Boolean(action.disabled || action.disabledReason);
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <button
+            type="button"
+            data-no-row-click
+            aria-label={action.label}
+            aria-disabled={blocked || undefined}
+            aria-describedby={action.disabledReason ? reasonId : undefined}
+            onClick={() => {
+              // aria-disabled blocks nothing by itself.
+              if (!blocked) {
+                action.onSelect();
+              }
+            }}
+            className={cn(
+              'row-action',
+              Icon && 'row-action-icon',
+              toneClass(action.variant),
+              'aria-disabled:text-text-inactive aria-disabled:cursor-not-allowed aria-disabled:hover:bg-transparent',
+            )}
+          />
+        }
+      >
+        {Icon ? <Icon className="size-4" /> : action.label}
+        {action.disabledReason ? (
+          <span id={reasonId} className="sr-only">
+            {action.disabledReason}
+          </span>
+        ) : null}
+      </TooltipTrigger>
+      <TooltipContent>
+        {action.disabledReason ?? action.title ?? action.label}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -154,42 +222,14 @@ export function DataTableRowActions({
           className,
         )}
       >
-        {actions.map((action) => {
-          const Icon = action.icon;
-          return (
-            <Fragment key={action.id}>
-              {action.separatorBefore ? (
-                <span aria-hidden className="bg-border mx-0.5 h-5 w-px" />
-              ) : null}
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <button
-                      type="button"
-                      data-no-row-click
-                      aria-label={action.label}
-                      aria-disabled={action.disabled || undefined}
-                      onClick={() => {
-                        if (!action.disabled) {
-                          action.onSelect();
-                        }
-                      }}
-                      className={cn(
-                        'row-action',
-                        Icon && 'row-action-icon',
-                        toneClass(action.variant),
-                        'aria-disabled:text-text-inactive aria-disabled:hover:bg-transparent aria-disabled:cursor-not-allowed',
-                      )}
-                    />
-                  }
-                >
-                  {Icon ? <Icon className="size-4" /> : action.label}
-                </TooltipTrigger>
-                <TooltipContent>{action.title ?? action.label}</TooltipContent>
-              </Tooltip>
-            </Fragment>
-          );
-        })}
+        {actions.map((action) => (
+          <Fragment key={action.id}>
+            {action.separatorBefore ? (
+              <span aria-hidden className="bg-border mx-0.5 h-5 w-px" />
+            ) : null}
+            <InlineRowAction action={action} />
+          </Fragment>
+        ))}
       </div>
       <RowActionsMenu
         actions={actions}

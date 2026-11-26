@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
+import { deferred } from '@/test/deferred';
 import { setTestLanguage, tt } from '@/test/i18n';
-import { renderWithProviders, screen } from '@/test/render';
+import { renderWithProviders, screen, waitFor } from '@/test/render';
 import { ConfirmDialog } from './confirm-dialog';
 
 interface Options {
@@ -118,5 +119,65 @@ describe('ConfirmDialog', () => {
       screen.getByRole('button', { name: tt('common.confirm') }),
     ).toBeInTheDocument();
     await setTestLanguage('en');
+  });
+
+  it('is an alert dialog with focus on Cancel when destructive', async () => {
+    renderConfirm({ destructive: true });
+
+    const dialog = screen.getByRole('alertdialog', {
+      name: 'Approve document',
+    });
+    expect(dialog).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: tt('common.cancel') }),
+      ).toHaveFocus();
+    });
+  });
+
+  it('stays a plain dialog when not destructive', () => {
+    renderConfirm({});
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+  });
+
+  it('confirms once per request however often the button is pressed', async () => {
+    const { user, onConfirm } = renderConfirm({ destructive: true });
+    const confirm = screen.getByRole('button', { name: tt('common.confirm') });
+
+    await user.click(confirm);
+    await user.click(confirm);
+    await user.click(confirm);
+
+    expect(onConfirm).toHaveBeenCalledOnce();
+  });
+
+  it('stays open and busy until a returned promise settles', async () => {
+    const gate = deferred();
+    const onConfirm = vi.fn(() => gate.promise);
+    const onOpenChange = vi.fn();
+    const { user } = renderWithProviders(
+      <ConfirmDialog
+        open
+        onOpenChange={onOpenChange}
+        title="Delete warehouse"
+        onConfirm={onConfirm}
+        destructive
+      />,
+    );
+    const confirm = screen.getByRole('button', { name: tt('common.confirm') });
+
+    await user.click(confirm);
+    expect(confirm).toHaveAttribute('aria-busy', 'true');
+    await user.keyboard('{Escape}');
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    gate.resolve();
+    await waitFor(() => {
+      expect(confirm).not.toHaveAttribute('aria-busy', 'true');
+    });
+    await user.click(confirm);
+    expect(onConfirm).toHaveBeenCalledTimes(2);
   });
 });

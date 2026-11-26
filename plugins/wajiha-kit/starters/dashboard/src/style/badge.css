@@ -1,8 +1,8 @@
-/* Badges / tags — design system spec (docs/design/design-system.md §4).
+/* Badges and tags. Sizes and colours come from src/style/tokens.
    Status badge (`.badge-status`, a pill with a dot): 4–6px dot plus text in
    the semantic colour with no visible tint, as the ds-badges sheet and the
    table frames draw it. Every tag text clears 4.5:1 straight on the canvas
-   and surfaces (tokens-contrast.test.ts). Chips and tags keep the 8–9% tint.
+   and surfaces (tokens/contrast.test.ts). Chips and tags keep the 8–9% tint.
    Neutral text = secondary.
    Compose as `.badge .badge-green` (+ `.badge-sm` / `.badge-pill`). */
 

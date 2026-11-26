@@ -46,7 +46,7 @@ export function AuditLogButton({
   showIcon = true,
 }: AuditLogButtonProps) {
   const { t } = useTranslation();
-  const canRead = useHasPermission(PERMS.auditLog.read);
+  const canRead = useHasPermission(PERMS.auditLog.view);
   const [open, setOpen] = useState(false);
   const log = useAuditLog({ entity, entityId, enabled: open && canRead });
 

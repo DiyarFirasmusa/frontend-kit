@@ -96,13 +96,14 @@ export interface TypeStyle {
   weight: number;
   size: number;
   line: number;
-  family: 'sans' | 'heading';
+  family: 'sans' | 'heading' | 'mono';
 }
 
 /**
  * Type ramp. One utility per named style; each sets size, line-height, weight
  * and family together, so never pair it with font-* or tracking-* classes.
- * Cairo (heading) carries titles and numbers, IBM Plex Sans the rest.
+ * Cairo (heading) carries titles and numbers, IBM Plex Mono record ids and
+ * codes (400 only: no synthetic bold), IBM Plex Sans the rest.
  */
 export const TYPE_RAMP: Readonly<Record<string, TypeStyle>> = {
   'text-h1': { weight: 700, size: 28, line: 33.6, family: 'heading' },
@@ -117,7 +118,7 @@ export const TYPE_RAMP: Readonly<Record<string, TypeStyle>> = {
   'text-button-2': { weight: 600, size: 13, line: 19.5, family: 'sans' },
   'text-label': { weight: 600, size: 12, line: 18, family: 'sans' },
   'text-table-header': { weight: 400, size: 11, line: 16.5, family: 'sans' },
-  'text-table-id': { weight: 700, size: 13, line: 19.5, family: 'heading' },
+  'text-table-id': { weight: 400, size: 13, line: 19.5, family: 'mono' },
   'text-kpi': { weight: 700, size: 30, line: 28.5, family: 'heading' },
   'text-metric': { weight: 700, size: 24, line: 36, family: 'heading' },
   'text-display': { weight: 700, size: 28, line: 42, family: 'heading' },

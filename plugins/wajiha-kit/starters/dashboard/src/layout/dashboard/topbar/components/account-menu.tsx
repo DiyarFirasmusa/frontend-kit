@@ -7,10 +7,21 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  isSupportedLanguage,
+  LANGUAGE_CODES,
+  LANGUAGES,
+  type SupportedLanguage,
+} from '@/lib/i18n/languages';
 import { ChevronDown, LogOut } from '@/lib/icons';
+import { PHONE_QUERY, useMediaQuery } from '../hooks/use-media-query';
+
+type ThemeValue = 'light' | 'dark';
 
 interface AccountMenuProps {
   displayName: string;
@@ -19,6 +30,87 @@ interface AccountMenuProps {
   avatarUrl: string | null;
   initials: string;
   onLogout: () => void;
+  /** Theme and language show inside the menu on phones only, where the bar has no room for them. */
+  theme?: ThemeValue;
+  onThemeChange?: (theme: ThemeValue) => void;
+  language?: SupportedLanguage;
+  onLanguageChange?: (language: SupportedLanguage) => void;
+}
+
+const THEMES: readonly { value: ThemeValue; labelKey: string }[] = [
+  { value: 'light', labelKey: 'common.light' },
+  { value: 'dark', labelKey: 'common.dark' },
+];
+
+function isTheme(value: unknown): value is ThemeValue {
+  return value === 'light' || value === 'dark';
+}
+
+function PhonePreferences({
+  theme,
+  onThemeChange,
+  language,
+  onLanguageChange,
+}: Pick<
+  AccountMenuProps,
+  'theme' | 'onThemeChange' | 'language' | 'onLanguageChange'
+>): ReactElement {
+  const { t } = useTranslation();
+  return (
+    <>
+      {theme && onThemeChange ? (
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-label text-text-secondary">
+            {t('common.theme')}
+          </DropdownMenuLabel>
+          <DropdownMenuRadioGroup
+            value={theme}
+            onValueChange={(next) => {
+              if (isTheme(next)) {
+                onThemeChange(next);
+              }
+            }}
+          >
+            {THEMES.map((option) => (
+              <DropdownMenuRadioItem
+                key={option.value}
+                value={option.value}
+                className="text-b1 h-10"
+              >
+                {t(option.labelKey)}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
+      ) : null}
+      {language && onLanguageChange ? (
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-label text-text-secondary">
+            {t('common.language')}
+          </DropdownMenuLabel>
+          <DropdownMenuRadioGroup
+            value={language}
+            onValueChange={(next) => {
+              if (isSupportedLanguage(next) && next !== language) {
+                onLanguageChange(next);
+              }
+            }}
+          >
+            {LANGUAGE_CODES.map((value) => (
+              <DropdownMenuRadioItem
+                key={value}
+                value={value}
+                className="text-b1 h-10"
+              >
+                {t(LANGUAGES[value].nameKey)}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
+      ) : null}
+      <DropdownMenuSeparator />
+    </>
+  );
 }
 
 export function AccountMenu({
@@ -28,8 +120,13 @@ export function AccountMenu({
   avatarUrl,
   initials,
   onLogout,
+  theme,
+  onThemeChange,
+  language,
+  onLanguageChange,
 }: AccountMenuProps): ReactElement {
   const { t } = useTranslation();
+  const isPhone = useMediaQuery(PHONE_QUERY);
   const subtitle = [roleLabel, orgUnitName]
     .filter((part) => part && part !== '—')
     .join(' • ');
@@ -38,7 +135,7 @@ export function AccountMenu({
     <DropdownMenu>
       <DropdownMenuTrigger
         data-slot="account-trigger"
-        className="topbar-chip topbar-chip-soft min-w-0 text-start"
+        className="topbar-chip topbar-chip-soft max-md:px-field min-w-0 text-start max-md:min-h-10"
       >
         <UserAvatar
           src={avatarUrl}
@@ -70,6 +167,14 @@ export function AccountMenu({
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        {isPhone ? (
+          <PhonePreferences
+            theme={theme}
+            onThemeChange={onThemeChange}
+            language={language}
+            onLanguageChange={onLanguageChange}
+          />
+        ) : null}
         <DropdownMenuItem
           variant="destructive"
           className="text-b1 h-10"

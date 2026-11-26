@@ -10,10 +10,9 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-dim: var(--surface-dim);
-  --color-popover: var(--popover);
   --color-surface-elevated: var(--surface-elevated);
+  --color-popover: var(--popover);
   --color-secondary: var(--secondary);
-  --color-muted: var(--muted);
   --color-hover-row: var(--hover-row);
   --color-surface-solid-secondary: var(--surface-solid-secondary);
   --color-kbd: var(--kbd);
@@ -31,8 +30,9 @@
   --color-primary-highlight: var(--primary-highlight);
   --color-primary-light: var(--primary-light);
   --color-primary-tint: var(--primary-tint);
-  --color-brand-light: var(--brand-light);
-  --color-brand-dark: var(--brand-dark);
+  --color-brand: var(--brand);
+  --color-brand-text: var(--brand-text);
+  --color-brand-tint: var(--brand-tint);
   --color-brand-panel-from: var(--brand-panel-from);
   --color-brand-panel-to: var(--brand-panel-to);
   --color-stroke: var(--stroke);
@@ -81,12 +81,12 @@
   --color-tag-purple-container: var(--tag-purple-container);
   --color-tag-neutral: var(--tag-neutral);
   --color-tag-neutral-container: var(--tag-neutral-container);
-  --color-brand: var(--brand);
   --color-neutral-100: var(--neutral-100);
   --color-disabled-container: var(--disabled-container);
   --color-surface-border: var(--surface-border);
   --color-border: var(--border);
   --color-input: var(--input);
+  --color-muted: var(--muted);
   --color-destructive: var(--destructive);
   --color-sidebar-active: var(--sidebar-active);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -162,6 +162,25 @@
   --duration-base: 180ms;
   --duration-slow: 280ms;
 
+  /* Type ramp as font shorthands: component CSS writes font: var(--font-b2)
+     and follows TYPE_RAMP like the text-b2 utility does. */
+  --font-h1: 700 28px / 33.6px var(--font-heading);
+  --font-h2: 700 24px / 26.4px var(--font-heading);
+  --font-h3: 700 20px / 26px var(--font-heading);
+  --font-h4: 700 16px / 24px var(--font-heading);
+  --font-h5: 600 14px / 21px var(--font-sans);
+  --font-b1: 400 14px / 21px var(--font-sans);
+  --font-b2: 400 13px / 19.5px var(--font-sans);
+  --font-b3: 400 12px / 18px var(--font-sans);
+  --font-button-1: 600 14px / 21px var(--font-sans);
+  --font-button-2: 600 13px / 19.5px var(--font-sans);
+  --font-label: 600 12px / 18px var(--font-sans);
+  --font-table-header: 400 11px / 16.5px var(--font-sans);
+  --font-table-id: 400 13px / 19.5px var(--font-mono);
+  --font-kpi: 700 30px / 28.5px var(--font-heading);
+  --font-metric: 700 24px / 36px var(--font-heading);
+  --font-display: 700 28px / 42px var(--font-heading);
+
   /* Density (comfortable is the default) */
   --control-h-lg: 44px;
   --control-h: 38px;
@@ -190,50 +209,50 @@
 }
 
 @utility text-h1 {
-  font: 700 28px / 33.6px var(--font-heading);
+  font: var(--font-h1);
 }
 @utility text-h2 {
-  font: 700 24px / 26.4px var(--font-heading);
+  font: var(--font-h2);
 }
 @utility text-h3 {
-  font: 700 20px / 26px var(--font-heading);
+  font: var(--font-h3);
 }
 @utility text-h4 {
-  font: 700 16px / 24px var(--font-heading);
+  font: var(--font-h4);
 }
 @utility text-h5 {
-  font: 600 14px / 21px var(--font-sans);
+  font: var(--font-h5);
 }
 @utility text-b1 {
-  font: 400 14px / 21px var(--font-sans);
+  font: var(--font-b1);
 }
 @utility text-b2 {
-  font: 400 13px / 19.5px var(--font-sans);
+  font: var(--font-b2);
 }
 @utility text-b3 {
-  font: 400 12px / 18px var(--font-sans);
+  font: var(--font-b3);
 }
 @utility text-button-1 {
-  font: 600 14px / 21px var(--font-sans);
+  font: var(--font-button-1);
 }
 @utility text-button-2 {
-  font: 600 13px / 19.5px var(--font-sans);
+  font: var(--font-button-2);
 }
 @utility text-label {
-  font: 600 12px / 18px var(--font-sans);
+  font: var(--font-label);
 }
 @utility text-table-header {
-  font: 400 11px / 16.5px var(--font-sans);
+  font: var(--font-table-header);
 }
 @utility text-table-id {
-  font: 700 13px / 19.5px var(--font-heading);
+  font: var(--font-table-id);
 }
 @utility text-kpi {
-  font: 700 30px / 28.5px var(--font-heading);
+  font: var(--font-kpi);
 }
 @utility text-metric {
-  font: 700 24px / 36px var(--font-heading);
+  font: var(--font-metric);
 }
 @utility text-display {
-  font: 700 28px / 42px var(--font-heading);
+  font: var(--font-display);
 }

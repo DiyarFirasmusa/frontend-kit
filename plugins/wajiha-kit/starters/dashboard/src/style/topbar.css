@@ -1,11 +1,17 @@
-/* Top bar. Header height 72px. Controls are 44px chips on --surface with an
-   8px radius; the account chip sits on --primary-light. */
+/* Top bar: 56px on phones (one bar for menu, title and account), 72px from
+   md. Controls are 44px chips on --surface with an 8px radius; the account
+   chip sits on --primary-light. */
 @layer components {
   .topbar {
-    height: 72px;
-    padding-inline: 24px;
+    block-size: 56px;
+    padding-inline: var(--spacing-card);
     background-color: var(--surface);
     border-block-end: 1px solid var(--sidebar-border);
+  }
+  @media (width >= 48rem) {
+    .topbar {
+      block-size: 72px;
+    }
   }
   .topbar-chip {
     position: relative;
@@ -14,8 +20,8 @@
     justify-content: center;
     flex-shrink: 0;
     gap: var(--spacing-field);
-    min-block-size: 44px;
-    padding-inline: 12px;
+    min-block-size: var(--control-h-lg);
+    padding-inline: var(--spacing-inline);
     border-radius: 8px;
     background-color: var(--surface);
     color: var(--text-primary);

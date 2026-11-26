@@ -9,14 +9,15 @@
 
 /** Tokens a preset chooses by hand. */
 export const PRESET_TOKEN_NAMES = [
-  // surfaces
+  // surfaces. In dark mode each raised layer is lighter than the one below:
+  // background < surface < surface-elevated < popover (contrast.test.ts).
   'background',
   'surface',
   'surface-dim',
-  'popover',
   'surface-elevated',
+  'popover',
   'secondary',
-  'muted',
+  // row hover and the highlighted menu or list item, on surface and popover
   'hover-row',
   'surface-solid-secondary',
   'kbd',
@@ -27,7 +28,7 @@ export const PRESET_TOKEN_NAMES = [
   'text-secondary',
   'text-muted',
   'text-inactive',
-  // brand. `primary` is a FILL colour: use `primary-text` for text.
+  // primary action. `primary` is a FILL colour: use `primary-text` for text.
   'primary',
   'primary-foreground',
   'primary-hover',
@@ -36,8 +37,12 @@ export const PRESET_TOKEN_NAMES = [
   'primary-highlight',
   'primary-light',
   'primary-tint',
-  'brand-light',
-  'brand-dark',
+  // brand accent: logo mark, breadcrumbs, KPI marks, icon tiles. `brand` is a
+  // fill (3:1 as a graphic), `brand-text` is for text (4.5:1 on surfaces),
+  // `brand-tint` a soft background that brand-text stays readable on.
+  'brand',
+  'brand-text',
+  'brand-tint',
   // login-page brand panel: the same dark gradient in both modes, white text on it
   'brand-panel-from',
   'brand-panel-to',
@@ -97,14 +102,20 @@ export interface Preset {
   dark: ModeTokens;
 }
 
-/** Tokens that are only a `var()` pointing at another token, the same in every preset. */
+/**
+ * Tokens that are only a `var()` pointing at another token, the same in every
+ * preset. The first group are roles of this kit. The rest are compat-only:
+ * shadcn and older component code expect these names, so they stay, but new
+ * code should ask for the role they point at.
+ */
 export const ALIAS_TOKENS: Readonly<Record<string, string>> = {
-  brand: 'primary',
   'neutral-100': 'surface-solid-secondary',
   'disabled-container': 'surface-solid-secondary',
   'surface-border': 'stroke',
+  // compat-only from here on
   border: 'stroke',
   input: 'stroke',
+  muted: 'secondary',
   destructive: 'danger',
   'sidebar-active': 'sidebar-accent',
   'sidebar-ring': 'primary-highlight',

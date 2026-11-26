@@ -1,8 +1,9 @@
+import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { PERMS } from '@/constants/permissions';
 import { usePermissionStore } from '@/store/permission-store';
 import { renderWithProviders, screen } from '@/test/render';
-import { Can } from './can';
+import { Can, useCan, useCanAny } from './can';
 
 function grant(permissions: string[], roles: string[] = []): void {
   usePermissionStore.getState().setPermissions({ permissions, roles });
@@ -14,9 +15,9 @@ describe('<Can>', () => {
   });
 
   it('renders children when the permission is held', () => {
-    grant([PERMS.supplier.write]);
+    grant([PERMS.supplier.update]);
     renderWithProviders(
-      <Can permission={PERMS.supplier.write}>
+      <Can permission={PERMS.supplier.update}>
         <span>add supplier</span>
       </Can>,
     );
@@ -24,9 +25,9 @@ describe('<Can>', () => {
   });
 
   it('renders the fallback when the permission is missing', () => {
-    grant([PERMS.supplier.read]);
+    grant([PERMS.supplier.view]);
     renderWithProviders(
-      <Can permission={PERMS.supplier.write} fallback={<span>read only</span>}>
+      <Can permission={PERMS.supplier.update} fallback={<span>read only</span>}>
         <span>add supplier</span>
       </Can>,
     );
@@ -36,7 +37,7 @@ describe('<Can>', () => {
 
   it('renders nothing by default when denied', () => {
     renderWithProviders(
-      <Can permission={PERMS.supplier.write}>
+      <Can permission={PERMS.supplier.update}>
         <span>add supplier</span>
       </Can>,
     );
@@ -46,7 +47,7 @@ describe('<Can>', () => {
   it('anyOf passes with one of several permissions', () => {
     grant([PERMS.supplier.delete]);
     renderWithProviders(
-      <Can anyOf={[PERMS.supplier.write, PERMS.supplier.delete]}>
+      <Can anyOf={[PERMS.supplier.update, PERMS.supplier.delete]}>
         <span>manage</span>
       </Can>,
     );
@@ -61,5 +62,47 @@ describe('<Can>', () => {
       </Can>,
     );
     expect(screen.getByText('delete')).toBeInTheDocument();
+  });
+});
+
+describe('useCan()', () => {
+  beforeEach(() => {
+    usePermissionStore.getState().clear();
+  });
+
+  it('keeps the same checker while permissions do not change', () => {
+    grant([PERMS.warehouse.view]);
+    const { result, rerender } = renderHook(() => useCan());
+    const first = result.current;
+    rerender();
+    expect(result.current).toBe(first);
+    expect(first(PERMS.warehouse.view)).toBe(true);
+  });
+
+  it('re-renders with a new checker when permissions change', () => {
+    grant([PERMS.warehouse.view]);
+    let renders = 0;
+    const { result } = renderHook(() => {
+      renders += 1;
+      return useCan();
+    });
+    const before = result.current;
+    expect(before(PERMS.warehouse.delete)).toBe(false);
+
+    act(() => {
+      grant([PERMS.warehouse.view, PERMS.warehouse.delete]);
+    });
+
+    expect(renders).toBe(2);
+    expect(result.current).not.toBe(before);
+    expect(result.current(PERMS.warehouse.delete)).toBe(true);
+  });
+
+  it('useCanAny follows the same SUPERADMIN rule', () => {
+    grant([], ['SUPERADMIN']);
+    const { result } = renderHook(() =>
+      useCanAny([PERMS.supplier.update, PERMS.supplier.delete]),
+    );
+    expect(result.current).toBe(true);
   });
 });

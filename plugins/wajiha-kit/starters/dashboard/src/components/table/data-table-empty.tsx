@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableCell } from '@/components/ui/table';
 import { SearchX } from '@/lib/icons';
@@ -7,12 +8,15 @@ interface DataTableEmptyProps {
   colSpan: number;
   rows?: number;
   label?: string;
+  /** An action under the message: create (empty list) or clear filters (no results). */
+  children?: ReactNode;
 }
 
 export function DataTableEmpty({
   colSpan,
   rows = 5,
   label,
+  children,
 }: DataTableEmptyProps) {
   const { t } = useTranslation();
   return (
@@ -30,6 +34,7 @@ export function DataTableEmpty({
           <p className="text-h4 text-text-secondary">
             {label ?? t('common.noResults')}
           </p>
+          {children}
         </div>
       </TableCell>
     </tr>

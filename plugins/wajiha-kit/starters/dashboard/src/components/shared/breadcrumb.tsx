@@ -47,7 +47,7 @@ export function Breadcrumb({ children, current }: BreadcrumbProps) {
   return (
     <nav
       aria-label={t('common.breadcrumb')}
-      className="text-warning text-b3 flex flex-wrap items-center"
+      className="text-brand-text text-b3 flex flex-wrap items-center"
     >
       <ol className="gap-x-field flex flex-wrap items-center">
         {Children.toArray(children).map((ancestor, index) => (

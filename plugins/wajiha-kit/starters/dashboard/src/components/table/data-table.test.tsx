@@ -1,131 +1,94 @@
+import { createColumnHelper } from '@tanstack/react-table';
 import { describe, expect, it, vi } from 'vitest';
-import { setTestLanguage, tt } from '@/test/i18n';
-import { renderWithProviders, screen } from '@/test/render';
-import type { Column, ServerPagination } from '@/types/table';
-import { DataTable } from './data-table';
+import { renderWithProviders, screen, within } from '@/test/render';
+import { DataTable, type DataTableProps } from './data-table';
+import type { DataTableFeatures, TableStatus } from './table-features';
 
 interface Row {
   id: string;
   name: string;
 }
 
-const columns: Column<Row>[] = [
-  { id: 'name', header: 'Name', accessor: (row) => row.name },
+const helper = createColumnHelper<DataTableFeatures, Row>();
+const columns = helper.columns([
+  helper.accessor('name', { id: 'name', header: 'Name' }),
+  helper.accessor('id', { header: 'Id', enableSorting: false }),
+]);
+const ROWS: Row[] = [
+  { id: 'a', name: 'Alpha' },
+  { id: 'b', name: 'Beta' },
 ];
 
-const rows: Row[] = [
-  { id: '1', name: 'Zara' },
-  { id: '2', name: 'Amir' },
-];
-
-const serverPage: ServerPagination = {
-  page: 0,
-  pageSize: 20,
-  total: 40,
-  totalPages: 2,
-  onPageChange: vi.fn(),
-};
-
-function summaryIs(text: string) {
-  return (_: string, el: Element | null) =>
-    el?.tagName === 'P' && el.textContent === text;
+function renderTable(overrides: Partial<DataTableProps<Row>> = {}) {
+  const props: DataTableProps<Row> = {
+    caption: 'Things',
+    columns,
+    rows: ROWS,
+    rowCount: 25,
+    getRowId: (row) => row.id,
+    pagination: { pageIndex: 0, pageSize: 10 },
+    sorting: [],
+    onPaginationChange: vi.fn(),
+    onSortingChange: vi.fn(),
+    status: 'ready',
+    onRetry: vi.fn(),
+    emptyLabel: 'Nothing here',
+    ...overrides,
+  };
+  return { ...renderWithProviders(<DataTable {...props} />), props };
 }
 
-describe('DataTable states', () => {
-  it('renders skeleton placeholders in each body row while loading', () => {
-    const { container } = renderWithProviders(
-      <DataTable
-        data={[]}
-        columns={columns}
-        getRowId={(row) => row.id}
-        isLoading
-        skeletonRows={3}
-      />,
-    );
+describe('DataTable', () => {
+  it('renders the page it is given, with a caption', () => {
+    renderTable();
+    const table = screen.getByRole('table', { name: 'Things' });
+    expect(within(table).getByText('Alpha')).toBeVisible();
+  });
 
-    const bodyRows = screen.getAllByRole('row').slice(1);
-    expect(bodyRows).toHaveLength(3);
-    for (const row of bodyRows) {
-      expect(row.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(1);
-    }
+  it('marks sortable headers and hands the next sort up', async () => {
+    const { user, props } = renderTable({
+      sorting: [{ id: 'name', desc: false }],
+    });
+    const header = screen.getByRole('columnheader', { name: /Name/ });
+    expect(header).toHaveAttribute('aria-sort', 'ascending');
     expect(
-      container.querySelectorAll('tbody [data-slot="skeleton"]'),
-    ).toHaveLength(3);
-    expect(screen.queryByText(tt('common.noResults'))).not.toBeInTheDocument();
+      screen.getByRole('columnheader', { name: 'Id' }),
+    ).not.toHaveAttribute('aria-sort');
+    await user.click(within(header).getByRole('button'));
+    expect(props.onSortingChange).toHaveBeenCalledWith([
+      { id: 'name', desc: true },
+    ]);
   });
 
-  it('renders the error state and retries', async () => {
-    const onRetry = vi.fn();
-    const { user } = renderWithProviders(
-      <DataTable
-        data={[]}
-        columns={columns}
-        getRowId={(row) => row.id}
-        isError
-        errorLabel="Network down"
-        onRetry={onRetry}
-      />,
-    );
-
-    expect(screen.getByText(tt('common.error'))).toBeInTheDocument();
-    expect(screen.getByText('Network down')).toBeInTheDocument();
-    await user.click(
-      screen.getByRole('button', { name: tt('common.tryAgain') }),
-    );
-    expect(onRetry).toHaveBeenCalledOnce();
+  it('hands the next page up and derives the page count from the total', async () => {
+    const { user, props } = renderTable();
+    expect(screen.getByRole('button', { name: '3' })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: '2' }));
+    expect(props.onPaginationChange).toHaveBeenCalledWith({
+      pageIndex: 1,
+      pageSize: 10,
+    });
   });
 
-  it('renders the empty state when there are no rows', () => {
-    renderWithProviders(
-      <DataTable data={[]} columns={columns} getRowId={(row) => row.id} />,
-    );
-
-    expect(screen.getByText(tt('common.noResults'))).toBeInTheDocument();
+  it.each<[TableStatus, string]>([
+    ['error', 'Try again'],
+    ['loading', ''],
+  ])('renders the %s body and hides the pagination', (status, text) => {
+    renderTable({ status });
+    expect(screen.queryByRole('navigation')).toBeNull();
+    if (text) {
+      expect(screen.getByRole('button', { name: /try again/i })).toBeVisible();
+    }
   });
 
-  it('renders the success state with rows and fires onRowClick', async () => {
-    const onRowClick = vi.fn();
-    const { user } = renderWithProviders(
-      <DataTable
-        data={rows}
-        columns={columns}
-        getRowId={(row) => row.id}
-        onRowClick={onRowClick}
-      />,
-    );
-
-    expect(screen.getByText('Zara')).toBeInTheDocument();
-    await user.click(screen.getByText('Amir'));
-    expect(onRowClick).toHaveBeenCalledExactlyOnceWith(rows[1]);
-  });
-});
-
-describe('DataTable pagination summary', () => {
-  it('shows the summary for the current server page', () => {
-    renderWithProviders(
-      <DataTable
-        data={rows}
-        columns={columns}
-        getRowId={(row) => row.id}
-        serverPagination={serverPage}
-      />,
-    );
-
-    const summary = `${tt('common.showing')} 1–20 ${tt('common.of')} 40`;
-    expect(screen.getByText(summaryIs(summary))).toBeInTheDocument();
-  });
-
-  it('translates the summary in Arabic', async () => {
-    await setTestLanguage('ar');
-    renderWithProviders(
-      <DataTable
-        data={rows}
-        columns={columns}
-        getRowId={(row) => row.id}
-        serverPagination={serverPage}
-      />,
-    );
-
-    expect(screen.getByText(summaryIs('عرض 1–20 من 40'))).toBeInTheDocument();
+  it('shows the empty message with its action and no pagination', () => {
+    renderTable({
+      rows: [],
+      rowCount: 0,
+      emptyAction: <button type="button">Clear filters</button>,
+    });
+    expect(screen.getByText('Nothing here')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Clear filters' })).toBeVisible();
+    expect(screen.queryByRole('navigation')).toBeNull();
   });
 });

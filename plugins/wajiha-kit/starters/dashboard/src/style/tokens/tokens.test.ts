@@ -7,9 +7,10 @@ import {
   generatePreset,
   generateTheme,
   modeValues,
+  rampVar,
 } from './generate-css';
 import { DEFAULT_PRESET_ID, PRESETS } from './presets';
-import { PRESET_TOKEN_NAMES } from './types';
+import { PRESET_TOKEN_NAMES, type PresetTokenName } from './types';
 
 const read = (name: string): string =>
   readFileSync(join(__dirname, '..', name), 'utf-8').replaceAll('\r\n', '\n');
@@ -67,6 +68,22 @@ describe('design tokens: presets', () => {
     }
   });
 
+  it('lets every preset own its brand accent (bg-brand, text-brand-text, bg-brand-tint)', () => {
+    const theme = read('theme.css');
+    const brand: readonly PresetTokenName[] = [
+      'brand',
+      'brand-text',
+      'brand-tint',
+    ];
+    for (const name of brand) {
+      expect(theme).toContain(`--color-${name}: var(--${name});`);
+      for (const preset of PRESETS) {
+        expect(preset.light[name]).not.toBe(preset.dark[name]);
+      }
+    }
+    expect(read('preset.css')).not.toMatch(/--brand: var\(/u);
+  });
+
   it('scopes the default preset to :root and every preset to data-preset', () => {
     const css = read('preset.css');
     for (const preset of PRESETS) {
@@ -82,6 +99,17 @@ describe('design tokens: foundation', () => {
   it.each(Object.keys(TYPE_RAMP))('defines type utility %s', (name) => {
     expect(theme).toContain(`@utility ${name} {`);
   });
+
+  it.each(Object.entries(TYPE_RAMP))(
+    'exposes %s as a font shorthand variable for component CSS',
+    (name, style) => {
+      const variable = `--${rampVar(name)}`;
+      expect(theme).toContain(
+        `${variable}: ${style.weight} ${style.size}px / ${style.line}px var(--font-${style.family});`,
+      );
+      expect(theme).toContain(`@utility ${name} {\n  font: var(${variable});`);
+    },
+  );
 
   it.each([
     'radius-control',

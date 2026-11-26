@@ -49,7 +49,7 @@ function page(
 
 describe('AuditLogButton', () => {
   beforeEach(() => {
-    signIn({ permissions: [PERMS.auditLog.read] });
+    signIn({ permissions: [PERMS.auditLog.view] });
   });
 
   it('renders nothing without audit_log:read', () => {

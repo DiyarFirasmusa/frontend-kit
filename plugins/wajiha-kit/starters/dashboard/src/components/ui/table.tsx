@@ -2,18 +2,56 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
-function Table({ className, ...props }: React.ComponentProps<'table'>) {
+/** True while `element` is wider inside than it is on screen. */
+function useScrollsInline(ref: React.RefObject<HTMLElement | null>): boolean {
+  const [scrolls, setScrolls] = React.useState(false);
+  React.useEffect(() => {
+    const element = ref.current;
+    if (!element) {
+      return;
+    }
+    const check = () => {
+      setScrolls(element.scrollWidth > element.clientWidth + 1);
+    };
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(element);
+    if (element.firstElementChild) {
+      observer.observe(element.firstElementChild);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref]);
+  return scrolls;
+}
+
+/**
+ * The wrapper becomes a named, focusable region only while the table scrolls
+ * sideways, so keyboard users can scroll it without a useless tab stop on
+ * every table. The label names the region then, the table otherwise: never
+ * both, or a screen reader reads it twice.
+ */
+function Table({
+  className,
+  'aria-label': ariaLabel,
+  ...props
+}: React.ComponentProps<'table'>) {
   const { t } = useTranslation();
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const scrolls = useScrollsInline(containerRef);
   return (
     <div
+      ref={containerRef}
       data-slot="table-container"
-      role="region"
-      tabIndex={0}
-      aria-label={props['aria-label'] ?? t('table.scrollRegion')}
-      className="custom-scrollbar focus-visible:ring-ring relative w-full overflow-x-auto rounded-[inherit] outline-none focus-visible:ring-2"
+      role={scrolls ? 'region' : undefined}
+      tabIndex={scrolls ? 0 : undefined}
+      aria-label={scrolls ? (ariaLabel ?? t('table.scrollRegion')) : undefined}
+      className="custom-scrollbar focus-visible:outline-primary-highlight relative w-full overflow-x-auto rounded-[inherit] focus-visible:outline-2 focus-visible:-outline-offset-2"
     >
       <table
         data-slot="table"
+        aria-label={scrolls ? undefined : ariaLabel}
         className={cn('w-full caption-bottom text-b2', className)}
         {...props}
       />

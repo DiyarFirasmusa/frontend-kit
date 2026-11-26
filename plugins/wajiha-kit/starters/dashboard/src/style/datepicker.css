@@ -37,15 +37,15 @@
   }
 
   .date-popup-header {
-    margin-bottom: 4px;
+    margin-block-end: 4px;
   }
 
   .date-popup-title {
-    font: 600 14px / 1.5 var(--font-sans);
+    font: var(--font-h5);
   }
 
   .date-popup-year {
-    margin-bottom: var(--spacing-field);
+    margin-block-end: var(--spacing-field);
     font: 500 12px / 1.5 var(--font-sans);
     color: var(--text-secondary);
   }
@@ -85,7 +85,7 @@
   .date-popup-day {
     height: 34px;
     border-radius: var(--radius-control);
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     font-variant-numeric: tabular-nums;
     transition: background-color 150ms ease;
   }
@@ -111,13 +111,13 @@
   .date-popup-footer {
     display: flex;
     justify-content: space-between;
-    margin-top: var(--spacing-field);
-    padding-top: var(--spacing-field);
-    border-top: 1px solid var(--stroke);
+    margin-block-start: var(--spacing-field);
+    padding-block-start: var(--spacing-field);
+    border-block-start: 1px solid var(--stroke);
   }
 
   .date-popup-link {
-    font: 600 13px / 19.5px var(--font-sans);
+    font: var(--font-button-2);
     color: var(--primary-text);
   }
 
@@ -196,7 +196,7 @@
     flex: 0 0 auto;
     height: 34px;
     border-radius: var(--radius-control);
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     font-variant-numeric: tabular-nums;
     transition: background-color 150ms ease;
   }

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen, within } from '@/test/render';
 import type { Column } from '@/types/table';
-import { DataTable } from './data-table';
+import { ClientDataTable } from './client-data-table';
 
 interface Row {
   id: string;
@@ -25,10 +25,14 @@ function tableRoot(container: HTMLElement) {
   return root;
 }
 
-describe('DataTable layout', () => {
+describe('ClientDataTable layout', () => {
   it('draws its own bordered panel by default', () => {
     const { container } = renderWithProviders(
-      <DataTable data={rows} columns={columns} getRowId={(row) => row.id} />,
+      <ClientDataTable
+        data={rows}
+        columns={columns}
+        getRowId={(row) => row.id}
+      />,
     );
 
     expect(tableRoot(container)).toHaveClass('border', 'p-panel');
@@ -36,7 +40,7 @@ describe('DataTable layout', () => {
 
   it('drops the panel when embedded in a card', () => {
     const { container } = renderWithProviders(
-      <DataTable
+      <ClientDataTable
         embedded
         data={rows}
         columns={columns}
@@ -55,7 +59,7 @@ describe('DataTable layout', () => {
   it('puts the selection column at the end and marks selected rows', async () => {
     const onChange = vi.fn();
     const { user } = renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={rows}
         columns={columns}
         getRowId={(row) => row.id}
@@ -91,7 +95,7 @@ describe('DataTable layout', () => {
 
   it('adds per-row classes', () => {
     renderWithProviders(
-      <DataTable
+      <ClientDataTable
         data={rows}
         columns={columns}
         getRowId={(row) => row.id}

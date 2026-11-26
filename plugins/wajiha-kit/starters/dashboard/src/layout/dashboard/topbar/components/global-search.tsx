@@ -1,4 +1,4 @@
-import { useEffect, type ReactElement } from 'react';
+import { useEffect, type ReactElement, type RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DataBadge } from '@/components/table/data-badge';
 import { Building2, Hash, Search, Tag, Warehouse } from '@/lib/icons';
@@ -37,13 +37,23 @@ function OptionText({ option }: { option: GlobalSearchOption }): ReactElement {
   );
 }
 
+interface GlobalSearchProps {
+  className?: string;
+  /** `bar` floats the results under the field; `dialog` lays them out below it. */
+  variant?: 'bar' | 'dialog';
+  inputRef?: RefObject<HTMLInputElement | null>;
+  onSelected?: () => void;
+}
+
 export function GlobalSearch({
   className,
-}: {
-  className?: string;
-}): ReactElement {
+  variant = 'bar',
+  inputRef,
+  onSelected,
+}: GlobalSearchProps): ReactElement {
   const { t } = useTranslation();
-  const search = useGlobalSearch();
+  const search = useGlobalSearch({ inputRef, onSelected });
+  const isBar = variant === 'bar';
   const { activeIndex, optionId, status, isPopupVisible, listboxId, sections } =
     search;
   const activeId = activeIndex >= 0 ? optionId(activeIndex) : undefined;
@@ -61,40 +71,48 @@ export function GlobalSearch({
       data-slot="global-search"
       className={cn('relative min-w-0 flex-1', className)}
     >
-      <Search className="text-text-muted pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2" />
-      <input
-        ref={search.inputRef}
-        type="text"
-        role="combobox"
-        aria-label={t('search.label')}
-        aria-autocomplete="list"
-        aria-expanded={isPopupVisible}
-        aria-controls={
-          isPopupVisible && status === 'results' ? listboxId : undefined
-        }
-        aria-activedescendant={isPopupVisible ? activeId : undefined}
-        autoComplete="off"
-        spellCheck={false}
-        placeholder={t('search.placeholder')}
-        value={search.value}
-        onChange={search.onChange}
-        onFocus={search.onFocus}
-        onBlur={search.onBlur}
-        onKeyDown={search.onKeyDown}
-        className="control ps-10 pe-16"
-      />
-      <kbd
-        aria-hidden
-        data-slot="kbd"
-        dir="ltr"
-        className="bg-kbd text-text-secondary text-b3 pointer-events-none absolute end-2 top-1/2 inline-flex h-6 min-w-6 -translate-y-1/2 items-center justify-center rounded-(--radius-kbd) px-1.5"
-      >
-        {search.shortcutLabel}
-      </kbd>
+      <div className="relative">
+        <Search className="text-text-muted pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2" />
+        <input
+          ref={search.inputRef}
+          type="text"
+          role="combobox"
+          aria-label={t('search.label')}
+          aria-autocomplete="list"
+          aria-expanded={isPopupVisible}
+          aria-controls={
+            isPopupVisible && status === 'results' ? listboxId : undefined
+          }
+          aria-activedescendant={isPopupVisible ? activeId : undefined}
+          autoComplete="off"
+          spellCheck={false}
+          placeholder={t('search.placeholder')}
+          value={search.value}
+          onChange={search.onChange}
+          onFocus={search.onFocus}
+          onBlur={search.onBlur}
+          onKeyDown={search.onKeyDown}
+          className={cn('control ps-10', isBar ? 'pe-16' : 'pe-row')}
+        />
+        {isBar ? (
+          /* dir sits on the inner span: on the <kbd> it would turn its own
+             end-2 into the left edge in Arabic, on top of the search icon. */
+          <kbd
+            aria-hidden
+            data-slot="kbd"
+            className="bg-kbd text-text-secondary text-b3 pointer-events-none absolute end-2 top-1/2 inline-flex h-6 min-w-6 -translate-y-1/2 items-center justify-center rounded-(--radius-kbd) px-1.5"
+          >
+            <span dir="ltr">{search.shortcutLabel}</span>
+          </kbd>
+        ) : null}
+      </div>
 
       {isPopupVisible ? (
         <div
-          className="select-popup absolute inset-x-0 top-full mt-2 w-full"
+          className={cn(
+            'select-popup mt-2 w-full',
+            isBar ? 'absolute inset-x-0 top-full' : 'relative',
+          )}
           onMouseDown={(event) => {
             event.preventDefault();
           }}
@@ -128,6 +146,7 @@ export function GlobalSearch({
                         id={optionId(index)}
                         role="option"
                         aria-selected={index === activeIndex}
+                        data-highlighted={index === activeIndex || undefined}
                         className="select-item"
                         onMouseMove={() => {
                           if (index !== activeIndex) {

@@ -14,7 +14,7 @@ interface SidebarHeaderProps {
 }
 
 function BrandMark() {
-  return <Cube aria-hidden className="text-warning size-6 shrink-0" />;
+  return <Cube aria-hidden className="text-brand-text size-6 shrink-0" />;
 }
 
 function CollapseButton({
@@ -28,7 +28,8 @@ function CollapseButton({
   const label = t(
     collapsed ? 'shell.sidebar.expand' : 'shell.sidebar.collapse',
   );
-  const Arrow = collapsed ? ArrowLeftLong : ArrowRightLong;
+  // Points the way the sidebar will move: toward the start edge to collapse.
+  const Arrow = collapsed ? ArrowRightLong : ArrowLeftLong;
 
   return (
     <button

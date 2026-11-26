@@ -50,7 +50,7 @@ type StatusVariant = VisualProps & {
 export type DataBadgeProps = CustomProps | StatusVariant;
 
 /* Status tones read their hue from the tag tokens. Neutral and brand keep
-   their own text colour (secondary grey / burgundy text). A pill with a dot
+   their own text colour (secondary grey / the tone colour). A pill with a dot
    is a status badge and renders without a tint (`.badge-status`); chips
    without a dot and tag-shaped badges keep the 8-9% container. */
 const TONE_CLASSES: Record<BadgeTone | BadgePalette, string> = {

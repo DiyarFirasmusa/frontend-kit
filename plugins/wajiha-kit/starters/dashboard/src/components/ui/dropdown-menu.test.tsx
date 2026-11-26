@@ -49,6 +49,24 @@ describe('DropdownMenu', () => {
     });
   });
 
+  it('marks the keyboard-highlighted item for the start-edge focus bar', async () => {
+    const { user } = renderWithProviders(<Menu onEdit={vi.fn()} />);
+    screen.getByRole('button', { name: 'Row actions' }).focus();
+    await user.keyboard('{Enter}');
+    await screen.findByRole('menu');
+    await user.keyboard('{ArrowDown}');
+
+    // The bar itself is CSS (style/select.css: .menu-item[data-highlighted]).
+    await waitFor(() => {
+      expect(
+        document.querySelector('.menu-item[data-highlighted]'),
+      ).not.toBeNull();
+    });
+    for (const item of screen.getAllByRole('menuitem')) {
+      expect(item).toHaveClass('menu-item');
+    }
+  });
+
   it('forwards consumer props to the popup element', async () => {
     const { user } = renderWithProviders(
       <DropdownMenu>

@@ -20,6 +20,17 @@ export function stateHeightClass(rows: number): string {
   return 'h-56';
 }
 
+/** Keyboard focus on a row: the global focus colour, full strength (3:1 on every surface). */
+export const ROW_FOCUS_CLASS =
+  'focus-visible:bg-hover-row focus-visible:outline-primary-highlight outline-none focus-visible:outline-2 focus-visible:-outline-offset-2';
+
+/**
+ * The sticky actions cell needs its own opaque background (rows scroll under
+ * it), so it follows the row's hover, focus and open-menu states explicitly.
+ */
+export const STICKY_ACTIONS_CELL_CLASS =
+  'bg-surface group-hover/row:bg-hover-row group-focus-visible/row:bg-hover-row group-has-aria-expanded/row:bg-hover-row sticky end-0 transition-colors duration-150';
+
 export function alignClass(align?: ColumnAlign): string {
   if (align === 'center') {
     return 'text-center';
@@ -79,9 +90,8 @@ export function DataTableRow<T>({
           : undefined
       }
       className={cn(
-        'border-stroke-subtle h-[62px] border-b transition-colors duration-150 last:border-0',
-        clickable &&
-          'focus-visible:bg-hover-row focus-visible:ring-ring/40 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-inset',
+        'group/row border-stroke-subtle h-[62px] border-b transition-colors duration-150 last:border-0',
+        clickable && cn('cursor-pointer', ROW_FOCUS_CLASS),
         className,
       )}
     >
@@ -91,7 +101,7 @@ export function DataTableRow<T>({
           className={cn(
             'text-b2 text-text-primary h-[62px] px-4 py-2 align-middle',
             alignClass(col.align),
-            col.id === 'actions' && 'bg-surface sticky end-0',
+            col.id === 'actions' && STICKY_ACTIONS_CELL_CLASS,
             col.cellClassName,
           )}
         >

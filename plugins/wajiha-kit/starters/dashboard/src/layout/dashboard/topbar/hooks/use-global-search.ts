@@ -49,9 +49,20 @@ export interface GlobalSearchState {
   onHover: (index: number) => void;
 }
 
-export function useGlobalSearch(): GlobalSearchState {
+interface UseGlobalSearchOptions {
+  /** A ref the caller keeps, so Ctrl/Cmd+K can focus this field. */
+  inputRef?: RefObject<HTMLInputElement | null>;
+  /** Runs after a result is chosen, e.g. to close the search dialog. */
+  onSelected?: () => void;
+}
+
+export function useGlobalSearch({
+  inputRef: outerRef,
+  onSelected,
+}: UseGlobalSearchOptions = {}): GlobalSearchState {
   const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const ownRef = useRef<HTMLInputElement>(null);
+  const inputRef = outerRef ?? ownRef;
   const listboxId = useId();
   const [value, setValue] = useState('');
   const [debounced, setDebounced] = useState('');
@@ -70,24 +81,6 @@ export function useGlobalSearch(): GlobalSearchState {
       clearTimeout(timer);
     };
   }, [value]);
-
-  useEffect(() => {
-    function handleShortcut(event: globalThis.KeyboardEvent) {
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        !event.altKey &&
-        event.key.toLowerCase() === 'k'
-      ) {
-        event.preventDefault();
-        inputRef.current?.focus();
-        inputRef.current?.select();
-      }
-    }
-    document.addEventListener('keydown', handleShortcut);
-    return () => {
-      document.removeEventListener('keydown', handleShortcut);
-    };
-  }, []);
 
   const query = useQuery({
     queryKey: qk.search.query(debouncedTrimmed),
@@ -129,6 +122,7 @@ export function useGlobalSearch(): GlobalSearchState {
       setValue('');
       setDebounced('');
       inputRef.current?.blur();
+      onSelected?.();
       switch (option.group) {
         case 'warehouses':
           void navigate({
@@ -147,7 +141,7 @@ export function useGlobalSearch(): GlobalSearchState {
           break;
       }
     },
-    [close, navigate],
+    [close, navigate, inputRef, onSelected],
   );
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {

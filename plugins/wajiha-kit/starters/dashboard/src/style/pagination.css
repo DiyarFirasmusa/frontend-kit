@@ -1,4 +1,4 @@
-/* Pagination — design system spec (docs/design/design-system.md §4).
+/* Pagination. Sizes and colours come from src/style/tokens.
    Row: result summary on one side, controls on the other.
    Page box = 29px square, 7px radius (--radius-pagination); others sit on a
    white 5% fill with a 1px stroke; active page = --primary fill, bold text;
@@ -14,7 +14,7 @@
   }
 
   .pagination-summary {
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     color: var(--text-secondary);
   }
 
@@ -85,7 +85,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-field);
-    font: 400 13px / 19.5px var(--font-sans);
+    font: var(--font-b2);
     color: var(--text-secondary);
   }
 }
