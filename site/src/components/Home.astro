@@ -6,7 +6,6 @@ import '../styles/home/index.css'
 import Layout from '../layouts/Layout.astro'
 import type { Route } from '../lib/routes.ts'
 import Header from './Header.astro'
-import Builds from './home/Builds.astro'
 import Compare from './home/Compare.astro'
 import Example from './home/Example.astro'
 import GetIt from './home/GetIt.astro'
@@ -26,7 +25,6 @@ const route: Route = { kind: 'home' }
   <Header locale={locale} route={route} />
   <main id="content" class="home" tabindex="-1" transition:name="page">
     <Hero locale={locale} />
-    <Builds locale={locale} />
     <Example locale={locale} />
     <Compare locale={locale} />
     <GetIt locale={locale} />

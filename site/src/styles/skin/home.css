@@ -299,26 +299,6 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   }
 }
 
-/* In "What can you build" the window fills the block:
-   its drawing is in em, so its text size follows the width it is given and the whole picture grows with it (taller, not
-   left in the middle of an empty black block). */
-@media (width >= 48rem) {
-  #builds .board-main {
-    container-type: inline-size;
-  }
-
-  #builds .board-main > .browser {
-    width: min(100%, 66rem);
-    margin-inline: auto;
-  }
-
-  /* A wide, not tall, window: the drawing keeps the height its em layout needs (about 18.5em) and stretches across. */
-  #builds .board-main > .browser .browser-page {
-    aspect-ratio: 16 / 6.9;
-    font-size: calc(min(100cqw, 66rem) * 0.0195);
-  }
-}
-
 /* The parts of the home page have about the same height: the journey's windows grow to match the others. */
 @media (width >= 62rem) {
   #example .path-picture {
