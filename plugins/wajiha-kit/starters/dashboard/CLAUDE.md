@@ -88,12 +88,62 @@ Copy `src/features/dashboard/suppliers/` and rename it, then touch these 11 file
 4. `src/constants/permissions.ts` (`PERMS.customer`)
 5. `src/routes/_app/customers/index.tsx` (guard, `validateSearch`, loader)
 6. `src/layout/dashboard/sidebar/config/nav-config.ts` (the `to` is checked against the route tree)
-7. `src/locales/ar.json` and 8. `en.json` (`nav.customers`)
-8. `PERMISSIONS.md` (a row; `route-guards.test.ts` fails without it)
-9. `src/mocks/handlers/customers.ts` (+ seed) and 11. `src/mocks/index.ts`
+7. `src/locales/ar.json` (`nav.customers`)
+8. `src/locales/en.json` (`nav.customers`)
+9. `PERMISSIONS.md` (a row; `route-guards.test.ts` fails without it)
+10. `src/mocks/handlers/customers.ts` (+ `src/mocks/seed/customers.ts`)
+11. `src/mocks/index.ts` (register the handlers)
 
 Then `npm run fix` (route tree, lint fix, format), `npx vitest run src/constants -u` (the
-PERMS snapshot pins the list on purpose) and `npm run check`.
+PERMS snapshot pins the list on purpose) and `npm run check`. Tests: copy
+`e2e/suppliers.spec.ts` and `e2e/a11y-pages/suppliers.ts` (a11y pages are auto-discovered).
+
+### Show the entity in search, notifications and the home page
+
+Not part of the 11 files; do them when the entity should appear there (the demo's
+`warehouses`, `suppliers`, `categories`, `units` do, and a new project must rename them).
+
+- Search (the group key is the response key, for example `customers`). In `src/layout/dashboard/topbar/`: `types/types.ts` (`GlobalSearchGroup`),
+  `utils/search-options.ts` (`SEARCH_GROUP_ORDER`), `hooks/use-global-search.ts` (the `switch` that navigates), `components/global-search.tsx` (icon map).
+  Also `src/locales/{ar,en}.json` (`search.groups.<key>` and `search.placeholder`) and `src/mocks/handlers/search.ts` (one `hits(...)` line).
+  Tests: `utils/search-options.test.ts`, `components/global-search.test.tsx` (same topbar folder), `e2e/global-search.spec.ts`.
+- Notifications: `src/mocks/seed/notifications.ts` (`entityType` and `entityId` of each row); in `src/layout/dashboard/topbar/`: `utils/notification-target.ts` (the `switch`)
+  and `NotificationTarget` in `types/types.ts`. Tests: `utils/notification-target.test.ts`, `components/notifications-menu.test.tsx` (topbar folder), `e2e/notifications.spec.ts`.
+- Home: `src/types/api/overview.ts` (`OverviewSummary` key, `ChangeResource`), `src/mocks/handlers/overview.ts` (`kpi(...)`),
+  `src/mocks/seed/activity.ts` (a row per resource), `src/features/dashboard/home/components/home-kpi-grid.tsx` (a card),
+  `home-recent-changes-table.tsx` (`RESOURCE_LINK`), `src/features/dashboard/home/locales/{ar,en}.json`. Tests: `e2e/home.spec.ts`, `e2e/fixtures/home.ts`.
+- Audit log, only when the backend's audit knows the entity: `src/types/api/enums.ts` (`AuditEntity`),
+  `src/constants/audit-entities.ts`, `auditLog.entities.*` in both locale files.
+
+### An entity with no DELETE (the backend has none, or "delete" means cancel)
+
+Copy `suppliers/` and take the delete out of these places, then run the checks:
+`hooks/use-list-page.ts` (`useDeleteDialog`, `onDelete`, `deleteDialog`), `index.tsx` (the `ConfirmDialog` block),
+`hooks/<x>-actions.ts` and its test (the `onDelete` dependency and the `delete` row action), `hooks/query/use-<x>-mutations.ts` (`useDelete<X>`),
+`services/<x>.service.ts` (`delete<X>`), `src/constants/api.ts` (`remove`), `src/constants/permissions.ts` (the `delete` key of `PERMS.<x>`, then the
+`PERMISSIONS.md` row and the snapshot), `src/mocks/handlers/<x>.ts` (`http.delete`), the feature locales (`delete.*`, `actions.deleteRow`, `messages.deleted`),
+and the unit and e2e tests that click Delete. A soft delete ("cancel the appointment") is an update, not a delete: keep the `ConfirmDialog`
+(focus starts on Cancel), call the update mutation with the status value, gate it with `PERMS.<x>.update` and word it "cancel" in both locale files.
+
+### A picker over another entity (a lookup)
+
+`src/hooks/lookups/` only holds the directory pickers (`use-directory-search.ts`, `GET /api/directory/search`): there is no shared picker for another entity,
+and a feature never imports another feature. Add the same four pieces once, by copying the directory ones (`person-select-field.tsx` is the model for the field):
+
+1. `src/services/lookups.service.ts`: `searchLookup(kind, q)` reads the other entity's list endpoint with `privateApi.get(endpoints.<x>.list, { params: { <the spec's search parameter>: q, size: 20, page: 0 }, silentError: true })`
+   and maps each row to `{ id, label, description }`.
+2. `src/constants/query-keys.ts`: `qk.lookups.search(kind, q)`.
+3. `src/hooks/lookups/use-lookup-search.ts`: a copy of `use-directory-search.ts` calling `searchLookup`.
+4. `src/components/fields/lookup-select-field.tsx`: a `Combobox` with `useDebouncedValue`, as in `person-select-field.tsx`; pass the saved record's name as `selectedLabel`
+   so edit mode shows it before the options load.
+
+The form stores the id.
+
+### Dates and times
+
+`TextField` has `type="date"` and `type="time"` (`components/fields/date-input.tsx`, `time-input.tsx`). There is no date-time field. A backend `format: date-time`
+becomes two form fields (a date and a time), joined into one ISO string in the submit mapper and split in the edit mapper. `applyApiFieldErrors` maps
+only fields with the same name, so map a 422 on the backend field to the form field by hand.
 
 ## Commands
 

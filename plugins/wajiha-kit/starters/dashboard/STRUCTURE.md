@@ -129,7 +129,7 @@ dashboard-starter/
 │   ├── mocks/                   → core.ts، seed/، handlers/ (واحد لكل ميزة)، index.ts: للمتصفح والاختبارات وPlaywright
 │   └── test/                    → setup، render (مكوّن لوحده)، render-app (التطبيق الحقيقي على مسار)، MSW، fixtures
 ├── PERMISSIONS.md               → من يشوف ويسوي شنو (4 طبقات + جدول لكل صفحة)
-└── .env.development             → عناوين وهمية + VITE_USE_MOCK=true (مرفوع بالمستودع، ما فيه أسرار)
+└── .env.development             → عناوين وهمية + VITE_USE_MOCK=true (مرفوع بـgit، ما فيه أسرار)
 ```
 
 كل ملف تحت 400 سطر (اللنت يفشل فوقها، والاختبارات 600). لا `any` ولا `@ts-ignore` ولا تعطيل لنت.
@@ -172,9 +172,11 @@ dashboard-starter/
 6. `src/routes/_app/customers/index.tsx`: انسخ ملف مسار الموردين (حارس + `validateSearch` + `loaderDeps` + `loader`).
 7. `src/layout/dashboard/sidebar/config/nav-config.ts`: عنصر القائمة مع `permission`. المسار `to` نوعه مأخوذ من شجرة المسارات المولّدة (`StaticRoutePath`)،
    فالغلط بالمسار يفشل الـ`typecheck` وما تحتاج تحدّث قائمة أنواع بيدك.
-8. `src/locales/ar.json` و9. `en.json`: `nav.customers`.
-9. `PERMISSIONS.md`: سطر بالجدول (اختبار `route-guards.test.ts` يفشل بدونه).
-10. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين مع جدول `seed/`) وسجّله بـ`src/mocks/index.ts`. إذا الباكند جاهز تقدر تتخطى هالخطوة.
+8. `src/locales/ar.json`: `nav.customers`.
+9. `src/locales/en.json`: `nav.customers`.
+10. `PERMISSIONS.md`: سطر بالجدول (اختبار `route-guards.test.ts` يفشل بدونه).
+11. الداتا الوهمية: `src/mocks/handlers/customers.ts` (انسخ ملف الموردين مع جدول `seed/`). إذا الباكند جاهز تقدر تتخطى هالخطوة والخطوة اللي بعدها.
+12. `src/mocks/index.ts`: سجّل الـhandlers.
 
 ثم: **`npm run fix`** يولّد `routeTree.gen.ts` (بدون تشغيل Vite) ويصلح اللنت ويكتب التنسيق، وبعده `npm run check`.
 اختبار `src/constants/permissions.test.ts` يثبّت قائمة الصلاحيات عمداً، فبعد إضافة `PERMS.customer` حدّثه بـ`npx vitest run src/constants -u`.
@@ -184,8 +186,13 @@ dashboard-starter/
 `src/mocks`)، فما تحتاج ملف fixture خاص. اختبارات الوحدة بالمجلد المنسوخ تستخدم `server.use(...customerHandlers)` و`renderApp('/customers')`
 (المسار الحقيقي مع الحارس والـloader).
 
-عدد الملفات: **11 ملفاً خارج المجلد المنسوخ** (كان 11 أيضاً لكن بعدها أمران بيدك: تشغيل خادم التطوير أو البناء لتوليد شجرة المسارات، وتنسيق الملفات).
+عدد الملفات: **11 ملفاً خارج المجلد المنسوخ (الخطوات 2 إلى 12)** (كان 11 أيضاً لكن بعدها أمران بيدك: تشغيل خادم التطوير أو البناء لتوليد شجرة المسارات، وتنسيق الملفات).
 الآن الأمران صارا `npm run fix`، وقائمة التنقل ما عاد لها نوع مكتوب بيدك.
+
+**أماكن ثانية تذكر الكيان وما هي ضمن الـ11 ملفاً**: البحث العام (`topbar/types/types.ts` و`utils/search-options.ts` و`hooks/use-global-search.ts` و`components/global-search.tsx` و`search.groups` بالترجمات و`mocks/handlers/search.ts`)،
+الإشعارات (`mocks/seed/notifications.ts` و`utils/notification-target.ts`)، الرئيسية (`types/api/overview.ts` و`mocks/handlers/overview.ts` و`mocks/seed/activity.ts` و`home-kpi-grid.tsx` و`home-recent-changes-table.tsx`)،
+وسجل التدقيق (`types/api/enums.ts` و`constants/audit-entities.ts`). القائمة الكاملة بملفات الاختبار بـ`CLAUDE.md` (قسم "Show the entity in search, notifications and the home page").
+كيان بدون حذف، ومنتقي فوق كيان ثاني، وحقل التاريخ والوقت: بـ`CLAUDE.md` أيضاً. لا يوجد حقل تاريخ ووقت بحقل واحد: التاريخ حقل والوقت حقل.
 
 ## الوحدات الاختيارية (مطفية افتراضياً)
 
