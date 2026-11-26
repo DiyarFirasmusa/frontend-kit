@@ -11,7 +11,7 @@ import { all } from './dom.ts'
 const kinds: [string, string][] = [
   ['main.home > section:not(#intro, #example, #builds) > .column', 'rise'],
   ['main.home #builds > .section-head', 'rise'],
-  ['main.home #builds .kind', 'rise'],
+  ['main.home #builds .make-tabs', 'rise'],
   ['main.home #install .start-window', 'flip'],
   ['main.home #intro .hero-side', 'leave'],
   ['main.doc .doc-article > section.block', 'rise'],
