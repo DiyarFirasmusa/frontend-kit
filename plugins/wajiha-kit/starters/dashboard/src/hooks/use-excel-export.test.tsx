@@ -99,6 +99,7 @@ describe('useExcelExport', () => {
         rows: [{ code: 'A-1', qty: 1, createdBy: null }],
         total: 61_000,
         isTruncated: true,
+        limit: 50_000,
       }),
     );
 

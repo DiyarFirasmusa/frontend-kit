@@ -5,6 +5,6 @@ import { fetchWorkspace } from '@/services/workspace.service';
 export function useWorkspace() {
   return useQuery({
     queryKey: qk.workspace,
-    queryFn: fetchWorkspace,
+    queryFn: ({ signal }) => fetchWorkspace({ signal }),
   });
 }

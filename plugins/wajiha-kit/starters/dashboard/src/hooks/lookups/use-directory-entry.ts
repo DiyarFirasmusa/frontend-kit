@@ -25,6 +25,8 @@ export function useDirectoryEntryState(
 ): { entry: DirectoryEntryResponse | null; isLoading: boolean } {
   const query = useQuery({
     queryKey: qk.directory.entry(id ?? ''),
+    // No `signal`: ids asked for in the same pass share one batched request,
+    // which one cancelled query must not abort for the others.
     queryFn: () => loadDirectoryEntry(kind, id ?? ''),
     enabled: Boolean(id),
     retry: false,

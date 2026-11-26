@@ -17,13 +17,16 @@ interface UseAuditLogOptions {
 export function useAuditLog({ entity, entityId, enabled }: UseAuditLogOptions) {
   const query = useInfiniteQuery({
     queryKey: qk.auditLog.list({ entity, entityId }),
-    queryFn: ({ pageParam }) =>
-      fetchAuditLog({
-        entity,
-        ...(entityId ? { entityId } : {}),
-        page: pageParam,
-        size: AUDIT_LOG_PAGE_SIZE,
-      }),
+    queryFn: ({ pageParam, signal }) =>
+      fetchAuditLog(
+        {
+          entity,
+          ...(entityId ? { entityId } : {}),
+          page: pageParam,
+          size: AUDIT_LOG_PAGE_SIZE,
+        },
+        { signal },
+      ),
     initialPageParam: 0,
     getNextPageParam: (last) => {
       const page = last.page ?? 0;

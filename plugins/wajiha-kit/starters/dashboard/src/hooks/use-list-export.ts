@@ -42,6 +42,7 @@ export function useListExport<P extends { page: number; pageSize: number }, T>({
         rows: all.content,
         total: all.totalElements,
         isTruncated: all.totalElements > all.content.length,
+        limit: EXPORT_PAGE_SIZE,
       };
     },
   });

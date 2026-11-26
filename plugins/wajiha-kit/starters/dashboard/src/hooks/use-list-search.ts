@@ -41,7 +41,7 @@ function pickKeys<S>(source: S, keys: readonly (keyof S)[]): Partial<S> {
 /**
  * Everything a list page reads from and writes to the URL: the table's
  * pagination and sorting, the filters, and clearing them. The URL is the only
- * copy of this state (routing.md); nothing here is `useState`.
+ * copy of this state (routing-url-state.md); nothing here is `useState`.
  */
 export function useListSearch<S extends ListSearchBase>({
   search,

@@ -22,13 +22,15 @@ export type SupportedLanguage = keyof typeof LANGUAGES;
 export const DEFAULT_LANGUAGE: SupportedLanguage = 'ar';
 export const FALLBACK_LANGUAGE: SupportedLanguage = 'en';
 
-export const LANGUAGE_CODES = Object.keys(LANGUAGES) as SupportedLanguage[];
-
 export function isSupportedLanguage(
   value: unknown,
 ): value is SupportedLanguage {
   return typeof value === 'string' && Object.hasOwn(LANGUAGES, value);
 }
+
+export const LANGUAGE_CODES = Object.keys(LANGUAGES).filter((code) =>
+  isSupportedLanguage(code),
+);
 
 /** Direction of a language code, `rtl` for the ones the config marks so. */
 export function directionOf(code: string | undefined): 'ltr' | 'rtl' {

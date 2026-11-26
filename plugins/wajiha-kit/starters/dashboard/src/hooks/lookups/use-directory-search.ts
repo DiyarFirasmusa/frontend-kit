@@ -20,7 +20,7 @@ export function useDirectorySearch(
   const term = q.trim();
   const query = useQuery({
     queryKey: qk.directory.search(kind, term),
-    queryFn: () => searchDirectory(kind, term),
+    queryFn: ({ signal }) => searchDirectory(kind, term, undefined, { signal }),
     placeholderData: keepPreviousData,
     enabled,
     retry: false,

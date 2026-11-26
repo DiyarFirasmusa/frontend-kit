@@ -1,10 +1,7 @@
 import { isAxiosError } from 'axios';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import type { FieldErrors } from '@/types/api/page';
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
+import { isRecord } from './utils/utils';
 
 function toMessages(value: unknown): string[] {
   if (typeof value === 'string') {

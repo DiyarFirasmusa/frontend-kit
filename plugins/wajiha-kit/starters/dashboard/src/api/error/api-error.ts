@@ -4,15 +4,29 @@ import i18n from '@/lib/i18n/i18n';
 import type { ApiErrorBody } from './types/types';
 import { translateKnownMessage } from './utils/known-messages';
 import { statusFallbackMessage } from './utils/status-fallback';
-import { isArabic, pickString } from './utils/utils';
+import { isArabic, isRecord, pickString } from './utils/utils';
 
 export { getErrorData, getErrorStatus, isNotFoundError } from './utils/http';
+
+/** The reason of one `details` item, in the user's language first. */
+function pickDetailReason(item: unknown): string | undefined {
+  if (!isRecord(item)) {
+    return undefined;
+  }
+  return isArabic()
+    ? (pickString(item.ar_reason) ??
+        pickString(item.en_reason) ??
+        pickString(item.reason))
+    : (pickString(item.en_reason) ??
+        pickString(item.ar_reason) ??
+        pickString(item.reason));
+}
 
 export function extractApiErrorMessage(body: unknown): string | undefined {
   if (!body || typeof body !== 'object') {
     return undefined;
   }
-  const errorBody = body as ApiErrorBody;
+  const errorBody: ApiErrorBody = body;
 
   const localized = isArabic()
     ? (pickString(errorBody.ar_error) ?? pickString(errorBody.en_error))
@@ -29,13 +43,7 @@ export function extractApiErrorMessage(body: unknown): string | undefined {
 
   if (Array.isArray(errorBody.details)) {
     for (const item of errorBody.details) {
-      const reason = isArabic()
-        ? (pickString(item?.ar_reason) ??
-          pickString(item?.en_reason) ??
-          pickString(item?.reason))
-        : (pickString(item?.en_reason) ??
-          pickString(item?.ar_reason) ??
-          pickString(item?.reason));
+      const reason = pickDetailReason(item);
       if (reason) {
         return reason;
       }

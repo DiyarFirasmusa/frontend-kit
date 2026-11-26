@@ -49,6 +49,7 @@ describe.each([
       ).rejects.toMatchObject({ response: { status: 409 } });
       expect(errorToast).toHaveBeenCalledExactlyOnceWith(
         tt('common.errors.conflict'),
+        { id: tt('common.errors.conflict') },
       );
     },
   );
@@ -73,6 +74,7 @@ describe.each([
     await expect(client.post('/probe')).rejects.toBeDefined();
     expect(errorToast).toHaveBeenCalledExactlyOnceWith(
       tt('common.errors.generic'),
+      { id: tt('common.errors.generic') },
     );
   });
 
@@ -119,7 +121,9 @@ describe.each([
       message: 'Stock is locked',
       response: { status: 200 },
     });
-    expect(errorToast).toHaveBeenCalledExactlyOnceWith('Stock is locked');
+    expect(errorToast).toHaveBeenCalledExactlyOnceWith('Stock is locked', {
+      id: 'Stock is locked',
+    });
     expect(successToast).not.toHaveBeenCalled();
   });
 

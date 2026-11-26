@@ -10,12 +10,18 @@ export interface AuditLogParams {
   size: number;
 }
 
+/** `signal` comes from TanStack Query, so a cancelled query aborts the request. */
+interface RequestOptions {
+  signal?: AbortSignal;
+}
+
 export async function fetchAuditLog(
   params: AuditLogParams,
+  options?: RequestOptions,
 ): Promise<PageResponseAuditLogResponse> {
   const { data } = await privateApi.get<PageResponseAuditLogResponse>(
     endpoints.auditLog.list,
-    { params },
+    { params, signal: options?.signal },
   );
   return data;
 }

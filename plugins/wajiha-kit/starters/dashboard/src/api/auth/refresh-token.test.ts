@@ -14,7 +14,6 @@ import { deferred } from '@/test/deferred';
 import { makeJwt } from '@/test/fixtures/auth';
 import { authApi } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
-import type { AccessTokenPayload } from '@/types/auth';
 import {
   startSessionSync,
   stopSessionSync,
@@ -89,7 +88,7 @@ describe('refreshAccessToken', () => {
       permissions: ['warehouse:read'],
     });
     const access = makeJwt({ roles: undefined, permissions: undefined });
-    expect(decodeJwt<AccessTokenPayload>(access)?.permissions).toBeUndefined();
+    expect(decodeJwt(access)?.permissions).toBeUndefined();
     server.use(
       http.post(authApi(endpoints.auth.refresh), () =>
         HttpResponse.json({ access, refresh: 'rotated' }),
@@ -124,7 +123,7 @@ describe('refreshAccessToken', () => {
   it('keeps the existing session tenant when the refreshed JWT has no tenant_id claim', async () => {
     signInWithRefreshToken('tenant-keep');
     const access = makeJwt();
-    expect(decodeJwt<AccessTokenPayload>(access)?.tenant_id).toBeUndefined();
+    expect(decodeJwt(access)?.tenant_id).toBeUndefined();
     server.use(
       http.post(authApi(endpoints.auth.refresh), () =>
         HttpResponse.json({ access, refresh: 'rotated' }),

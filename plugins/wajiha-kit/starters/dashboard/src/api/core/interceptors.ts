@@ -116,7 +116,10 @@ export function rejectApiError(error: unknown): never {
           error.response?.status ?? 0,
         ))
     ) {
-      toast.error(resolveApiErrorMessage(error));
+      // The message is the toast id: a retried request that fails again
+      // updates the toast already on screen instead of stacking a second one.
+      const message = resolveApiErrorMessage(error);
+      toast.error(message, { id: message });
     }
   }
   throw error;

@@ -18,7 +18,15 @@ export function createAppQueryClient(): QueryClient {
       queries: {
         // Above 0 so a hover preload or a remount is not a second request.
         staleTime: 5_000,
+        // One retry for a network or 5xx failure, none for a 4xx the user must
+        // fix. The client toasts once per message, so a retry adds no toast.
         retry: retryOnceUnlessClientError,
+        // Off on purpose: a list the user is filtering or editing must not
+        // jump under them when the tab regains focus. Mutations invalidate
+        // what they change; Home (`qk.overview`) refreshes on its next visit
+        // after the 5 s above, and is not invalidated by entity mutations.
+        // If Home shows stale numbers in practice, invalidate `qk.overview`
+        // in the entity mutations.
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
       },

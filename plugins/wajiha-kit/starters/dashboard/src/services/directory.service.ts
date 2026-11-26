@@ -11,6 +11,11 @@ export type DirectorySearchKind = 'USER' | 'EMPLOYEE' | 'ORG_UNIT';
 
 export const DIRECTORY_SEARCH_LIMIT = 20;
 
+/** `signal` comes from TanStack Query, so a cancelled query aborts the request. */
+interface RequestOptions {
+  signal?: AbortSignal;
+}
+
 export const DIRECTORY_KIND_BY_SEARCH_KIND: Record<
   DirectorySearchKind,
   DirectoryKind
@@ -45,10 +50,15 @@ export async function searchDirectory(
   kind: DirectorySearchKind,
   q: string,
   limit: number = DIRECTORY_SEARCH_LIMIT,
+  options?: RequestOptions,
 ): Promise<DirectoryEntryResponse[]> {
   const { data } = await privateApi.get<DirectoryEntryResponse[]>(
     endpoints.directory.search,
-    { params: { kind, q: q.trim() || undefined, limit }, silentError: true },
+    {
+      params: { kind, q: q.trim() || undefined, limit },
+      silentError: true,
+      signal: options?.signal,
+    },
   );
   return data;
 }

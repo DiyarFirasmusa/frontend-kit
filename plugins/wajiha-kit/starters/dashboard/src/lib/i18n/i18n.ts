@@ -85,12 +85,6 @@ function setLanguageCookie(lng: SupportedLanguage) {
   document.cookie = `${LANG_COOKIE}=${lng}; path=/; max-age=${ONE_YEAR_SECONDS}; SameSite=Lax`;
 }
 
-type DocumentWithViewTransition = Document & {
-  startViewTransition?: (callback: () => Promise<void> | void) => {
-    finished: Promise<void>;
-  };
-};
-
 async function applyLanguage(lng: SupportedLanguage): Promise<void> {
   await Promise.all(
     [...loadedFeatures].map((feature) => mergeBundle(feature, lng)),
@@ -105,25 +99,26 @@ async function applyLanguage(lng: SupportedLanguage): Promise<void> {
 }
 
 export async function setLanguage(lng: SupportedLanguage) {
-  const doc =
-    typeof document === 'undefined'
-      ? undefined
-      : (document as DocumentWithViewTransition);
   const prefersReduced =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (!doc?.startViewTransition || prefersReduced) {
+  // No document (SSR) or no View Transitions API (jsdom, older browsers).
+  if (
+    typeof document === 'undefined' ||
+    typeof document.startViewTransition !== 'function' ||
+    prefersReduced
+  ) {
     await applyLanguage(lng);
     return;
   }
 
-  doc.documentElement.dataset.langSwitching = 'true';
-  const transition = doc.startViewTransition(() => applyLanguage(lng));
+  document.documentElement.dataset.langSwitching = 'true';
+  const transition = document.startViewTransition(() => applyLanguage(lng));
   try {
     await transition.finished;
   } finally {
-    delete doc.documentElement.dataset.langSwitching;
+    delete document.documentElement.dataset.langSwitching;
   }
 }
 

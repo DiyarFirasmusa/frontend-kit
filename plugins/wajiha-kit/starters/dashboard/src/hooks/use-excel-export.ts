@@ -8,9 +8,6 @@ import { saveBlob } from '@/utils/download-file';
 import { collectPersonIds, toExportMatrix } from '@/utils/export-table';
 import { localIsoDate } from '@/utils/format';
 
-/** The backend's cap on one `all=true` response. */
-export const EXPORT_ROW_LIMIT = 50_000;
-
 export interface UseExcelExportOptions<T> {
   /** File name without the date or extension, e.g. `stock-documents`. */
   fileName: string;
@@ -33,8 +30,8 @@ function toExportRows<T>(result: ExportRows<T> | T[]): ExportRows<T> {
 
 /**
  * Exports a list to Excel (.xlsx) with the on-screen column labels. Failed
- * requests are toasted by the api client; a cut result (over 50,000 rows)
- * still downloads and warns the user to narrow the filters.
+ * requests are toasted by the api client; a cut result (more rows than the
+ * read's `limit`) still downloads and warns the user to narrow the filters.
  */
 export function useExcelExport<T>({
   fileName,
@@ -46,7 +43,7 @@ export function useExcelExport<T>({
   const { t, i18n } = useTranslation();
   const mutation = useMutation({
     mutationFn: async (scope: ExportScope) => {
-      const { rows, total, isTruncated } = toExportRows(
+      const { rows, total, isTruncated, limit } = toExportRows(
         scope === 'page' && pageRows ? pageRows : await load(),
       );
       const personIds = collectPersonIds(rows, columns);
@@ -65,7 +62,7 @@ export function useExcelExport<T>({
       if (isTruncated) {
         toast.warning(
           t('common.exportTruncated', {
-            limit: EXPORT_ROW_LIMIT.toLocaleString('en-US'),
+            limit: (limit ?? rows.length).toLocaleString('en-US'),
             total: total.toLocaleString('en-US'),
           }),
         );

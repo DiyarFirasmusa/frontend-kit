@@ -3,7 +3,6 @@ import { decodeJwt } from '@/lib/jwt';
 import { tokenService } from '@/services/token.service';
 import { useAuthStore } from '@/store/auth-store';
 import { usePermissionStore } from '@/store/permission-store';
-import type { AccessTokenPayload } from '@/types/auth';
 import { getErrorStatus } from '../error/utils/http';
 import { postSessionMessage, type SessionMessage } from './session-sync';
 
@@ -40,7 +39,7 @@ let refreshAbortController: AbortController | null = null;
 export function applyTokens(access: string, refresh: string | null): void {
   const auth = useAuthStore.getState();
   auth.setTokens(access, refresh);
-  const claims = decodeJwt<AccessTokenPayload>(access);
+  const claims = decodeJwt(access);
   if (!claims) {
     return;
   }
@@ -58,7 +57,7 @@ export function applyTokens(access: string, refresh: string | null): void {
 
 /** True when the token carries roles or permissions claims. */
 export function tokenHasPermissionClaims(access: string): boolean {
-  const claims = decodeJwt<AccessTokenPayload>(access);
+  const claims = decodeJwt(access);
   return Array.isArray(claims?.roles) || Array.isArray(claims?.permissions);
 }
 
@@ -117,7 +116,7 @@ async function doRefresh(
         access: tokens.access,
         refresh: useAuthStore.getState().refreshToken,
         previousRefresh: usedRefresh,
-        userId: decodeJwt<AccessTokenPayload>(tokens.access)?.sub ?? null,
+        userId: decodeJwt(tokens.access)?.sub ?? null,
       });
       return { status: 'ok', token: tokens.access };
     } catch (error) {
