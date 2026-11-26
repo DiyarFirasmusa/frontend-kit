@@ -64,4 +64,23 @@ describe('safeReturnPath', () => {
     expect(safeReturnPath('en', '/en/admin/login')).toBe('/en/admin');
     expect(safeReturnPath('en', undefined)).toBe('/en/admin');
   });
+
+  it('resolves dot-segments before checking, so they cannot climb out of the admin', () => {
+    expect(safeReturnPath('en', '/en/admin/../../x')).toBe('/en/admin');
+    expect(safeReturnPath('en', '/en/admin/%2e%2e/en')).toBe('/en/admin');
+    expect(safeReturnPath('en', '/en/admin/suppliers/../settings')).toBe('/en/admin/settings');
+    expect(safeReturnPath('en', '/en/admin\\evil')).toBe('/en/admin');
+  });
+
+  it('moves a path written for the other language into this one (the language switcher keeps ?redirect=)', () => {
+    expect(safeReturnPath('ar', '/en/admin/suppliers?page=2')).toBe('/ar/admin/suppliers?page=2');
+    expect(safeReturnPath('ar', '/en/administrator')).toBe('/ar/admin');
+  });
+
+  it('never returns to the login page, however it is spelled', () => {
+    expect(safeReturnPath('en', '/en/admin/login?redirect=%2Fen%2Fadmin')).toBe('/en/admin');
+    expect(safeReturnPath('en', '/en/admin/suppliers?next=/login')).toBe(
+      '/en/admin/suppliers?next=/login',
+    );
+  });
 });

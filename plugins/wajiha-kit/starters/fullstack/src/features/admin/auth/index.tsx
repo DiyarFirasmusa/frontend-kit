@@ -10,7 +10,16 @@ import { publicEnv } from '@/shared/env/public-env';
 import type { Locale } from '@/shared/lib/i18n/languages';
 import { useLoginPage } from './use-login-page';
 
-export function LoginPage({ locale, redirect }: { locale: Locale; redirect?: string }) {
+export function LoginPage({
+  locale,
+  redirect,
+  expired = false,
+}: {
+  locale: Locale;
+  redirect?: string;
+  /** The session ended while the user was working (a 401): say so, they did not sign out themselves. */
+  expired?: boolean;
+}) {
   const { t } = useTranslation();
   const page = useLoginPage({ locale, redirect });
 
@@ -29,6 +38,11 @@ export function LoginPage({ locale, redirect }: { locale: Locale; redirect?: str
               <h1 className="text-h2">{t('login.title')}</h1>
             </div>
           </div>
+          {expired ? (
+            <output className="border-stroke-strong bg-muted text-text-primary text-b2 block rounded-md border p-3">
+              {t('login.sessionEnded')}
+            </output>
+          ) : null}
           <p className="text-b2 text-text-secondary">{t('login.subtitle')}</p>
           <Form {...page.form}>
             <form onSubmit={page.onSubmit} noValidate className="gap-row flex flex-col">

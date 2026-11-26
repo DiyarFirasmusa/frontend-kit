@@ -30,6 +30,7 @@
     "errorTitle": "Something went wrong",
     "errorText": "This page could not be shown. Please try again in a moment.",
     "retry": "Try again",
-    "goHome": "Back to the home page"
+    "goHome": "Back to the home page",
+    "backToAdmin": "Back to the admin"
   }
 }

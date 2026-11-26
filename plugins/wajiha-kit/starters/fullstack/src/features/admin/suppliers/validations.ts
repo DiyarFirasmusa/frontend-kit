@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@/shared/lib/zod';
 
 const optionalText = (max: number, message: string) => z.string().trim().max(max, { message });
 

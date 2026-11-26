@@ -11,9 +11,7 @@
     "signOut": "Sign out",
     "forbiddenTitle": "No access",
     "forbiddenText": "Your account cannot open this page. Ask an administrator if you need it.",
-    "backToOverview": "Back to the overview",
-    "notFoundTitle": "Page not found",
-    "notFoundText": "This admin page does not exist."
+    "backToOverview": "Back to the overview"
   },
   "adminErrors": {
     "network": "No connection to the server. Check the network and try again.",

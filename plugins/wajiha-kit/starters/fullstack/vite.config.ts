@@ -13,7 +13,16 @@ import { STATIC_FILE_HEADERS, STATIC_IMAGE_HEADERS } from './src/shared/server/s
 
 export const DEV_PORT = 5190;
 
+/** Set (to "1") by the e2e script only: the tests run the mock API on a build that is "the real site". */
+const ALLOW_MOCK_ON_REAL_SITE = 'ALLOW_MOCK_ON_REAL_SITE';
+
 export default defineConfig(({ command, mode }) => {
+  // The mock API rule (documented in .env.example and STRUCTURE.md): it is OFF unless something asks for it.
+  // "npm run dev" asks for it by running Vite in the "mock" mode; "npm run dev:api" and every build, start
+  // and Docker image use VITE_ADMIN_API_MOCK from the environment, whose default is false.
+  if (command === 'serve' && mode === 'mock') {
+    process.env['VITE_ADMIN_API_MOCK'] = 'true';
+  }
   // Fail the build, not the first visitor: every value is checked before anything is bundled.
   const env = loadEnv(mode, process.cwd(), '');
   if (command === 'build') {
@@ -35,8 +44,16 @@ export default defineConfig(({ command, mode }) => {
         `\nNote: ${WEBHOOK_REQUIRED}. Set it where the server runs, or the server will refuse to start.\n`,
       );
     }
-    if (result.ok && result.value.VITE_ALLOW_INDEXING && result.value.VITE_ADMIN_API_MOCK) {
-      console.warn(`\nNote: ${MOCK_API_ON_REAL_SITE}.\n`);
+    // A real site whose admin accepts any login is never what you want: stop, unless the e2e script says
+    // it is on purpose (it tests the production build with the mock API).
+    if (
+      result.ok &&
+      result.value.VITE_ALLOW_INDEXING &&
+      result.value.VITE_ADMIN_API_MOCK &&
+      env[ALLOW_MOCK_ON_REAL_SITE] !== '1'
+    ) {
+      console.error(`\nBuild stopped: ${MOCK_API_ON_REAL_SITE}.\n`);
+      process.exit(1);
     }
   }
 
@@ -59,6 +76,7 @@ export default defineConfig(({ command, mode }) => {
         routeRules: {
           '/assets/**': { headers: STATIC_FILE_HEADERS },
           '/site.webmanifest': { headers: STATIC_FILE_HEADERS },
+          '/mockServiceWorker.js': { headers: STATIC_FILE_HEADERS },
           '/images/**': { headers: STATIC_IMAGE_HEADERS },
           '/favicon.svg': { headers: STATIC_IMAGE_HEADERS },
           '/og-default.png': { headers: STATIC_IMAGE_HEADERS },

@@ -18,6 +18,17 @@ describe('NAV', () => {
     expect(new Set(NAV.map((item) => item.id)).size).toBe(NAV.length);
   });
 
+  it('cannot hold an admin page: it does not compile, and none is in the list', () => {
+    navItem({
+      // @ts-expect-error admin routes are not public pages (PageRoute excludes /$locale/admin...)
+      to: '/$locale/admin/suppliers',
+      labelKey: 'nav.about',
+      changefreq: 'yearly',
+      priority: 0.5,
+    });
+    expect(NAV.filter((item) => item.id.startsWith('admin'))).toEqual([]);
+  });
+
   it('priorities are between 0 and 1', () => {
     for (const item of NAV) {
       expect(item.priority).toBeGreaterThan(0);

@@ -59,8 +59,8 @@ export function SuppliersPage(props: SuppliersPageProps) {
           getRowId={rowId}
           isLoading={page.isLoading}
           isError={page.isError}
-          errorLabel={t('suppliers.loadError')}
-          onRetry={page.refetch}
+          errorLabel={page.isForbidden ? t('adminErrors.forbidden') : t('suppliers.loadError')}
+          {...(page.isForbidden ? {} : { onRetry: page.refetch })}
           serverPagination={page.pagination}
           noResultsLabel={page.isFiltered ? t('suppliers.emptyFiltered') : t('suppliers.empty')}
         />

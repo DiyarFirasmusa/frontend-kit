@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useCallback } from 'react';
 import { PERMS } from '@/features/admin/constants/permissions';
-import { requirePermission } from '@/features/admin/guards/route-guards';
+import { adminHead } from '@/features/admin/layout/admin-head';
 import { SuppliersPage } from '@/features/admin/suppliers';
 import {
   parseSuppliersSearch,
@@ -11,9 +11,11 @@ import { toLocale } from '@/shared/lib/i18n/languages';
 
 export const Route = createFileRoute('/$locale_/admin/_shell/suppliers')({
   validateSearch: parseSuppliersSearch,
-  beforeLoad: ({ params }) => {
+  beforeLoad: async ({ params }) => {
+    const { requirePermission } = await import('@/features/admin/guards/route-guards');
     requirePermission(toLocale(params.locale), PERMS.supplier.read);
   },
+  head: adminHead('suppliers.title'),
   component: SuppliersRoute,
 });
 

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@/shared/lib/zod';
 
 export const loginSchema = z.object({
   username: z.string().trim().min(1, { message: 'login.usernameRequired' }),

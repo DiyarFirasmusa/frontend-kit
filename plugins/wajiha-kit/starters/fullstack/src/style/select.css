@@ -3,6 +3,16 @@
    Option rows: 40px, 13px body text, 8px radius; highlight = --hover-row;
    selected = --primary-light with a check at the end side. */
 
+/* Base UI hides the scrollbar of an open Select list with a <style> element it injects at runtime. The strict
+   CSP (style-src 'self') blocks that element, so AdminRoot turns it off (CSPProvider disableStyleElements)
+   and the same two rules live here. */
+.base-ui-disable-scrollbar {
+  scrollbar-width: none;
+}
+.base-ui-disable-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @layer components {
   .select-popup {
     display: flex;

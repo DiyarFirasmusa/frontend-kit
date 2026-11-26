@@ -74,8 +74,14 @@ privateApi.interceptors.request.use((config) => {
 });
 privateApi.interceptors.response.use(onSuccess, (error: AxiosError) => {
   if (error.response?.status === 401) {
-    useAuthStore.getState().clear();
-    emitSessionExpired();
+    // Only the request that carried the CURRENT session ends it. A late 401 for a request sent before
+    // a sign-out (or before a newer sign-in) is a consequence, not a new expiry: no second redirect.
+    const { accessToken } = useAuthStore.getState();
+    const sent = error.config?.headers?.Authorization;
+    if (accessToken !== null && sent === `Bearer ${accessToken}`) {
+      useAuthStore.getState().clear();
+      emitSessionExpired();
+    }
     throw error;
   }
   return onError(error);

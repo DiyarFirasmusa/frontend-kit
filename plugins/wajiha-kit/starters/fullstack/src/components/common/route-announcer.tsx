@@ -16,7 +16,8 @@ export function RouteAnnouncer() {
         if (event.fromLocation === undefined || !event.pathChanged) {
           return;
         }
-        const main = document.getElementById('main');
+        // The public pages use id="main", the admin id="admin-main".
+        const main = document.getElementById('main') ?? document.getElementById('admin-main');
         const heading = main?.querySelector('h1') ?? null;
         if (heading !== null) {
           heading.tabIndex = -1;

@@ -4,10 +4,14 @@
 // and the language-free path and the id are worked out from it.
 import type { FileRouteTypes } from '@/routeTree.gen';
 
-/** Every page under /$locale that needs no other parameter (the article page needs a slug, so it is out). */
+/**
+ * Every public page under /$locale that needs no other parameter (the article page needs a slug, so it is
+ * out). The admin pages (/$locale/admin...) are routes too but must never reach the header, the footer or
+ * the sitemap, so they are excluded by type: adding one here does not compile.
+ */
 export type PageRoute = Exclude<
   Extract<FileRouteTypes['to'], `/$locale${string}`>,
-  `${string}/$${string}/$${string}`
+  `${string}/$${string}/$${string}` | `/$locale/admin${string}`
 >;
 
 type NavInput = {

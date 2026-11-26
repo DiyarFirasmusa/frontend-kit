@@ -84,7 +84,7 @@ export function validateProductionEnv(raw: RawEnv): string[] {
 }
 
 export const MOCK_API_ON_REAL_SITE =
-  'VITE_ADMIN_API_MOCK=true on an indexed site: the admin accepts any login and shows demo data. Use it only for demos and tests';
+  'VITE_ADMIN_API_MOCK=true with VITE_ALLOW_INDEXING=true: the real site would accept any login in its admin and show demo data. Set VITE_ADMIN_API_MOCK=false (the default). For a deliberate demo build set ALLOW_MOCK_ON_REAL_SITE=1';
 
 export const WEBHOOK_REQUIRED =
   'CONTACT_WEBHOOK_URL: required on the real site (VITE_ALLOW_INDEXING=true), otherwise contact messages would be lost';

@@ -1,5 +1,6 @@
+import { CSPProvider } from '@base-ui/react/csp-provider';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Outlet, useNavigate, useRouterState } from '@tanstack/react-router';
+import { Outlet, useNavigate, useRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -14,36 +15,40 @@ import { createAdminQueryClient } from '../lib/query-client';
 export function AdminRoot({ locale }: { locale: Locale }) {
   const [queryClient] = useState(createAdminQueryClient);
   const navigate = useNavigate();
-  const href = useRouterState({ select: (state) => state.location.href });
+  const router = useRouter();
 
   useEffect(
     () =>
       onSessionExpired(() => {
-        queryClient.clear();
+        // Read the page at the moment of the event, not at render time: a second 401 that arrives while
+        // the login page is showing must not make the login page its own return address.
+        const { pathname, href } = router.state.location;
+        if (pathname.endsWith('/login')) {
+          return;
+        }
+        void queryClient.cancelQueries();
         void navigate({
           to: '/$locale/admin/login',
           params: { locale },
-          search: { redirect: href },
+          search: { redirect: href, reason: 'expired' },
+          replace: true,
+        }).then(() => {
+          queryClient.clear();
         });
       }),
-    [href, locale, navigate, queryClient],
+    [locale, navigate, queryClient, router],
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Outlet />
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-}
-
-/** Shown while the admin's code, text and (in mock mode) the mock API start. */
-export function AdminLoading() {
-  return (
-    <div className="bg-background grid min-h-dvh place-items-center">
-      <span className="border-stroke-strong border-t-primary size-8 animate-spin rounded-full border-2" />
-    </div>
+    // disableStyleElements: Base UI would inject <style> elements, which style-src 'self' blocks (the
+    // rules it needs are in src/style/select.css).
+    <CSPProvider disableStyleElements>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Outlet />
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </CSPProvider>
   );
 }

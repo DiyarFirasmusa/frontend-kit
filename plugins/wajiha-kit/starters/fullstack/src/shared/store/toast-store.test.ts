@@ -32,4 +32,21 @@ describe('toast store', () => {
     useToastStore.getState().dismiss(first?.id ?? 0);
     expect(useToastStore.getState().toasts.map((item) => item.message)).toEqual([{ text: 'b' }]);
   });
+
+  it('shows the same error once, however often it is reported (retries)', () => {
+    toast.error({ text: 'Network down' });
+    toast.error({ text: 'Network down' });
+    toast.error({ key: 'adminErrors.network' });
+    toast.error({ key: 'adminErrors.network' });
+    expect(useToastStore.getState().toasts.map((item) => item.message)).toEqual([
+      { text: 'Network down' },
+      { key: 'adminErrors.network' },
+    ]);
+  });
+
+  it('still shows a repeated success, because each save is its own event', () => {
+    toast.success({ key: 'settings.saved' });
+    toast.success({ key: 'settings.saved' });
+    expect(useToastStore.getState().toasts).toHaveLength(2);
+  });
 });

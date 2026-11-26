@@ -26,20 +26,32 @@ export function UserMenu({ locale }: { locale: Locale }) {
   const clear = useAuthStore((state) => state.clear);
 
   const signOut = () => {
-    // Best effort: the session ends here whatever the server answers.
-    void privateApi.post(endpoints.auth.logout, null, { silentError: true }).catch(() => undefined);
+    // The request interceptor reads the token when the request is sent, which is after clear() below,
+    // so the token is passed explicitly: a real backend can only revoke a session it can identify.
+    const token = useAuthStore.getState().accessToken;
+    void privateApi
+      .post(endpoints.auth.logout, null, {
+        silentError: true,
+        ...(token === null ? {} : { headers: { Authorization: `Bearer ${token}` } }),
+      })
+      .catch(() => undefined);
+    // Stop in-flight and background list requests first: they would come back without a token.
+    void queryClient.cancelQueries();
     clear();
-    queryClient.clear();
-    void navigate({ to: '/$locale/admin/login', params: { locale } });
+    void navigate({ to: '/$locale/admin/login', params: { locale } }).then(() => {
+      queryClient.clear();
+    });
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="outline" className="max-w-48" aria-label={t('admin.accountMenu')}>
-            <User className="size-4" />
+          <Button variant="outline" className="max-w-48">
+            <User className="size-4" aria-hidden="true" />
             <span className="truncate">{user?.name ?? ''}</span>
+            {/* The visible name comes first, so the accessible name starts with it (WCAG 2.5.3). */}
+            <span className="sr-only">{t('admin.accountMenu')}</span>
           </Button>
         }
       />

@@ -5,6 +5,7 @@ import type { ResolvedTableFilter, ServerPagination } from '@/components/table/t
 import { useDebouncedValue } from '@/shared/hooks/use-debounced-value';
 import { useDeleteTarget } from '@/shared/hooks/use-delete-target';
 import { zodResolver } from '@/shared/lib/vendor/zod-resolver';
+import { errorStatus } from '../api/errors';
 import { useCan } from '../components/can';
 import { PERMS } from '../constants/permissions';
 import type { Supplier } from '../types/api';
@@ -65,12 +66,23 @@ export function useSuppliersPage({ search, onSearchChange }: SuppliersPageProps)
     pageSize: SUPPLIERS_PAGE_SIZE,
   });
   const total = query.data?.total ?? 0;
+  const lastPage = Math.max(1, Math.ceil(total / SUPPLIERS_PAGE_SIZE));
+
+  // A page past the end (a typed URL, or the last row of the last page was deleted): a real backend answers
+  // it with no rows, so go to the last page instead of showing "no suppliers" under a pager that says 3 of 2.
+  // Only judged on real data, not on the previous page kept on screen while this one loads.
+  const settled = query.isSuccess && !query.isPlaceholderData && !query.isFetching;
+  useEffect(() => {
+    if (settled && page > lastPage) {
+      onSearchChange({ ...search, page: lastPage === 1 ? undefined : lastPage });
+    }
+  }, [settled, page, lastPage, search, onSearchChange]);
 
   const pagination: ServerPagination = {
     page: page - 1,
     pageSize: SUPPLIERS_PAGE_SIZE,
     total,
-    totalPages: Math.max(1, Math.ceil(total / SUPPLIERS_PAGE_SIZE)),
+    totalPages: lastPage,
     onPageChange: (index) => {
       onSearchChange({ ...search, page: index === 0 ? undefined : index + 1 });
     },
@@ -158,6 +170,8 @@ export function useSuppliersPage({ search, onSearchChange }: SuppliersPageProps)
     rows: query.data?.items ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    /** The API said 403 for the list: show "no access", a retry cannot help. */
+    isForbidden: errorStatus(query.error) === 403,
     refetch: () => {
       void query.refetch();
     },

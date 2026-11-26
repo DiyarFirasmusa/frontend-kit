@@ -23,6 +23,7 @@ export default defineConfig({
     'playwright-report/**',
     'test-results/**',
     'public/mockServiceWorker.js',
+    '.lint-probe/**',
   ],
 
   plugins: ['react', 'typescript', 'oxc', 'jsx-a11y', 'import', 'unicorn'],
@@ -63,7 +64,9 @@ export default defineConfig({
     },
     // Boundaries. The two parts of the project (src/features/site and src/features/admin) never import each
     // other; shared code (src/components, src/shared, src/style, src/config) never imports a feature or a
-    // route. Code both parts need moves down into shared code.
+    // route. Code both parts need moves down into shared code. Each rule lists the "@/" spelling AND the
+    // relative spelling (../../admin/x, any depth): a relative path is the same import in disguise.
+    // "npm run check:boundaries" writes probe files and proves every rule still fires.
     {
       files: ['src/components/**', 'src/shared/**', 'src/style/**', 'src/config/**'],
       rules: {
@@ -73,7 +76,7 @@ export default defineConfig({
             paths: [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API],
             patterns: [
               {
-                group: ['@/features/**', '@/routes/**'],
+                group: ['@/features/**', '@/routes/**', '../**/features/**', '../**/routes/**'],
                 message:
                   'Shared code must not import a feature or a route. Move the shared part into src/components or src/shared.',
               },
@@ -91,7 +94,7 @@ export default defineConfig({
             paths: [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API],
             patterns: [
               {
-                group: ['@/features/admin', '@/features/admin/**'],
+                group: ['@/features/admin', '@/features/admin/**', '../**/admin', '../**/admin/**'],
                 message:
                   'The public site never imports the admin. Shared code goes in src/components or src/shared.',
               },
@@ -109,7 +112,7 @@ export default defineConfig({
             paths: [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API],
             patterns: [
               {
-                group: ['@/features/site', '@/features/site/**'],
+                group: ['@/features/site', '@/features/site/**', '../**/site', '../**/site/**'],
                 message:
                   'The admin never imports the public site. Shared code goes in src/components or src/shared.',
               },
@@ -127,7 +130,16 @@ export default defineConfig({
             paths: [I18NEXT_DEFAULT],
             patterns: [
               {
-                group: ['@/features/site', '@/features/site/**', '@/routes/**', '@/components/**'],
+                group: [
+                  '@/features/site',
+                  '@/features/site/**',
+                  '@/routes/**',
+                  '@/components/**',
+                  '../**/site',
+                  '../**/site/**',
+                  '../**/routes/**',
+                  '../**/components/**',
+                ],
                 message:
                   'The API layer talks to stores and services only, never to UI. Announce events instead (session-events.ts).',
               },

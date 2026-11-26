@@ -20,6 +20,10 @@ const MAX_TOASTS = 3;
 
 let nextId = 1;
 
+function sameMessage(a: ToastMessage, b: ToastMessage): boolean {
+  return 'key' in a ? 'key' in b && a.key === b.key : 'text' in b && a.text === b.text;
+}
+
 /**
  * Toasts without a toast library: the common ones inject a <style> element at runtime, which the
  * strict Content-Security-Policy (style-src 'self') blocks. The Toaster component renders this store.
@@ -27,8 +31,17 @@ let nextId = 1;
 export const useToastStore = create<ToastState>((set) => ({
   toasts: [],
   push: (tone, message) => {
-    const toast: Toast = { id: nextId++, tone, message };
-    set((state) => ({ toasts: [...state.toasts, toast].slice(-MAX_TOASTS) }));
+    set((state) => {
+      // One failed request that is retried reports the same error again: show it once, not three times.
+      const shown =
+        tone === 'error' &&
+        state.toasts.some((toast) => toast.tone === 'error' && sameMessage(toast.message, message));
+      if (shown) {
+        return state;
+      }
+      const toast: Toast = { id: nextId++, tone, message };
+      return { toasts: [...state.toasts, toast].slice(-MAX_TOASTS) };
+    });
   },
   dismiss: (id) => {
     set((state) => ({ toasts: state.toasts.filter((toast) => toast.id !== id) }));

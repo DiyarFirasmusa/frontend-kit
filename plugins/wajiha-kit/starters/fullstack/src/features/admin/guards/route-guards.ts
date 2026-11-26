@@ -1,5 +1,5 @@
 import { redirect } from '@tanstack/react-router';
-import type { Locale } from '@/shared/lib/i18n/languages';
+import { otherLocale, type Locale } from '@/shared/lib/i18n/languages';
 import type { Permission } from '../constants/permissions';
 import { isSignedIn } from '../store/auth-store';
 import { hasPermission } from '../store/permission-store';
@@ -32,18 +32,33 @@ export function requirePermission(locale: Locale, permission: Permission): void 
   }
 }
 
+const PARSE_BASE = 'http://admin.invalid';
+
 /**
  * Where to go after login: only a path inside this admin, so a crafted ?redirect= link can never send
- * the user to another site or to the public pages.
+ * the user to another site or to the public pages. The value is parsed first, so dot-segments
+ * (/en/admin/../x, /en/admin/%2e%2e/x) are resolved before the check, and the login page is never a
+ * destination (it would bounce straight back).
  */
 export function safeReturnPath(locale: Locale, value: unknown): string {
   const home = `/${locale}/admin`;
-  if (typeof value !== 'string' || !value.startsWith(`${home}`) || value.startsWith('//')) {
+  if (typeof value !== 'string' || !value.startsWith('/') || value.includes('\\')) {
     return home;
   }
-  const rest = value.slice(home.length);
-  if (rest !== '' && !rest.startsWith('/') && !rest.startsWith('?')) {
+  let url: URL;
+  try {
+    // The language switcher keeps ?redirect= as it was: a path written for the other language is moved
+    // into this one, so switching language on the login page does not lose the page the user wanted.
+    const other = `/${otherLocale(locale)}/admin`;
+    const path = value.startsWith(other) ? `${home}${value.slice(other.length)}` : value;
+    url = new URL(path, PARSE_BASE);
+  } catch {
     return home;
   }
-  return value.includes('/login') ? home : value;
+  const { pathname } = url;
+  const inside = pathname === home || pathname.startsWith(`${home}/`);
+  if (url.origin !== PARSE_BASE || !inside || pathname === `${home}/login`) {
+    return home;
+  }
+  return `${pathname}${url.search}${url.hash}`;
 }

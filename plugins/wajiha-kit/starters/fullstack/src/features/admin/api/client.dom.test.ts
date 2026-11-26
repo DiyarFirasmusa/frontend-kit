@@ -13,7 +13,7 @@ const api = (path: string) => `${publicEnv.VITE_ADMIN_API_URL}${path}`;
 function signIn(): void {
   useAuthStore.getState().setSession({
     user: { id: 'u1', username: 'demo', name: 'Demo' },
-    accessToken: 'mock-token-test',
+    accessToken: 'mock-token-admin-test',
   });
 }
 
@@ -32,7 +32,7 @@ describe('admin API client', () => {
       }),
     );
     await privateApi.get(endpoints.overview);
-    expect(seen).toEqual({ auth: 'Bearer mock-token-test', lang: 'en' });
+    expect(seen).toEqual({ auth: 'Bearer mock-token-admin-test', lang: 'en' });
   });
 
   it('ends the session on a 401 and tells the layout', async () => {
@@ -46,6 +46,39 @@ describe('admin API client', () => {
     stop();
     expect(expired).toBe(true);
     expect(useAuthStore.getState().accessToken).toBeNull();
+  });
+
+  it('ignores a late 401 for a request sent with an older session', async () => {
+    signIn();
+    let expired = 0;
+    const stop = onSessionExpired(() => {
+      expired += 1;
+    });
+    server.use(http.get(api(endpoints.overview), () => HttpResponse.json({}, { status: 401 })));
+    const pending = privateApi.get(endpoints.overview);
+    // The user signs out (or in again) before the answer arrives.
+    useAuthStore.getState().clear();
+    await expect(pending).rejects.toThrow();
+    stop();
+    expect(expired).toBe(0);
+  });
+
+  it('sends the token it was given for a request made while signing out', async () => {
+    signIn();
+    let auth: string | null = null;
+    server.use(
+      http.post(api(endpoints.auth.logout), ({ request }) => {
+        auth = request.headers.get('Authorization');
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+    const pending = privateApi.post(endpoints.auth.logout, null, {
+      silentError: true,
+      headers: { Authorization: 'Bearer mock-token-admin-test' },
+    });
+    useAuthStore.getState().clear();
+    await pending;
+    expect(auth).toBe('Bearer mock-token-admin-test');
   });
 
   it('shows the backend message for a failed request, and a success message for a change', async () => {
