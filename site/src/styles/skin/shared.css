@@ -14,11 +14,11 @@ html .board .board-main {
   box-shadow: inset 0 0 0 1.5px var(--accent-bright);
 }
 
-/* The two bars around the block (the title bar above it, the note bar under it) carry the turquoise: an edge of the same
-   weight as the orange one of the block between them, in dark and in light mode. Orange is what you do, turquoise is
+/* The two bars around the block (the title bar above it, the note bar under it) carry the turquoise: an thin, soft
+   edge (the orange block between them stays the strong one), in dark and in light mode. Orange is what you do, turquoise is
    where you are and where you go next. */
 html .board :is(.board-top, .board-note) {
-  border: 1.5px solid var(--dark-turq);
+  border: 1px solid color-mix(in srgb, var(--dark-turq) 50%, transparent);
 }
 
 /* In light mode the words inside the block are light again; the drawings inside it stay light paper windows. */
