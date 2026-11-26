@@ -34,6 +34,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint:check
+      - run: npm run check:boundaries
       - run: npm run fmt:check
       - run: npm run i18n:validate
       - run: npm run check:env
@@ -42,6 +43,8 @@ jobs:
       # Unit and component tests with the coverage thresholds from vitest.config.ts.
       - run: npm run test:coverage
       - run: npm run build
+      # The public pages must stay small and free of admin code (budget in scripts/check-bundle-size.mjs).
+      - run: npm run check:bundle
 
   audit:
     name: Dependency audit
