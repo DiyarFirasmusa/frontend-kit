@@ -13,6 +13,68 @@ const AXIOS_OUTSIDE_ADMIN_API = {
     'Import axios only inside src/features/admin/api; use the clients and helpers it exports.',
 };
 
+const BASE_PATHS = [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API];
+
+// TanStack Query and MSW belong to the admin (CLAUDE.md: "admin only"; a build with the mock off must contain no MSW).
+const ADMIN_ONLY_PACKAGES = [
+  {
+    name: '@tanstack/react-query',
+    message: 'TanStack Query is admin only. The public site fetches on the server.',
+  },
+  { name: 'msw', message: 'MSW is the admin mock API; the public site never imports it.' },
+  { name: 'msw/browser', message: 'MSW is the admin mock API; the public site never imports it.' },
+  { name: 'msw/node', message: 'MSW is the admin mock API; the public site never imports it.' },
+];
+
+const SHARED_NO_FEATURES = {
+  group: ['@/features/**', '@/routes/**', '../**/features/**', '../**/routes/**'],
+  message:
+    'Shared code must not import a feature or a route. Move the shared part into src/components or src/shared.',
+};
+const NO_SERVER_CODE = {
+  group: ['@/shared/server/**', '../**/shared/server/**'],
+  message:
+    'src/components is client code. Server-only code (src/shared/server) is not importable here.',
+};
+const NO_SITE = {
+  group: ['@/features/site', '@/features/site/**', '../**/site', '../**/site/**'],
+  message:
+    'The admin never imports the public site. Shared code goes in src/components or src/shared.',
+};
+const NO_MOCKS = {
+  group: ['@/features/admin/mocks', '@/features/admin/mocks/**', '../**/mocks', '../**/mocks/**'],
+  message: 'Nothing outside mocks/start-mocks.ts (loaded by the admin route) imports the mock API.',
+};
+const NO_RAW_API_CLIENT = {
+  group: [
+    '@/features/admin/api/client',
+    '@/features/admin/api/endpoints',
+    '../**/api/client',
+    '../**/api/endpoints',
+  ],
+  message:
+    'Components, pages and hooks never call axios: go through <x>.service.ts (see api-layer.md).',
+};
+const NO_STATIC_ADMIN = {
+  group: [
+    '@/features/admin',
+    '@/features/admin/**',
+    './features/admin/**',
+    '../**/features/admin',
+    '../**/features/admin/**',
+  ],
+  message: 'Public entry files never import the admin statically. Use import() in beforeLoad.',
+};
+const NO_ROUTES = {
+  group: ['@/routes/**', '../**/routes/**'],
+  message:
+    'Features never import route files (the route imports the feature). Use getRouteApi(path) for typed route access.',
+};
+const NO_TEST_HELPERS = {
+  group: ['@/test/**', '../**/test/**'],
+  message: 'src/test is for tests only.',
+};
+
 export default defineConfig({
   ignorePatterns: [
     '**/routeTree.gen.ts',
@@ -63,25 +125,23 @@ export default defineConfig({
       rules: { 'jsx-a11y/label-has-associated-control': 'off' },
     },
     // Boundaries. The two parts of the project (src/features/site and src/features/admin) never import each
-    // other; shared code (src/components, src/shared, src/style, src/config) never imports a feature or a
-    // route. Code both parts need moves down into shared code. Each rule lists the "@/" spelling AND the
-    // relative spelling (../../admin/x, any depth): a relative path is the same import in disguise.
-    // "npm run check:boundaries" writes probe files and proves every rule still fires.
+    // other; shared code never imports a feature or a route; only <x>.service.ts and api/ call axios; nothing
+    // but tests imports the mocks or src/test. Each rule lists the "@/" spelling AND the relative spelling (any
+    // depth). Later blocks REPLACE earlier ones for the same rule (no merge), so every block lists
+    // everything that applies to its files; the helpers keep that readable.
     {
       files: ['src/components/**', 'src/shared/**', 'src/style/**', 'src/config/**'],
       rules: {
+        'no-restricted-imports': ['error', { paths: BASE_PATHS, patterns: [SHARED_NO_FEATURES] }],
+      },
+    },
+    // UI components (src/components) are client code: they never import server-only code.
+    {
+      files: ['src/components/**'],
+      rules: {
         'no-restricted-imports': [
           'error',
-          {
-            paths: [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API],
-            patterns: [
-              {
-                group: ['@/features/**', '@/routes/**', '../**/features/**', '../**/routes/**'],
-                message:
-                  'Shared code must not import a feature or a route. Move the shared part into src/components or src/shared.',
-              },
-            ],
-          },
+          { paths: BASE_PATHS, patterns: [SHARED_NO_FEATURES, NO_SERVER_CODE] },
         ],
       },
     },
@@ -91,13 +151,14 @@ export default defineConfig({
         'no-restricted-imports': [
           'error',
           {
-            paths: [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API],
+            paths: [...BASE_PATHS, ...ADMIN_ONLY_PACKAGES],
             patterns: [
               {
                 group: ['@/features/admin', '@/features/admin/**', '../**/admin', '../**/admin/**'],
                 message:
                   'The public site never imports the admin. Shared code goes in src/components or src/shared.',
               },
+              NO_TEST_HELPERS,
             ],
           },
         ],
@@ -109,14 +170,8 @@ export default defineConfig({
         'no-restricted-imports': [
           'error',
           {
-            paths: [I18NEXT_DEFAULT, AXIOS_OUTSIDE_ADMIN_API],
-            patterns: [
-              {
-                group: ['@/features/site', '@/features/site/**', '../**/site', '../**/site/**'],
-                message:
-                  'The admin never imports the public site. Shared code goes in src/components or src/shared.',
-              },
-            ],
+            paths: BASE_PATHS,
+            patterns: [NO_SITE, NO_ROUTES, NO_MOCKS, NO_RAW_API_CLIENT, NO_TEST_HELPERS],
           },
         ],
       },
@@ -143,10 +198,45 @@ export default defineConfig({
                 message:
                   'The API layer talks to stores and services only, never to UI. Announce events instead (session-events.ts).',
               },
+              NO_MOCKS,
+              NO_TEST_HELPERS,
             ],
           },
         ],
       },
+    },
+    // Only the service files (and the api folder above) call the axios clients; pages, hooks and
+    // components go through <x>.service.ts and use-<x>-queries.ts.
+    {
+      files: ['src/features/admin/**/*.service.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          { paths: BASE_PATHS, patterns: [NO_SITE, NO_MOCKS, NO_TEST_HELPERS] },
+        ],
+      },
+    },
+    // The mock API is the only admin code that may import its own files.
+    {
+      files: ['src/features/admin/mocks/**'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          { paths: BASE_PATHS, patterns: [NO_SITE, NO_TEST_HELPERS] },
+        ],
+      },
+    },
+    // Route files, the router and the server entry are in the public entry chunk: they never import the admin
+    // statically (the admin route files below may: the split properties keep it out, and check:bundle proves it).
+    {
+      files: ['src/routes/**', 'src/router.tsx', 'src/start.ts'],
+      rules: {
+        'no-restricted-imports': ['error', { paths: BASE_PATHS, patterns: [NO_STATIC_ADMIN] }],
+      },
+    },
+    {
+      files: ['src/routes/$locale_/**'],
+      rules: { 'no-restricted-imports': ['error', { paths: BASE_PATHS }] },
     },
     {
       files: [

@@ -59,9 +59,51 @@ const CASES = [
   // axios only inside the admin API folder.
   ['src/features/admin/suppliers/a.ts', "import axios from 'axios';", true],
   ['src/features/site/home/a.ts', "const m = () => import('axios');", true],
+  // Packages that belong to the admin: the public site never imports them (stack notes in CLAUDE.md).
+  ['src/features/site/home/a.ts', "import { useQuery } from '@tanstack/react-query';", true],
+  ['src/features/site/home/a.ts', "import { setupWorker } from 'msw/browser';", true],
+  ['src/features/site/home/a.ts', "import { setupServer } from 'msw/node';", true],
+  // Test helpers and the mock API are for tests only.
+  ['src/features/site/home/a.ts', "import { x } from '@/test/render';", true],
+  ['src/features/admin/suppliers/a.ts', "import { x } from '@/test/render';", true],
+  [
+    'src/features/admin/suppliers/a.ts',
+    "import { handlers } from '@/features/admin/mocks/handlers';",
+    true,
+  ],
+  ['src/features/admin/suppliers/a.ts', "import { db } from '../mocks/db';", true],
+  ['src/features/admin/api/a.ts', "import { db } from '../mocks/db';", true],
+  // Components, pages and hooks never call axios: only <x>.service.ts and the api folder do.
+  [
+    'src/features/admin/layout/a.tsx',
+    "import { privateApi } from '@/features/admin/api/client';",
+    true,
+  ],
+  ['src/features/admin/suppliers/a.ts', "import { privateApi } from '../api/client';", true],
+  ['src/features/admin/settings/use-x.ts', "import { endpoints } from '../api/endpoints';", true],
+  [
+    'src/features/admin/suppliers/a/b/c.ts',
+    "import { privateApi } from '../../../api/client';",
+    true,
+  ],
+  // Features never import route files; shared UI never imports server code.
+  ['src/features/admin/layout/a.tsx', "import { Route } from '@/routes/__root';", true],
+  ['src/features/admin/layout/a.tsx', "import { Route } from '../../../routes/__root';", true],
+  ['src/components/ui/a.ts', "import { x } from '@/shared/server/security-headers';", true],
+  ['src/components/ui/deep/a.ts', "import { x } from '../../../shared/server/env.server';", true],
+  // Route files, the router and the server entry never import the admin statically.
+  ['src/routes/$locale/a.ts', "import { x } from '@/features/admin/store/auth-store';", true],
+  ['src/routes/$locale/a.ts', "import { x } from '../../features/admin/store/auth-store';", true],
+  ['src/router.tsx', "import { x } from '@/features/admin/api/client';", true],
+  ['src/router.tsx', "import { x } from './features/admin/store/auth-store';", true],
+  ['src/start.ts', "export * from '@/features/admin/store/auth-store';", true],
   // Allowed imports must stay allowed (no false positives).
   ['src/features/admin/api/a.ts', "import axios from 'axios';", false],
-  ['src/features/admin/suppliers/a.ts', "import { x } from '../api/client';", false],
+  [
+    'src/features/admin/suppliers/suppliers.service.ts',
+    "import { x } from '../api/client';",
+    false,
+  ],
   ['src/features/admin/suppliers/a/b.ts', "import { x } from '../../store/auth-store';", false],
   ['src/features/admin/suppliers/a.ts', "import { x } from '@/components/ui/button';", false],
   ['src/features/site/home/a.ts', "import { x } from '../components/page-header';", false],
@@ -69,6 +111,47 @@ const CASES = [
   ['src/components/ui/a.ts', "import { x } from '@/shared/utils/cn';", false],
   ['src/components/ui/a.ts', "import { x } from './button';", false],
   ['src/shared/lib/a.ts', "import { x } from '../utils/cn';", false],
+  // The service layer calls the API clients; the api folder and the mocks use their own neighbours.
+  [
+    'src/features/admin/suppliers/suppliers.service.ts',
+    "import { privateApi } from '@/features/admin/api/client';",
+    false,
+  ],
+  [
+    'src/features/admin/auth/login.service.ts',
+    "import { endpoints } from '../api/endpoints';",
+    false,
+  ],
+  ['src/features/admin/api/a.ts', "import { privateApi } from './client';", false],
+  ['src/features/admin/mocks/a.ts', "import { endpoints } from '../api/endpoints';", false],
+  ['src/features/admin/mocks/a.ts', "import { db } from './db';", false],
+  // Admin code may use TanStack Query, query keys and the stores; shared code may use the clean helpers.
+  ['src/features/admin/suppliers/a.ts', "import { useQuery } from '@tanstack/react-query';", false],
+  ['src/features/admin/suppliers/a.ts', "import { qk } from '../api/query-keys';", false],
+  [
+    'src/features/site/home/a.ts',
+    "import { createFileRoute } from '@tanstack/react-router';",
+    false,
+  ],
+  [
+    'src/features/site/contact/server/a.ts',
+    "import { x } from '@/shared/server/env.server';",
+    false,
+  ],
+  ['src/shared/server/a.ts', "import { x } from './env.server';", false],
+  // Tests may use the mocks and the test helpers.
+  [
+    'src/features/admin/suppliers/a.test.tsx',
+    "import { handlers } from '@/features/admin/mocks/handlers';",
+    false,
+  ],
+  ['src/features/site/home/a.test.tsx', "import { x } from '@/test/render';", false],
+  // Admin route files may import the admin (their split properties keep it out; check:bundle proves it).
+  [
+    'src/routes/$locale_/admin/a.ts',
+    "import { x } from '@/features/admin/store/auth-store';",
+    false,
+  ],
 ];
 
 function cleanup() {

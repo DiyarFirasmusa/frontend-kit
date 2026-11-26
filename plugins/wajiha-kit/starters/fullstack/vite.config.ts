@@ -1,3 +1,5 @@
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import viteReact from '@vitejs/plugin-react';
@@ -57,6 +59,9 @@ export default defineConfig(({ command, mode }) => {
     }
   }
 
+  // The mock API's service worker (public/mockServiceWorker.js) is only for a build that serves the mock.
+  const keepMockWorker = env['VITE_ADMIN_API_MOCK'] === 'true';
+
   return {
     server: { port: DEV_PORT, strictPort: true },
     resolve: { tsconfigPaths: true },
@@ -72,6 +77,19 @@ export default defineConfig(({ command, mode }) => {
         compressPublicAssets: true,
         // Checks the runtime environment once at server start (see the file).
         plugins: ['./src/shared/server/check-env-plugin.ts'],
+        hooks: {
+          // After public/ is copied and before the .br/.gz copies are made: a build with the mock off ships
+          // no mock service worker (an inert file today, but a dead file with the MSW version in it).
+          'vite:compile:before': async (instance) => {
+            if (!keepMockWorker) {
+              for (const suffix of ['', '.br', '.gz', '.zst']) {
+                await rm(join(instance.options.output.publicDir, `mockServiceWorker.js${suffix}`), {
+                  force: true,
+                });
+              }
+            }
+          },
+        },
         // Files from public/ and the build skip the request middleware, so they get their headers here.
         routeRules: {
           '/assets/**': { headers: STATIC_FILE_HEADERS },

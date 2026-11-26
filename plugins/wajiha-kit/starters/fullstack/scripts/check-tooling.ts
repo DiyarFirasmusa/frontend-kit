@@ -53,6 +53,7 @@ const ci = existsSync('.github/workflows/ci.yml')
   ? readFileSync('.github/workflows/ci.yml', 'utf8')
   : '';
 need(ci !== '', '.github/workflows/ci.yml is missing');
+const PATTERNS: Record<string, string> = { test: 'test(:coverage)?', build: 'build(:proof)?' };
 for (const command of [
   'typecheck',
   'lint:check',
@@ -63,14 +64,16 @@ for (const command of [
   'check:tooling',
   'test',
   'build',
+  'build:proof',
   'check:bundle',
   'check:boundaries',
   'test:e2e',
 ]) {
   need(scripts[command] !== undefined, `package.json has no "${command}" script`);
   need(
-    // "test" is satisfied by the coverage run, which executes the same tests plus the thresholds.
-    new RegExp(`npm run ${command === 'test' ? 'test(:coverage)?' : command}(\\s|$)`, 'm').test(ci),
+    // "test" is satisfied by the coverage run, which executes the same tests plus the thresholds, and
+    // "build" by "build:proof" (the same build plus the source maps the bundle check reads).
+    new RegExp(`npm run ${PATTERNS[command] ?? command}(\\s|$)`, 'm').test(ci),
     `ci.yml never runs "npm run ${command}"`,
   );
 }
