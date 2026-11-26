@@ -304,57 +304,11 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* WHAT FILLS A BLOCK. With no side column the block is the whole width, so its content is arranged to fill it, not left
-   floating in the middle: the words of a kind beside its window, and the comparison as large as its drawing needs. */
-@media (width >= 62rem) {
-  #builds .board-main {
-    display: grid;
-    grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr);
-    align-items: center;
-    gap: clamp(2rem, 4vw, 4rem);
-    padding: 2rem clamp(1.5rem, 4vw, 3.5rem);
-  }
-
-  #builds .show-caption {
-    grid-column: 1;
-    grid-row: 1;
-    width: auto;
-    margin: 0;
-    gap: 0.75rem;
-  }
-
-  #builds .show-caption h3 {
-    font-size: clamp(1.375rem, 1rem + 0.9vw, 1.875rem);
-    line-height: 1.2;
-  }
-
-  #builds .show-caption p {
-    max-width: 30rem;
-    font-size: 1.0625rem;
-  }
-
-  #builds .board-main > .browser {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-    width: 100%;
-    max-width: 44rem;
-    margin: 0;
-  }
-
-  /* Arabic reads from the right: the words come first, on the right, the window on the left. */
-  [dir='rtl'] #builds .board-main {
-    grid-template-columns: minmax(0, 1.2fr) minmax(15rem, 0.8fr);
-  }
-
-  [dir='rtl'] #builds .show-caption {
-    grid-column: 2;
-  }
-
-  [dir='rtl'] #builds .board-main > .browser {
-    grid-column: 1;
-    justify-self: start;
-  }
+/* WHAT FILLS A BLOCK. With no side column a board is as wide as its content needs and no wider, centred under its title,
+   so the content fills it instead of floating in the middle of a very wide black block. */
+.home section:not(#intro) .board {
+  max-width: 64rem;
+  margin-inline: auto;
 }
 
 /* The comparison is drawn in em, 61.8em wide and about 36em tall: its text size follows the width it is given (not the
@@ -368,5 +322,13 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
     width: min(100%, 64rem);
     aspect-ratio: 61.8 / 36;
     font-size: calc(min(100cqw, 64rem) / 61.8);
+  }
+}
+
+/* In "What can you build" the words and the window share one width and one left edge, and fill most of the block. */
+@media (width >= 48rem) {
+  #builds .show-caption,
+  #builds .board-main > .browser {
+    width: min(100%, 40rem);
   }
 }
