@@ -9,7 +9,7 @@ import { useArticlePage } from './use-article-page';
 
 export function ArticlePage() {
   const { t } = useTranslation();
-  const { locale, text, date, cover, readMinutes, related } = useArticlePage();
+  const { locale, article, related } = useArticlePage();
   return (
     <>
       <Container className="pt-10">
@@ -24,22 +24,24 @@ export function ArticlePage() {
       </Container>
       <article>
         <Container size="prose" className="pt-4">
-          <h1 className="text-4xl">{text.title}</h1>
+          <h1 className="text-4xl">{article.title}</h1>
           <p className="text-muted mt-4">
-            <time dateTime={date}>{t('news.publishedOn', { date: formatDate(locale, date) })}</time>
+            <time dateTime={article.date}>
+              {t('news.publishedOn', { date: formatDate(locale, article.date) })}
+            </time>
             {' · '}
-            {t('news.readTime', { count: readMinutes })}
+            {t('news.readTime', { count: article.readMinutes })}
           </p>
           <Picture
-            src={cover}
-            alt={text.coverAlt}
+            src={article.cover}
+            alt={article.coverAlt}
             width={640}
             height={360}
             priority
             className="mt-8 aspect-video w-full rounded-lg object-cover"
           />
           <div className="mt-8 space-y-5">
-            {text.body.map((paragraph) => (
+            {article.body.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>

@@ -1,19 +1,42 @@
-// The single source of truth for languages. Nothing else hardcodes 'ar', 'en', 'rtl' or a locale code.
+// The one registry of languages: the language switcher, the sitemap alternates, the validator, the e2e
+// projects and the translation loader all read it. Adding a language starts here (see "Add a language" in
+// .claude/rules/i18n-rtl.md); `npm run typecheck` then lists every other place that needs the new code.
 export const LOCALES = ['ar', 'en'] as const;
 export type Locale = (typeof LOCALES)[number];
 export type Direction = 'rtl' | 'ltr';
 
 export const DEFAULT_LOCALE: Locale = 'ar';
 
-export const LANGUAGES: Record<
-  Locale,
-  { label: string; dir: Direction; hreflang: string; ogLocale: string }
-> = {
-  ar: { label: 'العربية', dir: 'rtl', hreflang: 'ar-IQ', ogLocale: 'ar_IQ' },
-  en: { label: 'English', dir: 'ltr', hreflang: 'en', ogLocale: 'en_US' },
+export type LanguageInfo = {
+  /** The language's own name: what the switcher shows, whatever the page language is. */
+  label: string;
+  dir: Direction;
+  /** hreflang and the browser's locale: "ar-IQ", "en". */
+  hreflang: string;
+  /** Open Graph locale: "ar_IQ". */
+  ogLocale: string;
+  /** Intl tag for dates, with Latin digits, so the server and the browser print the same text. */
+  dateTag: string;
+};
+
+export const LANGUAGES: Record<Locale, LanguageInfo> = {
+  ar: {
+    label: 'العربية',
+    dir: 'rtl',
+    hreflang: 'ar-IQ',
+    ogLocale: 'ar_IQ',
+    dateTag: 'ar-IQ-u-nu-latn',
+  },
+  en: { label: 'English', dir: 'ltr', hreflang: 'en', ogLocale: 'en_US', dateTag: 'en-GB' },
 };
 
 export const LOCALE_COOKIE = 'lang';
+
+/** One value per language, built from the registry: `localeRecord(() => [])` is `{ ar: [], en: [] }`. */
+export function localeRecord<T>(make: (locale: Locale) => T): Record<Locale, T> {
+  // Object.fromEntries cannot keep the key type; LOCALES is exactly the key set.
+  return Object.fromEntries(LOCALES.map((locale) => [locale, make(locale)])) as Record<Locale, T>;
+}
 
 export function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (LOCALES as readonly string[]).includes(value);
@@ -28,8 +51,9 @@ export function directionOf(locale: Locale): Direction {
   return LANGUAGES[locale].dir;
 }
 
-export function otherLocale(locale: Locale): Locale {
-  return locale === 'ar' ? 'en' : 'ar';
+/** Every language except the given one, in registry order: what the language switcher links to. */
+export function otherLocales(locale: Locale): Locale[] {
+  return LOCALES.filter((candidate) => candidate !== locale);
 }
 
 /** The locale named by the first path segment (/ar/about gives "ar"), or undefined. */

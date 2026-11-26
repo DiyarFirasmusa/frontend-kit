@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAV } from '@/config/nav.config';
 import { siteName } from '@/config/site.config';
@@ -8,7 +8,6 @@ import { CloseIcon, MenuIcon } from '@/shared/components/icons';
 import { LanguageSwitcher } from '@/shared/components/language-switcher';
 import { ThemeToggle } from '@/shared/components/theme-toggle';
 import type { Locale } from '@/shared/lib/i18n/languages';
-import { useMenuStore } from '@/shared/store/menu-store';
 import { cx } from '@/shared/utils/cx';
 
 const linkClass =
@@ -16,9 +15,8 @@ const linkClass =
 
 export function SiteHeader({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
-  const open = useMenuStore((state) => state.open);
-  const toggle = useMenuStore((state) => state.toggle);
-  const setOpen = useMenuStore((state) => state.setOpen);
+  // Phone menu: UI state of this one component, so it is plain state, not a store.
+  const [open, setOpen] = useState(false);
   const toggleButton = useRef<HTMLButtonElement>(null);
 
   // Escape closes the open phone menu and puts focus back on its button.
@@ -77,7 +75,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <button
             ref={toggleButton}
             type="button"
-            onClick={toggle}
+            onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="site-nav"
             aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}

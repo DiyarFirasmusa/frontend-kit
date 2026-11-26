@@ -1,5 +1,3 @@
-import { create } from 'zustand';
-
 export type ThemeChoice = 'light' | 'dark';
 
 export const THEME_STORAGE_KEY = 'theme';
@@ -10,13 +8,7 @@ export const THEME_STORAGE_KEY = 'theme';
  */
 export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
 
-type ThemeState = {
-  /** The visitor's saved choice. undefined = follow the system. */
-  choice: ThemeChoice | undefined;
-  /** Reads what the page currently shows and switches to the other theme. */
-  toggle: () => void;
-};
-
+/** What the page shows now: the `data-theme` attribute if set, otherwise the system setting. */
 function currentTheme(): ThemeChoice {
   const attribute = document.documentElement.getAttribute('data-theme');
   if (attribute === 'light' || attribute === 'dark') {
@@ -25,16 +17,16 @@ function currentTheme(): ThemeChoice {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-export const useThemeStore = create<ThemeState>((set) => ({
-  choice: undefined,
-  toggle: () => {
-    const next: ThemeChoice = currentTheme() === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch {
-      // Private mode or blocked storage: the choice just lasts for this visit.
-    }
-    set({ choice: next });
-  },
-}));
+/**
+ * Switches to the other theme and remembers it. The `data-theme` attribute on <html> is the only state (CSS and
+ * the init script read it), so there is no store to keep in step with it.
+ */
+export function toggleTheme(): void {
+  const next: ThemeChoice = currentTheme() === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+  } catch {
+    // Private mode or blocked storage: the choice just lasts for this visit.
+  }
+}

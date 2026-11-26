@@ -12,7 +12,7 @@ const NONE = "'none'";
 /**
  * Third parties the site is allowed to talk to. Empty by default: the starter loads nothing from outside.
  * Add a host here (and nowhere else) when you add analytics, maps, a captcha or a video player.
- * Example: ANALYTICS.script.push('https://analytics.example.com').
+ * Example: THIRD_PARTY.script.push('https://analytics.example.com').
  */
 export const THIRD_PARTY = {
   script: [] as string[],
@@ -101,12 +101,23 @@ export function nonceFor(request: Request): string | undefined {
 }
 
 /**
- * Where a request for a page should really go: uppercase letters, repeated slashes and a trailing slash are
- * redirected (301) to the one canonical spelling, in one hop. Returns undefined when the path is already
- * canonical, is not a page (assets, server functions and files keep their case: hashed file names are
- * case-sensitive), or the method is not GET or HEAD (a 301 turns a POST into a GET and drops its body).
+ * Where a request for a page should really go, in one 301 hop: repeated slashes and a trailing slash are
+ * removed, the language prefix and the static page segments (`staticSegments`: 'about', 'news', from NAV) are
+ * lowercased, and the hex of percent-escapes is uppercased (the one spelling of an encoded slug).
+ *
+ * The case policy is deliberately narrow: every other segment is a slug and keeps its case, so a CMS slug
+ * like `Q4-Plan` or an Arabic one is never rewritten (and `canonicalUrl` never lowercases it either). A slug
+ * is looked up exactly as written; see .claude/rules/content.md.
+ *
+ * Returns undefined when the path is already canonical, is not a page (assets, server functions and files
+ * keep their case: hashed file names are case-sensitive), or the method is not GET or HEAD (a 301 turns a
+ * POST into a GET and drops its body).
  */
-export function canonicalRedirect(url: URL, method = 'GET'): string | undefined {
+export function canonicalRedirect(
+  url: URL,
+  method = 'GET',
+  staticSegments: ReadonlySet<string> = new Set(),
+): string | undefined {
   const { pathname, search } = url;
   const isPage =
     (method === 'GET' || method === 'HEAD') &&
@@ -118,10 +129,20 @@ export function canonicalRedirect(url: URL, method = 'GET'): string | undefined 
   }
   // Collapse repeated slashes, the leading ones above all: a Location of "//evil.example" would be read as
   // another host.
-  let target = pathname.toLowerCase().replace(/\/{2,}/g, '/');
+  let target = pathname.replace(/\/{2,}/g, '/');
   if (target.length > 1) {
     target = target.replace(/\/+$/, '');
   }
+  target = target
+    .split('/')
+    .map((segment, index) => {
+      const lower = segment.toLowerCase();
+      // Index 1 is the language prefix. Static page segments are lowercase; anything else is a slug.
+      return index === 1 || staticSegments.has(lower)
+        ? lower
+        : segment.replace(/%[0-9a-f]{2}/gi, (escape) => escape.toUpperCase());
+    })
+    .join('/');
   return target === pathname ? undefined : `${target}${search}`;
 }
 

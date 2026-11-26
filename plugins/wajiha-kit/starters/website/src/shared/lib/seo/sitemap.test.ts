@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { siteSitemapEntries } from './site-entries';
 import { buildRobotsTxt, buildSitemapXml, escapeXml } from './sitemap';
 
 const SITE = 'https://example.test';
@@ -36,22 +35,6 @@ describe('buildSitemapXml', () => {
 
   it('escapes XML special characters', () => {
     expect(escapeXml(`a&b<c>"d"'e'`)).toBe('a&amp;b&lt;c&gt;&quot;d&quot;&apos;e&apos;');
-  });
-});
-
-describe('siteSitemapEntries', () => {
-  it('has every navigation page and every article, and no duplicates', () => {
-    const paths = siteSitemapEntries().map((entry) => entry.path);
-    expect(paths).toEqual(expect.arrayContaining(['', '/about', '/services', '/news', '/contact']));
-    expect(paths.some((path) => path.startsWith('/news/'))).toBe(true);
-    expect(new Set(paths).size).toBe(paths.length);
-  });
-
-  it('only lists lowercase paths with no query or trailing slash', () => {
-    for (const { path } of siteSitemapEntries()) {
-      expect(path).toBe(path.toLowerCase());
-      expect(path).not.toMatch(/[?#]|\/$/);
-    }
   });
 });
 

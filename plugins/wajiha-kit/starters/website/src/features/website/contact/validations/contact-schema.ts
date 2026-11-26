@@ -1,5 +1,6 @@
 // Shared by the browser form and the server function: the browser check is for the visitor's convenience,
 // the server check is the one that counts. Messages are locale keys, translated where they are shown.
+import type { ParseKeys } from 'i18next';
 import { z } from '@/shared/lib/zod';
 
 /** Arabic-Indic (٠-٩) and Eastern Arabic / Persian (۰-۹) digits to 0-9, so phone keyboards in Arabic work. */
@@ -17,6 +18,25 @@ function isPhone(value: string): boolean {
   }
   const digits = value.replace(/\D/g, '');
   return digits.length >= 6 && digits.length <= 15;
+}
+
+/**
+ * Every message the schema can return. They are typed locale keys, so a message that is not in the locale
+ * files fails `npm run typecheck`; `isContactMessage` narrows the plain string a form library hands back.
+ */
+export const CONTACT_MESSAGES = [
+  'contact.nameRequired',
+  'contact.nameTooLong',
+  'contact.emailInvalid',
+  'contact.phoneInvalid',
+  'contact.messageTooShort',
+  'contact.messageTooLong',
+] as const satisfies readonly ParseKeys[];
+
+export type ContactMessage = (typeof CONTACT_MESSAGES)[number];
+
+export function isContactMessage(value: unknown): value is ContactMessage {
+  return (CONTACT_MESSAGES as readonly unknown[]).includes(value);
 }
 
 export const contactSchema = z.object({

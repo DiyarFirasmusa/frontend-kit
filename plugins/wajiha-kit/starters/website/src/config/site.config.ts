@@ -8,8 +8,8 @@ export const SITE = {
   phone: '+000 000 000 0000',
   /** Share image: 1200x630 PNG in /public. Chat apps do not read SVG. */
   ogImage: { path: '/og-default.png', width: 1200, height: 630 },
-  /** Brand colour, matches --color-primary in tokens.css (light). */
-  themeColor: '#0f6b5c',
+  /** Browser toolbar colour per scheme: --primary (light) and --bg (dark) in tokens.css; site.config.test.ts checks it. */
+  themeColor: { light: '#0f6b5c', dark: '#0f1513' },
 } as const;
 
 export function siteName(locale: Locale): string {

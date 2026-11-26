@@ -1,9 +1,10 @@
-import { Link } from '@tanstack/react-router';
+import { getRouteApi, Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { buttonPrimary, card } from '@/shared/components/button-styles';
 import { Container } from '@/shared/components/container';
 import { PageHeader } from '@/shared/components/page-header';
-import { useServicesPage } from './use-services-page';
+
+const route = getRouteApi('/$locale/services');
 
 const SERVICES = [
   { title: 'services.consultingTitle', text: 'services.consultingText' },
@@ -20,7 +21,7 @@ const STEPS = [
 
 export function ServicesPage() {
   const { t } = useTranslation();
-  const { locale } = useServicesPage();
+  const { locale } = route.useParams();
   return (
     <>
       <PageHeader title={t('services.title')} lead={t('services.lead')} />

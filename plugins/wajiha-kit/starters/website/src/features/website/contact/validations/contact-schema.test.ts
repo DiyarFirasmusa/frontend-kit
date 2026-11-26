@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { contactSchema, EMPTY_CONTACT, toAsciiDigits } from './contact-schema';
+import {
+  CONTACT_MESSAGES,
+  contactSchema,
+  EMPTY_CONTACT,
+  isContactMessage,
+  toAsciiDigits,
+} from './contact-schema';
 
 const valid = {
   name: 'Sara Ali',
@@ -58,5 +64,43 @@ describe('contactSchema', () => {
 
   it('starts empty', () => {
     expect(contactSchema.safeParse(EMPTY_CONTACT).success).toBe(false);
+  });
+});
+
+describe('error messages are typed locale keys', () => {
+  const bad = [
+    EMPTY_CONTACT,
+    {
+      name: 'x'.repeat(81),
+      email: `${'a'.repeat(250)}@x.io`,
+      phone: '1'.repeat(21),
+      message: 'm'.repeat(2001),
+      contactRef: '',
+    },
+    {
+      name: 'Ali',
+      email: 'not-an-email',
+      phone: 'abc',
+      message: 'long enough message',
+      contactRef: '',
+    },
+  ];
+
+  it('every message the schema returns is one of CONTACT_MESSAGES, and each is reachable', () => {
+    const seen = new Set<string>();
+    for (const input of bad) {
+      const result = contactSchema.safeParse(input);
+      expect(result.success).toBe(false);
+      for (const issue of result.error?.issues ?? []) {
+        expect(isContactMessage(issue.message), issue.message).toBe(true);
+        seen.add(issue.message);
+      }
+    }
+    expect([...seen].toSorted()).toEqual([...CONTACT_MESSAGES].toSorted());
+  });
+
+  it('isContactMessage rejects any other string', () => {
+    expect(isContactMessage('contact.nope')).toBe(false);
+    expect(isContactMessage(undefined)).toBe(false);
   });
 });

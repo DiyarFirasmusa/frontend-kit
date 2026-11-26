@@ -4,7 +4,7 @@ import { buttonPrimary, buttonSecondary } from '@/shared/components/button-style
 import { cx } from '@/shared/utils/cx';
 import { useHydrated } from '@/shared/utils/use-hydrated';
 import { useContactForm } from '../hooks/use-contact-form';
-import type { ContactInput } from '../validations/contact-schema';
+import { isContactMessage, type ContactInput } from '../validations/contact-schema';
 
 type Props = {
   submit: (input: ContactInput) => Promise<{ ok: boolean }>;
@@ -54,7 +54,7 @@ export function ContactForm({ submit }: Props) {
   const fieldError = (message: string | undefined, id: string) =>
     message === undefined ? null : (
       <p id={id} role="alert" className="text-danger mt-1 text-sm">
-        {t(message)}
+        {isContactMessage(message) ? t(message) : t('error.errorText')}
       </p>
     );
 

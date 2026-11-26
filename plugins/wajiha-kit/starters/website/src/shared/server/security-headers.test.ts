@@ -102,12 +102,34 @@ describe('nonces', () => {
 });
 
 describe('canonicalRedirect', () => {
-  const target = (path: string) => canonicalRedirect(new URL(`https://example.test${path}`));
+  const PAGES = new Set(['about', 'news', 'contact']);
+  const target = (path: string) =>
+    canonicalRedirect(new URL(`https://example.test${path}`), 'GET', PAGES);
 
   it('redirects uppercase and trailing slashes to the one spelling, keeping the query', () => {
     expect(target('/AR/About')).toBe('/ar/about');
     expect(target('/ar/about/')).toBe('/ar/about');
     expect(target('/ar/News/?page=2')).toBe('/ar/news?page=2');
+  });
+
+  it('lowercases only the language prefix and the static page segments; a slug keeps its case', () => {
+    expect(target('/AR/NEWS/Q4-Plan')).toBe('/ar/news/Q4-Plan');
+    expect(target('/en/news/Q4-Plan')).toBeUndefined();
+    expect(target('/en/news/Q4-Plan/')).toBe('/en/news/Q4-Plan');
+    expect(target('/en/News/Q4-Plan?x=1')).toBe('/en/news/Q4-Plan?x=1');
+  });
+
+  it('an unknown segment is a slug: it is not lowercased (and then answers 404)', () => {
+    expect(target('/ar/Nothing')).toBeUndefined();
+  });
+
+  it('writes the hex of percent-escapes in uppercase, once, and never loops', () => {
+    const lower = '/ar/news/%d9%85%d9%82%d8%a7%d9%84';
+    const upper = '/ar/news/%D9%85%D9%82%D8%A7%D9%84';
+    expect(target(lower)).toBe(upper);
+    expect(target(upper)).toBeUndefined();
+    // A raw Arabic slug is normalised by URL to uppercase hex: no redirect at all.
+    expect(target('/ar/news/مقال')).toBeUndefined();
   });
 
   it('leaves canonical paths, the root, assets and server functions alone', () => {
@@ -132,8 +154,8 @@ describe('canonicalRedirect', () => {
 
   it('only redirects GET and HEAD: a 301 would turn a POST into a GET and drop the body', () => {
     const url = new URL('https://example.test/AR/contact/');
-    expect(canonicalRedirect(url, 'GET')).toBe('/ar/contact');
-    expect(canonicalRedirect(url, 'HEAD')).toBe('/ar/contact');
+    expect(canonicalRedirect(url, 'GET', PAGES)).toBe('/ar/contact');
+    expect(canonicalRedirect(url, 'HEAD', PAGES)).toBe('/ar/contact');
     expect(canonicalRedirect(url, 'POST')).toBeUndefined();
     expect(canonicalRedirect(url, 'PUT')).toBeUndefined();
   });

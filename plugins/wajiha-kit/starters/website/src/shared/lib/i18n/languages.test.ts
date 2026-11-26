@@ -3,9 +3,12 @@ import {
   DEFAULT_LOCALE,
   directionOf,
   isLocale,
+  LANGUAGES,
   localeFromPath,
+  LOCALES,
+  localeRecord,
   negotiateLocale,
-  otherLocale,
+  otherLocales,
   swapLocaleInPath,
   toLocale,
 } from './languages';
@@ -26,9 +29,32 @@ describe('languages', () => {
     expect(toLocale('en')).toBe('en');
   });
 
-  it('otherLocale flips the language', () => {
-    expect(otherLocale('ar')).toBe('en');
-    expect(otherLocale('en')).toBe('ar');
+  it('otherLocales lists every other language, in registry order', () => {
+    expect(otherLocales('ar')).toEqual(['en']);
+    expect(otherLocales('en')).toEqual(['ar']);
+    for (const locale of LOCALES) {
+      expect(otherLocales(locale)).toHaveLength(LOCALES.length - 1);
+      expect(otherLocales(locale)).not.toContain(locale);
+    }
+  });
+
+  it('the registry is complete: every language has every field, and none is missing or extra', () => {
+    expect(Object.keys(LANGUAGES).toSorted()).toEqual([...LOCALES].toSorted());
+    for (const locale of LOCALES) {
+      const info = LANGUAGES[locale];
+      expect(info.label.trim()).not.toBe('');
+      expect(['rtl', 'ltr']).toContain(info.dir);
+      expect(info.hreflang).toMatch(/^[a-z]{2}(-[A-Z]{2})?$/);
+      expect(info.ogLocale).toMatch(/^[a-z]{2}_[A-Z]{2}$/);
+      expect(() => new Intl.DateTimeFormat(info.dateTag)).not.toThrow();
+    }
+    expect(new Set(LOCALES.map((l) => LANGUAGES[l].hreflang)).size).toBe(LOCALES.length);
+  });
+
+  it('localeRecord makes one value per language', () => {
+    expect(Object.keys(localeRecord((locale) => locale.length)).toSorted()).toEqual(
+      [...LOCALES].toSorted(),
+    );
   });
 
   it('localeFromPath reads the first segment only', () => {

@@ -3,68 +3,42 @@
   Components use the utilities these tokens produce (bg-surface, text-muted, rounded-lg, p-section, text-2xl ...)
   and never write a colour, a font or a physical direction (left/right) themselves.
 
-  Light is the default. Dark follows the system unless the visitor chose a theme (data-theme on <html>).
+  Light and dark follow the system unless the visitor chose a theme (data-theme on <html>).
   Contrast: every text/background pair below is 4.5:1 or better (the axe e2e checks it in both themes).
 */
 
-/* ---------- Colours ---------- */
+/* ---------- Colours ----------
+  One palette: every colour is light-dark(light value, dark value), so there is no second copy of the dark
+  values. `color-scheme: light dark` follows the system; data-theme (set by the theme button, applied before
+  first paint by the init script) forces one side. themeColor in site.config.ts must match --primary (light)
+  and --bg (dark) here: site.config.test.ts checks it. */
 :root {
+  color-scheme: light dark;
+  --bg: light-dark(#faf8f4, #0f1513);
+  --surface: light-dark(#ffffff, #172019);
+  --surface-sunken: light-dark(#f1ede5, #0c110f);
+  --text: light-dark(#1c2321, #eef3f0);
+  --text-muted: light-dark(#4a5753, #a9b7b1);
+  --border: light-dark(#d9d3c7, #2c3a34);
+  --input-border: light-dark(#767f7a, #7f908a);
+  --primary: light-dark(#0f6b5c, #5fd1b9);
+  --primary-hover: light-dark(#0b5246, #86e0cc);
+  --on-primary: light-dark(#ffffff, #08211c);
+  --accent: light-dark(#a84a12, #f0a36b);
+  --focus: light-dark(#0f6b5c, #5fd1b9);
+  --danger: light-dark(#b3261e, #ff8f86);
+  --success: light-dark(#1b6b3a, #6fd493);
+  --shadow:
+    0 1px 2px light-dark(rgb(28 35 33 / 0.06), rgb(0 0 0 / 0.4)),
+    0 8px 24px light-dark(rgb(28 35 33 / 0.06), rgb(0 0 0 / 0.35));
+}
+
+:root[data-theme='light'] {
   color-scheme: light;
-  --bg: #faf8f4;
-  --surface: #ffffff;
-  --surface-sunken: #f1ede5;
-  --text: #1c2321;
-  --text-muted: #4a5753;
-  --border: #d9d3c7;
-  --input-border: #767f7a;
-  --primary: #0f6b5c;
-  --primary-hover: #0b5246;
-  --on-primary: #ffffff;
-  --accent: #a84a12;
-  --focus: #0f6b5c;
-  --danger: #b3261e;
-  --success: #1b6b3a;
-  --shadow: 0 1px 2px rgb(28 35 33 / 0.06), 0 8px 24px rgb(28 35 33 / 0.06);
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #0f1513;
-  --surface: #172019;
-  --surface-sunken: #0c110f;
-  --text: #eef3f0;
-  --text-muted: #a9b7b1;
-  --border: #2c3a34;
-  --input-border: #7f908a;
-  --primary: #5fd1b9;
-  --primary-hover: #86e0cc;
-  --on-primary: #08211c;
-  --accent: #f0a36b;
-  --focus: #5fd1b9;
-  --danger: #ff8f86;
-  --success: #6fd493;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-    --bg: #0f1513;
-    --surface: #172019;
-    --surface-sunken: #0c110f;
-    --text: #eef3f0;
-    --text-muted: #a9b7b1;
-    --border: #2c3a34;
-    --input-border: #7f908a;
-    --primary: #5fd1b9;
-    --primary-hover: #86e0cc;
-    --on-primary: #08211c;
-    --accent: #f0a36b;
-    --focus: #5fd1b9;
-    --danger: #ff8f86;
-    --success: #6fd493;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
-  }
 }
 
 /* ---------- Fonts ----------

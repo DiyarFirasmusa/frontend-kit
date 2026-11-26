@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { THEME_INIT_SCRIPT, THEME_STORAGE_KEY, useThemeStore } from './theme-store';
+import { THEME_INIT_SCRIPT, THEME_STORAGE_KEY, toggleTheme } from './theme';
 
 function setSystemDark(dark: boolean): void {
   vi.spyOn(window, 'matchMedia').mockImplementation(
@@ -7,30 +7,29 @@ function setSystemDark(dark: boolean): void {
   );
 }
 
-describe('theme store', () => {
+describe('toggleTheme', () => {
   beforeEach(() => {
     document.documentElement.removeAttribute('data-theme');
     localStorage.clear();
-    useThemeStore.setState({ choice: undefined });
   });
 
-  it('follows the system until the visitor chooses', () => {
-    expect(useThemeStore.getState().choice).toBeUndefined();
+  it('follows the system until the visitor chooses: nothing is set before the first toggle', () => {
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
   });
 
   it('toggles from the system theme to the other one and remembers it', () => {
     setSystemDark(true);
-    useThemeStore.getState().toggle();
+    toggleTheme();
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('light');
-    expect(useThemeStore.getState().choice).toBe('light');
   });
 
   it('toggles back and forth from an explicit choice', () => {
     setSystemDark(false);
-    useThemeStore.getState().toggle();
+    toggleTheme();
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-    useThemeStore.getState().toggle();
+    toggleTheme();
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
   });
 
@@ -39,7 +38,7 @@ describe('theme store', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('blocked');
     });
-    expect(() => useThemeStore.getState().toggle()).not.toThrow();
+    expect(() => toggleTheme()).not.toThrow();
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
   });
 });
