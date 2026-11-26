@@ -8,18 +8,19 @@ import {
   Tag,
   Warehouse,
 } from '@/lib/icons';
+import type { StaticRoutePath } from '@/types/routes';
 import type { NavGroup, NavItem } from '../types/types';
 
 // Nav is registered here, never hardcoded in JSX. The sidebar renders
 // NAV_GROUPS as an accordion (one open group at a time) and filters by
 // permission; NAV_HOME sits above the groups as a standalone link.
-export const NAV_HOME: NavItem = {
+export const NAV_HOME: NavItem<StaticRoutePath> = {
   to: '/',
   labelKey: 'nav.dashboard',
   icon: Home,
 };
 
-export const NAV_GROUPS: readonly NavGroup[] = [
+export const NAV_GROUPS: readonly NavGroup<StaticRoutePath>[] = [
   {
     id: 'products',
     labelKey: 'nav.groups.products',
@@ -67,7 +68,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   },
 ];
 
-export const NAV_ITEMS: readonly NavItem[] = [
+export const NAV_ITEMS: readonly NavItem<StaticRoutePath>[] = [
   NAV_HOME,
   ...NAV_GROUPS.flatMap((group) => group.items),
 ];

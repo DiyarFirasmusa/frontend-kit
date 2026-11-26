@@ -1,5 +1,4 @@
 import type { UseQueryOptions } from '@tanstack/react-query';
-import type { SupplierListParams } from '@/features/dashboard/suppliers/types/types';
 
 /** Cache window for read-mostly reference lookups (org units, titles, photos). */
 export const REFERENCE_STALE_TIME_MS = 5 * 60 * 1000;
@@ -34,6 +33,7 @@ export const qk = {
   },
   warehouses: {
     all: ['warehouses'] as const,
+    lists: () => ['warehouses', 'list'] as const,
     list: (params: unknown) => ['warehouses', 'list', params] as const,
     detail: (id: string) => ['warehouses', 'detail', id] as const,
     users: (id: string) => ['warehouses', 'users', id] as const,
@@ -41,25 +41,27 @@ export const qk = {
   },
   unitsOfMeasure: {
     all: ['units-of-measure'] as const,
+    lists: () => ['units-of-measure', 'list'] as const,
     list: (params: unknown) => ['units-of-measure', 'list', params] as const,
     detail: (id: string) => ['units-of-measure', 'detail', id] as const,
   },
   categories: {
     all: ['categories'] as const,
+    lists: () => ['categories', 'list'] as const,
     list: (params: unknown) => ['categories', 'list', params] as const,
     detail: (id: string) => ['categories', 'detail', id] as const,
     attributes: (id: string) => ['categories', 'attributes', id] as const,
   },
   attributes: {
     all: ['attributes'] as const,
+    lists: () => ['attributes', 'list'] as const,
     list: (params: unknown) => ['attributes', 'list', params] as const,
     detail: (id: string) => ['attributes', 'detail', id] as const,
   },
   suppliers: {
     all: ['suppliers'] as const,
     lists: () => ['suppliers', 'list'] as const,
-    list: (params: SupplierListParams) =>
-      ['suppliers', 'list', params] as const,
+    list: (params: unknown) => ['suppliers', 'list', params] as const,
     detail: (id: string) => ['suppliers', 'detail', id] as const,
   },
   workspace: ['workspace'] as const,

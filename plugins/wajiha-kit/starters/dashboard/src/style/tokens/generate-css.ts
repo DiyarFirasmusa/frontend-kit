@@ -7,6 +7,7 @@ import {
   SHADOWS,
   SPACING,
   TYPE_RAMP,
+  TYPE_RAMP_ARABIC,
 } from './foundation.ts';
 import { DEFAULT_PRESET_ID, PRESETS } from './presets/index.ts';
 import { statusTokens } from './status.ts';
@@ -74,6 +75,15 @@ export function generateTheme(): string {
         `  --${rampVar(name)}: ${s.weight} ${s.size}px / ${s.line}px var(--font-${s.family});`,
     )
     .join('\n');
+  const arabicRampVars = Object.entries(TYPE_RAMP_ARABIC)
+    .map(([name, override]) => {
+      const base = TYPE_RAMP[name];
+      if (!base) {
+        throw new Error(`TYPE_RAMP_ARABIC has no base style ${name}`);
+      }
+      return `  --${rampVar(name)}: ${base.weight} ${override.size}px / ${override.line}px var(--font-${base.family});`;
+    })
+    .join('\n');
   const ramp = Object.keys(TYPE_RAMP)
     .map((name) => `@utility ${name} {\n  font: var(--${rampVar(name)});\n}`)
     .join('\n');
@@ -136,6 +146,11 @@ ${declarations(DENSITY.comfortable)}
 
 :root[data-density='compact'] {
 ${declarations(DENSITY.compact)}
+}
+
+/* Arabic: bigger small text and roomier headings (TYPE_RAMP_ARABIC) */
+:root:lang(ar) {
+${arabicRampVars}
 }
 
 ${ramp}

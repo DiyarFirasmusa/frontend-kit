@@ -24,6 +24,7 @@ import { DataTableError } from './data-table-error';
 import { DataTablePagination } from './data-table-pagination';
 import {
   alignClass,
+  ROW_HEIGHT_CLASS,
   STICKY_ACTIONS_CELL_CLASS,
   TABLE_HEADER_TINT,
 } from './data-table-row';
@@ -53,6 +54,8 @@ export interface DataTableProps<TRow extends RowData> {
   emptyLabel: string;
   /** Action under the empty message: create, or clear filters. */
   emptyAction?: ReactNode;
+  /** For a small list the API does not page (a category's attributes): no pager. */
+  hidePagination?: boolean;
 }
 
 const ACTIONS_COLUMN_ID = 'actions';
@@ -128,7 +131,8 @@ export function DataTable<TRow extends RowData>(props: DataTableProps<TRow>) {
   const rows = table.getRowModel().rows;
   const total = props.rowCount ?? 0;
   const busy = props.status === 'loading' || props.status === 'refetching';
-  const showPagination = props.status !== 'loading' && total > 0;
+  const showPagination =
+    !props.hidePagination && props.status !== 'loading' && total > 0;
 
   return (
     <div data-slot="data-table" className="space-y-row relative min-w-0">
@@ -206,7 +210,10 @@ export function DataTable<TRow extends RowData>(props: DataTableProps<TRow>) {
               rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="group/row border-stroke-subtle h-[62px] border-b transition-colors duration-150 last:border-0"
+                  className={cn(
+                    'group/row border-stroke-subtle border-b transition-colors duration-150 last:border-0',
+                    ROW_HEIGHT_CLASS,
+                  )}
                 >
                   {row.getVisibleCells().map((cell) => {
                     const meta = cell.column.columnDef.meta;
@@ -214,7 +221,8 @@ export function DataTable<TRow extends RowData>(props: DataTableProps<TRow>) {
                       <TableCell
                         key={cell.id}
                         className={cn(
-                          'text-b2 text-text-primary h-[62px] px-4 py-2 align-middle',
+                          'text-b2 text-text-primary px-4 py-2 align-middle',
+                          ROW_HEIGHT_CLASS,
                           metaClass(cell.column.id, meta),
                           cell.column.id === ACTIONS_COLUMN_ID &&
                             STICKY_ACTIONS_CELL_CLASS,

@@ -1,9 +1,4 @@
-import { TableCell, TableRow } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
-import type { Column, ColumnAlign } from '@/types/table';
-
-const ROW_CLICK_IGNORE =
-  'button, a, [role="button"], [role="menuitem"], input, label, [data-no-row-click]';
+import type { ColumnAlign } from '@/types/table';
 
 /** Header-strip and sticky-action surface tint (one value, used by every header cell). */
 export const TABLE_HEADER_TINT =
@@ -20,9 +15,8 @@ export function stateHeightClass(rows: number): string {
   return 'h-56';
 }
 
-/** Keyboard focus on a row: the global focus colour, full strength (3:1 on every surface). */
-export const ROW_FOCUS_CLASS =
-  'focus-visible:bg-hover-row focus-visible:outline-primary-highlight outline-none focus-visible:outline-2 focus-visible:-outline-offset-2';
+/** Body row and cell height: the `--row-h` token (comfortable 62px, compact 52px). */
+export const ROW_HEIGHT_CLASS = 'h-(--row-h)';
 
 /**
  * The sticky actions cell needs its own opaque background (rows scroll under
@@ -39,79 +33,4 @@ export function alignClass(align?: ColumnAlign): string {
     return 'text-end';
   }
   return 'text-start';
-}
-
-interface DataTableRowProps<T> {
-  row: T;
-  columns: Column<T>[];
-  onRowClick?: (row: T) => void;
-  /** Extra row classes, e.g. the selected-row tint. */
-  className?: string;
-  /** Marks the row as selected for assistive tech and styling hooks. */
-  selected?: boolean;
-}
-
-export function DataTableRow<T>({
-  row,
-  columns,
-  onRowClick,
-  className,
-  selected,
-}: DataTableRowProps<T>) {
-  const clickable = !!onRowClick;
-  return (
-    <TableRow
-      tabIndex={clickable ? 0 : undefined}
-      data-selected={selected || undefined}
-      onClick={
-        clickable
-          ? (e) => {
-              const ignored = (e.target as HTMLElement).closest(
-                ROW_CLICK_IGNORE,
-              );
-              if (ignored && ignored !== e.currentTarget) {
-                return;
-              }
-              onRowClick(row);
-            }
-          : undefined
-      }
-      onKeyDown={
-        clickable
-          ? (e) => {
-              if (
-                (e.key === 'Enter' || e.key === ' ') &&
-                (e.target as HTMLElement) === e.currentTarget
-              ) {
-                e.preventDefault();
-                onRowClick(row);
-              }
-            }
-          : undefined
-      }
-      className={cn(
-        'group/row border-stroke-subtle h-[62px] border-b transition-colors duration-150 last:border-0',
-        clickable && cn('cursor-pointer', ROW_FOCUS_CLASS),
-        className,
-      )}
-    >
-      {columns.map((col) => (
-        <TableCell
-          key={col.id}
-          className={cn(
-            'text-b2 text-text-primary h-[62px] px-4 py-2 align-middle',
-            alignClass(col.align),
-            col.id === 'actions' && STICKY_ACTIONS_CELL_CLASS,
-            col.cellClassName,
-          )}
-        >
-          {col.cell
-            ? col.cell(row)
-            : col.accessor
-              ? ((col.accessor(row) as React.ReactNode) ?? '—')
-              : null}
-        </TableCell>
-      ))}
-    </TableRow>
-  );
 }

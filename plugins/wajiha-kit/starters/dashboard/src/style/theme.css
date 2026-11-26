@@ -187,6 +187,7 @@
   --control-h-sm: 32px;
   --control-h-xs: 28px;
   --field-h: 42px;
+  --row-h: 62px;
 
   /* Theme-ripple defaults; the theme provider sets x/y/r per switch */
   --vt-x: 50%;
@@ -206,6 +207,19 @@
   --control-h-sm: 30px;
   --control-h-xs: 26px;
   --field-h: 36px;
+  --row-h: 52px;
+}
+
+/* Arabic: bigger small text and roomier headings (TYPE_RAMP_ARABIC) */
+:root:lang(ar) {
+  --font-h1: 700 28px / 40px var(--font-heading);
+  --font-h2: 700 24px / 34px var(--font-heading);
+  --font-h3: 700 20px / 30px var(--font-heading);
+  --font-b2: 400 14px / 21px var(--font-sans);
+  --font-b3: 400 13px / 19.5px var(--font-sans);
+  --font-button-2: 600 14px / 21px var(--font-sans);
+  --font-label: 600 13px / 19.5px var(--font-sans);
+  --font-table-header: 400 12px / 18px var(--font-sans);
 }
 
 @utility text-h1 {

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { TYPE_RAMP } from './foundation';
+import { DENSITY, TYPE_RAMP, TYPE_RAMP_ARABIC } from './foundation';
 import {
   allColourTokenNames,
   generatePreset,
@@ -144,5 +144,21 @@ describe('design tokens: foundation', () => {
   it('keeps Arabic and Latin faces in the font stacks', () => {
     expect(theme).toMatch(/--font-sans:[^;]*IBM Plex Sans Arabic/u);
     expect(theme).toMatch(/--font-heading:[^;]*Cairo Variable/u);
+  });
+
+  it('only grows the type in Arabic, never shrinks it', () => {
+    for (const [name, arabic] of Object.entries(TYPE_RAMP_ARABIC)) {
+      const base = TYPE_RAMP[name];
+      expect(base, name).toBeDefined();
+      expect(arabic.size, name).toBeGreaterThanOrEqual(base?.size ?? 0);
+      expect(arabic.line, name).toBeGreaterThanOrEqual(base?.line ?? 0);
+    }
+    expect(theme).toContain(':root:lang(ar)');
+  });
+
+  it('has one table row height per density, as a token', () => {
+    expect(DENSITY.comfortable['row-h']).toBe('62px');
+    expect(DENSITY.compact['row-h']).toBe('52px');
+    expect(theme).toContain('--row-h: 62px');
   });
 });

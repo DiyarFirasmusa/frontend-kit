@@ -82,6 +82,8 @@ export const DENSITY = {
     'control-h-sm': '32px',
     'control-h-xs': '28px',
     'field-h': '42px',
+    /** Table body row; the skeleton rows use it too, so loading never shifts. */
+    'row-h': '62px',
   },
   compact: {
     'control-h-lg': '40px',
@@ -89,6 +91,7 @@ export const DENSITY = {
     'control-h-sm': '30px',
     'control-h-xs': '26px',
     'field-h': '36px',
+    'row-h': '52px',
   },
 } as const;
 
@@ -122,4 +125,23 @@ export const TYPE_RAMP: Readonly<Record<string, TypeStyle>> = {
   'text-kpi': { weight: 700, size: 30, line: 28.5, family: 'heading' },
   'text-metric': { weight: 700, size: 24, line: 36, family: 'heading' },
   'text-display': { weight: 700, size: 28, line: 42, family: 'heading' },
+};
+
+/**
+ * Arabic overrides of the ramp, applied under `:lang(ar)`. Arabic letters
+ * look smaller than Latin ones at the same size, so the small styles grow by
+ * 1px, and the tight heading line heights (about 1.1) open up so dots and
+ * marks above and below the line are not clipped.
+ */
+export const TYPE_RAMP_ARABIC: Readonly<
+  Record<string, Pick<TypeStyle, 'size' | 'line'>>
+> = {
+  'text-h1': { size: 28, line: 40 },
+  'text-h2': { size: 24, line: 34 },
+  'text-h3': { size: 20, line: 30 },
+  'text-b2': { size: 14, line: 21 },
+  'text-b3': { size: 13, line: 19.5 },
+  'text-button-2': { size: 14, line: 21 },
+  'text-label': { size: 13, line: 19.5 },
+  'text-table-header': { size: 12, line: 18 },
 };
