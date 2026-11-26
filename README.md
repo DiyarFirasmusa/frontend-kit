@@ -37,7 +37,8 @@ versions let a call through when a guard times out or cannot start.
 `/wajiha-kit:setup` asks what you are doing (new project, existing project, maintenance, refactor) and what kind of project it is,
 detects the stack (package manager, framework, router, tests, linter, formatter, i18n, source folders), shows **one proposal**
 and waits for your yes, then writes `CLAUDE.md`, `.claude/rules/`, `.claude/settings.json` and `.claude/wajiha-kit.json`,
-adapted to what it found.
+adapted to what it found. A new project in an empty folder is built instead from one of three verified foundations (dashboard, website, or both in one project)
+after five plain questions and your yes: the demo content is replaced with your pages and entities, and the checks must pass before it hands the project over.
 
 **Updates don't always arrive by themselves.** Setup writes `autoUpdate: false` for the kit's marketplace, so updates are by hand unless you turn it on. Where it is on, Claude Code
 updates plugins only in interactive sessions, and not at all where `DISABLE_AUTOUPDATER`, `DISABLE_UPDATES` or

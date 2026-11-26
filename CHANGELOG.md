@@ -16,6 +16,10 @@ A smaller kit: fewer overlapping skills, less always-loaded text.
 - Every skill description is 300 characters or fewer; two agents no longer list their MCP tools twice.
 - The `react` profile's `forms`, `data-and-state` and `routing` rules load only for matching files. `quality-bar.md` lost
   its repeated "before you say done" list; `scope.md` states the live site and deploy config once, in `CLAUDE.md`.
+- **New project path in `/wajiha-kit:setup`.** *New project* in an empty folder asks five plain questions (project type, "tell me about your project", design, OpenAPI link or file,
+  languages), shows a summary, then copies the dashboard, website or fullstack foundation from `starters/`, writes `CLAUDE.md`, `.claude/rules/`, `settings.json` and
+  `wajiha-kit.json`, replaces the demo content with the user's pages and entities (from `docs/api/openapi.json` when given), applies the design and runs the foundation's checks
+  until green. The details are in `skills/setup/references/` (no new skill, agent or hook). The flow was written against the starters but not yet run end to end.
 - Run `/wajiha-kit:setup` again to get the changed rules: copied rules don't update by themselves.
 
 ## 1.16.0

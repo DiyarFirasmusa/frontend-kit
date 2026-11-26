@@ -20,7 +20,13 @@ convention, then the kit's example.
    **both in one project** (`fullstack`: a site and an admin in one tree, each app with its own rules, skills and checks),
    or **any other frontend** (`react`, the name is historical: Next.js, React Router, Vue, Nuxt, Svelte, Angular, plain, …).
 
-It then detects the stack (package manager, framework, router, data layer, styling, tests, linter, formatter, i18n,
+**A new project in an empty folder** takes another path: five plain questions (dashboard, website or both; "tell me about your project"; design; the
+OpenAPI link or file; Arabic, English or both), a summary and your yes, then the kit copies one of three verified foundations from `starters/`
+(`dashboard`, `website`, `fullstack`), replaces the demo content with your pages and entities (from the OpenAPI file when there is one), applies your design,
+runs the foundation's checks until they pass and starts the dev server. The stack and the tooling are fixed; only the content is yours. Details:
+`skills/setup/references/`.
+
+For the other answers it then detects the stack (package manager, framework, router, data layer, styling, tests, linter, formatter, i18n,
 source folders) and adapts the copied rules, permissions and hook commands to it. The hooks work with oxlint, eslint
 or biome, oxfmt, prettier or biome, vitest or jest, and any source folder layout: without `srcDirs` they watch code in
 any folder. Vue and Svelte are typechecked with `vue-tsc` and `svelte-check` when installed; `.astro` files need the
