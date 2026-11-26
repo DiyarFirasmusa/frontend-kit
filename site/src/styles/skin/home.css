@@ -1,0 +1,279 @@
+/* ---------------------------------------------------------------------------------------------
+   THE SKIN (home page): the Claude windows go light in light mode, like the app in its light theme.
+   Layer `skin-page`, the last one (see home/index.css). In dark mode only the parts marked "both" apply.
+   --------------------------------------------------------------------------------------------- */
+/* ---------- The windows: paper-white surfaces with ink words ---------- */
+html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint, .ce-shot) {
+  --ink-rgb: 20 20 19;
+  --ivory: #141413;
+  --line: rgb(20 20 19 / 0.16);
+  --accent: #e8643a;
+  --amber: #c9502a;
+  --turq: #0c8a8a;
+  --turq-deep: #006c6d;
+  color: #141413;
+}
+
+/* Small and muted words in the windows reach 4.5:1. */
+html[data-theme='light'] :is(.tree-hint, .ce-shot) {
+  --muted: #4a4741;
+  --faint: #6b675f;
+}
+
+html[data-theme='light'] :is(.chat, .start-window, .browser, .ba, .path-picture, .dash, .mock) {
+  --faint: #57534c;
+  --muted: #3f3c37;
+}
+
+html[data-theme='light'] :is(.chat, .browser, .ba, .start-window) {
+  border-color: rgb(20 20 19 / 0.2);
+  background: #fffdf9;
+}
+
+html[data-theme='light'] :is(.path-picture, .ce-shot, .show-tabs, .dash, .mock) {
+  border-color: rgb(20 20 19 / 0.12);
+  background: #f4efe6;
+}
+
+html[data-theme='light'] :is(.chat-bar, .browser-bar) {
+  border-color: rgb(20 20 19 / 0.12);
+  background: #f4efe6;
+}
+
+html[data-theme='light'] .browser-url {
+  color: #57534c;
+}
+
+html[data-theme='light'] :is(.ce-spark, .chat-title i) {
+  color: #b5461f;
+}
+
+/* Messages, inputs and chips inside the windows. */
+html[data-theme='light'] :is(.chat, .start-window) :is(.ce-user, .chat-input, .chat-tools, .msg-command, .start-message, .ce-ask, .ce-tool) {
+  border-color: rgb(20 20 19 / 0.16);
+  background: #f4efe6;
+  color: #141413;
+}
+
+html[data-theme='light'] .start-window .start-text .msg-command,
+html[data-theme='light'] .start-window code {
+  background: transparent;
+  color: #141413;
+}
+
+/* Orange on a light surface that carries small text is ink instead. */
+html[data-theme='light'] :is(.chat, .start-window, .browser, .ba, .path-picture) :is(.ce-key, .jp-typed, .is-pick) {
+  color: #141413;
+}
+
+/* ---------- The drawings: the parts that were hard-coded dark ---------- */
+html[data-theme='light'] .ba::before,
+html[data-theme='light'] [dir='rtl'] .ba::before {
+  border-block-end-color: rgb(20 20 19 / 0.12);
+  background-color: #f4efe6;
+}
+
+html[data-theme='light'] .dash-side,
+html[data-theme='light'] .is-broken .dash-side {
+  background: #ece6da;
+  color: #141413;
+}
+
+html[data-theme='light'] .ba-tag.is-bad,
+html[data-theme='light'] .ba-cue {
+  border-color: #141413;
+  background: #141413;
+  color: #f1ede7;
+}
+
+html[data-theme='light'] :is(.jp-input, .jp-ask, .jp-save, .jp-plan) {
+  border-color: rgb(20 20 19 / 0.16);
+  background: #fffdf9;
+  color: #141413;
+}
+
+html[data-theme='light'] :is(.jp-input, .jp-ask, .jp-save) :is(p, span, li, strong) {
+  color: #141413;
+}
+
+html[data-theme='light'] :is(.ce-ready, .ce-tool, .ce-user) {
+  background: #f4efe6;
+  color: #141413;
+}
+
+html[data-theme='light'] .path-picture::before,
+html[data-theme='light'] [dir='rtl'] .path-picture::before {
+  background-color: #f4efe6;
+  border-block-end-color: rgb(20 20 19 / 0.12);
+}
+
+html[data-theme='light'] .jp-build li > span,
+html[data-theme='light'] .jp-build li {
+  color: #141413;
+}
+
+html[data-theme='light'] .jp-bar {
+  background: rgb(20 20 19 / 0.1);
+}
+
+/* The comparison reads at 4.5:1 or better. */
+html[data-theme='light'] .ba b,
+html[data-theme='light'] .ba .is-on {
+  color: #141413;
+}
+
+html[data-theme='light'] .ba .is-broken b {
+  color: #a63a2f;
+}
+
+html[data-theme='light'] .ba .dash-pill {
+  color: #4a4741;
+}
+
+html[data-theme='light'] .ba .dash-pill.is-done {
+  background: #d6eeee;
+  color: #0a5f5f;
+}
+
+html[data-theme='light'] .ba .dash-pill.is-wait {
+  background: #f9dccf;
+  color: #8a3a1c;
+}
+
+html[data-theme='light'] .ba .dash-toast {
+  background: #d6eeee;
+  color: #0a5f5f;
+}
+
+html[data-theme='light'] .ba .dash-error {
+  background: #f8dcd8;
+  color: #8f2a21;
+}
+
+html[data-theme='light'] .ba-tag.is-good,
+html[data-theme='light'] .ba-tag.is-good span {
+  background: #0c7a7a;
+  color: #fff;
+}
+
+/* ---------- The opening screen ---------- */
+/* The second action underlines in turquoise (both themes). */
+html .hero-actions a:not(.hero-start) {
+  text-decoration-color: var(--turq);
+}
+
+html[data-theme='light'] .hero-actions a:not(.hero-start) {
+  text-decoration-color: #0c8a8a;
+}
+
+/* The orange line of the title is the deeper orange in light mode. */
+html[data-theme='light'] .hero h1 > span + span {
+  color: #b8461f;
+  -webkit-text-fill-color: #b8461f;
+}
+
+/* ---------- Number badges in light mode: dark digits on orange / turquoise ----------
+   The kit badge's two !important beat the unlayered !important in components/home/Example.astro. */
+html[data-theme='light'] .board .board-main .path-dot,
+html[data-theme='light'] .board .board-main .start-line-dot {
+  color: #141413;
+}
+
+html[data-theme='light'] .board .board-main .start-line-dot,
+html[data-theme='light'] #install .start-main .start-line-dot,
+html[data-theme='light'] .board .path-stop[data-who='you'] .path-dot {
+  background: #ea6a40;
+  border-color: #ea6a40;
+  color: #141413;
+}
+
+html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
+  background: #19abab !important;
+  color: #141413 !important;
+}
+
+/* ---------- Sizes and hit areas (both themes) ---------- */
+/* Tabs and chips are at least 44px high. */
+.show-tabs button,
+.hero-audience a {
+  min-height: 2.75rem;
+}
+
+/* Arabic text is never below 15px, also in the start part and the hero's small lines. */
+:lang(ar) #install .start-window .start-message,
+:lang(ar) #install .start-skip,
+:lang(ar) #install .start-window .start-hint,
+:lang(ar) #install .start-text,
+:lang(ar) .hero-trust,
+:lang(ar) .hero-audience-label {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+/* In the start window the command's lines are spaced out, and the sentences around it are a step smaller. */
+.start-window .msg-command {
+  line-height: 1.7;
+}
+
+.start-window .msg-line {
+  font-size: 0.875rem;
+}
+
+:lang(ar) .start-window .msg-line {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+/* The start window's copy button has the primary button's size and weight. */
+.start-copy {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #141413;
+}
+
+/* The hero board's side column is as wide as the others' minimum. */
+@media (min-width: 62rem) {
+  .hero-side .board {
+    grid-template-columns: minmax(0, 1fr) 15.5rem;
+  }
+}
+
+/* The comparison: its quote lines up with the title; the broken side is not letter-spaced. */
+.ba-ask {
+  margin-inline-start: 0;
+  justify-self: start;
+  text-align: start;
+}
+
+.ba .dash-table p {
+  letter-spacing: 0;
+}
+
+/* On a phone: the drag pill sits at the bottom centre of the window, clear of the cards; the chat is as tall as its words. */
+@media (max-width: 47.99rem) {
+  .ba-cue {
+    inset-block-end: 0.5rem;
+    inset-block-start: auto;
+  }
+
+  .chat.is-playing .chat-body,
+  .hero-side .chat .chat-body {
+    min-height: 0;
+  }
+}
+
+/* On a small phone the comparison keeps the one stat and the table, and the command wraps at spaces. */
+@media (max-width: 40rem) {
+  .ba .dash-stats > :nth-child(n + 5),
+  .ba .dash-toast {
+    display: none;
+  }
+
+  #install .start-text .msg-command {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    overflow-x: visible;
+    mask-image: none;
+  }
+}

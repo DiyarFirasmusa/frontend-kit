@@ -150,7 +150,7 @@
 }
 
 [dir='rtl'] .jp-typed {
-  animation-name: type-rtl !important;
+  animation-name: type-rtl;
 }
 
 @keyframes cursor-site {

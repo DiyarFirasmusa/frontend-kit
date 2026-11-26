@@ -1,18 +1,4 @@
-/* ---------------------------------------------------------------------------------------------
-   ROUNDED. Every box, button, chip and field has a radius. The grids that are drawn with a 1px gap
-   are rounded as a whole and clip their cells.
-   --------------------------------------------------------------------------------------------- */
-:root {
-  --radius: 0.875rem;
-  --radius-sm: 0.5rem;
-  --radius-pill: 999px;
-}
-
 /* Grids of cells: one rounded frame. */
-/* Boxes. */
-.menu nav {
-  border-radius: var(--radius);
-}
 
 /* Small things are pills. */
 .top-docs {
@@ -33,13 +19,6 @@
   display: grid;
   gap: 0;
   border-inline-start: 0;
-}
-
-.run > li {
-  border: 0;
-  border-radius: 0;
-  background: none;
-  padding-inline: 0;
 }
 
 .run > li::before {

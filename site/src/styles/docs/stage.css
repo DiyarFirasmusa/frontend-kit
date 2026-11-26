@@ -1,10 +1,28 @@
 /* The documentation stands beside the object it is about. */
 .doc {
   min-height: 100svh;
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  align-items: start;
+  --kc: var(--k-page);
+  isolation: isolate;
+  --k-rule: var(--ivory);
+  --k-skill: var(--accent);
+  --k-agent: var(--turq);
+  --k-hook: var(--ivory);
+  --k-page: var(--turq);
+  --accent-text: var(--accent);
+  --turq-text: var(--turq);
+  --measure: 68ch;
+  --row-name: 13rem;
+  --code-ground: #121211;
+  --code-ink: #e4dfd8;
 }
 
 .doc .column {
   padding-block-start: calc(var(--bar) + 1.5rem);
+  min-width: 0;
+  padding-inline: clamp(1.25rem, 4vw, 4rem);
 }
 
 .doc-head h1.is-name {
@@ -15,6 +33,7 @@
 .doc-head .crumbs {
   flex-wrap: wrap;
   column-gap: 1.25rem;
+  display: none;
 }
 
 .doc-summary {
@@ -24,11 +43,6 @@
 }
 
 /* The documentation: the tree, the words, and the thing itself. */
-.doc {
-  display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
-  align-items: start;
-}
 
 .doc .big {
   font-size: 1.0625rem;
@@ -60,6 +74,14 @@
 .tree-search input {
   color: inherit;
   font: inherit;
+  width: 100%;
+  min-height: 2.5rem;
+  padding-inline: 2.5rem 1rem;
+  background: rgb(var(--ink-rgb) / 0.04);
+  font-size: 0.875rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .tree-none {
@@ -79,6 +101,16 @@
   border-block-end: 1px solid var(--line);
   cursor: pointer;
   list-style: none;
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.5rem;
+  padding-inline: 0.5rem;
+  color: var(--ivory);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
 }
 
 .tree nav summary::-webkit-details-marker {
@@ -87,11 +119,22 @@
 
 .tree nav summary span {
   font-family: var(--latin);
+  margin-inline-start: 0;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gc) 14%, transparent);
+  color: var(--gc);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .tree small {
   display: block;
   padding-block: 0.625rem 0.125rem;
+  padding-inline: 0.75rem;
+  color: var(--faint);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .tree a {
@@ -100,6 +143,11 @@
   line-height: 1.3;
   text-decoration: none;
   overflow-wrap: anywhere;
+  position: relative;
+  min-height: 2.125rem;
+  margin-block: 1px;
+  padding-inline: 0.75rem;
+  font-size: 0.9375rem;
 }
 
 .tree a.is-name {

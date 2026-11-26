@@ -7,11 +7,9 @@ import grotesk from '@fontsource-variable/familjen-grotesk/files/familjen-grotes
 import arabic400 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url'
 import arabic500 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url'
 import mono from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url'
-// Every page's styles (styles/site.css), then the light drawings last. The home page (components/Home.astro)
-// and the guide (pages/[...path].astro) import these same two around their own part, so the order is
-// site.css, home/index.css or docs/index.css, light-claude.css on every page.
+// Every page's styles. The home page (components/Home.astro) and the guide (components/DocPage.astro) each add
+// their own part; the order between them is set by the cascade layers declared in site.css, not by load order.
 import '../styles/site.css'
-import '../styles/light-claude.css'
 import { ClientRouter } from 'astro:transitions'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'

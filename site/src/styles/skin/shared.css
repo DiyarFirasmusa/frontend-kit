@@ -1,0 +1,159 @@
+/* ---------------------------------------------------------------------------------------------
+   THE SKIN (every page): the board's black main block with the orange edge, the turquoise side
+   column, and light mode's brighter orange. It sits in the `skin` layer, above every shared and
+   page rule (see site.css), so it needs no !important to win.
+   --------------------------------------------------------------------------------------------- */
+html[data-theme='light'] {
+  --accent: #e8643a;
+  --accent-text: #b5461f;
+}
+
+/* ---------- The main block: a black ground with the orange edge, in dark AND light mode ---------- */
+html .board .board-main {
+  background: #0c0c0c;
+  box-shadow: inset 0 0 0 1.5px #e8643a;
+}
+
+/* In light mode the words inside the block are light again; the drawings inside it stay light paper windows. */
+html[data-theme='light'] .board .board-main {
+  --ink-rgb: 241 237 231;
+  --ivory: #f1ede7;
+  --muted: #cfcac2;
+  --faint: #a8a49d;
+  --line: rgb(241 237 231 / 0.2);
+  --accent: #ea6a40;
+  color: #f1ede7;
+}
+
+/* Some heads paint their words with -webkit-text-fill-color, which beats `color`: the fill follows the colour. */
+html[data-theme='light'] .board-main :is(h1, h1 *, h2, h2 *, .doc-summary, .crumbs, .crumbs *) {
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Focus is visible on the black block: a light ring, and a near-black ring on the paper windows inside it. */
+html[data-theme='light'] .board-main :focus-visible,
+html[data-theme='light'] .board-main a:focus-visible,
+html[data-theme='light'] .board-main input:focus-visible {
+  outline-color: #141413;
+  box-shadow: 0 0 0 2px #fffdf9;
+}
+
+html[data-theme='light'] .board .board-main :is(a, button, input):focus-visible:not(:is(.chat, .browser, .ba, .path-picture, .start-window, .dash, .mock, .command) *) {
+  outline-color: #f4f0ea;
+  box-shadow: 0 0 0 2px #0c0c0c;
+}
+
+/* ---------- The side column: a turquoise edge, rule and ticks; rows sit at the top with an even rhythm ---------- */
+html .board.side-ink .board-side {
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--turq) 70%, transparent);
+}
+
+html .board.side-ink .board-side-title {
+  border-block-end-color: var(--turq);
+}
+
+html .board.side-ink:not(.missing-board) .board-list li::before {
+  background: var(--turq);
+}
+
+html[data-theme='light'] .board.side-ink .board-side {
+  box-shadow: inset 0 0 0 1.5px #0c8a8a;
+}
+
+html[data-theme='light'] .board.side-ink .board-side-title {
+  border-block-end-color: #0c8a8a;
+}
+
+html[data-theme='light'] .board.side-ink .board-list li::before {
+  background: #0c8a8a;
+}
+
+html .board .board-list {
+  flex: 0 0 auto;
+  grid-auto-rows: auto;
+  align-content: start;
+}
+
+html .board .board-list li {
+  justify-content: flex-start;
+  padding-block: 1rem;
+}
+
+/* One side-column width on every home board, so the main block's edge never moves from part to part. */
+@media (min-width: 48rem) {
+  html #builds .board.side-ink,
+  html #example .board.side-ink,
+  html #why .board.side-ink,
+  html #install .board.side-ink {
+    grid-template-columns: minmax(0, 1fr) 19rem;
+  }
+}
+
+/* ---------- The bar: the counter, and the pills that take you somewhere ---------- */
+.board-top,
+.board-top span {
+  text-transform: uppercase;
+}
+
+:lang(ar) .board-top,
+:lang(ar) .board-top span {
+  text-transform: none;
+}
+
+html .board-count {
+  color: var(--turq);
+}
+
+html[data-theme='light'] .board-count {
+  color: #004f50;
+}
+
+.board-note p {
+  font-weight: 400;
+}
+
+/* ---------- Small parts on every page ---------- */
+html[data-theme='light'] :is(.tree summary > span, [data-tree-group] > summary span) {
+  color: #8a3c1f;
+}
+
+/* The pause control's hit area grows without changing the look. */
+.chat-pause::before,
+[data-pause]::before {
+  content: '';
+  position: absolute;
+  inset: -0.5rem;
+}
+
+.foot a {
+  padding-block: 0.25rem;
+}
+
+/* Commands break only at spaces, never inside a name at a hyphen. */
+.tok {
+  white-space: nowrap;
+}
+
+/* Copy buttons: one weight, ink words. */
+.copy-pill {
+  font-weight: 600;
+  color: #141413;
+}
+
+/* The words in the black block, in light mode. The broad rule is kept at low weight (:where) so the
+   narrower ones after it win by being more specific, never by !important. */
+html[data-theme='light'] .board .board-main :where(h1, h2, h3, p, strong, small, li, a, em, span, bdi, .path-label, .crumbs):where(:not(:is(.chat, .browser, .ba, .path-picture, .start-window, .dash, .mock, .command, .tree-hint, .ce-shot) *, .hero-start, .path-dot, .start-line-dot, .board-count)) {
+  color: #f1ede7;
+}
+
+html[data-theme='light'] .board .board-main :is(p, small, .doc-summary, .path-label p):not(:is(.chat, .browser, .ba, .path-picture, .start-window, .dash, .mock, .command) *) {
+  color: #d9d5cd;
+}
+
+html[data-theme='light'] .board .board-main :is(h1 em, .hero h1 span + span) {
+  color: #ea6a40;
+}
+
+html[data-theme='light'] .board .board-main a:not(.hero-start) {
+  text-decoration-color: rgb(241 237 231 / 0.6);
+}

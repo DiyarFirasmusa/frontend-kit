@@ -1,12 +1,4 @@
 /* The side columns: compact rows. */
-.board-list li {
-  padding-block: 0.6rem;
-}
-
-.board-list li small {
-  font-size: 0.8125rem;
-  line-height: 1.4;
-}
 
 .board-side {
   padding-block: 0.9rem;
@@ -86,25 +78,8 @@
   }
 }
 
-.board-list li {
-  transition: background-color 0.2s ease, padding-inline-start 0.2s ease;
-}
-
 .board-list li:hover {
-  padding-inline-start: 0.35rem;
+  padding-inline-start: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .board .board-list li,
-  .board .board-top * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Start in two steps, round 2: a wider window means fewer lines in it; the side column is narrower. */
-@media (min-width: 901px) {
-  #install .board {
-    grid-template-columns: minmax(0, 1fr) minmax(12.5rem, 0.24fr);
-  }
-}
+/* Start in two steps: a wider window means fewer lines in it; the side column is narrower. */

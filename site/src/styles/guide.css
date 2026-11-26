@@ -24,6 +24,7 @@
 .page-index a:hover strong {
   text-decoration: underline;
   text-underline-offset: 6px;
+  color: var(--kc);
 }
 
 .page-index a span {

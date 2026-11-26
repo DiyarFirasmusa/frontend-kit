@@ -26,9 +26,6 @@
 }
 
 /* Focus and the reading line. */
-:focus-visible {
-  outline-color: var(--turq);
-}
 
 .progress {
   background: var(--turq);
@@ -72,44 +69,11 @@
   background: rgb(25 171 171 / 0.22);
 }
 
-.menu nav {
-  border-color: rgb(25 171 171 / 0.3);
-}
-
 @media (max-width: 1279px) {
   .top-nav a[aria-current] {
     background: var(--turq-soft);
     color: var(--turq);
   }
-}
-
-/* The light behind the page: turquoise from the top, orange from below. */
-body::before {
-  background:
-    radial-gradient(52rem 38rem at 88% -6%, rgb(25 171 171 / 0.2), transparent 62%),
-    radial-gradient(44rem 34rem at -8% 38%, rgb(217 119 87 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 96% 108%, rgb(var(--ink-rgb) / 0.14), transparent 62%);
-}
-
-[dir='rtl'] body::before {
-  background:
-    radial-gradient(52rem 38rem at 12% -6%, rgb(25 171 171 / 0.2), transparent 62%),
-    radial-gradient(44rem 34rem at 108% 38%, rgb(217 119 87 / 0.13), transparent 62%),
-    radial-gradient(56rem 36rem at 4% 108%, rgb(var(--ink-rgb) / 0.14), transparent 62%);
-}
-
-/* ---------------------------------------------------------------------------------------------
-   KINDS. Two families from the two colours. What you write down is orange: skills (orange) and
-   rules (light orange). Who acts and checks is turquoise: agents (light turquoise) and checks
-   (turquoise). Guides are the reading pages: ivory in the side list, turquoise in the page.
-   Each light tone is made at the same lightness and strength as its partner.
-   --------------------------------------------------------------------------------------------- */
-:root {
-  --k-skill: #d97757;
-  --k-rule: #f2a183;
-  --k-agent: #57cdcd;
-  --k-hook: #19abab;
-  --k-page: #19abab;
 }
 
 /* Home: the four numbers, the four kinds and the name you pick. */
@@ -131,10 +95,6 @@ body::before {
 .starts {
   border-image: linear-gradient(90deg, transparent, var(--turq), transparent) 1;
   background: linear-gradient(180deg, rgb(25 171 171 / 0.06), transparent 28rem);
-}
-
-.page-index a:hover strong {
-  color: var(--kc);
 }
 
 .progress {

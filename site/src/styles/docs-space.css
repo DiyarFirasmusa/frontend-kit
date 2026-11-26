@@ -1,23 +1,6 @@
-/* The header keeps the same room from the edge on the guide as on the home page. */
-/* ---------- Calm ground: one soft light at the top, a faint grid, no shades or boxes ---------- */
-body::before,
-[dir='rtl'] body::before {
-  background: radial-gradient(60rem 30rem at 50% -12%, rgb(25 171 171 / 0.12), transparent 70%);
-}
-
-/* No shade under the header: it stays clear as the page moves under it. */
-body .top::before,
-body .top.is-scrolled::before {
-  content: none;
-}
-
+/* ---------- Calm ground: a faint grid, no light, no shades or boxes ---------- */
 /* The side list and the page share one ground. */
 /* "On this page" without a frame. */
-/* Once the page moves, the header takes the page's own colour, flat: words pass under it unseen,
-   with no shade, no line and no box. */
-.top.is-scrolled {
-  background: var(--void);
-}
 
 /* ---------- The header on a guide page ----------
    The logo lines up with the page list below it; the search starts where the words start. */
@@ -81,21 +64,6 @@ body .top.is-scrolled::before {
   }
 }
 
-/* ---------- One grid under the whole site ----------
-   The grid stays on the screen while the page moves, from the top of the page to its end and on every page,
-   under the words, never over them. The hero no longer draws a second grid that scrolls away with it. */
-body::before,
-body::after {
-  z-index: -1;
-}
-
-body::after {
-  background:
-    linear-gradient(rgb(var(--ink-rgb) / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.07) 1px, transparent 1px) 0 0 / 4rem 4rem;
-  mask-image: none;
-}
-
 /* ---------- The footer: who made it, where everything is, and the legal pages ----------
    Plain words on the page's own ground: no boxes and no lines, only space between the groups. */
 .foot {
@@ -110,6 +78,10 @@ body::after {
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
   gap: clamp(2rem, 5vw, 4.5rem);
   align-items: start;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: rgb(var(--ink-rgb) / 0.04);
 }
 
 .foot-brand {
@@ -153,13 +125,14 @@ body::after {
 .foot-columns {
   display: grid;
   gap: 2rem 1.5rem;
+  grid-template-columns: repeat(5, max-content);
+  justify-content: space-between;
 }
 
 .foot-columns .foot-title {
   margin: 0 0 0.75rem;
   color: #fff;
   font-size: 0.9375rem;
-  font-weight: 500;
 }
 
 .foot-columns ul {
@@ -173,9 +146,9 @@ body::after {
 .foot-columns a {
   display: flex;
   align-items: center;
-  min-height: 2.25rem;
   color: var(--muted);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .foot-columns a:hover,
@@ -194,6 +167,7 @@ body::after {
   margin-block-start: clamp(2.5rem, 5vw, 4rem);
   color: var(--faint);
   font-size: 0.875rem;
+  padding: 0.75rem 1.1rem;
 }
 
 .foot .foot-bottom p {
@@ -203,9 +177,11 @@ body::after {
 }
 
 .foot-bottom a {
-  display: inline;
-  min-height: 0;
   color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  padding-block: 0.4rem;
 }
 
 .foot-version {
@@ -236,7 +212,10 @@ body::after {
 }
 
 /* ---------- Accessibility: focus, contrast, targets and one pause for all motion ---------- */
-.top-search input:focus-visible {
+/* The search fields' focus ring beats the fields' own `outline: none`, wherever that is set. */
+.top-search input:focus-visible,
+.tree-search input:focus-visible,
+.finder input:focus-visible {
   outline: 2px solid var(--turq, #19abab) !important;
   outline-offset: 2px;
 }
@@ -258,12 +237,6 @@ body::after {
   color: #fff;
   font-size: 0.9375rem;
   font-weight: 500;
-}
-
-.foot-bottom a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.5rem;
 }
 
 /* The pause button in the corner of the chat stops every animation on the page. */
@@ -292,16 +265,6 @@ html:not([dir='rtl']) {
   font-family: system-ui, sans-serif;
 }
 
-/* The footer's links stay on one line each. */
-.foot-columns a {
-  white-space: nowrap;
-}
-
-.foot-columns {
-  grid-template-columns: repeat(5, max-content);
-  justify-content: space-between;
-}
-
 @media (max-width: 1100px) {
   .foot-columns {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -321,7 +284,6 @@ html:not([dir='rtl']) {
 
 /* The commands in a message, on every page. */
 .msg-command {
-  display: block;
   margin-block: 0.375rem;
   color: var(--ivory);
   font: 500 0.8125rem / 1.6 var(--code);
@@ -329,6 +291,8 @@ html:not([dir='rtl']) {
   text-align: left;
   unicode-bidi: isolate;
   overflow-wrap: anywhere;
+  overflow-x: auto;
+  white-space: pre;
 }
 
 .msg-line {
@@ -359,11 +323,6 @@ body .top.is-scrolled {
   font-weight: 600;
 }
 
-/* Links inside a line of text are easy to press: the padding adds to the area that answers, not to the line. */
-.foot-bottom a {
-  padding-block: 0.4rem;
-}
-
 /* Search fields: 16px so a phone does not zoom in, and tall enough to press. */
 @media (max-width: 900px) {
   input[type='search'] {
@@ -387,16 +346,20 @@ body .top.is-scrolled {
 
 .eyebrow svg {
   flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
 .eyebrow-count {
-  color: var(--turq);
+  color: var(--sec, var(--turq));
+  font-weight: 600;
 }
 
 :lang(ar) .eyebrow {
   font-family: var(--type);
-  font-size: 0.9375rem;
   letter-spacing: 0;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 #example {
@@ -404,7 +367,7 @@ body .top.is-scrolled {
 }
 
 #install {
-  --sec: #f1ede7;
+  --sec: #d97757;
 }
 
 #example,
@@ -417,36 +380,9 @@ body .top.is-scrolled {
   color: var(--sec);
 }
 
-/* ---------- Identity: one thread, orange into turquoise, over the first line of every page and every part ---------- */
-:root {
-  --thread: linear-gradient(90deg, var(--accent), var(--turq));
-  --thread: linear-gradient(in oklab 90deg, var(--accent), var(--ivory) 50%, var(--turq));
-}
-
-[dir='rtl'] {
-  --thread: linear-gradient(270deg, var(--accent), var(--turq));
-  --thread: linear-gradient(in oklab 270deg, var(--accent), var(--ivory) 50%, var(--turq));
-}
-
-.eyebrow svg {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
-.eyebrow-count {
-  color: var(--sec, var(--turq));
-  font-weight: 600;
-}
-
 /* One ink on every orange button (the main action: chat.css). */
 .top-install {
   color: #141413;
-}
-
-/* Arabic is smaller than Latin at the same size: the labels above titles are a step larger and bolder. */
-:lang(ar) .eyebrow {
-  font-size: 1rem;
-  font-weight: 600;
 }
 
 @media (max-width: 620px) {
@@ -454,11 +390,6 @@ body .top.is-scrolled {
     width: 2.25rem;
     height: 2.25rem;
   }
-}
-
-/* The light behind each part is strong enough to read as its colour. */
-#install {
-  --sec: #d97757;
 }
 
 /* =====================================================================================================
@@ -473,9 +404,7 @@ body .top.is-scrolled {
   --tone: var(--accent);
   --side: var(--turq);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(10.5rem, 0.32fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 0.75rem;
   direction: ltr;
 }
 
@@ -496,11 +425,11 @@ body .top.is-scrolled {
   gap: 0.5rem 0.75rem;
   padding: 0.65rem 1.1rem;
   border: 1px solid rgb(var(--ink-rgb) / 0.16);
-  border-radius: 0.9rem;
   background: #171715;
   color: #f1ede7;
   font-size: 0.875rem;
   line-height: 1.5;
+  border-radius: 0.7rem;
 }
 
 .board-top {
@@ -508,7 +437,6 @@ body .top.is-scrolled {
   font-family: var(--code);
   font-size: 0.8125rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .board-count {
@@ -518,6 +446,7 @@ body .top.is-scrolled {
 .board-note {
   grid-column: 1;
   grid-row: 3;
+  justify-content: space-between;
 }
 
 .board-note p {
@@ -529,7 +458,9 @@ body .top.is-scrolled {
   grid-row: 2;
   padding: 0.9rem;
   border-radius: 1.4rem;
-  background: var(--tone);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .board-side {
@@ -538,10 +469,11 @@ body .top.is-scrolled {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1.25rem 1rem;
   border-radius: 1.4rem;
-  background: var(--side);
-  color: #101010;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--side) 11%, #0c0c0b);
+  box-shadow: inset 0 0 0 1.5px var(--side);
+  color: #f1ede7;
 }
 
 .board-side p {
@@ -550,14 +482,17 @@ body .top.is-scrolled {
 
 .board-side-title {
   font-family: var(--code);
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
   text-transform: uppercase;
+  padding-block-end: 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  border-block-end: 1px solid color-mix(in srgb, var(--side) 65%, transparent);
+  color: var(--side);
 }
 
 .board-list {
   display: grid;
-  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -567,19 +502,38 @@ body .top.is-scrolled {
   font-size: 1.0625rem;
   font-weight: 600;
   line-height: 1.35;
+  flex-direction: column;
+  justify-content: center;
+  border-block-start: 1px solid rgb(16 16 16 / 0.2);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  column-gap: 0.5rem;
+  border-block-start-color: color-mix(in srgb, var(--side) 32%, transparent);
+  padding-block: 0.6rem;
+  transition: background-color 0.2s ease, padding-inline-start 0.2s ease;
 }
 
 .board-list li::before {
-  content: '✓ ';
+  grid-column: 1;
+  grid-row: 1;
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-block-start: 0.3em;
+  clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 24%, 86% 10%, 38% 72%);
+  background: var(--side);
 }
 
 .board-list li small {
+  grid-column: 2;
   display: block;
-  margin-block-start: 0.2rem;
-  font-size: 0.875rem;
+  margin-block-start: 0.25rem;
+  color: inherit;
+  font-size: max(0.8125rem, 1em);
   font-weight: 400;
-  line-height: 1.45;
-  opacity: 0.85;
+  line-height: 1.5;
+  opacity: 1;
 }
 
 .board-top svg {
@@ -601,9 +555,13 @@ body .top.is-scrolled {
   text-transform: none;
 }
 
+.board.side-ink .board-side-title {
+  border-block-end-color: rgb(241 237 231 / 0.3);
+  color: #f1ede7;
+}
+
 @media (max-width: 760px) {
   .board {
-    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
   }
 
@@ -625,15 +583,21 @@ body .top.is-scrolled {
   }
 }
 
-/* No coloured light behind the titles of the parts or behind the drawings: the page is plain black, the colour is in the blocks. */
-#example::before,
-#install::before {
-  content: none;
-}
-
 /* ---------- The board, tightened after the design review ---------- */
 .board {
   gap: 0.5rem;
+}
+
+/* A side column of what you need is neutral: it is not what you get. */
+
+.board.side-ink {
+  --side: #f1ede7;
+}
+@media (min-width: 901px) {
+
+#install .board {
+    grid-template-columns: minmax(0, 1fr) minmax(12.5rem, 0.24fr);
+  }
 }
 
 .board-main,
@@ -641,91 +605,31 @@ body .top.is-scrolled {
   border-radius: 0.9rem;
 }
 
-.board-top,
-.board-note {
-  border-radius: 0.7rem;
+.board.side-ink .board-side {
+  background: #131312;
+  box-shadow: inset 0 0 0 1px rgb(241 237 231 / 0.22);
 }
 
 /* The side column is never an empty slab: its points share the whole height, each in its own row. */
-.board-side {
-  padding: 1rem 1.1rem;
-}
-
-.board-side-title {
-  padding-block-end: 0.25rem;
-}
 
 .board-list {
-  flex: 1;
-  grid-auto-rows: 1fr;
   gap: 0;
-}
-
-.board-list li {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-block: 0.9rem;
-  border-block-start: 1px solid rgb(16 16 16 / 0.2);
 }
 
 .board-list li:first-child {
   border-block-start: 0;
 }
 
-/* The tick sits beside the words of each point, not above them. */
-.board-list li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-content: center;
-  column-gap: 0.5rem;
-}
-
-.board-list li::before {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.board-list li small {
-  grid-column: 2;
-}
-
 /* What sits in the main block is centred in it, so a short drawing never leaves an empty band under it. */
-.board-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 
 .board-main > * {
   width: 100%;
-}
-
-/* A drawn tick, beside the words, in every point of every side column. */
-.board-list li::before {
-  content: '';
-  width: 0.9rem;
-  height: 0.9rem;
-  margin-block-start: 0.3em;
-  background: currentColor;
-  clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 24%, 86% 10%, 38% 72%);
-}
-
-.board-side-title {
-  padding-block-end: 0.75rem;
-  border-block-end: 2px solid rgb(16 16 16 / 0.85);
-  font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
 }
 
 /* =====================================================================================================
    ONE PLACE FOR THE BOARD: under the title of its part, as wide as the column. Only the hero is split.
    The action of a part is always at the end of its note bar; the note's words are at the start.
    ===================================================================================================== */
-.board-note {
-  justify-content: space-between;
-}
 
 .board-note > div {
   display: contents;
@@ -736,41 +640,16 @@ body .top.is-scrolled {
    with its colour as a clear edge and a soft tint, and its words stay light. The logo's shape and its
    four colours are all there; the page keeps one dark voice. (In light mode the blocks are solid, see theme-light.css.)
    ===================================================================================================== */
-.board-main {
-  background: color-mix(in srgb, var(--tone) 13%, #0c0c0b);
-  box-shadow: inset 0 0 0 1.5px var(--tone);
-}
 
-.board.tone-ink .board-main {
-  background: #131312;
-  box-shadow: inset 0 0 0 1px rgb(241 237 231 / 0.2);
-}
-
-.board-side {
-  background: color-mix(in srgb, var(--side) 11%, #0c0c0b);
-  box-shadow: inset 0 0 0 1.5px var(--side);
-  color: #f1ede7;
-}
-
-.board-side-title {
-  border-block-end: 1px solid color-mix(in srgb, var(--side) 65%, transparent);
-  color: var(--side);
-}
-
-.board-list li {
-  border-block-start-color: color-mix(in srgb, var(--side) 32%, transparent);
-}
-
-.board-list li::before {
-  background: var(--side);
-}
-
-.board-list li small {
-  opacity: 0.85;
+.missing-board .board-main {
+  justify-content: flex-start;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* =====================================================================================================
-   Round 18, after the third studio review
+   The board's side column, commands and the footer bar (refinements of the board rules above)
    ===================================================================================================== */
 /* The side column is wide enough for its sentences. */
 .board {
@@ -786,27 +665,11 @@ body .top.is-scrolled {
 /* A command is one line you can scroll, never broken in the middle of a flag. */
 .msg-command {
   display: block;
-  overflow-x: auto;
-  white-space: pre;
-}
-
-/* The footer opens with the same dark bar as every board: the mark, the name, what it is. */
-.foot-top {
-  padding: 1.1rem 1.25rem;
-  border: 1px solid var(--line);
-  border-radius: 0.9rem;
-  background: rgb(var(--ink-rgb) / 0.04);
 }
 
 /* =====================================================================================================
-   ROUND 22: the law reaches the end of every page, its steps, its code and its controls
+   Header controls, footer bar, side-column ink and the 404 board
    ===================================================================================================== */
-/* No tinted light anywhere: the ground is plain black (or paper). */
-body::before,
-[dir='rtl'] body::before {
-  content: none;
-}
-
 /* The header's two controls are settings, not places to go: quiet squares in ink. */
 .theme-toggle,
 .language {
@@ -827,25 +690,9 @@ body::before,
 
 /* The footer ends in a bar too. */
 .foot-bottom {
-  padding: 0.75rem 1.1rem;
   border: 1px solid var(--line);
   border-radius: 0.7rem;
   background: rgb(var(--ink-rgb) / 0.04);
-}
-
-/* A side column of what you need is neutral: it is not what you get. */
-.board.side-ink {
-  --side: #f1ede7;
-}
-
-.board.side-ink .board-side {
-  background: #131312;
-  box-shadow: inset 0 0 0 1px rgb(241 237 231 / 0.22);
-}
-
-.board.side-ink .board-side-title {
-  border-block-end-color: rgb(241 237 231 / 0.3);
-  color: #f1ede7;
 }
 
 .board.side-ink .board-list li::before {
@@ -885,11 +732,6 @@ body::before,
   color: var(--turq);
 }
 
-.missing-board .board-main {
-  justify-content: flex-start;
-  min-height: 14rem;
-}
-
 /* The page that is not there: links are arrows (go there), not ticks. */
 .missing-board .board-list li::before {
   content: '\2192';
@@ -904,10 +746,6 @@ body::before,
 
 [dir='rtl'] .missing-board .board-list li::before {
   content: '\2190';
-}
-
-.missing-board .board-main {
-  min-height: auto;
 }
 
 .missing-help {
@@ -928,11 +766,6 @@ body::before,
 
 [dir='rtl'] .board.side-ink.missing-board .board-list li::before {
   content: '\2190';
-}
-
-.missing-board .board-main {
-  display: flex;
-  flex-direction: column;
 }
 
 .missing-other {

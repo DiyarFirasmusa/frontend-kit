@@ -6,6 +6,7 @@
 /* The header has no line under it while scrolling: no edge and no reading bar. */
 .top.is-scrolled {
   box-shadow: none;
+  background: var(--void);
 }
 
 .progress {

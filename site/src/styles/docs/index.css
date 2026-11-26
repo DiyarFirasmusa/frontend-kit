@@ -1,16 +1,17 @@
-/* The guide's own styles: the parts of each stylesheet that only guide pages use, in the same order. */
-@import './base.css';
-@import './details.css';
-@import './guide.css';
-@import './doc.css';
-@import './stage.css';
-@import './rounded.css';
-@import './motion.css';
-@import './identity.css';
-@import './chat.css';
-@import './docs-space.css';
-@import './theme-light.css';
-@import './docs-law.css';
+/* The guide's own styles: the parts of each stylesheet that only guide pages use, in the same order,
+   then the skin's guide part. The layer order is the one site.css explains. */
+@layer astro, shared, page, skin, skin-page;
 
-/* Loaded again last on this page kind: in production the shared light-mode file is bundled before the page's own CSS, and it must win. */
-@import '../light-claude.css';
+@import './base.css' layer(page);
+@import './details.css' layer(page);
+@import './guide.css' layer(page);
+@import './doc.css' layer(page);
+@import './stage.css' layer(page);
+@import './rounded.css' layer(page);
+@import './motion.css' layer(page);
+@import './identity.css' layer(page);
+@import './chat.css' layer(page);
+@import './docs-space.css' layer(page);
+@import './theme-light.css' layer(page);
+@import './docs-law.css' layer(page);
+@import '../skin/docs.css' layer(skin-page);

@@ -26,10 +26,6 @@
   gap: 0.75rem;
 }
 
-.show-words h3 {
-  margin-block-end: 0.35rem;
-}
-
 .show-tabs {
   margin-block-end: 1rem;
 }
@@ -39,15 +35,7 @@
   height: 9.5rem;
 }
 
-.board .path-label p {
-  font-size: 0.8125rem;
-  line-height: 1.5;
-}
-
 /* 4/4: the window and the two steps are closer together. */
-.start-main {
-  gap: 1rem;
-}
 
 .start-window .start-body {
   gap: 0.6rem;
@@ -70,7 +58,6 @@
 /* The journey: the current step is the one lit; the steps before it are done, the ones after it are quiet. */
 .path-stop {
   cursor: pointer;
-  outline-offset: 4px;
 }
 
 .path-stop .path-picture,
@@ -80,7 +67,7 @@
 
 .path-stop:not(.is-current):not(.is-done) .path-picture,
 .path-stop:not(.is-current):not(.is-done) .path-label {
-  opacity: 0.55;
+  opacity: 1;
 }
 
 .path-stop.is-current .path-picture {
@@ -98,12 +85,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .path-stop .path-picture,
-  .path-stop .path-label {
-    animation: none !important;
-    transition: none !important;
-  }
-
   .path-stop.is-current .path-picture {
     transform: none;
   }
@@ -119,10 +100,10 @@
 @media (min-width: 62rem) {
   .show-panel .show-words {
     display: grid;
-    grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
     align-items: baseline;
     gap: 1.5rem;
     margin-block-end: 0.75rem;
+    grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.72fr);
   }
 
   .show-panel .show-words h3,
@@ -131,14 +112,11 @@
   }
 
   .builds .board-main > .browser {
-    width: min(100%, 29rem);
+    width: min(100%, 27rem);
   }
 }
 
 @media (min-width: 62rem) {
-  .show-panel .show-words {
-    grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.72fr);
-  }
 
   /* A wider side column: four features sit in four short rows, so the board is as tall as the picture. */
   .builds .board {
@@ -148,34 +126,20 @@
   .builds .board-list li {
     padding-block: 0.45rem;
   }
-
-  .builds .board-main > .browser {
-    width: min(100%, 31rem);
-  }
 }
 
 @media (min-width: 62rem) {
-  .builds .board-main > .browser {
-    width: min(100%, 27rem);
-  }
 
   .builds.builds {
     padding-block: 2.5rem;
   }
 }
 
-/* ---------------------------------------------------------------------------------------------
-   Start in two steps: the two steps and the window share one short row; the note under the
-   window says one thing (the step already said "paste it and send it").
-   --------------------------------------------------------------------------------------------- */
-.start-lead {
-  margin-block: 0.5rem 0;
-}
-
 @media (min-width: 901px) {
   #install .start-main {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     gap: 1.25rem;
+    align-items: center;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
   }
 }
 
@@ -200,7 +164,7 @@
 }
 
 #install .start-copy {
-  min-height: 2.5rem;
+  min-height: 2.75rem;
 }
 
 #install .start-more {
@@ -219,9 +183,6 @@
 }
 
 @media (min-width: 901px) {
-  #install .start-main {
-    align-items: center;
-  }
 
   #install .start-line {
     align-self: stretch;
@@ -230,9 +191,6 @@
 }
 
 @media (min-width: 901px) {
-  #install .start-main {
-    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
-  }
 
   #install .start-window .start-body {
     padding: 0.7rem 0.9rem;
@@ -257,7 +215,7 @@
   .home .example,
   .home .get-it,
   .compare-section {
-    padding-block: 2rem;
+    padding-block: 4rem;
   }
 
   .section-head {
@@ -268,12 +226,6 @@
 /* The same air between every part of the home page: 8rem from the end of one board to the next title,
    the same as between the opening screen and the first part. */
 @media (min-width: 62rem) {
-  .builds.builds,
-  .home .example,
-  .home .get-it,
-  .compare-section {
-    padding-block: 4rem;
-  }
 
   .home .intro,
   .home .hero {

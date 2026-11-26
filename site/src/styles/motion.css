@@ -64,3 +64,28 @@
     }
   }
 }
+
+/* Less motion, in one place: the parts that move on their own or on hover stand still. !important because this has to
+   beat every animation, transition and hover shift set anywhere else, in any layer. */
+@media (prefers-reduced-motion: reduce) {
+  .board-count,
+  .board-note a,
+  .hero-start,
+  .board .board-list li,
+  .board .board-top *,
+  .ce-spark.is-busy,
+  .chat.is-playing [data-ev].is-in,
+  .path-stop .path-picture,
+  .path-stop .path-label {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .board-count,
+  .board-note a,
+  .hero-start,
+  .ce-spark.is-busy,
+  .chat.is-playing [data-ev].is-in {
+    transform: none !important;
+  }
+}

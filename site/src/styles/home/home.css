@@ -1,10 +1,15 @@
 /* The home page: plain words on one quiet grid, and a session that shows what really happens. */
 .home {
   --cell: 4rem;
+  --grid-line: rgb(var(--ink-rgb) / 0.11);
 }
 
 .home > section {
   scroll-margin-top: var(--bar);
+  border-block-start: 0;
+  border-image: none;
+  background: none;
+  overflow-x: clip;
 }
 
 .home h2 {
@@ -21,6 +26,8 @@
   min-height: 100svh;
   padding-block: calc(var(--bar) + 2rem) 3rem;
   isolation: isolate;
+  --mx: -50vmax;
+  --my: -50vmax;
 }
 
 .hero h1 {
@@ -34,6 +41,10 @@
 
 [dir='rtl'] .hero h1 {
   letter-spacing: 0;
+  line-height: 1.35;
+  max-width: none;
+  font-size: clamp(2rem, 0.9rem + 3vw, 3.875rem);
+  text-wrap: balance;
 }
 
 .hero-lead {
@@ -48,14 +59,10 @@
   display: grid;
   gap: 1rem;
   margin-inline-end: var(--edge);
+  position: relative;
 }
 
 /* Three plain promises, right under the opening screen. */
-/* The light that follows the pointer over a grid: each cell glows where the hand is. */
-.hero {
-  --mx: -50vmax;
-  --my: -50vmax;
-}
 
 /* EXAMPLE: the steps on one side, the session they produce on the other. */
 .example {
@@ -95,13 +102,8 @@
   border-block-start: 1px solid var(--line);
 }
 
-.section-head {
-  margin-block-end: 3rem;
-}
-
 .section-head p {
   max-width: 40rem;
-  margin-block-start: 0.75rem;
   color: var(--muted);
   font-size: var(--lead);
 }

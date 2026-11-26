@@ -1,7 +1,18 @@
+/* Headings, strong words, current items and titles that were hard-coded white are ink on ivory (as theme-light.css
+   does for every page; repeated here, in the page layer, because the guide's own colours sit in this layer too). */
+html[data-theme='light'] :is(h1, h2, h3, h4, strong, th):not(.board *):not(.chat *):not(.browser *):not(.ba *) {
+  color: var(--ivory);
+  -webkit-text-fill-color: currentColor;
+}
+
+html[data-theme='light'] :is(.tree a[aria-current], .doc .pager a bdi, .toc a[aria-current]) {
+  color: var(--ivory);
+}
+
 html[data-theme='light'] .tree,
 html[data-theme='light'] .doc .tree,
 html[data-theme='light'] .toc:not([hidden]) {
-  background: rgb(244 240 234 / 0.94) !important;
+  background: rgb(244 240 234 / 0.94);
 }
 
 html[data-theme='light'] .toc a::before {

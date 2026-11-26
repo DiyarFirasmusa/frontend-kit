@@ -28,7 +28,7 @@ html[data-theme='light'] {
 html[data-theme='light'] .board-side {
   --ivory: #101010;
   --muted: #101010;
-  color: #101010;
+  box-shadow: none;
 }
 
 /* Headings and strong words are ink, whatever gradient or white they had. */
@@ -38,15 +38,6 @@ html[data-theme='light'] :is(h1, h2, h3, h4, strong, th):not(.board *):not(.chat
 }
 
 /* The bar at the top of every page, the side lists and the search stay light and clear. */
-html[data-theme='light'] .top,
-html[data-theme='light'] .top.is-scrolled,
-html[data-theme='light'] body .top.is-scrolled {
-  background: rgb(244 240 234 / 0.86);
-}
-
-html[data-theme='light'] body .top::before {
-  background: linear-gradient(rgb(244 240 234 / 0.9), rgb(244 240 234 / 0.5) 60%, transparent);
-}
 
 html[data-theme='light'] .top-install,
 html[data-theme='light'] .hero-start {
@@ -55,12 +46,6 @@ html[data-theme='light'] .hero-start {
 
 html[data-theme='light'] .top-install {
   background: var(--accent);
-}
-
-/* The grid under the page is a quiet ink grid. */
-html[data-theme='light'] body::before,
-html[data-theme='light'] body::after {
-  filter: none;
 }
 
 /* The button that switches. */
@@ -121,14 +106,9 @@ html[data-theme='light'] :is(.top-nav a[aria-current], .menu nav [aria-current],
 }
 
 /* In light mode the blocks are the solid colours of the mark, with dark words on them. */
-html[data-theme='light'] .board-main {
-  background: var(--tone);
-  box-shadow: none;
-}
 
 html[data-theme='light'] .board-side {
   background: var(--side);
-  box-shadow: none;
   color: #101010;
 }
 
@@ -159,7 +139,7 @@ html[data-theme='light'] .board-note {
 
 html[data-theme='light'] .board-note a:not(.hero-start) {
   border-color: rgb(20 20 19 / 0.4);
-  color: #141413;
+  color: #006c6d;
 }
 
 html[data-theme='light'] .board-note a:not(.hero-start):hover {
@@ -168,12 +148,7 @@ html[data-theme='light'] .board-note a:not(.hero-start):hover {
 }
 
 html[data-theme='light'] .board-top svg rect[fill*='241 237 231'] {
-  fill: rgb(20 20 19 / 0.28);
-}
-
-html[data-theme='light'] .board.tone-ink .board-main {
-  background: #dcd5c8;
-  box-shadow: inset 0 0 0 1px rgb(20 20 19 / 0.16);
+  fill: #141413;
 }
 
 /* Light mode: the end bar, the code windows and the side column of needs follow the paper bars. */
@@ -184,9 +159,9 @@ html[data-theme='light'] .foot-bottom {
 }
 
 html[data-theme='light'] .board.side-ink .board-side {
-  background: #dcd5c8;
   box-shadow: inset 0 0 0 1px rgb(20 20 19 / 0.16);
   color: #141413;
+  background: #e6e0d4;
 }
 
 html[data-theme='light'] .board.side-ink .board-side-title {

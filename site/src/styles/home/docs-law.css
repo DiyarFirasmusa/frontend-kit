@@ -6,10 +6,6 @@
 }
 
 /* The journey: the steps are never faded (faded words fail contrast); the current one is marked by its edge and its lift. */
-.path-stop:not(.is-current):not(.is-done) .path-picture,
-.path-stop:not(.is-current):not(.is-done) .path-label {
-  opacity: 1;
-}
 
 .path-stop .path-picture {
   box-shadow: 0 0 0 1px transparent;
@@ -20,7 +16,6 @@
   direction: rtl;
 }
 
-:lang(ar) .path-label p,
 :lang(ar) .start-hint,
 :lang(ar) .start-skip {
   font-size: max(0.9375rem, 1em);
@@ -33,6 +28,7 @@
     overflow-wrap: normal;
     overflow-x: auto;
     font-size: 0.8125rem;
+    mask-image: linear-gradient(to right, #000 85%, transparent);
   }
 
   /* The words of a step are never at the block's edge. */
@@ -47,16 +43,10 @@
   .hero-phone a {
     border-radius: 0.5rem;
   }
-
-  /* Commands that scroll show it: a fade at the end edge. */
-  #install .start-text .msg-command {
-    mask-image: linear-gradient(to right, #000 85%, transparent);
-  }
 }
 
 .hero-trust {
   max-width: 34rem;
-  text-wrap: pretty;
 }
 
 html[data-theme='light'] .board.tone-orange .path-label,
@@ -65,16 +55,3 @@ html[data-theme='light'] .board.tone-orange .path-label h3 {
   color: #050607;
 }
 
-/* Every button is at least 44px high (the note bar's links: chat.css). */
-#install .start-copy {
-  min-height: 2.75rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ce-spark.is-busy,
-  .chat.is-playing [data-ev].is-in {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
-}

@@ -1,3 +1,14 @@
+/* Headings and strong words are ink, and the hero's action keeps ink words (as theme-light.css does for every page;
+   repeated here, in the page layer, because the home page's own heading colours sit in this layer too). */
+html[data-theme='light'] :is(h1, h2, h3, h4, strong, th):not(.board *):not(.chat *):not(.browser *):not(.ba *) {
+  color: var(--ivory);
+  -webkit-text-fill-color: currentColor;
+}
+
+html[data-theme='light'] .hero-start {
+  color: #141413;
+}
+
 /* The drawings and the board bars keep the dark of the Claude app, with the bright brand colours. */
 html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture, .dash, .mock, .start-window, .tree-hint) {
   --ink-rgb: 241 237 231;

@@ -152,9 +152,6 @@
 @media (max-width: 560px) {
   .inventory {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .inventory {
     gap: 1.75rem;
   }
 }

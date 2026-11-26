@@ -11,13 +11,6 @@
    Fixes after the ninth review (identity, Arabic, mobile, light)
    --------------------------------------------------------------------------------------------- */
 /* The rows of a side column carry a small line under them, so the shared height reads as full. */
-.board-list li small {
-  display: block;
-  margin-block-start: 0.25rem;
-  color: inherit;
-  font-weight: 400;
-  opacity: 0.78;
-}
 
 /* Arabic never goes below 15px. */
 :lang(ar) .board-list li small,
@@ -36,37 +29,22 @@
 
   /* The opening bar's label is one line: no capitals, the mark beside it. */
   .board-top {
-    text-transform: none;
     letter-spacing: 0.02em;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
 /* Light mode: the lit block in a board bar is ink, the others a quiet 22%; the "look" block and the side column differ. */
-html[data-theme='light'] .board-top svg rect[fill*='241 237 231'] {
-  fill: #141413;
-}
 
 html[data-theme='light'] .board-top svg rect[fill*='/ 0.28'] {
   fill: rgb(20 20 19 / 0.22);
 }
 
-html[data-theme='light'] .board.tone-ink .board-main {
-  background: #cfc7b8;
-}
-
-html[data-theme='light'] .board.side-ink .board-side {
-  background: #e6e0d4;
-}
-
-/* Round 2, from the Arabic / phone / light review */
 /* The comparison keeps a real height on a phone, and the drag pill never covers the cards. */
 @media (max-width: 47.99rem) {
   /* One layout for the opening bar in both languages: the mark and one line of words. */
-  .board-top {
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    overflow: hidden;
-  }
 
   .board-top > span:last-child,
   .board-top > bdi {
@@ -84,32 +62,10 @@ html[data-theme='light'] [data-tree-group] > summary span {
   color: #a64b28;
 }
 
-main[data-section='get-started'] #install {
-  counter-increment: gs-step;
-}
-
-main[data-section='get-started'] :is(#install, #questions, #approve, #build, #after) > h2::before {
-  content: counter(gs-step);
-  display: inline-grid;
-  place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  margin: 0;
-  border-radius: 0.5rem;
-  background: var(--accent);
-  color: #141413;
-  font: 600 0.9375rem/1 var(--latin, inherit);
-}
-
 /* Light mode: the current guide link. (The journey's number badge: sections.css.) */
 html[data-theme='light'] .top-docs[aria-current],
 html[data-theme='light'] .top-docs:hover {
   color: var(--ivory);
-}
-
-/* Side rows move with transform, not padding, so nothing reflows on hover. */
-.board-list li:hover {
-  padding-inline-start: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -126,12 +82,8 @@ html[data-theme='light'] .top-docs:hover {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .board-count,
-  .board-note a,
-  .hero-start {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
+/* The note bar's go-there pill: ink border, turquoise words, so the side column's edge is the one turquoise outline. */
+html .board-note a:not(.hero-start) {
+  border-color: rgb(241 237 231 / 0.4);
+  color: var(--turq);
 }

@@ -18,6 +18,11 @@ html:not(.js) .start-copy {
   display: none;
 }
 
+.start-copy,
+.show-tabs button[aria-selected='true'] {
+  color: #141413;
+}
+
 .start-line a {
   display: inline-flex;
   align-items: center;
@@ -25,9 +30,6 @@ html:not(.js) .start-copy {
 }
 
 /* The message to copy: the two commands are lines of code, always left to right, apart from the words around them. */
-.start-text {
-  white-space: normal;
-}
 
 .start-text .msg-line {
   display: block;
@@ -43,6 +45,14 @@ html:not(.js) .start-copy {
   text-align: left;
   unicode-bidi: isolate;
   overflow-wrap: anywhere;
+}
+
+@media (max-width: 47.99rem) {
+
+.start-text .msg-command {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* The pause between the first and second part of the message. */
@@ -76,34 +86,35 @@ html:not(.js) .start-copy {
   }
 }
 
+@media (max-width: 768px) {
+
+.hero-actions {
+    display: none;
+  }
+}
+
 /* The line under the home headline that says who the kit is for. */
 /* The install section: a short lead, a short list of what you need, and small notes under the message card. */
 .start-window .start-hint {
-  margin-block-start: 0.5rem;
-}
-
-/* The install section on a phone: the lead first, then what you need, then the steps. */
-/* The notes under the message card read as notes for the steps: left-aligned, a readable size, not floating captions. */
-.start-window .start-hint {
-  margin-block-start: 0.75rem;
   color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.7;
   text-align: start;
 }
 
+/* The install section on a phone: the lead first, then what you need, then the steps. */
+/* The notes under the message card read as notes for the steps: left-aligned, a readable size, not floating captions. */
+
 :lang(ar) .start-window .start-hint {
   font-size: 1rem;
   line-height: 1.85;
 }
 
-/* ---------- Round 8: designer's list ---------- */
+/* ---------- Hero link, pause button ---------- */
 /* The link under the hero text is its own line, not the tail of the sentence. */
 /* The pause button is small to look at and still 44px to press. */
 .chat-pause {
   width: 1.75rem;
-  height: 1.75rem;
-  inset-block-start: 0.5rem;
 }
 
 .chat-pause::after {
@@ -112,11 +123,8 @@ html:not(.js) .start-copy {
   inset: -0.5rem;
 }
 
-/* ---------- Round 9: phone targets ---------- */
+/* ---------- Phone targets ---------- */
 @media (max-width: 620px) {
-  .show-tabs button {
-    min-height: 2.75rem;
-  }
 
   .start-line + p a {
     display: inline-flex;
@@ -163,11 +171,6 @@ html:not(.js) .start-copy {
   opacity: 0.85;
 }
 
-/* The pause button is in that corner on the live chat, so the stamp moves in beside it. */
-.chat.live .chat-bar::after {
-  inset-inline-end: 3.25rem;
-}
-
 /* ---------- Identity: one window for every drawing on the site ---------- */
 /* The same edge, the same corner, the same bar with its three lights and the kit's stamp. */
 .chat,
@@ -186,45 +189,9 @@ html:not(.js) .start-copy {
 
 /* The small pictures of the journey become small windows: a bar of their own, with the lights and the stamp. */
 .path-picture {
-  position: relative;
   height: 12rem;
   padding: 2.25rem 0.75rem 0.75rem;
   border-radius: 1rem;
-  background: #141413;
-}
-
-.path-picture::before {
-  content: '';
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 0;
-  height: 1.5rem;
-  border-block-end: 1px solid rgb(var(--ink-rgb) / 0.08);
-  background: #1a1a18 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='5' width='54' height='12' rx='4' fill='%23f1ede7'/%3E%3Crect x='45' y='21' width='14' height='38' rx='4' fill='%2319abab'/%3E%3Crect x='5' y='21' width='36' height='20' rx='4' fill='%23d97757'/%3E%3Crect x='5' y='45' width='36' height='14' rx='4' fill='%23f1ede7'/%3E%3C/svg%3E") no-repeat calc(100% - 0.6rem) center / 0.8rem;
-}
-
-[dir='rtl'] .path-picture::before {
-  background-position: 0.6rem center;
-}
-
-.path-picture::after {
-  content: '';
-  position: absolute;
-  inset-block-start: 0.5rem;
-  inset-inline-start: 0.65rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow:
-    0.8rem 0 0 rgb(var(--ink-rgb) / 0.16),
-    1.6rem 0 0 rgb(var(--ink-rgb) / 0.16);
-}
-
-[dir='rtl'] .path-picture::after {
-  box-shadow:
-    -0.8rem 0 0 rgb(var(--ink-rgb) / 0.16),
-    -1.6rem 0 0 rgb(var(--ink-rgb) / 0.16);
 }
 
 @media (max-width: 620px) {
@@ -235,9 +202,6 @@ html:not(.js) .start-copy {
 }
 
 /* ---------- Identity: each part of the home page has its own colour, from the block it adds to the mark ---------- */
-#builds {
-  --sec: #f1ede7;
-}
 
 #why {
   --sec: #19abab;
@@ -260,18 +224,19 @@ html:not(.js) .start-copy {
   margin: 1.25rem 0 0;
   padding: 0;
   list-style: none;
+  align-items: center;
+  margin-block-start: 0;
 }
 
 .hero-audience a {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
   padding-inline: 1rem;
   border: 1px solid rgb(var(--ink-rgb) / 0.22);
   border-radius: 999px;
-  color: var(--ivory);
-  font-size: 0.9375rem;
   text-decoration: none;
+  border-color: rgb(var(--ink-rgb) / 0.35);
+  font-size: 1rem;
 }
 
 .hero-audience a:hover {
@@ -280,11 +245,11 @@ html:not(.js) .start-copy {
 }
 
 .hero-trust {
-  max-width: 36rem;
   margin: 1rem 0 0;
-  color: var(--faint);
-  font-size: 0.875rem;
   line-height: 1.6;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  text-wrap: pretty;
 }
 
 :lang(ar) .hero-trust,
@@ -294,16 +259,16 @@ html:not(.js) .start-copy {
 
 .hero-copy::before,
 .section-head::before {
-  content: '';
   display: block;
-  width: 3rem;
-  height: 4px;
   margin-block-end: 1.25rem;
-  border-radius: 2px;
   background: var(--thread);
+  width: 4.5rem;
+  height: 5px;
+  border-radius: 3px;
+  content: none;
 }
 
-/* ---------- Round 10 fixes from the UI audit ---------- */
+/* ---------- Section labels ---------- */
 /* The label above a title is the same size everywhere: the paragraph rule of the section head no longer enlarges it. */
 .section-head p.eyebrow {
   max-width: none;
@@ -316,30 +281,16 @@ html:not(.js) .start-copy {
 
 :lang(ar) .section-head p.eyebrow {
   font-family: var(--type);
-  font-size: 0.9375rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-.start-copy,
-.show-tabs button[aria-selected='true'] {
-  color: #141413;
-}
-
-/* ---------- Round 10 fixes from the Arabic and phone review ---------- */
+/* ---------- Arabic and phone: room under gradient text ---------- */
 /* The text gradient only paints inside the line, so the dots of a final yeh and the tail of a g were cut off: room below the line. */
 .hero h1 span:last-child,
 .section-head h2 {
   padding-block: 0.08em 0.3em;
   margin-block-end: -0.3em;
-}
-
-/* The broken example in Arabic moves toward the reading end, not off the frame. */
-[dir='rtl'] .is-broken .dash-button {
-  translate: -2em 0.4em;
-}
-
-:lang(ar) .section-head p.eyebrow {
-  font-size: 1rem;
-  font-weight: 600;
 }
 
 .hero-actions a {
@@ -348,19 +299,7 @@ html:not(.js) .start-copy {
   min-height: 2.75rem;
 }
 
-@media (max-width: 620px) {
-  :lang(ar) .path-picture {
-    font-size: 0.75rem;
-  }
-}
-
-/* ---------- Round 11: the thread is bigger and runs through the functional lines too ---------- */
-.hero-copy::before,
-.section-head::before {
-  width: 4.5rem;
-  height: 5px;
-  border-radius: 3px;
-}
+/* ---------- The thread colour of each part ---------- */
 
 #builds {
   --sec: #d97757;
@@ -370,33 +309,27 @@ html:not(.js) .start-copy {
   margin-block-end: 1rem;
 }
 
-/* ---------- Round 11: marketing - the trust line is readable, the phone is told at once ---------- */
-.hero-trust {
-  max-width: 38rem;
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
+/* ---------- The trust line and the phone note ---------- */
 
 :lang(ar) .hero-trust {
   font-size: 1rem;
 }
 
-.hero-audience {
-  align-items: center;
-}
-
 .hero-phone {
   display: none;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
   margin: 1.25rem 0 0;
   padding: 0.9rem 1.1rem;
   border: 1px solid rgb(25 171 171 / 0.5);
   border-radius: 1rem;
-  background: rgb(25 171 171 / 0.08);
   color: var(--ivory);
   font-size: 0.9375rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin-block-end: 1.25rem;
+  border-color: rgb(241 237 231 / 0.16);
+  background: #171715;
 }
 
 .hero-phone button {
@@ -404,11 +337,13 @@ html:not(.js) .start-copy {
   padding-inline: 1.1rem;
   border: 1px solid var(--turq);
   border-radius: 999px;
-  background: transparent;
-  color: var(--turq);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  margin-block-start: 0.5rem;
+  color: #141413;
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 @media (max-width: 768px) {
@@ -417,7 +352,7 @@ html:not(.js) .start-copy {
   }
 }
 
-/* ---------- Round 12 ---------- */
+/* ---------- The hero mark and the part counter ---------- */
 /* The hero is where the logo shows whole, in colour; the counter starts on the first part. */
 .hero-copy .eyebrow svg {
   width: 3rem;
@@ -437,21 +372,9 @@ html:not(.js) .start-copy {
 
 /* The caption under a drawing says what it is. */
 /* The phone card is the main step on a phone: setup needs a computer. */
-.hero-phone {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-}
 
 .hero-phone strong {
   font-size: 1.0625rem;
-}
-
-.hero-phone button {
-  margin-block-start: 0.5rem;
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #141413;
 }
 
 .hero-phone a {
@@ -459,16 +382,10 @@ html:not(.js) .start-copy {
   color: var(--ivory);
 }
 
-.hero-phone {
-  margin-block-end: 1.25rem;
-}
-
 /* Who it is for: three buttons you can read. */
 .hero-audience a {
   min-height: 2.75rem;
-  border-color: rgb(var(--ink-rgb) / 0.35);
   color: var(--ivory);
-  font-size: 1rem;
 }
 
 .board-main > .chat,
@@ -476,6 +393,7 @@ html:not(.js) .start-copy {
 .board-main > .ba {
   border: 0;
   border-radius: 1rem;
+  box-shadow: none;
 }
 
 #builds::before,
@@ -486,14 +404,9 @@ html:not(.js) .start-copy {
   content: none;
 }
 
-/* Inside the orange block of the journey, the words under each window are dark and the rail is dark. */
-html[data-theme='light'] .board.tone-orange .path-label,
-html[data-theme='light'] .board.tone-orange .path-label * {
-  color: #141413;
-}
-
 html[data-theme='light'] .board.tone-orange .path-label p {
-  color: rgb(20 20 19 / 0.85);
+  color: #141413;
+  font-size: 0.9375rem;
 }
 
 html[data-theme='light'] .board.tone-orange .path-track i {
@@ -501,52 +414,9 @@ html[data-theme='light'] .board.tone-orange .path-track i {
   opacity: 0.5;
 }
 
-/* On orange, the words are as dark and as big as they need to be, and the numbers keep their dark dots. */
-html[data-theme='light'] .board.tone-orange .path-label p {
-  color: #141413;
-  font-size: 0.9375rem;
-}
-
-/* The words of a part sit at the top of their column, not in the middle of nowhere. */
-.show-panel {
-  align-items: start;
-}
-
-/* In Arabic the journey keeps its left-to-right order inside the board, like the board itself, so step 1 is never beside the end column. */
-[dir='rtl'] .board .path {
-  direction: ltr;
-}
-
-[dir='rtl'] .board .path-label {
-  direction: rtl;
-}
-
-@media (max-width: 768px) {
-  .hero-actions {
-    display: none;
-  }
-}
-
 /* =====================================================================================================
-   Round 16, after the studio review: colour lives in the blocks, not in lines and gradients.
+   Colour lives in the blocks, not in lines and gradients.
    ===================================================================================================== */
-.hero-copy::before,
-.section-head::before {
-  content: none;
-}
-
-.hero h1 span:last-child {
-  background: none;
-  color: var(--accent);
-  -webkit-text-fill-color: var(--accent);
-}
-
-.path-picture input,
-.jp-input {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 @media (max-width: 760px) {
   .board .path-picture {
@@ -554,27 +424,15 @@ html[data-theme='light'] .board.tone-orange .path-label p {
   }
 
   .board .path-stop {
-    padding-block: 0.5rem;
+    column-gap: 0.75rem;
+    align-items: start;
+    padding-block: 0.9rem;
+    border-block-start: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    text-align: start;
   }
 }
 
-/* 1/4: the words of the chosen kind sit in a row above the board, the board is the full width. */
-.show-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.show-panel .show-words {
-  max-width: 46rem;
-}
-
-.show-panel .show-picture {
-  width: 100%;
-}
-
 .board-main > .browser {
-  width: min(100%, 52rem);
   margin-inline: auto;
 }
 
@@ -582,16 +440,8 @@ html[data-theme='light'] .board.tone-orange .path-label p {
 .start-main {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: 1.5rem;
   align-items: start;
-}
-
-html[data-theme='light'] .start-main .start-line,
-html[data-theme='light'] .start-main .start-line li,
-html[data-theme='light'] .start-main .start-line h3,
-html[data-theme='light'] .start-main .start-line p,
-html[data-theme='light'] html[data-theme='light'] .start-main .start-line a {
-  color: #141413;
+  gap: 1rem;
 }
 
 html[data-theme='light'] .start-main .start-line a {
@@ -609,13 +459,6 @@ html[data-theme='light'] .start-main .start-line-track i {
   }
 }
 
-/* The chat inside its block needs no frame of its own: the block is its frame. */
-.board-main > .chat,
-.board-main > .browser,
-.board-main > .ba {
-  box-shadow: none;
-}
-
 /* Titles and steps on the tinted block keep the page's light words. */
 .board.tone-orange .path-label strong {
   color: var(--ivory);
@@ -626,38 +469,19 @@ html[data-theme='light'] .start-main .start-line-track i {
   display: none;
 }
 
-/* The setup card on a phone is a note bar of the board, not a card of its own. */
-.hero-phone {
-  border-color: rgb(241 237 231 / 0.16);
-  background: #171715;
-}
-
-.hero-phone button {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
 /* The journey on a phone: ruled rows, number first, then the title and the words, the full width. */
 @media (max-width: 760px) {
+  /* !important: beats the unlayered `.path { gap }` in components/home/Example.astro (drop it once that style is layered). */
   .board .path {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+    gap: 0 !important;
   }
 
   .board .path-stop {
     display: grid;
     grid-template-columns: 2rem minmax(0, 1fr);
-    column-gap: 0.75rem;
-    align-items: start;
     width: 100%;
-    padding-block: 0.9rem;
-    border-block-start: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-    text-align: start;
-  }
-
-  .board .path-stop:first-of-type {
-    border-block-start: 0;
   }
 
   .board .path-label {
@@ -672,16 +496,9 @@ html[data-theme='light'] .start-main .start-line-track i {
 }
 
 /* =====================================================================================================
-   Round 19: the third wave of reviews, from every part of the site
+   Order of words and boards, audience buttons
    ===================================================================================================== */
 /* Home: the words of a kind come before its board on every width, and the label before the three audience buttons. */
-.show-panel .show-words {
-  order: 0;
-}
-
-.show-panel .show-picture {
-  order: 1;
-}
 
 .hero-audience-label {
   margin: 1.1rem 0 0.4rem;
@@ -691,10 +508,6 @@ html[data-theme='light'] .start-main .start-line-track i {
 
 :lang(ar) .hero-audience-label {
   font-size: 1rem;
-}
-
-.hero-audience {
-  margin-block-start: 0;
 }
 
 /* The steps on a phone use the whole width. */
@@ -714,7 +527,7 @@ html[data-theme='light'] .start-main .start-line-track i {
 }
 
 /* =====================================================================================================
-   Round 24: from the sixth review
+   The install window on every width
    ===================================================================================================== */
 /* The install window never wider than its block, and its commands scroll inside it. */
 .start-body,
@@ -725,7 +538,6 @@ html[data-theme='light'] .start-main .start-line-track i {
 }
 
 .start-body {
-  display: grid;
   grid-template-columns: minmax(0, 1fr);
 }
 
@@ -757,12 +569,6 @@ html[data-theme='light'] .start-main .start-line-track i {
   background: var(--accent);
 }
 
-/* The saved toast has its own space in the comparison. */
-.ba .dash-toast {
-  inset-block-end: 0.5rem;
-  inset-inline-end: 0.75rem;
-}
-
 .ba .dash-main {
   padding-block-end: 2.75rem;
 }
@@ -770,10 +576,12 @@ html[data-theme='light'] .start-main .start-line-track i {
 /* Words in the six narrow columns of the journey start where you start reading. */
 .board .path-label p {
   text-align: start;
+  font-size: max(0.8125rem, 1em);
+  line-height: 1.5;
 }
 
 /* =====================================================================================================
-   Round 25: from the seventh review
+   The install message on a phone
    ===================================================================================================== */
 /* The install message never pushes its window wider than a phone. */
 .start-window .start-message {
@@ -782,17 +590,4 @@ html[data-theme='light'] .start-main .start-line-track i {
 
 .start-window .start-text {
   min-width: 0;
-}
-
-@media (max-width: 47.99rem) {
-  .start-text .msg-command {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-}
-
-/* The rail under the install steps is orange all the way: both steps are yours. */
-#install .start-line-track {
-  background: var(--accent);
-  opacity: 0.85;
 }

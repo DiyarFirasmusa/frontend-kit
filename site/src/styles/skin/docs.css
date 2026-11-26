@@ -1,0 +1,211 @@
+/* ---------------------------------------------------------------------------------------------
+   THE SKIN (guide pages): code windows, row lists and the page head's black block.
+   Layer `skin-page`, the last one (see docs/index.css).
+   --------------------------------------------------------------------------------------------- */
+/* ---------- Code windows ---------- */
+/* Light mode: paper, with the orange edge and the brighter orange pill. */
+html[data-theme='light'] .command {
+  --ink-rgb: 20 20 19;
+  --ivory: #141413;
+  --muted: #4a4741;
+  border-color: rgb(20 20 19 / 0.2);
+  background: #fffdf9;
+  color: #141413;
+}
+
+html[data-theme='light'] .command :is(code, span, pre) {
+  color: #141413;
+}
+
+html[data-theme='light'] .command button {
+  background: #e8643a;
+  color: #141413;
+}
+
+html[data-theme='light'] .prompt > span {
+  color: #a63f1b;
+}
+
+/* The command is a little smaller than the sentences around it; prose inside the window is regular weight. */
+.command .msg-command {
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.command .msg-line {
+  font-size: 0.875rem;
+}
+
+:lang(ar) .doc-article .command :is(.msg-line, p, span:not(.msg-command)) {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+.doc-article .command code :is(p, .msg-line, span:not(.msg-command)) {
+  font-weight: 400;
+}
+
+/* The copy button has the primary button's size and weight. */
+.command button {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* Prompts and code windows run the full column, even where the reading text is capped at 68ch. */
+.doc-article :is(.command, .prompt) {
+  max-width: none;
+  width: 100%;
+}
+
+/* The copy button is at the top end of every code window. */
+.doc-article .command {
+  align-items: flex-start;
+}
+
+.doc-article .command code {
+  align-self: stretch;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* In Arabic a message reads right to left; a plain command runs left to right inside, but its orange edge
+   stays on the page's start side (right). */
+[dir='rtl'] .doc-article .command.is-message {
+  direction: rtl;
+}
+
+.doc-article .command:not(.is-message) {
+  direction: ltr;
+}
+
+[dir='rtl'] .doc-article .command .msg-command {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+}
+
+[dir='rtl'] .doc-article .command:not(.is-message) {
+  border-left-width: 1px;
+  border-left-color: rgb(var(--ink-rgb) / 0.16);
+  border-right: 3px solid var(--accent);
+}
+
+/* On a phone the copy pill sits under the text at full width, and commands wrap at spaces so the whole command can be read. */
+@media (max-width: 40rem) {
+  .doc-article .command {
+    flex-direction: column;
+  }
+
+  .doc-article .command button {
+    align-self: stretch;
+    width: 100%;
+    margin-block-start: 0.25rem;
+  }
+
+  .doc-article .command .msg-command {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    overflow-x: visible;
+    mask-image: none;
+  }
+}
+
+/* ---------- Rows and cards ---------- */
+/* Row names: one size and weight, not underlined until hover, at least 24px wide; the small meta line is 13px. */
+.doc :is(.index a, .rows dt a, .hub-path a) {
+  text-decoration: none;
+}
+
+.doc :is(.index a, .rows dt a, .hub-path a):hover {
+  text-decoration: underline;
+}
+
+.doc :is(.index p, .index span:last-child, .hub-path p) {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.doc .rows dt,
+.doc .rows dt a {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.doc .rows dt a {
+  display: inline-block;
+  min-width: 1.5rem;
+  padding-block: 0.125rem;
+}
+
+.doc .rows dd small {
+  font-size: 0.8125rem;
+}
+
+.heading-link {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+}
+
+/* The disclosure over a long list has a row's padding. */
+.doc-article .fold-all > summary {
+  padding-block: 0.75rem;
+  font-weight: 600;
+}
+
+/* Hub cards share one neutral ground in dark mode; the specialists card keeps its names at the bottom. */
+html:not([data-theme='light']) .doc .hub-kinds a {
+  background: #0d0e10;
+}
+
+.doc .hub-kinds [data-kind='agent'] .hub-kind-rows {
+  margin-block-start: auto;
+}
+
+.hub-kind-about {
+  font-weight: 400;
+}
+
+/* The comparison's two lines sit tight; one small size in the specialists' rows. */
+.doc .pair p,
+.doc .pair p + p {
+  margin: 0;
+}
+
+.doc .card-say {
+  font-size: 0.875rem;
+  font-style: normal;
+  color: var(--muted);
+}
+
+/* ---------- The side list, "on this page" and the page head ---------- */
+:lang(ar) .tree small,
+:lang(ar) .tree summary {
+  font-size: max(0.875rem, 1em);
+  letter-spacing: 0;
+}
+
+html[data-theme='light'] :is(.toc a:not([aria-current]), .toc-mini a, .doc .crumbs a, .tree a:not([aria-current])) {
+  color: rgb(20 20 19 / 0.74);
+}
+
+/* Light mode: the head's black block has light words. */
+html[data-theme='light'] .doc-head .doc-summary {
+  color: #d9d5cd;
+}
+
+html[data-theme='light'] .doc-head .board-main h1,
+html[data-theme='light'] .doc-head .board-main h1 bdi {
+  color: #f1ede7;
+}
+
+html[data-theme='light'] .doc-head .board-main h1 em {
+  color: #ea6a40;
+}
+
+html[data-theme='light'] .doc-head .board-main .crumbs,
+html[data-theme='light'] .doc-head .board-main .crumbs a,
+html[data-theme='light'] .doc-head .board-main .crumbs span {
+  color: #cfcac2;
+}

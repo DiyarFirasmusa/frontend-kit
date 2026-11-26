@@ -1,22 +1,31 @@
-/* Every page's styles, in the order of the cascade. A page adds its own part after these:
-   home/index.css (the home page) or docs/index.css (the guide). Rules that tie with a later shared rule
-   stay here, so moving the page parts out never changes which rule wins. */
-@import './tokens.css';
-@import './base.css';
-@import './header.css';
-@import './details.css';
-@import './guide.css';
-@import './doc.css';
-@import './stage.css';
-@import './home.css';
-@import './colour.css';
-@import './rounded.css';
-@import './motion.css';
-@import './identity.css';
-@import './chat.css';
-@import './sections.css';
-@import './loops.css';
-@import './docs-space.css';
-@import './home-fit.css';
-@import './theme-light.css';
-@import './docs-law.css';
+/* The cascade order of the whole site, declared at the top of every entry file (this one, home/index.css and
+   docs/index.css), so it holds whichever stylesheet the browser reads first:
+     astro      Astro's own view-transition defaults (declared first so they stay the weakest, as before)
+     shared     every page's rules, the files below in this order
+     page       one page kind's own rules (home/index.css or docs/index.css)
+     skin       the board skin and light mode, every page (skin/shared.css)
+     skin-page  the skin's page-kind part (skin/home.css or skin/docs.css)
+   A later layer wins over an earlier one whatever the selectors, so nothing here needs !important to win;
+   the few !important left are for [hidden], reduced or paused motion, and focus rings. */
+@layer astro, shared, page, skin, skin-page;
+
+@import './tokens.css' layer(shared);
+@import './base.css' layer(shared);
+@import './header.css' layer(shared);
+@import './details.css' layer(shared);
+@import './guide.css' layer(shared);
+@import './doc.css' layer(shared);
+@import './stage.css' layer(shared);
+@import './home.css' layer(shared);
+@import './colour.css' layer(shared);
+@import './rounded.css' layer(shared);
+@import './motion.css' layer(shared);
+@import './identity.css' layer(shared);
+@import './chat.css' layer(shared);
+@import './sections.css' layer(shared);
+@import './loops.css' layer(shared);
+@import './docs-space.css' layer(shared);
+@import './home-fit.css' layer(shared);
+@import './theme-light.css' layer(shared);
+@import './docs-law.css' layer(shared);
+@import './skin/shared.css' layer(skin);

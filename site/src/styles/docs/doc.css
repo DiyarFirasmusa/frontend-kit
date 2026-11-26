@@ -115,6 +115,7 @@
   width: 16px;
   height: 12px;
   clip-path: var(--check);
+  color: var(--turq);
 }
 
 .crosses li::before {
@@ -153,10 +154,10 @@
 
 .rows > div {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   gap: 0.25rem 2rem;
   padding-block: 1rem;
   border-block-start: 1px solid var(--line);
+  align-items: baseline;
 }
 
 .rows dt {
@@ -408,6 +409,7 @@
   text-align: left;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  text-indent: 0;
 }
 
 .source-doc {
@@ -460,6 +462,7 @@
 
 .source-doc blockquote {
   padding-inline-start: 1rem;
+  background: color-mix(in srgb, var(--kc) 7%, transparent);
 }
 
 .source-doc :not(pre) > code {
@@ -515,6 +518,8 @@
 
 .source-doc th {
   font-weight: 560;
+  background: color-mix(in srgb, var(--kc) 12%, transparent);
+  color: var(--ivory);
 }
 
 @media (max-width: 600px) {

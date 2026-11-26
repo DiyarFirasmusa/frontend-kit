@@ -1,14 +1,15 @@
-/* The home page's own styles: the parts of each stylesheet that only the home page uses, in the same order. */
-@import './home.css';
-@import './colour.css';
-@import './identity.css';
-@import './chat.css';
-@import './sections.css';
-@import './loops.css';
-@import './docs-space.css';
-@import './home-fit.css';
-@import './theme-light.css';
-@import './docs-law.css';
+/* The home page's own styles: the parts of each stylesheet that only the home page uses, in the same order,
+   then the skin's home part. The layer order is the one site.css explains. */
+@layer astro, shared, page, skin, skin-page;
 
-/* Loaded again last on this page kind: in production the shared light-mode file is bundled before the page's own CSS, and it must win. */
-@import '../light-claude.css';
+@import './home.css' layer(page);
+@import './colour.css' layer(page);
+@import './identity.css' layer(page);
+@import './chat.css' layer(page);
+@import './sections.css' layer(page);
+@import './loops.css' layer(page);
+@import './docs-space.css' layer(page);
+@import './home-fit.css' layer(page);
+@import './theme-light.css' layer(page);
+@import './docs-law.css' layer(page);
+@import '../skin/home.css' layer(skin-page);

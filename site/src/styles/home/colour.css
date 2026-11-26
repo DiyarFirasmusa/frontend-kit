@@ -1,15 +1,4 @@
-/* ---------------------------------------------------------------------------------------------
-   COLOUR. A warm glow behind everything, a grid you can see, and one colour for each kind of thing:
-   skills orange, agents amber, rules teal, hooks sand.
-   --------------------------------------------------------------------------------------------- */
-.home {
-  --grid-line: rgb(var(--ink-rgb) / 0.11);
-}
-
 /* A glow right behind the console. */
-.hero-side {
-  position: relative;
-}
 
 .hero-side::before {
   content: '';
@@ -22,16 +11,19 @@
 
 /* The second sentence of the headline carries the colour. */
 .hero h1 span:last-child {
-  background: linear-gradient(90deg, var(--accent), var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  background-image: linear-gradient(in oklab 90deg, var(--accent), var(--ivory) 50%, var(--turq));
+  background: none;
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
 }
 
 [dir='rtl'] .hero h1 span:last-child {
   background: linear-gradient(270deg, var(--accent), var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
+  background-image: linear-gradient(in oklab 270deg, var(--accent), var(--ivory) 50%, var(--turq));
 }
 
 .example,
@@ -51,9 +43,4 @@
   background: linear-gradient(270deg, #fff 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
-}
-
-/* The Arabic headline is two lines, one sentence each. */
-[dir='rtl'] .hero h1 {
-  line-height: 1.35;
 }

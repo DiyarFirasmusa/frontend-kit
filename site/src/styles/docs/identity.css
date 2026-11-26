@@ -1,16 +1,12 @@
 /* Step numbers. */
 /* The result: every check. */
 .ticks li::before {
-  color: var(--turq);
   background: var(--turq);
 }
 
 /* ---------------------------------------------------------------------------------------------
    DOCS. Every page wears the colour of its section; the side list shows each section's colour.
    --------------------------------------------------------------------------------------------- */
-.doc {
-  --kc: var(--k-page);
-}
 
 .doc[data-section='skills'] {
   --kc: var(--k-skill);
@@ -50,14 +46,13 @@
   --gc: var(--k-hook);
 }
 
-.tree nav summary {
-  justify-content: flex-start;
-}
-
 .tree nav summary::before {
   content: '';
   flex: none;
   background: var(--gc);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
 }
 
 /* The page: a faint light of its colour at the top, and the colour on what you scan for. */
@@ -113,10 +108,6 @@
 }
 
 /* The source of a skill, agent or rule: tables, quotes and links in colour. */
-.source-doc th {
-  background: color-mix(in srgb, var(--kc) 12%, transparent);
-  color: var(--ivory);
-}
 
 .source-doc a {
   text-decoration-color: var(--turq);
@@ -124,7 +115,6 @@
 
 .source-doc blockquote {
   border-inline-start: 3px solid var(--kc);
-  background: color-mix(in srgb, var(--kc) 7%, transparent);
   border-radius: 0 0.5rem 0.5rem 0;
 }
 
@@ -151,11 +141,11 @@
 
 /* Above every page title, a bar in the section's colour, like the bars over each heading. */
 .doc-head::before {
-  content: '';
   display: block;
-  width: 3rem;
-  height: 4px;
   margin-block-end: 1.25rem;
-  border-radius: 2px;
-  background: var(--kc);
+  background: var(--thread);
+  width: 4.5rem;
+  height: 5px;
+  border-radius: 3px;
+  content: none;
 }

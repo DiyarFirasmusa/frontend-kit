@@ -6,7 +6,6 @@
   margin: 0;
   overflow: hidden;
   border: 1px solid rgb(217 119 87 / 0.32);
-  border-radius: 1.25rem;
   background: #141413;
   color: var(--ivory);
   font-size: 0.9375rem;
@@ -28,6 +27,12 @@
   background: #1a1a18;
   color: var(--faint);
   font-size: 0.8125rem;
+}
+
+/* The pause button is in that corner on the live chat, so the stamp moves in beside it. */
+
+.chat.live .chat-bar::after {
+  inset-inline-end: 3.25rem;
 }
 
 .chat-lights {
@@ -170,8 +175,8 @@
   background: #1c1c1a;
 }
 
-.ce-question {
-  margin-block-end: 0.625rem !important;
+.chat .ce-question {
+  margin-block-end: 0.625rem;
   font-weight: 500;
 }
 
@@ -361,6 +366,7 @@
 /* NO JUMPING: the opening chat keeps one height whatever it shows, so nothing below it moves while it plays. */
 .chat.live {
   height: 32rem;
+  position: relative;
 }
 
 /* While it plays, each message waits for its turn. */
@@ -409,13 +415,9 @@
 }
 
 /* The small pause button in the corner of the playing chat. */
-.chat.live {
-  position: relative;
-}
 
 .chat-pause {
   position: absolute;
-  inset-block-start: 0.4rem;
   inset-inline-end: 0.6rem;
   z-index: 2;
   display: grid;
@@ -426,6 +428,8 @@
   background: rgb(var(--ink-rgb) / 0.08);
   color: var(--muted);
   cursor: pointer;
+  height: 1.75rem;
+  inset-block-start: 0.5rem;
 }
 
 .chat-pause:hover {
