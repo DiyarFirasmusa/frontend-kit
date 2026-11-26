@@ -24,8 +24,9 @@
     "check:env": "node scripts/check-env-example.ts",
     "check:css": "node scripts/check-logical-css.ts",
     "check:tooling": "node scripts/check-tooling.ts",
+    "check:bundle": "node scripts/check-bundle-size.mjs",
     "check": "npm run typecheck && npm run lint:check && npm run fmt:check && npm run i18n:validate && npm run check:env && npm run check:css && npm run check:tooling && npm run test",
-    "check:full": "npm run check && npm run build && npm run test:e2e",
+    "check:full": "npm run check && npm run build && npm run check:bundle && npm run test:e2e",
     "audit": "npm audit --audit-level=high",
     "setup:env": "node scripts/setup-env.mjs",
     "prepare": "node scripts/prepare.mjs"

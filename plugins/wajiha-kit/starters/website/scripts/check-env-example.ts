@@ -27,6 +27,15 @@ for (const key of documented) {
   }
 }
 
+// The example must show the safe value of the switch, the same one the code defaults to: a copy of this
+// file (npm run setup:env) must never turn indexing on by accident.
+const indexing = /^VITE_ALLOW_INDEXING=(.*)$/m.exec(text)?.[1]?.trim();
+if (indexing !== 'false') {
+  problems.push(
+    `VITE_ALLOW_INDEXING must be false in .env.example (the safe default), not "${indexing}"`,
+  );
+}
+
 if (problems.length > 0) {
   for (const problem of problems) {
     console.error(`error ${problem}`);

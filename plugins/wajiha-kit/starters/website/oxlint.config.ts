@@ -1,5 +1,18 @@
 import { defineConfig } from 'oxlint';
 
+const I18NEXT_DEFAULT = {
+  name: 'i18next',
+  importNames: ['default'],
+  message:
+    'Never use a shared i18next instance: it is a race between visitors. Use the per-request instance (useTranslation) or getFixedT from @/shared/lib/i18n/create-i18n.',
+};
+
+const ZOD_DIRECT = {
+  name: 'zod',
+  message:
+    "Import z from '@/shared/lib/zod': it turns zod's eval fast path off, which the strict CSP would report as a violation.",
+};
+
 export default defineConfig({
   ignorePatterns: [
     '**/routeTree.gen.ts',
@@ -34,22 +47,16 @@ export default defineConfig({
     'import/no-cycle': 'error',
     'eslint/no-console': ['error', { allow: ['warn', 'error'] }],
     'eslint/max-lines': ['error', { max: 400 }],
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          {
-            name: 'i18next',
-            importNames: ['default'],
-            message:
-              'Never use a shared i18next instance: it is a race between visitors. Use the per-request instance (useTranslation) or getFixedT from @/shared/lib/i18n/create-i18n.',
-          },
-        ],
-      },
-    ],
+    'no-restricted-imports': ['error', { paths: [I18NEXT_DEFAULT, ZOD_DIRECT] }],
   },
 
   overrides: [
+    // The one wrapper, and the env schema (it runs in Node at build time and server start, never in the
+    // browser, with relative imports only, so it cannot use the "@/" wrapper).
+    {
+      files: ['src/shared/lib/zod.ts', 'src/shared/env/schema.ts'],
+      rules: { 'no-restricted-imports': ['error', { paths: [I18NEXT_DEFAULT] }] },
+    },
     {
       files: [
         'scripts/**',

@@ -35,11 +35,20 @@ test.describe('redirects', () => {
       ['/en/', '/en'],
       [`/en/news/${ARTICLE.slug.toUpperCase()}/`, `/en/news/${ARTICLE.slug}`],
       ['/en/news/?page=2', '/en/news?page=2'],
+      ['/AR//About//', '/ar/about'],
     ] as const) {
       const response = await request.get(from, { maxRedirects: 0 });
       expect(response.status(), from).toBe(301);
       expect(response.headers()['location'], from).toBe(to);
     }
+  });
+
+  test('only GET and HEAD are redirected: a 301 would turn a POST into a GET and lose the body', async ({
+    request,
+  }) => {
+    const response = await request.post('/AR/contact/', { data: 'x=1', maxRedirects: 0 });
+    // The framework may still answer 307 (it keeps the method); 301 is what would lose the body.
+    expect(response.status()).not.toBe(301);
   });
 });
 

@@ -24,6 +24,10 @@ test.describe('security headers on every HTML response', () => {
       expect(headers['cross-origin-opener-policy']).toBe('same-origin');
       expect(headers['strict-transport-security']).toMatch(/max-age=\d{7,}/);
       expect(headers['x-powered-by']).toBeUndefined();
+      // The page has a per-response nonce: never in a shared cache; a failed page is not stored at all.
+      expect(headers['cache-control']).toBe(
+        response.status() === 200 ? 'private, no-cache' : 'no-store',
+      );
 
       const csp = headers['content-security-policy'];
       expect(csp).toBeDefined();
