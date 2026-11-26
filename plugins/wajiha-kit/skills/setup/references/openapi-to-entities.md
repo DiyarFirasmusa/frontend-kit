@@ -33,12 +33,13 @@ first build, and list the rest in the final report as "not built yet, say which"
 | List item schema, create body (`POST`), update body (`PUT`/`PATCH`) | DTOs in the foundation's types file; columns; the form schema |
 | `required`, `minLength`, `maxLength`, `pattern`, `minimum` | zod rules in `validations.ts` |
 | `enum` | a select, a status badge, filter options (labels in both locale files) |
-| `format: date` / `date-time`; `boolean`; numbers | date field and column; switch or status; number field |
-| A `$ref` or `...Id` to another entity | a lookup/combobox (dashboard: `src/hooks/lookups`) |
+| `format: date`; `boolean`; numbers | date field and column; switch or status; number field |
+| `format: date-time` | the foundation has no date-time field: two form fields (`TextField` `type="date"` and `type="time"`) joined and split in the mappers, and the 422 field error mapped by hand (dashboard `CLAUDE.md`, "Dates and times"). Say so in the summary |
+| A `$ref` or `...Id` to another entity | a search picker. Dashboard: `src/hooks/lookups` only has the directory pickers (users, employees, org units); for another entity add the four-piece lookup of `CLAUDE.md` "A picker over another entity" once (service, query key, hook, field), then reuse it |
 | `readOnly` properties (`id`, timestamps, audit) | columns or details only, never in the form |
 | List `GET` query parameters other than page, size, sort | the filter bar: a text parameter (`q`, `search`, `name`) is the search field, an enum or boolean is a select |
 | `sort` parameter and sortable fields | sortable columns |
-| `DELETE` present / absent, `PUT` / `PATCH` present / absent | delete action / edit action (leave the action out when the backend has none) |
+| `DELETE` present / absent, `PUT` / `PATCH` present / absent | delete action / edit action (leave the action out when the backend has none: dashboard `CLAUDE.md` "An entity with no DELETE" lists the places; a "cancel" operation is an update) |
 | Operation `security`, `x-permissions`, or permission names written in descriptions | permission strings, exactly as the backend writes them |
 | Nothing about permissions | the default set (below), said once in the summary as "assumed" |
 
@@ -55,8 +56,12 @@ Every page gets its row in `PERMISSIONS.md` (dashboard).
   that parser once.
 - Auth: login, refresh and logout paths go in `endpoints.auth` of `src/constants/api.ts` (dashboard) or `features/admin/api/endpoints.ts` (fullstack). The login answer the
   foundation reads is: dashboard, a JWT access token whose claims carry `roles` and `permissions` (`src/types/auth.ts`, decoded in the session code) plus `/me`, with an
-  optional separate auth service (`VITE_AUTH_BASE_URL`); fullstack, `{ accessToken, user, roles, permissions }`. Read the `securitySchemes` and the login operation, and adapt
-  `src/api/auth/` and the permission store (dashboard) or `features/admin/store/auth-store.ts` (fullstack) when the backend differs.
+  optional separate auth service (`VITE_AUTH_BASE_URL`); fullstack, `{ accessToken, user, roles, permissions }`. Read the `securitySchemes` and the login operation and compare:
+  dashboard login is `POST` of `{ username, password }` answered with `LoginResponse` (`src/types/auth.ts`): `access` (required, the JWT), and optional `refresh`, `userId`, `tenantId`, `roles`, `permissions`;
+  a missing optional field is read from the JWT claims `sub`, `tenant_id`, `roles`, `permissions` (`src/features/auth/login/utils/resolve-session.ts`). A backend that answers `{ accessToken }` needs the rename in one place:
+  `LoginResponse`/`RefreshResponse` in `src/types/auth.ts`, then `features/auth/login/hooks/query/use-login.ts` (`res.access`), `src/api/auth/refresh-token.ts`, `src/mocks/handlers/auth.ts`, and the tests that build a login response.
+  Permissions must come from the token, the login body or `/me`; if the backend has none of them, say it in the summary. When the spec is the draft the kit wrote (section 6), write its login in the foundation's shape instead, so nothing needs adapting.
+  Adapt `src/api/auth/` and the permission store (dashboard) or `features/admin/store/auth-store.ts` (fullstack) when the backend differs.
 
 ## 5. Connect it
 
@@ -73,6 +78,6 @@ Every page gets its row in `PERMISSIONS.md` (dashboard).
 ## 6. No OpenAPI
 
 Ask "does it need sign-in?" and, only if the description did not say, "what are the main things it manages?" (orders, customers, products...).
-Write a draft `docs/api/openapi.json` (OpenAPI 3.0, `info.title` ending in `(draft, written by the kit)`) with a login operation when sign-in is needed
+Write a draft `docs/api/openapi.json` (OpenAPI 3.0, `info.title` ending in `(draft, written by the kit)`) with a login operation when sign-in is needed (dashboard: `POST` `{ username, password }` answered with `{ access, refresh, userId, tenantId, roles, permissions }`, as in section 4)
 and a list/create/update/delete set per entity with the fields the description implies, then build from it exactly as above. Say in the summary that the shape is
 a guess: when the real file arrives, replace `docs/api/openapi.json` and ask Claude to update the entities from it.

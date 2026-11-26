@@ -39,30 +39,50 @@ Leave out: `node_modules`, `.output`, `.nitro`, `.tanstack`, `dist`, `coverage`,
 ## Where the demo lives (strip these, in this order)
 
 The sweep that proves it is gone is in `new-project-flow.md` (step 7). The demo words are: warehouse, supplier,
-categor(y/ies), unit of measure / uom, attribute, inventory, stock, "Example Company", "شركة المثال", "Example".
+categor(y/ies), unit(s) of measure (also spelled `units-of-measure`) / uom, attribute definition / data type, inventory, stock, storekeeper, "Example Company", "شركة المثال", "Example",
+the word "playground" in comments, and the brand letter `authBrand.logoMark` ("D") in the locale files. The sweep pattern is exact and tested: copy it from there, do not retype it.
 `example.com` in CI files, the Dockerfile comments and env tests is a placeholder host, not demo content: leave it.
 
 ### dashboard
 
-- Features (delete after the user's entities exist): `src/features/dashboard/{warehouses,suppliers,categories,units-of-measure}/`
-  (categories holds `pages/attributes/`). `home/` is rewritten, not deleted. `src/features/dashboard/README.md` describes the demo: rewrite or delete.
-- Routes: `src/routes/_app/{warehouses,suppliers,categories,attributes,units-of-measure}/`; `src/routes/_app/index.tsx` (home) is rewritten.
-- Registries (edit, do not delete): `src/constants/{api,query-keys,permissions,audit-entities,enums}.ts` and their tests
-  (`permissions.test.ts` is a snapshot: `npx vitest run src/constants -u` after the edit), `src/layout/dashboard/sidebar/config/nav-config.ts`
-  (icons come from `src/lib/icons.tsx`), `src/locales/{ar,en}.json` (`nav.*`), `PERMISSIONS.md` (`route-guards.test.ts` fails without a row per page).
-- Types: `src/types/api/{suppliers,warehouses,catalog,overview}.ts`, the audit and entity enums in `enums.ts`.
-- Mock backend: `src/mocks/handlers/{suppliers,warehouses,categories,attributes,units,overview,search}.ts`,
-  `src/mocks/seed/{suppliers,warehouses,categories,units,activity,misc,notifications,people}.ts`, then `src/mocks/index.ts`.
-  Keep `core.ts`, `browser.ts`, `handlers/{auth,shell}.ts`, `seed/base.ts`. Search (`handlers/search.ts`, `layout/dashboard/topbar/utils/search-options.ts`),
-  notifications (`notification-target.ts`) and the home widgets name the demo entities: rewrite them for the user's entities or remove what has no counterpart.
-- Tests and e2e: delete `e2e/{suppliers,warehouses,categories,units-of-measure}.spec.ts` and `e2e/a11y-pages/{suppliers,warehouses,categories,units-of-measure}.ts`; rewrite what the sweep finds in
-  `e2e/{home,global-search,notifications,sidebar-nav,guards,login,branding}.spec.ts`, `e2e/global-setup.ts`, `e2e/fixtures/home.ts`, `e2e/a11y-pages/home.ts`, `src/test/msw/handlers.ts`, `*-test-utils.ts` in the deleted features.
-  Shared tests (`src/components/**`, `src/store/permission-store.test.ts`, ...) use the demo words as sample data: rename the word to the user's entity
-  (whole-word replace), then run the tests.
-- Name and brand: `package.json` `name`, `index.html` `<title>`, `vite/pwa.ts` (`name`, `short_name`, `description`), `src/locales/{ar,en}.json`
-  `shell.brand.{title,subtitle}` and `shell.sidebar.title`, the tests that assert the Arabic brand `لوحة التحكم`
-  (`e2e/branding.spec.ts`, `src/layout/auth/components/auth-brand-panel.test.tsx`, `src/layout/auth/index.test.tsx`), `README.md` (rewrite short), `STRUCTURE.md` title.
-- `STRUCTURE.md` sections that describe the demo (`الصفحات الخمس`, `الداتا التجريبية` counts, `وش تغيّر عن الـplayground القديم`, `حالة الفحوصات`): delete them; keep the structural sections.
+Order: (1) the user's entities exist; (2) rewrite what is listed under "Rewrite"; (3) delete what is listed under "Delete"; (4) run the sweep and `npm run check`. Delete last: the files below import each other.
+
+**Delete** (after the user's entities exist):
+
+- Features: `src/features/dashboard/{warehouses,suppliers,categories,units-of-measure}/` (categories holds `pages/attributes/`).
+- Routes: `src/routes/_app/{warehouses,suppliers,categories,attributes,units-of-measure}/`.
+- Mock handlers: `src/mocks/handlers/{suppliers,warehouses,categories,attributes,units}.ts`. Mock seeds: `src/mocks/seed/{suppliers,warehouses,categories,units}.ts`
+  (only after "Rewrite" below: `seed/misc.ts` and `seed/notifications.ts` import `seed/warehouses`, `seed/activity.ts` imports all four).
+- Types: `src/types/api/{suppliers,warehouses,catalog}.ts` (only the deleted features, handlers and seeds import them).
+- E2E: `e2e/{suppliers,warehouses,categories,units-of-measure}.spec.ts` and `e2e/a11y-pages/{suppliers,warehouses,categories,units-of-measure}.ts`
+  (`a11y-pages/` is auto-discovered: no registry to edit).
+
+**Rewrite for the user's entities** (do not delete; other code imports them):
+
+- Mock backend: `src/mocks/index.ts` (the handler list), `handlers/overview.ts` and `handlers/search.ts` (they read the four demo seeds), `seed/activity.ts`, `seed/misc.ts`
+  (workspace name, audit log), `seed/notifications.ts`, `seed/people.ts` (job titles, org units, the `roles` list with `INVENTORY_*`, the signed-in user `me`),
+  `src/types/api/overview.ts`. Keep `core.ts` (rename the `// Warehouses` comment above `nextCode`), `handlers/{auth,shell}.ts`, `seed/base.ts`:
+  `auth.ts` imports `seed/misc` and `seed/people`; `shell.ts` imports `seed/misc`, `seed/notifications`, `seed/people`. The comments that say "playground" in `src/mocks/browser.ts` and `src/main.tsx`.
+- Registries and their tests: `src/constants/{api,query-keys,permissions,audit-entities,enums}.ts` (`permissions.test.ts` is a snapshot: `npx vitest run src/constants -u` after the edit),
+  `src/types/api/enums.ts` (`WarehouseUserRole`, `AttributeDataType`, `AuditEntity`), `src/constants/{enums,permissions,query-keys}.test.ts`, `src/locales/locales.test.ts`,
+  `src/layout/dashboard/sidebar/config/nav-config.ts` (icons from `src/lib/icons.tsx`; `sidebar-header.tsx` imports the `Warehouse` icon from there: use another), `PERMISSIONS.md` (`route-guards.test.ts` fails without a row per page).
+- Home, search, notifications (the recipe is in `CLAUDE.md`, "Show the entity in search, notifications and the home page"): `src/features/dashboard/home/` (`components/home-kpi-grid.tsx`,
+  `components/home-recent-changes-table.tsx`, `locales/{ar,en}.json`), `src/layout/dashboard/topbar/{types/types.ts,utils/search-options.ts,utils/notification-target.ts,hooks/use-global-search.ts,components/global-search.tsx}` and their tests.
+- Tests that name the demo (the sweep finds them; replace the word with the user's entity, whole word, then run the tests): in `e2e/`: `error-pages.spec.ts` and `a11y-pages/errors.ts` (both open `/units-of-measure`),
+  `home.spec.ts`, `global-search.spec.ts`, `notifications.spec.ts`, `sidebar-nav.spec.ts`, `guards.spec.ts`, `global-setup.ts`, `fixtures/app.ts`, `fixtures/home.ts`, `a11y-pages/home.ts`; in `src/`:
+  `api/**/*.test.ts`, `components/{auth,dialog,fields,shared,table,ui,wrapper}/**/*.test.tsx` (and the doc comments in `components/auth/can.tsx`, `components/shared/page-header.tsx`, `components/table/data-table.tsx`),
+  `features/auth/**`, `features/fallback/record-not-found.tsx` (comments), `guards/route-guards.test.ts`, `hooks/**` (`use-current-user.test.tsx`, `lookups/use-directory-search.test.tsx`, `use-excel-export.ts`),
+  `layout/dashboard/sidebar/**`, `layout/dashboard/topbar/**`, `store/permission-store.test.ts`, `test/fixtures/auth.ts` (`INVENTORY_USER`), `test/msw/handlers.ts`, `utils/format.test.ts`.
+  Not a plain replace: `src/router.test.ts` (asserts that two warehouse routes exist: assert two routes of the user's), the sidebar tests that need two nav groups (`nav.groups`), tests that need two different entities.
+- Shared words in docs: `CLAUDE.md`, `STRUCTURE.md`, `.claude/rules/*.md`, `README.md`, `src/features/dashboard/README.md` (rewrite or delete).
+
+**Name and brand:** `package.json` `name` and `description`, `index.html` `<title>`, `vite/pwa.ts` (`name`, `short_name`, `description`), `src/locales/{ar,en}.json`:
+`authBrand.{logoMark,tagline,body}` (`logoMark` is one letter, "D" in the demo: the first letter of the user's name in each language), `shell.brand.{title,subtitle}`, `shell.sidebar.title`,
+`shell.roles.{WAREHOUSE_MANAGER,STOREKEEPER,STOCK_CONTROLLER,APPROVER}`, `auditLog.entities.*`, `enums.AttributeDataType`, `nav.*` (also `nav.groups`), `search.{placeholder,groups.*}`,
+`errorPages.states.notFound.{alertDescription,tip1,scopeValue}`; the tests that assert the Arabic brand `لوحة التحكم`
+(`e2e/branding.spec.ts`, `src/layout/auth/components/auth-brand-panel.test.tsx`, `src/layout/auth/index.test.tsx`); `README.md` (rewrite short); `STRUCTURE.md` title and the tree root `dashboard-starter/`.
+
+**`STRUCTURE.md` sections that describe the demo** (`الصفحات الخمس`, the demo-data counts under `الداتا التجريبية`, `وش تغيّر عن الـplayground القديم`, `حالة الفحوصات`): delete them; keep the structural sections.
 
 ### website
 
@@ -92,12 +112,13 @@ categor(y/ies), unit of measure / uom, attribute, inventory, stock, "Example Com
 
 Settings: `templates/<profile>/settings.json` with `{{DEFAULT_BRANCH}}` = `main`, the ports above, `{{LIVE_HOST}}` empty (so drop `sandbox.network.deniedDomains`).
 It already denies the other app's skills (dashboard denies `web-*`, website denies `dash-*`, fullstack denies none). Add to `allow` the foundation's own scripts:
-`npm run fmt`, `npm run lint`, and dashboard `routes tokens fix lint:probe`, website `check:env check:css check:tooling check:bundle`, fullstack `tokens check:boundaries check:env check:css check:tooling check:bundle`;
-add `Edit(./src/style/theme.css)` and `Edit(./src/style/preset.css)` to `deny` for dashboard and fullstack.
+dashboard `routes tokens fix lint:probe` (its template already has `fmt` and `lint`), website `fmt lint check:env check:css check:tooling check:bundle`, fullstack `fmt lint tokens check:boundaries check:env check:css check:tooling check:bundle`
+(each as `Bash(npm run <name>)`; skip one the template already lists);
+add `Edit(./src/style/theme.css)` and `Edit(./src/style/preset.css)` to `deny` for dashboard and fullstack. The `lsof` allow rules stay (useless on Windows, harmless).
 
 `.claude/wajiha-kit.json` (one Write call): start from `templates/<profile>/wajiha-kit.json` and set
 `mode` `new`, `projectName`, `projectDescription` (the user's, one line), `liveHosts` `[]`, `uatHost` `""`, `githubRepo` `""` (until a remote exists), `defaultBranch` `main`,
-`protectedBranches` `["main","master"]`, the ports and `apiBaseEnv` from the table, `protectedPaths` `[".env",".env.*",".github/**","deploy/**","package-lock.json"]`
+`protectedBranches` `["main","master"]`, `devPort` and `e2ePort` as JSON strings (`"3000"`, `"3100"`, like the template; the hooks compare strings) and `apiBaseEnv` from the table, `protectedPaths` `[".env",".env.*",".github/**","deploy/**","package-lock.json"]`
 (no `server/**`: the starters have no root `server/` folder), `generatedPaths` from the table, `srcDirs` `["src"]`, `srcDir` `"src"`, and
 `commands` `{"typecheck":"npm run typecheck","lint":"npm run lint:check","test":"npm run test","build":"npm run build","dev":"npm run dev","relatedTests":"npx vitest related --run --passWithNoTests","i18nValidate":"npm run i18n:validate"}`,
 and `stack` `{"packageManager":"npm","framework":"Vite" | "TanStack Start","router":"TanStack Router","data":"TanStack Query","state":"Zustand","styling":"Tailwind","tests":"vitest","e2e":"playwright","lint":"oxlint","format":"oxfmt","i18n":"i18next","forms":"react-hook-form","typescript":true}`.
@@ -105,4 +126,8 @@ Fullstack also keeps the template's `apps`: site `{"name":"site","profile":"webs
 `{"name":"admin","profile":"dashboard","path":"src/features/admin","routes":"src/routes/$locale_/admin","apiBaseEnv":"VITE_ADMIN_API_URL"}`;
 leave both apps' `commands` out (one `npm run i18n:validate` and one test run cover both; the project commands are used).
 The foundation's own `CLAUDE.md` and `.claude/rules/` stay as copied: the kit's template rules are not copied on top (they overlap). Only `templates/shared/rules/git.md`
-is added to `.claude/rules/` (placeholders: `{{DEFAULT_BRANCH}}` `main`, `{{PROTECTED_BRANCHES}}` `main, master`, `{{GITHUB_REPO}}` empty: write the compare-link line without a repo until one exists).
+is added to `.claude/rules/` (placeholders: `{{DEFAULT_BRANCH}}` `main`, `{{PROTECTED_BRANCHES}}` `main, master`, `{{GITHUB_REPO}}` empty: write the compare-link line exactly as `https://github.com/<owner>/<repo>/compare/main...<branch>?expand=1` until a remote exists, and say in the report that `<owner>/<repo>` is for the user to fill in).
+
+Format of `.claude/wajiha-kit.json`: write it the way `npm run fmt` would (oxfmt with the project's `printWidth: 80`): 2 spaces, a final newline, an array that fits in 80 columns on one line (`"protectedBranches": ["main", "master"]`),
+a longer one (`protectedPaths`, `generatedPaths`) one item per line. `npm run fix` / `npm run fmt` rewrite the file if the layout differs (whitespace only, no key changes: harmless; do not edit it again to "fix" that, and do not
+run a command that names the file, the kit asks the user for those).
