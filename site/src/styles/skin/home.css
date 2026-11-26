@@ -285,20 +285,6 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 /* WHAT FILLS A BLOCK. Every board is as wide as the page column, like the opening screen; its drawing is centred in it and
    grows with the block up to about 66rem, so the content fills the block instead of floating in the middle. */
 
-/* The comparison is drawn in em, 61.8em wide and about 36em tall: its text size follows the width it is given (not the
-   screen's), so the whole drawing always fits its window, whatever the screen. */
-@media (width >= 48rem) {
-  #why .board-main {
-    container-type: inline-size;
-  }
-
-  #why .board-main > .ba {
-    width: min(100%, 64rem);
-    aspect-ratio: 61.8 / 36;
-    font-size: calc(min(100cqw, 64rem) / 61.8);
-  }
-}
-
 /* The parts of the home page have about the same height: the journey's windows grow to match the others. */
 @media (width >= 62rem) {
   #example .path-picture {
