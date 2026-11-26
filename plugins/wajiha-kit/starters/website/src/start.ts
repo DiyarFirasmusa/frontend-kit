@@ -3,6 +3,7 @@ import { publicEnv } from '@/shared/env/public-env';
 import { getServerEnv } from '@/shared/server/env.server';
 import {
   bodySizeProblem,
+  cacheControlFor,
   canonicalRedirect,
   createNonce,
   rememberNonce,
@@ -21,7 +22,8 @@ const bodyLimitMiddleware = createMiddleware().server(async ({ next, request }) 
 
 /** Applies the canonical URL redirect and the security headers to every response. */
 const securityMiddleware = createMiddleware().server(async ({ next, request }) => {
-  const redirectTo = canonicalRedirect(new URL(request.url));
+  const url = new URL(request.url);
+  const redirectTo = canonicalRedirect(url, request.method);
   if (redirectTo !== undefined) {
     return new Response(null, { status: 301, headers: { Location: redirectTo } });
   }
@@ -48,6 +50,15 @@ const securityMiddleware = createMiddleware().server(async ({ next, request }) =
   // Set the headers on Start's own response object: rebuilding the Response loses its status.
   for (const [name, value] of Object.entries(headers)) {
     result.response.headers.set(name, value);
+  }
+  const cache = cacheControlFor({
+    pathname: url.pathname,
+    status: result.response.status,
+    contentType: result.response.headers.get('Content-Type'),
+    existing: result.response.headers.get('Cache-Control'),
+  });
+  if (cache !== undefined) {
+    result.response.headers.set('Cache-Control', cache);
   }
   result.response.headers.delete('X-Powered-By');
   return result;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ARTICLES, findArticle, sortedArticles } from './articles';
+import { ARTICLES, articleCard, findArticle, sortedArticles } from './articles';
 
 describe('articles', () => {
   it('slugs are unique English kebab-case', () => {
@@ -34,5 +34,22 @@ describe('articles', () => {
     const dates = sortedArticles().map((article) => article.date);
     expect(dates).toEqual(dates.toSorted().toReversed());
     expect(ARTICLES.map((article) => article.slug)).toEqual(before);
+  });
+
+  it('articleCard gives the text of the asked language and the language-free fields', () => {
+    const article = ARTICLES[0];
+    expect(article).toBeDefined();
+    if (article === undefined) {
+      return;
+    }
+    expect(articleCard(article, 'en')).toEqual({
+      slug: article.slug,
+      title: article.text.en.title,
+      summary: article.text.en.summary,
+      date: article.date,
+      cover: article.cover,
+      coverAlt: article.text.en.coverAlt,
+    });
+    expect(articleCard(article, 'ar').title).toBe(article.text.ar.title);
   });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   bodySizeProblem,
+  cacheControlFor,
   canonicalRedirect,
   MAX_SERVER_FN_BODY_BYTES,
   contentSecurityPolicy,
@@ -121,7 +122,20 @@ describe('canonicalRedirect', () => {
     expect(target('//evil.example/')).toBe('/evil.example');
     expect(target('///Evil/x')).toBe('/evil/x');
     expect(target('//')).toBe('/');
-    expect(target('/ar//x')).toBeUndefined();
+    expect(target('/ar//x')).toBe('/ar/x');
+  });
+
+  it('collapses repeated slashes together with the other fixes, in one hop', () => {
+    expect(target('/AR//About//')).toBe('/ar/about');
+    expect(target('/ar///news')).toBe('/ar/news');
+  });
+
+  it('only redirects GET and HEAD: a 301 would turn a POST into a GET and drop the body', () => {
+    const url = new URL('https://example.test/AR/contact/');
+    expect(canonicalRedirect(url, 'GET')).toBe('/ar/contact');
+    expect(canonicalRedirect(url, 'HEAD')).toBe('/ar/contact');
+    expect(canonicalRedirect(url, 'POST')).toBeUndefined();
+    expect(canonicalRedirect(url, 'PUT')).toBeUndefined();
   });
 });
 
@@ -140,6 +154,33 @@ describe('bodySizeProblem', () => {
     expect(bodySizeProblem(post('/_serverFn/abc', { 'content-length': tooBig }))).toBe(413);
     expect(bodySizeProblem(post('/_serverFn/abc', { 'content-length': 'lots' }))).toBe(413);
     expect(bodySizeProblem(post('/_serverFn/abc', {}))).toBe(411);
+  });
+});
+
+describe('cacheControlFor', () => {
+  const html = {
+    pathname: '/ar',
+    status: 200,
+    contentType: 'text/html; charset=utf-8',
+    existing: null,
+  };
+
+  it('keeps pages out of shared caches (the nonce is per response)', () => {
+    expect(cacheControlFor(html)).toBe('private, no-cache');
+  });
+
+  it('never stores a failed page or a server function answer', () => {
+    expect(cacheControlFor({ ...html, status: 404 })).toBe('no-store');
+    expect(cacheControlFor({ ...html, status: 500 })).toBe('no-store');
+    expect(
+      cacheControlFor({ ...html, pathname: '/_serverFn/abc', contentType: 'application/json' }),
+    ).toBe('no-store');
+  });
+
+  it('leaves a header the response already has, and other file types, alone', () => {
+    expect(cacheControlFor({ ...html, existing: 'public, max-age=60' })).toBeUndefined();
+    expect(cacheControlFor({ ...html, contentType: 'text/plain; charset=utf-8' })).toBeUndefined();
+    expect(cacheControlFor({ ...html, contentType: null })).toBeUndefined();
   });
 });
 

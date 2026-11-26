@@ -20,6 +20,16 @@ export type Article = {
   text: Record<Locale, ArticleText>;
 };
 
+/** What an article card shows, in one language. Plain values, so the card needs no news types. */
+export type ArticleCardData = {
+  slug: string;
+  title: string;
+  summary: string;
+  date: string;
+  cover: string;
+  coverAlt: string;
+};
+
 export const ARTICLES: readonly Article[] = [
   {
     slug: 'plan-your-first-quarter',
@@ -111,4 +121,17 @@ export function findArticle(slug: string): Article | undefined {
 /** Newest first. */
 export function sortedArticles(): Article[] {
   return ARTICLES.toSorted((a, b) => b.date.localeCompare(a.date));
+}
+
+/** The card of one article in one language. The list, the home page and the related list all use this. */
+export function articleCard(article: Article, locale: Locale): ArticleCardData {
+  const text = article.text[locale];
+  return {
+    slug: article.slug,
+    title: text.title,
+    summary: text.summary,
+    date: article.date,
+    cover: article.cover,
+    coverAlt: text.coverAlt,
+  };
 }

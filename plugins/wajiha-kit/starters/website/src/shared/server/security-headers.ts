@@ -101,21 +101,24 @@ export function nonceFor(request: Request): string | undefined {
 }
 
 /**
- * Where a request for a page should really go: uppercase letters and a trailing slash are redirected (301)
- * to the one canonical spelling. Returns undefined when the path is already canonical or is not a page
- * (assets, server functions and files keep their case: hashed file names are case-sensitive).
+ * Where a request for a page should really go: uppercase letters, repeated slashes and a trailing slash are
+ * redirected (301) to the one canonical spelling, in one hop. Returns undefined when the path is already
+ * canonical, is not a page (assets, server functions and files keep their case: hashed file names are
+ * case-sensitive), or the method is not GET or HEAD (a 301 turns a POST into a GET and drops its body).
  */
-export function canonicalRedirect(url: URL): string | undefined {
+export function canonicalRedirect(url: URL, method = 'GET'): string | undefined {
   const { pathname, search } = url;
   const isPage =
+    (method === 'GET' || method === 'HEAD') &&
     !pathname.startsWith('/assets/') &&
     !pathname.toLowerCase().startsWith('/_serverfn') &&
     !/\.[a-z0-9]+$/i.test(pathname);
   if (!isPage) {
     return undefined;
   }
-  // Collapse leading slashes first: a Location of "//evil.example" would be read as another host.
-  let target = pathname.toLowerCase().replace(/^\/{2,}/, '/');
+  // Collapse repeated slashes, the leading ones above all: a Location of "//evil.example" would be read as
+  // another host.
+  let target = pathname.toLowerCase().replace(/\/{2,}/g, '/');
   if (target.length > 1) {
     target = target.replace(/\/+$/, '');
   }
@@ -159,6 +162,26 @@ export const STATIC_IMAGE_HEADERS: Record<string, string> = {
   // Not hashed, so a short cache: a replaced image shows up within the hour.
   'Cache-Control': 'public, max-age=3600',
 };
+
+/**
+ * Cache-Control for a response that did not set its own. Pages carry a per-response CSP nonce, so a shared
+ * cache must never keep them ("private"), and a failed page or a server function answer is never stored.
+ * Other responses (files, robots.txt, sitemap.xml) keep the header they already have.
+ */
+export function cacheControlFor(input: {
+  pathname: string;
+  status: number;
+  contentType: string | null;
+  existing: string | null;
+}): string | undefined {
+  if (input.existing !== null) {
+    return undefined;
+  }
+  if (input.pathname.toLowerCase().startsWith('/_serverfn') || input.status >= 400) {
+    return 'no-store';
+  }
+  return input.contentType?.startsWith('text/html') === true ? 'private, no-cache' : undefined;
+}
 
 /**
  * X-Robots-Tag: a copy of the page's robots meta for crawlers that read headers, and the only signal

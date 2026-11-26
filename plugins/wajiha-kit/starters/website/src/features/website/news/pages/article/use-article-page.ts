@@ -1,6 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router';
 import { toLocale } from '@/shared/lib/i18n/languages';
-import { findArticle, sortedArticles } from '../../data/articles';
+import { articleCard, findArticle, sortedArticles } from '../../data/articles';
 
 const route = getRouteApi('/$locale/news/$slug');
 
@@ -16,14 +16,7 @@ export function useArticlePage() {
   const related = sortedArticles()
     .filter((other) => other.slug !== article.slug)
     .slice(0, 2)
-    .map((other) => ({
-      slug: other.slug,
-      title: other.text[locale].title,
-      summary: other.text[locale].summary,
-      date: other.date,
-      cover: other.cover,
-      coverAlt: other.text[locale].coverAlt,
-    }));
+    .map((other) => articleCard(other, locale));
   return {
     locale,
     text,

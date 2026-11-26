@@ -1,6 +1,6 @@
 // Shared by the browser form and the server function: the browser check is for the visitor's convenience,
 // the server check is the one that counts. Messages are locale keys, translated where they are shown.
-import { z } from 'zod';
+import { z } from '@/shared/lib/zod';
 
 /** Arabic-Indic (٠-٩) and Eastern Arabic / Persian (۰-۹) digits to 0-9, so phone keyboards in Arabic work. */
 export function toAsciiDigits(value: string): string {
