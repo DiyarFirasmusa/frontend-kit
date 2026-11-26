@@ -136,7 +136,7 @@ dashboard-starter/
 
 ## هيكل الميزة الواحدة
 
-**الموردون هم الكيان المرجعي**، مطابق لقواعد قالب الكيت (`routing.md` و`data-tables.md` و`forms-crud.md` و`api-layer.md` و`permissions.md`).
+**الموردون هم الكيان المرجعي**، مطابق لقواعد قالب الكيت (`routing-url-state.md` و`data-tables.md` و`forms-crud.md` و`api-layer-mocks.md` و`permissions.md`، كلها في `.claude/rules/`).
 الشرح ملف بملف بـ `src/features/dashboard/README.md`. باختصار:
 
 - **الرابط يملك حالة القائمة**: الصفحة وحجمها والترتيب والبحث والفلاتر بـ`validations/search.ts` (كل حقل له `.catch()` وقيمة افتراضية)،
@@ -158,6 +158,18 @@ dashboard-starter/
 **حدود الطبقات** (قاعدة لنت يولّدها `oxlint.config.ts` من المجلدات): الكود المشترك (`components` `hooks` `lib` `utils` `constants` `services` `store` `types` `validations` `guards` `context` `mocks`) ما يستورد من `features` ولا `layout` ولا `routes`؛
 والميزة ما تستورد ميزة ثانية (إلا `features/fallback` وهي شاشات الأخطاء المشتركة) ولا تطلع من مجلدها بمسار نسبي. القاعدة تمسك الاستيراد بـ`@/` وبالمسار النسبي وبكل عمق مجلد،
 و`npm run lint:probe` يكتب ملفات مخالفة مؤقتة (528 استيراداً مخالفاً) ويفشل إذا لم يُمسك أحدها.
+
+### التكرار المقصود بين الميزات
+
+الموردون والوحدات (وبدرجة أقل المستودعات) يتشابهون بالـglue: الحاوية `index.tsx` و`use-*-list` و`use-*-mutations` وهوك حوار النموذج
+و`use-list-page.ts` و`*-actions.ts` و`use-*-filters.ts`. هذا مقصود: الطريقة الموثّقة هي «انسخ `suppliers/` وعدّل»،
+وكل كيان جديد ينسخ هالملفات ثم يغيّر ما يخصه (الأعمدة، `validations.ts`، أعمدة التصدير، الفلاتر). لا نستخرج `useEntityListPage` عامّاً
+قبل أن يظهر كيان ثالث حقيقي يحتاجه، لأن الاستخراج المبكر يخفي الفروق ويصعّب التعديل.
+الملفات المشتركة فعلاً بين كل القوائم بـ`src/hooks` (`use-list-search` و`use-delete-dialog` و`use-list-export`) و`src/components/table`.
+قاعدة «انقل الملف إلى `src/` لما تحتاجه ميزة ثانية» تخص مكان ملف مشترك، لا نسخ الكود.
+التصنيفات شجرة بواجهة مختلفة، فليست نسخة رابعة: هوك صفحتها مقسوم إلى `use-category-selection` و`use-category-dialogs` و`use-categories-page`،
+وحوار خيارات الخاصية إلى `use-option-drafts` و`use-option-drag` و`OptionDraftList` و`OptionFormSection`.
+أسماء الملفات المكررة (`index.tsx` و`types/types.ts` و`validations/validations.ts`) اتفاقية مقصودة لتبقى الميزات متطابقة الشكل.
 
 ## إضافة كيان جديد
 
@@ -254,14 +266,15 @@ PWA: الألوان من الثيم الافتراضي، أيقونات PNG 192 
 ## حالة الفحوصات (آخر تشغيل فعلي، ويندوز 11)
 
 - `npm run typecheck`: يمر.
-- `npm run lint:check` (`--deny-warnings`) و`npm run fmt:check`: يمرون (706 ملفاً، على نسخة خارج المستودع، شوف الملاحظة تحت). `npm run lint:probe`: 528 استيراداً مخالفاً كلها تُمسك، و291 مسموحاً نظيفين.
-- `npm run test`: 211 ملفاً و1327 اختباراً، كلها تمر بحوالي 34 ثانية (كانت 333 ثانية).
+- `npm run lint:check` (`--deny-warnings`) و`npm run fmt:check`: يمرون (721 ملفاً، على نسخة خارج المستودع، شوف الملاحظة تحت). `npm run lint:probe`: 528 استيراداً مخالفاً كلها تُمسك، و291 مسموحاً نظيفين.
+- `npm run test`: 216 ملفاً و1358 اختباراً، كلها تمر بحوالي 40 ثانية (كانت 333 ثانية)، ثم الوضع المعزول (ملفان و18 اختباراً).
+  `npm run test:coverage` له حد أدنى (80% للأسطر والعبارات والدوال و70% للفروع) والتغطية الحالية 83.6% / 74.6% / 83.7%.
   السبب: `isolate: false` بـ`vitest.config.ts` (الوحدات تنحمّل مرة لكل عامل)، و`src/test/setup.ts` يرجّع بعد كل اختبار
   المخازن والتخزين وhandlers الـMSW وقاعدة الداتا الوهمية ومؤقتات vitest وحالة الاتصال بـTanStack Query.
   لا تستخدم `vi.mock` (يتسرّب بين الملفات بهالوضع). والملفان اللذان يستدعيان `vi.resetModules()` (`env.test.ts` و`monitoring.test.ts`)
   يشتغلان بأمر ثاني معزول (`npm run test:isolated`، جزء من `npm run test`): بدون ذلك كانت ملفات تالية بنفس العامل تفشل أحياناً بـ"Network Error" حسب ترتيب التشغيل.
 - `npm run build`: يمر. بدون الداتا الوهمية يُحذف `mockServiceWorker.js` من `dist`.
-- `npm run test:e2e`: 320 اختباراً (4 مشاريع). `e2e/global-setup.ts` يسخّن سيرفر Vite قبل العمّال.
+- `npm run test:e2e`: 320 اختباراً (4 مشاريع): 319 نجحوا بالتشغيل الكامل، وواحد فشل بتوقف الجهاز (انتهى الاختبار قبل أن يجد الزر) ونجح عند إعادة ملفه. `e2e/global-setup.ts` يسخّن سيرفر Vite قبل العمّال.
 
 ملاحظة: oxlint يتجاهل ملفات المجلد إذا كان المجلد داخل `.gitignore` لمستودع أب (مثل `playground/` بمستودع الكيت).
 داخل مستودعك الخاص يشتغل عادي.
