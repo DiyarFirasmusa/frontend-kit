@@ -40,12 +40,6 @@ const { locale } = Astro.props
       <ChatWindow locale={locale} label={home.example[locale]} live>
         {firstRun.map((event) => <ChatEvent locale={locale} event={event} />)}
       </ChatWindow>
-      <Fragment slot="side">
-        <p class="board-side-title">{home.board.getTitle[locale]}</p>
-        <ul class="board-list">
-          {home.board.get.map((item, i) => <li>{item[locale]}<small>{home.board.getDetail[i]?.[locale]}</small></li>)}
-        </ul>
-      </Fragment>
       <p slot="note">{home.board.note[locale]}</p>
     </Board>
   </div>

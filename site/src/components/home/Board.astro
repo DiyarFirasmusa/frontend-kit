@@ -16,6 +16,7 @@ interface Props {
 
 const { part, label, tone = 'orange', side } = Astro.props
 const sideTone = side ?? 'ink'
+const hasSide = Astro.slots.has('side')
 const blocks = [
   { x: 5, y: 5, w: 54, h: 12, fill: '#f1ede7' },
   { x: 5, y: 21, w: 36, h: 20, fill: '#d97757' },
@@ -24,7 +25,7 @@ const blocks = [
 ]
 ---
 
-<div class:list={['board', `tone-${tone}`, `side-${sideTone}`]}>
+<div class:list={['board', `tone-${tone}`, hasSide ? `side-${sideTone}` : 'no-side']}>
   <p class="board-top">
     <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
       {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={part === -1 || i === part ? b.fill : 'rgb(241 237 231 / 0.28)'} />)}
@@ -33,6 +34,6 @@ const blocks = [
     <span>{label}</span>
   </p>
   <div class="board-main"><slot /></div>
-  <div class="board-side"><slot name="side" /></div>
+  {hasSide && <div class="board-side"><slot name="side" /></div>}
   <div class="board-note"><slot name="note" /></div>
 </div>

@@ -299,22 +299,23 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
   line-height: 1.6;
 }
 
-/* The parts alternate, starting from the reading start (right): 1 and 3 have the orange block on the right and the side column on the left; 2 and 4 are mirrored. */
+/* A board is its bar, one block and its note bar: no side column, so nothing pulls the eye from the block. */
+.board.no-side {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* The mark's tall turquoise column stays as a slim spine beside the block and its note bar: colour, no words. */
 @media (width >= 48rem) {
-  html #builds .board.side-ink,
-  html #why .board.side-ink {
-    grid-template-columns: 19rem minmax(0, 1fr);
+  .board.no-side {
+    grid-template-columns: minmax(0, 1fr) 0.9rem;
   }
 
-  #builds .board .board-side,
-  #why .board .board-side {
-    grid-column: 1;
-  }
-
-  #builds .board .board-main,
-  #builds .board .board-note,
-  #why .board .board-main,
-  #why .board .board-note {
+  .board.no-side::after {
+    content: '';
     grid-column: 2;
+    grid-row: 2 / 4;
+    border-radius: 0.9rem;
+    background: var(--side);
   }
 }
+

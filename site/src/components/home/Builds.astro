@@ -29,7 +29,7 @@ const { locale } = Astro.props
       }
     </div>
     {
-      showcase.map(({ id, title, text, features, url }, i) => (
+      showcase.map(({ id, title, text, url }, i) => (
         <div class="show-panel" role="tabpanel" tabindex="0" id={`kind-${id}`} aria-labelledby={`tab-${id}`} data-kind={i} data-hidden={i > 0 ? '' : undefined}>
           <div class="show-picture">
             <Board locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} tone="ink">
@@ -46,17 +46,6 @@ const { locale } = Astro.props
                   <Mock kind={id} />
                 </div>
               </div>
-              <Fragment slot="side">
-                <p class="board-side-title">{home.board.getTitle[locale]}</p>
-                <ul class="board-list">
-                  {features.map(({ name, text }) => (
-                    <li>
-                      {name[locale]}
-                      <small>{text[locale]}</small>
-                    </li>
-                  ))}
-                </ul>
-              </Fragment>
               <div slot="note">
                 <p>{home.madeUp[locale]}</p>
                 <a class="note-cta" href={pageUrl(locale, 'project-types')}>{home.builds.more[locale]}</a>

@@ -84,12 +84,6 @@ const tokens = (value: string): string => value.split(' ').map((word) => `<span 
             </div>
           </figure>
       </div>
-      <Fragment slot="side">
-        <p class="board-side-title">{w.needsTitle[locale]}</p>
-        <ul class="board-list">
-          {w.needsList.map((item, i) => <li>{item[locale]}<small>{w.needsDetail[i]?.[locale]}</small></li>)}
-        </ul>
-      </Fragment>
       <div slot="note">
         <p>{w.source[locale]} <a href={REPO_URL} dir="ltr">github.com/DiyarFirasmusa/wajiha-kit</a> · {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a></p>
         <a class="note-cta" href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>

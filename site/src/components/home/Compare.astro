@@ -97,12 +97,6 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
       <span class="ba-cue" aria-hidden="true">{w.cue[locale]}</span>
       <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range data-bad={compare.without[locale]} data-good={compare.with[locale]} />
     </div>
-      <Fragment slot="side">
-        <p class="board-side-title">{home.board.getTitle[locale]}</p>
-        <ul class="board-list">
-          {w.results.map((result, i) => <li>{result[locale]}<small>{w.resultsDetail[i]?.[locale]}</small></li>)}
-        </ul>
-      </Fragment>
       <div slot="note">
         <p>{words.illustration[locale]}</p>
         <a class="hero-start" href="#install">{home.start[locale]}</a>
