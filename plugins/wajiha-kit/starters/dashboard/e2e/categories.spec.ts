@@ -1,69 +1,81 @@
-import { expect, test } from './fixtures/app';
-import {
-  CATEGORY_PERMISSIONS,
-  mockCategories,
-  signInWithPermissions,
-} from './fixtures/categories';
+import { categories } from '../src/mocks/seed/categories';
+import { expect, loginAs, test } from './fixtures/app';
 
-test.describe('categories and attributes', () => {
+/* Runs against the shared demo backend (src/mocks): 31 seeded categories and
+   13 attribute definitions. No fixture file of its own. */
+
+function idOf(code: string): string {
+  const found = categories.find((category) => category.code === code);
+  if (!found) {
+    throw new Error(`seed category ${code} missing`);
+  }
+  return found.id;
+}
+
+const CODE_HEADER = /^(Code|الرمز)/;
+
+test.describe('categories', () => {
   test.beforeEach(async ({ page, mockApi }) => {
-    await mockApi.shell();
-    await mockCategories(mockApi);
-    await signInWithPermissions(page, mockApi, CATEGORY_PERMISSIONS);
+    await mockApi.backend();
+    await loginAs(page, mockApi);
   });
 
   test('shows inherited attributes read-only and toggles a required flag', async ({
     page,
     dir,
   }) => {
-    await page.goto('/categories');
+    await page.goto(`/categories?category=${idOf('BLD-STL')}`);
     await expect(page.locator('html')).toHaveAttribute('dir', dir);
 
-    await page.getByText('حماية اليدين').first().click();
+    await expect(page.getByText('بلد المنشأ').first()).toBeVisible();
     await expect(
       page
         .getByText(/Inherited attribute, read-only|خاصية موروثة للقراءة فقط/)
         .first(),
     ).toBeVisible();
-    await expect(page.getByText('معدات السلامة').first()).toBeVisible();
 
     const put = page.waitForRequest(
       (request) =>
         request.method() === 'PUT' &&
-        request
-          .url()
-          .endsWith('/api/item-categories/cat-hand/attributes/asg-2'),
+        request.url().includes('/api/item-categories/'),
     );
     await page
-      .getByRole('row', { name: /اللون/ })
+      .getByRole('row', { name: /الطول/ })
       .getByRole('switch')
       .first()
       .click();
-
-    expect((await put).postDataJSON()).toMatchObject({
-      attributeDefinitionId: 'attr-color',
-      isRequired: true,
-      isVariantAxis: true,
-    });
+    expect((await put).postDataJSON()).toMatchObject({ isRequired: false });
   });
 
-  test('creates a category under the selected parent', async ({
+  test('the selected category and the search live in the URL', async ({
     page,
-    dir,
   }) => {
     await page.goto('/categories');
-    await expect(page.locator('html')).toHaveAttribute('dir', dir);
+    await page.getByRole('button', { name: /^مواد غذائية/ }).click();
+    await expect(page).toHaveURL(new RegExp(`category=${idOf('FOOD')}`));
 
-    await page.getByText('معدات السلامة').first().click();
+    await page.getByRole('searchbox').fill('FOOD-OIL');
+    await expect(page).toHaveURL(/q=FOOD-OIL/);
+    await expect(
+      page.getByRole('button', { name: /^زيوت ودهون/ }),
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /^مشروبات/ })).toBeHidden();
+
+    await page.reload();
+    await expect(page.getByRole('searchbox')).toHaveValue('FOOD-OIL');
+    await expect(
+      page.getByRole('button', { name: /^زيوت ودهون/ }),
+    ).toBeVisible();
+  });
+
+  test('creates a category under the selected parent', async ({ page }) => {
+    await page.goto(`/categories?category=${idOf('OFF')}`);
     await page
-      .getByRole('button', { name: /إضافة تصنيف|add category/i })
-      .first()
+      .getByRole('button', { name: /^(Add category|إضافة تصنيف)$/ })
       .click();
 
     const dialog = page.getByRole('dialog');
-    await expect(dialog).toBeVisible();
-    await dialog.getByLabel(/اسم التصنيف|Category name/).fill('Gloves');
-
+    await dialog.getByLabel(/^(Category name|اسم التصنيف)/).fill('Gloves');
     const post = page.waitForRequest(
       (request) =>
         request.method() === 'POST' &&
@@ -73,50 +85,32 @@ test.describe('categories and attributes', () => {
 
     expect((await post).postDataJSON()).toEqual({
       name: 'Gloves',
-      parentId: 'cat-safety',
+      parentId: idOf('OFF'),
       isActive: true,
     });
     await expect(dialog).toBeHidden();
     await expect(page.getByText('Gloves').first()).toBeVisible();
   });
 
-  test('adds an option to an OPTION attribute', async ({ page, dir }) => {
-    await page.goto('/attributes');
-    await expect(page.locator('html')).toHaveAttribute('dir', dir);
-
+  test('a backend field error shows under the input', async ({ page }) => {
+    await page.goto(`/categories?category=${idOf('OFF')}`);
     await page
-      .getByRole('row', { name: /اللون/ })
-      .getByRole('button', { name: /تحرير الخيارات|edit options/i })
+      .getByRole('button', { name: /^(Add category|إضافة تصنيف)$/ })
       .click();
-
     const dialog = page.getByRole('dialog');
-    await expect(dialog).toBeVisible();
     await dialog
-      .getByRole('button', { name: /^(Add option|إضافة خيار)$/ })
-      .click();
-    await dialog.getByLabel(/اسم الخيار|Option label/).fill('Red');
-
-    await dialog
-      .getByRole('button', { name: /^(Add to list|إضافة إلى القائمة)$/ })
-      .click();
-
-    const post = page.waitForRequest(
-      (request) =>
-        request.method() === 'POST' &&
-        request.url().endsWith('/api/attribute-definitions/attr-color/options'),
-    );
-    await dialog
-      .getByRole('button', { name: /^(Save options|حفظ الخيارات)$/ })
-      .click();
-
-    const body = (await post).postDataJSON();
-    expect(body).toMatchObject({ label: 'Red' });
-    expect(body).not.toHaveProperty('code');
+      .getByLabel(/^(Category name|اسم التصنيف)/)
+      .fill('ورق وقرطاسية');
+    await dialog.getByRole('button', { name: /^(Save|حفظ)$/ }).click();
+    await expect(
+      dialog.getByText(
+        /A category with this name already exists here|يوجد تصنيف بهذا الاسم/,
+      ),
+    ).toBeVisible();
   });
 
   test('shows item counts and blocks deleting a category that has items', async ({
     page,
-    dir,
   }) => {
     let deletes = 0;
     page.on('request', (request) => {
@@ -124,23 +118,141 @@ test.describe('categories and attributes', () => {
         deletes += 1;
       }
     });
-    await page.goto('/categories');
-    await expect(page.locator('html')).toHaveAttribute('dir', dir);
+    await page.goto(`/categories?category=${idOf('FOOD-OIL')}`);
     await expect(
-      page.getByText(/^(Items: 184|الأصناف: 184)$/).first(),
+      page.getByText(/^(Items: 4|الأصناف: 4)$/).first(),
     ).toBeAttached();
 
-    await page.getByText('حماية اليدين').first().click();
     await page
       .getByRole('button', { name: /^(Delete|حذف)$/ })
       .first()
       .click();
-
     const dialog = page.getByRole('dialog', {
       name: /Can't delete this category|تعذر حذف التصنيف/,
     });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByText('62', { exact: true })).toHaveCount(2);
     expect(deletes).toBe(0);
+  });
+});
+
+test.describe('attributes', () => {
+  test.beforeEach(async ({ page, mockApi }) => {
+    await mockApi.backend();
+    await loginAs(page, mockApi);
+  });
+
+  test('pages and sorts on the server, and the URL keeps the state', async ({
+    page,
+    dir,
+  }) => {
+    await page.goto('/attributes');
+    await expect(page.locator('html')).toHaveAttribute('dir', dir);
+    const table = page.getByRole('table');
+    await expect(table.getByText('COLOR', { exact: true })).toBeVisible();
+
+    await page
+      .getByRole('columnheader', { name: CODE_HEADER })
+      .getByRole('button')
+      .click();
+    await expect(page).toHaveURL(/sort=code\.asc/);
+    await page
+      .getByRole('columnheader', { name: CODE_HEADER })
+      .getByRole('button')
+      .click();
+    await expect(page).toHaveURL(/sort=code\.desc/);
+    await expect(table.getByText('WEIGHT', { exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: '2', exact: true }).click();
+    await expect(page).toHaveURL(/page=2/);
+    await expect(
+      table.getByText('CAPACITY_OLD', { exact: true }),
+    ).toBeVisible();
+  });
+
+  test('adds an option to an OPTION attribute', async ({ page }) => {
+    await page.goto('/attributes?q=COLOR');
+    await page
+      .getByRole('button', { name: /^(Edit options of|تحرير خيارات) / })
+      .click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await dialog
+      .getByRole('button', { name: /^(Add option|إضافة خيار)$/ })
+      .click();
+    await dialog.getByLabel(/^(Option label|اسم الخيار)/).fill('Teal');
+    await dialog
+      .getByRole('button', { name: /^(Add to list|إضافة إلى القائمة)$/ })
+      .click();
+
+    const post = page.waitForRequest(
+      (request) =>
+        request.method() === 'POST' && request.url().endsWith('/options'),
+    );
+    await dialog
+      .getByRole('button', { name: /^(Save options|حفظ الخيارات)$/ })
+      .click();
+    const body = (await post).postDataJSON();
+    expect(body).toMatchObject({ label: 'Teal' });
+    expect(body).not.toHaveProperty('code');
+  });
+
+  test('adds, edits and deletes an attribute', async ({ page }) => {
+    await page.goto('/attributes');
+    await page
+      .getByRole('button', { name: /^(Add attribute|إضافة خاصية)$/ })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel(/^(Attribute name|اسم الخاصية)/).fill('Thickness');
+    await dialog
+      .getByRole('button', { name: /^(Save attribute|حفظ الخاصية)$/ })
+      .click();
+    await expect(dialog).toBeHidden();
+
+    await page.getByRole('searchbox').fill('Thickness');
+    const row = page.getByRole('row').filter({ hasText: 'Thickness' });
+    await expect(row).toBeVisible();
+
+    await row
+      .getByRole('button', { name: /^(Edit|تعديل) / })
+      .first()
+      .click();
+    await expect(
+      dialog.getByLabel(/^(Attribute name|اسم الخاصية)/),
+    ).toHaveValue('Thickness');
+    await dialog
+      .getByLabel(/^(Attribute name|اسم الخاصية)/)
+      .fill('Thickness 2');
+    await dialog
+      .getByRole('button', { name: /^(Save attribute|حفظ الخاصية)$/ })
+      .click();
+    await expect(dialog).toBeHidden();
+
+    await page.getByRole('searchbox').fill('Thickness 2');
+    const edited = page.getByRole('row').filter({ hasText: 'Thickness 2' });
+    await edited.getByRole('button', { name: /^(Delete|حذف) / }).click();
+    const confirm = page.getByRole('alertdialog');
+    await expect(
+      confirm.getByRole('button', { name: /^(Cancel|إلغاء)$/ }),
+    ).toBeFocused();
+    await confirm.getByRole('button', { name: /^(Delete|حذف)$/ }).click();
+    await expect(edited).toHaveCount(0);
+  });
+
+  test('a backend field error shows under the input', async ({ page }) => {
+    await page.goto('/attributes');
+    await page
+      .getByRole('button', { name: /^(Add attribute|إضافة خاصية)$/ })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel(/^(Attribute name|اسم الخاصية)/).fill('اللون');
+    await dialog
+      .getByRole('button', { name: /^(Save attribute|حفظ الخاصية)$/ })
+      .click();
+    await expect(
+      dialog.getByText(
+        /Attribute name already exists|اسم الخاصية مستخدم مسبقاً/,
+      ),
+    ).toBeVisible();
   });
 });

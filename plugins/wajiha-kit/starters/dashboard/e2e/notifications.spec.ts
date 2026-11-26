@@ -1,6 +1,5 @@
 import type { NotificationPageResponse } from '../src/types/api/notifications';
 import { expect, loginAs, test } from './fixtures/app';
-import { mockWarehouses } from './fixtures/warehouses';
 
 const NOTIFICATIONS: NotificationPageResponse = {
   unreadCount: 1,
@@ -37,9 +36,8 @@ const PANEL = /^(Notifications|الإشعارات)/;
 
 test.describe('notifications', () => {
   test.beforeEach(async ({ page, mockApi }) => {
-    await mockApi.shell();
+    await mockApi.backend();
     await mockApi.json('**/api/notifications*', NOTIFICATIONS);
-    await mockWarehouses(mockApi);
     await loginAs(page, mockApi);
   });
 
@@ -54,7 +52,9 @@ test.describe('notifications', () => {
     });
 
     await page.goto('/warehouses');
-    await expect(page.getByText('Baghdad central warehouse')).toBeVisible();
+    await expect(
+      page.getByRole('table').getByText('WH-BGD-01', { exact: true }),
+    ).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('dir', dir);
 
     const bell = page.getByRole('button', { name: BELL });
@@ -95,7 +95,9 @@ test.describe('notifications', () => {
     });
 
     await page.goto('/warehouses');
-    await expect(page.getByText('Baghdad central warehouse')).toBeVisible();
+    await expect(
+      page.getByRole('table').getByText('WH-BGD-01', { exact: true }),
+    ).toBeVisible();
 
     await page.getByRole('button', { name: BELL }).click();
     await page

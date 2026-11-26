@@ -1,5 +1,4 @@
 import { expect, loginAs, test } from './fixtures/app';
-import { mockWarehouses } from './fixtures/warehouses';
 
 const SEARCH_RESPONSE = {
   warehouses: [
@@ -16,8 +15,7 @@ const SEARCH_RESPONSE = {
 
 test.describe('global search', () => {
   test.beforeEach(async ({ page, mockApi }) => {
-    await mockApi.shell();
-    await mockWarehouses(mockApi);
+    await mockApi.backend();
     await loginAs(page, mockApi);
   });
 
@@ -32,7 +30,9 @@ test.describe('global search', () => {
     });
 
     await page.goto('/warehouses');
-    await expect(page.getByText('Baghdad central warehouse')).toBeVisible();
+    await expect(
+      page.getByRole('table').getByText('WH-BGD-01', { exact: true }),
+    ).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('dir', dir);
     expect(queries).toHaveLength(0);
 
@@ -67,7 +67,9 @@ test.describe('global search', () => {
       }),
     );
     await page.goto('/warehouses');
-    await expect(page.getByText('Baghdad central warehouse')).toBeVisible();
+    await expect(
+      page.getByRole('table').getByText('WH-BGD-01', { exact: true }),
+    ).toBeVisible();
 
     await page
       .getByRole('combobox', { name: /Global search|البحث الشامل/ })

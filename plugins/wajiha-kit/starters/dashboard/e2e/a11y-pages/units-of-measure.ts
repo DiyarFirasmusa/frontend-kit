@@ -1,5 +1,4 @@
 import type { MockApi } from '../fixtures/app';
-import { mockUnitsOfMeasure } from '../fixtures/units-of-measure';
 import type { A11yPage } from './types';
 
 export const pages: A11yPage[] = [
@@ -7,9 +6,9 @@ export const pages: A11yPage[] = [
     name: 'units of measure',
     path: '/units-of-measure',
     guarded: true,
+    // The shared demo backend (src/mocks): no fixture file per entity.
     mocks: async (mockApi: MockApi) => {
-      await mockApi.shell();
-      await mockUnitsOfMeasure(mockApi);
+      await mockApi.backend();
     },
   },
 ];

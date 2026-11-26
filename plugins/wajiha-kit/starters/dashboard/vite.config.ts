@@ -7,6 +7,7 @@ import viteReact from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv, type PluginOption } from 'vite';
 import { pwaPlugin } from './vite/pwa.ts';
+import { routerOptions } from './vite/router-options.ts';
 import { vendorChunk } from './vite/vendor-chunks.ts';
 
 const pkg = JSON.parse(
@@ -22,11 +23,7 @@ export default defineConfig(({ mode }) => {
   const pwa = env.VITE_PWA === 'true';
 
   const plugins: PluginOption[] = [
-    tanstackRouter({
-      target: 'react',
-      autoCodeSplitting: true,
-      routeFileIgnorePattern: '.test.tsx?$',
-    }),
+    tanstackRouter(routerOptions),
     tailwindcss(),
     viteReact(),
   ];
