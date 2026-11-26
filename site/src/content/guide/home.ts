@@ -3,7 +3,7 @@ import { t } from './text.ts'
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
-  title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
+  title: t('Build your own website. No experience needed.', 'اصنع موقعك بنفسك. دون أي خبرة.'),
   lead: t(
     'Answer a few plain questions in the Claude app. It builds a website or dashboard, checks it, and shows it to you in Arabic and English.',
     'أجب عن بضعة أسئلة بسيطة داخل تطبيق ⁦Claude⁩. يبني لك موقعا أو لوحة تحكم، ويفحصها، ويعرضها عليك بالعربية والإنجليزية.',
