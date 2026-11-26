@@ -1,0 +1,109 @@
+/* THE OPENING SCREEN BUILDS A SITE. When Claude says the dashboard is ready, its picture is not just shown: the pieces of
+   the dashboard fly in from all sides and fall into place inside the chat window, the side menu first, then the numbers,
+   the chart growing bar by bar, and the rows of orders. Layer skin-page (home/index.css). Only for the playing chat, and
+   only when the visitor has not asked for less motion. */
+.chat.live .ce-ready .ce-shot {
+  height: 12.5rem;
+  font-size: 0.7rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chat.is-playing .ce-ready.is-in .mock-dash :is(.mock-side, .mock-stats > span, .mock-table > span) {
+    animation: build-piece 0.95s var(--spring, cubic-bezier(0.3, 1.5, 0.5, 1)) both;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-dash .mock-chart i {
+    transform-origin: bottom;
+    animation: build-bar 0.6s var(--glide, ease) both;
+    animation-delay: calc(0.85s + var(--b, 0) * 0.07s);
+  }
+
+  .chat.is-playing .ce-ready.is-in .ce-open {
+    animation: build-pop 0.5s var(--spring, ease) 1.7s both;
+  }
+
+  /* Where each piece comes from: the menu from the side, the numbers from above, the rows from the far side. */
+  .chat.is-playing .ce-ready.is-in .mock-side {
+    --from-x: -5em;
+    --from-y: 2em;
+    --turn: -12deg;
+    animation-delay: 0.1s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-stats > span:nth-child(1) {
+    --from-x: -2em;
+    --from-y: -4em;
+    --turn: 9deg;
+    animation-delay: 0.3s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-stats > span:nth-child(2) {
+    --from-x: 0em;
+    --from-y: -5em;
+    --turn: -7deg;
+    animation-delay: 0.42s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-stats > span:nth-child(3) {
+    --from-x: 3em;
+    --from-y: -4em;
+    --turn: 11deg;
+    animation-delay: 0.54s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-table > span:nth-child(1) {
+    --from-x: 6em;
+    --from-y: 2em;
+    --turn: 6deg;
+    animation-delay: 1.15s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-table > span:nth-child(2) {
+    --from-x: 7em;
+    --from-y: 3em;
+    --turn: -5deg;
+    animation-delay: 1.27s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-table > span:nth-child(3) {
+    --from-x: 8em;
+    --from-y: 4em;
+    --turn: 4deg;
+    animation-delay: 1.39s;
+  }
+
+  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(2) { --b: 1; }
+  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(3) { --b: 2; }
+  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(4) { --b: 3; }
+  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(5) { --b: 4; }
+  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(6) { --b: 5; }
+  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(7) { --b: 6; }
+
+  @keyframes build-piece {
+    from {
+      opacity: 0;
+      transform: translate(var(--from-x, 0), var(--from-y, 0)) rotate(var(--turn, 0deg)) scale(0.6);
+    }
+
+    55% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes build-bar {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes build-pop {
+    from {
+      opacity: 0;
+      scale: 0.6;
+    }
+  }
+
+  html.is-paused .chat .ce-ready * {
+    animation-play-state: paused;
+  }
+}
