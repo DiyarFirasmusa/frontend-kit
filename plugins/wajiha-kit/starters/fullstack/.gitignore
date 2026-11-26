@@ -19,3 +19,6 @@ Thumbs.db
 
 # Temporary files of npm run check:boundaries
 .lint-probe/
+
+# Source maps of npm run build:proof (never served; see scripts/proof-maps.ts)
+.proof-maps/

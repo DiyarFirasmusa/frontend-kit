@@ -46,6 +46,13 @@ if (process.env.E2E_SKIP_BUILD !== '1') {
   const { createBuilder } = await import('vite');
   const builder = await createBuilder();
   await builder.buildApp();
+  // The production build must hold no source map (they would be served): stop before serving if one does.
+  const { findMaps, OUTPUT_DIR } = await import('./proof-maps.ts');
+  const maps = findMaps(OUTPUT_DIR);
+  if (maps.length > 0) {
+    console.error(`e2e build: ${maps.length} source map file(s) in ${OUTPUT_DIR}, e.g. ${maps[0]}`);
+    process.exit(1);
+  }
 }
 
 const server = spawn(process.execPath, ['.output/server/index.mjs'], { stdio: 'inherit', env });

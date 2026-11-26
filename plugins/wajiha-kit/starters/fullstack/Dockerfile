@@ -26,9 +26,12 @@ ENV VITE_SITE_URL=$VITE_SITE_URL \
     VITE_ADMIN_API_MOCK=$VITE_ADMIN_API_MOCK \
     NODE_ENV=production
 COPY . .
-# A build with the mock off ships no mock service worker. The Vite config already drops it; this line is
+# The build makes no source map, and check-no-maps fails the image build if one ever appears in .output (a map
+# holds the original source and .output/public is served).
+# A build with the mock off ships no mock service worker. The Vite config already drops it; the last line is
 # the second lock, so an image can never carry it (the file is inert without a page that registers it).
 RUN npm run build \
+    && node scripts/check-no-maps.mjs \
     && if [ "$VITE_ADMIN_API_MOCK" != "true" ]; then rm -f .output/public/mockServiceWorker.js*; fi
 
 FROM node:24-alpine AS runtime

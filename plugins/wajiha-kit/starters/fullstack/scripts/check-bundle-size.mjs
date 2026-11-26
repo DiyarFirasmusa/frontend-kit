@@ -1,6 +1,7 @@
 // Proof that the PUBLIC pages are small and carry no admin code, checked against the production build.
 // Run: npm run build:proof && npm run check:bundle  (build:proof is "vite build" plus hidden source maps,
-// which this script reads; a plain "npm run build" makes none and ships none).
+// which it moves out of .output into .proof-maps, where this script reads them; a plain "npm run build" makes
+// none). The deployable output must hold no source map at all: this script fails if one is there or is served.
 // It starts the built server on a free port and loads EVERY public page of the sitemap in both languages
 // plus the not-found page. For each script a page loads it fails when
 //   - a module of src/features/admin or of the admin-only UI folders is inside it, unless it is on the
@@ -20,6 +21,7 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { loadEnv } from 'vite';
 import { forbiddenSources, pagePath, sitemapPaths } from './bundle-sources.ts';
+import { findMaps, PROOF_MAPS_DIR } from './proof-maps.ts';
 
 /**
  * Largest allowed gzip size in bytes per language-free page: all JS and CSS a page loads (total) and the
@@ -156,7 +158,7 @@ function inspect(url) {
       result.issues.push(`${url} contains "${marker}" (admin code in a public file)`);
     }
   }
-  const mapFile = `${file}.map`;
+  const mapFile = join(PROOF_MAPS_DIR, 'public', `${url}.map`);
   // Generated chunks are not read from a source file, so they have no map (and no source).
   if (!existsSync(mapFile) && VIRTUAL_CHUNK.test(url)) {
     return result;
@@ -192,8 +194,10 @@ async function checkMockOff() {
   if (response.status !== 404) {
     problems.push(`the mock is off but /mockServiceWorker.js answers ${response.status}, not 404`);
   }
-  const assets = join(publicDir, 'assets');
-  const maps = readdirSync(assets).filter((name) => name.endsWith('.js.map'));
+  const assets = join(PROOF_MAPS_DIR, 'public', 'assets');
+  const maps = existsSync(assets)
+    ? readdirSync(assets).filter((name) => name.endsWith('.js.map'))
+    : [];
   let withMsw = 0;
   for (const name of maps) {
     const { sources = [] } = JSON.parse(readFileSync(join(assets, name), 'utf8'));
@@ -207,8 +211,30 @@ async function checkMockOff() {
   );
 }
 
+/** A source map holds the original source: none may be in the deployable output, and none may be served. */
+async function checkNoMaps(html) {
+  const inOutput = findMaps(OUTPUT);
+  for (const name of inOutput.slice(0, 5)) {
+    problems.push(
+      `${OUTPUT}/${name} is a source map in the deployable output (build:proof must move it out)`,
+    );
+  }
+  let probed = 0;
+  for (const url of assetsOf(html).filter((asset) => asset.endsWith('.js'))) {
+    const response = await fetch(`http://127.0.0.1:${port}${url}.map`, { redirect: 'manual' });
+    probed += 1;
+    if (response.status !== 404) {
+      problems.push(`${url}.map is served (${response.status}), not 404`);
+    }
+  }
+  console.log(
+    `check:bundle source maps: ${inOutput.length} in ${OUTPUT}, ${probed} map URLs probed (all must answer 404)`,
+  );
+}
+
 try {
   const first = await waitForServer();
+  await checkNoMaps(first);
   await checkMockOff();
   const sitemap = await fetchText('/sitemap.xml');
   const pages = sitemapPaths(sitemap).map((path) => ({ path, status: 200 }));
