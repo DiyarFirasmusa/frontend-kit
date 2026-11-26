@@ -48,9 +48,11 @@ npm run dev:api           # :5190, admin on the real API from .env.local (VITE_A
 npm run typecheck | lint:check | fmt (writes) | fmt:check | i18n:validate | test
 npm run tokens            # regenerate src/style/theme.css and preset.css from src/style/tokens
 npm run check             # everything above plus env, css, tooling, boundaries, unit tests
-npm run build             # production build in .output (no source maps)
-npm run build:proof       # the same plus hidden source maps; then run check:bundle, it checks every public page
-                          # (sitemap, both languages, not-found) stays in budget and loads no admin module
+npm run build             # production build in .output (no source maps; Docker runs this)
+npm run build:proof       # the same plus hidden source maps, MOVED OUT of .output into .proof-maps/ (never served);
+                          # then run check:bundle: every public page (sitemap, both languages, not-found) stays in
+                          # budget and loads no admin module, and no .map is in .output or served
+npm run check:maps        # fails when .output holds a source map (the Dockerfile runs it after its build)
 npm run test:e2e          # builds, serves the production build on :5191 (E2E_PORT=5441 to change), Playwright
 npm run check:full        # check + build:proof + check:bundle + test:e2e
 ```
@@ -87,13 +89,27 @@ a page with a detail route nests it (`news/pages/article/`). Admin entities are 
 
 ## Add an admin entity
 
-Copy `src/features/admin/suppliers/` to `<entity>/` and rename. Then: types in `types/api.ts`, paths in
-`api/endpoints.ts`, keys in `api/query-keys.ts`, permissions in `constants/permissions.ts`, a route file
+Copy `src/features/admin/suppliers/` to `<entity>/` and rename (about 19 new files for a customers page: the folder has 17,
+with 2 locale files and 5 test files, plus the route and `mocks/<entity>.ts`; 10 existing files change). Then: types in
+`types/api.ts`, paths in `api/endpoints.ts`, keys in `api/query-keys.ts`, permissions in `constants/permissions.ts`
+(a group with `read`, `write` and `delete`: `crudHandlers` and the nav test assume all three), a route file
 `src/routes/$locale_/admin/_shell/<entity>.tsx` (copy `suppliers.tsx`), one line in `layout/nav-config.ts` plus the
-`admin.nav<Entity>` label in `features/admin/locales/{ar,en}.json`, mock data and handlers in `mocks/`
-(`seed.ts`, `db.ts`, `handlers.ts`), tests (the permission test `layout/nav-permissions.dom.test.ts` checks the new
-nav item against its route guard by itself). Locale files are picked up by folder (no registration). The full
-step list with the order and the traps is in `STRUCTURE.md`.
+`admin.nav<Entity>` label in `features/admin/locales/{ar,en}.json`. The mock API: sample rows in `mocks/seed.ts`
+(write `seed<Entity>(index)` like `seedSupplier` and build the list with `Array.from`; lint rejects
+`.map((row) => ({ ...row }))`), the list in `mocks/db.ts` (type and `resetMockDb`), a copy of `mocks/suppliers.ts` to
+`mocks/<entity>.ts` (it is one `crudHandlers({...})` call: list, create, update, delete, search, paging, 401 and 403
+come from `mocks/crud.ts`; do not hand-write handlers), and one `...<entity>Handlers` line in `mocks/handlers.ts`. Tests:
+copy the feature's tests (the permission test `layout/nav-permissions.dom.test.ts` checks the new nav item against
+its route guard by itself). Locale files are picked up by folder (no registration). The full step list with the
+order and the traps is in `STRUCTURE.md`.
+
+Traps: a word swap does not translate the Arabic text (`مورد`, `الموردين` in `locales/ar.json`) nor the seed code
+`SUP-` and the id prefix `sup` in `mocks/<entity>.ts`: search for them by hand. The copy has list, create, edit and
+delete; for fewer operations remove the matching pieces (a `delete` step touches the service, the queries file, the page
+hook, `index.tsx`, the row actions, the locale keys and the tests) but keep the three-permission group. The overview page and
+its `Overview` type (`overview/`, its own `prefetch.ts`) count suppliers only: a new entity does not appear there until
+you edit `types/api.ts`, the mock's overview handler and the page. The copied page tests assume 23 sample rows
+(a third page, `SUP-021` becomes `CUS-021`): seed at least 23, or change those numbers.
 
 ## Mock API users (`npm run dev` and e2e)
 
@@ -112,6 +128,9 @@ every request answers 401. `blocked`: the login answers 401. The mock enforces p
   field errors (Spring `errors[]`, Problem Details, a map; `api/problem.ts`) appear under their inputs, anything else is toasted.
 - The admin session is written only by `store/session.ts` (`startSession`, `endSession`); leaving it (sign-out, 401)
   goes through `layout/end-session.ts`. One admin QueryClient (`getAdminQueryClient()`); route loaders only start
-  `prefetchQuery` (never await, never block the page).
+  `prefetchQuery` (never await, never block the page). A 401 that returns before `AdminRoot` mounted (a loader's
+  prefetch on a hard reload) is kept by `api/session-events.ts` and delivered to the first listener: do not
+  replace that with a check in a page. The stored session is versioned (`store/session-storage.ts`): another or no
+  version is erased, with the old token, not migrated.
 - Commit messages: `type(scope): subject`. Definition of done: `npm run check` (+ `npm run test:e2e` when a
   route or UI changed).

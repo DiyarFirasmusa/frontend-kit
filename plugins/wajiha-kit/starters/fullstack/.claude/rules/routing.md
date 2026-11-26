@@ -35,7 +35,8 @@ paths:
   because they are only ever written in the browser: the Zustand stores in `shared/store` and `features/admin/store`,
   the admin QueryClient (`getAdminQueryClient()`, the admin is `ssr: false`) and the site i18n `fixedInstance`
   (`getFixedT` never changes its language). Anything new with module-level state must be client-only too.
-- Admin route loaders only START work: `loader: async ({ deps }) => { (await import('.../prefetch')).prefetchX(deps); }`
+- Admin route loaders only START work (each feature has its own `prefetch.ts`: `suppliers/prefetch.ts`,
+  `overview/prefetch.ts`; no feature imports another's): `loader: async ({ deps }) => { (await import('.../prefetch')).prefetchX(deps); }`
   with `prefetchQuery` and no `await` on the request, so the page keeps its own loading, error and empty states. Never
   `ensureQueryData` in a loader (it would block the page), and never import TanStack Query or the QueryClient in
   `router.tsx` or in a route file outside a split property (it cost 4.6 KB gzip on every public page; and a

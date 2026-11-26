@@ -19,15 +19,19 @@ paths:
   A new page that appears in the nav needs its guard in the route file. `layout/nav-permissions.dom.test.ts` runs the
   real route tree and fails when the menu and the guard disagree for any menu entry and any kind of user.
 - The session (user and token) and the permissions live in `sessionStorage` through two Zustand stores
-  (`admin-auth`, `admin-permissions`, each with `version: 1`: change the version when the stored shape changes) and are
+  (`admin-auth`, `admin-permissions`; `store/session-storage.ts` holds `SESSION_STORE_VERSION`: change it when the stored
+  shape of either changes) and are
   written to start and end ONLY by `store/session.ts` (`startSession(loginResponse)`, `endSession()`; saving the profile only
   renames the user with `setUser`). Closing the tab ends the session.
+  A tab saved under another version, or under none (older starters), or with only one of the two halves, is erased as a
+  whole with the old token (no migrate, no console error): the user signs in again.
   Only `api/client.ts` reads the token (and sign-out, which passes it explicitly).
   A real backend should set an HttpOnly cookie instead (see STRUCTURE.md).
 - Sign-out: `auth/logout.service.ts` sends the logout request WITH the token (explicit header; it never throws or
   toasts), and `useEndSession` / `endAdminSession` (`layout/end-session.ts`, the one place a session ends) cancels in-flight
   queries, clears the stores, navigates to login, then clears the query cache. Session expiry (a 401): the API layer clears the session and
-  `AdminRoot` navigates to `login?redirect=<page>&reason=expired`; the login page says the session ended.
+  `AdminRoot` navigates to `login?redirect=<page>&reason=expired` (also when the 401 came before `AdminRoot` mounted: see
+  api-layer.md); the login page says the session ended and puts focus on its heading.
 - Redirect after login: `safeReturnPath(locale, redirect)` accepts only a path inside `/{locale}/admin`, resolves `..`,
   never returns to the login page, and moves the other language's admin path into the current language.
 - The no-access page (`/admin/forbidden`) is for a signed-in user without the right. A 403 from an API call is a

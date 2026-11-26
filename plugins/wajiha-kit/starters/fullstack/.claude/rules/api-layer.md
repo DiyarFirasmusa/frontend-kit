@@ -21,12 +21,18 @@ the same flow: service, queries file, page hook.
   `api/query-keys.ts` (`qk.<resource>`). Shapes come from `types/api.ts`; the mock and a real backend both match it.
 - `privateApi` adds `Authorization: Bearer <token>` and `Accept-Language`. A 401 that carried the CURRENT session
   clears it and calls `emitSessionExpired()`; `AdminRoot` listens and navigates to login with `reason=expired`.
-  The API layer never imports the router or any UI.
+  The API layer never imports the router or any UI. `AdminRoot` may not be mounted yet: on a hard reload a route
+  loader's prefetch sends its request first and its 401 can come back before the listener exists. So
+  `api/session-events.ts` keeps an expiry nobody heard and hands it, once, to the first listener that subscribes
+  (`onSessionExpired`). Never rely on a page's own query to notice an expired session (its request has no token
+  by then, and a second 401 is ignored on purpose). `e2e/ui/admin-reload.spec.ts` loads each admin URL cold with
+  an expired token and requires the login page.
 - Errors: the API layer toasts once per failure (identical error toasts are collapsed, so retries do not stack).
   A caller that shows the error itself passes `silentError: true`. Success toasts: `successMessage: '<i18n key>'`.
 - A form that saves (create or update) sends with `silentError: true` and, in `onError`, calls
   `reportSaveError(form, error, FIELD_NAMES)` from `lib/apply-field-errors.ts`: field errors from the backend go under
-  their inputs (and nothing is toasted); with no field to blame the error is toasted. `api/problem.ts` reads Spring's
+  their inputs; a message for a field the form does not show is toasted (never dropped), and with no field to
+  blame at all the error is toasted. `api/problem.ts` reads Spring's
   default body, RFC 9457 Problem Details (`detail`; `title` is ignored on purpose) and field lists/maps
   (`errors` / `fieldErrors`, `defaultMessage` | `message`) from 400, 409 and 422. A mock answer that blames a field
   uses `FieldMessage` (`field: 'code'`) so `fail()` sends `errors: [{ field, message }]`.
@@ -42,5 +48,9 @@ the same flow: service, queries file, page hook.
   It does not clamp or repair bad input. Demo users: any name (administrator), `viewer`, `expired`, `blocked`.
   Nothing outside `mocks/start-mocks.ts` imports the mocks (lint enforces it); a build with the mock off contains no MSW
   and no `mockServiceWorker.js` (the Vite config drops it, the Dockerfile repeats it, `npm run check:bundle` proves both).
-- Adding an entity to the mock: data in `seed.ts` and `db.ts`, handlers in `handlers.ts` that start with
-  `denied(request, PERMS.<resource>.<action>)`.
+- Adding an entity to the mock: sample rows in `seed.ts` (a `seed<Entity>(index)` function and `Array.from`, like
+  `seedSupplier`; lint rejects `.map((row) => ({ ...row }))`), the list in `db.ts`, and a file `mocks/<entity>.ts` that is
+  one `crudHandlers({...})` call (copy `mocks/suppliers.ts`), spread into `handlers` in `handlers.ts`. `crud.ts` does
+  list, create, update, delete, search, paging, and the 401/403 checks (`denied(request, PERMS.<resource>.<action>)`
+  inside it); hand-write a handler in `handlers.ts` only for something that is not a plain list (login, profile,
+  overview) and start it with `denied(...)`. The overview handler counts suppliers only.
