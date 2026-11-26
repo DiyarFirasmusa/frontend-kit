@@ -32,7 +32,7 @@ Copy everything from the starter, demo content included: the foundation's recipe
 so strip the demo only after the first real one exists (`new-project-flow.md`, step 7).
 
 Leave out: `node_modules`, `.output`, `.nitro`, `.tanstack`, `dist`, `coverage`, `playwright-report`, `test-results`,
-`blob-report`, `.lint-probe`, `*.tsbuildinfo`, `.env`, `.env.local`, `.env.*.local`, `.git`. Keep `package-lock.json`
+`blob-report`, `.lint-probe`, `*.tsbuildinfo`, `.env`, `*.local` (covers `.env.local` and `.env.*.local`; the copy command in `new-project-flow.md` never names them), `.git`. Keep `package-lock.json`
 (the verified versions; `npm install` honours it and only renames it) and the committed `.env.example`
 (dashboard also `.env.development`).
 
@@ -86,7 +86,8 @@ Order: (1) the user's entities exist; (2) rewrite what is listed under "Rewrite"
 
 ### website
 
-- Pages: `src/features/website/{home,about,services,news}/` (news has `data/articles.ts`, `data/locales`, `pages/`); keep `contact/` (a real form with server delivery) and `fallback/`.
+- Pages: `src/features/website/{home,about,services,news}/` (news: `pages/`, `locales/`; its articles live in `src/content/`: `articles.data.ts`, `bodies/*.ts`,
+  `articles.ts`, `sitemap-entries.ts` and their tests, also read by the home page, the sitemap and `routing*.test.ts`); keep `contact/` (a real form with server delivery) and `fallback/`.
   Routes: `src/routes/$locale/{index,about,services,contact}.tsx`, `news/{index,$slug}.tsx`.
 - Registries: `src/config/nav.config.ts` (one `navItem` per page; also drives header, footer, sitemap), `src/shared/lib/i18n/resources.ts` (each page's two locale files),
   `src/shared/locales/{ar,en}.json` (`nav.*`, footer), `e2e/fixtures/app.ts` (`PAGES`, `ARTICLE` come from the first article: drop both with the news pages).
@@ -105,6 +106,9 @@ Order: (1) the user's entities exist; (2) rewrite what is listed under "Rewrite"
   route `src/routes/$locale_/admin/_shell/suppliers.tsx`, nav `src/features/admin/layout/nav-config.ts` plus `admin.nav*` labels in `src/features/admin/locales/{ar,en}.json`,
   `types/api.ts`, `api/endpoints.ts`, `api/query-keys.ts`, `constants/permissions.ts`, mock API `mocks/{suppliers,seed,db,handlers}.ts`, e2e `e2e/ui/admin*.spec.ts`.
   Keep `auth/`, `api/` core, `store/`, `guards/`, `layout/`, `mocks/{http,crud,start-mocks,browser}.ts`.
+- One name on both sides (a public "courses" page and a "courses" admin entity): the site and admin locale bundles share one key space, and
+  `npm run i18n:validate` fails with `"courses.title" is defined in two bundles`. Give the site page its own top-level key from the start
+  (`courseCatalog.*`, folder `src/features/site/course-catalog/`, URL still `/courses`) and keep `courses.*` for the admin entity.
 - Mock users in dev: any name = admin, `viewer` = read only, `expired`, `blocked` (`STRUCTURE.md`); keep them, they are how the 401/403 paths are tested.
 - Name: `package.json` `name`, `public/site.webmanifest`, `Dockerfile` comments, `STRUCTURE.md` title and `استبدال الشركة التجريبية بشركتك`.
 
@@ -121,7 +125,8 @@ add `Edit(./src/style/theme.css)` and `Edit(./src/style/preset.css)` to `deny` f
 `protectedBranches` `["main","master"]`, `devPort` and `e2ePort` as JSON strings (`"3000"`, `"3100"`, like the template; the hooks compare strings) and `apiBaseEnv` from the table, `protectedPaths` `[".env",".env.*",".github/**","deploy/**","package-lock.json"]`
 (no `server/**`: the starters have no root `server/` folder), `generatedPaths` from the table, `srcDirs` `["src"]`, `srcDir` `"src"`, and
 `commands` `{"typecheck":"npm run typecheck","lint":"npm run lint:check","test":"npm run test","build":"npm run build","dev":"npm run dev","relatedTests":"npx vitest related --run --passWithNoTests","i18nValidate":"npm run i18n:validate"}`,
-and `stack` `{"packageManager":"npm","framework":"Vite" | "TanStack Start","router":"TanStack Router","data":"TanStack Query","state":"Zustand","styling":"Tailwind","tests":"vitest","e2e":"playwright","lint":"oxlint","format":"oxfmt","i18n":"i18next","forms":"react-hook-form","typescript":true}`.
+and `stack` `{"packageManager":"npm","framework":"Vite" | "TanStack Start","router":"TanStack Router","data":"TanStack Query","state":"Zustand","styling":"Tailwind","tests":"vitest","e2e":"playwright","lint":"oxlint","format":"oxfmt","i18n":"i18next","forms":"react-hook-form","typescript":true}`
+(website: `"data":"none"` and `"state":"none"`: it has neither TanStack Query nor Zustand; dashboard and fullstack have both).
 Fullstack also keeps the template's `apps`: site `{"name":"site","profile":"website","path":"src","routes":"src/routes/$locale"}`, admin
 `{"name":"admin","profile":"dashboard","path":"src/features/admin","routes":"src/routes/$locale_/admin","apiBaseEnv":"VITE_ADMIN_API_URL"}`;
 leave both apps' `commands` out (one `npm run i18n:validate` and one test run cover both; the project commands are used).

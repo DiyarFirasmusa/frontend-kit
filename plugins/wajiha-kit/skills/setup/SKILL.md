@@ -13,6 +13,7 @@ allowed-tools:
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-package-scripts.sh" *)
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-scope-rules.sh" *)
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-update-check.sh")
+  - Bash(VITE_SITE_URL=http://localhost:5190 VITE_ALLOW_INDEXING=false npm run build)
 ---
 
 # wajiha-kit setup
@@ -37,8 +38,8 @@ The questions are the same for everyone, in plain words and in the user's langua
 project" (one free answer), (3) design, (4) the OpenAPI link or file, (5) Arabic, English or both. Dashboard maps to `dashboard`, website to `website`, both to
 `fullstack`. Then a plain-words summary and "shall I start?": nothing is copied before the yes. Light and dark, permissions and deployment are not asked.
 
-Order: copy the foundation (`CLAUDE.md` and `.claude/rules/` come with it) → rename → write `.claude/wajiha-kit.json` (`"mode": "new"`) and `settings.json` →
-`npm install` → OpenAPI into `docs/api/openapi.json` → the user's entities and pages by the foundation's own recipes → strip the demo domain (a grep must find none) →
+Order: copy the foundation (`CLAUDE.md` and `.claude/rules/` come with it) → rename → `npm install` (before `settings.json`, which puts it on the ask list) →
+write `.claude/wajiha-kit.json` (`"mode": "new"`) and `settings.json` → OpenAPI into `docs/api/openapi.json` → the user's entities and pages by the foundation's own recipes → strip the demo domain (a grep must find none) →
 design → languages → the foundation's checks and build, fixed until green → dev server and URL → report. Never commit. Sections 1 to 7 below are for the other
 answers (existing, maintenance, refactor, a new project on another framework); for this path the summary above replaces the proposal in section 3.
 

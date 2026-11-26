@@ -8,7 +8,8 @@ Never commit, push or create a PR. Never write `.env*`, `.github/`, `deploy/` or
 ## 0. Before asking
 
 - `ls -A`: a folder is fit when none of its top-level names equals a top-level name of the chosen foundation
-  (`comm -12 <(ls -A "${CLAUDE_PLUGIN_ROOT}/starters/<foundation>" | sort) <(ls -A . | sort)` prints nothing; an existing `.claude` without `rules/` is fine,
+  (compare `ls -A` here with the top-level names Glob finds in `${CLAUDE_PLUGIN_ROOT}/starters/<foundation>/`, dot files included: `.claude`, `.env.example`, `.gitignore`...;
+  the shell listing of the plugin folder reads outside the project and Claude Code asks for it; an existing `.claude` without `rules/` is fine,
   and so are `.git`, `docs/`, `LICENSE`, design files). A clash: stop, show it, ask for another folder. Never overwrite.
 - `node -v` (dashboard >= 22.18, website and fullstack >= 24), `command -v npm jq`. Too old: say so and stop; do not switch the user's Node.
 - Not a git repo: say it, offer `git init -b main` (no commit), default yes, before the install so the git hooks install.
@@ -46,9 +47,9 @@ End with "shall I start?" and build only after a yes. Show anything the user's a
 | # | Step | How |
 | --- | --- | --- |
 | 1 | Copy the foundation | The command below, run in the project folder (one line, no `\n`, no pipe). It brings `CLAUDE.md`, `.claude/rules/`, `STRUCTURE.md`, scripts, tests and the demo content (dashboard: 726 files). If Claude Code refuses a write inside `.claude/`, stop and tell the user which file needs approval; never route around it. |
-| 2 | Rename | `npm pkg set name=<slug>`; the titles and names listed in `foundations.md` ("Name and brand" / "Name"); `README.md` rewritten short (dashboard); the `STRUCTURE.md` title. The lockfile is renamed by npm in step 4. |
-| 3 | Write the kit files | `.claude/wajiha-kit.json` first (one Write, `mode` `new`, already in the project's format: `foundations.md`, last section), then `.claude/settings.json`, then `.claude/rules/git.md`: values in `foundations.md` (last section). Append `.claude/state/` and `.claude/settings.local.json` to `.gitignore` (ask once; the starter's `*.local` does not match either, checked with `git check-ignore`). Claude Code asks the user before it writes these two files: say so first. |
-| 4 | Install | `git init -b main` if agreed; `npm install` (the lockfile is respected; npm only renames it). Then `node -p "require('./package-lock.json').name"` must print the slug. Expected, not a failure: npm prints a vulnerability count (some "critical") and, on npm 11, `npm warn install-scripts` for `@sentry/cli`, `@swc/core`, `msw` on npm 11. The lockfile is the verified one: do not run `npm audit fix` or approve scripts; mention it in one line only if the user asks. The dashboard needs no env file for the mock; for website and fullstack the user runs `npm run setup:env` (final report). |
+| 2 | Rename | `npm pkg set name=<slug>`; the titles and names listed in `foundations.md` ("Name and brand" / "Name"); `README.md` rewritten short (dashboard); the `STRUCTURE.md` title. The lockfile is renamed by npm in step 3. |
+| 3 | Install | Before step 4: the kit's `settings.json` puts `npm install` on the ask list, so after it the install needs the user's approval (refused outright when nobody is there to answer). `git init -b main` if agreed; `npm install` (the lockfile is respected; npm only renames it). Then `node -p "require('./package-lock.json').name"` must print the slug. Expected, not a failure: npm prints a vulnerability count (some "critical") and, on npm 11, `npm warn install-scripts` for `@sentry/cli`, `@swc/core`, `msw` on npm 11. The lockfile is the verified one: do not run `npm audit fix` or approve scripts; mention it in one line only if the user asks. The dashboard needs no env file for the mock; for website and fullstack the user runs `npm run setup:env` (final report). |
+| 4 | Write the kit files | `.claude/wajiha-kit.json` first (one Write, `mode` `new`, already in the project's format: `foundations.md`, last section), then `.claude/settings.json`, then `.claude/rules/git.md`: values in `foundations.md` (last section). Append `.claude/state/` and `.claude/settings.local.json` to `.gitignore` (ask once; the starter's `*.local` does not match either, checked with `git check-ignore`). Claude Code asks the user before it writes these two files: say so first. |
 | 5 | OpenAPI | Dashboard and fullstack only: `openapi-to-entities.md` sections 1 and 6. Put the file in `docs/api/openapi.json` before building entities. |
 | 6 | Build the user's content | Dashboard: the user's entities by the recipe in `CLAUDE.md` "Add an entity" (copy `suppliers/`; a picker over another entity, an entity with no DELETE, date-times: the sections after it in the same file), the first one is the new reference entity; rewrite the home page, search and notifications. Website: the user's pages by "كيف تضيف صفحة"; keep `contact/` when the project has any contact; map the demo pages to the user's own where they fit and delete the rest the opposite way (route file, feature folder, `nav.config.ts` line, locale registration, `PAGES` in `e2e/fixtures/app.ts`). Fullstack: both. Text in every shipped language; no placeholder text, no lorem; copy the user's description into pages only as far as it says it, never invent facts, prices, names or numbers (a fact the answers do not give: leave that field out or ask, never fill it with a guess). Details of the spec mapping: `openapi-to-entities.md`. |
 | 7 | Strip the demo | Delete the demo features, routes, handlers, seeds, tests and e2e listed in `foundations.md`; rewrite (do not delete) what it lists under "rewrite"; edit the registries; re-point `CLAUDE.md`, `STRUCTURE.md`, `.claude/rules/*.md` and the feature README from the demo reference entity (`suppliers`) to the user's first entity; delete the `STRUCTURE.md` sections that describe the demo. Then the sweep (below) must print nothing. |
@@ -63,8 +64,15 @@ because a pipe corrupts binary data in Windows PowerShell 5.1. Tested on Windows
 Git Bash, Linux, macOS:
 
 ```sh
-tar -C "$CLAUDE_PLUGIN_ROOT/starters/<foundation>" --exclude=node_modules --exclude=.output --exclude=.nitro --exclude=.tanstack --exclude=dist --exclude=coverage --exclude=playwright-report --exclude=test-results --exclude=blob-report --exclude=.lint-probe --exclude='*.tsbuildinfo' --exclude=.env --exclude=.env.local --exclude='.env.*.local' --exclude=.git -cf wajiha-foundation.tar . && tar -xf wajiha-foundation.tar && rm wajiha-foundation.tar
+tar -C "$CLAUDE_PLUGIN_ROOT/starters/<foundation>" --exclude=node_modules --exclude=.output --exclude=.nitro --exclude=.tanstack --exclude=dist --exclude=coverage --exclude=playwright-report --exclude=test-results --exclude=blob-report --exclude=.lint-probe --exclude='*.tsbuildinfo' --exclude=.env --exclude='*.local' --exclude=.git -cf wajiha-foundation.tar . && tar -xf wajiha-foundation.tar && rm wajiha-foundation.tar
 ```
+
+Run it exactly like this, on its own: the plugin's real path written out in place of `$CLAUDE_PLUGIN_ROOT` (the variable may be unset in the shell, and
+Claude Code asks about a command whose path it cannot resolve), nothing chained before or after it (a `find`, `wc` or pipe added to the line makes Claude Code ask
+too); check the result with Glob afterwards. `--exclude='*.local'` leaves out `.env.local` and `.env.*.local` without naming them: the kit's shell guard
+refuses any command that names `.env.local` (even inside an exclude), and `--exclude='.env*'` would also drop the `.env.example` (and dashboard
+`.env.development`) the foundation needs. Listing the plugin folder in the shell (`ls`, `comm` in step 0) reads outside the project, so Claude Code asks:
+use Glob on the starter folder instead.
 
 PowerShell: three commands, one after the other: `tar -C "$env:CLAUDE_PLUGIN_ROOT\starters\<foundation>"` plus the same excludes and `-cf wajiha-foundation.tar .`, then
 `tar -xf wajiha-foundation.tar`, then `Remove-Item wajiha-foundation.tar` (check `$LASTEXITCODE` after each `tar`). Keep each command on one line.
@@ -75,13 +83,14 @@ Run it with the Bash tool, in the project root. It was tested on a finished dash
 
 ```sh
 grep -rInE -i 'warehouse|supplier|\bcategor(y|ies)\b|units?[-_ ]?of[-_ ]?measure|\buom\b|\battribute[-_ ]?(definition|data)|inventory|\bstock\b|stock_controller|storekeeper|example company|playground|مستودع|مخزون|مخازن|مخزن|تصنيف|الموردون|الموردين|وحدات القياس|شركة المثال' . \
-  --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.output --exclude-dir=dist --exclude-dir=.tanstack --exclude-dir=test-results \
+  --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.output --exclude-dir=.proof-maps --exclude-dir=dist --exclude-dir=.tanstack --exclude-dir=test-results \
   --exclude=package-lock.json --exclude=routeTree.gen.ts \
-  | grep -vE 'oxlint\.config\.ts:|monitoring\.test\.ts:.*category|stock Tailwind|probe-lint-boundaries\.ts:|download-file\.test\.ts:'
+  | grep -vE 'oxlint\.config\.ts:|monitoring\.test\.ts:.*category|validate-i18n\.ts:.*missing category|stock Tailwind|probe-lint-boundaries\.ts:|download-file\.test\.ts:'
 grep -rn '"logoMark": "D"' src/locales
 ```
 
-The filter drops known noise that is not demo content: the `categories` key of `oxlint.config.ts`, Sentry's `category:` in `monitoring.test.ts`, the words "stock Tailwind" in `src/lib/utils.ts`,
+The filter drops known noise that is not demo content: the `categories` key of `oxlint.config.ts`, Sentry's `category:` in `monitoring.test.ts`, the CLDR plural
+"missing category" comment in `scripts/validate-i18n.ts` (website, fullstack), the words "stock Tailwind" in `src/lib/utils.ts`,
 the `playground/` comment in `scripts/probe-lint-boundaries.ts`, the sample file name `مخزون.csv` in `download-file.test.ts`. The plain words `attribute` and `categor` are not in the pattern on purpose (DOM `toHaveAttribute`, `HTMLAttributes`).
 The second command finds the demo brand letter (`authBrand.logoMark`, "D"): it must print nothing; the user's letter goes there (`foundations.md`, "Name and brand").
 
