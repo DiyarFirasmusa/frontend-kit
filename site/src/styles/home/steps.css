@@ -410,3 +410,12 @@
     text-align: start;
   }
 }
+
+/* The block on its own: no title bar above it and no note bar under it. */
+.example .board.is-bare {
+  grid-template-rows: auto;
+}
+
+.example .board.is-bare .board-main {
+  grid-row: 1;
+}

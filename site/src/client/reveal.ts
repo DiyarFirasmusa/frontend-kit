@@ -8,7 +8,6 @@ import { all } from './dom.ts'
 const targets = [
   // The road of "how it works" brings in its own steps as they are scrolled to (board-life.ts).
   'main.home > section:not(#intro, #example) > .column',
-  'main.home > #example > .section-head',
   'main.doc .doc-article > section.block',
   'main.doc .doc-article > .finder',
   'main.doc .doc-article > .pager',

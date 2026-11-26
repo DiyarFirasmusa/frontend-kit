@@ -12,11 +12,11 @@ interface Props {
   tone?: 'orange' | 'ink'
   /** The side column's colour; turquoise unless the main block is turquoise. */
   side?: 'turq' | 'ink'
-  /** The number shown in the counter, when it is not the part's own (the parts are counted 1/2, 2/2). */
-  count?: number
+  /** Only the black block with its orange edge: no title bar and no note bar (the block explains itself). */
+  bare?: boolean
 }
 
-const { part, label, tone = 'orange', side, count } = Astro.props
+const { part, label, tone = 'orange', side, bare = false } = Astro.props
 const sideTone = side ?? 'ink'
 const hasSide = Astro.slots.has('side')
 const blocks = [
@@ -27,15 +27,14 @@ const blocks = [
 ]
 ---
 
-<div class:list={['board', `tone-${tone}`, hasSide ? `side-${sideTone}` : 'no-side']}>
-  <p class="board-top">
+<div class:list={['board', `tone-${tone}`, hasSide ? `side-${sideTone}` : 'no-side', { 'is-bare': bare }]}>
+  {!bare && (<p class="board-top">
     <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
       {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={part === -1 || i === part ? b.fill : 'rgb(241 237 231 / 0.28)'} />)}
     </svg>
-    {part >= 0 && <span class="board-count" dir="ltr">{count ?? part}/2</span>}
     <span>{label}</span>
-  </p>
+  </p>)}
   <div class="board-main"><slot /></div>
   {hasSide && <div class="board-side"><slot name="side" /></div>}
-  <div class="board-note"><slot name="note" /></div>
+  {!bare && <div class="board-note"><slot name="note" /></div>}
 </div>

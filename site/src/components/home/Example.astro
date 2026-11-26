@@ -16,12 +16,10 @@ const last = w.stops.length - 1
 ---
 
 <section id="example" class="example">
-  <div class="column section-head">
-    <h2>{home.example[locale]}</h2>
-    <p>{w.lead[locale]}</p>
-  </div>
+  <!-- No title above it: the four steps say it themselves. The heading stays for screen readers. -->
+  <h2 class="sr-only">{home.example[locale]}</h2>
   <div class="column">
-    <Board locale={locale} part={1} label={locale === 'ar' ? 'كيف تعمل' : 'How it works'} tone="orange">
+    <Board locale={locale} part={1} label={locale === 'ar' ? 'كيف تعمل' : 'How it works'} tone="orange" bare>
       <!-- Four screens side by side, one road between them, from the first message to the project you open. -->
       <ol class="path road" data-alive>
         {
@@ -55,10 +53,6 @@ const last = w.stops.length - 1
           ))
         }
       </ol>
-      <div slot="note">
-        <p>{w.noteLine[locale]}</p>
-        <a class="hero-start" href="#install">{home.start[locale]}</a>
-      </div>
     </Board>
   </div>
 </section>
