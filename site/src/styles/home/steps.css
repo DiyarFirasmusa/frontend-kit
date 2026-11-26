@@ -385,3 +385,8 @@
     font-size: calc(100cqw * 0.036);
   }
 }
+
+/* Arabic words are not set in the code font (it spaces the letters apart). */
+:lang(ar) .example :is(.hw-folder span, .hw-folder p, .hw-plan p) {
+  font-family: var(--type);
+}
