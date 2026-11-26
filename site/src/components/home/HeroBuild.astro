@@ -1,0 +1,43 @@
+---
+import { heroBuild as b } from '../../content/guide/chat.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+// The four blocks of the mark, in the mark's own places (out of 100): the top bar, the orange block, the tall turquoise
+// column and the bottom bar. Each one lands on the one before it, then turns into a part of the site.
+const blocks = [
+  { name: 'top', tone: 'ivory', x: 0, y: 0, w: 100, h: 22.2, parts: 4 },
+  { name: 'main', tone: 'orange', x: 0, y: 29.6, w: 66.7, h: 37, parts: 3 },
+  { name: 'side', tone: 'turq', x: 74, y: 29.6, w: 26, h: 70.4, parts: 4 },
+  { name: 'foot', tone: 'ivory', x: 0, y: 74, w: 66.7, h: 26, parts: 3 },
+]
+---
+
+<div class="ce ce-user"><p>{b.ask[locale]}</p></div>
+<div class="hb">
+  <p class="hb-say">
+    <i class="ce-spark is-busy" aria-hidden="true">✻</i>
+    <span class="hb-lines">{b.lines.map((line, i) => <span class={`hb-line is-${i}`}>{line[locale]}</span>)}</span>
+  </p>
+  <div class="hb-frame" aria-hidden="true">
+    <div class="hb-bar">
+      <span class="chat-lights"><i></i><i></i><i></i></span>
+      <span class="hb-address" dir="ltr">{b.address}</span>
+    </div>
+    <div class="hb-canvas" dir="ltr">
+      {blocks.map((block) => <i class={`hb-ghost is-${block.name}`} style={`--x:${block.x}%;--y:${block.y}%;--w:${block.w}%;--h:${block.h}%`}></i>)}
+      {
+        blocks.map((block) => (
+          <span class={`hb-block is-${block.name} is-${block.tone}`} style={`--x:${block.x}%;--y:${block.y}%;--w:${block.w}%;--h:${block.h}%`}>
+            {Array.from({ length: block.parts }, () => <i></i>)}
+          </span>
+        ))
+      }
+      <b class="hb-ready">✓ {b.address}</b>
+    </div>
+  </div>
+</div>

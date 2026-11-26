@@ -106,3 +106,16 @@ export const stepChat: ChatEvent[][] = [
     { kind: 'ask', question: t('Save this version?', 'هل أحفظ هذه النسخة؟'), options: [t('Yes, save it', 'نعم، احفظها'), notYet], picked: 0 },
   ],
 ]
+
+/** The opening screen: you ask, Claude thinks, and the site is built live from the four blocks of the kit's mark. */
+export const heroBuild = {
+  ask: t('Build me a website for my shop.', 'ابنِ لي موقعا لمتجري.'),
+  /** What Claude says while it works, one line after another. */
+  lines: [
+    t('Thinking about your site…', 'أفكر في موقعك…'),
+    t('Placing the pieces…', 'أضع القطع في أماكنها…'),
+    t('Building the pages…', 'أبني الصفحات…'),
+    t('Ready. Open it and click around.', 'جاهز. افتحه وتصفحه.'),
+  ],
+  address: 'localhost:5173',
+}

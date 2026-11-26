@@ -302,7 +302,13 @@
     0 0 0 6px var(--ivory);
 }
 
-/* ---------- Motion: each step turns in from its side as it is scrolled to (board-life.ts adds is-in) ---------- */
+/* ---------- Motion tied to the scroll: each step turns in from its side as far as it has come up the screen, and turns
+   back out if you scroll back (board-life.ts sets --p from 0 to 1 on each step; without a script, or for less motion, --p
+   stays 1 and nothing moves). ---------- */
+.example .road .path-stop {
+  --p: 1;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .example .road.is-scrolly .path-stop .road-screen {
     --from: -1;
@@ -321,39 +327,26 @@
     --from: -1;
   }
 
-  .example .road.is-scrolly .path-stop .road-screen > *,
-  .example .road.is-scrolly .path-stop .path-pick,
+  .example .road.is-scrolly .path-stop .road-screen > * {
+    opacity: calc(0.15 + var(--p) * 0.85);
+    transform:
+      translateX(calc((1 - var(--p)) * var(--from) * 6rem))
+      rotateY(calc((1 - var(--p)) * var(--from) * -38deg))
+      scale(calc(0.86 + var(--p) * 0.14));
+  }
+
+  .example .road.is-scrolly .path-stop .path-pick {
+    opacity: calc(var(--p) * 1.2 - 0.2);
+    translate: calc((1 - var(--p)) * var(--from) * -3rem) 0;
+  }
+
   .example .road.is-scrolly .path-stop .road-pin {
-    transition:
-      opacity 0.7s var(--glide, ease),
-      transform 0.9s var(--glide, ease),
-      translate 0.9s var(--glide, ease),
-      scale 0.5s var(--spring, ease),
-      box-shadow 0.4s,
-      background-color 0.4s;
+    scale: calc(0.5 + var(--p) * 0.5);
+    rotate: calc((1 - var(--p)) * 90deg);
   }
 
-  .example .road.is-scrolly .path-stop:not(.is-in) .road-screen > * {
-    opacity: 0;
-    transform: translateX(calc(var(--from) * 4rem)) rotateY(calc(var(--from) * -28deg));
-  }
-
-  .example .road.is-scrolly .path-stop:not(.is-in) .path-pick {
-    opacity: 0;
-    translate: calc(var(--from) * -2.5rem) 0;
-  }
-
-  .example .road.is-scrolly .path-stop:not(.is-in) .road-pin {
-    scale: 0.4;
-    opacity: 0;
-  }
-
-  .example .road.is-scrolly .path-stop.is-in .path-pick {
-    transition-delay: 0.15s;
-  }
-
-  .example .road::after {
-    transition: transform 0.25s linear;
+  .example .road.is-scrolly .path-stop.is-current .road-pin {
+    scale: calc((0.5 + var(--p) * 0.5) * 1.12);
   }
 }
 

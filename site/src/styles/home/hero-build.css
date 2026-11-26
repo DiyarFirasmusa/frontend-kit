@@ -1,109 +1,327 @@
-/* THE OPENING SCREEN BUILDS A SITE. When Claude says the dashboard is ready, its picture is not just shown: the pieces of
-   the dashboard fly in from all sides and fall into place inside the chat window, the side menu first, then the numbers,
-   the chart growing bar by bar, and the rows of orders. Layer skin-page (home/index.css). Only for the playing chat, and
-   only when the visitor has not asked for less motion. */
-.chat.live .ce-ready .ce-shot {
-  height: 12.5rem;
-  font-size: 0.7rem;
+/* THE OPENING SCREEN BUILDS A SITE, LIVE. You ask; Claude thinks (its plan shows as dashed outlines of the kit's mark);
+   then the four blocks of the mark fall one on another into those places, from the bottom up, and each turns into a part of
+   the site: the bar into the menu, the orange block into the main words and button, the turquoise column into a side list,
+   the bottom bar into cards. Claude says what it is doing as it goes, and the address of the finished site shows.
+   One loop of 12 seconds; it stops with the pause button (html.is-paused) and stands finished for less motion.
+   Layer skin-page (home/index.css). The blocks take the window's colours, so light mode follows. */
+.hb {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.hb-say {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-block-size: 1.6em;
+}
+
+.hb-lines {
+  display: grid;
+}
+
+.hb-line {
+  grid-area: 1 / 1;
+  color: var(--ivory);
+}
+
+.hb-frame {
+  overflow: hidden;
+  border: 1px solid rgb(var(--ink-rgb) / 0.14);
+  border-radius: 0.85rem;
+  background: rgb(var(--ink-rgb) / 0.03);
+}
+
+.hb-bar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.45rem 0.75rem;
+  border-block-end: 1px solid rgb(var(--ink-rgb) / 0.1);
+}
+
+.hb-bar .chat-lights {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+
+.hb-address {
+  padding: 0.1rem 0.9rem;
+  border-radius: 999px;
+  background: rgb(var(--ink-rgb) / 0.08);
+  color: var(--muted);
+  font: 500 0.6875rem/1.5 var(--code);
+}
+
+.hb-canvas {
+  position: relative;
+  block-size: 11rem;
+  margin: 0.8rem;
+  container-type: size;
+}
+
+.hb-ghost,
+.hb-block {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  border-radius: 0.55rem;
+}
+
+.hb-ghost {
+  border: 1.5px dashed rgb(var(--ink-rgb) / 0.35);
+  opacity: 0;
+}
+
+.hb-block {
+  display: flex;
+  overflow: hidden;
+  gap: 0.4rem;
+  padding: 0.5rem;
+}
+
+.hb-block.is-ivory {
+  background: var(--ivory);
+  color: var(--void);
+}
+
+.hb-block.is-orange {
+  background: var(--accent);
+  color: #141413;
+}
+
+.hb-block.is-turq {
+  background: var(--turq);
+  color: #141413;
+}
+
+/* What each block becomes. */
+.hb-block i {
+  display: block;
+  border-radius: 0.25rem;
+  background: currentColor;
+  opacity: var(--o, 0.35);
+}
+
+.hb-block.is-top {
+  align-items: center;
+}
+
+.hb-block.is-top i:first-child {
+  width: 1.1rem;
+  height: 1.1rem;
+  --o: 0.6;
+}
+
+.hb-block.is-top i:not(:first-child) {
+  width: 12%;
+  height: 0.35rem;
+}
+
+.hb-block.is-top i:last-child {
+  margin-left: auto;
+  width: 18%;
+  height: 1rem;
+  border-radius: 0.5rem;
+  --o: 0.55;
+}
+
+.hb-block.is-main {
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: 0.9rem;
+}
+
+.hb-block.is-main i:nth-child(1) {
+  width: 78%;
+  height: 0.7rem;
+  --o: 0.55;
+}
+
+.hb-block.is-main i:nth-child(2) {
+  width: 55%;
+  height: 0.4rem;
+}
+
+.hb-block.is-main i:nth-child(3) {
+  width: 30%;
+  height: 1rem;
+  margin-top: 0.2rem;
+  border-radius: 0.5rem;
+  --o: 0.6;
+}
+
+.hb-block.is-side {
+  flex-direction: column;
+  padding-block: 0.75rem;
+}
+
+.hb-block.is-side i {
+  height: 0.45rem;
+}
+
+.hb-block.is-side i:first-child {
+  width: 70%;
+  --o: 0.6;
+}
+
+.hb-block.is-foot i {
+  flex: 1;
+  border-radius: 0.35rem;
+  --o: 0.22;
+}
+
+.hb-ready {
+  position: absolute;
+  right: 0;
+  bottom: -0.2rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: var(--turq);
+  color: #141413;
+  font: 600 0.75rem/1.5 var(--code);
+  opacity: 0;
+}
+
+/* The opening chat makes room for it. */
+.chat.live .chat-body {
+  gap: 0.8rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .chat.is-playing .ce-ready.is-in .mock-dash :is(.mock-side, .mock-stats > span, .mock-table > span) {
-    animation: build-piece 0.95s var(--spring, cubic-bezier(0.3, 1.5, 0.5, 1)) both;
+  .hb-ghost {
+    animation: hb-ghost 12s linear infinite;
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-dash .mock-chart i {
-    transform-origin: bottom;
-    animation: build-bar 0.6s var(--glide, ease) both;
-    animation-delay: calc(0.85s + var(--b, 0) * 0.07s);
+  .hb-block {
+    animation-duration: 12s;
+    animation-timing-function: var(--glide, ease);
+    animation-iteration-count: infinite;
   }
 
-  .chat.is-playing .ce-ready.is-in .ce-open {
-    animation: build-pop 0.5s var(--spring, ease) 1.7s both;
+  .hb-block.is-foot { animation-name: hb-fall-foot; }
+  .hb-block.is-side { animation-name: hb-fall-side; }
+  .hb-block.is-main { animation-name: hb-fall-main; }
+  .hb-block.is-top { animation-name: hb-fall-top; }
+
+  .hb-block i {
+    animation: hb-part 12s var(--glide, ease) infinite;
   }
 
-  /* Where each piece comes from: the menu from the side, the numbers from above, the rows from the far side. */
-  .chat.is-playing .ce-ready.is-in .mock-side {
-    --from-x: -5em;
-    --from-y: 2em;
-    --turn: -12deg;
-    animation-delay: 0.1s;
+  .hb-block i:nth-child(2) { animation-delay: 0.1s; }
+  .hb-block i:nth-child(3) { animation-delay: 0.2s; }
+  .hb-block i:nth-child(4) { animation-delay: 0.3s; }
+
+  .hb-ready {
+    animation: hb-ready 12s var(--spring, ease) infinite;
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-stats > span:nth-child(1) {
-    --from-x: -2em;
-    --from-y: -4em;
-    --turn: 9deg;
-    animation-delay: 0.3s;
+  .hb-line {
+    opacity: 0;
+    animation-duration: 12s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-stats > span:nth-child(2) {
-    --from-x: 0em;
-    --from-y: -5em;
-    --turn: -7deg;
-    animation-delay: 0.42s;
+  .hb-line.is-0 { animation-name: hb-line-0; }
+  .hb-line.is-1 { animation-name: hb-line-1; }
+  .hb-line.is-2 { animation-name: hb-line-2; }
+  .hb-line.is-3 { animation-name: hb-line-3; }
+
+  /* Thinking: the plan shows as outlines, then the blocks take their places. */
+  @keyframes hb-ghost {
+    0% { opacity: 0; }
+    5%, 16% { opacity: 1; }
+    40%, 100% { opacity: 0; }
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-stats > span:nth-child(3) {
-    --from-x: 3em;
-    --from-y: -4em;
-    --turn: 11deg;
-    animation-delay: 0.54s;
+  /* From the bottom up, each block falls onto the one before it and settles with a small bounce. */
+  @keyframes hb-fall-foot {
+    0%, 13% { opacity: 0; transform: translateY(-150cqh) rotate(-7deg); }
+    14% { opacity: 1; transform: translateY(-150cqh) rotate(-7deg); }
+    19% { transform: translateY(0) rotate(0deg); }
+    20.5% { transform: translateY(-5cqh); }
+    22%, 90% { opacity: 1; transform: none; }
+    97%, 100% { opacity: 0; transform: none; }
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-table > span:nth-child(1) {
-    --from-x: 6em;
-    --from-y: 2em;
-    --turn: 6deg;
-    animation-delay: 1.15s;
+  @keyframes hb-fall-side {
+    0%, 19% { opacity: 0; transform: translateY(-150cqh) rotate(9deg); }
+    20% { opacity: 1; transform: translateY(-150cqh) rotate(9deg); }
+    25% { transform: translateY(0) rotate(0deg); }
+    26.5% { transform: translateY(-5cqh); }
+    28%, 90% { opacity: 1; transform: none; }
+    97%, 100% { opacity: 0; transform: none; }
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-table > span:nth-child(2) {
-    --from-x: 7em;
-    --from-y: 3em;
-    --turn: -5deg;
-    animation-delay: 1.27s;
+  @keyframes hb-fall-main {
+    0%, 25% { opacity: 0; transform: translateY(-150cqh) rotate(-5deg); }
+    26% { opacity: 1; transform: translateY(-150cqh) rotate(-5deg); }
+    31% { transform: translateY(0) rotate(0deg); }
+    32.5% { transform: translateY(-5cqh); }
+    34%, 90% { opacity: 1; transform: none; }
+    97%, 100% { opacity: 0; transform: none; }
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-table > span:nth-child(3) {
-    --from-x: 8em;
-    --from-y: 4em;
-    --turn: 4deg;
-    animation-delay: 1.39s;
+  @keyframes hb-fall-top {
+    0%, 31% { opacity: 0; transform: translateY(-150cqh) rotate(4deg); }
+    32% { opacity: 1; transform: translateY(-150cqh) rotate(4deg); }
+    37% { transform: translateY(0) rotate(0deg); }
+    38.5% { transform: translateY(-5cqh); }
+    40%, 90% { opacity: 1; transform: none; }
+    97%, 100% { opacity: 0; transform: none; }
   }
 
-  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(2) { --b: 1; }
-  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(3) { --b: 2; }
-  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(4) { --b: 3; }
-  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(5) { --b: 4; }
-  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(6) { --b: 5; }
-  .chat.is-playing .ce-ready.is-in .mock-chart i:nth-child(7) { --b: 6; }
-
-  @keyframes build-piece {
-    from {
-      opacity: 0;
-      transform: translate(var(--from-x, 0), var(--from-y, 0)) rotate(var(--turn, 0deg)) scale(0.6);
-    }
-
-    55% {
-      opacity: 1;
-    }
+  /* Then each block becomes its part of the site. */
+  @keyframes hb-part {
+    0%, 46% { opacity: 0; scale: 0.6; }
+    54%, 90% { opacity: var(--o, 0.35); scale: 1; }
+    97%, 100% { opacity: 0; }
   }
 
-  @keyframes build-bar {
-    from {
-      transform: scaleY(0);
-    }
+  @keyframes hb-ready {
+    0%, 66% { opacity: 0; scale: 0.6; }
+    70%, 90% { opacity: 1; scale: 1; }
+    97%, 100% { opacity: 0; }
   }
 
-  @keyframes build-pop {
-    from {
-      opacity: 0;
-      scale: 0.6;
-    }
+  /* What Claude says, one line after another. */
+  @keyframes hb-line-0 {
+    0% { opacity: 0; translate: 0 0.4em; }
+    3%, 17% { opacity: 1; translate: none; }
+    19%, 100% { opacity: 0; translate: 0 -0.4em; }
   }
 
-  html.is-paused .chat .ce-ready * {
-    animation-play-state: paused;
+  @keyframes hb-line-1 {
+    0%, 17% { opacity: 0; translate: 0 0.4em; }
+    19%, 42% { opacity: 1; translate: none; }
+    44%, 100% { opacity: 0; translate: 0 -0.4em; }
+  }
+
+  @keyframes hb-line-2 {
+    0%, 42% { opacity: 0; translate: 0 0.4em; }
+    44%, 64% { opacity: 1; translate: none; }
+    66%, 100% { opacity: 0; translate: 0 -0.4em; }
+  }
+
+  @keyframes hb-line-3 {
+    0%, 64% { opacity: 0; translate: 0 0.4em; }
+    66%, 92% { opacity: 1; translate: none; }
+    96%, 100% { opacity: 0; translate: 0 -0.4em; }
+  }
+}
+
+/* For less motion: the finished site and the last line, standing still. */
+@media (prefers-reduced-motion: reduce) {
+  .hb-line:not(.is-3) {
+    display: none;
+  }
+
+  .hb-ready {
+    opacity: 1;
   }
 }

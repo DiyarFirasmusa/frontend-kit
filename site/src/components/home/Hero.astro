@@ -1,11 +1,10 @@
 ---
-import { firstRun } from '../../content/guide/chat.ts'
 import { home } from '../../content/guide/home.ts'
 import type { Locale } from '../../content/types.ts'
 import { pageUrl } from '../../lib/links.ts'
 import Board from './Board.astro'
-import ChatEvent from './ChatEvent.astro'
 import ChatWindow from './ChatWindow.astro'
+import HeroBuild from './HeroBuild.astro'
 
 interface Props {
   locale: Locale
@@ -38,7 +37,7 @@ const { locale } = Astro.props
   <div class="hero-side">
     <Board locale={locale} part={-1} label={home.board.top[locale]} tone="orange">
       <ChatWindow locale={locale} label={home.example[locale]} live>
-        {firstRun.map((event) => <ChatEvent locale={locale} event={event} />)}
+        <HeroBuild locale={locale} />
       </ChatWindow>
       <p slot="note">{home.board.note[locale]}</p>
     </Board>

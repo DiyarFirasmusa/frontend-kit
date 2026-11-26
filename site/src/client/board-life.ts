@@ -51,6 +51,7 @@ export function initBoardLife(signal: AbortSignal): void {
     const box = element?.getBoundingClientRect()
     return box ? box.top + box.height / 2 : 0
   }
+  const moving = !calm()
   let frame = 0
   const follow = (): void => {
     frame = 0
@@ -67,6 +68,14 @@ export function initBoardLife(signal: AbortSignal): void {
     path.style.setProperty('--road-top', `${first - top}px`)
     path.style.setProperty('--road-length', `${Math.max(0, last - first)}px`)
     path.style.setProperty('--fill', String(Math.min(1, Math.max(0, (middle - first) / Math.max(1, last - first)))))
+    // Each step turns in as it comes up the screen: 0 when its top reaches the bottom edge, 1 once it is a little past the middle.
+    if (moving) {
+      for (const stop of stops) {
+        const rise = (innerHeight - stop.getBoundingClientRect().top) / (innerHeight * 0.6)
+        const p = Math.min(1, Math.max(0, rise))
+        stop.style.setProperty('--p', (1 - (1 - p) ** 2).toFixed(3))
+      }
+    }
   }
   const soon = (): void => {
     if (!frame) frame = requestAnimationFrame(follow)
@@ -75,26 +84,6 @@ export function initBoardLife(signal: AbortSignal): void {
   addEventListener('resize', soon, { passive: true, signal })
   follow()
 
-  // Each step turns in from its side as it is scrolled to; for less motion it is simply there.
-  if (calm()) {
-    for (const stop of stops) stop.classList.add('is-in')
-    signal.addEventListener('abort', () => cancelAnimationFrame(frame))
-    return
-  }
-  path.classList.add('is-scrolly')
-  const arrive = new IntersectionObserver(
-    (entries) => {
-      for (const { target, isIntersecting } of entries) {
-        if (!isIntersecting) continue
-        target.classList.add('is-in')
-        arrive.unobserve(target)
-      }
-    },
-    { threshold: 0.3 },
-  )
-  for (const stop of stops) arrive.observe(stop)
-  signal.addEventListener('abort', () => {
-    arrive.disconnect()
-    cancelAnimationFrame(frame)
-  })
+  if (moving) path.classList.add('is-scrolly')
+  signal.addEventListener('abort', () => cancelAnimationFrame(frame))
 }
