@@ -1,76 +1,57 @@
-import { useCallback, useMemo, useState } from 'react';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { usePagination } from '@/hooks/use-pagination';
-import type {
-  SupplierListParams,
-  SupplierSourceFilter,
-  SupplierStatusFilter,
+import { getRouteApi } from '@tanstack/react-router';
+import { useCallback } from 'react';
+import {
+  SUPPLIER_STATUSES,
+  type SupplierStatusFilter,
 } from '../../types/types';
+import {
+  defaultSupplierSearch,
+  type SupplierSearch,
+} from '../../validations/search';
 
-export const PAGE_SIZE = 10;
+const routeApi = getRouteApi('/_app/suppliers/');
+
+type FilterPatch = Partial<Pick<SupplierSearch, 'q' | 'status'>>;
 
 export function toSupplierStatusFilter(value: string): SupplierStatusFilter {
-  return value === 'active' || value === 'inactive' ? value : 'all';
+  return SUPPLIER_STATUSES.find((status) => status === value) ?? 'all';
 }
 
-export function toSupplierSourceFilter(value: string): SupplierSourceFilter {
-  return value === 'all' ? 'all' : 'registered';
-}
-
+/** Reads and writes the list's filters; the URL is the only copy. */
 export function useSupplierFilters() {
-  const pagination = usePagination({ pageSize: PAGE_SIZE });
-  const { reset: resetPagination } = pagination;
-  const [search, setSearchValue] = useState('');
-  const debouncedSearch = useDebouncedValue(search, 400);
-  const [statusFilter, setStatusValue] = useState<SupplierStatusFilter>('all');
-  const [sourceFilter, setSourceValue] =
-    useState<SupplierSourceFilter>('registered');
+  const search = routeApi.useSearch();
+  const navigate = routeApi.useNavigate();
 
-  const setSearch = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      resetPagination();
+  const setFilters = useCallback(
+    (patch: FilterPatch) => {
+      void navigate({
+        search: (prev) => ({ ...prev, ...patch, page: 1 }),
+        // Typing a search must not add a history entry per pause.
+        replace: patch.q !== undefined,
+      });
     },
-    [resetPagination],
+    [navigate],
   );
 
-  const setStatusFilter = useCallback(
-    (value: SupplierStatusFilter) => {
-      setStatusValue(value);
-      resetPagination();
-    },
-    [resetPagination],
-  );
+  const clear = useCallback(() => {
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        q: defaultSupplierSearch.q,
+        status: defaultSupplierSearch.status,
+        page: 1,
+      }),
+    });
+  }, [navigate]);
 
-  const setSourceFilter = useCallback(
-    (value: SupplierSourceFilter) => {
-      setSourceValue(value);
-      resetPagination();
-    },
-    [resetPagination],
-  );
-
-  const listParams: SupplierListParams = useMemo(
-    () => ({
-      q: debouncedSearch.trim() || undefined,
-      isActive: statusFilter === 'all' ? undefined : statusFilter === 'active',
-      includeUnregistered: sourceFilter === 'all' ? true : undefined,
-    }),
-    [debouncedSearch, statusFilter, sourceFilter],
-  );
+  const activeCount =
+    Number(search.q !== defaultSupplierSearch.q) +
+    Number(search.status !== defaultSupplierSearch.status);
 
   return {
-    search,
-    setSearch,
-    statusFilter,
-    setStatusFilter,
-    sourceFilter,
-    setSourceFilter,
-    listParams,
-    isFiltered:
-      search.trim() !== '' ||
-      statusFilter !== 'all' ||
-      sourceFilter !== 'registered',
-    pagination,
+    values: { q: search.q, status: search.status },
+    setFilters,
+    clear,
+    activeCount,
   };
 }

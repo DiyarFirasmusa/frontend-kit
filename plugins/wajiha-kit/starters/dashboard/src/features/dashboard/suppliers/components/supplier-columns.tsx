@@ -1,117 +1,94 @@
-import type { useTranslation as useTranslationType } from 'react-i18next';
+import { createColumnHelper } from '@tanstack/react-table';
+import type { TFunction } from 'i18next';
 import { DataBadge } from '@/components/table/data-badge';
-import { DataTableRowActions } from '@/components/table/data-table-row-actions';
-import type { Column } from '@/types/table';
-import { getSupplierRowActions } from '../hooks/supplier-actions';
+import {
+  DataTableRowActions,
+  type RowAction,
+} from '@/components/table/data-table-row-actions';
+import type { DataTableFeatures } from '@/components/table/table-features';
+import { activeBadge } from '@/utils/status-tones';
 import type { SupplierRow } from '../types/types';
-import { supplierStatusBadge } from '../utils/supplier-status';
 
-type TFn = ReturnType<typeof useTranslationType>['t'];
+const helper = createColumnHelper<DataTableFeatures, SupplierRow>();
 
-interface GetSupplierColumnsArgs {
-  t: TFn;
-  canWrite: boolean;
-  canDelete: boolean;
-  onEdit: (row: SupplierRow) => void;
-  onRegister: (row: SupplierRow) => void;
-  onRemove: (row: SupplierRow) => void;
+const text = (value: string | null | undefined): string => value?.trim() || '—';
+
+interface SupplierColumnsDeps {
+  t: TFunction;
+  getActions: (row: SupplierRow) => RowAction[];
 }
 
-const text = (value: string | null | undefined) => value?.trim() || '—';
-
-export function getSupplierColumns({
-  t,
-  canWrite,
-  canDelete,
-  onEdit,
-  onRegister,
-  onRemove,
-}: GetSupplierColumnsArgs): Column<SupplierRow>[] {
-  return [
-    {
+/**
+ * Column ids that sort are the backend's sort keys (`code`, `name`), so the
+ * URL sort maps straight through; everything else has sorting off.
+ */
+export function getSupplierColumns({ t, getActions }: SupplierColumnsDeps) {
+  return helper.columns([
+    helper.accessor('code', {
       id: 'code',
       header: t('suppliers.columns.code'),
-      accessor: (row) => text(row.code),
-      cell: (row) => (
-        <span className="text-table-id text-warning" dir="ltr">
-          {text(row.code)}
+      cell: ({ getValue }) => (
+        <span className="text-table-id text-text-primary" dir="ltr">
+          {text(getValue())}
         </span>
       ),
-    },
-    {
+    }),
+    helper.accessor('name', {
       id: 'name',
       header: t('suppliers.columns.name'),
-      accessor: (row) => text(row.name),
-      cell: (row) => (
+      cell: ({ row }) => (
         <span className="flex flex-col">
-          <span className="text-text-primary">{text(row.name)}</span>
-          {row.contactName?.trim() ? (
+          <span className="text-text-primary">{text(row.original.name)}</span>
+          {row.original.contactName?.trim() ? (
             <span className="text-b3 text-text-secondary">
-              {row.contactName.trim()}
+              {row.original.contactName.trim()}
             </span>
           ) : null}
         </span>
       ),
-    },
-    {
-      id: 'phone',
+    }),
+    helper.accessor('phone', {
       header: t('suppliers.columns.phone'),
-      accessor: (row) => text(row.phone),
-      cell: (row) => <span dir="ltr">{text(row.phone)}</span>,
-    },
-    {
-      id: 'email',
+      enableSorting: false,
+      cell: ({ getValue }) => <span dir="ltr">{text(getValue())}</span>,
+      meta: { hideBelow: 'md' },
+    }),
+    helper.accessor('email', {
       header: t('suppliers.columns.email'),
-      accessor: (row) => text(row.email),
-      cell: (row) => <span dir="ltr">{text(row.email)}</span>,
-    },
-    {
-      id: 'taxNumber',
-      header: t('suppliers.columns.taxNumber'),
-      accessor: (row) => text(row.taxNumber),
-      cell: (row) => (
-        <span dir="ltr" className="tabular-nums">
-          {text(row.taxNumber)}
-        </span>
-      ),
-    },
-    {
-      id: 'inUse',
+      enableSorting: false,
+      cell: ({ getValue }) => <span dir="ltr">{text(getValue())}</span>,
+      meta: { hideBelow: 'lg' },
+    }),
+    helper.accessor('inUse', {
       header: t('suppliers.columns.inUse'),
-      accessor: (row) => row.inUse,
-      cell: (row) =>
-        row.inUse === true ? t('suppliers.inUse.yes') : t('suppliers.inUse.no'),
-    },
-    {
+      enableSorting: false,
+      cell: ({ getValue }) =>
+        getValue() === true
+          ? t('suppliers.inUse.yes')
+          : t('suppliers.inUse.no'),
+      meta: { hideBelow: 'lg' },
+    }),
+    helper.accessor('isActive', {
       id: 'status',
       header: t('suppliers.columns.status'),
-      accessor: (row) => row.isActive,
-      cell: (row) => {
-        const badge = supplierStatusBadge(row);
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const badge = activeBadge(getValue());
         return (
           <DataBadge tone={badge.tone} shape="pill">
             {t(badge.labelKey)}
           </DataBadge>
         );
       },
-    },
-    {
+    }),
+    helper.display({
       id: 'actions',
-      header: '',
-      align: 'end',
-      cell: (row) => (
-        <DataTableRowActions
-          actions={getSupplierRowActions({
-            t,
-            row,
-            canWrite,
-            canDelete,
-            onEdit,
-            onRegister,
-            onRemove,
-          })}
-        />
+      enableSorting: false,
+      header: () => <span className="sr-only">{t('common.actions')}</span>,
+      cell: ({ row }) => (
+        <DataTableRowActions actions={getActions(row.original)} />
       ),
-    },
-  ];
+      meta: { align: 'end' },
+    }),
+  ]);
 }

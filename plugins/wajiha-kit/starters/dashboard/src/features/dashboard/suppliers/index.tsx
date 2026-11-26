@@ -1,60 +1,29 @@
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/dialog/confirm-dialog';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { PageHeader } from '@/components/shared/page-header';
 import { DataTable } from '@/components/table/data-table';
 import { ExportExcelButton } from '@/components/table/export-excel-button';
-import { ListFiltersBar } from '@/components/table/list-filters-bar';
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
 import { Plus } from '@/lib/icons';
+import { PAGE_SIZES } from '@/lib/list-search';
 import { SupplierFormDialog } from './components/dialog/supplier-form-dialog';
-import { getSupplierColumns } from './components/supplier-columns';
-import { useSupplierFormDialog } from './hooks/form/use-supplier-form-dialog';
-import {
-  getSupplierRowId,
-  useSuppliersListPage,
-} from './hooks/use-suppliers-list-page';
+import { SupplierFilterBar } from './components/supplier-filter-bar';
+import { getSupplierRowId, useSuppliersListPage } from './hooks/use-list-page';
 
+/** The reference list page: copy this feature folder for a new entity. */
 export default function SuppliersListContainer() {
-  const { t } = useTranslation();
   const page = useSuppliersListPage();
-  const { dialog, deleteDialog } = page;
+  const { t } = page;
 
-  const columns = useMemo(
-    () =>
-      getSupplierColumns({
-        t,
-        canWrite: page.canWrite,
-        canDelete: page.canDelete,
-        onEdit: dialog.openEdit,
-        onRegister: dialog.openRegister,
-        onRemove: deleteDialog.request,
-      }),
-    [
-      t,
-      page.canWrite,
-      page.canDelete,
-      dialog.openEdit,
-      dialog.openRegister,
-      deleteDialog.request,
-    ],
-  );
-
-  const formDialog = useSupplierFormDialog({
-    open: dialog.open,
-    editing: dialog.editing,
-    registering: dialog.registering,
-    onDone: () => {
-      dialog.onOpenChange(false);
-    },
-  });
-
-  const isDeactivate = deleteDialog.mode === 'deactivate';
+  const createButton = page.canCreate ? (
+    <Button type="button" onClick={page.openCreate}>
+      <Plus className="size-4" />
+      {t('suppliers.create')}
+    </Button>
+  ) : null;
 
   return (
-    <section dir={page.dir} className="gap-card flex flex-col">
+    <section className="gap-card flex flex-col">
       <PageHeader
         breadcrumb={
           <Breadcrumb current={t('suppliers.title')}>
@@ -66,67 +35,71 @@ export default function SuppliersListContainer() {
         actions={
           <>
             <ExportExcelButton {...page.exportExcel} />
-            {page.canWrite ? (
-              <Button type="button" onClick={dialog.openCreate}>
-                <Plus className="size-4" />
-                {t('suppliers.create')}
-              </Button>
-            ) : null}
+            {createButton}
           </>
         }
       />
 
       <div className="surface-card gap-card flex flex-col">
-        <ListFiltersBar {...page.toolbar} />
+        <SupplierFilterBar />
         <DataTable
-          embedded
-          data={page.rows}
-          columns={columns}
+          caption={t('suppliers.caption')}
+          columns={page.columns}
+          rows={page.rows}
+          rowCount={page.rowCount}
           getRowId={getSupplierRowId}
-          isLoading={page.isLoading}
-          isError={page.isError}
-          errorLabel={t('common.loadError')}
-          onRetry={page.refetch}
-          serverPagination={page.tablePagination}
-          noResultsLabel={
-            page.isFiltered
+          pagination={page.pagination}
+          sorting={page.sorting}
+          onPaginationChange={page.setPagination}
+          onSortingChange={page.setSorting}
+          pageSizeOptions={PAGE_SIZES}
+          status={page.status}
+          onRetry={page.retry}
+          emptyLabel={
+            page.hasFilters
               ? t('suppliers.emptyFiltered')
               : t('suppliers.empty')
+          }
+          emptyAction={
+            page.hasFilters ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={page.clearFilters}
+              >
+                {t('table.clearFilters')}
+              </Button>
+            ) : (
+              createButton
+            )
           }
         />
       </div>
 
-      <Form {...formDialog.form}>
+      {page.dialog.kind === 'closed' ? null : (
         <SupplierFormDialog
-          open={dialog.open}
-          onOpenChange={dialog.onOpenChange}
-          isEditing={dialog.editing !== null}
-          control={formDialog.form.control}
-          isPending={formDialog.isPending}
-          onSubmit={formDialog.submit}
+          key={
+            page.dialog.kind === 'edit'
+              ? `edit:${page.dialog.supplierId}`
+              : 'create'
+          }
+          mode={page.dialog}
+          onClose={page.closeDialog}
         />
-      </Form>
+      )}
 
       <ConfirmDialog
-        open={deleteDialog.open}
-        onOpenChange={deleteDialog.onOpenChange}
-        title={
-          isDeactivate
-            ? t('suppliers.deactivate.title')
-            : t('suppliers.delete.title')
-        }
-        description={
-          isDeactivate
-            ? t('suppliers.deactivate.description', { name: deleteDialog.name })
-            : t('suppliers.delete.description', { name: deleteDialog.name })
-        }
-        confirmLabel={
-          isDeactivate ? t('suppliers.actions.deactivate') : t('common.delete')
-        }
+        open={page.deleteDialog.open}
+        onOpenChange={page.deleteDialog.onOpenChange}
+        title={t('suppliers.delete.title')}
+        description={t('suppliers.delete.description', {
+          name: page.deleteDialog.name,
+        })}
+        confirmLabel={t('common.delete')}
         cancelLabel={t('common.cancel')}
         destructive
-        isLoading={deleteDialog.isPending}
-        onConfirm={deleteDialog.onConfirm}
+        isLoading={page.deleteDialog.isPending}
+        onConfirm={page.deleteDialog.onConfirm}
       />
     </section>
   );

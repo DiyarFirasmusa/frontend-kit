@@ -2,6 +2,7 @@ import { Outlet, createFileRoute } from '@tanstack/react-router';
 import ServerError from '@/features/fallback/500';
 import { requireGuest } from '@/guards/route-guards';
 import { AuthLayout } from '@/layout/auth';
+import { reportError } from '@/lib/monitoring';
 
 function AuthShell() {
   return (
@@ -17,4 +18,7 @@ export const Route = createFileRoute('/_auth')({
   },
   component: AuthShell,
   errorComponent: ServerError,
+  onCatch: (error) => {
+    void reportError(error, { boundary: 'auth' });
+  },
 });

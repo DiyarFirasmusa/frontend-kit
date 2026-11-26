@@ -24,7 +24,7 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/_dashboard/warehouses/$warehouseId')({
+export const Route = createFileRoute('/_app/warehouses/$warehouseId')({
   validateSearch: (
     search: Record<string, unknown>,
   ): { tab?: WarehouseDetailTab } => {
@@ -32,7 +32,7 @@ export const Route = createFileRoute('/_dashboard/warehouses/$warehouseId')({
     return tab === 'overview' ? {} : { tab };
   },
   beforeLoad: () => {
-    requirePermission(PERMS.warehouse.read);
+    requirePermission(PERMS.warehouse.view);
   },
   loader: () => loadFeatureLocale('dashboard/warehouses'),
   component: RouteComponent,

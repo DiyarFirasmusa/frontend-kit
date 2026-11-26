@@ -1,74 +1,73 @@
-import { useEffect } from 'react';
-import { useForm, type UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { applyApiFieldErrors } from '@/api/error/field-errors';
 import { zodResolver } from '@/lib/vendor/zod-resolver';
-import type { SupplierRow } from '../../types/types';
 import {
   defaultSupplierForm,
+  SUPPLIER_FORM_FIELDS,
   supplierSchema,
+  toSupplierFormValues,
+  toSupplierPayload,
   type SupplierValues,
 } from '../../validations/validations';
+import { useSupplierDetail } from '../query/use-supplier-detail';
 import {
   useCreateSupplier,
   useUpdateSupplier,
 } from '../query/use-supplier-mutations';
-import {
-  toRegisterFormValues,
-  toSupplierFormValues,
-  toSupplierPayload,
-} from '../supplier-actions';
 
-interface UseSupplierFormDialogParams {
-  open: boolean;
-  /** The master row being edited; null for a new supplier. */
-  editing: SupplierRow | null;
-  /** A document-only name being registered: fills the create form. */
-  registering: SupplierRow | null;
-  onDone: () => void;
-}
+/** Which dialog is open: one union, never three booleans. */
+export type SupplierDialogState =
+  | { kind: 'closed' }
+  | { kind: 'create' }
+  | { kind: 'edit'; supplierId: string };
 
-export function useSupplierFormDialog({
-  open,
-  editing,
-  registering,
-  onDone,
-}: UseSupplierFormDialogParams): {
-  form: UseFormReturn<SupplierValues>;
-  isPending: boolean;
-  submit: () => void;
-} {
+/**
+ * The create/edit form. Mounted per opening (keyed by mode and id), so each
+ * opening starts clean. Edit loads the record by id and fills the form when
+ * it arrives; submit stays off until then.
+ */
+export function useSupplierFormDialog(
+  mode: Exclude<SupplierDialogState, { kind: 'closed' }>,
+  onDone: () => void,
+) {
+  const editId = mode.kind === 'edit' ? mode.supplierId : null;
+  const detail = useSupplierDetail(editId);
   const create = useCreateSupplier();
   const update = useUpdateSupplier();
   const form = useForm<SupplierValues>({
     resolver: zodResolver(supplierSchema),
     defaultValues: defaultSupplierForm,
+    // `values` resets the form once when the record arrives.
+    values: detail.data ? toSupplierFormValues(detail.data) : undefined,
+    resetOptions: { keepDirtyValues: true },
   });
-  const { reset } = form;
+  const isPending = create.isPending || update.isPending;
+  const isLoading = editId !== null && detail.isPending;
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    if (editing) {
-      reset(toSupplierFormValues(editing));
-      return;
-    }
-    reset(
-      registering ? toRegisterFormValues(registering) : defaultSupplierForm,
-    );
-  }, [open, editing, registering, reset]);
+  const onError = (error: unknown) => {
+    // The client already toasted the summary; put field messages under the inputs.
+    applyApiFieldErrors(error, form.setError, SUPPLIER_FORM_FIELDS);
+  };
 
   const submit = form.handleSubmit((values) => {
-    const payload = toSupplierPayload(values);
-    if (editing) {
-      update.mutate({ id: editing.id, payload }, { onSuccess: onDone });
+    // Enter or a double click while a request is in flight sends nothing.
+    if (isPending || isLoading) {
       return;
     }
-    create.mutate(payload, { onSuccess: onDone });
+    const payload = toSupplierPayload(values);
+    if (editId !== null) {
+      update.mutate({ id: editId, payload }, { onSuccess: onDone, onError });
+      return;
+    }
+    create.mutate(payload, { onSuccess: onDone, onError });
   });
 
   return {
     form,
-    isPending: create.isPending || update.isPending,
+    isEditing: editId !== null,
+    isLoading,
+    isPending,
+    loadFailed: detail.isError,
     submit: () => {
       void submit();
     },

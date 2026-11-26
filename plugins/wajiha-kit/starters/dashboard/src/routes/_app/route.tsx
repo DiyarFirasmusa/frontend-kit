@@ -3,6 +3,7 @@ import { PageLoading } from '@/features/fallback/page-loading';
 import { RouteErrorView } from '@/features/fallback/route-error-view';
 import { requireAuth } from '@/guards/route-guards';
 import { DashboardLayout } from '@/layout/dashboard';
+import { reportError } from '@/lib/monitoring';
 
 function DashboardShell() {
   return (
@@ -12,11 +13,15 @@ function DashboardShell() {
   );
 }
 
-export const Route = createFileRoute('/_dashboard')({
-  beforeLoad: () => {
-    requireAuth();
+export const Route = createFileRoute('/_app')({
+  beforeLoad: ({ location }) => {
+    requireAuth(location);
   },
   component: DashboardShell,
   errorComponent: RouteErrorView,
+  // Reports what this boundary catches (a crashed page keeps the shell).
+  onCatch: (error) => {
+    void reportError(error, { boundary: 'app' });
+  },
   pendingComponent: PageLoading,
 });

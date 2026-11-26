@@ -1,7 +1,7 @@
 import type { useTranslation as useTranslationType } from 'react-i18next';
 import type { ExportColumn } from '@/types/export';
+import { activeBadge } from '@/utils/status-tones';
 import type { SupplierRow } from '../types/types';
-import { supplierStatusBadge } from './supplier-status';
 
 type TFn = ReturnType<typeof useTranslationType>['t'];
 
@@ -35,7 +35,7 @@ export function getSupplierExportColumns(t: TFn): ExportColumn<SupplierRow>[] {
     },
     {
       header: t('suppliers.columns.status'),
-      value: (row) => t(supplierStatusBadge(row).labelKey),
+      value: (row) => t(activeBadge(row.isActive).labelKey),
     },
   ];
 }

@@ -6,9 +6,9 @@ import { loadFeatureLocale } from '@/lib/i18n/i18n';
 
 /* The attribute definitions are the second tab of the categories feature, with
    their own address so the sidebar can link straight to them. */
-export const Route = createFileRoute('/_dashboard/attributes/')({
+export const Route = createFileRoute('/_app/attributes/')({
   beforeLoad: () => {
-    requirePermission(PERMS.attributeDefinition.read);
+    requirePermission(PERMS.attributeDefinition.view);
   },
   loader: () => loadFeatureLocale('dashboard/categories'),
   component: AttributesRoute,

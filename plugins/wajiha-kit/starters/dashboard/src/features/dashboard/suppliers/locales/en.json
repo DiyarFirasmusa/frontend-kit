@@ -2,6 +2,7 @@
   "suppliers": {
     "title": "Suppliers",
     "subtitle": "The supplier master that receipts and landed costs pick from",
+    "caption": "Suppliers, one page of the filtered list",
     "create": "Add supplier",
     "empty": "No suppliers yet",
     "emptyFiltered": "No suppliers match these filters",
@@ -18,19 +19,15 @@
       "yes": "Yes",
       "no": "No"
     },
-    "status": {
-      "unregistered": "Not registered"
-    },
     "filters": {
       "searchPlaceholder": "Search by code, name or phone",
       "status": "Status",
-      "source": "Show",
-      "registered": "Registered suppliers",
-      "withUnregistered": "Include names from documents"
+      "label": "Filter suppliers"
     },
     "actions": {
-      "register": "Register supplier",
-      "deactivate": "Deactivate"
+      "editRow": "Edit {{name}}",
+      "deleteRow": "Delete {{name}}",
+      "deleteBlocked": "On documents, so it cannot be deleted. Edit it and switch off Active instead."
     },
     "dialog": {
       "createTitle": "Add supplier",
@@ -59,14 +56,9 @@
       "title": "Delete supplier",
       "description": "“{{name}}” will be deleted. This cannot be undone."
     },
-    "deactivate": {
-      "title": "Deactivate supplier",
-      "description": "“{{name}}” is on documents, so it cannot be deleted. It will be deactivated and no longer offered on new receipts."
-    },
     "messages": {
       "created": "Supplier added",
       "updated": "Supplier updated",
-      "deactivated": "Supplier deactivated",
       "deleted": "Supplier deleted"
     },
     "validation": {

@@ -1,27 +1,57 @@
 import { privateApi } from '@/api/client/private/private';
 import { endpoints } from '@/constants/api';
+import { toBackendSort } from '@/utils/table-state';
 import type {
+  SupplierDetail,
   SupplierListParams,
+  SupplierListResponse,
   SupplierPayload,
   SupplierRow,
 } from '../types/types';
 
-/** The master list is one unpaged array; this caps it for the client-side pager. */
-export const SUPPLIER_LIST_LIMIT = 500;
+interface RequestOptions {
+  signal?: AbortSignal;
+}
+
+/** UI params -> the backend's names: 0-based `page`, `size`, `sort=name,asc`. */
+export function toSupplierListQuery(
+  params: SupplierListParams,
+): Record<string, string | number | boolean> {
+  const query: Record<string, string | number | boolean> = {
+    page: params.page - 1,
+    size: params.pageSize,
+  };
+  const sort = toBackendSort(params.sort);
+  if (sort) {
+    query.sort = sort;
+  }
+  if (params.q) {
+    query.q = params.q;
+  }
+  if (params.status !== 'all') {
+    query.isActive = params.status === 'active';
+  }
+  return query;
+}
 
 export async function fetchSuppliers(
   params: SupplierListParams,
-): Promise<SupplierRow[]> {
-  const { data } = await privateApi.get<SupplierRow[]>(
+  options?: RequestOptions,
+): Promise<SupplierListResponse> {
+  const { data } = await privateApi.get<SupplierListResponse>(
     endpoints.suppliers.list,
-    {
-      params: {
-        q: params.q || undefined,
-        isActive: params.isActive,
-        includeUnregistered: params.includeUnregistered,
-        limit: params.limit ?? SUPPLIER_LIST_LIMIT,
-      },
-    },
+    { params: toSupplierListQuery(params), signal: options?.signal },
+  );
+  return data;
+}
+
+export async function fetchSupplier(
+  id: string,
+  options?: RequestOptions,
+): Promise<SupplierDetail> {
+  const { data } = await privateApi.get<SupplierDetail>(
+    endpoints.suppliers.detail(id),
+    { signal: options?.signal },
   );
   return data;
 }
@@ -40,12 +70,11 @@ export async function createSupplier(
 export async function updateSupplier(
   id: string,
   payload: SupplierPayload,
-  successMessage = 'suppliers.messages.updated',
 ): Promise<SupplierRow> {
   const { data } = await privateApi.put<SupplierRow>(
     endpoints.suppliers.update(id),
     payload,
-    { successMessage },
+    { successMessage: 'suppliers.messages.updated' },
   );
   return data;
 }

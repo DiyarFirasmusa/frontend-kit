@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
  * without a guard, or without a row in the table, fails here.
  */
 
-const DASHBOARD = join(__dirname, '_dashboard');
+const DASHBOARD = join(__dirname, '_app');
 const NO_GUARD_NEEDED = new Set(['index.tsx', 'route.tsx']);
 
 function pageRoutes(dir: string, found: string[] = []): string[] {

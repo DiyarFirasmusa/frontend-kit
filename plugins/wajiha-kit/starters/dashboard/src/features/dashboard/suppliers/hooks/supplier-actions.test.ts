@@ -1,74 +1,43 @@
 import { describe, expect, it, vi } from 'vitest';
+import { PERMS, type Permission } from '@/constants/permissions';
+import i18n from '@/lib/i18n/i18n';
 import { makeSupplier } from '../supplier-test-utils';
-import { defaultSupplierForm } from '../validations/validations';
-import {
-  canRemoveSupplier,
-  getSupplierDeleteMode,
-  getSupplierRowActions,
-  toRegisterFormValues,
-  toSupplierFormValues,
-  toSupplierPayload,
-} from './supplier-actions';
+import { getSupplierRowActions } from './supplier-actions';
 
-const t = (key: string) => key;
+const t = i18n.t.bind(i18n);
 
-function actionIds(
-  row = makeSupplier(),
-  canWrite = true,
-  canDelete = true,
-): string[] {
-  return getSupplierRowActions({
-    t: t as never,
-    row,
-    canWrite,
-    canDelete,
-    onEdit: vi.fn(),
-    onRegister: vi.fn(),
-    onRemove: vi.fn(),
-  }).map((action) => action.id);
+function actionsFor(granted: Permission[], inUse = false) {
+  const onEdit = vi.fn();
+  const onDelete = vi.fn();
+  const actions = getSupplierRowActions(makeSupplier({ inUse }), {
+    t,
+    can: (permission) => granted.includes(permission),
+    onEdit,
+    onDelete,
+  });
+  return { actions, onEdit, onDelete };
 }
 
-describe('supplier actions', () => {
-  it('offers edit and delete for an unused supplier', () => {
-    expect(actionIds()).toEqual(['edit', 'delete']);
-    expect(actionIds(makeSupplier(), false, true)).toEqual(['delete']);
-    expect(actionIds(makeSupplier(), true, false)).toEqual(['edit']);
+describe('getSupplierRowActions', () => {
+  it('renders nothing with view only', () => {
+    expect(actionsFor([PERMS.supplier.view]).actions).toEqual([]);
   });
 
-  it('turns delete into deactivate for a supplier on documents', () => {
-    const used = makeSupplier({ inUse: true });
-    expect(getSupplierDeleteMode(used)).toBe('deactivate');
-    expect(actionIds(used)).toEqual(['edit', 'deactivate']);
-    expect(canRemoveSupplier(used, false, true)).toBe(false);
-    expect(actionIds(makeSupplier({ inUse: true, isActive: false }))).toEqual([
-      'edit',
-    ]);
+  it('offers edit with update only', () => {
+    const { actions, onEdit } = actionsFor([PERMS.supplier.update]);
+    expect(actions.map((action) => action.id)).toEqual(['edit']);
+    actions[0]?.onSelect();
+    expect(onEdit).toHaveBeenCalledOnce();
   });
 
-  it('offers only register for a name seen on documents', () => {
-    const loose = makeSupplier({ registered: false });
-    expect(actionIds(loose)).toEqual(['register']);
-    expect(actionIds(loose, false, true)).toEqual([]);
-    expect(toRegisterFormValues(loose)).toEqual({
-      ...defaultSupplierForm,
-      code: 'SUP-001',
-      name: 'Rafidain Supplies',
-    });
+  it('offers delete with delete only', () => {
+    const { actions } = actionsFor([PERMS.supplier.delete]);
+    expect(actions.map((action) => action.id)).toEqual(['delete']);
+    expect(actions[0]?.disabledReason).toBeUndefined();
   });
 
-  it('maps a row to form values and back to a trimmed payload', () => {
-    const values = toSupplierFormValues(makeSupplier({ notes: null }));
-    expect(values.notes).toBe('');
-    expect(
-      toSupplierPayload({ ...values, phone: '  ', name: ' Rafidain ' }),
-    ).toEqual({
-      code: 'SUP-001',
-      name: 'Rafidain',
-      isActive: true,
-      contactName: 'Ali Hassan',
-      email: 'orders@example.com',
-      address: 'Baghdad',
-      taxNumber: '123456789',
-    });
+  it('keeps delete for a supplier on documents, with the reason', () => {
+    const { actions } = actionsFor([PERMS.supplier.delete], true);
+    expect(actions[0]?.disabledReason).toBeTruthy();
   });
 });

@@ -4,9 +4,9 @@ import WarehousesListContainer from '@/features/dashboard/warehouses';
 import { requirePermission } from '@/guards/route-guards';
 import { loadFeatureLocale } from '@/lib/i18n/i18n';
 
-export const Route = createFileRoute('/_dashboard/warehouses/')({
+export const Route = createFileRoute('/_app/warehouses/')({
   beforeLoad: () => {
-    requirePermission(PERMS.warehouse.read);
+    requirePermission(PERMS.warehouse.view);
   },
   loader: () => loadFeatureLocale('dashboard/warehouses'),
   component: WarehousesListContainer,

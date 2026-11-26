@@ -1,12 +1,10 @@
 import {
   HeadContent,
   Outlet,
-  createRootRoute,
-  useNavigate,
+  createRootRouteWithContext,
 } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { onSessionExpired } from '@/api/auth/session-events';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryProvider } from '@/context/query-provider';
@@ -15,6 +13,7 @@ import NotFoundErrorContainer from '@/features/fallback/404';
 import { RootErrorFallback } from '@/features/fallback/root-error-fallback';
 import { getDir } from '@/lib/i18n/i18n';
 import { reportError } from '@/lib/monitoring';
+import type { RouterContext } from '@/router';
 
 /* Devtools ship only in `npm run dev`; the lazy import keeps them out of the
    production bundle entirely. They are also hidden under VITE_ENV=test so the
@@ -26,10 +25,12 @@ const DevTools =
 
 /* Last-resort boundary: a render error anywhere above the layout groups
    (providers, i18n, theme) lands here instead of a blank page. */
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   notFoundComponent: () => <NotFoundErrorContainer />,
   errorComponent: ({ error }) => <RootErrorFallback error={error} />,
-  onError: (error) => {
+  // onCatch, not onError: the boundary sees render and loader errors alike,
+  // and main.tsx leaves caught errors to the boundaries (reported once).
+  onCatch: (error) => {
     void reportError(error, { boundary: 'root' });
   },
   component: RootShell,
@@ -37,7 +38,8 @@ export const Route = createRootRoute({
 
 function RootShell() {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
+  // The same client the loaders prefetch into (tests pass their own).
+  const { queryClient } = Route.useRouteContext();
   const lang = i18n.resolvedLanguage ?? i18n.language;
   const dir = getDir(lang);
 
@@ -46,18 +48,9 @@ function RootShell() {
     document.documentElement.dir = dir;
   }, [lang, dir]);
 
-  // A finished session (401 and no refresh) moves to /login through the router.
-  useEffect(
-    () =>
-      onSessionExpired(() => {
-        void navigate({ to: '/login' });
-      }),
-    [navigate],
-  );
-
   return (
     <ThemeProvider>
-      <QueryProvider>
+      <QueryProvider client={queryClient}>
         <TooltipProvider>
           <HeadContent />
           <div className="bg-background text-text-primary min-h-svh">

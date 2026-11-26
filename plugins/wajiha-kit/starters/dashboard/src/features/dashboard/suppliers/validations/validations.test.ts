@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { defaultSupplierForm, supplierSchema } from './validations';
+import { makeSupplier } from '../supplier-test-utils';
+import {
+  defaultSupplierForm,
+  supplierSchema,
+  toSupplierFormValues,
+  toSupplierPayload,
+} from './validations';
 
 function issues(values: Partial<typeof defaultSupplierForm>) {
   const result = supplierSchema.safeParse({
@@ -45,5 +51,34 @@ describe('supplierSchema', () => {
       'suppliers.validation.email',
     ]);
     expect(issues({ code: 'A', name: 'B', email: 'a@b.co' })).toEqual([]);
+  });
+});
+
+describe('supplier form mappers', () => {
+  it('round-trips a record through the form', () => {
+    const values = toSupplierFormValues(
+      makeSupplier({ notes: null, contactName: '' }),
+    );
+    expect(values.notes).toBe('');
+    expect(toSupplierPayload(values)).toEqual({
+      code: 'SUP-001',
+      name: 'Demo Supplies',
+      phone: '+964 780 000 0000',
+      email: 'orders@example.com',
+      address: 'Main street',
+      taxNumber: '123456789',
+      isActive: true,
+    });
+  });
+
+  it('trims and leaves empty optional fields out of the payload', () => {
+    expect(
+      toSupplierPayload({
+        ...defaultSupplierForm,
+        code: ' SUP-9 ',
+        name: ' Nine ',
+        notes: '  ',
+      }),
+    ).toEqual({ code: 'SUP-9', name: 'Nine', isActive: true });
   });
 });
