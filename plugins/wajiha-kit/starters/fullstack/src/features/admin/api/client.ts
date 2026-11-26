@@ -8,6 +8,7 @@ import {
 import { publicEnv } from '@/shared/env/public-env';
 import { toast } from '@/shared/store/toast-store';
 import { useAuthStore } from '../store/auth-store';
+import { endSession } from '../store/session';
 import { apiErrorMessage, isCancelled } from './errors';
 import { emitSessionExpired } from './session-events';
 
@@ -79,7 +80,7 @@ privateApi.interceptors.response.use(onSuccess, (error: AxiosError) => {
     const { accessToken } = useAuthStore.getState();
     const sent = error.config?.headers?.Authorization;
     if (accessToken !== null && sent === `Bearer ${accessToken}`) {
-      useAuthStore.getState().clear();
+      endSession();
       emitSessionExpired();
     }
     throw error;

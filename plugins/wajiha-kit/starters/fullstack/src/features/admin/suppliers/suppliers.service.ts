@@ -17,6 +17,8 @@ export async function fetchSuppliers(params: SupplierListParams): Promise<Page<S
 export async function createSupplier(payload: SupplierRequest): Promise<Supplier> {
   const { data } = await privateApi.post<Supplier>(endpoints.suppliers.create, payload, {
     successMessage: 'suppliers.created',
+    // The form shows the error (under the input it names, or a toast): see lib/apply-field-errors.ts.
+    silentError: true,
   });
   return data;
 }
@@ -25,7 +27,7 @@ export async function updateSupplier(id: string, payload: SupplierRequest): Prom
   const { data } = await privateApi.put<Supplier>(
     endpoints.suppliers.update(encodeURIComponent(id)),
     payload,
-    { successMessage: 'suppliers.updated' },
+    { successMessage: 'suppliers.updated', silentError: true },
   );
   return data;
 }

@@ -22,7 +22,7 @@ export const supplierHandlers = crudHandlers<Supplier, SupplierRequest>({
       : { ar: 'الرمز والاسم مطلوبان', en: 'Code and name are required' },
   conflict: (body, rows, exceptId) =>
     rows.some((row) => row.id !== exceptId && normalize(row.code) === normalize(body.code ?? ''))
-      ? { ar: 'رمز المورد مستخدم مسبقاً', en: 'This supplier code is already used' }
+      ? { ar: 'رمز المورد مستخدم مسبقاً', en: 'This supplier code is already used', field: 'code' }
       : undefined,
   toRow: (body) => ({
     code: (body.code ?? '').trim(),

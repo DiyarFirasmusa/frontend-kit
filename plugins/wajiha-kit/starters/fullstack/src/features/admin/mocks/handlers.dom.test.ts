@@ -69,7 +69,11 @@ describe('mock API', () => {
       body: JSON.stringify(body),
     });
     expect(duplicate.status).toBe(409);
-    expect(await duplicate.json()).toEqual({ message: 'This supplier code is already used' });
+    // The conflict blames the code field, in the shape a Spring backend sends too (api/problem.ts reads it).
+    expect(await duplicate.json()).toEqual({
+      message: 'This supplier code is already used',
+      errors: [{ field: 'code', message: 'This supplier code is already used' }],
+    });
 
     const updated = await fetch(api(`/suppliers/${row.id}`), {
       method: 'PUT',

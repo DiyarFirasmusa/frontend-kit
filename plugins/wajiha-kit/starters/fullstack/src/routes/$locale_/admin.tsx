@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import { AdminLoading } from '@/features/admin/layout/admin-loading';
 import { AdminMessage } from '@/features/admin/layout/admin-message';
 import { AdminRoot } from '@/features/admin/layout/admin-root';
+import { getAdminQueryClient } from '@/features/admin/lib/query-client';
 import { isLocale, toLocale } from '@/shared/lib/i18n/languages';
 
 // The admin: /ar/admin and /en/admin. "$locale_" (trailing underscore) keeps the language in the URL but
@@ -36,7 +37,8 @@ export const Route = createFileRoute('/$locale_/admin')({
 
 function AdminLayoutRoute() {
   const { locale } = Route.useParams();
-  return <AdminRoot locale={toLocale(locale)} />;
+  // One client for the whole admin visit: the loaders prefetch into the same one (see lib/query-client.ts).
+  return <AdminRoot locale={toLocale(locale)} queryClient={getAdminQueryClient()} />;
 }
 
 function AdminNotFoundRoute() {

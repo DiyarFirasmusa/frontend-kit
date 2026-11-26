@@ -22,7 +22,7 @@ export const usePermissionStore = create<PermissionState>()(
         set({ roles: [], permissions: [] });
       },
     }),
-    { name: 'admin-permissions', storage: createJSONStorage(() => sessionStorage) },
+    { name: 'admin-permissions', version: 1, storage: createJSONStorage(() => sessionStorage) },
   ),
 );
 

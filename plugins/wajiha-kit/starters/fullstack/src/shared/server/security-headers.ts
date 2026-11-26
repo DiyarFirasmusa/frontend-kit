@@ -65,7 +65,8 @@ export function contentSecurityPolicy(options: CspOptions): string {
       ...connectOrigins,
       ...THIRD_PARTY.connect,
     ],
-    // The admin's mock API runs as a service worker from this origin (only when VITE_ADMIN_API_MOCK=true).
+    // The admin's mock API runs as a service worker from this origin (only in a build with VITE_ADMIN_API_MOCK=true).
+    // The directive is always sent and allows 'self' only: with no worker file in the build it permits nothing.
     'worker-src': [SELF],
     'frame-src': THIRD_PARTY.frame.length > 0 ? THIRD_PARTY.frame : [NONE],
     'object-src': [NONE],

@@ -8,16 +8,22 @@ import { zodResolver } from '@/shared/lib/vendor/zod-resolver';
 import { errorStatus } from '../api/errors';
 import { useCan } from '../components/can';
 import { PERMS } from '../constants/permissions';
+import { reportSaveError } from '../lib/apply-field-errors';
 import type { Supplier } from '../types/api';
 import { toSupplierFormValues, toSupplierPayload } from './supplier-actions';
-import { SUPPLIERS_PAGE_SIZE, type SuppliersSearch } from './supplier-search';
+import { SUPPLIERS_PAGE_SIZE, suppliersListParams, type SuppliersSearch } from './supplier-search';
 import {
   useCreateSupplier,
   useDeleteSupplier,
   useSuppliersList,
   useUpdateSupplier,
 } from './use-supplier-queries';
-import { EMPTY_SUPPLIER, supplierSchema, type SupplierValues } from './validations';
+import {
+  EMPTY_SUPPLIER,
+  SUPPLIER_FIELDS,
+  supplierSchema,
+  type SupplierValues,
+} from './validations';
 
 export type SuppliersPageProps = {
   /** The list state from the URL (the route parses it). */
@@ -59,12 +65,7 @@ export function useSuppliersPage({ search, onSearchChange }: SuppliersPageProps)
     }
   }, [search.q]);
 
-  const query = useSuppliersList({
-    q: search.q,
-    status: search.status,
-    page,
-    pageSize: SUPPLIERS_PAGE_SIZE,
-  });
+  const query = useSuppliersList(suppliersListParams(search));
   const total = query.data?.total ?? 0;
   const lastPage = Math.max(1, Math.ceil(total / SUPPLIERS_PAGE_SIZE));
 
@@ -146,12 +147,17 @@ export function useSuppliersPage({ search, onSearchChange }: SuppliersPageProps)
     setDialogOpen(false);
   };
 
+  // The dialog stays open on an error: the backend's field errors appear under the inputs.
+  const onError = (error: unknown) => {
+    reportSaveError(form, error, SUPPLIER_FIELDS);
+  };
+
   const submit = form.handleSubmit((values) => {
     const payload = toSupplierPayload(values);
     if (editing === null) {
-      create.mutate(payload, { onSuccess: closeDialog });
+      create.mutate(payload, { onSuccess: closeDialog, onError });
     } else {
-      update.mutate({ id: editing.id, payload }, { onSuccess: closeDialog });
+      update.mutate({ id: editing.id, payload }, { onSuccess: closeDialog, onError });
     }
   });
 

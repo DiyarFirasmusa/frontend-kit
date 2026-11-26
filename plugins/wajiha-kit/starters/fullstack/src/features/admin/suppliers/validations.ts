@@ -38,3 +38,14 @@ export const EMPTY_SUPPLIER: SupplierValues = {
   notes: '',
   isActive: true,
 };
+
+/** The inputs of the supplier form: the names a backend field error can be shown under. */
+export const SUPPLIER_FIELDS: readonly (keyof SupplierValues)[] = [
+  'code',
+  'name',
+  'contactName',
+  'phone',
+  'email',
+  'notes',
+  'isActive',
+];

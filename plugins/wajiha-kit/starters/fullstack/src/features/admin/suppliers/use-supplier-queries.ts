@@ -1,4 +1,10 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { qk } from '../api/query-keys';
 import type { SupplierListParams, SupplierRequest } from '../types/api';
 import {
@@ -8,10 +14,16 @@ import {
   updateSupplier,
 } from './suppliers.service';
 
-export function useSuppliersList(params: SupplierListParams) {
-  return useQuery({
+/** One list page: the page hook and the route loader (prefetch.ts) build it from the same params. */
+export const suppliersListQueryOptions = (params: SupplierListParams) =>
+  queryOptions({
     queryKey: qk.suppliers.list(params),
     queryFn: () => fetchSuppliers(params),
+  });
+
+export function useSuppliersList(params: SupplierListParams) {
+  return useQuery({
+    ...suppliersListQueryOptions(params),
     // Keep the current page on screen while the next one loads, so the table does not jump.
     placeholderData: keepPreviousData,
   });

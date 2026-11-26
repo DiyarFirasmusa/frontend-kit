@@ -32,7 +32,7 @@ export const useAuthStore = create<AuthState>()(
         usePermissionStore.getState().clear();
       },
     }),
-    { name: 'admin-auth', storage: createJSONStorage(() => sessionStorage) },
+    { name: 'admin-auth', version: 1, storage: createJSONStorage(() => sessionStorage) },
   ),
 );
 

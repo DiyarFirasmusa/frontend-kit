@@ -1,3 +1,6 @@
+// The project's one zod resolver for react-hook-form, used by the public contact form and every admin form.
+// It replaces @hookform/resolvers (a second copy of the same job, with every other schema library in it).
+// Zod's issue paths become nested field errors; each message is an i18n key the form translates when shown.
 import type { FieldValues, Resolver } from 'react-hook-form';
 import type { ZodType } from 'zod';
 

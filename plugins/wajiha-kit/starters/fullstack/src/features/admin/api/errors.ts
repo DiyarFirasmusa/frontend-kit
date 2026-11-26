@@ -1,34 +1,24 @@
 import { isAxiosError, isCancel } from 'axios';
 import type { ToastMessage } from '@/shared/store/toast-store';
+import { parseApiProblem } from './problem';
 
 /** HTTP status of a failed request, or undefined for a network error or a non-HTTP error. */
 export function errorStatus(error: unknown): number | undefined {
   return isAxiosError(error) ? error.response?.status : undefined;
 }
 
-/** The `message` the backend sent with an error, when it is a non-empty string. */
-function backendMessage(error: unknown): string | undefined {
-  if (!isAxiosError(error)) {
-    return undefined;
-  }
-  const body: unknown = error.response?.data;
-  if (typeof body === 'object' && body !== null && 'message' in body) {
-    const { message } = body;
-    return typeof message === 'string' && message.trim() !== '' ? message : undefined;
-  }
-  return undefined;
-}
-
 /**
- * What to tell the user about a failed request. The backend's own message wins (the mock API answers
- * in the request's language); otherwise a short text chosen by status.
+ * What to tell the user about a failed request. The backend's own sentence wins (the mock API answers in
+ * the request's language; Spring bodies: see problem.ts), then the first field error, then a short text
+ * chosen by status.
  */
 export function apiErrorMessage(error: unknown): ToastMessage {
-  const text = backendMessage(error);
+  const problem = parseApiProblem(error);
+  const text = problem.message ?? Object.values(problem.fields)[0];
   if (text !== undefined) {
     return { text };
   }
-  const status = errorStatus(error);
+  const { status } = problem;
   if (status === undefined) {
     return { key: 'adminErrors.network' };
   }

@@ -1,16 +1,19 @@
 import { createRoute, type AnyRoute } from '@tanstack/react-router';
 import { act } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { createTestQueryClient } from '@/test/render';
 import { renderRoutes } from '@/test/render-router';
 import { emitSessionExpired } from '../api/session-events';
 import { AdminRoot } from './admin-root';
+
+const queryClient = createTestQueryClient();
 
 /** A tiny admin: the real layout (AdminRoot), a page and the login page, with the login's search rules. */
 function adminRoutes(root: AnyRoute) {
   const admin = createRoute({
     getParentRoute: () => root,
     path: '/$locale/admin',
-    component: () => <AdminRoot locale="en" />,
+    component: () => <AdminRoot locale="en" queryClient={queryClient} />,
   });
   const suppliers = createRoute({
     getParentRoute: () => admin,

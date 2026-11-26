@@ -4,7 +4,7 @@ import { Search } from '@/components/ui/icons';
 import { cn } from '@/shared/utils/cn';
 
 /** The list search shortcut. ⌘K belongs to the top bar's global search. */
-export const LIST_SEARCH_SHORTCUT = '/';
+const LIST_SEARCH_SHORTCUT = '/';
 
 export interface ListSearchFieldProps {
   value: string;

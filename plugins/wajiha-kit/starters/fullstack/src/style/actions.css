@@ -2,7 +2,7 @@
    Compact pill buttons used in a table row's action cell: 32px tall,
    fully rounded, icon + label. Neutral by default, tone-coloured for
    destructive/success/warning, filled solid for primary.
-   .row-action-icon: icon-only inline action (03.01) — a 32px rounded square
+   .row-action-icon: icon-only inline action — a 32px rounded square
    with a stroke border, no fill, the icon in the tone colour.
    .row-action-menu: the borderless "⋯" menu trigger (04.01, 14.01). */
 
@@ -83,7 +83,7 @@
     background-color: color-mix(in oklab, var(--warning) 10%, transparent);
   }
 
-  /* ── Icon-only inline action (03.01) ── */
+  /* ── Icon-only inline action ── */
   .row-action.row-action-icon {
     justify-content: center;
     width: 32px;

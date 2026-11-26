@@ -28,10 +28,26 @@ function english(request: Request): boolean {
   return (request.headers.get('Accept-Language') ?? 'ar').toLowerCase().startsWith('en');
 }
 
-/** An error body with a `message` in the request's language (the admin shows it as is). */
-export async function fail(request: Request, status: number, message: Message): Promise<Response> {
+/** A message that blames one field of the form (a 409 on "code" shows under the Code input). */
+export type FieldMessage = Message & { field?: string };
+
+/**
+ * An error body in the request's language: `{ message }`, plus `errors: [{ field, message }]` when the message
+ * blames a field (the shape the admin reads, see api/problem.ts; a Spring backend sends the same idea).
+ */
+export async function fail(
+  request: Request,
+  status: number,
+  message: FieldMessage,
+): Promise<Response> {
   await wait();
-  return HttpResponse.json({ message: english(request) ? message.en : message.ar }, { status });
+  const text = english(request) ? message.en : message.ar;
+  return HttpResponse.json(
+    message.field === undefined
+      ? { message: text }
+      : { message: text, errors: [{ field: message.field, message: text }] },
+    { status },
+  );
 }
 
 /** The token carries the demo user's role, so the mock can tell users apart: mock-token-<role>-<random>. */

@@ -1,19 +1,19 @@
 import { CSPProvider } from '@base-ui/react/csp-provider';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { Outlet, useNavigate, useRouter } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { Locale } from '@/shared/lib/i18n/languages';
 import { onSessionExpired } from '../api/session-events';
-import { createAdminQueryClient } from '../lib/query-client';
+import { endAdminSession } from './end-session';
 
 /**
- * Everything the admin owns, mounted by its layout route: its own QueryClient (the public site has none),
- * the toast region, tooltips, and the "session ended" listener that sends the user back to login.
+ * Everything the admin owns, mounted by its layout route: its QueryClient (made in the route's beforeLoad and
+ * kept in the router context; the public site has none), the toast region, tooltips, and the "session ended"
+ * listener that sends the user back to login.
  */
-export function AdminRoot({ locale }: { locale: Locale }) {
-  const [queryClient] = useState(createAdminQueryClient);
+export function AdminRoot({ locale, queryClient }: { locale: Locale; queryClient: QueryClient }) {
   const navigate = useNavigate();
   const router = useRouter();
 
@@ -26,15 +26,7 @@ export function AdminRoot({ locale }: { locale: Locale }) {
         if (pathname.endsWith('/login')) {
           return;
         }
-        void queryClient.cancelQueries();
-        void navigate({
-          to: '/$locale/admin/login',
-          params: { locale },
-          search: { redirect: href, reason: 'expired' },
-          replace: true,
-        }).then(() => {
-          queryClient.clear();
-        });
+        endAdminSession({ queryClient, navigate, locale, redirect: href, reason: 'expired' });
       }),
     [locale, navigate, queryClient, router],
   );

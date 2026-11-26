@@ -38,7 +38,7 @@ function isAbsoluteHttpUrl(value: string): boolean {
   }
 }
 
-export const publicEnvSchema = z.object({
+const publicEnvSchema = z.object({
   VITE_SITE_URL: z.preprocess(emptyToUndefined, siteOrigin.default(DEFAULT_SITE_URL)),
   VITE_ALLOW_INDEXING: z.preprocess(emptyToUndefined, booleanText.default(false)),
   // Admin: the backend it talks to, and whether the built-in mock API (MSW, in the browser) answers instead.
@@ -52,7 +52,7 @@ export const serverEnvSchema = z.object({
   CONTACT_WEBHOOK_URL: z.preprocess(emptyToUndefined, z.url().optional()),
 });
 
-export const envSchema = publicEnvSchema.extend(serverEnvSchema.shape);
+const envSchema = publicEnvSchema.extend(serverEnvSchema.shape);
 
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

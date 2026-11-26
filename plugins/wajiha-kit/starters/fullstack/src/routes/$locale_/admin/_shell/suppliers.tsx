@@ -15,6 +15,12 @@ export const Route = createFileRoute('/$locale_/admin/_shell/suppliers')({
     const { requirePermission } = await import('@/features/admin/guards/route-guards');
     requirePermission(toLocale(params.locale), PERMS.supplier.read);
   },
+  // Starts the list request early (on hover too); the page still shows its own loading state.
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
+    const { prefetchSuppliers } = await import('@/features/admin/suppliers/prefetch');
+    prefetchSuppliers(deps);
+  },
   head: adminHead('suppliers.title'),
   component: SuppliersRoute,
 });

@@ -1,6 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@/shared/lib/vendor/zod-resolver';
 import { createSingleFlight } from '@/shared/utils/single-flight';
 import { contactSchema, EMPTY_CONTACT, type ContactInput } from '../validations/contact-schema';
 

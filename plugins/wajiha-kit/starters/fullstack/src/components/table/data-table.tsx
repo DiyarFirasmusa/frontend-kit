@@ -34,7 +34,7 @@ interface TableSelection {
   onChange: (ids: Set<string>) => void;
 
   bulkActions?: ReactNode;
-  /** Where the checkbox column sits: first (default) or last, as in 07.04. */
+  /** Where the checkbox column sits: first (default) or last. */
   position?: 'start' | 'end';
   /** Hide the header "select all" checkbox. */
   hideSelectAll?: boolean;

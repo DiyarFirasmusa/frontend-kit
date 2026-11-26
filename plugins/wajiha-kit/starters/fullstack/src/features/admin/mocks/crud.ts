@@ -2,7 +2,17 @@ import { http, HttpResponse } from 'msw';
 import type { Permission } from '../constants/permissions';
 import type { Page } from '../types/api';
 import { db } from './db';
-import { api, denied, fail, normalize, ok, readJson, wait, type Message } from './http';
+import {
+  api,
+  denied,
+  fail,
+  normalize,
+  ok,
+  readJson,
+  wait,
+  type FieldMessage,
+  type Message,
+} from './http';
 
 /** What a resource must say about itself. The factory below does the rest the way a backend does. */
 export type CrudConfig<Row extends { id: string; updatedAt: string }, Body> = {
@@ -25,8 +35,8 @@ export type CrudConfig<Row extends { id: string; updatedAt: string }, Body> = {
   isActive?: (row: Row) => boolean;
   /** A 400 message when the body is not acceptable, in both languages. */
   invalid: (body: Partial<Body>) => Message | undefined;
-  /** A 409 message when the body clashes with another row (a taken code). */
-  conflict?: (body: Partial<Body>, rows: Row[], exceptId?: string) => Message | undefined;
+  /** A 409 message when the body clashes with another row (a taken code). `field` puts it under that input. */
+  conflict?: (body: Partial<Body>, rows: Row[], exceptId?: string) => FieldMessage | undefined;
   /** The stored fields made from a valid body. */
   toRow: (body: Partial<Body>) => Omit<Row, 'id' | 'updatedAt'>;
   /** The 404 message. */

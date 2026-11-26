@@ -1,23 +1,23 @@
 import { http, HttpResponse } from 'msw';
 import { useState } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { publicEnv } from '@/shared/env/public-env';
 import { useToastStore } from '@/shared/store/toast-store';
 import { tt } from '@/test/i18n';
 import { server } from '@/test/msw-server';
 import { renderWithProviders, screen, waitFor, within } from '@/test/render';
 import { PERMS } from '../constants/permissions';
-import { useAuthStore } from '../store/auth-store';
-import { usePermissionStore } from '../store/permission-store';
+import { startSession } from '../store/session';
 import { SuppliersPage } from './index';
 import type { SuppliersSearch } from './supplier-search';
 
 function signIn(permissions: string[], roles: string[] = []): void {
-  useAuthStore.getState().setSession({
+  startSession({
     user: { id: 'u1', username: 'demo', name: 'Demo' },
     accessToken: 'mock-token-admin-test',
+    roles,
+    permissions,
   });
-  usePermissionStore.getState().setPermissions({ permissions, roles });
 }
 
 /** The page with its URL state held in memory, the way the route holds it in the address bar. */
@@ -42,6 +42,9 @@ function Harness({
   );
 }
 
+/** A form label by its locale key (the label starts with the text; a required mark may follow). */
+const label = (key: string): RegExp => new RegExp(`^${tt(key)}`, 'u');
+
 const firstRows = async () => {
   const table = await screen.findByRole('table');
   await within(table).findByText('SUP-001');
@@ -49,6 +52,14 @@ const firstRows = async () => {
 };
 
 describe('suppliers page', () => {
+  // The API client sends the page language (<html lang>) and the mock answers in it.
+  beforeEach(() => {
+    document.documentElement.lang = 'en';
+  });
+  afterEach(() => {
+    document.documentElement.lang = '';
+  });
+
   it('lists the first page from the API with paging', async () => {
     signIn([], ['admin']);
     renderWithProviders(<Harness />);
@@ -100,8 +111,8 @@ describe('suppliers page', () => {
     await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
     expect(await within(dialog).findByText(tt('suppliers.codeRequired'))).toBeInTheDocument();
 
-    await user.type(within(dialog).getByLabelText(/^Code/u), 'NEW-1');
-    await user.type(within(dialog).getByLabelText(/^Name/u), 'Test Supplier');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldCode')), 'NEW-1');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldName')), 'Test Supplier');
     await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -109,23 +120,105 @@ describe('suppliers page', () => {
     expect(await screen.findByText('NEW-1')).toBeInTheDocument();
   });
 
-  it('shows the API error and keeps the dialog open on a taken code', async () => {
+  it('shows a taken code under the Code input and keeps the dialog open', async () => {
+    signIn([], ['admin']);
+    const { user } = renderWithProviders(<Harness />);
+    await firstRows();
+    await user.click(screen.getByRole('button', { name: tt('suppliers.create') }));
+    const dialog = await screen.findByRole('dialog');
+    // SUP-001 is in the seed data: the mock API answers 409 with an error on the "code" field.
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldCode')), 'SUP-001');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldName')), 'Copy');
+    await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
+
+    const taken = await within(dialog).findByText('This supplier code is already used');
+    // The message sits with the input it blames, and the input says so to assistive technology.
+    const code = within(dialog).getByLabelText(label('suppliers.fieldCode'));
+    expect(code).toHaveAttribute('aria-invalid', 'true');
+    expect(code.closest('[data-slot="form-item"]')).toContainElement(taken);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    // One place for the error: a toast would repeat it.
+    expect(useToastStore.getState().toasts).toEqual([]);
+  });
+
+  it('shows an error that blames no field as a toast and keeps the dialog open', async () => {
     signIn([], ['admin']);
     server.use(
       http.post(`${publicEnv.VITE_ADMIN_API_URL}/suppliers`, () =>
-        HttpResponse.json({ message: 'This supplier code is already used' }, { status: 409 }),
+        HttpResponse.json({ message: 'The warehouse is closed' }, { status: 409 }),
       ),
     );
     const { user } = renderWithProviders(<Harness />);
     await firstRows();
     await user.click(screen.getByRole('button', { name: tt('suppliers.create') }));
     const dialog = await screen.findByRole('dialog');
-    await user.type(within(dialog).getByLabelText(/^Code/u), 'SUP-001');
-    await user.type(within(dialog).getByLabelText(/^Name/u), 'Copy');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldCode')), 'NEW-9');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldName')), 'Copy');
+    await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts).toEqual([
+        expect.objectContaining({ tone: 'error', message: { text: 'The warehouse is closed' } }),
+      ]);
+    });
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('shows Spring-style field errors (errors[].defaultMessage) under their inputs', async () => {
+    signIn([], ['admin']);
+    server.use(
+      http.post(`${publicEnv.VITE_ADMIN_API_URL}/suppliers`, () =>
+        HttpResponse.json(
+          {
+            message: 'Validation failed',
+            errors: [
+              { field: 'name', defaultMessage: 'size must be between 3 and 255' },
+              { field: 'notAnInput', defaultMessage: 'ignored: no such input' },
+            ],
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    const { user } = renderWithProviders(<Harness />);
+    await firstRows();
+    await user.click(screen.getByRole('button', { name: tt('suppliers.create') }));
+    const dialog = await screen.findByRole('dialog');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldCode')), 'NEW-9');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldName')), 'ab');
+    await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
+
+    expect(await within(dialog).findByText('size must be between 3 and 255')).toBeInTheDocument();
+    expect(within(dialog).getByLabelText(label('suppliers.fieldName'))).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+    expect(within(dialog).getByLabelText(label('suppliers.fieldCode'))).not.toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+  });
+
+  it('keeps the entered values so the user can correct a taken code and save', async () => {
+    signIn([], ['admin']);
+    const { user } = renderWithProviders(<Harness />);
+    await firstRows();
+    await user.click(screen.getByRole('button', { name: tt('suppliers.create') }));
+    const dialog = await screen.findByRole('dialog');
+    const code = within(dialog).getByLabelText(label('suppliers.fieldCode'));
+    await user.type(code, 'SUP-001');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldName')), 'Copy');
+    await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
+    await within(dialog).findByText('This supplier code is already used');
+    expect(within(dialog).getByLabelText(label('suppliers.fieldName'))).toHaveValue('Copy');
+
+    await user.clear(code);
+    await user.type(code, 'FREE-1');
     await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
     await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
+    expect(await screen.findByText('FREE-1')).toBeInTheDocument();
   });
 
   it('goes to the last page when the URL asks for one past the end', async () => {
@@ -190,17 +283,19 @@ describe('suppliers page', () => {
 
   it('shows the 403 of a change as an error toast and keeps the dialog open', async () => {
     // A tampered screen: the UI offers the button, the API says no.
-    signIn([], ['admin']);
-    useAuthStore.getState().setSession({
+    startSession({
       user: { id: 'u1', username: 'viewer', name: 'viewer' },
       accessToken: 'mock-token-viewer-test',
+      // The screen thinks this is an administrator; the token is the viewer's, so the API refuses.
+      roles: ['admin'],
+      permissions: [],
     });
     const { user } = renderWithProviders(<Harness />);
     await firstRows();
     await user.click(screen.getByRole('button', { name: tt('suppliers.create') }));
     const dialog = await screen.findByRole('dialog');
-    await user.type(within(dialog).getByLabelText(/^Code/u), 'NEW-1');
-    await user.type(within(dialog).getByLabelText(/^Name/u), 'Test Supplier');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldCode')), 'NEW-1');
+    await user.type(within(dialog).getByLabelText(label('suppliers.fieldName')), 'Test Supplier');
     await user.click(within(dialog).getByRole('button', { name: tt('ui.save') }));
     await waitFor(() => {
       expect(useToastStore.getState().toasts.map((toast) => toast.tone)).toEqual(['error']);

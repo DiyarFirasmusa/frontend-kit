@@ -1,4 +1,4 @@
-import type { SupplierStatus } from '../types/api';
+import type { SupplierListParams, SupplierStatus } from '../types/api';
 
 /**
  * The list state that lives in the URL (?q=&status=&page=), so a filtered page can be shared, reloaded
@@ -26,4 +26,14 @@ export function parseSuppliersSearch(raw: Record<string, unknown>): SuppliersSea
     search.page = page;
   }
   return search;
+}
+
+/** The request for a list state: the page hook and the route loader both use it, so they share one cache entry. */
+export function suppliersListParams(search: SuppliersSearch): SupplierListParams {
+  return {
+    q: search.q,
+    status: search.status,
+    page: search.page ?? 1,
+    pageSize: SUPPLIERS_PAGE_SIZE,
+  };
 }

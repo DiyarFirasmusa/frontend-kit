@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -13,34 +12,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, Settings, User } from '@/components/ui/icons';
 import type { Locale } from '@/shared/lib/i18n/languages';
-import { privateApi } from '../api/client';
-import { endpoints } from '../api/endpoints';
+import { logout } from '../auth/logout.service';
 import { useAuthStore } from '../store/auth-store';
+import { useEndSession } from './end-session';
 
 /** The signed-in user's name, a link to settings and sign out. */
 export function UserMenu({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const endSession = useEndSession(locale);
   const user = useAuthStore((state) => state.user);
-  const clear = useAuthStore((state) => state.clear);
 
   const signOut = () => {
-    // The request interceptor reads the token when the request is sent, which is after clear() below,
-    // so the token is passed explicitly: a real backend can only revoke a session it can identify.
-    const token = useAuthStore.getState().accessToken;
-    void privateApi
-      .post(endpoints.auth.logout, null, {
-        silentError: true,
-        ...(token === null ? {} : { headers: { Authorization: `Bearer ${token}` } }),
-      })
-      .catch(() => undefined);
-    // Stop in-flight and background list requests first: they would come back without a token.
-    void queryClient.cancelQueries();
-    clear();
-    void navigate({ to: '/$locale/admin/login', params: { locale } }).then(() => {
-      queryClient.clear();
-    });
+    // Read the token before the session is cleared: the request must still identify it.
+    void logout(useAuthStore.getState().accessToken);
+    endSession();
   };
 
   return (
