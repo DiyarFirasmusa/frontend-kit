@@ -41,13 +41,6 @@ interface ThemeContextValue {
   mounted: boolean;
 }
 
-type DocumentWithViewTransition = Document & {
-  startViewTransition?: (callback: () => void) => {
-    ready: Promise<void>;
-    finished: Promise<void>;
-  };
-};
-
 const TRANSITION_DURATION = 220;
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.9, 1)';
 
@@ -104,9 +97,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setMode = useCallback((next: ThemeMode) => {
     // Only an explicit choice is persisted; the default is never written.
     writeStored(MODE_KEY, next);
-    const doc = document as DocumentWithViewTransition;
 
-    if (!doc.startViewTransition || prefersReducedMotion()) {
+    // jsdom and older browsers have no View Transitions API.
+    if (
+      typeof document.startViewTransition !== 'function' ||
+      prefersReducedMotion()
+    ) {
       setModeState(next);
       return;
     }
@@ -121,7 +117,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.style.setProperty('--vt-easing', TRANSITION_EASING);
     root.dataset.themeSwitching = '';
 
-    const transition = doc.startViewTransition(() => {
+    const transition = document.startViewTransition(() => {
       flushSync(() => {
         setModeState(next);
       });

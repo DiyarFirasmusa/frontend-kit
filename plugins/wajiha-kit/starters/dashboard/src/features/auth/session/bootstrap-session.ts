@@ -16,7 +16,6 @@ import { queryClient } from '@/lib/query-client';
 import { fetchMe } from '@/services/me.service';
 import { AUTH_STORAGE_KEY, useAuthStore } from '@/store/auth-store';
 import { usePermissionStore } from '@/store/permission-store';
-import type { AccessTokenPayload } from '@/types/auth';
 
 /* Older builds kept both tokens and the permissions in localStorage. */
 const LEGACY_LOCAL_KEYS = [AUTH_STORAGE_KEY, 'app-permissions'];
@@ -55,7 +54,7 @@ function ensureUser(access: string): void {
   if (auth.user) {
     return;
   }
-  const claims = decodeJwt<AccessTokenPayload>(access);
+  const claims = decodeJwt(access);
   auth.setUser({ id: claims?.sub ?? '', username: '' });
 }
 

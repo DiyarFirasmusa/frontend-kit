@@ -33,9 +33,18 @@ function reportRootError(boundary: 'uncaught' | 'recoverable') {
 
 /* Hot reload can re-run this module; reusing the root it created keeps a
    second createRoot from mounting a duplicate app into #root. */
+function isRoot(value: unknown): value is Root {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'render' in value &&
+    'unmount' in value
+  );
+}
+
 function getRoot(container: Element, options?: RootOptions): Root {
-  const existing = import.meta.hot?.data.root as Root | undefined;
-  if (existing) {
+  const existing: unknown = import.meta.hot?.data.root;
+  if (isRoot(existing)) {
     return existing;
   }
   const root = createRoot(container, options);

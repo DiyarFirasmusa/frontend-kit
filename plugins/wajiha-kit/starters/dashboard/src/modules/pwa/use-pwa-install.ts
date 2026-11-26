@@ -5,6 +5,10 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+function isInstallPromptEvent(e: Event): e is BeforeInstallPromptEvent {
+  return 'prompt' in e && typeof e.prompt === 'function';
+}
+
 /**
  * Lets a button offer "install app". `canInstall` turns true when the browser
  * fires `beforeinstallprompt` (Chromium; iOS Safari has no such event).
@@ -18,7 +22,9 @@ export function usePwaInstall(): {
   useEffect(() => {
     const onPrompt = (e: Event): void => {
       e.preventDefault();
-      setEvent(e as BeforeInstallPromptEvent);
+      if (isInstallPromptEvent(e)) {
+        setEvent(e);
+      }
     };
     const onInstalled = (): void => {
       setEvent(null);

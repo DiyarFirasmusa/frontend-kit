@@ -6,9 +6,13 @@ import { DataTableRowActions } from '@/components/table/data-table-row-actions';
 import { Button } from '@/components/ui/button';
 import { Wrapper } from '@/components/wrapper/loading-wrapper';
 import { Plus, Trash2 } from '@/lib/icons';
-import type { WarehouseUserRole } from '@/types/api/enums';
+import {
+  WarehouseUserRoleValues,
+  type WarehouseUserRole,
+} from '@/types/api/enums';
 import type { WarehouseUserResponse } from '@/types/api/warehouses';
 import { formatDate } from '@/utils/format';
+import { isOneOf } from '@/utils/is-one-of';
 import { useMembersTab } from '../hooks/use-members-tab';
 import {
   memberInitials,
@@ -215,8 +219,8 @@ function MemberRole({
       aria-label={`${t('warehouses.members.changeRole')}: ${name}`}
       disabled={isPending}
       onChange={(next) => {
-        if (next !== role) {
-          onChange(next as WarehouseUserRole);
+        if (next !== role && isOneOf(WarehouseUserRoleValues, next)) {
+          onChange(next);
         }
       }}
     />

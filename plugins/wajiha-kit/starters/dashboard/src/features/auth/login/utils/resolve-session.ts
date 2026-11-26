@@ -1,5 +1,5 @@
 import { decodeJwt } from '@/lib/jwt';
-import type { AccessTokenPayload, LoginResponse } from '@/types/auth';
+import type { LoginResponse } from '@/types/auth';
 
 export interface ResolvedSession {
   userId: string;
@@ -14,7 +14,7 @@ export interface ResolvedSession {
  * token first and fall back to the body, so either response shape works.
  */
 export function resolveLoginSession(res: LoginResponse): ResolvedSession {
-  const claims = decodeJwt<AccessTokenPayload>(res.access);
+  const claims = decodeJwt(res.access);
   return {
     userId: res.userId ?? claims?.sub ?? '',
     tenantId: res.tenantId ?? claims?.tenant_id ?? null,

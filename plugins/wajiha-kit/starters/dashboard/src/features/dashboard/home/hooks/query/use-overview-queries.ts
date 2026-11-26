@@ -9,20 +9,20 @@ import {
 export function useOverviewSummary() {
   return useQuery({
     queryKey: qk.overview.summary,
-    queryFn: fetchOverviewSummary,
+    queryFn: ({ signal }) => fetchOverviewSummary({ signal }),
   });
 }
 
 export function useActivityTrend(days: number) {
   return useQuery({
     queryKey: qk.overview.activity(days),
-    queryFn: () => fetchActivity(days),
+    queryFn: ({ signal }) => fetchActivity(days, { signal }),
   });
 }
 
 export function useRecentChanges(limit: number) {
   return useQuery({
     queryKey: qk.overview.recent(limit),
-    queryFn: () => fetchRecentChanges(limit),
+    queryFn: ({ signal }) => fetchRecentChanges(limit, { signal }),
   });
 }

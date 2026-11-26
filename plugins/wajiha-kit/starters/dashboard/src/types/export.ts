@@ -16,4 +16,6 @@ export interface ExportRows<T> {
   rows: T[];
   total: number;
   isTruncated: boolean;
+  /** How many rows the read was allowed to return; the warning states it. Defaults to `rows.length`. */
+  limit?: number;
 }

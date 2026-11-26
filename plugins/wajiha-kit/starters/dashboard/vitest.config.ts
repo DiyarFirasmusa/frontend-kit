@@ -52,6 +52,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       reportsDirectory: './coverage',
+      // A floor, not a goal: set a little under the measured numbers (83.6
+      // statements, 74.6 branches, 83.7 functions) so a change that removes
+      // tests fails `npm run test:coverage`. Raise it as the suite grows.
+      thresholds: { statements: 80, branches: 70, functions: 80, lines: 80 },
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'src/**/*.test.{ts,tsx}',

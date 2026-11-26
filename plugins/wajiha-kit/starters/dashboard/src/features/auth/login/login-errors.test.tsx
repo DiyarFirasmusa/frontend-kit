@@ -47,9 +47,11 @@ describe('LoginContainer shared feedback', () => {
       );
       const { router } = await submitLogin();
       await waitFor(() => {
-        expect(errorToast).toHaveBeenCalledExactlyOnceWith(
-          language === 'ar' ? 'بيانات الدخول غير صحيحة' : 'Invalid credentials',
-        );
+        const message =
+          language === 'ar' ? 'بيانات الدخول غير صحيحة' : 'Invalid credentials';
+        expect(errorToast).toHaveBeenCalledExactlyOnceWith(message, {
+          id: message,
+        });
       });
       expect(screen.getByText(tt('login.subtitle'))).toBeInTheDocument();
       expect(screen.queryByRole('alert')).not.toBeInTheDocument();
@@ -69,6 +71,7 @@ describe('LoginContainer shared feedback', () => {
     await waitFor(() => {
       expect(errorToast).toHaveBeenCalledExactlyOnceWith(
         'No active account found with the given credentials',
+        { id: 'No active account found with the given credentials' },
       );
     });
   });
@@ -85,6 +88,7 @@ describe('LoginContainer shared feedback', () => {
     await waitFor(() => {
       expect(errorToast).toHaveBeenCalledExactlyOnceWith(
         tt('common.errors.server'),
+        { id: tt('common.errors.server') },
       );
     });
     server.resetHandlers();
