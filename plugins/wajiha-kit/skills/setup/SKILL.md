@@ -1,9 +1,11 @@
 ---
 name: setup
-description: Install wajiha-kit's project files into the current project - CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/wajiha-kit.json. Asks if the project is new, existing, in maintenance or a refactor and what kind (website, dashboard, other frontend). Run with /wajiha-kit:setup.
+description: Install wajiha-kit's project files into the current project - CLAUDE.md, .claude/rules/, .claude/settings.json and .claude/wajiha-kit.json - or start a new project from the kit's foundation. Asks if the project is new, existing, in maintenance or a refactor and what kind. Run with /wajiha-kit:setup.
 disable-model-invocation: true
 allowed-tools:
   - Read(/${CLAUDE_PLUGIN_ROOT}/templates/**)
+  - Read(/${CLAUDE_PLUGIN_ROOT}/starters/**)
+  - Read(/${CLAUDE_PLUGIN_ROOT}/skills/setup/references/**)
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-detect-stack.sh")
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-detect-stack.sh" *)
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/kit-prune.sh" *)
@@ -17,6 +19,28 @@ allowed-tools:
 
 Plugins can't load CLAUDE.md, rules or most settings, so this copies them into the project.
 Skills, agents, hooks and MCP servers already come from the plugin; nothing of those is copied.
+
+## New project
+
+*New project* in a folder with no `package.json` does not use the template flow below: the kit builds the project from one of three verified foundations
+in `${CLAUDE_PLUGIN_ROOT}/starters/` (`dashboard`, `website`, `fullstack`). Stack, structure and tooling are fixed; the content (pages, entities, copy,
+languages, colours, name) is generated from the user's answers. Read `${CLAUDE_SKILL_DIR}/references/new-project-flow.md` and follow it; it points to the other three:
+
+| File | What it holds |
+| ---- | ------------- |
+| `references/new-project-flow.md` | the five questions, the summary and go-ahead, the build steps in order, the checks, the final report |
+| `references/foundations.md` | what each foundation is, how to copy it, where its demo content lives, the values for `wajiha-kit.json` and `settings.json` |
+| `references/openapi-to-entities.md` | `docs/api/openapi.json` (file, URL, YAML), entities, permissions, auth and mock data from it |
+| `references/design-intake.md` | Figma, images, a style picture or a site link, the logo: where each lands in the tokens |
+
+The questions are the same for everyone, in plain words and in the user's language: (1) dashboard, website or both in one project, (2) "tell me about your
+project" (one free answer), (3) design, (4) the OpenAPI link or file, (5) Arabic, English or both. Dashboard maps to `dashboard`, website to `website`, both to
+`fullstack`. Then a plain-words summary and "shall I start?": nothing is copied before the yes. Light and dark, permissions and deployment are not asked.
+
+Order: copy the foundation (`CLAUDE.md` and `.claude/rules/` come with it) → rename → write `.claude/wajiha-kit.json` (`"mode": "new"`) and `settings.json` →
+`npm install` → OpenAPI into `docs/api/openapi.json` → the user's entities and pages by the foundation's own recipes → strip the demo domain (a grep must find none) →
+design → languages → the foundation's checks and build, fixed until green → dev server and URL → report. Never commit. Sections 1 to 7 below are for the other
+answers (existing, maintenance, refactor, a new project on another framework); for this path the summary above replaces the proposal in section 3.
 
 Templates live in `${CLAUDE_PLUGIN_ROOT}/templates/`:
 `shared/rules/` (every profile) and `<profile>/` (`CLAUDE.md`, `rules/`, `settings.json`, `wajiha-kit.json`),
@@ -43,8 +67,8 @@ with `modeState`, whatever the answer: a mode with rules is the user's to switch
 `/wajiha-kit:mode <name>` instead. While one is on, change that file with Edit or Write (other keys only) and report what
 the mode refuses (for example `package.json` scripts in freeze) instead of working round it.
 
-For *New project* with no `package.json`: ask which framework (Vite, Next.js, TanStack Start, React Router, other)
-and offer to run that framework's official create command (any framework, not only those listed); run it only after the user says yes. Then continue.
+For *New project* with no `package.json`: the foundation path above (the kit's fixed stack). Only when the user names another framework (Next.js, React Router, Vue, other) ask which one
+and offer to run that framework's official create command (any framework, not only those listed); run it only after the user says yes, then continue with the flow below.
 For a Next.js dashboard answer *yes* to the `src/` directory prompt: that variant's example layout is under `src/`. When the user already said
 they want a dashboard, the framework question here is question 2b, asked once.
 For *Refactor*: after setup, tell the user to run `/wajiha-kit:refactor-mode audit` (setup does not restructure anything).
