@@ -1,13 +1,21 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, notFound } from '@tanstack/react-router';
+import { getArticle, listArticles } from '@/content/articles';
 import { NotFound } from '@/features/fallback/not-found';
 import { ArticlePage } from '@/features/website/news/pages/article';
 import { articleHead } from '@/features/website/news/pages/article/article-head';
-import { loadArticle } from '@/features/website/news/pages/article/load-article';
-import { toLocale } from '@/shared/lib/i18n/languages';
 
 export const Route = createFileRoute('/$locale/news/$slug')({
-  loader: ({ params }) => loadArticle(params.slug),
-  head: ({ params, loaderData }) => articleHead(toLocale(params.locale), loaderData?.slug),
+  // The loader returns the article in the page language (never just a slug that every consumer looks up
+  // again), so head() and the page read the same data. A missing article is a real 404.
+  loader: async ({ params }) => {
+    const article = await getArticle(params.slug, params.locale);
+    if (article === undefined) {
+      throw notFound();
+    }
+    const others = await listArticles(params.locale);
+    return { article, related: others.filter((card) => card.slug !== article.slug).slice(0, 2) };
+  },
+  head: ({ params, loaderData }) => articleHead(params.locale, loaderData?.article),
   component: ArticlePage,
   // A missing article is shown inside the page layout (header and footer stay).
   notFoundComponent: NotFound,

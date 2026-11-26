@@ -1,5 +1,3 @@
-import cairoArabicFont from '@fontsource-variable/cairo/files/cairo-arabic-wght-normal.woff2?url';
-import cairoLatinFont from '@fontsource-variable/cairo/files/cairo-latin-wght-normal.woff2?url';
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -12,46 +10,46 @@ import { I18nextProvider } from 'react-i18next';
 import { SITE } from '@/config/site.config';
 import type { RouterContext } from '@/router';
 import { getFixedT } from '@/shared/lib/i18n/create-i18n';
-import { directionOf, localeFromPath, toLocale } from '@/shared/lib/i18n/languages';
-import { THEME_INIT_SCRIPT } from '@/shared/store/theme-store';
+import { DEFAULT_LOCALE, directionOf, localeFromPath, toLocale } from '@/shared/lib/i18n/languages';
+import { failedMeta, failureOf } from '@/shared/lib/seo/failed-page';
+import { PRELOAD_FONTS } from '@/shared/style/fonts';
+import { THEME_INIT_SCRIPT } from '@/shared/utils/theme';
 import appCss from '@/shared/style/styles.css?url';
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: ({ matches }) => {
     const last = matches.at(-1);
-    const locale = toLocale(localeFromPath(last?.pathname ?? '/'));
-    // An unmatched URL under /ar or /en is marked _notFound on the layout match, a missing article has status notFound.
-    const missing = matches.some(
-      (match) => match.status === 'notFound' || match._notFound === true,
-    );
-    const failed = missing || matches.some((match) => match.status === 'error');
+    const locale = localeFromPath(last?.pathname ?? '/') ?? DEFAULT_LOCALE;
     const t = getFixedT(locale);
-    const failedTitle = missing ? t('error.notFoundTitle') : t('error.errorTitle');
     return {
       meta: [
         { charSet: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: SITE.themeColor },
-        // Real pages set their own title and robots through seo(); a failed page is never indexed.
-        ...(failed
-          ? [{ title: failedTitle }, { name: 'robots', content: 'noindex, nofollow' }]
-          : []),
+        {
+          name: 'theme-color',
+          content: SITE.themeColor.light,
+          media: '(prefers-color-scheme: light)',
+        },
+        {
+          name: 'theme-color',
+          content: SITE.themeColor.dark,
+          media: '(prefers-color-scheme: dark)',
+        },
+        // Real pages set their own title and robots through seo(); a failed page (404, error) is never indexed.
+        ...failedMeta(failureOf(matches), (key) => t(key)),
       ],
       links: [
         { rel: 'stylesheet', href: appCss },
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
         { rel: 'manifest', href: '/site.webmanifest' },
-        // Arabic pages paint Arabic letters plus Latin digits and punctuation: fetch both font files early,
-        // so the text does not shift when they arrive.
-        ...(locale === 'ar'
-          ? [cairoArabicFont, cairoLatinFont].map((href) => ({
-              rel: 'preload',
-              as: 'font',
-              type: 'font/woff2',
-              href,
-              crossOrigin: 'anonymous' as const,
-            }))
-          : []),
+        // The language's own font files, fetched early so the text does not shift when they arrive.
+        ...PRELOAD_FONTS[locale].map((href) => ({
+          rel: 'preload',
+          as: 'font',
+          type: 'font/woff2',
+          href,
+          crossOrigin: 'anonymous' as const,
+        })),
       ],
       scripts: [{ children: THEME_INIT_SCRIPT }],
     };

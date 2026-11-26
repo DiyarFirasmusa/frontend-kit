@@ -1,9 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ServicesPage } from '@/features/website/services';
-import { servicesHead } from '@/features/website/services/services-head';
-import { toLocale } from '@/shared/lib/i18n/languages';
+import { pageHead } from '@/shared/lib/seo/page-head';
 
 export const Route = createFileRoute('/$locale/services')({
-  head: ({ params }) => servicesHead(toLocale(params.locale)),
+  head: ({ params }) => pageHead(params.locale, '/$locale/services'),
   component: ServicesPage,
 });

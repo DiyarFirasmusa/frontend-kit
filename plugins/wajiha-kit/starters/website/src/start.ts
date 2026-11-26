@@ -1,4 +1,5 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from '@tanstack/react-start';
+import { PAGE_SEGMENTS } from '@/config/nav.config';
 import { publicEnv } from '@/shared/env/public-env';
 import { getServerEnv } from '@/shared/server/env.server';
 import {
@@ -23,7 +24,7 @@ const bodyLimitMiddleware = createMiddleware().server(async ({ next, request }) 
 /** Applies the canonical URL redirect and the security headers to every response. */
 const securityMiddleware = createMiddleware().server(async ({ next, request }) => {
   const url = new URL(request.url);
-  const redirectTo = canonicalRedirect(url, request.method);
+  const redirectTo = canonicalRedirect(url, request.method, PAGE_SEGMENTS);
   if (redirectTo !== undefined) {
     return new Response(null, { status: 301, headers: { Location: redirectTo } });
   }

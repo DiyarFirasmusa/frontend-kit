@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { listArticles } from '@/content/articles';
 import { NewsListPage } from '@/features/website/news';
-import { newsHead } from '@/features/website/news/news-head';
-import { toLocale } from '@/shared/lib/i18n/languages';
+import { pageHead } from '@/shared/lib/seo/page-head';
 
 export const Route = createFileRoute('/$locale/news/')({
-  head: ({ params }) => newsHead(toLocale(params.locale)),
+  loader: async ({ params }) => ({ cards: await listArticles(params.locale) }),
+  head: ({ params }) => pageHead(params.locale, '/$locale/news'),
   component: NewsListPage,
 });
