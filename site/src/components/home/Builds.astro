@@ -31,12 +31,12 @@ const { locale } = Astro.props
     {
       showcase.map(({ id, title, text, features, url }, i) => (
         <div class="show-panel" role="tabpanel" tabindex="0" id={`kind-${id}`} aria-labelledby={`tab-${id}`} data-kind={i} data-hidden={i > 0 ? '' : undefined}>
-          <div class="show-words">
-            <h3>{title[locale]}</h3>
-            <p>{text[locale]}</p>
-          </div>
           <div class="show-picture">
             <Board locale={locale} part={0} label={locale === 'ar' ? 'ماذا تبني' : 'What you can build'} tone="ink">
+              <div class="show-caption">
+                <h3>{title[locale]}</h3>
+                <p>{text[locale]}</p>
+              </div>
               <div class="browser" aria-hidden="true">
                 <div class="browser-bar">
                   <span class="chat-lights"><i></i><i></i><i></i></span>

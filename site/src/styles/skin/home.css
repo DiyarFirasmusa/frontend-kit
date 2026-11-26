@@ -276,3 +276,25 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
     mask-image: none;
   }
 }
+
+/* "What can you build": the title and words of each kind sit inside the black block, above the drawing, so the part reads title, lead, board. */
+.show-caption {
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 40rem);
+  margin: 0 auto 1rem;
+  text-align: start;
+}
+
+.show-caption h3 {
+  margin: 0;
+  color: var(--dark-ivory);
+  font-size: 1.125rem;
+}
+
+.show-caption p {
+  margin: 0;
+  color: var(--block-muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
