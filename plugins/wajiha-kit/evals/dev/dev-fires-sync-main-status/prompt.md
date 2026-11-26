@@ -1,6 +1,6 @@
 ---
-name: dev-fires-branch-status
-description: The branch-status skill fires for a realistic request.
+name: dev-fires-sync-main-status
+description: The sync-main skill fires for a realistic request.
 tags: [trigger, skill, dev]
 runs: 3
 max_turns: 8

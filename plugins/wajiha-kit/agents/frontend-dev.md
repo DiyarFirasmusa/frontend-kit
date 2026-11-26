@@ -33,9 +33,9 @@ nothing more.
 1. Read `CLAUDE.md`, every file in `.claude/rules/`, and any structure doc
    `CLAUDE.md` points to.
 2. Load the skills the task needs and the stack fits: `create-component`,
-   `create-hook`, `create-form`, `create-store`, `i18n-conventions`,
-   `tanstack-query-key-conventions` (TanStack Query), `web-*` (a TanStack Start
-   website) or `dash-*` (dashboard). A skill's library and paths are examples:
+   `create-hook` (also the query-key rules, with TanStack Query), `create-form`,
+   `create-store`, `web-*` (a TanStack Start website) or `dash-*` (dashboard).
+   Translations follow `.claude/rules/i18n.md`. A skill's library and paths are examples:
    copy the nearest existing example in the project, and never add a library for it.
 3. Read the files you will touch and the shared pieces you can reuse (shared
    components, hooks, services, constants — `CLAUDE.md` says where).

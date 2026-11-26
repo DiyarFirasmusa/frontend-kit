@@ -15,8 +15,7 @@ Website and dashboard (except the Next.js variant): no Server Components, no `'u
 
 ## TypeScript
 
-- Strict. Never `any` — use `unknown` and narrow. Never `@ts-ignore` /
-  `@ts-expect-error`; fix the type.
+- Strict, with no `any` and no `@ts-ignore` (the bar: `quality-bar.md`). Use `unknown` and narrow.
 - Data from outside the type system (`JSON.parse`, `response.json()`, storage, URL, env) is `unknown` until the project's
   schema library parses it; auth, permission and money responses too, whatever their generated type says. No cast after.
 - Type-only imports use `import type`.

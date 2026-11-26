@@ -1,6 +1,6 @@
 ---
-name: dev-fires-pr-link
-description: The pr-link skill fires for a realistic request.
+name: dev-fires-commit-push-link
+description: The commit-push skill fires for a realistic request.
 tags: [trigger, skill, dev]
 runs: 3
 max_turns: 8

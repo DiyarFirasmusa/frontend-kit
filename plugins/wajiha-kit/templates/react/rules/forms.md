@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/src/**/{forms,form,validations,schemas,fields}/**"
+  - "**/src/**/*{form,Form,schema,validation}*.{js,jsx,ts,tsx,vue,svelte}"
+  - "{components,pages}/**/*{form,Form,schema}*.{js,jsx,ts,tsx,vue,svelte}"
+---
+
 # Forms
 
 Use the form library the project already has (`react-hook-form`, Formik, TanStack Form, native). Do not mix two.

@@ -113,9 +113,9 @@ A feature folder: `index.tsx` (list container, one `useListPage()`), `components
 | ---------------------------------- | ----------------------------------------------------------------- |
 | `commit`, `commit push`, `yes`     | Approval to commit **and** push the task branch (`commit-push`)   |
 | `continue`                         | Resume the last unfinished step; don't restart or re-ask          |
-| `all`, `check all`, `other pages`  | Every occurrence, proven by a final grep (`fix-everywhere`)       |
-| `link`, `link pr`                  | Print the compare link + PR description (`pr-link`)               |
-| `why …?`, `explain`                | Answer only, no edits (`explain`)                                 |
+| `all`, `check all`, `other pages`  | Every occurrence, proven by a final grep                          |
+| `link`, `link pr`                  | Print the compare link + PR description (`commit-push`)           |
+| `why …?`, `explain`                | Answer only, no edits                                             |
 | `fast`                             | Shortest correct path; the gates still run                        |
 | a Figma link                       | Match it exactly (`figma-match`)                                  |
 

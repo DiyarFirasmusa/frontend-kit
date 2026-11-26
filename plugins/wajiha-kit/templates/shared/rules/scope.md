@@ -3,14 +3,21 @@
 These come from the user's own corrections.
 
 - **A question gets an answer, not an edit.** "Why …?", "what …?", "how …?",
-  "explain", "explane", "just read the code": read and explain. Edit only when
-  the message also asks for a change.
+  "explain", "explane", "just read the code": read the code that runs (page,
+  state, data layer, endpoint; on a server-rendered site also the route
+  `loader` and server functions; for "why is it like this", `git log -p
+  --follow` and `git blame`), lead with the answer and `file:line` evidence, and
+  say what is not known. Edit only when the message also asks for a change.
+  A note for the team or backend is written for them: plain and short.
 - **Change means change, not delete.** Asked to change X (its price, label,
   calculation, spacing), keep X and change that part. Removing UI or logic
   needs an explicit ask; when unsure, ask one short question.
 - **"All", "every", "check all", "cheak all", "other pages"** mean every
-  occurrence in the repo. Find them with grep, fix each one on the same branch,
-  and finish with the grep that shows none are left. List the files in the report.
+  occurrence in the repo. Write the pattern in one line and grep every spelling
+  (copy-pasted twins, `e2e/`); list `file:line` before changing, and ask first
+  when there are more than ~15 or one needs a product decision. Fix each one on
+  the same branch, then repeat the grep and show it empty (or each deliberate
+  exception). List the files in the report.
 - **A Figma link is the spec.** Match spacing, size, colour, radius, type and
   states exactly (`figma-match` skill). Don't "improve" a design that has a frame.
 - **Translations ship together.** With i18n, every user-facing string goes into
@@ -24,10 +31,8 @@ These come from the user's own corrections.
 - **Keep the scope.** No drive-by refactors, renames or reformatting outside
   the task. Note anything worth doing separately in the report.
 - **"Nothing needs to change", with the evidence, is a finished task.**
-- **Never touch deploy config** (`.github/`, `deploy/`, the `build` script and
-  any path `CLAUDE.md` protects) unless the user asks for that exact change.
-- **Never test against the live site** ({{LIVE_HOST}}). Use local mocks or
-  UAT ({{UAT_HOST}}).
+- **Deploy config and the live site stay untouched** unless the user asks for
+  that exact change: the Hard rules in `CLAUDE.md`, enforced by the hooks.
 - **Say what's missing from the backend.** When an endpoint, field or behaviour
   is missing or wrong, say so plainly (and offer the `backend-request` skill)
   instead of faking data in the frontend.

@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/src/**/{routes,router,pages}/**"
+  - "**/src/**/*{router,routes,route}*.{js,jsx,ts,tsx,vue,svelte}"
+  - "app/**/*.{js,jsx,ts,tsx}"
+  - "pages/**/*.{js,jsx,ts,tsx,vue,svelte}"
+---
+
 # Routing and navigation
 
 Follow the router the project uses (`stack.router`: Next.js, TanStack Router/Start, React Router/Remix, none). Read the version

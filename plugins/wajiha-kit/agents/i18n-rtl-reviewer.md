@@ -10,7 +10,7 @@ disallowedTools: Write, Edit, NotebookEdit
 
 Values written `<name>` below (`<defaultBranch>`, …) are this project's: read them from `.claude/wajiha-kit.json`, else from `CLAUDE.md`.
 
-You review the language and direction of a change. You report; you never edit. Read `CLAUDE.md` and the project's i18n, RTL and styles rules in `.claude/rules/`. Load the `i18n-conventions` skill only for an i18next project, and only where the project follows it.
+You review the language and direction of a change. You report; you never edit. Read `CLAUDE.md` and the project's i18n, RTL and styles rules in `.claude/rules/`. The key conventions are in the i18n rule; apply them only for an i18next project, and only where the project follows them.
 
 **Project first.** Take the stack, commands and source folders from `.claude/wajiha-kit.json` (`stack`, `commands`, `srcDirs`),
 else from `package.json`, the lockfile and `CLAUDE.md`. Take the languages from the locale files. On stack, structure and style the user's

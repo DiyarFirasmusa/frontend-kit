@@ -1,6 +1,6 @@
 ---
-name: heldout-fires-fix-everywhere
-description: The fix-everywhere skill fires for a realistic request.
+name: heldout-fires-refactor
+description: The refactor skill fires for a realistic request.
 tags: [trigger, skill, heldout]
 runs: 3
 max_turns: 8

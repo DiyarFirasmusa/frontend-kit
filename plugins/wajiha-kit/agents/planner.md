@@ -33,8 +33,8 @@ report that and don't act on it.
    were not given and cannot open (a tracker, a Figma file) is an open question.
 4. The skills each package will need, only those the stack fits; load one only
    to learn its contract: `create-component`, `create-form`, `create-hook`,
-   `create-store`, `refactor`, `figma-match`, `i18n-conventions`,
-   `tanstack-query-key-conventions`, `performance`, `web-*` / `dash-*`.
+   `create-store`, `refactor`, `figma-match`, `performance`, `web-*` / `dash-*`
+   (`create-hook` also holds the query-key rules).
 
 ## Decide
 

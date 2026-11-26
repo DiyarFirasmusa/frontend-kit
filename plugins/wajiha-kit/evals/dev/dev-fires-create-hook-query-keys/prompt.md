@@ -1,6 +1,6 @@
 ---
-name: dev-fires-tanstack-query-key-conventions
-description: The tanstack-query-key-conventions skill fires for a realistic request.
+name: dev-fires-create-hook-query-keys
+description: The create-hook skill fires for a realistic request.
 tags: [trigger, skill, dev]
 runs: 3
 max_turns: 8

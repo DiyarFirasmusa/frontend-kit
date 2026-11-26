@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/src/**/{api,services,queries,hooks,composables,store,stores,state}/**"
+  - "**/src/**/*{query,Query,store,Store,service,Service}*.{js,jsx,ts,tsx,vue,svelte}"
+  - "**/src/**/use-*.{js,jsx,ts,tsx}"
+  - "{hooks,lib,services,store}/**/*.{js,jsx,ts,tsx,vue,svelte}"
+---
+
 # Data and state
 
 Use the data layer the project already has (see `stack.data` in `.claude/wajiha-kit.json`: TanStack Query, SWR,

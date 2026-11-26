@@ -1,6 +1,6 @@
 ---
-name: dev-fires-vercel-react-best-practices
-description: The vercel-react-best-practices skill fires for a realistic request.
+name: dev-fires-performance-rerender
+description: The performance skill fires for a realistic request.
 tags: [trigger, skill, dev]
 runs: 3
 max_turns: 8

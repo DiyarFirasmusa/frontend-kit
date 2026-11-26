@@ -84,8 +84,8 @@ Inside each app the layout rules of its profile apply (`website`: feature folder
 | `commit`, `commit push`, `yes`    | Approval to commit **and** push the task branch (`commit-push`) |
 | `continue`                        | Resume the last unfinished step; don't restart or re-ask        |
 | `all`, `check all`, `other pages` | Every occurrence in the right app, proven by grep               |
-| `link`, `link pr`                 | Print the compare link + PR description (`pr-link`)             |
-| `why …?`, `explain`               | Answer only, no edits (`explain`)                               |
+| `link`, `link pr`                 | Print the compare link + PR description (`commit-push`)         |
+| `why …?`, `explain`               | Answer only, no edits                                           |
 | a Figma link                      | Match it exactly (`figma-match`)                                |
 
 ## Conventions
