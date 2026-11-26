@@ -1,4 +1,5 @@
 import type { UseQueryOptions } from '@tanstack/react-query';
+import type { SupplierListParams } from '@/features/dashboard/suppliers/types/types';
 
 /** Cache window for read-mostly reference lookups (org units, titles, photos). */
 export const REFERENCE_STALE_TIME_MS = 5 * 60 * 1000;
@@ -56,8 +57,10 @@ export const qk = {
   },
   suppliers: {
     all: ['suppliers'] as const,
-    search: (params: unknown) => ['suppliers', 'search', params] as const,
-    list: (params: unknown) => ['suppliers', 'list', params] as const,
+    lists: () => ['suppliers', 'list'] as const,
+    list: (params: SupplierListParams) =>
+      ['suppliers', 'list', params] as const,
+    detail: (id: string) => ['suppliers', 'detail', id] as const,
   },
   workspace: ['workspace'] as const,
   overview: {

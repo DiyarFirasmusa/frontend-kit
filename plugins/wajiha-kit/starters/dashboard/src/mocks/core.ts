@@ -1,35 +1,38 @@
 import { HttpResponse, delay, type JsonBodyType } from 'msw';
 import { type AuditLogResponse } from '@/types/api/audit';
 import { type AuditAction, type AuditEntity } from '@/types/api/enums';
+import type { FieldErrors, PageResponse } from '@/types/api/page';
 /** Shared helpers for the mock backend: URLs, responses, query parsing, audit log writes. */
 import { newId } from './seed/base';
 import { auditLog } from './seed/misc';
 import { ME_USER_ID } from './seed/people';
 
-export function trimBase(value: string | undefined): string {
-  return (value ?? '').trim().replace(/\/+$/, '');
+/**
+ * Handlers match the path on any origin (`*` + path). The same handlers then
+ * serve the browser worker (any VITE_API_BASE_URL), the unit tests
+ * (http://api.test) and the Playwright suite (http://api.e2e.test) without
+ * reading the env, which Playwright's Node runtime does not have.
+ */
+function anyOrigin(path: string): string {
+  return `*${path.startsWith('/') ? '' : '/'}${path}`;
 }
 
-export const API_BASE = trimBase(import.meta.env.VITE_API_BASE_URL);
-export const AUTH_BASE =
-  trimBase(import.meta.env.VITE_AUTH_BASE_URL) || API_BASE;
+/** URL pattern for an endpoint on the API. */
+export const api = (path: string): string => anyOrigin(path);
 
-export function join(base: string, path: string): string {
-  return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
-}
-
-/** Absolute URL on the inventory API (axios joins baseURL + url the same way). */
-export const api = (path: string): string => join(API_BASE, path);
-
-/** Absolute URL on the auth service (requests sent with `authBase: true`). */
-export const authApi = (path: string): string => join(AUTH_BASE, path);
+/** URL pattern for an endpoint on the auth service (same matching rule). */
+export const authApi = (path: string): string => anyOrigin(path);
 
 // ---------------------------------------------------------------------------
 // Response helpers
 // ---------------------------------------------------------------------------
 
-export function wait(): Promise<void> {
-  return delay(150 + Math.floor(Math.random() * 250));
+/** A short random delay in the browser so loading states show; none in Node (unit tests, Playwright routes). */
+export async function wait(): Promise<void> {
+  if (typeof window === 'undefined' || import.meta.env.MODE === 'test') {
+    return;
+  }
+  await delay(150 + Math.floor(Math.random() * 250));
 }
 
 export async function ok(body: JsonBodyType, status = 200): Promise<Response> {
@@ -59,6 +62,35 @@ export async function fail(
   return HttpResponse.json(
     { message: isEnglish(request) ? en : ar },
     { status },
+  );
+}
+
+/**
+ * 422 in the RFC 9457 problem+json shape most OpenAPI backends use: `detail`
+ * is the summary the client toasts, `errors` maps each field to its messages
+ * (the form puts them under the inputs).
+ */
+export async function validationProblem(
+  request: Request,
+  errors: { field: string; ar: string; en: string }[],
+): Promise<Response> {
+  await wait();
+  const english = isEnglish(request);
+  const fieldErrors: FieldErrors = {};
+  for (const error of errors) {
+    fieldErrors[error.field] = [english ? error.en : error.ar];
+  }
+  return HttpResponse.json(
+    {
+      type: 'about:blank',
+      title: english ? 'Validation failed' : 'فشل التحقق',
+      status: 422,
+      detail: english
+        ? 'Some fields need attention'
+        : 'بعض الحقول تحتاج إلى تصحيح',
+      errors: fieldErrors,
+    },
+    { status: 422, headers: { 'Content-Type': 'application/problem+json' } },
   );
 }
 
@@ -139,15 +171,50 @@ export function sameCode(
   return (a ?? '').trim().toLowerCase() === (b ?? '').trim().toLowerCase();
 }
 
-export function paginate<T>(rows: T[], page: number, size: number) {
-  const safeSize = Math.max(1, size);
+/** The page of a list in the Spring Data shape (`page` is 0-based). */
+export function paginate<T>(
+  rows: T[],
+  page: number,
+  size: number,
+): PageResponse<T> & { page: number } {
+  const safeSize = Math.min(200, Math.max(1, size));
+  const safePage = Math.max(0, page);
   return {
-    content: rows.slice(page * safeSize, page * safeSize + safeSize),
-    page,
+    content: rows.slice(safePage * safeSize, safePage * safeSize + safeSize),
+    page: safePage,
+    number: safePage,
     size: safeSize,
     totalElements: rows.length,
     totalPages: Math.ceil(rows.length / safeSize),
   };
+}
+
+/**
+ * Applies `sort=<field>,<asc|desc>` when the field is one the endpoint allows
+ * (an unknown field is ignored, as most backends do).
+ */
+export function sortBy<T>(
+  rows: T[],
+  url: URL,
+  allowed: Record<string, (row: T) => string | number | null>,
+): T[] {
+  const [field = '', direction = 'asc'] = (
+    url.searchParams.get('sort') ?? ''
+  ).split(',');
+  const read = allowed[field];
+  if (!read) {
+    return rows;
+  }
+  const collator = new Intl.Collator('ar', { numeric: true });
+  const sign = direction === 'desc' ? -1 : 1;
+  return rows.toSorted((a, b) => {
+    const left = read(a);
+    const right = read(b);
+    if (typeof left === 'number' && typeof right === 'number') {
+      return (left - right) * sign;
+    }
+    return collator.compare(String(left ?? ''), String(right ?? '')) * sign;
+  });
 }
 
 export const nowIso = (): string => new Date().toISOString();

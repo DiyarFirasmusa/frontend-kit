@@ -1,5 +1,6 @@
 import { HttpResponse, delay, http } from 'msw';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { startSessionSync, stopSessionSync } from '@/api/auth/session-sync';
 import { endpoints } from '@/constants/api';
 import { useAuthStore } from '@/store/auth-store';
 import { signIn } from '@/test/fixtures/auth';
@@ -24,6 +25,10 @@ async function mountProbe() {
   await renderWithRouter(<LogoutProbe latest={latest} />, { path: '/' });
   return latest;
 }
+
+afterEach(() => {
+  stopSessionSync();
+});
 
 describe('useLogout', () => {
   it('clears the local session without waiting for the logout request to settle', async () => {
@@ -86,5 +91,24 @@ describe('useLogout', () => {
 
     expect(useAuthStore.getState().accessToken).toBeNull();
     expect(useAuthStore.getState().refreshToken).toBeNull();
+  });
+
+  it('signs the other tabs out too', async () => {
+    signIn();
+    startSessionSync();
+    const otherTab = new BroadcastChannel('app-session');
+    const received = new Promise<unknown>((resolve) => {
+      otherTab.addEventListener('message', (event: MessageEvent<unknown>) => {
+        resolve(event.data);
+      });
+    });
+    const latest = await mountProbe();
+
+    await act(async () => {
+      await latest.current!();
+    });
+
+    await expect(received).resolves.toEqual({ type: 'signed-out' });
+    otherTab.close();
   });
 });

@@ -1,6 +1,8 @@
 export type ApiErrorBody = {
   message?: unknown;
+  /** RFC 9457 problem+json: `detail` explains, `title` summarises. */
   detail?: unknown;
+  title?: unknown;
   error_description?: unknown;
   en_error?: unknown;
   ar_error?: unknown;

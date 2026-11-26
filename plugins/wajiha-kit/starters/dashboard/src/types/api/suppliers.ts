@@ -1,4 +1,5 @@
-// Generated from docs/api/openapi.json by scripts/gen-api-types.py — do not edit by hand.
+// Hand-written mirror of the demo backend's OpenAPI schemas. With a real spec, generate
+// these instead (for example `npx openapi-typescript docs/api/openapi.json -o src/types/api/schema.ts`).
 export interface SupplierRequest {
   /** max 30 chars */
   code: string;
@@ -31,7 +32,7 @@ export interface SupplierResponse {
   taxNumber: string | null;
   notes: string | null;
   isActive: boolean | null;
-  registered: boolean | null;
+  /** True when documents reference the supplier: the backend refuses to delete it. */
   inUse: boolean | null;
   /** date-time */
   createdAt: string | null;

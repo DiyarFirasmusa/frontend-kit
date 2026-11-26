@@ -1,6 +1,6 @@
 import { type SupplierResponse } from '@/types/api/suppliers';
 /** Suppliers. */
-import { isoDaysAgo, makeId } from './base';
+import { isoDaysAgo, makeId, seedTable } from './base';
 
 // Suppliers
 // ---------------------------------------------------------------------------
@@ -187,8 +187,8 @@ const SUPPLIER_SEEDS: [string, string, string, string, string][] = [
 const INACTIVE_SUPPLIERS = new Set([19, 23, 24]);
 const IDLE_SUPPLIERS = new Set([12, 17, 19, 20, 24]);
 
-export const suppliers: SupplierResponse[] = SUPPLIER_SEEDS.map(
-  ([name, contact, address, domain, notes], i) => ({
+export const suppliers: SupplierResponse[] = seedTable(() =>
+  SUPPLIER_SEEDS.map(([name, contact, address, domain, notes], i) => ({
     id: makeId(0xe0, i + 1),
     code: `SUP-${String(i + 1).padStart(3, '0')}`,
     name,
@@ -201,31 +201,8 @@ export const suppliers: SupplierResponse[] = SUPPLIER_SEEDS.map(
     taxNumber: `TIN-${String(1_004_200 + i * 113)}`,
     notes: notes === '' ? null : notes,
     isActive: !INACTIVE_SUPPLIERS.has(i),
-    registered: true,
     inUse: !IDLE_SUPPLIERS.has(i),
     createdAt: isoDaysAgo(400 - i * 11, 10, 30),
     updatedAt: isoDaysAgo(60 - i, 12, 0),
-  }),
+  })),
 );
-
-/** Names seen on documents but never registered in the supplier master. */
-export const unregisteredSuppliers: SupplierResponse[] = [
-  ['محلات أبو علي للأدوات الاحتياطية', null],
-  ['مكتب النور للطباعة', 'NOOR-PR'],
-  ['معرض الجادرية للأثاث', null],
-].map(([name, code], i) => ({
-  id: makeId(0xe1, i + 1),
-  code,
-  name,
-  contactName: null,
-  phone: null,
-  email: null,
-  address: null,
-  taxNumber: null,
-  notes: null,
-  isActive: true,
-  registered: false,
-  inUse: true,
-  createdAt: null,
-  updatedAt: null,
-}));

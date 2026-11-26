@@ -1,7 +1,8 @@
 /**
  * Every permission string the UI checks, in the `<resource>:<action>` shape the
- * access token's `permissions` claim carries. Group by resource; add a resource
- * here when its feature is added, and mirror the backend's real names.
+ * access token's `permissions` claim carries. Group by resource with the keys
+ * view / create / update / delete; the values must be the backend's exact
+ * strings (when it has one `write` for create and update, map both keys to it).
  *
  *  - Route guard:  requirePermission(PERMS.x.y) in a route's beforeLoad
  *  - JSX:          <Can permission={PERMS.x.y}> or useCan(PERMS.x.y)
@@ -13,32 +14,37 @@
  */
 export const PERMS = {
   warehouse: {
-    read: 'warehouse:read',
-    write: 'warehouse:write',
+    view: 'warehouse:read',
+    create: 'warehouse:create',
+    update: 'warehouse:update',
     delete: 'warehouse:delete',
   },
   supplier: {
-    read: 'supplier:read',
-    write: 'supplier:write',
+    view: 'supplier:read',
+    create: 'supplier:create',
+    update: 'supplier:update',
     delete: 'supplier:delete',
   },
   unitOfMeasure: {
-    read: 'unit_of_measure:read',
-    write: 'unit_of_measure:write',
+    view: 'unit_of_measure:read',
+    create: 'unit_of_measure:create',
+    update: 'unit_of_measure:update',
     delete: 'unit_of_measure:delete',
   },
   itemCategory: {
-    read: 'item_category:read',
-    write: 'item_category:write',
+    view: 'item_category:read',
+    create: 'item_category:create',
+    update: 'item_category:update',
     delete: 'item_category:delete',
   },
   attributeDefinition: {
-    read: 'attribute_definition:read',
-    write: 'attribute_definition:write',
+    view: 'attribute_definition:read',
+    create: 'attribute_definition:create',
+    update: 'attribute_definition:update',
     delete: 'attribute_definition:delete',
   },
   auditLog: {
-    read: 'audit_log:read',
+    view: 'audit_log:read',
   },
 } as const;
 

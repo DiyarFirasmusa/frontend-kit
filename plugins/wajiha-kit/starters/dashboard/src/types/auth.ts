@@ -5,7 +5,8 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   access: string;
-  refresh: string;
+  /** Absent when the backend keeps the refresh token in an HttpOnly cookie. */
+  refresh?: string;
   /** Optional: when absent, read from the access token (`sub`). */
   userId?: string;
   /** Optional: when absent, read from the access token (`tenant_id`). */
@@ -17,7 +18,8 @@ export interface LoginResponse {
 
 export interface RefreshResponse {
   access: string;
-  refresh: string;
+  /** Absent when the backend keeps the refresh token in an HttpOnly cookie. */
+  refresh?: string;
 }
 
 export interface ChangePasswordPayload {

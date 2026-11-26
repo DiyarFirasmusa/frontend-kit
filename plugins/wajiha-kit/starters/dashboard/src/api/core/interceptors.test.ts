@@ -102,6 +102,40 @@ describe.each([
     expect(successToast).toHaveBeenCalledExactlyOnceWith(tt('common.done'));
   });
 
+  it('rejects a success:false envelope with the backend message and one error toast', async () => {
+    const successToast = vi.spyOn(toast, 'success');
+    const errorToast = vi.spyOn(toast, 'error');
+    server.use(
+      http.post(api('/probe'), () =>
+        HttpResponse.json({
+          success: false,
+          message: 'Stock is locked',
+          data: null,
+        }),
+      ),
+    );
+    await expect(client.post('/probe')).rejects.toMatchObject({
+      isAxiosError: true,
+      message: 'Stock is locked',
+      response: { status: 200 },
+    });
+    expect(errorToast).toHaveBeenCalledExactlyOnceWith('Stock is locked');
+    expect(successToast).not.toHaveBeenCalled();
+  });
+
+  it('keeps a success:false envelope quiet when the request is silentError', async () => {
+    const errorToast = vi.spyOn(toast, 'error');
+    server.use(
+      http.get(api('/probe'), () =>
+        HttpResponse.json({ success: false, message: 'nope', data: null }),
+      ),
+    );
+    await expect(
+      client.get('/probe', { silentError: true }),
+    ).rejects.toMatchObject({ message: 'nope' });
+    expect(errorToast).not.toHaveBeenCalled();
+  });
+
   it('prefers backend success text ahead of the fallback, and honours silent', async () => {
     const successToast = vi.spyOn(toast, 'success');
     server.use(

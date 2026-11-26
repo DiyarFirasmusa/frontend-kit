@@ -1,4 +1,5 @@
-// Generated from docs/api/openapi.json by scripts/gen-api-types.py — do not edit by hand.
+// Hand-written mirror of the demo backend's OpenAPI schemas. With a real spec, generate
+// these instead (for example `npx openapi-typescript docs/api/openapi.json -o src/types/api/schema.ts`).
 import type { AttributeDataType } from './enums';
 
 export interface UnitOfMeasureRequest {

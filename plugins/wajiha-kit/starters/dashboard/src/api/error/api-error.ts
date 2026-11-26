@@ -59,7 +59,9 @@ export function extractApiErrorMessage(body: unknown): string | undefined {
     }
   }
 
-  return undefined;
+  // A problem+json `title` ("Conflict") is generic: only when nothing more
+  // specific was sent.
+  return pickString(errorBody.title);
 }
 
 export function displayBackendMessage(raw: unknown): string | undefined {

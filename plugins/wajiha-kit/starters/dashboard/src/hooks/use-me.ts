@@ -8,7 +8,7 @@ export function useMe() {
   const isSignedIn = useAuthStore((s) => Boolean(s.accessToken));
   return useQuery({
     queryKey: qk.me.all,
-    queryFn: fetchMe,
+    queryFn: ({ signal }) => fetchMe({ signal }),
     enabled: isSignedIn,
     ...referenceQueryOptions,
   });

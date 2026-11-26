@@ -83,4 +83,24 @@ export function applyThemeToDocument(
   root.classList.toggle('dark', theme === 'dark');
   root.dataset.preset = preset;
   root.dataset.density = density;
+  syncThemeColor(root);
+}
+
+/**
+ * index.html ships one theme-color per OS scheme; once the app knows the
+ * chosen theme and preset, both follow the page background, so a dark choice
+ * on a light OS does not leave a light browser bar.
+ */
+function syncThemeColor(root: HTMLElement): void {
+  const background = getComputedStyle(root)
+    .getPropertyValue('--background')
+    .trim();
+  if (!background) {
+    return;
+  }
+  for (const meta of document.querySelectorAll<HTMLMetaElement>(
+    'meta[name="theme-color"]',
+  )) {
+    meta.content = background;
+  }
 }

@@ -1,11 +1,15 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { Permission } from '@/constants/permissions';
 
 /** Role that bypasses every permission check. */
 const SUPERADMIN_ROLE = 'SUPERADMIN';
 
-interface PermissionState {
+export interface PermissionSnapshot {
+  roles: readonly string[];
+  permissions: readonly string[];
+}
+
+interface PermissionState extends PermissionSnapshot {
   roles: string[];
   permissions: string[];
   setPermissions: (data: {
@@ -15,35 +19,34 @@ interface PermissionState {
   clear: () => void;
 }
 
-export const usePermissionStore = create<PermissionState>()(
-  persist(
-    (set) => ({
-      roles: [],
-      permissions: [],
-      setPermissions: ({ roles, permissions }) => {
-        set({ roles: roles ?? [], permissions: permissions ?? [] });
-      },
-      clear: () => {
-        set({ roles: [], permissions: [] });
-      },
-    }),
-    {
-      name: 'app-permissions',
-    },
-  ),
-);
+/**
+ * Memory only. Permissions are rebuilt at boot from the refreshed token or
+ * `/me` (see bootstrapSession), so nothing a script could edit in storage
+ * ever decides what the UI shows.
+ */
+export const usePermissionStore = create<PermissionState>()((set) => ({
+  roles: [],
+  permissions: [],
+  setPermissions: ({ roles, permissions }) => {
+    set({ roles: roles ?? [], permissions: permissions ?? [] });
+  },
+  clear: () => {
+    set({ roles: [], permissions: [] });
+  },
+}));
 
-function isGranted(
-  state: { roles?: string[]; permissions?: string[] },
+/** The one place that knows the super-admin rule. */
+export function isGranted(
+  state: PermissionSnapshot,
   permission: Permission,
 ): boolean {
-  /* Persisted state from an older session can lack either list. */
   return (
-    (state.roles ?? []).includes(SUPERADMIN_ROLE) ||
-    (state.permissions ?? []).includes(permission)
+    state.roles.includes(SUPERADMIN_ROLE) ||
+    state.permissions.includes(permission)
   );
 }
 
+/** Reads the store once: for guards and event handlers, never for render. */
 export function hasPermission(permission: Permission): boolean {
   return isGranted(usePermissionStore.getState(), permission);
 }

@@ -1,6 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { cancelPendingRefresh } from '@/api/auth/refresh-token';
+import { postSessionMessage } from '@/api/auth/session-sync';
+import { env } from '@/env';
 import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -16,12 +18,14 @@ export function useLogout() {
     // never be allowed to resolve into a session that was just cleared.
     cancelPendingRefresh();
     clear();
+    // The other tabs of this app sign out too (see bootstrapSession).
+    postSessionMessage({ type: 'signed-out' });
 
     // Best-effort, bounded server-side revocation — errors and timeouts
     // are ignored, the local sign-out already happened above. The access
     // token is passed explicitly since the store no longer holds one.
     // Fired before navigation so a failed navigate can never skip it.
-    if (refreshToken) {
+    if (refreshToken || env.VITE_AUTH_REFRESH === 'cookie') {
       authService.logout(refreshToken, accessToken).catch(() => {
         // no-op
       });

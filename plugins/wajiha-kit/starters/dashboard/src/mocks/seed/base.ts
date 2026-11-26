@@ -76,3 +76,28 @@ export const ALL_PERMISSIONS: string[] = Object.values(PERMS).flatMap((group) =>
 export const ROLES = ['SUPERADMIN'];
 
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Resettable tables
+// ---------------------------------------------------------------------------
+
+const resets: (() => void)[] = [];
+
+/**
+ * An in-memory table the handlers mutate. `resetMockDb()` puts every table
+ * back to its seed, so a Playwright test or a unit test starts from the same
+ * data (the browser gets a fresh copy on every page load anyway).
+ */
+export function seedTable<T>(create: () => T[]): T[] {
+  const rows = create();
+  resets.push(() => {
+    rows.splice(0, rows.length, ...create());
+  });
+  return rows;
+}
+
+export function resetMockDb(): void {
+  for (const reset of resets) {
+    reset();
+  }
+}

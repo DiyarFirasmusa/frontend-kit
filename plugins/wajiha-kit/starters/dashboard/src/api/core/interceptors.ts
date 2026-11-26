@@ -1,4 +1,5 @@
 import {
+  AxiosError,
   isAxiosError,
   isCancel,
   type AxiosResponse,
@@ -9,6 +10,7 @@ import { env } from '@/env';
 import { useAppErrorStore } from '@/store/app-error-store';
 import {
   displayBackendMessage,
+  extractApiErrorMessage,
   resolveApiErrorMessage,
 } from '../error/api-error';
 import { toAppError } from '../error/utils/classify';
@@ -44,8 +46,36 @@ export function prepareApiRequest(config: InternalAxiosRequestConfig) {
   return config;
 }
 
+function isFailedEnvelope(body: unknown): boolean {
+  return (
+    !!body &&
+    typeof body === 'object' &&
+    'success' in body &&
+    body.success === false
+  );
+}
+
+/**
+ * A `{ success: false }` body arrives with a 2xx status. Turn it into the
+ * same rejected AxiosError an HTTP error would be, so it toasts once and the
+ * caller's `onError` runs instead of reading `null` as data.
+ */
+function rejectFailedEnvelope(response: AxiosResponse): never {
+  const error = new AxiosError(
+    extractApiErrorMessage(response.data) ?? 'Request failed',
+    AxiosError.ERR_BAD_RESPONSE,
+    response.config,
+    response.request,
+    response,
+  );
+  return rejectApiError(error);
+}
+
 export function handleApiResponse(response: AxiosResponse) {
   const body: unknown = response.data;
+  if (isFailedEnvelope(body)) {
+    return rejectFailedEnvelope(response);
+  }
   const method = response.config.method?.toLowerCase();
   const isMutation = !!method && !['get', 'head', 'options'].includes(method);
   if (isMutation && !response.config.silent) {

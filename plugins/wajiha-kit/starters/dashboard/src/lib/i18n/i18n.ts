@@ -19,10 +19,12 @@ export const LANG_COOKIE = 'lng';
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 const FALLBACK_LNG = FALLBACK_LANGUAGE;
 
-/* A language missing here is a type error, so config and bundles cannot drift. */
+/* A language missing here is a type error, so config and bundles cannot drift.
+   Copies: i18next merges feature bundles into these objects, and the imported
+   JSON modules must stay as shipped (the locale tests read them). */
 const RESOURCES: Record<SupportedLanguage, { [defaultNS]: object }> = {
-  ar: { [defaultNS]: ar },
-  en: { [defaultNS]: en },
+  ar: { [defaultNS]: structuredClone(ar) },
+  en: { [defaultNS]: structuredClone(en) },
 };
 
 const featureLoaders = import.meta.glob<{ default: Record<string, unknown> }>(

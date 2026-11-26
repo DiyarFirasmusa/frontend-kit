@@ -28,4 +28,32 @@ describe('PERMS', () => {
       }
     }
   });
+
+  it('pins the list, so a rename on either side is noticed', () => {
+    expect(flatten()).toMatchInlineSnapshot(`
+      [
+        "warehouse:read",
+        "warehouse:create",
+        "warehouse:update",
+        "warehouse:delete",
+        "supplier:read",
+        "supplier:create",
+        "supplier:update",
+        "supplier:delete",
+        "unit_of_measure:read",
+        "unit_of_measure:create",
+        "unit_of_measure:update",
+        "unit_of_measure:delete",
+        "item_category:read",
+        "item_category:create",
+        "item_category:update",
+        "item_category:delete",
+        "attribute_definition:read",
+        "attribute_definition:create",
+        "attribute_definition:update",
+        "attribute_definition:delete",
+        "audit_log:read",
+      ]
+    `);
+  });
 });

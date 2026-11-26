@@ -103,4 +103,93 @@ describe('on-demand monitoring', () => {
     expect(event.request.headers).not.toHaveProperty('Authorization');
     expect(event.request.headers).not.toHaveProperty('authorization');
   });
+
+  it('initializes at boot when a DSN is set, before any error', async () => {
+    const { monitoring, sentry } = await load();
+    const previousClient = sentry.getClient();
+    monitoring.startMonitoring(createRouter({ routeTree: createRootRoute() }));
+    await vi.waitFor(() => {
+      expect(sentry.getClient()).not.toBe(previousClient);
+    });
+    const integrations = sentry.getClient()?.getOptions().integrations ?? [];
+    expect(integrations.map((integration) => integration.name)).toContain(
+      'BrowserTracing',
+    );
+  });
+
+  it('does not load the SDK at boot without a DSN', async () => {
+    vi.stubEnv('VITE_SENTRY_DSN', '');
+    const { monitoring, sentry } = await load();
+    const previousClient = sentry.getClient();
+    monitoring.startMonitoring(createRouter({ routeTree: createRootRoute() }));
+    expect(await monitoring.initSentry()).toBeNull();
+    expect(sentry.getClient()).toBe(previousClient);
+  });
+});
+
+describe('scrubbing', () => {
+  it('beforeSend drops credential headers, cookies and query strings', async () => {
+    const { monitoring } = await load();
+    const event = monitoring.scrubEvent({
+      type: undefined,
+      request: {
+        url: 'https://app.example/suppliers?q=Jane%20Doe&token=abc#row-2',
+        query_string: 'q=Jane%20Doe&token=abc',
+        cookies: { session: 'secret' },
+        headers: {
+          Authorization: 'Bearer secret',
+          cookie: 'session=secret',
+          'Set-Cookie': 'session=secret',
+          Accept: 'application/json',
+        },
+      },
+      breadcrumbs: [
+        {
+          category: 'xhr',
+          data: {
+            method: 'GET',
+            url: 'https://api.example/api/suppliers?q=Jane',
+            status_code: 200,
+          },
+        },
+        {
+          category: 'navigation',
+          data: { from: '/suppliers?q=Jane', to: '/suppliers/1?tab=notes' },
+        },
+        { category: 'console', message: 'kept as is' },
+      ],
+    });
+
+    expect(event.request).toEqual({
+      url: 'https://app.example/suppliers',
+      headers: { Accept: 'application/json' },
+    });
+    expect(event.breadcrumbs).toEqual([
+      {
+        category: 'xhr',
+        data: {
+          method: 'GET',
+          url: 'https://api.example/api/suppliers',
+          status_code: 200,
+        },
+      },
+      {
+        category: 'navigation',
+        data: { from: '/suppliers', to: '/suppliers/1' },
+      },
+      { category: 'console', message: 'kept as is' },
+    ]);
+  });
+
+  it('is the beforeSend and beforeBreadcrumb the SDK runs', async () => {
+    const { monitoring, sentry } = await load();
+    await monitoring.initSentry();
+    const options = sentry.getClient()?.getOptions();
+    expect(
+      options?.beforeBreadcrumb?.({
+        category: 'fetch',
+        data: { url: '/api/x?secret=1' },
+      }),
+    ).toEqual({ category: 'fetch', data: { url: '/api/x' } });
+  });
 });

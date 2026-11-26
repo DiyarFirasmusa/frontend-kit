@@ -43,6 +43,7 @@ describe('shared API error resolution', () => {
     { non_field_errors: ['common.errors.conflict'] },
     { errors: { username: ['common.errors.conflict'] } },
     { details: [{ reason: 'common.errors.conflict' }] },
+    { type: 'about:blank', title: 'common.errors.conflict', status: 409 },
   ])(
     'resolves supported bodies through the same translation path: %j',
     (body) => {
@@ -51,6 +52,20 @@ describe('shared API error resolution', () => {
       );
     },
   );
+
+  it('reads a problem+json detail before its generic title', () => {
+    expect(
+      extractApiErrorMessage({
+        type: 'about:blank',
+        title: 'Conflict',
+        status: 409,
+        detail: 'The code is already used',
+      }),
+    ).toBe('The code is already used');
+    expect(
+      extractApiErrorMessage({ title: 'Conflict', message: 'Taken' }),
+    ).toBe('Taken');
+  });
 
   it.each([null, '<html>error</html>', {}, { message: ' ' }])(
     'falls back for missing or unusable backend messages: %j',

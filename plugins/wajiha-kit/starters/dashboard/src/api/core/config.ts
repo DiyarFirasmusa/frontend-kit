@@ -17,6 +17,8 @@ declare module 'axios' {
     keepSession?: boolean;
     /** Route to the auth service base (env.VITE_AUTH_BASE_URL). Removed before axios runs. */
     authBase?: boolean;
+    /** Set by the private client on the one retry after a refresh; never set by callers. */
+    isRetry?: boolean;
   }
 }
 

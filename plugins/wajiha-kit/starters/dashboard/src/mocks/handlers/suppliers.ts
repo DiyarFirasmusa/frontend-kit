@@ -4,7 +4,12 @@ import {
   type SupplierRequest,
   type SupplierResponse,
 } from '@/types/api/suppliers';
-/** Suppliers. */
+/**
+ * Suppliers: the reference mock for a CRUD entity. Copy this file for a new
+ * one. It answers like a typical OpenAPI backend: a paged list
+ * (`?page=0&size=10&sort=name,asc`), 404 for a missing id, 422 problem+json
+ * with field errors, 409 when a rule refuses the action.
+ */
 import {
   api,
   boolParam,
@@ -12,95 +17,104 @@ import {
   intParam,
   matches,
   noContent,
-  normalize,
   notFound,
   nowIso,
   ok,
+  paginate,
   param,
   readJson,
   sameCode,
+  sortBy,
   textParam,
+  validationProblem,
 } from '../core';
 import { newId } from '../seed/base';
-import { suppliers, unregisteredSuppliers } from '../seed/suppliers';
+import { suppliers } from '../seed/suppliers';
+
+const SORTABLE = {
+  code: (row: SupplierResponse) => row.code,
+  name: (row: SupplierResponse) => row.name,
+  createdAt: (row: SupplierResponse) => row.createdAt,
+};
+
+/** A malformed body (readJson returns {}) must fail validation, not throw. */
+function text(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function validate(
+  request: Request,
+  body: SupplierRequest,
+  id: string | null,
+): Promise<Response> | null {
+  const errors: { field: string; ar: string; en: string }[] = [];
+  if (!text(body.code)) {
+    errors.push({ field: 'code', ar: 'الرمز مطلوب', en: 'Code is required' });
+  } else if (
+    suppliers.some((s) => s.id !== id && sameCode(s.code, body.code))
+  ) {
+    errors.push({
+      field: 'code',
+      ar: 'رمز المورد مستخدم مسبقاً',
+      en: 'Supplier code already exists',
+    });
+  }
+  if (!text(body.name)) {
+    errors.push({ field: 'name', ar: 'الاسم مطلوب', en: 'Name is required' });
+  }
+  return errors.length > 0 ? validationProblem(request, errors) : null;
+}
+
+function toRecord(
+  body: SupplierRequest,
+): Omit<SupplierResponse, 'id' | 'inUse' | 'createdAt' | 'updatedAt'> {
+  return {
+    code: text(body.code),
+    name: text(body.name),
+    contactName: body.contactName ?? null,
+    phone: body.phone ?? null,
+    email: body.email ?? null,
+    address: body.address ?? null,
+    taxNumber: body.taxNumber ?? null,
+    notes: body.notes ?? null,
+    isActive: body.isActive ?? true,
+  };
+}
 
 export const supplierHandlers = [
-  // ----- Suppliers -----
   http.get(api(endpoints.suppliers.list), async ({ request }) => {
     const url = new URL(request.url);
     const q = textParam(url, 'q');
     const isActive = boolParam(url, 'isActive');
-    const includeUnregistered = boolParam(url, 'includeUnregistered') === true;
-    const limit = intParam(url, 'limit', 500);
-    const pool = includeUnregistered
-      ? [...suppliers, ...unregisteredSuppliers]
-      : suppliers;
-    const response: SupplierResponse[] = pool
-      .filter(
-        (s) =>
-          matches(
-            q,
-            s.code,
-            s.name,
-            s.contactName,
-            s.phone,
-            s.email,
-            s.address,
-          ) &&
-          (isActive === undefined || s.isActive === isActive),
-      )
-      .toSorted((a, b) => {
-        if (q === '') {
-          return 0;
-        }
-        const aStarts = normalize(a.name ?? '').startsWith(normalize(q))
-          ? 0
-          : 1;
-        const bStarts = normalize(b.name ?? '').startsWith(normalize(q))
-          ? 0
-          : 1;
-        return aStarts - bStarts;
-      })
-      .slice(0, limit);
-    return ok(response);
+    const filtered = suppliers.filter(
+      (s) =>
+        matches(q, s.code, s.name, s.contactName, s.phone, s.email) &&
+        (isActive === undefined || s.isActive === isActive),
+    );
+    return ok(
+      paginate(
+        sortBy(filtered, url, SORTABLE),
+        intParam(url, 'page', 0),
+        intParam(url, 'size', 10),
+      ),
+    );
   }),
 
   http.post(api(endpoints.suppliers.create), async ({ request }) => {
     const body = await readJson<SupplierRequest>(request);
-    if (suppliers.some((s) => sameCode(s.code, body.code))) {
-      return fail(
-        request,
-        409,
-        'رمز المورد مستخدم مسبقاً',
-        'Supplier code already exists',
-      );
+    const invalid = validate(request, body, null);
+    if (invalid) {
+      return invalid;
     }
     const now = nowIso();
     const supplier: SupplierResponse = {
       id: newId(),
-      code: body.code,
-      name: body.name,
-      contactName: body.contactName ?? null,
-      phone: body.phone ?? null,
-      email: body.email ?? null,
-      address: body.address ?? null,
-      taxNumber: body.taxNumber ?? null,
-      notes: body.notes ?? null,
-      isActive: body.isActive ?? true,
-      registered: true,
+      ...toRecord(body),
       inUse: false,
       createdAt: now,
       updatedAt: now,
     };
-    suppliers.push(supplier);
-    // Registering a document-only name removes it from the unregistered list.
-    const pending = unregisteredSuppliers.findIndex(
-      (u) => u.name === supplier.name,
-    );
-    if (pending !== -1) {
-      unregisteredSuppliers.splice(pending, 1);
-      supplier.inUse = true;
-    }
+    suppliers.unshift(supplier);
     return ok(supplier, 201);
   }),
 
@@ -120,30 +134,11 @@ export const supplierHandlers = [
         return notFound(request);
       }
       const body = await readJson<SupplierRequest>(request);
-      if (
-        suppliers.some(
-          (s) => s.id !== supplier.id && sameCode(s.code, body.code),
-        )
-      ) {
-        return fail(
-          request,
-          409,
-          'رمز المورد مستخدم مسبقاً',
-          'Supplier code already exists',
-        );
+      const invalid = validate(request, body, supplier.id);
+      if (invalid) {
+        return invalid;
       }
-      Object.assign(supplier, {
-        code: body.code ?? supplier.code,
-        name: body.name ?? supplier.name,
-        contactName: body.contactName ?? null,
-        phone: body.phone ?? null,
-        email: body.email ?? null,
-        address: body.address ?? null,
-        taxNumber: body.taxNumber ?? null,
-        notes: body.notes ?? null,
-        isActive: body.isActive ?? supplier.isActive,
-        updatedAt: nowIso(),
-      } satisfies Partial<SupplierResponse>);
+      Object.assign(supplier, { ...toRecord(body), updatedAt: nowIso() });
       return ok(supplier);
     },
   ),
@@ -156,6 +151,7 @@ export const supplierHandlers = [
       if (!supplier) {
         return notFound(request);
       }
+      // The UI already blocks this; the backend still decides.
       if (supplier.inUse === true) {
         return fail(
           request,
