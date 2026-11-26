@@ -26,7 +26,10 @@ ENV VITE_SITE_URL=$VITE_SITE_URL \
     VITE_ADMIN_API_MOCK=$VITE_ADMIN_API_MOCK \
     NODE_ENV=production
 COPY . .
-RUN npm run build
+# A build with the mock off ships no mock service worker. The Vite config already drops it; this line is
+# the second lock, so an image can never carry it (the file is inert without a page that registers it).
+RUN npm run build \
+    && if [ "$VITE_ADMIN_API_MOCK" != "true" ]; then rm -f .output/public/mockServiceWorker.js*; fi
 
 FROM node:24-alpine AS runtime
 ENV NODE_ENV=production \

@@ -42,8 +42,9 @@ jobs:
       - run: npm run check:tooling
       # Unit and component tests with the coverage thresholds from vitest.config.ts.
       - run: npm run test:coverage
-      - run: npm run build
-      # The public pages must stay small and free of admin code (budget in scripts/check-bundle-size.mjs).
+      # The same build as "npm run build" plus hidden source maps, which the next step reads.
+      - run: npm run build:proof
+      # Every public page must stay small and load no admin module (budget and allow-list: scripts/check-bundle-size.mjs).
       - run: npm run check:bundle
 
   audit:
