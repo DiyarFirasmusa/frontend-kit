@@ -8,7 +8,7 @@
 
 .make {
   display: grid;
-  grid-template-columns: minmax(14rem, 0.36fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
   align-items: center;
   gap: clamp(1rem, 2.5vw, 2.25rem);
   block-size: 100%;
@@ -16,103 +16,116 @@
   box-sizing: border-box;
 }
 
-/* The three kinds. */
+/* The three kinds, drawn like the two steps of "Start": a numbered square on one thin line, the name and the examples
+   beside it, no box. The picked one's square is filled; the others are outlined. */
 .make-tabs {
+  position: relative;
   display: grid;
-  gap: 0.6rem;
+  gap: 1.25rem;
+}
+
+.make-track {
+  position: absolute;
+  inset-block: 1rem;
+  inset-inline-start: calc(0.9375rem - 1px);
+  inline-size: 2px;
+  border-radius: 2px;
+  background: rgb(var(--ink-rgb) / 0.14);
 }
 
 .make-tab {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 0.85rem;
-  row-gap: 0.2rem;
-  align-items: baseline;
-  overflow: hidden;
-  padding: 1rem 1.1rem 1.15rem;
-  border: 1px solid rgb(var(--ink-rgb) / 0.1);
-  border-radius: 0.9rem;
+  gap: 0.375rem;
+  padding-block: 0;
+  padding-inline: 3.5rem 0.5rem;
+  border: 0;
   background: transparent;
   color: var(--muted);
   font: inherit;
   text-align: start;
   cursor: pointer;
+  transition: color 0.3s;
+}
+
+.make-number {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: grid;
+  place-items: center;
+  inline-size: 1.875rem;
+  block-size: 1.875rem;
+  box-sizing: border-box;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 0.5rem;
+  background: var(--void, #050607);
+  color: var(--accent);
+  font: 600 0.875rem / 1 var(--latin);
+  box-shadow: 0 0 0 5px var(--void, #050607);
   transition:
     background-color 0.3s,
     border-color 0.3s,
     color 0.3s,
-    translate 0.45s var(--spring, ease);
-}
-
-.make-number {
-  grid-row: span 2;
-  color: rgb(var(--ink-rgb) / 0.35);
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
-  transition: color 0.3s;
+    scale 0.45s var(--spring, ease);
 }
 
 .make-name {
-  color: inherit;
-  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
-  font-weight: 650;
-  line-height: 1.2;
+  color: var(--ivory);
+  font-size: var(--sub);
+  font-weight: 500;
+  line-height: 1.35;
+  transition: color 0.3s;
 }
 
 .make-examples {
-  font-size: 0.875rem;
-  line-height: 1.5;
+  color: var(--muted);
+  line-height: 1.55;
 }
 
-.make-tab:hover {
-  border-color: rgb(var(--ink-rgb) / 0.22);
+.make-tab:not([aria-selected='true']) .make-name {
+  color: rgb(var(--ink-rgb) / 0.6);
+}
+
+.make-tab:hover .make-name {
   color: var(--ivory);
-}
-
-.make-tab[aria-selected='true'] {
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-  background: rgb(var(--ink-rgb) / 0.05);
-  color: var(--ivory);
-}
-
-.make-tab.is-dashboard[aria-selected='true'],
-.make-tab.is-fullstack[aria-selected='true'] {
-  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
 }
 
 .make-tab[aria-selected='true'] .make-number {
-  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #141413;
 }
 
-.make-tab.is-dashboard[aria-selected='true'] .make-number,
-.make-tab.is-fullstack[aria-selected='true'] .make-number {
-  color: var(--turq);
+html[data-theme='light'] .make-tab[aria-selected='true'] .make-number {
+  border-color: var(--block-accent);
+  background: var(--block-accent);
+  color: var(--on-accent);
 }
 
 .make-tab:focus-visible {
   outline: 2px solid var(--turq);
-  outline-offset: 2px;
+  outline-offset: 4px;
+  border-radius: 0.5rem;
 }
 
-/* The line at the foot of the picked kind: full when picked by hand, filling while the kinds take turns. */
+/* On the line, from the picked kind's square down: full when picked by hand, filling while the kinds take turns. */
 .make-time {
   position: absolute;
-  inset: auto 0 0;
-  block-size: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--turq));
-  transform: scaleX(0);
-  transform-origin: left;
+  inset-block: 1.875rem -1.25rem;
+  inset-inline-start: calc(0.9375rem - 1px);
+  inline-size: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
 }
 
-[dir='rtl'] .make-time {
-  background: linear-gradient(270deg, var(--accent), var(--turq));
-  transform-origin: right;
+.make-tab:last-child .make-time {
+  inset-block-end: 0;
 }
 
 .make-tab[aria-selected='true'] .make-time {
-  transform: scaleX(1);
+  transform: scaleY(1);
 }
 
 /* The big window: the three are stacked in one place; only the picked one is in the frame. */
@@ -229,12 +242,12 @@
     animation-play-state: running;
   }
 
-  .make-tab:hover {
-    translate: calc(var(--push, 6px) / 2) 0;
+  .make-tab:hover .make-number {
+    scale: 1.1;
   }
 
-  .make-tab:active {
-    scale: 0.98;
+  .make-tab:active .make-number {
+    scale: 0.9;
   }
 
   .make-tab[aria-selected='true'] .make-name {
@@ -263,11 +276,11 @@
 
   @keyframes make-turn {
     from {
-      transform: scaleX(0);
+      transform: scaleY(0);
     }
 
     to {
-      transform: scaleX(1);
+      transform: scaleY(1);
     }
   }
 
@@ -282,7 +295,8 @@
   }
 }
 
-/* A phone: the three names in one row above the window, and the picked kind's examples under it. */
+/* A phone: the three in one row above the window, each a square with its name under it; the picked kind's examples
+   are under the window. */
 @media (width < 56.25rem) {
   #builds .board-main {
     min-block-size: 0;
@@ -295,18 +309,25 @@
 
   .make-tabs {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.4rem;
+    gap: 0.5rem;
+  }
+
+  .make-track {
+    inset-block: calc(0.9375rem - 1px) auto;
+    inset-inline: 16%;
+    inline-size: auto;
+    block-size: 2px;
   }
 
   .make-tab {
-    grid-template-columns: minmax(0, 1fr);
     justify-items: center;
-    padding: 0.7rem 0.4rem 0.85rem;
+    padding: 2.6rem 0.25rem 0;
     text-align: center;
   }
 
   .make-number {
-    grid-row: auto;
+    inset-inline: 0;
+    margin-inline: auto;
   }
 
   .make-name {
@@ -315,6 +336,11 @@
 
   .make-examples {
     display: none;
+  }
+
+  /* Still running, so the kinds keep taking turns, but not drawn. */
+  .make-time {
+    visibility: hidden;
   }
 
   .make-caption {

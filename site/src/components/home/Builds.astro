@@ -23,9 +23,10 @@ const examples = home.builds.examples as Record<string, { en: string; ar: string
     <p>{home.builds.lead[locale]}</p>
   </div>
   <div class="column">
-    <Board locale={locale} part={1} label={home.types[locale]} tone="orange">
+    <Board locale={locale} part={1} label={home.types[locale]} tone="orange" side="ink">
       <div class="make" data-kinds data-alive>
         <div class="make-tabs" role="tablist" aria-label={home.builds.title[locale]}>
+          <i class="make-track" aria-hidden="true"></i>
           {
             showcase.map((kind, i) => (
               <button
@@ -38,7 +39,7 @@ const examples = home.builds.examples as Record<string, { en: string; ar: string
                 tabindex={i === 0 ? 0 : -1}
                 data-kind-tab
               >
-                <span class="make-number" dir="ltr">0{i + 1}</span>
+                <span class="make-number">{i + 1}</span>
                 <span class="make-name">{kind.tab[locale]}</span>
                 <span class="make-examples">{examples[kind.id]?.[locale]}</span>
                 <i class="make-time" aria-hidden="true"></i>
