@@ -303,19 +303,3 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
 .board.no-side {
   grid-template-columns: minmax(0, 1fr);
 }
-
-/* The mark's tall turquoise column stays as a slim spine beside the block and its note bar: colour, no words. */
-@media (width >= 48rem) {
-  .board.no-side {
-    grid-template-columns: minmax(0, 1fr) 0.9rem;
-  }
-
-  .board.no-side::after {
-    content: '';
-    grid-column: 2;
-    grid-row: 2 / 4;
-    border-radius: 0.9rem;
-    background: var(--side);
-  }
-}
-

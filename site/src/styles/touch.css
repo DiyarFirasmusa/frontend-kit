@@ -121,3 +121,55 @@
     translate: none !important;
   }
 }
+
+/* THE POINTER. The grid under the page lights in orange around a mouse pointer, and a press sends a ring from where it
+   landed (pointer.ts sets --px, --py and the rings). */
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) {
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s;
+      background:
+        linear-gradient(rgb(232 100 58 / 0.34) 1px, transparent 1px) 0 0 / 4rem 4rem,
+        linear-gradient(90deg, rgb(232 100 58 / 0.34) 1px, transparent 1px) 0 0 / 4rem 4rem;
+      mask-image: radial-gradient(13rem circle at var(--px, -50%) var(--py, -50%), #000, transparent 72%);
+    }
+
+    html.has-pointer body::before {
+      opacity: 1;
+    }
+  }
+
+  .press-ring {
+    position: fixed;
+    z-index: 100;
+    inline-size: 4.5rem;
+    block-size: 4.5rem;
+    translate: -50% -50%;
+    border: 2px solid var(--accent, #e8643a);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: press-ring-out 0.65s var(--glide) forwards;
+  }
+
+  .press-ring.is-go {
+    border-color: var(--turq, #19abab);
+  }
+
+  @keyframes press-ring-out {
+    from {
+      scale: 0.12;
+      opacity: 0.85;
+    }
+
+    to {
+      scale: 1;
+      opacity: 0;
+    }
+  }
+}

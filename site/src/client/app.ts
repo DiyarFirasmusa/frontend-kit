@@ -8,6 +8,7 @@ import { initLife } from './life.ts'
 import { initBeforeAfter } from './before-after.ts'
 import { initChrome } from './page-chrome.ts'
 import { initShareLink } from './share-link.ts'
+import { initPointer } from './pointer.ts'
 import { initReveal } from './reveal.ts'
 import { initTabs } from './tabs.ts'
 import { initTheme } from './theme.ts'
@@ -38,6 +39,7 @@ document.addEventListener('astro:page-load', () => {
     ['theme', () => initTheme(signal)],
     ['boards', () => initBoardLife(signal)],
     ['reveal', () => initReveal(signal)],
+    ['pointer', () => initPointer(signal)],
   ]
   for (const [name, start] of starters) {
     try {
