@@ -6,13 +6,18 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import viteReact from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv, type PluginOption } from 'vite';
+import { z } from 'zod';
 import { pwaPlugin } from './vite/pwa.ts';
 import { routerOptions } from './vite/router-options.ts';
 import { vendorChunk } from './vite/vendor-chunks.ts';
 
-const pkg = JSON.parse(
-  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
-) as { name: string; version: string };
+const pkg = z
+  .object({ name: z.string(), version: z.string() })
+  .parse(
+    JSON.parse(
+      readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+    ),
+  );
 
 /* Source maps are uploaded to Sentry only when CI provides an auth token; the
    .map files are deleted from dist afterwards so they never ship. */

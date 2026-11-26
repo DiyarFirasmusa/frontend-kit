@@ -6,4 +6,4 @@ export default {
   rules: {
     'header-max-length': [RuleConfigSeverity.Error, 'always', 144],
   },
-} as UserConfig;
+} satisfies UserConfig;
