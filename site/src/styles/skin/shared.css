@@ -14,6 +14,12 @@ html .board .board-main {
   box-shadow: inset 0 0 0 1.5px var(--accent-bright);
 }
 
+/* The note bar under the block is where you go next, so it carries the turquoise: an edge of the same weight as the orange
+   one above it, in dark and in light mode. Orange is what you do, turquoise is where you go and what you get. */
+html .board .board-note {
+  border: 1.5px solid var(--dark-turq);
+}
+
 /* In light mode the words inside the block are light again; the drawings inside it stay light paper windows. */
 html[data-theme='light'] .board .board-main {
   --ink-rgb: var(--dark-ink-rgb);

@@ -326,6 +326,12 @@ html[data-theme='light'] .board .path-stop[data-who='kit'] .path-dot {
     font-size: 1.15rem;
   }
 
+  /* The line runs through the numbers, which sit under the (16rem tall) windows. */
+  #example .path::before,
+  #example .path::after {
+    inset-block-start: calc(16rem + 1.25rem + 0.9375rem);
+  }
+
   #example .path-label strong {
     font-size: 1.125rem;
   }
