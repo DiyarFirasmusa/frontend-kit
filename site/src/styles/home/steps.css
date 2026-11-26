@@ -1,392 +1,412 @@
-/* HOW IT WORKS: a row of four steps, and under it two windows that follow the step you are on: the Claude chat (what you
-   do, orange) and the project (what you get, turquoise). One layer, last (skin-page), so it replaces the older picture rules. */
-.example .hw {
-  display: grid;
-  gap: 1.25rem;
-  padding: 1.25rem clamp(0.75rem, 2vw, 1.5rem) 1.5rem;
-  direction: inherit;
-}
-
-/* ---------- The row of steps ---------- */
-.example .path {
-  --dot: 2rem;
+/* HOW IT WORKS: THE ROAD. Four screens side by side, from the first message to the project you open, with one road between
+   them. Each screen has its number on the road, what it shows, and under it what happens and whose move it is: orange when
+   it is yours, turquoise when it is Claude's. The last screen, the project, is where the road arrives.
+   Layer skin-page (home/index.css), so it replaces the older journey rules without !important. */
+.example .road {
+  --gap: clamp(2.25rem, 3.4vw, 3.75rem);
+  --screen: 17.5rem;
+  --pin: 2.25rem;
+  --dir: 1;
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr);
+  column-gap: var(--gap);
+  row-gap: 2rem;
   margin: 0;
-  padding: 0;
+  padding-block: 1.75rem 1.25rem;
+  padding-inline: calc(var(--gap) / 2 + var(--pin) / 2 + 0.5rem) clamp(1.25rem, 2.4vw, 2.25rem);
   list-style: none;
 }
 
-/* The line runs through the dots; the part you have reached is lit, from orange to turquoise. */
-.example .path::before,
-.example .path::after {
-  content: '';
-  position: absolute;
-  inset-block-start: calc(var(--dot) / 2 - 1px);
-  inset-inline: 12.5%;
-  height: 2px;
-  border-radius: 2px;
+[dir='rtl'] .example .road {
+  --dir: -1;
 }
 
-.example .path::before {
-  background: rgb(var(--ink-rgb) / 0.16);
+/* The older journey line is not used: the road is drawn between the screens. */
+.example .road::before,
+.example .road::after {
+  content: none;
 }
 
-.example .path::after {
-  background: linear-gradient(90deg, var(--accent), var(--turq));
-  transform-origin: left;
-  transform: scaleX(calc(var(--current, 0) / 3));
-  transition: transform 0.6s var(--glide, ease);
-}
-
-[dir='rtl'] .example .path::after {
-  background: linear-gradient(270deg, var(--accent), var(--turq));
-  transform-origin: right;
-}
-
-.example .path-stop {
-  display: block;
+.example .road .path-stop {
+  position: relative;
+  display: grid;
+  grid-template-rows: var(--screen) auto;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
+  gap: 1.1rem;
   padding: 0;
   border: 0;
   background: none;
-  text-align: center;
+  text-align: start;
+  cursor: pointer;
 }
 
-.example .path-pick {
+/* ---------- The screens ---------- */
+.example .road-screen {
   position: relative;
+  block-size: var(--screen);
+  container-type: inline-size;
+}
+
+.example .road-screen > :is(.chat, .browser) {
+  block-size: 100%;
+  border-radius: 0.9rem;
+  transition:
+    translate 0.5s var(--glide, ease),
+    box-shadow 0.4s,
+    opacity 0.4s;
+}
+
+/* The words in a screen follow its width, so a narrow screen still shows its whole step. */
+.example .road-screen .chat {
+  font-size: clamp(0.75rem, calc(100cqw * 0.052), 0.875rem);
+}
+
+.example .road-screen .chat-input {
+  display: none;
+}
+
+.example .road-screen .chat-body {
+  gap: 0.6rem;
+  padding: 0.85rem 0.85rem 0.5rem;
+  overflow: hidden;
+}
+
+/* Answers are small chips in a row. */
+.example .road-screen .ce-ask ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+}
+
+.example .road-screen .ce-ask li {
+  flex: 0 1 auto;
+  padding-block: 0.25rem;
+}
+
+.example .road-screen .ce-tool {
+  padding-block: 0.35rem;
+}
+
+/* The last screen: the project in the browser, and the one question left. */
+.example .road-screen .browser {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--dark-turq) 75%, transparent);
+}
+
+.example .road-screen .browser-page {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  aspect-ratio: auto;
+  padding: 0.75rem;
+  font-size: calc(100cqw * 0.03);
+}
+
+.example .road-save {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border-block-start: 1px solid rgb(var(--ink-rgb) / 0.12);
+  font-size: 0.8125rem;
+}
+
+.example .road-save span {
+  margin-inline-end: auto;
+  color: var(--ivory);
+  font-weight: 600;
+}
+
+.example .road-save :is(b, i) {
+  padding: 0.2rem 0.65rem;
+  border-radius: 0.5rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.example .road-save b {
+  background: var(--turq);
+  color: var(--on-accent, #141413);
+}
+
+.example .road-save i {
+  border: 1px solid rgb(var(--ink-rgb) / 0.2);
+  color: var(--muted);
+}
+
+/* ---------- The road and its numbers ---------- */
+/* Each number is a stop on the road, halfway along the stretch that leads into its screen. */
+.example .road .road-pin {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: calc(var(--screen) / 2 - var(--pin) / 2);
+  inset-inline-start: calc(var(--gap) / -2 - var(--pin) / 2);
   display: grid;
-  justify-items: center;
+  place-items: center;
+  inline-size: var(--pin);
+  block-size: var(--pin);
+  border-radius: 0.6rem;
+  font: 700 0.9375rem/1 var(--code);
+  box-shadow: 0 0 0 4px #0c0c0c;
+  transition:
+    scale 0.4s var(--spring, ease),
+    box-shadow 0.4s;
+}
+
+.example .road .path-stop[data-who='you'] .road-pin {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.example .road .path-stop[data-who='kit'] .road-pin {
+  background: var(--turq);
+  color: var(--on-accent);
+}
+
+/* The road between a screen and the next one: quiet until it is travelled, then orange to turquoise. */
+.example .road .path-stop:not(.is-last)::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-block-start: calc(var(--screen) / 2 - 1px);
+  inset-inline-start: 100%;
+  inline-size: var(--gap);
+  block-size: 2px;
+  background:
+    linear-gradient(90deg, var(--accent), var(--turq)) no-repeat 0 0 / var(--lit, 0%) 100%,
+    repeating-linear-gradient(90deg, rgb(var(--ink-rgb) / 0.3) 0 6px, transparent 6px 11px);
+  transition: --lit 0.6s var(--glide, ease);
+}
+
+[dir='rtl'] .example .road .path-stop:not(.is-last)::after {
+  background:
+    linear-gradient(270deg, var(--accent), var(--turq)) no-repeat 100% 0 / var(--lit, 0%) 100%,
+    repeating-linear-gradient(270deg, rgb(var(--ink-rgb) / 0.3) 0 6px, transparent 6px 11px);
+}
+
+@property --lit {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.example .road .path-stop:is(.is-done, .is-current):not(.is-last)::after {
+  --lit: 100%;
+}
+
+/* ---------- Under each screen: what happens, and whose move it is ---------- */
+.example .road .path-pick {
+  display: grid;
+  justify-items: start;
   align-content: start;
-  gap: 0.4rem;
+  gap: 0.35rem;
   inline-size: 100%;
-  padding: 0 0.5rem 0.5rem;
+  padding: 0 0.25rem 0.25rem;
   border: 0;
   border-radius: 0.5rem;
   background: none;
   color: inherit;
   font: inherit;
-  text-align: inherit;
+  text-align: start;
   cursor: pointer;
 }
 
-.example .path-pick:focus-visible {
+.example .road .path-pick:focus-visible {
   outline: 2px solid var(--turq);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
-.example .path-dot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  inline-size: var(--dot);
-  block-size: var(--dot);
-  border-radius: 0.5rem;
-  font: 700 0.9375rem/1 var(--code);
-  box-shadow: 0 0 0 4px #0c0c0c;
-}
-
-.example .path-stop[data-who='you'] .path-dot {
-  background: var(--accent);
-  color: var(--on-accent);
-}
-
-.example .path-stop[data-who='kit'] .path-dot {
-  background: var(--turq);
-  color: var(--on-accent);
-}
-
-.example .path-pick strong {
+.example .road .path-pick strong {
   color: var(--dark-ivory);
-  font-size: 1.1875rem;
+  font-size: 1.125rem;
   line-height: 1.3;
 }
 
-.example .path-text {
-  max-inline-size: 16rem;
+.example .road .path-text {
   color: var(--block-muted);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   line-height: 1.5;
 }
 
-/* The steps you are not on are quiet; the current one is clear. */
-.example .path-stop:not(.is-current) .path-pick > :not(.path-dot) {
-  opacity: 0.55;
+.example .road-move {
+  display: grid;
+  gap: 0.1rem;
+  margin-block-start: 0.35rem;
+  padding-block-start: 0.6rem;
+  border-block-start: 1px solid rgb(var(--dark-ink-rgb, 241 237 231) / 0.14);
+  color: var(--dark-ivory);
+  font-size: 0.875rem;
+  line-height: 1.45;
 }
 
-.example .path-stop .path-pick > * {
-  transition: opacity 0.35s;
+.example .road-move b {
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 700;
 }
 
-.example .path-stop.is-current .path-dot {
+.example .road .path-stop[data-who='kit'] .road-move b {
+  color: var(--turq);
+}
+
+/* ---------- Where you are on the road ---------- */
+.example .road .path-stop:not(.is-current):not(.is-done) .path-pick {
+  opacity: 0.6;
+}
+
+.example .road .path-pick {
+  transition: opacity 0.4s;
+}
+
+.example .road .path-stop.is-current .road-screen > * {
+  translate: 0 -6px;
+  box-shadow: 0 0 0 1.5px var(--accent-bright);
+}
+
+.example .road .path-stop.is-current:is([data-who='kit'], .is-last) .road-screen > * {
+  box-shadow: 0 0 0 1.5px var(--dark-turq);
+}
+
+.example .road .path-stop.is-current .road-pin {
+  scale: 1.12;
   box-shadow:
     0 0 0 4px #0c0c0c,
     0 0 0 6px var(--dark-ivory);
 }
 
-.example .path-pick:hover > :not(.path-dot) {
-  opacity: 1;
-}
-
-/* ---------- The two windows ---------- */
-.example .hw-stage {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  align-items: stretch;
-}
-
-.example .hw-pane {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 0.6rem;
-  container-type: inline-size;
-}
-
-.example .hw-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  color: var(--block-muted);
-  font: 600 0.8125rem/1.2 var(--code);
-  letter-spacing: 0.06em;
-}
-
-:lang(ar) .example .hw-label {
-  font-family: var(--type);
-  font-size: 0.9375rem;
-  letter-spacing: 0;
-}
-
-.example .hw-label::before {
-  content: '';
-  inline-size: 0.6rem;
-  block-size: 0.6rem;
-  border-radius: 0.15rem;
-  background: var(--accent);
-}
-
-.example .is-get .hw-label::before {
-  background: var(--turq);
-}
-
-.example .hw-pane > :is(.chat, .browser) {
-  min-block-size: 0;
-  border-radius: 1rem;
-}
-
-/* Every step of a window is in the same place; only the current one shows, and the window is as tall as the tallest. */
-.example .hw-steps {
-  display: grid;
-}
-
-.example .hw-step {
-  grid-area: 1 / 1;
-  align-content: start;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.example .hw-step.is-current {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* A step arrives: its window fades in and its lines are dealt out one after another (the dealt keyframes: motion.css). */
+/* ---------- Motion: the screens arrive along the road, one after another, and a traveller walks the current stretch ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  .example .hw-step {
-    translate: 0 0.5rem;
-    transition:
-      opacity 0.35s,
-      translate 0.5s var(--glide),
-      visibility 0s 0.35s;
+  .example .road.has-started .path-stop {
+    animation: road-in 0.7s var(--glide, ease) both;
+    animation-delay: calc(var(--n, 0) * 0.22s);
   }
 
-  .example .hw-step.is-current {
-    translate: none;
-    transition-delay: 0s;
+  .example .road.has-started .path-stop:not(.is-last)::after {
+    animation: road-draw 0.6s var(--glide, ease) both;
+    animation-delay: calc(var(--n, 0) * 0.22s + 0.35s);
   }
 
-  .example .hw-step.is-current .ce,
-  .example .hw-step.is-current .hw-folder,
-  .example .hw-step.is-current .hw-plan,
-  .example .hw-step.is-current .hw-shot,
-  .example .hw-step.is-current .hw-cap {
-    animation: dealt 0.55s var(--glide) both;
+  /* The traveller: a small turquoise dot that walks from this screen to the next, again and again. */
+  .example .road .path-stop.is-current:not(.is-last)::before {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    inset-block-start: calc(var(--screen) / 2 - 4px);
+    inset-inline-start: 100%;
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: 50%;
+    background: var(--turq);
+    box-shadow: 0 0 0 3px #0c0c0c;
+    animation: road-walk 1.5s var(--glide, ease) infinite;
   }
 
-  .example .hw-step.is-current .ce:nth-child(2) { animation-delay: 0.12s; }
-  .example .hw-step.is-current .ce:nth-child(3) { animation-delay: 0.24s; }
-  .example .hw-step.is-current .ce:nth-child(4) { animation-delay: 0.36s; }
-  .example .hw-step.is-current .ce:nth-child(5) { animation-delay: 0.48s; }
-  .example .hw-step.is-current .hw-cap { animation-delay: 0.3s; }
+  html.is-paused .example .road .path-stop::before {
+    animation-play-state: paused;
+  }
+
+  @keyframes road-in {
+    from {
+      opacity: 0;
+      translate: calc(1.5rem * var(--dir)) 0;
+    }
+  }
+
+  @keyframes road-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes road-walk {
+    from {
+      translate: 0 0;
+      opacity: 0;
+    }
+
+    15% {
+      opacity: 1;
+    }
+
+    85% {
+      opacity: 1;
+    }
+
+    to {
+      translate: calc((var(--gap) - 8px) * var(--dir)) 0;
+      opacity: 0;
+    }
+  }
 }
 
-.example .chat-body {
-  display: grid;
-  align-content: start;
-  padding: 1rem 1rem 0.5rem;
+[dir='rtl'] .example .road.has-started .path-stop:not(.is-last)::after {
+  animation-name: road-draw-rtl;
 }
 
-.example .chat-body .hw-step {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 0.75rem;
+@keyframes road-draw-rtl {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
-.example .hw-events {
-  display: grid;
-  gap: 0.75rem;
-  align-content: start;
+/* ---------- Tablets: two by two, the road runs along each row ---------- */
+@media (width < 62rem) {
+  .example .road {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .example .road .path-stop:nth-child(2)::after,
+  .example .road .path-stop:nth-child(2)::before {
+    display: none;
+  }
 }
 
-.example .chat-body .hw-steps {
-  block-size: 100%;
-}
-
-.example .browser {
-  display: flex;
-  flex-direction: column;
-}
-
-.example .browser-page {
-  flex: 1 1 auto;
-  aspect-ratio: auto;
-  padding: 1rem;
-  font-size: calc(100cqw * 0.034);
-}
-
-.example .browser-page .hw-step {
-  display: grid;
-  gap: 0.9rem;
-  align-content: center;
-}
-
-.example .hw-shot {
-  border: 1px solid rgb(var(--ink-rgb) / 0.12);
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-.example .hw-cap {
-  display: grid;
-  gap: 0.15rem;
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.example .hw-cap strong {
-  color: var(--ivory);
-  font-size: 1rem;
-}
-
-/* Under the chat: what you do in this step, set apart from the conversation, with the orange of what you do. */
-.example .hw-cap.is-you {
-  margin-block-start: 0.25rem;
-  padding-block-start: 0.75rem;
-  border-block-start: 1px solid rgb(var(--ink-rgb) / 0.16);
-}
-
-.example .hw-cap.is-you strong {
-  color: var(--accent);
-}
-
-/* An empty folder, and the plan you see before anything is made. */
-.example .hw-folder,
-.example .hw-plan {
-  display: grid;
-  gap: 0.6rem;
-  padding: 1rem;
-  border: 1px dashed rgb(var(--ink-rgb) / 0.3);
-  border-radius: 0.75rem;
-  color: var(--ivory);
-}
-
-.example .hw-folder p,
-.example .hw-plan p {
-  margin: 0;
-  font: 600 0.9375rem/1.3 var(--code);
-}
-
-.example .hw-folder span {
-  color: var(--muted);
-  font: 400 0.875rem/1.4 var(--code);
-}
-
-.example .hw-plan {
-  border-style: solid;
-  border-color: color-mix(in srgb, var(--turq) 55%, transparent);
-}
-
-.example .hw-plan ul {
-  display: grid;
-  gap: 0.35rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.example .hw-plan li {
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
-  font-size: 0.9375rem;
-}
-
-.example .hw-plan li::before {
-  content: '✓';
-  color: var(--turq);
-  font-weight: 700;
-}
-
-/* ---------- Narrow screens: the row is a list, and only the project window stays (the steps say what you do) ---------- */
+/* ---------- Phones: one screen under another, the road runs down beside them through the numbers ---------- */
 @media (width < 48rem) {
-  .example .path {
+  .example .road {
+    --screen: 15rem;
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.25rem;
+    row-gap: 2.5rem;
+    padding-block: 1.25rem 1rem;
+    padding-inline: calc(var(--pin) + 1.25rem) 0.75rem;
   }
 
-  .example .path::before,
-  .example .path::after {
+  .example .road .road-pin {
+    inset-block-start: 0.5rem;
+    inset-inline-start: calc(var(--pin) * -1 - 0.75rem);
+  }
+
+  .example .road .path-stop:nth-child(2)::after {
+    display: block;
+  }
+
+  .example .road .path-stop:not(.is-last)::after {
+    inset-block-start: calc(0.5rem + var(--pin));
+    inset-inline-start: calc(var(--pin) * -0.5 - 0.75rem - 1px);
+    inline-size: 2px;
+    block-size: calc(100% + 2.5rem - var(--pin));
+    background: linear-gradient(var(--accent), var(--turq));
+    opacity: 0.6;
+    animation: none;
+  }
+
+  .example .road .path-stop::before {
     display: none;
   }
-
-  .example .path-pick {
-    grid-template-columns: auto minmax(0, 1fr);
-    justify-items: start;
-    column-gap: 0.75rem;
-    row-gap: 0.15rem;
-    padding: 0.5rem;
-    text-align: start;
-  }
-
-  .example .path-dot {
-    grid-row: 1 / 3;
-    box-shadow: none;
-  }
-
-  .example .path-text {
-    max-inline-size: none;
-  }
-
-  .example .hw-stage {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .example .hw-pane.is-you {
-    display: none;
-  }
-
-  .example .browser-page {
-    font-size: calc(100cqw * 0.036);
-  }
-}
-
-/* Arabic words are not set in the code font (it spaces the letters apart). */
-:lang(ar) .example :is(.hw-folder span, .hw-folder p, .hw-plan p) {
-  font-family: var(--type);
 }

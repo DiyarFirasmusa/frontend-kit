@@ -12,6 +12,7 @@ interface Props {
 }
 
 const { locale } = Astro.props
+const last = w.stops.length - 1
 ---
 
 <section id="example" class="example">
@@ -21,74 +22,39 @@ const { locale } = Astro.props
   </div>
   <div class="column">
     <Board locale={locale} part={1} label={locale === 'ar' ? 'كيف تعمل' : 'How it works'} tone="orange">
-      <div class="hw">
-        <!-- The four steps, in a row. Pointing at one, or pressing it, shows it in both windows below. -->
-        <ol class="path">
-          {
-            w.stops.map((stop, i) => (
-              <li class:list={['path-stop', { 'is-current': i === 0 }]} data-who={i === 2 ? 'kit' : 'you'} style={`--n:${i}`}>
-                <button type="button" class="path-pick">
-                  <span class="path-dot" dir="ltr">{i + 1}</span>
-                  <strong>{stop[locale]}</strong>
-                  <span class="path-text">{w.details[i]![locale]}</span>
-                </button>
-              </li>
-            ))
-          }
-        </ol>
-        <div class="hw-stage" aria-hidden="true">
-          <div class="hw-pane is-you">
-            <p class="hw-label">{h.you[locale]}</p>
-            <ChatWindow locale={locale} label={h.you[locale]}>
-              <div class="hw-steps">
-                {
-                  h.chat.map((events, i) => (
-                    <div class:list={['hw-step', { 'is-current': i === 0 }]} data-step={i}>
-                      <div class="hw-events">{events.map((event) => <ChatEvent locale={locale} event={event} />)}</div>
-                      <p class="hw-cap is-you"><strong>{h.move[locale]}</strong>{h.youDo[i]![locale]}</p>
+      <!-- Four screens side by side, one road between them, from the first message to the project you open. -->
+      <ol class="path road" data-alive>
+        {
+          w.stops.map((stop, i) => (
+            <li class:list={['path-stop', { 'is-current': i === 0, 'is-last': i === last }]} data-who={i === 2 ? 'kit' : 'you'} style={`--n:${i}`}>
+              <span class="road-pin path-dot">{i + 1}</span>
+              <div class="road-screen" aria-hidden="true">
+                {i < last ? (
+                  <ChatWindow locale={locale} label={stop[locale]}>
+                    {h.chat[i]!.map((event) => <ChatEvent locale={locale} event={event} />)}
+                  </ChatWindow>
+                ) : (
+                  <div class="browser">
+                    <div class="browser-bar">
+                      <span class="chat-lights"><i></i><i></i><i></i></span>
+                      <span class="browser-url" dir="ltr">my-shop</span>
                     </div>
-                  ))
-                }
-              </div>
-            </ChatWindow>
-          </div>
-          <div class="hw-pane is-get">
-            <p class="hw-label">{h.get[locale]}</p>
-            <div class="browser">
-              <div class="browser-bar">
-                <span class="chat-lights"><i></i><i></i><i></i></span>
-                <span class="browser-url" dir="ltr">my-shop</span>
-              </div>
-              <div class="browser-page hw-steps">
-                <div class="hw-step is-current" data-step="0">
-                  <div class="hw-folder" dir="ltr">
-                    <p>my-shop/</p>
-                    <span>{h.folder[locale]}</span>
+                    <div class="browser-page">
+                      <Mock kind="dashboard" />
+                    </div>
+                    <p class="road-save"><span>{w.save[locale]}</span><b>{w.yes[locale]}</b><i>{w.no[locale]}</i></p>
                   </div>
-                  <p class="hw-cap"><strong>{h.result[0]!.title[locale]}</strong>{h.result[0]!.text[locale]}</p>
-                </div>
-                <div class="hw-step" data-step="1">
-                  <div class="hw-plan">
-                    <p>{h.plan[locale]}</p>
-                    <ul>
-                      {h.planItems.map((item) => <li>{item[locale]}</li>)}
-                    </ul>
-                  </div>
-                  <p class="hw-cap"><strong>{h.result[1]!.title[locale]}</strong>{h.result[1]!.text[locale]}</p>
-                </div>
-                <div class="hw-step" data-step="2">
-                  <div class="hw-shot"><Mock kind="dashboard" /></div>
-                  <p class="hw-cap"><strong>{h.result[2]!.title[locale]}</strong>{h.result[2]!.text[locale]}</p>
-                </div>
-                <div class="hw-step" data-step="3">
-                  <div class="hw-shot"><Mock kind="dashboard" /></div>
-                  <p class="hw-cap"><strong>{h.result[3]!.title[locale]}</strong>{h.result[3]!.text[locale]}</p>
-                </div>
+                )}
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              <button type="button" class="path-pick">
+                <strong>{stop[locale]}</strong>
+                <span class="path-text">{w.details[i]![locale]}</span>
+                <span class="road-move"><b>{i === 2 ? h.kit[locale] : h.move[locale]}</b>{h.youDo[i]![locale]}</span>
+              </button>
+            </li>
+          ))
+        }
+      </ol>
       <div slot="note">
         <p>{w.noteLine[locale]}</p>
         <a class="hero-start" href="#install">{home.start[locale]}</a>

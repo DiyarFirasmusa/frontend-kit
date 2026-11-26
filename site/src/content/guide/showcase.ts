@@ -264,32 +264,30 @@ export const howWords = {
   /** What the chat window shows at each step. */
   chat: [
     [
-      { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project. First check that jq, Node and git are installed. Then start setting it up.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع. تحقق أولا أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ مثبّتة، ثم ابدأ بتجهيزه.') },
-      { kind: 'tool', text: t('Added the kit’s source', 'أضفت مصدر الإضافة'), mark: 'ok' },
+      { kind: 'user', text: t('Please install the Wajiha Kit plugin for this project.', 'من فضلك ثبّت إضافة Wajiha Kit لهذا المشروع.') },
       { kind: 'tool', text: t('Installed Wajiha Kit', 'ثبّتُّ واجهة'), mark: 'ok' },
     ],
     [
-      { kind: 'claude', text: t('Let’s set up your project. A few quick questions, nothing technical.', 'لنجهز مشروعك. بضعة أسئلة سريعة، ولا شيء تقني.') },
+      { kind: 'claude', text: t('A few quick questions, nothing technical.', 'بضعة أسئلة سريعة، ولا شيء تقني.') },
       { kind: 'ask', question: t('What are we building?', 'ماذا سنبني؟'), options: [t('A dashboard', 'لوحة تحكم'), t('A website', 'موقع'), t('Both', 'الاثنان')], picked: 0 },
     ],
     [
-      { kind: 'claude', text: t('The plan: orders, customers and products, in Arabic and English. Shall I start?', 'الخطة: الطلبات والعملاء والمنتجات، بالعربية والإنجليزية. هل أبدأ؟') },
       { kind: 'user', text: t('Yes, start', 'نعم، ابدأ') },
-      { kind: 'tool', text: t('Made the pages and the sign-in screen', 'أنشأت الصفحات وشاشة الدخول'), mark: 'ok' },
-      { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
-      { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
+      { kind: 'tool', text: t('Made the pages and sign-in', 'أنشأت الصفحات والدخول'), mark: 'ok' },
+      { kind: 'tool', text: t('Tested it: all passed', 'اختبرته: نجح كله'), mark: 'ok' },
     ],
     [
-      { kind: 'claude', text: t('Your dashboard is ready. Open it in your browser and click around.', 'لوحتك جاهزة. افتحها في المتصفح وتصفحها.') },
+      { kind: 'claude', text: t('Your dashboard is ready. Open it and click around.', 'لوحتك جاهزة. افتحها وتصفحها.') },
       { kind: 'ask', question: t('Save this version?', 'هل أحفظ هذه النسخة؟'), options: [t('Yes, save it', 'نعم، احفظها'), t('Not yet', 'ليس الآن')], picked: 0 },
     ],
   ] as import('./chat.ts').ChatEvent[][],
   /** What you do at each step, in one line under the chat. */
   move: t('Your move', 'دورك'),
+  kit: t('Claude’s turn', 'دور Claude'),
   youDo: [
     t('Paste one message into the Claude app.', 'الصق رسالة واحدة في تطبيق Claude.'),
     t('Pick the answers that fit your project.', 'اختر الإجابات التي تناسب مشروعك.'),
-    t('Say yes to the plan, then wait while Claude works.', 'قل نعم للخطة، ثم انتظر بينما يعمل Claude.'),
+    t('Builds the pages, tests them and fixes what fails.', 'يبني الصفحات ويختبرها ويصلح ما يفشل.'),
     t('Read the short report, then choose what to keep.', 'اقرأ التقرير القصير، ثم اختر ما تحتفظ به.'),
   ],
   /** What the project looks like at each step, with one line under it. */
