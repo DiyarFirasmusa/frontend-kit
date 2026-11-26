@@ -64,6 +64,7 @@ const ACTIONS_COLUMN_ID = 'actions';
 interface ColumnLayout {
   align?: ColumnAlign;
   hideBelow?: 'md' | 'lg';
+  primary?: boolean;
 }
 
 const HIDE_BELOW: Record<NonNullable<ColumnLayout['hideBelow']>, string> = {
@@ -84,10 +85,15 @@ function toAriaSort(
   return sorted === 'desc' ? 'descending' : 'none';
 }
 
+/** Below md the primary column takes the leftover width and ellipsizes. */
+const PRIMARY_CLASS =
+  'w-full min-w-28 max-w-0 max-md:truncate md:w-auto md:max-w-none';
+
 function metaClass(id: string, meta: ColumnLayout | undefined): string {
   return cn(
     alignClass(meta?.align),
     meta?.hideBelow ? HIDE_BELOW[meta.hideBelow] : undefined,
+    meta?.primary && PRIMARY_CLASS,
     id === ACTIONS_COLUMN_ID && 'sticky end-0',
   );
 }

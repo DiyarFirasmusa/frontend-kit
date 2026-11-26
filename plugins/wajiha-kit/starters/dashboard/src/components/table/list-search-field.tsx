@@ -29,7 +29,11 @@ function isEditableTarget(target: EventTarget | null): boolean {
   );
 }
 
-/** Toolbar search: icon at the start, "/" shortcut chip at the end. */
+/**
+ * Toolbar search: icon at the start, "/" shortcut chip at the end. Made for a
+ * row (it grows from a 14rem basis); in a column pass
+ * `className="min-w-0 flex-none basis-auto"`, or the basis turns into a height.
+ */
 export function ListSearchField({
   value,
   onChange,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blendOver, contrast, luminance } from './contrast';
+import { blendOver, contrast, luminance, mixOklab } from './contrast';
 import { modeValues } from './generate-css';
 import { PRESETS } from './presets';
 import { TAG_HUES, type Mode } from './types';
@@ -10,7 +10,8 @@ import { TAG_HUES, type Mode } from './types';
  * its cases here without touching this file.
  *
  * Not covered on purpose: --text-inactive (disabled labels are exempt from
- * WCAG 1.4.3). Placeholders and secondary copy use --text-muted, covered below.
+ * WCAG 1.4.3). Placeholders and secondary copy use --text-muted, which is
+ * checked on every surface and on the filled field (`.control`) below.
  */
 
 const SURFACES = [
@@ -34,6 +35,9 @@ const TEXT = [
   'danger',
   'info',
 ] as const;
+
+/** Tokens a placeholder may use: text-inactive is for disabled controls only. */
+const PLACEHOLDER_TOKENS = ['text-muted'] as const;
 
 const TINT_PAIRS = [
   ['primary-light', 'primary-text'],
@@ -89,6 +93,32 @@ describe('design tokens: WCAG AA contrast, every preset', () => {
       }
     },
   );
+
+  it.each(cases)(
+    'placeholder text reaches 4.5:1 on the filled field, in dialogs too ($label)',
+    ({ label, values }) => {
+      // `.control` fills with 4% of the text colour over the surface it sits on.
+      for (const surface of ['surface', 'surface-elevated', 'popover']) {
+        const field = mixOklab(
+          at(values, 'text-primary'),
+          4,
+          at(values, surface),
+        );
+        for (const placeholder of PLACEHOLDER_TOKENS) {
+          expect(
+            contrast(at(values, placeholder), field),
+            `${label}: --${placeholder} on a field over --${surface}`,
+          ).toBeGreaterThanOrEqual(4.5);
+        }
+      }
+    },
+  );
+
+  it('mixes like CSS color-mix in oklab', () => {
+    expect(mixOklab('#000000', 0, '#ffffff')).toBe('#ffffff');
+    expect(mixOklab('#000000', 100, '#ffffff')).toBe('#000000');
+    expect(mixOklab('#111318', 4, '#ffffff')).toBe('#f4f4f4');
+  });
 
   it.each(cases)(
     'text on tinted containers reaches 4.5:1 ($label)',

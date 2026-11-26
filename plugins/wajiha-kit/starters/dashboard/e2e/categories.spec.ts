@@ -68,6 +68,26 @@ test.describe('categories', () => {
     ).toBeVisible();
   });
 
+  test('the tree search box is one field, not an input with a gap below it', async ({
+    page,
+  }) => {
+    await page.goto('/categories');
+    const input = page.getByRole('searchbox');
+    const field = input.locator('..');
+    await expect(input).toBeVisible();
+    const inputBox = await input.boundingBox();
+    const fieldBox = await field.boundingBox();
+    const iconBox = await field.locator('svg').first().boundingBox();
+    if (!inputBox || !fieldBox || !iconBox) {
+      throw new Error('search field has no layout');
+    }
+    expect(fieldBox.height).toBeLessThanOrEqual(inputBox.height + 1);
+    expect(iconBox.y).toBeGreaterThanOrEqual(inputBox.y);
+    expect(iconBox.y + iconBox.height).toBeLessThanOrEqual(
+      inputBox.y + inputBox.height,
+    );
+  });
+
   test('creates a category under the selected parent', async ({ page }) => {
     await page.goto(`/categories?category=${idOf('OFF')}`);
     await page

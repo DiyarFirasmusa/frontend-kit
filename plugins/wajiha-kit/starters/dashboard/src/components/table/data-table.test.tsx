@@ -91,4 +91,23 @@ describe('DataTable', () => {
     expect(screen.getByRole('button', { name: 'Clear filters' })).toBeVisible();
     expect(screen.queryByRole('navigation')).toBeNull();
   });
+
+  it('lets the primary column give way and ellipsize on a phone', () => {
+    const primary = helper.columns([
+      helper.accessor('name', {
+        id: 'name',
+        header: 'Name',
+        meta: { primary: true },
+      }),
+      helper.accessor('id', { header: 'Id', enableSorting: false }),
+    ]);
+    renderTable({ columns: primary });
+
+    const nameCell = screen.getByText('Alpha');
+    expect(nameCell).toHaveClass('max-w-0', 'min-w-28', 'max-md:truncate');
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveClass(
+      'max-w-0',
+    );
+    expect(screen.getByText('a')).not.toHaveClass('max-w-0');
+  });
 });

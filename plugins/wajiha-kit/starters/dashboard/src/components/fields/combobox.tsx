@@ -187,14 +187,14 @@ export function Combobox({
           aria-invalid={invalid}
           className={cn(
             'control justify-between',
-            'data-placeholder:text-text-inactive',
+            'data-placeholder:text-text-muted',
             className,
           )}
         >
           <span
             className={cn(
               'min-w-0 flex-1 truncate text-start',
-              !triggerLabel && 'text-text-inactive',
+              !triggerLabel && 'text-text-muted',
             )}
             title={triggerLabel}
           >

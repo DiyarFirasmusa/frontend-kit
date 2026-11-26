@@ -99,6 +99,28 @@ describe('style conventions', () => {
     expect(offenders).toEqual([]);
   });
 
+  /* --text-inactive is 4.2:1 on the filled field: fine for disabled labels
+     (exempt from WCAG 1.4.3), too faint for a placeholder. */
+  it('colours placeholders with text-muted, never text-inactive', () => {
+    const offenders = files
+      .filter(({ path }) => path.endsWith('.tsx'))
+      .flatMap(({ path, text }) =>
+        classTokens(text)
+          .filter((token) => token.endsWith('placeholder:text-text-inactive'))
+          .map((token) => `${path}: ${token}`),
+      );
+    const triggers = files.filter(({ path }) =>
+      ['components/fields/combobox.tsx', 'components/ui/select.tsx'].includes(
+        path,
+      ),
+    );
+    expect(triggers).toHaveLength(2);
+    expect(
+      triggers.filter(({ text }) => text.includes('text-text-inactive')),
+    ).toEqual([]);
+    expect(offenders).toEqual([]);
+  });
+
   it('has no inline style attributes that set a colour', () => {
     const offenders = files
       .filter(({ path }) => !DATA_COLOUR.has(path))

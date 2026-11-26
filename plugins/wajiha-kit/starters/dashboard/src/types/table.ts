@@ -12,6 +12,12 @@ declare module '@tanstack/react-table' {
     align?: ColumnAlign;
     /** Hidden below this breakpoint (phones keep the key columns). */
     hideBelow?: 'md' | 'lg';
+    /**
+     * The column that gives way on a phone: it takes the width the others
+     * leave and ellipsizes (never below 7rem), so a name is not cut mid-word
+     * by the sticky actions column. The cell content must be able to truncate.
+     */
+    primary?: boolean;
     /** Extra classes on every <td> of the column. */
     cellClassName?: string;
   }

@@ -54,6 +54,29 @@ test.describe('warehouses', () => {
     ).toBeVisible();
   });
 
+  test('on a phone the name ellipsizes beside the actions instead of being cut', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto('/warehouses');
+    const row = page.getByRole('row').nth(1);
+    const name = row.locator('a[href^="/warehouses/"]');
+    await expect(name).toBeVisible();
+
+    expect(
+      await name.evaluate((node) => getComputedStyle(node).textOverflow),
+    ).toBe('ellipsis');
+    const nameBox = await name.boundingBox();
+    const actionsBox = await row.locator('td').last().boundingBox();
+    if (!nameBox || !actionsBox) {
+      throw new Error('row has no layout');
+    }
+    const overlaps =
+      nameBox.x < actionsBox.x + actionsBox.width &&
+      actionsBox.x < nameBox.x + nameBox.width;
+    expect(overlaps).toBe(false);
+  });
+
   test('a filtered view survives a reload', async ({ page }) => {
     await page.goto('/warehouses');
     await page.getByRole('searchbox').fill('WH-KRB');
