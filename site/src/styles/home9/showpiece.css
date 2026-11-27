@@ -1,0 +1,960 @@
+/* THE DETAILED DRAWINGS in "What can you build": a made-up soap shop, its dashboard, and the dashboard changing the
+   shop. Everything is sized in em from the window's width (the page is a container), so it scales as one picture.
+   They play only while their tab is shown and the part is on screen (tabs.ts hides the others, alive.ts sets
+   .is-alive); with less motion they are still. */
+.show-picture::before {
+  content: none;
+}
+
+.browser-page:has(.sp) {
+  padding: 0;
+  container-type: inline-size;
+}
+
+.sp {
+  position: relative;
+  display: flex;
+  block-size: 100%;
+  overflow: hidden;
+  font-size: calc(100cqw * 0.0185);
+  line-height: 1.35;
+  color: #f1ede7;
+  background: #0f0f0e;
+}
+
+.sp small {
+  font-size: 0.8em;
+}
+
+.sp-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 700;
+}
+
+.sp-brand i {
+  inline-size: 1.4em;
+  block-size: 1.4em;
+  border-radius: 0.4em;
+  background: linear-gradient(135deg, #d97757, #f2a183);
+}
+
+/* ---- The shop ---- */
+.sp-site {
+  position: relative;
+  display: grid;
+  flex: 1;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  gap: 1.1em;
+  padding: 1.1em 1.4em;
+  min-inline-size: 0;
+}
+
+.sp-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  padding-block-end: 0.8em;
+  border-block-end: 1px solid rgb(241 237 231 / 0.08);
+}
+
+.sp-links {
+  display: flex;
+  gap: 1.2em;
+  margin-inline-start: auto;
+  color: #bcb8b1;
+}
+
+.sp-cart {
+  position: relative;
+  display: inline-grid;
+}
+
+.sp-cart i {
+  inline-size: 1.3em;
+  block-size: 1.1em;
+  border: 0.15em solid #f1ede7;
+  border-block-start-width: 0.15em;
+  border-radius: 0.15em 0.15em 0.35em 0.35em;
+}
+
+.sp-cart b {
+  position: absolute;
+  inset-block-start: -0.7em;
+  inset-inline-end: -0.8em;
+  display: grid;
+  place-items: center;
+  inline-size: 1.3em;
+  block-size: 1.3em;
+  border-radius: 50%;
+  background: #d97757;
+  color: #141413;
+  font-size: 0.75em;
+}
+
+.sp-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: 1.5em;
+}
+
+.sp-hero-words {
+  display: grid;
+  gap: 0.6em;
+  justify-items: start;
+}
+
+.sp-tag {
+  padding: 0.2em 0.7em;
+  border-radius: 0.4em;
+  background: rgb(25 171 171 / 0.16);
+  color: #19abab;
+  font-size: 0.85em;
+}
+
+.sp-headline {
+  font-size: 2.1em;
+  line-height: 1.15;
+}
+
+.sp-sub {
+  color: #bcb8b1;
+}
+
+.sp-buttons {
+  display: flex;
+  gap: 0.6em;
+  margin-block-start: 0.3em;
+}
+
+.sp-btn {
+  padding: 0.5em 1em;
+  border: 1px solid rgb(241 237 231 / 0.2);
+  border-radius: 0.5em;
+}
+
+.sp-btn.is-main {
+  border-color: transparent;
+  background: #d97757;
+  color: #141413;
+  font-weight: 600;
+}
+
+.sp-hero-picture {
+  position: relative;
+  block-size: 100%;
+  min-block-size: 8em;
+  border-radius: 0.9em;
+  background: radial-gradient(circle at 30% 30%, rgb(25 171 171 / 0.5), transparent 60%), linear-gradient(135deg, #2a2421, #1a1715);
+}
+
+.sp-hero-picture i {
+  position: absolute;
+  inline-size: 38%;
+  aspect-ratio: 3 / 2;
+  border-radius: 0.6em;
+  background: linear-gradient(135deg, #f2a183, #d97757);
+  box-shadow: 0 0.6em 1.2em rgb(0 0 0 / 0.4);
+}
+
+.sp-hero-picture i:nth-child(1) {
+  inset: 22% auto auto 14%;
+  rotate: -8deg;
+}
+
+.sp-hero-picture i:nth-child(2) {
+  inset: 38% auto auto 46%;
+  rotate: 6deg;
+  background: linear-gradient(135deg, #7fd3c9, #19abab);
+}
+
+.sp-hero-picture i:nth-child(3) {
+  inset: 60% auto auto 22%;
+  rotate: -2deg;
+  background: linear-gradient(135deg, #f1ede7, #cfc6b8);
+}
+
+.sp-products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9em;
+}
+
+.sp-product {
+  display: grid;
+  gap: 0.35em;
+  padding: 0.6em;
+  border-radius: 0.7em;
+  background: rgb(241 237 231 / 0.05);
+}
+
+.sp-photo {
+  display: block;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5em;
+  background: linear-gradient(135deg, rgb(217 119 87 / 0.75), rgb(242 161 131 / 0.25));
+}
+
+.sp-product:nth-child(2) .sp-photo {
+  background: linear-gradient(135deg, rgb(242 200 120 / 0.75), rgb(242 161 131 / 0.25));
+}
+
+.sp-product:nth-child(3) .sp-photo {
+  background: linear-gradient(135deg, rgb(90 90 88), rgb(40 40 38));
+}
+
+.sp-stars {
+  color: #f2c46b;
+  letter-spacing: 0.1em;
+  justify-self: start;
+}
+
+.sp-add {
+  justify-self: start;
+  padding: 0.3em 0.7em;
+  border-radius: 0.4em;
+  background: rgb(241 237 231 / 0.1);
+  font-size: 0.85em;
+}
+
+.sp-toast {
+  position: absolute;
+  inset-block-end: 1.2em;
+  inset-inline-start: 50%;
+  --tx: -50%;
+  translate: var(--tx) 0;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  background: #19abab;
+  color: #062a2a;
+  font-weight: 600;
+  opacity: 0;
+}
+
+[dir='rtl'] .sp-toast {
+  --tx: 50%;
+}
+
+.sp-cursor {
+  position: absolute;
+  inline-size: 1.2em;
+  block-size: 1.2em;
+  inset-block-end: 2.4em;
+  inset-inline-start: 6em;
+  background: #f1ede7;
+  clip-path: polygon(0 0, 0 100%, 30% 72%, 50% 100%, 62% 94%, 44% 66%, 82% 66%);
+  opacity: 0;
+}
+
+/* ---- The dashboard ---- */
+.sp-dash {
+  display: flex;
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.sp-side {
+  display: grid;
+  align-content: start;
+  gap: 0.35em;
+  inline-size: 9.5em;
+  padding: 1em 0.7em;
+  border-inline-end: 1px solid rgb(241 237 231 / 0.08);
+  background: #121211;
+}
+
+.sp-side .sp-brand {
+  margin-block-end: 0.8em;
+}
+
+.sp-side-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45em 0.6em;
+  border-radius: 0.45em;
+  color: #bcb8b1;
+}
+
+.sp-side-item.is-on {
+  background: rgb(217 119 87 / 0.16);
+  color: #f2a183;
+}
+
+.sp-side-item b {
+  padding: 0 0.45em;
+  border-radius: 0.4em;
+  background: #d97757;
+  color: #141413;
+  font-size: 0.75em;
+}
+
+.sp-main {
+  display: grid;
+  flex: 1;
+  grid-template-rows: auto auto 1fr;
+  gap: 0.9em;
+  padding: 1em 1.2em;
+  min-inline-size: 0;
+}
+
+.sp-top {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.sp-top > b {
+  font-size: 1.2em;
+}
+
+.sp-search {
+  margin-inline-start: auto;
+  padding: 0.35em 0.8em;
+  border-radius: 0.45em;
+  background: rgb(241 237 231 / 0.06);
+  color: #96938d;
+}
+
+.sp-avatar {
+  inline-size: 1.8em;
+  block-size: 1.8em;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #19abab, #7fd3c9);
+}
+
+.sp-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6em;
+}
+
+.sp-kpis span {
+  display: grid;
+  gap: 0.1em;
+  padding: 0.6em 0.75em;
+  border-radius: 0.6em;
+  background: rgb(241 237 231 / 0.05);
+}
+
+.sp-kpis small {
+  color: #96938d;
+}
+
+.sp-kpis b {
+  justify-self: start;
+  font: 600 1.5em / 1.15 var(--latin);
+}
+
+.sp-kpis em {
+  justify-self: start;
+  color: #19abab;
+  font: normal 500 0.8em var(--code);
+}
+
+.sp-panels {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 0.8em;
+  min-block-size: 0;
+}
+
+.sp-chart,
+.sp-table {
+  display: grid;
+  align-content: start;
+  gap: 0.6em;
+  padding: 0.7em 0.8em;
+  border-radius: 0.6em;
+  background: rgb(241 237 231 / 0.04);
+}
+
+.sp-chart > small,
+.sp-table > small {
+  color: #bcb8b1;
+}
+
+.sp-bars {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.4em;
+  block-size: 7.5em;
+}
+
+.sp-bars span {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: end;
+  gap: 0.3em;
+  block-size: 100%;
+}
+
+.sp-bars i {
+  display: block;
+  block-size: var(--h);
+  border-radius: 0.25em 0.25em 0 0;
+  background: linear-gradient(180deg, #19abab, rgb(25 171 171 / 0.3));
+  transform-origin: bottom;
+}
+
+.sp-bars span:last-child i {
+  background: linear-gradient(180deg, #d97757, rgb(217 119 87 / 0.35));
+}
+
+.sp-bars small {
+  color: #96938d;
+  font-size: 0.7em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sp-row {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.4em 0.5em;
+  border-radius: 0.4em;
+  background: rgb(241 237 231 / 0.04);
+  color: #bcb8b1;
+}
+
+.sp-row code {
+  color: #96938d;
+  font: 0.8em var(--code);
+}
+
+.sp-row b {
+  padding: 0.1em 0.55em;
+  border-radius: 0.4em;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.sp-row .is-ok {
+  background: rgb(25 171 171 / 0.2);
+  color: #5fd0d0;
+}
+
+.sp-row .is-wait {
+  background: rgb(217 119 87 / 0.2);
+  color: #f2a183;
+}
+
+/* ---- Both: the dashboard edits a product, and the shop shows the new name ---- */
+.sp.is-fullstack {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+
+.sp.is-fullstack .sp-site {
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  padding-block-end: 3.5em;
+  border-inline-start: 1px solid rgb(241 237 231 / 0.08);
+}
+
+.sp.is-fullstack .sp-products {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+}
+
+.sp.is-fullstack .sp-product:nth-child(3),
+.sp.is-fullstack .sp-links {
+  display: none;
+}
+
+.sp.is-fullstack .sp-side {
+  inline-size: 7.5em;
+}
+
+.sp-edit {
+  grid-template-rows: auto;
+  align-content: start;
+  gap: 1em;
+}
+
+.sp-edit-title {
+  font-size: 1.2em;
+}
+
+.sp-field {
+  display: grid;
+  gap: 0.35em;
+}
+
+.sp-field small {
+  color: #96938d;
+}
+
+.sp-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.55em 0.75em;
+  border: 1px solid rgb(25 171 171 / 0.6);
+  border-radius: 0.5em;
+  background: rgb(241 237 231 / 0.04);
+}
+
+.sp-input,
+.sp-product.is-edited b {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+}
+
+.sp-old,
+.sp-new {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.sp-new {
+  visibility: hidden;
+}
+
+.sp-caret {
+  grid-area: 1 / 2;
+  align-self: center;
+}
+
+.sp-caret {
+  inline-size: 1px;
+  block-size: 1.1em;
+  margin-inline-start: 0.1em;
+  background: #19abab;
+}
+
+.sp-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  color: #bcb8b1;
+}
+
+.sp-switch i {
+  position: relative;
+  inline-size: 2.2em;
+  block-size: 1.2em;
+  border-radius: 1em;
+  background: #19abab;
+}
+
+.sp-switch i::after {
+  content: '';
+  position: absolute;
+  inset-block: 0.15em;
+  inset-inline-end: 0.15em;
+  inline-size: 0.9em;
+  border-radius: 50%;
+  background: #f1ede7;
+}
+
+.sp-save {
+  justify-self: start;
+  display: grid;
+  padding: 0.5em 1.2em;
+  border-radius: 0.5em;
+  background: #d97757;
+  color: #141413;
+  font-weight: 600;
+}
+
+.sp-save > span {
+  grid-area: 1 / 1;
+}
+
+.sp-save-done {
+  visibility: hidden;
+}
+
+.sp-sync {
+  position: absolute;
+  inset-block-end: 1em;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  padding: 0.4em 0.9em;
+  border: 1px solid rgb(25 171 171 / 0.5);
+  border-radius: 0.5em;
+  background: #0f1817;
+  color: #5fd0d0;
+  white-space: nowrap;
+}
+
+[dir='rtl'] .sp-sync {
+  translate: 50% 0;
+}
+
+/* ---- Motion ---- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Each time a kind is shown, its parts come up one after the other. */
+  .show-panel:not([data-hidden]) :is(.sp-product, .sp-kpis span, .sp-row) {
+    animation: sp-up 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+    animation-delay: calc(var(--i, 0) * 0.1s + 0.1s);
+  }
+
+  .show-panel:not([data-hidden]) .sp-bars i {
+    animation: sp-grow 0.8s cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+    animation-delay: calc(var(--i, 0) * 0.07s + 0.3s);
+  }
+
+  /* The shop: the cursor goes to the first product, presses "add", the cart counts it and a note says so. */
+  .show.is-alive .show-panel:not([data-hidden]) .sp-cursor {
+    animation: sp-cursor 6s ease-in-out infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-product:first-child .sp-add {
+    animation: sp-press 6s ease infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-toast {
+    animation: sp-toast 6s ease infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-cart b {
+    animation: sp-bump 6s ease infinite;
+  }
+
+  /* The dashboard: the newest day keeps growing a little. */
+  .show.is-alive .show-panel:not([data-hidden]) .sp-bars span:last-child i {
+    animation:
+      sp-grow 0.8s cubic-bezier(0.2, 0.9, 0.25, 1.1) 0.72s both,
+      sp-breathe 3s ease-in-out 1.6s infinite;
+  }
+
+  /* Both: the name is changed, saved, and the shop shows it. */
+  .show.is-alive .show-panel:not([data-hidden]) .is-fullstack .sp-old {
+    animation: sp-old 7s steps(1, end) infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .is-fullstack .sp-input .sp-new {
+    animation: sp-new-input 7s steps(1, end) infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .is-fullstack .sp-product .sp-new {
+    animation: sp-new-site 7s steps(1, end) infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .is-fullstack .sp-product.is-edited .sp-old {
+    animation: sp-old-site 7s steps(1, end) infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-save-idle {
+    animation: sp-idle 7s steps(1, end) infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-save-done {
+    animation: sp-done 7s steps(1, end) infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-save {
+    animation: sp-save 7s ease infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-product.is-edited {
+    animation: sp-flash 7s ease infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-sync {
+    animation: sp-sync 7s ease infinite;
+  }
+
+  .show.is-alive .show-panel:not([data-hidden]) .sp-caret {
+    animation: sp-blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes sp-up {
+    from {
+      opacity: 0;
+      transform: translateY(0.8em) scale(0.96);
+    }
+  }
+
+  @keyframes sp-grow {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes sp-breathe {
+    50% {
+      transform: scaleY(1.08);
+    }
+  }
+
+  @keyframes sp-cursor {
+    0%,
+    10% {
+      opacity: 0;
+      transform: translate(6em, -6em);
+    }
+
+    20% {
+      opacity: 1;
+    }
+
+    38% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+
+    44% {
+      transform: translate(0, 0) scale(0.85);
+    }
+
+    50%,
+    80% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+
+    90%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes sp-press {
+    0%,
+    40%,
+    50%,
+    100% {
+      background: rgb(241 237 231 / 0.1);
+      color: #f1ede7;
+    }
+
+    44% {
+      background: #d97757;
+      color: #141413;
+      scale: 0.94;
+    }
+  }
+
+  @keyframes sp-toast {
+    0%,
+    46% {
+      opacity: 0;
+      translate: var(--tx) 0.8em;
+    }
+
+    52%,
+    82% {
+      opacity: 1;
+      translate: var(--tx) 0;
+    }
+
+    90%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes sp-bump {
+    0%,
+    46%,
+    60%,
+    100% {
+      scale: 1;
+    }
+
+    52% {
+      scale: 1.5;
+    }
+  }
+
+  @keyframes sp-old {
+    0% {
+      visibility: visible;
+    }
+
+    25%,
+    100% {
+      visibility: hidden;
+    }
+  }
+
+  @keyframes sp-new-input {
+    0% {
+      visibility: hidden;
+    }
+
+    25%,
+    100% {
+      visibility: visible;
+    }
+  }
+
+  @keyframes sp-old-site {
+    0% {
+      visibility: visible;
+    }
+
+    50%,
+    100% {
+      visibility: hidden;
+    }
+  }
+
+  @keyframes sp-new-site {
+    0% {
+      visibility: hidden;
+    }
+
+    50%,
+    100% {
+      visibility: visible;
+    }
+  }
+
+  @keyframes sp-idle {
+    0% {
+      visibility: visible;
+    }
+
+    40%,
+    92% {
+      visibility: hidden;
+    }
+
+    92.1% {
+      visibility: visible;
+    }
+  }
+
+  @keyframes sp-done {
+    0% {
+      visibility: hidden;
+    }
+
+    40%,
+    92% {
+      visibility: visible;
+    }
+
+    92.1% {
+      visibility: hidden;
+    }
+  }
+
+  @keyframes sp-save {
+    0%,
+    36%,
+    44%,
+    100% {
+      scale: 1;
+      background: #d97757;
+    }
+
+    39% {
+      scale: 0.93;
+    }
+
+    45%,
+    90% {
+      background: #19abab;
+    }
+  }
+
+  @keyframes sp-flash {
+    0%,
+    48%,
+    80%,
+    100% {
+      box-shadow: none;
+    }
+
+    52%,
+    70% {
+      box-shadow: 0 0 0 0.15em #19abab;
+    }
+  }
+
+  @keyframes sp-sync {
+    0%,
+    42%,
+    100% {
+      border-color: rgb(25 171 171 / 0.5);
+      scale: 1;
+    }
+
+    48% {
+      border-color: #5fd0d0;
+      scale: 1.06;
+    }
+  }
+
+  @keyframes sp-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Both: the shop keeps its headline (words only), the form has a description and photos. */
+.sp.is-fullstack .sp-hero {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.sp.is-fullstack .sp-hero-picture,
+.sp.is-fullstack .sp-buttons,
+.sp.is-fullstack .sp-sub {
+  display: none;
+}
+
+.sp.is-fullstack .sp-headline {
+  font-size: 1.5em;
+}
+
+.sp-area {
+  display: grid;
+  gap: 0.45em;
+  padding: 0.7em 0.75em;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 0.5em;
+}
+
+.sp-area i {
+  block-size: 0.45em;
+  border-radius: 0.2em;
+  background: rgb(241 237 231 / 0.18);
+}
+
+.sp-area i:nth-child(2) {
+  inline-size: 85%;
+}
+
+.sp-area i:nth-child(3) {
+  inline-size: 55%;
+}
+
+.sp-thumbs {
+  display: flex;
+  gap: 0.5em;
+}
+
+.sp-thumbs i,
+.sp-thumbs b {
+  inline-size: 3em;
+  aspect-ratio: 1;
+  border-radius: 0.45em;
+  background: linear-gradient(135deg, rgb(217 119 87 / 0.75), rgb(242 161 131 / 0.25));
+}
+
+.sp-thumbs i:nth-child(2) {
+  background: linear-gradient(135deg, #7fd3c9, rgb(25 171 171 / 0.4));
+}
+
+.sp-thumbs b {
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgb(241 237 231 / 0.3);
+  background: none;
+  color: #96938d;
+  font-weight: 400;
+}

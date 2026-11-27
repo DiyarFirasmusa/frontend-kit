@@ -3,7 +3,7 @@ import SectionMark from './SectionMark.astro'
 import { home } from '../../content/home9/home.ts'
 import { showcase } from '../../content/home9/showcase.ts'
 import type { Locale } from '../../content/types.ts'
-import Mock from './Mock.astro'
+import Showpiece from './Showpiece.astro'
 
 interface Props {
   locale: Locale
@@ -42,7 +42,7 @@ const { locale } = Astro.props
                 <span class="browser-url" dir="ltr">{url}</span>
               </div>
               <div class="browser-page">
-                <Mock kind={id} />
+                <Showpiece locale={locale} kind={id} />
               </div>
             </div>
           </div>

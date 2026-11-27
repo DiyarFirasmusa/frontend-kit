@@ -1,0 +1,148 @@
+---
+import { mockWords as m } from '../../content/home9/mock.ts'
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+  kind: string
+}
+
+const { locale, kind } = Astro.props
+const chart = [42, 58, 50, 74, 66, 88, 96]
+// A detailed drawing of each kind of project: a real-looking shop, its dashboard, and the dashboard changing the shop.
+---
+
+<div class:list={['sp', `is-${kind}`]}>
+  {
+    (kind === 'website' || kind === 'fullstack') && (
+      <div class="sp-site">
+        <div class="sp-nav">
+          <span class="sp-brand"><i></i>{m.shop[locale]}</span>
+          <span class="sp-links">{m.nav.map((link) => <span>{link[locale]}</span>)}</span>
+          <span class="sp-cart"><i></i><b dir="ltr">2</b></span>
+        </div>
+        {(kind === 'website' || kind === 'fullstack') && (
+          <div class="sp-hero">
+            <div class="sp-hero-words">
+              <span class="sp-tag">{m.tag[locale]}</span>
+              <b class="sp-headline">{m.headline[locale]}</b>
+              <span class="sp-sub">{m.sub[locale]}</span>
+              <span class="sp-buttons">
+                <span class="sp-btn is-main">{m.shopNow[locale]}</span>
+                <span class="sp-btn">{m.story[locale]}</span>
+              </span>
+            </div>
+            <div class="sp-hero-picture"><i></i><i></i><i></i></div>
+          </div>
+        )}
+        <div class="sp-products">
+          {m.products.map((name, i) => (
+            <span class:list={['sp-product', { 'is-edited': kind === 'fullstack' && i === 0 }]} style={`--i:${i}`}>
+              <i class="sp-photo"></i>
+              <b>
+                {kind === 'fullstack' && i === 0 ? (
+                  <>
+                    <span class="sp-old">{name[locale]}</span>
+                    <span class="sp-new">{m.newName[locale]}</span>
+                  </>
+                ) : (
+                  name[locale]
+                )}
+              </b>
+              <small class="sp-stars" dir="ltr">★★★★★</small>
+              <span class="sp-add">{m.add[locale]}</span>
+            </span>
+          ))}
+        </div>
+        {kind === 'website' && <span class="sp-toast">✓ {m.added[locale]}</span>}
+        {kind === 'website' && <i class="sp-cursor"></i>}
+      </div>
+    )
+  }
+  {
+    (kind === 'dashboard' || kind === 'fullstack') && (
+      <div class="sp-dash">
+        <div class="sp-side">
+          <span class="sp-brand"><i></i></span>
+          {m.side.map((item, i) => (
+            <span class:list={['sp-side-item', { 'is-on': kind === 'dashboard' ? i === 0 : i === 3 }]}>
+              {item[locale]}
+              {i === 1 && <b dir="ltr">14</b>}
+            </span>
+          ))}
+        </div>
+        {kind === 'dashboard' ? (
+          <div class="sp-main">
+            <div class="sp-top">
+              <b>{m.hello[locale]}</b>
+              <span class="sp-search">⌕ {m.search[locale]}</span>
+              <i class="sp-avatar"></i>
+            </div>
+            <div class="sp-kpis">
+              {m.kpis.map(({ label, value, trend }, i) => (
+                <span style={`--i:${i}`}>
+                  <small>{label[locale]}</small>
+                  <b dir="ltr">{value}</b>
+                  <em dir="ltr">{trend}</em>
+                </span>
+              ))}
+            </div>
+            <div class="sp-panels">
+              <div class="sp-chart">
+                <small>{m.chartTitle[locale]}</small>
+                <div class="sp-bars">
+                  {chart.map((h, i) => (
+                    <span style={`--h:${h}%;--i:${i}`}>
+                      <i></i>
+                      <small>{m.week[i]?.[locale]}</small>
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div class="sp-table">
+                <small>{m.latest[locale]}</small>
+                {m.rows.map(({ id, who, what, state, tone }, i) => (
+                  <span class="sp-row" style={`--i:${i}`}>
+                    <code dir="ltr">{id}</code>
+                    <span>{who[locale]}</span>
+                    <span>{what[locale]}</span>
+                    <b class={`is-${tone}`}>{state[locale]}</b>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="sp-main sp-edit">
+            <b class="sp-edit-title">{m.editTitle[locale]}</b>
+            <span class="sp-field">
+              <small>{m.nameLabel[locale]}</small>
+              <span class="sp-input">
+                <span class="sp-old">{m.products[0]![locale]}</span>
+                <span class="sp-new">{m.newName[locale]}</span>
+                <i class="sp-caret"></i>
+              </span>
+            </span>
+            <span class="sp-field">
+              <small>{m.descLabel[locale]}</small>
+              <span class="sp-area"><i></i><i></i><i></i></span>
+            </span>
+            <span class="sp-field">
+              <small>{m.photoLabel[locale]}</small>
+              <span class="sp-thumbs"><i></i><i></i><b>+</b></span>
+            </span>
+            <span class="sp-switch">
+              <i></i>
+              {m.inStock[locale]}
+            </span>
+            <span class="sp-save">
+              <span class="sp-save-idle">{m.save[locale]}</span>
+              <span class="sp-save-done">✓ {m.saved[locale]}</span>
+            </span>
+          </div>
+        )}
+      </div>
+    )
+  }
+  {kind === 'fullstack' && <span class="sp-sync">⟷ {m.live[locale]}</span>}
+</div>
