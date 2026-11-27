@@ -1,0 +1,41 @@
+/* LIGHT MODE for the version 9 home page. The page turns to paper and ink; the drawings of the product (the Claude
+   chat, the browser windows, the comparison) stay dark, like screenshots laid on paper, so they read as the real app.
+   Only the tokens change here, then the few places that wrote a dark colour by hand. */
+html[data-theme='light'] {
+  color-scheme: light;
+  --white: #141413;
+  --void: #fffdf9;
+  --raised: #f4efe6;
+  --ivory: #141413;
+  --muted: #4f4c47;
+  --faint: #6f6b65;
+  --line: rgb(20 20 19 / 0.16);
+  --accent: #c4542e;
+  --accent-soft: rgb(196 84 46 / 0.12);
+  --amber: #b4502c;
+  --sand: #9c4626;
+  --teal: #141413;
+  --turq: #0b7f7f;
+  --turq-deep: #006c6d;
+  --turq-soft: rgb(11 127 127 / 0.12);
+}
+
+/* The drawings of the product keep the dark palette. */
+html[data-theme='light'] :is(.chat, .browser, .ba) {
+  color-scheme: dark;
+  --white: #fff;
+  --void: #050607;
+  --raised: #0d0e10;
+  --ivory: #f1ede7;
+  --muted: #bcb8b1;
+  --faint: #96938d;
+  --line: rgb(241 237 231 / 0.18);
+  --accent: #d97757;
+  --accent-soft: rgb(217 119 87 / 0.16);
+  --amber: #f2a183;
+  --sand: #b85f3f;
+  --teal: #f1ede7;
+  --turq: #19abab;
+  --turq-soft: rgb(25 171 171 / 0.16);
+  color: var(--ivory);
+}

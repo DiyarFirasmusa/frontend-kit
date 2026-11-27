@@ -82,7 +82,7 @@
 }
 
 .show-words h3 {
-  color: #fff;
+  color: var(--white, #fff);
   font-size: clamp(1.375rem, 1rem + 0.9vw, 1.875rem);
   line-height: 1.15;
 }
@@ -515,7 +515,7 @@
 }
 
 .path-label strong {
-  color: #fff;
+  color: var(--white, #fff);
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.35;
@@ -764,7 +764,7 @@
 }
 
 .start-line h3 {
-  color: #fff;
+  color: var(--white, #fff);
   font-size: var(--sub);
   font-weight: 500;
   line-height: 1.35;
@@ -1081,7 +1081,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #fff;
+  color: var(--white, #fff);
   font-weight: 500;
 }
 
@@ -1511,7 +1511,7 @@
   border: 1px solid rgb(255 255 255 / 0.5);
   border-radius: 999px;
   background: rgb(20 20 19 / 0.92);
-  color: #fff;
+  color: var(--white, #fff);
   font-size: 0.9375rem;
   font-weight: 600;
   white-space: nowrap;
@@ -1563,7 +1563,7 @@
 
 .dash-side .is-on {
   background: rgb(25 171 171 / 0.16);
-  color: #fff;
+  color: var(--white, #fff);
 }
 
 .dash-main {
@@ -1618,7 +1618,7 @@
 }
 
 .dash-stats b {
-  color: #fff;
+  color: var(--white, #fff);
   font: 600 1.5em / 1.1 var(--latin);
 }
 

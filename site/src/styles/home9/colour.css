@@ -81,14 +81,14 @@ body::after {
 }
 
 .section-head h2 {
-  background: linear-gradient(90deg, #fff 60%, var(--amber));
+  background: linear-gradient(90deg, var(--white, #fff) 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 [dir='rtl'] .section-head h2 {
-  background: linear-gradient(270deg, #fff 60%, var(--amber));
+  background: linear-gradient(270deg, var(--white, #fff) 60%, var(--amber));
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -141,7 +141,7 @@ body::after {
 
 .top-nav a[aria-current],
 .menu nav [aria-current] {
-  color: #fff;
+  color: var(--white, #fff);
   text-decoration-thickness: 2px;
 }
 
@@ -154,7 +154,7 @@ body::after {
 
 .top-docs:hover,
 .top-docs[aria-current] {
-  color: #fff;
+  color: var(--white, #fff);
 }
 
 .language:hover {
@@ -216,7 +216,7 @@ body::after {
 
   .top-nav a:hover {
     background: rgb(241 237 231 / 0.08);
-    color: #fff;
+    color: var(--white, #fff);
   }
 
   .top-nav a[aria-current] {
@@ -326,7 +326,7 @@ body::after {
 
   .top-nav a:hover,
   .top-nav a[aria-current] {
-    color: #fff;
+    color: var(--white, #fff);
   }
 
   .top-nav a:hover::after,
@@ -371,7 +371,7 @@ body::after {
 
 /* The globe wears the system's orange, like the rest of the header. */
 .language {
-  color: #fff;
+  color: var(--white, #fff);
   transition:
     background-color 0.3s,
     border-color 0.3s;
