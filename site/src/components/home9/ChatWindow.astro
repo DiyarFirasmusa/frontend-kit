@@ -12,7 +12,7 @@ interface Props {
 const { locale, label, live = false } = Astro.props
 ---
 
-<figure class:list={['chat', { live }]} aria-label={label} data-live={live ? '' : undefined}>
+<figure class:list={['chat', { live }]} aria-label={label} data-live={live ? '' : undefined} data-tilt={live ? '' : undefined}>
   <div class="chat-bar" aria-hidden="true">
     <span class="chat-lights"><i></i><i></i><i></i></span>
     <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>

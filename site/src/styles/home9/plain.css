@@ -26,8 +26,25 @@
   background: none;
 }
 
-/* No coloured light behind the page either (turquoise from the top, orange from below). */
+/* No coloured light behind the page either (turquoise from the top, orange from below). The same layer carries the
+   orange grid that lights around a mouse pointer (pointer.ts sets --px and --py), so it is that and nothing else. */
 body::before,
 [dir='rtl'] body::before {
   background: none;
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  body::before,
+  [dir='rtl'] body::before {
+    opacity: 0;
+    transition: opacity 0.4s;
+    background:
+      linear-gradient(rgb(232 100 58 / 0.34) 1px, transparent 1px) 0 0 / 4rem 4rem,
+      linear-gradient(90deg, rgb(232 100 58 / 0.34) 1px, transparent 1px) 0 0 / 4rem 4rem;
+    mask-image: radial-gradient(13rem circle at var(--px, -50%) var(--py, -50%), #000, transparent 72%);
+  }
+
+  html.has-pointer body::before {
+    opacity: 1;
+  }
 }

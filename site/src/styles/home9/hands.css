@@ -1,0 +1,55 @@
+/* THE PAGE ANSWERS THE HAND (2026-11-27): windows lean toward the mouse (tilt.ts sets --rx and --ry on [data-tilt]),
+   buttons lift when pointed at and sink when pressed, the how-it-works windows rise when pointed at, and the cards of
+   what you get lift. All of it waits for the visitor's own motion setting. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-tilt] {
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1);
+  }
+
+  :is(.hero-start, .start-copy, .show-tabs button, .hero-audience a, .top-install) {
+    transition:
+      translate 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.3),
+      scale 0.25s cubic-bezier(0.2, 0.9, 0.25, 1.3),
+      background-color 0.25s,
+      color 0.25s,
+      border-color 0.25s;
+  }
+
+  :is(.hero-start, .start-copy, .hero-audience a):hover {
+    translate: 0 -2px;
+  }
+
+  :is(.hero-start, .start-copy, .show-tabs button, .hero-audience a, .top-install):active {
+    scale: 0.95;
+  }
+
+  .path-stop .path-picture {
+    transition:
+      translate 0.45s cubic-bezier(0.2, 0.9, 0.25, 1.2),
+      border-color 0.3s,
+      box-shadow 0.3s;
+  }
+
+  .path-stop:hover .path-picture {
+    translate: 0 -6px;
+    border-color: rgb(217 119 87 / 0.5);
+    box-shadow: 0 1.25rem 2.5rem -1.5rem rgb(217 119 87 / 0.45);
+  }
+
+  .path-stop:hover .path-dot {
+    scale: 1.12;
+  }
+
+  .path-dot {
+    transition: scale 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.4);
+  }
+
+  .ba-results li {
+    transition: translate 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.3);
+  }
+
+  .ba-results li:hover {
+    translate: 0 -2px;
+  }
+}
