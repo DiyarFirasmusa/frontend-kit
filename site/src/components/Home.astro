@@ -1,14 +1,15 @@
 ---
+import '../styles/home9/index.css'
 import { content } from '../content/index.ts'
 import type { Locale } from '../content/types.ts'
-// The home page's own styles; every page's styles come with Layout. Cascade layers (styles/site.css) set the order.
-import '../styles/home/index.css'
 import Layout from '../layouts/Layout.astro'
 import type { Route } from '../lib/routes.ts'
 import Header from './Header.astro'
-import Example from './home/Example.astro'
-import GetIt from './home/GetIt.astro'
-import Hero from './home/Hero.astro'
+import Builds from './home9/Builds.astro'
+import Compare from './home9/Compare.astro'
+import Example from './home9/Example.astro'
+import GetIt from './home9/GetIt.astro'
+import Hero from './home9/Hero.astro'
 import SiteFooter from './SiteFooter.astro'
 
 interface Props {
@@ -24,7 +25,9 @@ const route: Route = { kind: 'home' }
   <Header locale={locale} route={route} />
   <main id="content" class="home" tabindex="-1" transition:name="page">
     <Hero locale={locale} />
+    <Builds locale={locale} />
     <Example locale={locale} />
+    <Compare locale={locale} />
     <GetIt locale={locale} />
   </main>
   <SiteFooter locale={locale} />

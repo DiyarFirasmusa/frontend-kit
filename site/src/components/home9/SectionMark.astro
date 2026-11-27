@@ -1,0 +1,28 @@
+---
+// The mark's four blocks, one for each part of the home page. The block of the part you are reading shows in its own colour,
+// the others stay dim: as you go down the page the kit's mark is put together, one block at a time.
+import type { Locale } from '../../content/types.ts'
+
+interface Props {
+  locale: Locale
+  /** 0 to 3: the top bar, the orange block, the tall turquoise column, the bottom bar. */
+  part: -1 | 0 | 1 | 2 | 3
+  label: string
+}
+
+const { part, label } = Astro.props
+const blocks = [
+  { x: 5, y: 5, w: 54, h: 12, fill: '#f1ede7' },
+  { x: 5, y: 21, w: 36, h: 20, fill: '#d97757' },
+  { x: 45, y: 21, w: 14, h: 38, fill: '#19abab' },
+  { x: 5, y: 45, w: 36, h: 14, fill: '#f1ede7' },
+]
+---
+
+<p class="eyebrow">
+  <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
+    {blocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill={i === part || part === -1 ? b.fill : 'rgb(241 237 231 / 0.3)'} />)}
+  </svg>
+  <span class="eyebrow-count" dir="ltr">{part + 1}/4</span>
+  <span class="eyebrow-label">{label}</span>
+</p>

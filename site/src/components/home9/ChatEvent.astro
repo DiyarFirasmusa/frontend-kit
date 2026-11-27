@@ -1,0 +1,72 @@
+---
+import type { ChatEvent } from '../../content/home9/chat.ts'
+import type { Locale } from '../../content/types.ts'
+import Mock from './Mock.astro'
+
+interface Props {
+  locale: Locale
+  event: ChatEvent
+}
+
+const { locale, event } = Astro.props
+const say = (text: string | { en: string; ar: string } | undefined) => (typeof text === 'string' ? text : text?.[locale])
+---
+
+{
+  event.kind === 'user' && (
+    <div class="ce ce-user" data-ev="user">
+      <p class:list={{ 'is-command': event.command }} dir={event.command ? 'ltr' : 'auto'} data-say>
+        {say(event.text)}
+      </p>
+    </div>
+  )
+}
+{
+  event.kind === 'claude' && (
+    <div class="ce ce-claude" data-ev="claude">
+      <i class="ce-spark" aria-hidden="true">✻</i>
+      <p>{say(event.text)}</p>
+    </div>
+  )
+}
+{
+  event.kind === 'tool' && (
+    <div class:list={['ce ce-tool', event.mark && `is-${event.mark}`]} data-ev="tool">
+      <i class="ce-tool-icon" aria-hidden="true">{event.mark === 'bad' ? '✕' : '✓'}</i>
+      <p>
+        {say(event.text)}
+        {event.detail && <small>{say(event.detail)}</small>}
+      </p>
+      <i class="ce-chevron" aria-hidden="true">›</i>
+    </div>
+  )
+}
+{
+  event.kind === 'ask' && (
+    <div class="ce ce-ask" data-ev="ask">
+      <p class="ce-question">{say(event.question)}</p>
+      <ol>
+        {event.options.map((option, i) => (
+          <li class:list={{ 'is-pick': i === event.picked }}>
+            <span class="ce-key" dir="ltr">{i + 1}</span>
+            <span>{say(option)}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+{
+  event.kind === 'ready' && (
+    <div class="ce ce-ready" data-ev="ready">
+      <div class="ce-shot" aria-hidden="true">
+        <Mock kind="dashboard" />
+      </div>
+      <p>
+        <b>{say(event.title)}</b>
+        <small>{say(event.text)}</small>
+      </p>
+      <span class="ce-open" dir="ltr">localhost:5173</span>
+    </div>
+  )
+}

@@ -20,6 +20,7 @@ const start = home ? '' : routeUrl(locale, { kind: 'home' })
 const PARENT = { home: undefined, skill: 'skills', agent: 'agents', rule: 'rules', hook: 'checks' } as const
 const current: PageId | undefined = route.kind === 'page' ? route.id : PARENT[route.kind]
 const places = [
+  ['builds', t('What you can build', 'ماذا تبني')],
   ['example', t('How it works', 'كيف تعمل')],
 ] as const
 // On a guide page the header serves the guide: a search over every page, and the pages people come back to.

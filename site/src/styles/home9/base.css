@@ -1,0 +1,152 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--void);
+  color: var(--ivory);
+  color-scheme: dark;
+  scroll-padding-top: var(--bar);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* In film mode a section's top is exactly the frame it starts on. */
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  font: 400 var(--body) / var(--leading) var(--type);
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 560;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+[dir='rtl'] :is(h1, h2, h3) {
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+p,
+dd,
+li {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+code {
+  font: 500 0.875em var(--code);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+main:focus,
+.column:focus {
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  z-index: 20;
+  padding: 0.75rem 1rem;
+  background: var(--ivory);
+  color: var(--void);
+  translate: 0 -110%;
+}
+
+.skip:focus {
+  translate: 0;
+}
+
+.command {
+  display: flex;
+  max-width: 40rem;
+  border: 1px solid rgb(241 237 231 / 0.32);
+  background: rgb(5 6 7 / 0.65);
+  /* WebKit keeps the page's direction here unless told. */
+  text-align: left;
+}
+
+.command code {
+  flex: 1;
+  min-width: 0;
+  padding: 0.875rem 1rem;
+  font-size: clamp(0.71875rem, 0.4rem + 0.35vw, 0.8125rem);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.command button {
+  display: none;
+  flex: none;
+  min-width: 4.75rem;
+  min-height: 44px;
+  padding-inline: 0.875rem;
+  border-inline-start: 1px solid rgb(241 237 231 / 0.32);
+  text-align: center;
+  outline-offset: -5px;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.js .command button {
+  display: block;
+}

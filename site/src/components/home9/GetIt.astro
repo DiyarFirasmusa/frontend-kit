@@ -1,0 +1,99 @@
+---
+import SectionMark from './SectionMark.astro'
+import { chatWords } from '../../content/home9/chat.ts'
+import { home } from '../../content/home9/home.ts'
+import { installWords as w } from '../../content/home9/showcase.ts'
+import { installFlow, installMessage, needs } from '../../content/home9/start.ts'
+import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
+import { REPO_URL } from '../../lib/plugin.ts'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const message = installMessage[locale]
+// The message is one line of words and then the commands: each command is shown as a line of code, left to right.
+const isolates = new RegExp('[\u2066\u2069]', 'g')
+const lines = message.split(String.fromCharCode(10)).map((line) => {
+  const text = line.replace(isolates, '')
+  return { text: text.startsWith('claude plugin') ? text : line, command: text.startsWith('claude plugin') }
+})
+---
+
+<section id="install" class="get-it">
+  <div class="column start-split" data-alive>
+    <div class="start-side">
+      <SectionMark locale={locale} part={3} label={locale === 'ar' ? 'ابدأ' : 'Start'} />
+      <h2>{w.title[locale]}</h2>
+      <p class="start-lead">{w.lead[locale]}</p>
+      <p class="start-needs-title">{w.needsTitle[locale]}</p>
+      <ul class="start-needs">
+        {w.needsList.map((item) => <li>{item[locale]}</li>)}
+      </ul>
+      <ol class="start-line">
+        <li class="start-line-track" role="presentation" aria-hidden="true"><i></i></li>
+        {
+          installFlow.map(({ title, text }, i) => (
+            <li>
+              <span class="start-line-dot">
+                {i + 1}
+              </span>
+              <h3>{title[locale]}</h3>
+              <p>{text[locale]}</p>
+              {i === 0 && needs[0]?.link && <p><a href={needs[0].link}>{needs[0].linkLabel[locale]}</a></p>}
+            </li>
+          ))
+        }
+      </ol>
+      <p class="start-trust">
+        {w.source[locale]} <a href={REPO_URL} dir="ltr">GitHub</a>
+      </p>
+      <p class="start-trust">
+        {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a>
+      </p>
+      <p class="hero-ways">
+        <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
+        <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
+      </p>
+    </div>
+
+    <figure class="chat start-window" aria-label={w.title[locale]}>
+      <div class="chat-bar" aria-hidden="true">
+        <span class="chat-lights"><i></i><i></i><i></i></span>
+        <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
+      </div>
+      <div class="start-body">
+        <p class="start-folder" aria-hidden="true">
+          <span class="start-folder-icon">▣</span>
+          <bdi dir="ltr">~/my-shop</bdi>
+        </p>
+        <p class="start-skip">{w.hint[locale]}</p>
+        <div class="start-message">
+          <div class="start-text" dir="auto">
+            {lines.map(({ text, command }) => (command ? <code class="msg-command" dir="ltr">{text}</code> : <span class="msg-line">{text}</span>))}
+          </div>
+          <p class="chat-tools" aria-hidden="true">
+            <i class="chat-plus">+</i>
+            <span class="chat-model" dir="ltr">{chatWords.model}</span>
+            <i class="chat-send">↑</i>
+          </p>
+        </div>
+        <button type="button" class="start-copy" data-copy={message} data-copy-from=".start-text" data-label={w.copy[locale]} data-done={w.copied[locale]} data-failed={w.failed[locale]} aria-label={w.copy[locale]}>
+          <span aria-hidden="true" data-status>{w.copy[locale]}</span>
+        </button>
+        <span class="sr-only" role="status" data-announce></span>
+        <p class="start-hint">{w.send[locale]}</p>
+        <p class="start-hint">{w.tonight[locale]}</p>
+        <details class="start-more">
+          <summary>{w.moreTitle[locale]}</summary>
+          <p>{w.helpers[locale]}</p>
+          <p>{w.phone[locale]}</p>
+          <p>{w.reopen[locale]}</p>
+          <p>{w.windows[locale]}</p>
+        </details>
+      </div>
+    </figure>
+  </div>
+</section>

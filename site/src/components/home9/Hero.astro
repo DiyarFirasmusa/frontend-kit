@@ -1,0 +1,43 @@
+---
+import SectionMark from './SectionMark.astro'
+import { firstRun } from '../../content/home9/chat.ts'
+import { home } from '../../content/home9/home.ts'
+import type { Locale } from '../../content/types.ts'
+import { pageUrl } from '../../lib/links.ts'
+import ChatEvent from './ChatEvent.astro'
+import ChatWindow from './ChatWindow.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+---
+
+<section id="intro" class="hero" data-hero>
+  <div class="column hero-copy">
+    <SectionMark locale={locale} part={-1} label={locale === 'ar' ? 'واجهة · إضافة مجانية لتطبيق Claude' : 'Wajiha Kit · a free kit for the Claude app'} />
+    <h1 class="enter">{home.title[locale].split(/(?<=\.) /).map((part) => <span>{part}</span>)}</h1>
+    <p class="hero-lead enter">{home.lead[locale]}</p>
+    <div class="hero-phone enter" data-hero-phone>
+      <strong>{home.phoneTitle[locale]}</strong>
+      <span>{home.phoneBody[locale]}</span>
+      <button type="button" data-share-link data-done={home.phoneDone[locale]}>{home.phoneCopy[locale]}</button>
+      <a href="#example">{home.phoneOr[locale]}</a>
+    </div>
+    <p class="hero-actions enter">
+      <a class="hero-start" href="#install">{home.start[locale]}</a>
+      <a href="#example">{home.see[locale]}</a>
+    </p>
+    <p class="hero-trust enter">{home.trust[locale]}</p>
+    <ul class="hero-audience enter" aria-label={home.audienceLabel[locale]}>
+      {home.audience.map(({ label, to }) => <li><a href={to.startsWith('#') ? to : pageUrl(locale, 'developers') + to.replace('developers', '')}>{label[locale]}</a></li>)}
+    </ul>
+  </div>
+  <div class="hero-side">
+    <ChatWindow locale={locale} label={home.example[locale]} live>
+      {firstRun.map((event) => <ChatEvent locale={locale} event={event} />)}
+    </ChatWindow>
+    <p class="hero-caption">{home.caption[locale]}</p>
+  </div>
+</section>
