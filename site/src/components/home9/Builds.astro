@@ -10,6 +10,12 @@ interface Props {
 }
 
 const { locale } = Astro.props
+// A small sign for each thing you get, in the order of the features of each kind.
+const icons: Record<string, string[]> = {
+  website: ['◔', '⌕', '⤴', 'ع'],
+  dashboard: ['☰', '✓', '⚿', '▥'],
+  fullstack: ['⧉', '▣', '⇄', '◐'],
+}
 ---
 
 <section id="builds" class="builds" data-kinds>
@@ -29,11 +35,20 @@ const { locale } = Astro.props
       }
     </div>
     {
-      showcase.map(({ id, title, text, url }, i) => (
+      showcase.map(({ id, title, text, features, url }, i) => (
         <div class="show-panel" role="tabpanel" tabindex="0" id={`kind-${id}`} aria-labelledby={`tab-${id}`} data-kind={i} data-hidden={i > 0 ? '' : undefined}>
           <div class="show-words">
             <h3>{title[locale]}</h3>
             <p>{text[locale]}</p>
+            <ul class="show-gets">
+              {features.map(({ name, text: line }, n) => (
+                <li style={`--n:${n}`}>
+                  <i aria-hidden="true">{icons[id]?.[n] ?? '✓'}</i>
+                  <b>{name[locale]}</b>
+                  <span>{line[locale]}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div class="show-picture" aria-hidden="true">
             <div class="browser">

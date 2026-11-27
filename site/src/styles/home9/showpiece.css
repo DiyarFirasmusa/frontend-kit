@@ -958,3 +958,85 @@
   color: #96938d;
   font-weight: 400;
 }
+
+/* THE WORDS BESIDE THE WINDOW: the name and one sentence, then what you get as four small cards, two by two, each with
+   its sign, its name and one line. The cards come up one after the other when the kind is picked. */
+.show-gets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.show-gets li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.7rem;
+  row-gap: 0.15rem;
+  align-items: start;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid rgb(241 237 231 / 0.08);
+  border-radius: 0.75rem;
+  background: rgb(241 237 231 / 0.03);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s,
+    translate 0.4s cubic-bezier(0.2, 0.9, 0.25, 1.2);
+}
+
+.show-gets li:hover {
+  border-color: rgb(217 119 87 / 0.45);
+  background: rgb(217 119 87 / 0.06);
+  translate: 0 -2px;
+}
+
+.show-gets i {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 0.5rem;
+  background: rgb(217 119 87 / 0.14);
+  color: #f2a183;
+  font-size: 0.95rem;
+  font-style: normal;
+}
+
+.show-gets li:nth-child(even) i {
+  background: rgb(25 171 171 / 0.14);
+  color: #5fd0d0;
+}
+
+.show-gets b {
+  color: #f1ede7;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.show-gets span {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* The soap pictures stay inside their frame. */
+.sp-hero-picture {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .show-panel:not([data-hidden]) .show-gets li {
+    animation: sp-up 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+    animation-delay: calc(var(--n, 0) * 0.08s + 0.25s);
+  }
+}
+
+@media (max-width: 560px) {
+  .show-gets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
