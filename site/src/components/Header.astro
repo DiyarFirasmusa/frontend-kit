@@ -59,7 +59,7 @@ const searchWords = {
   }
   <nav class="top-nav" aria-label={chrome.sections}>
     {home
-      ? [...places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>), <a href={pageUrl(locale, 'developers')}>{PAGES.developers.name[locale]}</a>]
+      ? places.map(([id, name]) => <a href={`${start}#${id}`}>{name[locale]}</a>)
       : guideLinks.map(([href, name]) => <a href={href} aria-current={Astro.url.pathname === href ? 'page' : undefined}>{name[locale]}</a>)}
     <a class="nav-docs" href={pageUrl(locale, 'docs')} aria-current={Astro.url.pathname === pageUrl(locale, 'docs') ? 'page' : undefined}>{PAGES.docs.name[locale]}</a>
   </nav>
