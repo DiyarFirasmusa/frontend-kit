@@ -1,0 +1,484 @@
+/* THE SIX SMALL CLAUDE WINDOWS of "how it works": each one is the Claude app at that step, with real detail - the
+   message and what Claude did, the question and your pick, the plan drawn as a map, the build filling, the checks,
+   and the finished dashboard with the last question. They play in a loop while the part is on screen (alive.ts sets
+   .is-alive on the path); with less motion they show their finished state. */
+.path-picture.pp {
+  display: flex;
+  flex-direction: column;
+  place-items: stretch;
+  block-size: 12.5rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgb(241 237 231 / 0.1);
+  background: #121211;
+  color: #f1ede7;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  text-align: start;
+}
+
+.pp p,
+.pp ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-block-end: 1px solid rgb(241 237 231 / 0.07);
+  color: #96938d;
+  font-size: 0.625rem;
+}
+
+.pp-bar i {
+  color: #d97757;
+  font-style: normal;
+}
+
+.pp-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  min-block-size: 0;
+}
+
+/* 1: your message and what Claude did. */
+.pp .pp-user {
+  align-self: flex-end;
+  max-inline-size: 90%;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.6rem;
+  background: #2a2826;
+}
+
+[dir='rtl'] .pp-user {
+  align-self: flex-start;
+}
+
+.pp-tool {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #bcb8b1;
+}
+
+.pp-tool i,
+.pp-files i,
+.pp-checks i {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
+  border-radius: 0.3rem;
+  background: rgb(25 171 171 / 0.2);
+  color: #19abab;
+  font-size: 0.55rem;
+  font-style: normal;
+}
+
+.pp-input {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-start: 0.2rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.55rem;
+  border: 1px solid rgb(241 237 231 / 0.12);
+  border-radius: 0.55rem;
+}
+
+.pp-input span {
+  flex: 1;
+  block-size: 0.35rem;
+  border-radius: 0.2rem;
+  background: rgb(241 237 231 / 0.12);
+}
+
+.pp-input b {
+  display: grid;
+  place-items: center;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border-radius: 0.35rem;
+  background: #d97757;
+  color: #141413;
+  font-size: 0.6rem;
+}
+
+/* 2: the question and your pick. */
+.pp-q {
+  font-weight: 600;
+}
+
+.pp-options {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.pp-options li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid rgb(241 237 231 / 0.08);
+  border-radius: 0.45rem;
+  color: #bcb8b1;
+}
+
+.pp-options span {
+  display: grid;
+  place-items: center;
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
+  border-radius: 0.3rem;
+  background: rgb(241 237 231 / 0.08);
+  font-size: 0.55rem;
+}
+
+.pp-options .is-pick {
+  border-color: rgb(217 119 87 / 0.6);
+  background: rgb(217 119 87 / 0.14);
+  color: #f1ede7;
+}
+
+.pp-options .is-pick span {
+  background: #d97757;
+  color: #141413;
+}
+
+.pp .pp-chip {
+  align-self: flex-start;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.35rem;
+  background: rgb(241 237 231 / 0.07);
+  color: #bcb8b1;
+  font-size: 0.6rem;
+}
+
+/* 3: the plan as a map, then your yes. */
+.pp-map {
+  display: grid;
+  justify-items: center;
+}
+
+.pp-map svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 0.9rem;
+  fill: none;
+  stroke: rgb(25 171 171 / 0.7);
+  stroke-width: 1.3;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 300;
+}
+
+.pp-nodes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+  inline-size: 100%;
+}
+
+.pp-node {
+  display: grid;
+  place-items: center;
+  padding: 0.25rem 0.2rem;
+  border: 1px solid rgb(241 237 231 / 0.14);
+  border-radius: 0.35rem;
+  background: #1f1f1d;
+  font-size: 0.6rem;
+  white-space: nowrap;
+}
+
+.pp-node.is-root {
+  padding-inline: 0.6rem;
+  border-color: rgb(217 119 87 / 0.6);
+  background: rgb(217 119 87 / 0.14);
+}
+
+.pp .pp-yes {
+  align-self: flex-end;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.6rem;
+  background: #f1ede7;
+  color: #141413;
+  font-weight: 600;
+}
+
+[dir='rtl'] .pp-yes {
+  align-self: flex-start;
+}
+
+/* 4: the build. */
+.pp-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pp-progress span {
+  flex: 1;
+  block-size: 0.35rem;
+  overflow: hidden;
+  border-radius: 0.2rem;
+  background: rgb(241 237 231 / 0.08);
+}
+
+.pp-progress i {
+  display: block;
+  block-size: 100%;
+  background: linear-gradient(90deg, #d97757, #19abab);
+  transform-origin: left;
+}
+
+[dir='rtl'] .pp-progress i {
+  transform-origin: right;
+  background: linear-gradient(270deg, #d97757, #19abab);
+}
+
+.pp-progress b::after {
+  content: '100%';
+  color: #19abab;
+  font: 500 0.6rem var(--code);
+}
+
+.pp-files {
+  display: grid;
+  gap: 0.2rem;
+  color: #bcb8b1;
+  font: 0.6rem / 1.4 var(--code);
+  text-align: left;
+}
+
+.pp-files li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* 5: the checks. */
+.pp-checks {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.pp-checks li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 0.4rem;
+  background: rgb(25 171 171 / 0.07);
+  color: #bcb8b1;
+}
+
+.pp-checks b {
+  margin-inline-start: auto;
+  color: #5fd0d0;
+  font: 500 0.6rem var(--code);
+}
+
+.pp .pp-ready {
+  align-self: flex-start;
+  padding: 0.15rem 0.55rem;
+  border-radius: 0.35rem;
+  background: #19abab;
+  color: #062a2a;
+  font-weight: 600;
+}
+
+/* 6: the finished dashboard and the last question. */
+.pp-shot {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 0.25rem;
+  padding: 0.35rem;
+  border-radius: 0.45rem;
+  background: #0b0b0a;
+}
+
+.pp-kpi {
+  display: grid;
+  padding: 0.25rem;
+  border-radius: 0.3rem;
+  background: rgb(241 237 231 / 0.06);
+}
+
+.pp-kpi b {
+  font: 600 0.75rem var(--latin);
+}
+
+.pp-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.15rem;
+  block-size: 1.5rem;
+}
+
+.pp-bars i {
+  flex: 1;
+  block-size: var(--h);
+  border-radius: 0.15rem 0.15rem 0 0;
+  background: #19abab;
+}
+
+.pp-bars i:last-child {
+  background: #d97757;
+}
+
+.pp-buttons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.pp-buttons span {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgb(241 237 231 / 0.2);
+  border-radius: 0.45rem;
+}
+
+.pp-buttons .is-yes {
+  border-color: transparent;
+  background: #f1ede7;
+  color: #141413;
+  font-weight: 600;
+}
+
+/* Motion: each window plays its step again and again while the part is on screen. */
+@media (prefers-reduced-motion: no-preference) {
+  .path.is-alive :is(.pp-tool, .pp-options li, .pp-node, .pp-files li, .pp-checks li) {
+    animation: pp-in 6s ease infinite;
+    animation-delay: calc(var(--o, 0) * 0.35s);
+  }
+
+  .path.is-alive .pp-options .is-pick {
+    animation: pp-pick 6s ease infinite;
+  }
+
+  .path.is-alive .pp-map svg {
+    animation: pp-draw 6s ease infinite;
+  }
+
+  .path.is-alive :is(.pp-yes, .pp-ready, .pp-buttons .is-yes) {
+    animation: pp-late 6s ease infinite;
+  }
+
+  .path.is-alive .pp-progress i {
+    animation: pp-fill 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .path.is-alive .pp-input span {
+    animation: pp-type 6s steps(8, end) infinite;
+    transform-origin: left;
+  }
+
+  [dir='rtl'] .path.is-alive .pp-input span {
+    transform-origin: right;
+  }
+
+  .path.is-alive .pp-bars i {
+    animation: pp-grow 6s ease infinite;
+    transform-origin: bottom;
+  }
+
+  @keyframes pp-in {
+    0%,
+    6% {
+      opacity: 0;
+      transform: translateY(0.3rem);
+    }
+
+    14%,
+    90% {
+      opacity: 1;
+      transform: none;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pp-pick {
+    0%,
+    35% {
+      border-color: rgb(241 237 231 / 0.08);
+      background: transparent;
+    }
+
+    42%,
+    90% {
+      border-color: rgb(217 119 87 / 0.6);
+      background: rgb(217 119 87 / 0.14);
+    }
+  }
+
+  @keyframes pp-draw {
+    0% {
+      stroke-dashoffset: 300;
+    }
+
+    30%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes pp-late {
+    0%,
+    45% {
+      opacity: 0;
+      scale: 0.9;
+    }
+
+    55%,
+    90% {
+      opacity: 1;
+      scale: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pp-fill {
+    0% {
+      transform: scaleX(0);
+    }
+
+    55%,
+    100% {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes pp-type {
+    0% {
+      transform: scaleX(0);
+    }
+
+    40%,
+    100% {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes pp-grow {
+    0%,
+    10% {
+      transform: scaleY(0);
+    }
+
+    35%,
+    100% {
+      transform: scaleY(1);
+    }
+  }
+}

@@ -1,0 +1,174 @@
+/* THE START WINDOW as the Claude app's Code tab: the two tabs with Code picked, the project folder and its branch at
+   the top, the message to copy, then what happens after you send it - Claude asks before it runs the install, you
+   allow it, and it says the kit is installed. That part plays in a loop while the part is on screen. */
+.sw-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sw-tabs {
+  display: inline-flex;
+  padding: 0.15rem;
+  border-radius: 0.5rem;
+  background: rgb(241 237 231 / 0.06);
+  font-size: 0.75rem;
+}
+
+.sw-tabs span {
+  padding: 0.15rem 0.6rem;
+  border-radius: 0.35rem;
+  color: #96938d;
+}
+
+.sw-tabs .is-on {
+  background: #2a2826;
+  color: #f1ede7;
+}
+
+.sw-head .start-folder {
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.sw-branch {
+  color: #96938d;
+  font: 500 0.75rem var(--code);
+}
+
+.sw-next {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sw-ask {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgb(217 119 87 / 0.45);
+  border-radius: 0.75rem;
+  background: rgb(217 119 87 / 0.08);
+  font-size: 0.8125rem;
+}
+
+.sw-ask i,
+.sw-done i {
+  color: #d97757;
+  font-style: normal;
+}
+
+.sw-ask code {
+  justify-self: start;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  background: #0b0b0a;
+  color: #f1ede7;
+  font: 0.75rem var(--code);
+}
+
+.sw-choices {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.sw-choices > * {
+  padding: 0.2rem 0.75rem;
+  border: 1px solid rgb(241 237 231 / 0.2);
+  border-radius: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.sw-choices b {
+  border-color: transparent;
+  background: #f1ede7;
+  color: #141413;
+}
+
+.sw-done {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  color: #bcb8b1;
+  font-size: 0.8125rem;
+}
+
+.sw-done i {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border-radius: 0.35rem;
+  background: rgb(25 171 171 / 0.2);
+  color: #19abab;
+  font-size: 0.65rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .start-split.is-alive .sw-ask {
+    animation: sw-ask 8s ease infinite;
+  }
+
+  .start-split.is-alive .sw-choices b {
+    animation: sw-allow 8s ease infinite;
+  }
+
+  .start-split.is-alive .sw-done {
+    animation: sw-done 8s ease infinite;
+  }
+
+  @keyframes sw-ask {
+    0%,
+    8% {
+      opacity: 0;
+      transform: translateY(0.4rem);
+    }
+
+    16%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes sw-allow {
+    0%,
+    36%,
+    46%,
+    100% {
+      scale: 1;
+      background: #f1ede7;
+    }
+
+    40% {
+      scale: 0.9;
+      background: #19abab;
+    }
+  }
+
+  @keyframes sw-done {
+    0%,
+    48% {
+      opacity: 0;
+      transform: translateY(0.4rem);
+    }
+
+    56%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+}

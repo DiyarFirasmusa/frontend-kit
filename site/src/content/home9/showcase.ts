@@ -93,10 +93,33 @@ export const journeyWords = {
   save: t('Save this version?', 'هل أحفظ هذه النسخة؟'),
   yes: t('Yes', 'نعم'),
   no: t('Not yet', 'ليس الآن'),
+  /** The detailed small windows of the six stops. */
+  rich: {
+    message: t('Install Wajiha Kit for this project', 'ثبّت واجهة لهذا المشروع'),
+    tools: [t('Added the source', 'أضفت المصدر'), t('Installed Wajiha Kit', 'ثبّتُّ واجهة')],
+    langs: t('Arabic · English', 'العربية · English'),
+    signIn: t('Sign-in', 'الدخول'),
+    nodes: [t('Orders', 'الطلبات'), t('Customers', 'العملاء'), t('Products', 'المنتجات')],
+    files: ['orders/page.tsx', 'customers/page.tsx', 'sign-in/page.tsx'],
+    filesCount: t('14 files', '14 ملفا'),
+    checks: [
+      { name: t('Mistakes', 'الأخطاء'), value: '0' },
+      { name: t('Tests', 'الاختبارات'), value: '38/38' },
+      { name: t('Reviewer', 'المراجِع'), value: '✓' },
+    ],
+    ready: t('Ready', 'جاهز'),
+  },
 }
 
 /** The install panel. */
 export const installWords = {
+  /** The Claude app around the message: its two tabs, and what happens after you send. */
+  tabs: [t('Chat', 'Chat'), t('Code', 'Code')],
+  branch: 'main',
+  asks: t('Claude wants to run', 'يريد Claude تشغيل'),
+  allow: t('Allow', 'اسمح'),
+  deny: t('Deny', 'ارفض'),
+  installed: t('Installed Wajiha Kit. Shall we set up your project?', 'ثبّتُّ واجهة. هل نجهّز مشروعك؟'),
   title: t('Start in two steps', 'ابدأ بخطوتين'),
   lead: t('Wajiha Kit is free. You send one message, and Claude installs the kit for you.', '«واجهة» مجانية. ترسل رسالة واحدة، ويثبّت ⁦Claude⁩ الإضافة بنفسه.'),
   needsTitle: t('What you need', 'ما تحتاجه'),

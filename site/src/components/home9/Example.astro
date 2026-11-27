@@ -22,59 +22,72 @@ const { locale } = Astro.props
     {
       w.stops.map((stop, i) => (
         <li class="path-stop" style={`--n:${i}`}>
-          <div class="path-picture" aria-hidden="true">
-            {i === 0 && (
-              <div class="jp-input">
-                <span class="jp-typed">{w.install[locale]}</span>
-                <i class="chat-send">↑</i>
-              </div>
-            )}
-            {i === 1 && (
-              <div class="jp-ask">
-                <p>{w.ask[locale]}</p>
-                <ul>
-                  {w.options.map((option, n) => (
-                    <li class:list={{ 'is-pick': n === 0 }} style={`--o:${n}`}>
-                      <span class="ce-key" dir="ltr">{n + 1}</span>
-                      {option[locale]}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {i === 2 && (
-              <div class="jp-plan">
-                <ul>{w.plan.map((line, n) => <li style={`--o:${n}`}>{line[locale]}</li>)}</ul>
-                <span class="jp-pill jp-go">{w.start[locale]}</span>
-              </div>
-            )}
-            {i === 3 && (
-              <ul class="jp-build">
-                {w.pages.map((page, n) => (
-                  <li style={`--o:${n}`}>
-                    <span>{page[locale]}</span>
-                    <i class="jp-bar"><b></b></i>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {i === 4 && (
-              <ul class="jp-checks">
-                {w.checks.map((check, n) => (
-                  <li style={`--o:${n}`}>
-                    <i class="ce-tool-icon">✓</i>
-                    {check[locale]}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {i === 5 && (
-              <div class="jp-save">
-                <p>{w.save[locale]}</p>
-                <span class="jp-pill jp-yes">{w.yes[locale]}</span>
-                <span class="jp-pill is-quiet">{w.no[locale]}</span>
-              </div>
-            )}
+          <div class="path-picture pp" aria-hidden="true">
+            <div class="pp-body">
+              {i === 0 && (
+                <>
+                  <p class="pp-user">{w.rich.message[locale]}</p>
+                  {w.rich.tools.map((tool, n) => <p class="pp-tool" style={`--o:${n}`}><i>✓</i>{tool[locale]}</p>)}
+                  <p class="pp-input"><span></span><b>↑</b></p>
+                </>
+              )}
+              {i === 1 && (
+                <>
+                  <p class="pp-q">{w.ask[locale]}</p>
+                  <ul class="pp-options">
+                    {w.options.map((option, n) => (
+                      <li class:list={{ 'is-pick': n === 0 }} style={`--o:${n}`}>
+                        <span dir="ltr">{n + 1}</span>
+                        {option[locale]}
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="pp-chip">{w.rich.langs[locale]}</p>
+                </>
+              )}
+              {i === 2 && (
+                <>
+                  <div class="pp-map">
+                    <span class="pp-node is-root">{w.rich.signIn[locale]}</span>
+                    <svg viewBox="0 0 300 30" preserveAspectRatio="none"><path d="M150 0 V10 M150 10 H50 V30 M150 10 V30 M150 10 H250 V30" /></svg>
+                    <span class="pp-nodes">{w.rich.nodes.map((node, n) => <span class="pp-node" style={`--o:${n + 1}`}>{node[locale]}</span>)}</span>
+                  </div>
+                  <p class="pp-yes">{w.start[locale]}</p>
+                </>
+              )}
+              {i === 3 && (
+                <>
+                  <p class="pp-progress"><span><i></i></span><b dir="ltr"></b></p>
+                  <ul class="pp-files" dir="ltr">{w.rich.files.map((file, n) => <li style={`--o:${n}`}><i>✓</i>{file}</li>)}</ul>
+                  <p class="pp-chip">{w.rich.filesCount[locale]}</p>
+                </>
+              )}
+              {i === 4 && (
+                <>
+                  <ul class="pp-checks">
+                    {w.rich.checks.map(({ name, value }, n) => (
+                      <li style={`--o:${n}`}>
+                        <i>✓</i>
+                        <span>{name[locale]}</span>
+                        <b dir="ltr">{value}</b>
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="pp-ready">✓ {w.rich.ready[locale]}</p>
+                </>
+              )}
+              {i === 5 && (
+                <>
+                  <div class="pp-shot">
+                    <span class="pp-kpi"><b>128</b></span>
+                    <span class="pp-kpi"><b>96%</b></span>
+                    <span class="pp-bars"><i style="--h:45%"></i><i style="--h:70%"></i><i style="--h:55%"></i><i style="--h:90%"></i></span>
+                  </div>
+                  <p class="pp-q">{w.save[locale]}</p>
+                  <p class="pp-buttons"><span class="is-yes">{w.yes[locale]}</span><span>{w.no[locale]}</span></p>
+                </>
+              )}
+            </div>
           </div>
           <div class="path-label">
             <span class="path-dot" dir="ltr">{i + 1}</span>

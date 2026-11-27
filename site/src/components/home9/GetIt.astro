@@ -55,9 +55,13 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
         <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
       </div>
       <div class="start-body">
-        <p class="start-folder" aria-hidden="true">
-          <span class="start-folder-icon">▣</span>
-          <bdi dir="ltr">~/my-shop</bdi>
+        <p class="sw-head" aria-hidden="true">
+          <span class="sw-tabs">{w.tabs.map((tab, i) => <span class:list={{ 'is-on': i === 1 }}>{tab[locale]}</span>)}</span>
+          <span class="start-folder">
+            <span class="start-folder-icon">▣</span>
+            <bdi dir="ltr">~/my-shop</bdi>
+          </span>
+          <span class="sw-branch" dir="ltr">⑂ {w.branch}</span>
         </p>
         <p class="start-skip">{w.hint[locale]}</p>
         <div class="start-message">
@@ -74,6 +78,14 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
           <span aria-hidden="true" data-status>{w.copy[locale]}</span>
         </button>
         <span class="sr-only" role="status" data-announce></span>
+        <div class="sw-next" aria-hidden="true">
+          <p class="sw-ask">
+            <span><i>✻</i> {w.asks[locale]}</span>
+            <code dir="ltr">claude plugin install wajiha-kit</code>
+            <span class="sw-choices"><b>{w.allow[locale]}</b><span>{w.deny[locale]}</span></span>
+          </p>
+          <p class="sw-done"><i>✓</i> {w.installed[locale]}</p>
+        </div>
         <p class="start-hint">{w.send[locale]}</p>
         <p class="start-hint">{w.tonight[locale]}</p>
         <details class="start-more">
