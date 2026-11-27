@@ -6,6 +6,7 @@ import { initExternalLinks } from './external-links.ts'
 import { initFinder } from './finder.ts'
 import { initGate } from './gate.ts'
 import { initLife } from './life.ts'
+import { initLive } from './live.ts'
 import { initBeforeAfter } from './before-after.ts'
 import { initChrome } from './page-chrome.ts'
 import { initShareLink } from './share-link.ts'
@@ -42,6 +43,7 @@ document.addEventListener('astro:page-load', () => {
     ['reveal', () => initReveal(signal)],
     ['pointer', () => initPointer(signal)],
     ['tilt', () => initTilt(signal)],
+    ['live', () => initLive(signal)],
   ]
   for (const [name, start] of starters) {
     try {

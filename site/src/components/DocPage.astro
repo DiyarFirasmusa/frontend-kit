@@ -111,7 +111,7 @@ const crumbs = [
   <main class="doc" data-section={parent}>
     <DocsTree locale={locale} route={route} />
     <div class="column" id="content" tabindex="-1" transition:name="page">
-      <header class:list={['doc-head', 'board', 'board-head', `tone-${tone}`]}>
+      <header class:list={['doc-head', 'board', 'board-head', `tone-${tone}`]} data-tilt>
         <p class="board-top doc-eyebrow">
           <svg class="doc-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
             {markBlocks.map((b, i) => <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" class:list={[`b${i}`, { dim: lit !== undefined && i !== lit }]} />)}
