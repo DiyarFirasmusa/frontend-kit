@@ -17,12 +17,12 @@ const { locale } = Astro.props
     <h2>{home.example[locale]}</h2>
     <p>{w.lead[locale]}</p>
   </div>
-  <ol class="column path road" data-alive>
+  <ol class="column path" data-alive>
+    <li class="path-track" role="presentation" aria-hidden="true"><i></i></li>
     {
       w.stops.map((stop, i) => (
-        <li class:list={['path-stop', { 'is-current': i === 0 }]} data-who={i === 3 || i === 4 ? 'kit' : 'you'} style={`--n:${i}`}>
-          <span class="road-pin" aria-hidden="true" dir="ltr">{i + 1}</span>
-          <div class="road-screen path-picture pp" aria-hidden="true">
+        <li class="path-stop" style={`--n:${i}`}>
+          <div class="path-picture pp" aria-hidden="true">
             <div class="pp-body">
               {i === 0 && (
                 <>
@@ -90,7 +90,7 @@ const { locale } = Astro.props
             </div>
           </div>
           <div class="path-label">
-            <span class="road-who">{i === 3 || i === 4 ? w.kitMove[locale] : w.yourMove[locale]}</span>
+            <span class="path-dot" dir="ltr">{i + 1}</span>
             <strong>{stop[locale]}</strong>
             <p>{w.details[i]![locale]}</p>
           </div>
