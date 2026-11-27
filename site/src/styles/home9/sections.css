@@ -1318,9 +1318,6 @@
 
 
 /* The header has no line under it while scrolling: no edge and no reading bar. */
-.top.is-scrolled {
-  box-shadow: none;
-}
 
 .progress {
   display: none;
@@ -1817,9 +1814,6 @@
 }
 
 /* The phone menu's panel is out of the page while it is closed, so it can never push the page sideways. */
-.menu:not([open]) nav {
-  display: none;
-}
 
 /* Glows behind the windows may reach past a section's sides; they are clipped there so the page never scrolls sideways. */
 .home > section {

@@ -1,0 +1,42 @@
+/* CORNERS AND HEADER as in the latest design before version 9 came back (2026-11-27, owner's request): buttons and
+   pills have one soft 0.5rem corner instead of being fully round, windows about 1rem, number badges soft squares.
+   The header uses today's shared styles (home9 no longer loads its own header.css). */
+.top-install,
+.hero-start,
+.hero-audience a,
+.start-copy,
+.note-cta,
+.ce-open,
+.show-tabs button,
+.hero-phone a {
+  border-radius: 0.5rem;
+}
+
+.show-tabs {
+  border-radius: 0.75rem;
+}
+
+.chat {
+  border-radius: 1rem;
+}
+
+.browser,
+.ba,
+.path-picture {
+  border-radius: 0.9rem;
+}
+
+.start-line-dot,
+.path-dot {
+  border-radius: 0.5rem;
+}
+
+.ba-results i {
+  border-radius: 0.375rem;
+}
+
+/* The header has no halo of its own any more: today's header sits on the page. */
+.top,
+.top.is-scrolled {
+  text-shadow: none;
+}

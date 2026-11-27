@@ -2,7 +2,6 @@
    in a layer, so it sits above the shared layered styles of today's site, and the home page looks as it did then. */
 @import './tokens.css';
 @import './base.css';
-@import './header.css';
 @import './details.css';
 @import './guide.css';
 @import './doc.css';
@@ -19,3 +18,4 @@
 @import './visual.css';
 @import './theme-light.css';
 @import './plain.css';
+@import './corners.css';

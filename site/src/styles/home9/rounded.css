@@ -20,8 +20,7 @@
 .call,
 .pair p,
 .source-doc,
-.questions details,
-.menu nav {
+.questions details {
   border-radius: var(--radius);
 }
 
@@ -40,8 +39,7 @@
 }
 
 /* Small things are pills. */
-.tags li,
-.top-docs {
+.tags li {
   border-radius: var(--radius-pill);
 }
 
@@ -56,9 +54,6 @@
 }
 
 /* ---- The rest of the site ---- */
-.skip {
-  border-radius: var(--radius-sm);
-}
 
 :not(pre) > code {
   border-radius: 0.375rem;

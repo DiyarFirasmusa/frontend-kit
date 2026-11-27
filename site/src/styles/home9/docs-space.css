@@ -604,10 +604,6 @@ body::before,
 }
 
 /* No shade under the header: it stays clear as the page moves under it. */
-body .top::before,
-body .top.is-scrolled::before {
-  content: none;
-}
 
 /* The side list and the page share one ground. */
 
@@ -615,80 +611,11 @@ body .top.is-scrolled::before {
 
 /* Once the page moves, the header takes the page's own colour, flat: words pass under it unseen,
    with no shade, no line and no box. */
-.top.is-scrolled {
-  background: #050607;
-}
 
 /* ---------- The header on a guide page ----------
    The logo lines up with the page list below it; the search starts where the words start. */
-.top-search {
-  display: none;
-}
 
 @media (min-width: 901px) {
-  body:has(main.doc) .top {
-    padding-inline-start: 1.25rem;
-  }
-
-  body:has(main.doc) .brand {
-    flex: none;
-    width: calc(18rem - 1.25rem);
-    margin-inline-end: 0;
-  }
-
-  .top-search {
-    position: relative;
-    display: flex;
-    flex: 1;
-    align-items: center;
-    max-width: 30rem;
-    margin-inline: clamp(1.25rem, 4vw, 4rem) auto;
-  }
-
-  .top-search::before {
-    content: '';
-    position: absolute;
-    inset-inline-start: 0.875rem;
-    width: 0.75rem;
-    height: 0.75rem;
-    border: 2px solid var(--faint);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  .top-search input {
-    width: 100%;
-    min-height: 2.5rem;
-    padding-inline: 2.5rem 2.75rem;
-    border: 1px solid rgb(241 237 231 / 0.12);
-    border-radius: 0.75rem;
-    background: rgb(241 237 231 / 0.04);
-    color: inherit;
-    font: inherit;
-    font-size: 0.875rem;
-    transition:
-      border-color 0.2s,
-      background-color 0.2s;
-  }
-
-  .top-search input:focus {
-    border-color: rgb(217 119 87 / 0.6);
-    background: rgb(241 237 231 / 0.06);
-    outline: none;
-  }
-
-  .top-search kbd {
-    position: absolute;
-    inset-inline-end: 0.625rem;
-    display: grid;
-    place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 1px solid var(--line);
-    border-radius: 0.375rem;
-    color: var(--faint);
-    font: 600 0.75rem / 1 var(--code);
-  }
 
   /* The search lives in the header now, so the page list starts straight with its sections. */
   .doc .tree-search {
@@ -697,12 +624,6 @@ body .top.is-scrolled::before {
 
   .doc .tree nav {
     height: calc(100% - 1rem);
-  }
-}
-
-@media (min-width: 901px) and (max-width: 1100px) {
-  body:has(main.doc) .top-nav {
-    display: none;
   }
 }
 
@@ -757,25 +678,6 @@ body .top.is-scrolled::before {
 
 /* On a guide page the header, once the page moves, wears the same fixed grid and light as the page,
    so it covers the words passing under it without looking like a band. */
-body:has(main.doc) .top.is-scrolled {
-  background:
-    radial-gradient(40rem 26rem at 70% 0%, rgb(217 119 87 / 0.16), transparent 70%),
-    radial-gradient(36rem 24rem at 20% 10%, rgb(25 171 171 / 0.1), transparent 70%),
-    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    #050607;
-  background-attachment: fixed;
-}
-
-[dir='rtl'] body:has(main.doc) .top.is-scrolled {
-  background:
-    radial-gradient(40rem 26rem at 30% 0%, rgb(217 119 87 / 0.16), transparent 70%),
-    radial-gradient(36rem 24rem at 80% 10%, rgb(25 171 171 / 0.1), transparent 70%),
-    linear-gradient(rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    linear-gradient(90deg, rgb(241 237 231 / 0.11) 1px, transparent 1px) 0 0 / 4rem 4rem,
-    #050607;
-  background-attachment: fixed;
-}
 
 /* ---------- A dark frame around the words ----------
    The page list, the header and "On this page" share one darker colour with a clear edge,
@@ -784,14 +686,6 @@ body:has(main.doc) .top.is-scrolled {
   .doc .tree {
     background: #08090a;
     border-inline-end: 1px solid rgb(241 237 231 / 0.1);
-  }
-
-  body:has(main.doc) .top,
-  body:has(main.doc) .top.is-scrolled,
-  [dir='rtl'] body:has(main.doc) .top.is-scrolled {
-    background: #08090a;
-    background-attachment: scroll;
-    border-block-end: 1px solid rgb(241 237 231 / 0.1);
   }
 }
 
@@ -816,11 +710,6 @@ body:has(main.doc) .top.is-scrolled {
 /* The frame is told by its darker colour alone: no lines on its edges. */
 @media (min-width: 901px) {
   .doc .tree {
-    border: 0 !important;
-  }
-
-  body:has(main.doc) .top,
-  body:has(main.doc) .top.is-scrolled {
     border: 0 !important;
   }
 }
@@ -889,14 +778,6 @@ body::after {
   width: 2rem;
   height: 2rem;
   fill: var(--ivory);
-}
-
-.foot-logo svg .brand-block {
-  fill: var(--accent);
-}
-
-.foot-logo svg .brand-menu {
-  fill: var(--turq, #19abab);
 }
 
 .foot .foot-brand p {
@@ -997,15 +878,6 @@ body::after {
   }
 }
 
-.top .top-install,
-.language {
-  min-height: 2.75rem;
-}
-
-.language {
-  min-width: 2.75rem;
-}
-
 .hero-actions a,
 .hero-ways a {
   padding-block: 0.5rem;
@@ -1029,25 +901,16 @@ html:not(.js) .start-copy {
 
 
 /* ---------- Accessibility: focus, contrast, targets and one pause for all motion ---------- */
-.top-search input:focus-visible,
 .tree-search input:focus-visible,
 .finder input:focus-visible {
   outline: 2px solid var(--turq, #19abab) !important;
   outline-offset: 2px;
 }
 
-.top-search input::placeholder,
 .tree-search input::placeholder,
 .finder input::placeholder {
   color: var(--faint);
   opacity: 1;
-}
-
-.top-search kbd {
-  width: auto;
-  min-width: 1.5rem;
-  padding-inline: 0.375rem;
-  white-space: nowrap;
 }
 
 .foot-title {
@@ -1093,14 +956,6 @@ html.is-paused *::after {
 /* English pages do not download the Arabic fonts: only Arabic pages, and text marked as Arabic, use them. */
 html:not([dir='rtl']) {
   --type: 'Familjen Grotesk Variable', system-ui, sans-serif;
-}
-
-[lang='ar']:not(.language) {
-  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
-}
-
-.language {
-  font-family: system-ui, sans-serif;
 }
 
 /* The message to copy: the two commands are lines of code, always left to right, apart from the words around them. */
@@ -1295,9 +1150,6 @@ li {
 
 /* ---------- Art director's second pass ---------- */
 /* The header never lets scrolled words show through it. */
-body .top.is-scrolled {
-  background: rgb(5 6 7 / 0.97);
-}
 
 /* One colour for the small headings inside lists too. */
 main.doc .doc-article :is(h3, h4) {
@@ -1487,10 +1339,6 @@ html[lang='ar'] .credits {
 
 .foot-columns a {
   min-height: 2.75rem;
-}
-
-.brand-version {
-  font-size: 0.8125rem;
 }
 
 .numbered {
@@ -1988,7 +1836,6 @@ html[lang='ar'] .credits {
 }
 
 /* One ink on every orange button. */
-.top-install,
 .hero-start,
 .start-copy,
 .show-tabs button[aria-selected='true'] {

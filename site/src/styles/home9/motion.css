@@ -17,7 +17,6 @@
   }
 
   /* Every control answers a hand. */
-  .top a,
   .command button,
   .tree a,
   .tree summary,
@@ -34,14 +33,11 @@
       text-underline-offset 0.35s var(--glide);
   }
 
-  .tags li:hover,
-  .top-docs:hover,
-  .top-install:hover {
+  .tags li:hover {
     translate: 0 -4px;
   }
 
   .command button:active,
-  .top a:active,
   .tree a:active {
     scale: 0.93;
   }
@@ -102,10 +98,6 @@
 
   details[open]::details-content {
     height: auto;
-  }
-
-  .menu[open] nav a {
-    animation: dealt 0.5s var(--glide) both;
   }
 
   .tree a[aria-current] {
