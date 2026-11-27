@@ -118,6 +118,26 @@
     --side: -1;
   }
 
+  [data-scroll='turn'] {
+    --side: -1;
+    transform:
+      perspective(1100px)
+      translateX(calc((1 - var(--p, 1)) * var(--side) * 5rem))
+      rotateY(calc((1 - var(--p, 1)) * var(--side) * -24deg));
+  }
+
+  [dir='rtl'] [data-scroll='turn'] {
+    --side: 1;
+  }
+
+  /* The steps of "how it works": the later the step, the further down it starts, so they arrive one after another. */
+  [data-scroll='step'] {
+    transform:
+      perspective(1100px)
+      translateY(calc((1 - var(--p, 1)) * (3rem + var(--n, 0) * 1.75rem)))
+      rotateX(calc((1 - var(--p, 1)) * 18deg));
+  }
+
   [data-scroll='leave'] {
     transform:
       perspective(1200px)

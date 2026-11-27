@@ -4,13 +4,19 @@ import { all } from './dom.ts'
  * Motion tied to the scroll, like the road of "how it works": a part rises and comes into focus as far as it has come up
  * the screen, and goes back if you scroll back. Nothing is triggered once; everything follows the scroll.
  * - rise: the parts of a page come up and sharpen (section titles, boards, the guide's blocks, the footer);
- * - flip: the "start" window turns in from its side;
+ * - flip: the "start" window and the "what you can build" window turn in from their side;
+ * - turn: the comparison window turns in from the other side;
+ * - step: the six windows of "how it works" come up one after another;
  * - leave: the opening screen's window leans back a little as you scroll away from it.
  * For a visitor who asked for less motion nothing is marked, so nothing moves.
  */
 const kinds: [string, string][] = [
   ['main.home > section:not(#intro, #example) > .column', 'rise'],
   ['main.home #install .start-window', 'flip'],
+  ['main.home #builds .show-picture', 'flip'],
+  ['main.home #why .ba', 'turn'],
+  ['main.home #example > .section-head', 'rise'],
+  ['main.home #example .path-stop', 'step'],
   ['main.home #intro .hero-side', 'leave'],
   ['main.doc .doc-article > section.block', 'rise'],
   ['main.doc .doc-article > .finder', 'rise'],
