@@ -8,6 +8,32 @@ export type ChatEvent =
   | { kind: 'tool'; text: Bilingual; mark?: 'ok' | 'bad'; detail?: Bilingual | string }
   | { kind: 'ask'; question: Bilingual; options: Bilingual[]; picked: number }
   | { kind: 'ready'; title: Bilingual; text: Bilingual }
+  /** A card Claude draws inside the chat, like the visuals of the Claude app: the plan, then the build as it runs. */
+  | { kind: 'visual'; show: 'plan' | 'build' }
+
+/** The words inside the cards Claude draws in the opening chat. */
+export const visualWords = {
+  plan: t('Project plan', 'خطة المشروع'),
+  drawn: t('Visual', 'رسم'),
+  signIn: t('Sign-in', 'تسجيل الدخول'),
+  pages: [t('Orders', 'الطلبات'), t('Customers', 'العملاء'), t('Products', 'المنتجات')],
+  chips: [t('Arabic · English', 'العربية · English'), t('Light · Dark', 'فاتح · داكن'), t('Phone · Computer', 'هاتف · حاسوب')],
+  build: t('Building your project', 'يبني مشروعك'),
+  files: ['app/orders/page.tsx', 'app/customers/page.tsx', 'app/products/page.tsx', 'app/sign-in/page.tsx', 'messages/ar.json'],
+  counts: [t('14 files', '14 ملفا'), t('38 tests', '38 اختبارا'), t('0 errors', '0 أخطاء')],
+  kpis: [
+    { label: t('Orders today', 'طلبات اليوم'), value: '128', trend: '+12%' },
+    { label: t('Being prepared', 'قيد التجهيز'), value: '14', trend: '−3' },
+    { label: t('Delivered', 'تم التسليم'), value: '96%', trend: '+2%' },
+  ],
+  week: [t('Sat', 'سبت'), t('Sun', 'أحد'), t('Mon', 'إثنين'), t('Tue', 'ثلاثاء'), t('Wed', 'أربعاء'), t('Thu', 'خميس'), t('Fri', 'جمعة')],
+  rows: [
+    { who: t('Sara', 'سارة'), what: t('3 items', '3 قطع'), state: t('Delivered', 'تم التسليم'), tone: 'ok' },
+    { who: t('Ali', 'علي'), what: t('1 item', 'قطعة واحدة'), state: t('Preparing', 'قيد التجهيز'), tone: 'wait' },
+    { who: t('Noor', 'نور'), what: t('5 items', '5 قطع'), state: t('Delivered', 'تم التسليم'), tone: 'ok' },
+  ],
+  report: t('Checked: 0 errors · 38 tests passed', 'فُحصت: 0 أخطاء · 38 اختبارا ناجحا'),
+}
 
 const yesStart = t('Yes, start', 'نعم، ابدأ')
 const notYet = t('Not yet', 'ليس الآن')
@@ -60,10 +86,9 @@ export const firstRun: ChatEvent[] = [
       'هذه الخطة: لوحة متجر فيها الطلبات والعملاء والمنتجات، بالعربية والإنجليزية، بوضع فاتح وداكن. هل أبدأ؟',
     ),
   },
+  { kind: 'visual', show: 'plan' },
   { kind: 'user', text: yesStart },
-  { kind: 'tool', text: t('Made the pages and the sign-in screen', 'أنشأت الصفحات وشاشة الدخول'), mark: 'ok' },
-  { kind: 'tool', text: t('Checked for mistakes: none', 'فحصت الأخطاء: لا شيء'), mark: 'ok' },
-  { kind: 'tool', text: t('Ran the tests: all passed', 'أجريت الاختبارات: نجحت كلها'), mark: 'ok' },
+  { kind: 'visual', show: 'build' },
   { kind: 'ready', title: t('Your dashboard is ready', 'لوحتك جاهزة'), text: t('Open it in your browser and click around.', 'افتحها في المتصفح وتصفحها.') },
 ]
 

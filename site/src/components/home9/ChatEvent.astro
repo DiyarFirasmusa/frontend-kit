@@ -1,7 +1,6 @@
 ---
-import type { ChatEvent } from '../../content/home9/chat.ts'
+import { visualWords as v, type ChatEvent } from '../../content/home9/chat.ts'
 import type { Locale } from '../../content/types.ts'
-import Mock from './Mock.astro'
 
 interface Props {
   locale: Locale
@@ -57,16 +56,67 @@ const say = (text: string | { en: string; ar: string } | undefined) => (typeof t
   )
 }
 {
-  event.kind === 'ready' && (
-    <div class="ce ce-ready" data-ev="ready">
-      <div class="ce-shot" aria-hidden="true">
-        <Mock kind="dashboard" />
+  event.kind === 'visual' && event.show === 'plan' && (
+    <div class="ce ce-visual is-plan" data-ev="visual">
+      <p class="cv-head"><i aria-hidden="true">✻</i> {v.plan[locale]} <span>{v.drawn[locale]}</span></p>
+      <div class="cv-map" aria-hidden="true">
+        <span class="cv-node is-root" style="--d:0">{v.signIn[locale]}</span>
+        <svg class="cv-links" viewBox="0 0 300 40" preserveAspectRatio="none">
+          <path d="M150 0 V14 M150 14 H50 V40 M150 14 V40 M150 14 H250 V40" />
+        </svg>
+        <span class="cv-row">
+          {v.pages.map((page, i) => <span class="cv-node" style={`--d:${i + 1}`}>{page[locale]}</span>)}
+        </span>
       </div>
-      <p>
-        <b>{say(event.title)}</b>
-        <small>{say(event.text)}</small>
-      </p>
-      <span class="ce-open" dir="ltr">localhost:5173</span>
+      <p class="cv-chips">{v.chips.map((chip, i) => <span style={`--d:${i + 4}`}>{chip[locale]}</span>)}</p>
+    </div>
+  )
+}
+{
+  event.kind === 'visual' && event.show === 'build' && (
+    <div class="ce ce-visual is-build" data-ev="visual">
+      <p class="cv-head"><i class="is-busy" aria-hidden="true">✻</i> {v.build[locale]} <b class="cv-percent" dir="ltr"></b></p>
+      <span class="cv-bar" aria-hidden="true"><i></i></span>
+      <ul class="cv-files" dir="ltr">
+        {v.files.map((file, i) => <li style={`--d:${i}`}><i aria-hidden="true">✓</i>{file}</li>)}
+      </ul>
+      <p class="cv-counts">{v.counts.map((count, i) => <span style={`--d:${i + 5}`}>{count[locale]}</span>)}</p>
+    </div>
+  )
+}
+{
+  event.kind === 'ready' && (
+    <div class="ce ce-ready is-rich" data-ev="ready">
+      <p class="cv-head"><i aria-hidden="true">✻</i> {say(event.title)} <span class="ce-open" dir="ltr">localhost:5173</span></p>
+      <div class="cv-dash" aria-hidden="true">
+        <div class="cv-kpis">
+          {v.kpis.map(({ label, value, trend }, i) => (
+            <span style={`--d:${i}`}>
+              <small>{label[locale]}</small>
+              <b dir="ltr">{value}</b>
+              <em dir="ltr">{trend}</em>
+            </span>
+          ))}
+        </div>
+        <div class="cv-chart">
+          {[42, 58, 50, 74, 66, 88, 96].map((h, i) => (
+            <span style={`--h:${h}%;--d:${i}`}>
+              <i></i>
+              <small>{v.week[i]?.[locale]}</small>
+            </span>
+          ))}
+        </div>
+        <ul class="cv-table">
+          {v.rows.map(({ who, what, state, tone }, i) => (
+            <li style={`--d:${i}`}>
+              <span>{who[locale]}</span>
+              <span>{what[locale]}</span>
+              <b class={`is-${tone}`}>{state[locale]}</b>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p class="cv-report"><i aria-hidden="true">✓</i> {v.report[locale]} · <small>{say(event.text)}</small></p>
     </div>
   )
 }

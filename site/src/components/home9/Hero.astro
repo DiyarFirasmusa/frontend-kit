@@ -29,7 +29,6 @@ const { locale } = Astro.props
       <a class="hero-start" href="#install">{home.start[locale]}</a>
       <a href="#example">{home.see[locale]}</a>
     </p>
-    <p class="hero-trust enter">{home.trust[locale]}</p>
     <ul class="hero-audience enter" aria-label={home.audienceLabel[locale]}>
       {home.audience.map(({ label, to }) => <li><a href={to.startsWith('#') ? to : pageUrl(locale, 'developers') + to.replace('developers', '')}>{label[locale]}</a></li>)}
     </ul>
@@ -38,6 +37,5 @@ const { locale } = Astro.props
     <ChatWindow locale={locale} label={home.example[locale]} live>
       {firstRun.map((event) => <ChatEvent locale={locale} event={event} />)}
     </ChatWindow>
-    <p class="hero-caption">{home.caption[locale]}</p>
   </div>
 </section>

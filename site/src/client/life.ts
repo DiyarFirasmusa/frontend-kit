@@ -102,7 +102,7 @@ function playChat(signal: AbortSignal): void {
           await pace(380)
           input.textContent = ''
           box.classList.remove('is-typing')
-        } else if (kind === 'claude' || kind === 'ready') {
+        } else if (kind === 'claude' || kind === 'ready' || kind === 'visual') {
           await think(900)
         } else if (kind === 'tool') {
           await think(650)
@@ -115,7 +115,7 @@ function playChat(signal: AbortSignal): void {
           event.classList.add('is-picked')
           await pace(800)
         } else {
-          await pace(kind === 'ready' ? 5200 : 450)
+          await pace(kind === 'ready' ? 6200 : kind === 'visual' ? 3200 : 450)
         }
       }
       opening = false

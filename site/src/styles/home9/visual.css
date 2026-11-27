@@ -1,0 +1,373 @@
+/* THE CARDS CLAUDE DRAWS IN THE OPENING CHAT, like the visuals of the Claude app: a drawn plan of the project, the
+   build as it runs, and the finished dashboard with real-looking numbers. They sit inside the dark chat, so they use
+   the chat's own colours. Each card builds itself when it arrives (.is-in, set by life.ts); at rest, without the
+   script or with less motion, every part is simply shown. */
+.ce-visual,
+.ce-ready.is-rich {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.85rem;
+  border: 1px solid rgb(241 237 231 / 0.12);
+  border-radius: 0.9rem;
+  background: #161615;
+  font-size: 0.8125rem;
+}
+
+.ce-ready.is-rich {
+  border-color: rgb(217 119 87 / 0.45);
+}
+
+.cv-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: #f1ede7;
+  font-weight: 600;
+}
+
+.cv-head > i {
+  color: #d97757;
+  font-style: normal;
+}
+
+.cv-head > span:not(.ce-open) {
+  margin-inline-start: auto;
+  padding: 0.05rem 0.5rem;
+  border-radius: 0.4rem;
+  background: rgb(25 171 171 / 0.16);
+  color: #19abab;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.cv-head .ce-open {
+  margin-inline-start: auto;
+}
+
+/* The plan: sign-in on top, the three pages under it, joined by lines. */
+.cv-map {
+  display: grid;
+  justify-items: center;
+}
+
+.cv-node {
+  display: inline-grid;
+  place-items: center;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid rgb(241 237 231 / 0.16);
+  border-radius: 0.5rem;
+  background: #1f1f1d;
+  color: #f1ede7;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cv-node.is-root {
+  border-color: rgb(217 119 87 / 0.6);
+  background: rgb(217 119 87 / 0.14);
+}
+
+.cv-links {
+  display: block;
+  inline-size: 100%;
+  block-size: 1.6rem;
+  fill: none;
+  stroke: rgb(25 171 171 / 0.7);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 400;
+}
+
+.cv-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  inline-size: 100%;
+}
+
+.cv-chips,
+.cv-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.cv-chips span,
+.cv-counts span {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgb(241 237 231 / 0.07);
+  color: #bcb8b1;
+  font-size: 0.6875rem;
+}
+
+/* The build: a bar that fills, the files ticking off, then the counts. */
+.cv-bar {
+  display: block;
+  block-size: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgb(241 237 231 / 0.08);
+}
+
+.cv-bar i {
+  display: block;
+  block-size: 100%;
+  background: linear-gradient(90deg, #d97757, #19abab);
+  transform-origin: left;
+}
+
+[dir='rtl'] .cv-bar i {
+  transform-origin: right;
+  background: linear-gradient(270deg, #d97757, #19abab);
+}
+
+.cv-percent::after {
+  content: '100%';
+  color: #19abab;
+  font: 500 0.75rem var(--code);
+}
+
+.cv-head .cv-percent {
+  margin-inline-start: auto;
+}
+
+.cv-files {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #bcb8b1;
+  font: 0.6875rem / 1.5 var(--code);
+  text-align: left;
+}
+
+.cv-files i {
+  margin-inline-end: 0.45rem;
+  color: #19abab;
+  font-style: normal;
+}
+
+/* The finished dashboard: three numbers, a week of orders, the latest orders. */
+.cv-dash {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.6rem;
+  border-radius: 0.6rem;
+  background: #0f0f0e;
+}
+
+.cv-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.cv-kpis span {
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: 0.45rem;
+  background: rgb(241 237 231 / 0.05);
+}
+
+.cv-kpis small {
+  color: #96938d;
+  font-size: 0.625rem;
+}
+
+.cv-kpis b {
+  color: #f1ede7;
+  font: 600 1rem / 1.2 var(--latin);
+  justify-self: start;
+}
+
+.cv-kpis em {
+  color: #19abab;
+  font: normal 500 0.625rem var(--code);
+  justify-self: start;
+}
+
+.cv-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.3rem;
+  block-size: 4.5rem;
+}
+
+.cv-chart span {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: end;
+  block-size: 100%;
+  gap: 0.2rem;
+}
+
+.cv-chart i {
+  display: block;
+  block-size: var(--h);
+  border-radius: 0.2rem 0.2rem 0 0;
+  background: linear-gradient(180deg, #19abab, rgb(25 171 171 / 0.35));
+  transform-origin: bottom;
+}
+
+.cv-chart span:last-child i {
+  background: linear-gradient(180deg, #d97757, rgb(217 119 87 / 0.4));
+}
+
+.cv-chart small {
+  color: #96938d;
+  font-size: 0.5625rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.cv-table {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-table li {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.35rem;
+  background: rgb(241 237 231 / 0.04);
+  color: #bcb8b1;
+  font-size: 0.6875rem;
+}
+
+.cv-table b {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+.cv-table .is-ok {
+  background: rgb(25 171 171 / 0.2);
+  color: #5fd0d0;
+}
+
+.cv-table .is-wait {
+  background: rgb(217 119 87 / 0.2);
+  color: #f2a183;
+}
+
+.cv-report {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+  color: #bcb8b1;
+  font-size: 0.75rem;
+}
+
+.cv-report i {
+  color: #19abab;
+  font-style: normal;
+}
+
+.cv-report small {
+  color: #96938d;
+}
+
+/* Arriving: each card draws itself, part after part. */
+@media (prefers-reduced-motion: no-preference) {
+  .chat.is-playing .is-in :is(.cv-node, .cv-chips span, .cv-counts span, .cv-kpis span, .cv-table li) {
+    animation: cv-pop 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+    animation-delay: calc(var(--d, 0) * 0.18s + 0.15s);
+  }
+
+  .chat.is-playing .is-in .cv-links {
+    animation: cv-draw 0.9s ease-out 0.25s both;
+  }
+
+  .chat.is-playing .is-in .cv-bar i {
+    animation: cv-fill 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  .chat.is-playing .is-in .cv-files li {
+    animation: cv-pop 0.4s ease-out both;
+    animation-delay: calc(var(--d, 0) * 0.42s + 0.2s);
+  }
+
+  .chat.is-playing .is-in.is-build .cv-counts span {
+    animation-delay: calc(2.4s + (var(--d, 0) - 5) * 0.15s);
+  }
+
+  .chat.is-playing .is-in .cv-chart i {
+    animation: cv-grow 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+    animation-delay: calc(var(--d, 0) * 0.09s + 0.5s);
+  }
+
+  .chat.is-playing .is-in.is-build .cv-percent::after {
+    animation: cv-count 2.4s steps(1, end) both;
+  }
+
+  @keyframes cv-pop {
+    from {
+      opacity: 0;
+      transform: translateY(0.4rem) scale(0.92);
+    }
+  }
+
+  @keyframes cv-draw {
+    from {
+      stroke-dashoffset: 400;
+    }
+
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes cv-fill {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes cv-grow {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes cv-count {
+    0% {
+      content: '0%';
+    }
+
+    20% {
+      content: '18%';
+    }
+
+    40% {
+      content: '41%';
+    }
+
+    60% {
+      content: '63%';
+    }
+
+    80% {
+      content: '87%';
+    }
+
+    100% {
+      content: '100%';
+    }
+  }
+}

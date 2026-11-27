@@ -1,0 +1,27 @@
+/* PLAIN (2026-11-27): the owner asked for no coloured thread bar above titles and no coloured light behind the parts.
+   Titles stand on the page's own ground; colour stays in the drawings, the buttons and the small marks. */
+.hero-copy::before,
+.section-head::before,
+.start-side::before,
+.doc-head::before {
+  content: none;
+}
+
+#builds::before,
+#example::before,
+#install::before,
+#why::before,
+.hero::before,
+.hero-side::before {
+  content: none;
+}
+
+.example,
+.starts,
+.inside,
+.get-it,
+.builds,
+.home .example,
+.home .get-it {
+  background: none;
+}

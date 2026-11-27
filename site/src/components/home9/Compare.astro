@@ -1,7 +1,7 @@
 ---
 import SectionMark from './SectionMark.astro'
 import { home } from '../../content/home9/home.ts'
-import { compare, installWords as words } from '../../content/home9/showcase.ts'
+import { compare } from '../../content/home9/showcase.ts'
 import type { Locale } from '../../content/types.ts'
 
 interface Props {
@@ -97,7 +97,6 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
       <span class="ba-cue" aria-hidden="true">{w.cue[locale]}</span>
       <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={w.drag[locale]} data-ba-range data-bad={compare.without[locale]} data-good={compare.with[locale]} />
     </div>
-    <p class="ba-note">{words.illustration[locale]}</p>
 
     <ul class="ba-results">
       {
@@ -109,7 +108,6 @@ const rows = [w.row1, w.row2, w.row3, w.row4]
         ))
       }
     </ul>
-    <p class="ba-note ba-differs">{words.differs[locale]}</p>
   </div>
   <p class="column section-cta"><a class="hero-start" href="#install">{home.start[locale]}</a></p>
 </section>

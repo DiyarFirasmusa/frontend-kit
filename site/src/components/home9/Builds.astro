@@ -30,19 +30,11 @@ const { locale } = Astro.props
       }
     </div>
     {
-      showcase.map(({ id, title, text, features, url }, i) => (
+      showcase.map(({ id, title, text, url }, i) => (
         <div class="show-panel" role="tabpanel" tabindex="0" id={`kind-${id}`} aria-labelledby={`tab-${id}`} data-kind={i} data-hidden={i > 0 ? '' : undefined}>
           <div class="show-words">
             <h3>{title[locale]}</h3>
             <p>{text[locale]}</p>
-            <ul class="show-features">
-              {features.map(({ name, text }) => (
-                <li>
-                  <strong>{name[locale]}</strong>
-                  <span>{text[locale]}</span>
-                </li>
-              ))}
-            </ul>
           </div>
           <div class="show-picture" aria-hidden="true">
             <div class="browser">
@@ -55,7 +47,6 @@ const { locale } = Astro.props
               </div>
             </div>
           </div>
-          <p class="show-caption">{home.madeUp[locale]}</p>
         </div>
       ))
     }

@@ -28,10 +28,6 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
       <SectionMark locale={locale} part={3} label={locale === 'ar' ? 'ابدأ' : 'Start'} />
       <h2>{w.title[locale]}</h2>
       <p class="start-lead">{w.lead[locale]}</p>
-      <p class="start-needs-title">{w.needsTitle[locale]}</p>
-      <ul class="start-needs">
-        {w.needsList.map((item) => <li>{item[locale]}</li>)}
-      </ul>
       <ol class="start-line">
         <li class="start-line-track" role="presentation" aria-hidden="true"><i></i></li>
         {
