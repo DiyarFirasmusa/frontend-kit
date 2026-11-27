@@ -3,16 +3,16 @@ import { t } from '../guide/text.ts'
 /** The short page: what it is, one real example, what is inside, how to get it. */
 export const home = {
   // The goal of the kit, said first: the smallest ask, the best result.
-  title: t('Build your own website or dashboard. No coding needed.', 'اصنع موقعك أو لوحة تحكمك بنفسك. دون أن تكتب أي كود.'),
+  title: t('A tidy, fast frontend you can keep building on.', 'واجهة مرتبة وسريعة، تبني عليها بثقة.'),
   lead: t(
-    'Answer a few plain questions in the Claude app. It builds a website or dashboard, checks it, and shows it to you in Arabic and English.',
-    'أجب عن بضعة أسئلة بسيطة داخل تطبيق ⁦Claude⁩. يبني لك موقعا أو لوحة تحكم، ويفحصها، ويعرضها عليك بالعربية والإنجليزية.',
+    'For vibe coders and backend developers. Claude builds your website or dashboard on one fixed, clean structure, checks it with tests and a reviewer, and leaves you code you can read and maintain.',
+    'لمن يبني بالذكاء الاصطناعي ولمطوري الباك إند. يبني ⁦Claude⁩ موقعك أو لوحة تحكمك على هيكل ثابت ونظيف، ويفحصه بالاختبارات ومراجِع، ويترك لك كودا تقرؤه وتصونه.',
   ),
   // Ask simply, get it built well, get it checked: one line each.
   points: [
     {
       name: t('You answer five questions', 'تجيب عن خمسة أسئلة'),
-      text: t('What you want to build, a few lines about it, the look you like, your backend description and the languages. No technical knowledge needed.', 'ماذا تريد أن تبني، وأسطر قليلة عنه، والشكل الذي يعجبك، ووصف الخادم، واللغات. دون أي معرفة تقنية.'),
+      text: t('What you want to build, a few lines about it, the look you like, your backend description and the languages. Answer in your own words.', 'ماذا تريد أن تبني، وأسطر قليلة عنه، والشكل الذي يعجبك، ووصف الخادم، واللغات. أجب بكلماتك.'),
     },
     {
       name: t('It builds the whole project', 'تبني المشروع كاملا'),
@@ -34,11 +34,10 @@ export const home = {
   phoneOr: t('Or see how it works first', 'أو اطّلع على الطريقة أولا'),
   phoneDone: t('Copied. Open it on your computer.', 'نُسخ. افتحه على حاسوبك.'),
   audience: [
-    { label: t('I do not code', 'لا أبرمج'), to: '#example' },
     { label: t('I build with AI', 'أبني بالذكاء الاصطناعي'), to: 'developers#who' },
     { label: t('I am a backend developer', 'أنا مطوّر باك إند'), to: 'developers#backend' },
   ],
-  for: t('For people who do not code, for people who build with AI, and for developers who have a backend and need screens.', 'لمن لا يبرمج، ولمن يبني مع الذكاء الاصطناعي، وللمطورين الذين عندهم خادم ويحتاجون شاشات.'),
+  for: t('For people who build with AI, and for developers who have a backend and need screens.', 'لمن يبني بالذكاء الاصطناعي، وللمطورين الذين عندهم خادم ويحتاجون شاشات.'),
   forLink: t('Build with AI and want it kept tidy? For developers', 'تبني بالذكاء الاصطناعي وتريد أن يبقى مشروعك مرتبا؟ للمطورين'),
   builds: {
     title: t('What can you build?', 'ماذا تستطيع أن تبني؟'),
@@ -125,7 +124,7 @@ export const home = {
   },
 
   inside: t('What is inside', 'ما بداخلها'),
-  insideLead: t('You do not need this to start. It shows what works for you behind the scenes. Press any name to learn more.', 'لست بحاجة إلى هذا لتبدأ. هنا ما يعمل لأجلك في الخلفية. اضغط على أي اسم لتعرف أكثر.'),
+  insideLead: t('What keeps the code consistent behind the scenes. Press any name to learn more.', 'ما يُبقي الكود متسقا في الخلفية. اضغط على أي اسم لتعرف أكثر.'),
   kinds: {
     skills: t('Skills', 'المهارات'),
     agents: t('Specialists', 'المختصون'),

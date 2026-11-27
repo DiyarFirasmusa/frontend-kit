@@ -73,7 +73,7 @@ export const journeyWords = {
     t('Claude checks it', 'يفحصه Claude'),
     t('You decide', 'القرار لك'),
   ],
-  lead: t('This is how the kit works, from the first message to a project you can open. You do not need to write code. Questions may appear in a slightly different order.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتتصفحه. ولا تحتاج إلى كتابة أي كود. وقد يختلف ترتيب الأسئلة قليلا.'),
+  lead: t('This is how the kit works, from the first message to a project you can open and maintain. Questions may appear in a slightly different order.', 'هكذا تعمل الإضافة، من أول رسالة إلى مشروع تفتحه وتصونه. وقد يختلف ترتيب الأسئلة قليلا.'),
   /** What happens at each stop, one sentence each. */
   details: [
     t('In the Claude app you send one message. Claude installs the kit and starts the setup.', 'في تطبيق Claude ترسل رسالة واحدة. فيثبت Claude الإضافة ويبدأ الإعداد.'),
@@ -143,7 +143,7 @@ export const installWords = {
   slash: t('Then type / and pick', 'ثم اكتب / واختر'),
   illustration: t('An illustration of how unchecked pages can look, not a measurement.', 'توضيح لما قد تبدو عليه الصفحات غير المفحوصة، وليس قياسا.'),
   differs: t('Site builders host and publish your site for you. Wajiha Kit builds the files on your computer, inside Claude, and publishes nothing.', 'منصات بناء المواقع تستضيف موقعك وتنشره لك. أما واجهة فتبني الملفات على حاسوبك داخل ⁦Claude⁩، ولا تنشر شيئا.'),
-  hint: t('You do not need to understand it. Claude carries it out, and asks your permission before each command, including the jq, Node or git installs it proposes.', 'لا تحتاج إلى فهمها. ينفذها ⁦Claude⁩، ويسألك إذنك قبل كل أمر، ومنها أوامر تثبيت ⁦jq⁩ أو ⁦Node⁩ أو ⁦git⁩ التي يقترحها.'),
+  hint: t('Claude carries it out, and asks your permission before each command, including the jq, Node or git installs it proposes.', 'ينفذها ⁦Claude⁩، ويسألك إذنك قبل كل أمر، ومنها أوامر تثبيت ⁦jq⁩ أو ⁦Node⁩ أو ⁦git⁩ التي يقترحها.'),
   source: t('This installs code from github.com/DiyarFirasmusa/wajiha-kit, our only source.', 'تثبّت هذه الرسالة كودا من github.com/DiyarFirasmusa/wajiha-kit، وهو مصدرنا الوحيد.'),
   madeBy: t('Made by', 'صنعها'),
   other: t('Already have a project, or an old one? Read how to start from it', 'عندك مشروع جاهز أو قديم؟ اقرأ كيف تبدأ منه'),

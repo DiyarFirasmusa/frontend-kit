@@ -71,7 +71,7 @@ export const journeyWords = {
     t('Claude builds and checks', 'يبني Claude ويفحص'),
     t('You decide', 'القرار لك'),
   ],
-  lead: t('From the first message to a project you can open. You write no code.', 'من أول رسالة إلى مشروع تفتحه. ولا تكتب أي كود.'),
+  lead: t('From the first message to a project you can open and maintain.', 'من أول رسالة إلى مشروع تفتحه وتصونه.'),
   /** What happens at each stop, one sentence each. */
   details: [
     t('Claude installs the kit for you.', 'يثبّت ⁦Claude⁩ الإضافة لك.'),
@@ -138,7 +138,7 @@ export const installWords = {
   slash: t('Then type / and pick', 'ثم اكتب / واختر'),
   illustration: t('An illustration, not a measurement. Wajiha Kit builds the files on your computer and publishes nothing.', 'رسم توضيحي وليس قياسا. تبني «واجهة» الملفات على حاسوبك ولا تنشر شيئا.'),
   differs: t('Site builders host and publish your site for you. Wajiha Kit builds the files on your computer, inside Claude, and publishes nothing.', 'منصات بناء المواقع تستضيف موقعك وتنشره لك. أما واجهة فتبني الملفات على حاسوبك داخل ⁦Claude⁩، ولا تنشر شيئا.'),
-  hint: t('You do not need to understand it. Claude asks your permission before each command.', 'لا تحتاج إلى فهمها. ويسألك ⁦Claude⁩ إذنك قبل كل أمر.'),
+  hint: t('Claude asks your permission before each command.', 'ويسألك ⁦Claude⁩ إذنك قبل كل أمر.'),
   source: t('This installs code from one source only:', 'يثبّت هذا الكود من مصدر واحد فقط:'),
   madeBy: t('Made by', 'صنعها'),
   other: t('Have a project already?', 'لديك مشروع؟'),

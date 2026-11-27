@@ -3,9 +3,9 @@ import type { Copy } from './types.ts'
 export const en: Copy = {
   dir: 'ltr',
   meta: {
-    title: 'Wajiha Kit: build a website or dashboard with Claude, no coding needed',
+    title: 'Wajiha Kit: a tidy, fast frontend built with Claude, for vibe coders and backend developers',
     description:
-      'A free kit for the Claude app. Answer a few simple questions and Claude builds your website or dashboard in Arabic and English, then checks it before you see it. For people who do not code, vibe coders and backend developers.',
+      'A free kit for the Claude app. Answer a few simple questions and Claude builds your website or dashboard in Arabic and English, on one clean structure you can maintain, then checks it with tests and a reviewer. For vibe coders and backend developers.',
   },
   chrome: {
     skip: 'Skip to content',
@@ -25,7 +25,7 @@ export const en: Copy = {
       [agents, 'specialists that plan, build, test and review'],
       [rules, 'rule files, most of them loaded by path'],
       [events, 'session events watched by hooks'],
-      [4, 'project types (three for beginners, plus one for other stacks), each with its own setup'],
+      [4, 'project types (three ready setups, plus one for other stacks), each with its own setup'],
       [servers, 'Optional MCP servers: two browser helpers and documentation lookup (setup asks first)'],
       [denied, 'deny rules in the biggest ready settings file'],
       [examples, 'example projects to read'],

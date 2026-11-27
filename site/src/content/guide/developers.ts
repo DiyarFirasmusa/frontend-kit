@@ -5,14 +5,10 @@ export const developers = {
   who: {
     title: t('Who it is for', 'لمن هي'),
     lead: t(
-      'You keep the code. The kit adds conventions and checks to Claude Code, and it does not ask you to write code, so it fits three kinds of people.',
-      'الكود يبقى لك. تضيف «واجهة» أعرافا وفحوصا إلى ⁦Claude Code⁩، ولا تطلب منك أن تكتب كودا، ولهذا تناسب ثلاثة أنواع من الناس.',
+      'You keep the code. The kit adds conventions and checks to Claude Code, and it does not ask you to write code, so it fits two kinds of people.',
+      'الكود يبقى لك. تضيف «واجهة» أعرافا وفحوصا إلى ⁦Claude Code⁩، ولا تطلب منك أن تكتب كودا، ولهذا تناسب نوعين من الناس.',
     ),
     items: [
-      {
-        name: t('People who do not code', 'من لا يبرمج'),
-        text: t('You answer plain questions and look at the result. The start page is written for you.', 'تجيب عن أسئلة بسيطة وتنظر إلى النتيجة. وصفحة البدء مكتوبة لك.'),
-      },
       {
         name: t('Vibe coders', 'من يبني بالذكاء الاصطناعي (vibe coding)'),
         text: t(

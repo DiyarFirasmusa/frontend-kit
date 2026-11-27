@@ -1,14 +1,14 @@
 import { t } from './text.ts'
 
-/** The questions a beginner asks before they start. Plain and honest. */
+/** The questions people ask before they start. Plain and honest. */
 export const beginnerQuestions = [
   [
     t('Does it cost money?', 'هل تكلف مالا؟'),
     t('The kit is completely free. Claude has its own account and plan, and Claude Code, which the kit works inside, is not part of every plan: check yours on Claude’s website before you start. The kit makes the assistant check its own work, so it uses a little more of your daily Claude usage limit than a plain chat.', '«واجهة» مجانية تماما. أما ⁦Claude⁩ فله حساب وخطة خاصة به، و⁦Claude Code⁩، الذي تعمل الإضافة داخله، ليس في كل الخطط: تأكد من خطتك في موقع ⁦Claude⁩ قبل أن تبدأ. والإضافة تجعل المساعد يفحص عمله بنفسه، فتستهلك من حدّ استخدامك اليومي في ⁦Claude⁩ أكثر قليلا من محادثة عادية.'),
   ],
   [
-    t('Do I need to know how to code?', 'هل يجب أن أعرف البرمجة؟'),
-    t('No. You describe what you want in plain sentences, in Arabic or English. But you stay in charge. The kit shows you a short summary first and waits for your yes. When it finishes, open the result and look at it. If something is wrong, say so in a plain sentence and it fixes it.', 'لا. تصف ما تريد بجمل بسيطة، بالعربية أو بالإنجليزية. لكنك تبقى صاحب القرار. تعرض عليك الإضافة ملخصا قصيرا أولا وتنتظر موافقتك. وعندما تنتهي، افتح النتيجة وانظر إليها. وإذا وجدت خطأ، قله بجملة بسيطة وسيصلحه.'),
+    t('Do I need to know frontend?', 'هل يجب أن أعرف الفرونت إند؟'),
+    t('No. That is the part the kit takes on. You describe what you want, in Arabic or English, and it builds on one fixed structure that you can read and change later. You stay in charge: it shows a short plan first and waits for your yes, and every file is yours to open and edit.', 'لا. هذا الجزء تتولاه الإضافة. تصف ما تريد بالعربية أو بالإنجليزية، فتبني على هيكل ثابت تستطيع أن تقرأه وتغيّره لاحقا. وتبقى صاحب القرار: تعرض عليك خطة قصيرة أولا وتنتظر موافقتك، وكل ملف لك تفتحه وتعدّله.'),
   ],
   [
     t('Is my data safe?', 'هل بياناتي آمنة؟'),

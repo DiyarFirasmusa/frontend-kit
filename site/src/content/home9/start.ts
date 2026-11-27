@@ -24,7 +24,7 @@ export const needs = [
   },
 ]
 
-/** The message a beginner sends: Claude runs the install for them. The commands are the documented ones. */
+/** The message you send: Claude runs the install for them. The commands are the documented ones. */
 export const installMessage = t(
   'Please install the Wajiha Kit plugin for this project. First check that jq, Node and git are installed. If something is missing, help me install it the right way for my computer, and explain each step I do not know. Then run these two commands:\nclaude plugin marketplace add DiyarFirasmusa/wajiha-kit\nclaude plugin install wajiha-kit@wajiha-kit --scope project\nIf the claude command is missing, help me get it first. Then start setting up my project with Wajiha Kit.',
   'من فضلك ثبّت إضافة ⁦Wajiha Kit⁩ لهذا المشروع. تحقق أولا أن ⁦jq⁩ و⁦Node⁩ و⁦git⁩ مثبّتة. وإن نقص شيء فساعدني في تثبيته بالطريقة المناسبة لحاسوبي، واشرح لي كل خطوة لا أعرفها. ثم شغّل هذين الأمرين:\n⁦claude plugin marketplace add DiyarFirasmusa/wajiha-kit⁩\n⁦claude plugin install wajiha-kit@wajiha-kit --scope project⁩\nوإذا لم يكن أمر ⁦claude⁩ موجودا، ساعدني في تثبيته أولا. ثم ابدأ بتجهيز مشروعي باستخدام ⁦Wajiha Kit⁩.',
@@ -44,8 +44,8 @@ export const installFlow: { title: ReturnType<typeof t>; text: ReturnType<typeof
 ]
 
 export const questionsLead = t(
-  'The setup asks the same few questions of everyone. You do not need technical knowledge. Answer in your own words. The setup is being improved, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
-  'يسأل Claude الجميع الأسئلة القليلة نفسها. ولا تحتاج إلى معرفة تقنية. أجب بكلماتك أنت. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
+  'The setup asks the same few questions of everyone. Answer in your own words. The setup is being improved, so today it may ask a little differently, for example which kind of project and which framework. Answer in the same plain way.',
+  'يسأل Claude الجميع الأسئلة القليلة نفسها. أجب بكلماتك أنت. وتتحسن أسئلة الإعداد باستمرار، فقد تختلف قليلا عما تراه هنا، مثل نوع المشروع والإطار الذي يُبنى به. أجب بالطريقة البسيطة نفسها.',
 )
 
 export const questions = [
@@ -98,8 +98,8 @@ export const summary = {
 export const build = {
   title: t('It builds your project', 'تبني مشروعك'),
   text: t(
-    'It builds a complete project on a fixed setup chosen for these kinds of project. You do not need to know libraries or tools: the kit picks them, and may ask you about the framework. The kit also decides light and dark mode, who may open which page, and how the files are organised. Then it runs its checks and shows you the result.',
-    'تبني مشروعا كاملا على إعداد ثابت اختير لهذه الأنواع من المشاريع. ولا تحتاج إلى معرفة المكتبات أو الأدوات: تختارها الإضافة، وقد تسألك عن الإطار. وتقرر الإضافة أيضا الوضع الفاتح والداكن، ومن يحق له فتح أي صفحة، وكيف تُرتب الملفات. ثم تشغل فحوصها وتعرض عليك النتيجة.',
+    'It builds a complete project on a fixed setup chosen for these kinds of project. The kit picks the libraries and tools, and may ask you about the framework, so every project has the same structure. The kit also decides light and dark mode, who may open which page, and how the files are organised. Then it runs its checks and shows you the result.',
+    'تبني مشروعا كاملا على إعداد ثابت اختير لهذه الأنواع من المشاريع. وتختار الإضافة المكتبات والأدوات، وقد تسألك عن الإطار، فيكون لكل مشروع الهيكل نفسه. وتقرر الإضافة أيضا الوضع الفاتح والداكن، ومن يحق له فتح أي صفحة، وكيف تُرتب الملفات. ثم تشغل فحوصها وتعرض عليك النتيجة.',
   ),
 }
 

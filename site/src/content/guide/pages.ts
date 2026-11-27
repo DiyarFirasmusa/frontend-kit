@@ -70,8 +70,8 @@ export const PAGES: Record<PageId, PageInfo> = {
     name: t('What is it?', 'ما هي؟'),
     title: t('What is Wajiha Kit?', 'ما هي «واجهة»؟'),
     lead: t(
-      'A kit for Claude Code that builds your website or dashboard for you, the way a good team would, and checks the work before you see it. You do not need to know how to code.',
-      'إضافة لـ Claude Code تبني لك موقعك أو لوحة تحكمك كما يفعل فريق جيد، وتفحص العمل قبل أن تراه. لا تحتاج إلى معرفة البرمجة.',
+      'A kit for Claude Code that builds your website or dashboard for you, the way a good team would, and checks the work before you see it. It leaves you a clean structure to keep building on.',
+      'إضافة لـ Claude Code تبني لك موقعك أو لوحة تحكمك كما يفعل فريق جيد، وتفحص العمل قبل أن تراه. وتترك لك هيكلا نظيفا تبني عليه.',
     ),
   },
   'get-started': {
