@@ -71,10 +71,6 @@ const searchWords = {
     </svg>
     <span class="sr-only">{chrome.switchLanguage}</span>
   </a>
-  <button type="button" class="theme-toggle" data-theme-toggle data-dark={t('Switch to light mode', 'الوضع الفاتح')[locale]} data-light={t('Switch to dark mode', 'الوضع الداكن')[locale]} aria-label={t('Switch to light mode', 'الوضع الفاتح')[locale]}>
-    <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"></path></svg>
-    <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
-  </button>
   <a class="top-install" href={`${start}#install`} aria-label={t('Start the install', 'ابدأ التثبيت')[locale]}>{chrome.install}</a>
   <details class="menu" data-menu>
     <summary><span class="sr-only">{chrome.menu}</span><i aria-hidden="true"></i></summary>
