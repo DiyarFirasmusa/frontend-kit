@@ -93,6 +93,8 @@ export const journeyWords = {
   save: t('Save this version?', 'هل أحفظ هذه النسخة؟'),
   yes: t('Yes', 'نعم'),
   no: t('Not yet', 'ليس الآن'),
+  yourMove: t('Your move', 'دورك'),
+  kitMove: t('Claude’s move', 'دور Claude'),
   /** The detailed small windows of the six stops. */
   rich: {
     message: t('Install Wajiha Kit for this project', 'ثبّت واجهة لهذا المشروع'),
