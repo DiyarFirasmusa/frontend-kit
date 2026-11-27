@@ -21,7 +21,7 @@ html[data-theme='light'] {
 }
 
 /* The drawings of the product keep the dark palette. */
-html[data-theme='light'] :is(.chat, .browser, .ba) {
+html[data-theme='light'] :is(.chat, .browser, .ba, .path-picture) {
   color-scheme: dark;
   --white: #fff;
   --void: #050607;
@@ -38,4 +38,39 @@ html[data-theme='light'] :is(.chat, .browser, .ba) {
   --turq: #19abab;
   --turq-soft: rgb(25 171 171 / 0.16);
   color: var(--ivory);
+}
+
+/* The header sat on the dark page with a dark halo behind its words; on paper the halo only blurs them. */
+html[data-theme='light'] .top,
+html[data-theme='light'] .top.is-scrolled {
+  text-shadow: none;
+}
+
+/* The light blocks of the mark are ink on paper, and the unlit blocks a light grey. */
+html[data-theme='light'] svg rect[fill='#f1ede7'] {
+  fill: #141413;
+}
+
+html[data-theme='light'] svg rect[fill='rgb(241 237 231 / 0.3)'] {
+  fill: rgb(20 20 19 / 0.14);
+}
+
+/* The coloured second line of the headline is one clear orange. */
+html[data-theme='light'] .hero h1 span:last-child {
+  background: none;
+  color: var(--accent);
+}
+
+/* The three kinds: a light switch with the picked one in orange. */
+html[data-theme='light'] .show-tabs {
+  border-color: rgb(20 20 19 / 0.14);
+  background: #f4efe6;
+}
+
+html[data-theme='light'] .show-tabs button {
+  color: #4f4c47;
+}
+
+html[data-theme='light'] .show-tabs button[aria-selected='true'] {
+  color: #141413;
 }

@@ -25,3 +25,9 @@
 .home .get-it {
   background: none;
 }
+
+/* No coloured light behind the page either (turquoise from the top, orange from below). */
+body::before,
+[dir='rtl'] body::before {
+  background: none;
+}
