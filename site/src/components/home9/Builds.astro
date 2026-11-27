@@ -3,7 +3,6 @@ import SectionMark from './SectionMark.astro'
 import { home } from '../../content/home9/home.ts'
 import { showcase } from '../../content/home9/showcase.ts'
 import type { Locale } from '../../content/types.ts'
-import { pageUrl } from '../../lib/links.ts'
 import Mock from './Mock.astro'
 
 interface Props {
@@ -51,7 +50,4 @@ const { locale } = Astro.props
       ))
     }
   </div>
-  <p class="column hero-ways">
-    <a href={pageUrl(locale, 'project-types')}>{home.builds.more[locale]}</a>
-  </p>
 </section>

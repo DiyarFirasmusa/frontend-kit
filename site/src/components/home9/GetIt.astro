@@ -1,11 +1,9 @@
 ---
 import SectionMark from './SectionMark.astro'
 import { chatWords } from '../../content/home9/chat.ts'
-import { home } from '../../content/home9/home.ts'
 import { installWords as w } from '../../content/home9/showcase.ts'
 import { installFlow, installMessage, needs } from '../../content/home9/start.ts'
 import type { Locale } from '../../content/types.ts'
-import { pageUrl } from '../../lib/links.ts'
 import { REPO_URL } from '../../lib/plugin.ts'
 
 interface Props {
@@ -48,10 +46,6 @@ const lines = message.split(String.fromCharCode(10)).map((line) => {
       </p>
       <p class="start-trust">
         {w.madeBy[locale]} <a href="https://github.com/DiyarFirasmusa">Diyar Firas</a>
-      </p>
-      <p class="hero-ways">
-        <a href={pageUrl(locale, 'get-started')}>{w.other[locale]}</a>
-        <a href={pageUrl(locale, 'docs')}>{home.docs[locale]}</a>
       </p>
     </div>
 
