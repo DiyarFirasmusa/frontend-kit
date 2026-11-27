@@ -264,7 +264,7 @@
   color: #f2a183;
 }
 
-.cv-report {
+.ce-ready .cv-report {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -368,6 +368,151 @@
 
     100% {
       content: '100%';
+    }
+  }
+}
+
+/* THE APP AROUND THE OPENING CHAT: under the title bar the Chat and Code tabs (Code picked), the project folder and its
+   branch; in the box at the bottom, how Claude acts (it asks first) and the model. */
+.chat-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.5rem 1.25rem;
+  border-block-end: 1px solid rgb(241 237 231 / 0.07);
+  font-size: 0.75rem;
+}
+
+.cs-tabs {
+  display: inline-flex;
+  padding: 0.15rem;
+  border-radius: 0.5rem;
+  background: rgb(241 237 231 / 0.06);
+}
+
+.cs-tabs span {
+  padding: 0.1rem 0.55rem;
+  border-radius: 0.35rem;
+  color: #96938d;
+}
+
+.cs-tabs .is-on {
+  background: #2a2826;
+  color: #f1ede7;
+}
+
+.cs-folder {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid rgb(25 171 171 / 0.4);
+  border-radius: 0.45rem;
+  background: rgb(25 171 171 / 0.08);
+  color: #5fd0d0;
+  font: 500 0.7rem var(--code);
+}
+
+.cs-branch {
+  color: #96938d;
+  font: 500 0.7rem var(--code);
+}
+
+.cs-perm {
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.4rem;
+  background: rgb(241 237 231 / 0.06);
+  color: #bcb8b1;
+  font-size: 0.7rem;
+}
+
+/* The task list: Claude's own list of what it is doing, ticked off one by one. */
+.cv-count::after {
+  content: '4/4';
+  color: #19abab;
+  font: 500 0.75rem var(--code);
+}
+
+.cv-head .cv-count {
+  margin-inline-start: auto;
+}
+
+.cv-tasks {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #bcb8b1;
+}
+
+.cv-tasks li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cv-tasks i {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: 0.3rem;
+  background: rgb(25 171 171 / 0.2);
+}
+
+.cv-tasks i::after {
+  content: '✓';
+  color: #19abab;
+  font-size: 0.6rem;
+  font-style: normal;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chat.is-playing .is-in .cv-tasks li {
+    animation: cv-task 0.6s steps(1, end) both;
+    animation-delay: calc(var(--d, 0) * 0.6s + 0.4s);
+  }
+
+  .chat.is-playing .is-in .cv-tasks i::after {
+    animation: cv-tick 0.6s steps(1, end) both;
+    animation-delay: calc(var(--d, 0) * 0.6s + 0.4s);
+  }
+
+  .chat.is-playing .is-in.is-todo .cv-count::after {
+    animation: cv-tasks-count 2.8s steps(1, end) both;
+  }
+
+  @keyframes cv-task {
+    from {
+      color: #f1ede7;
+    }
+  }
+
+  @keyframes cv-tick {
+    from {
+      content: '';
+    }
+  }
+
+  @keyframes cv-tasks-count {
+    0% {
+      content: '0/4';
+    }
+
+    25% {
+      content: '1/4';
+    }
+
+    46% {
+      content: '2/4';
+    }
+
+    68% {
+      content: '3/4';
+    }
+
+    90% {
+      content: '4/4';
     }
   }
 }

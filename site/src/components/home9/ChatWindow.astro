@@ -1,5 +1,5 @@
 ---
-import { chatWords } from '../../content/home9/chat.ts'
+import { chatWords, visualWords as v } from '../../content/home9/chat.ts'
 import type { Locale } from '../../content/types.ts'
 
 interface Props {
@@ -17,6 +17,15 @@ const { locale, label, live = false } = Astro.props
     <span class="chat-lights"><i></i><i></i><i></i></span>
     <span class="chat-title"><i>✻</i> Claude · <bdi>{chatWords.title[locale]}</bdi></span>
   </div>
+  {
+    live && (
+      <p class="chat-sub" aria-hidden="true">
+        <span class="cs-tabs">{v.modes.map((mode, i) => <span class:list={{ 'is-on': i === 1 }}>{mode[locale]}</span>)}</span>
+        <span class="cs-folder" dir="ltr">▣ {v.folder}</span>
+        <span class="cs-branch" dir="ltr">⑂ {v.branch}</span>
+      </p>
+    )
+  }
   {
     live && (
       <>
@@ -42,7 +51,8 @@ const { locale, label, live = false } = Astro.props
     </p>
     <p class="chat-tools">
       <i class="chat-plus">+</i>
-      <span class="chat-model" dir="ltr">{chatWords.model}</span>
+      {live && <span class="cs-perm">◔ {v.permission[locale]}</span>}
+      <span class="chat-model" dir="ltr">{chatWords.model}{live && ' ▾'}</span>
       <i class="chat-send">↑</i>
     </p>
   </div>

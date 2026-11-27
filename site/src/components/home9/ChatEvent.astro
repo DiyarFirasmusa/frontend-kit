@@ -73,6 +73,16 @@ const say = (text: string | { en: string; ar: string } | undefined) => (typeof t
   )
 }
 {
+  event.kind === 'visual' && event.show === 'todo' && (
+    <div class="ce ce-visual is-todo" data-ev="visual">
+      <p class="cv-head"><i aria-hidden="true">✻</i> {v.todo[locale]} <b class="cv-count" dir="ltr"></b></p>
+      <ul class="cv-tasks">
+        {v.tasks.map((task, i) => <li style={`--d:${i}`}><i aria-hidden="true"></i>{task[locale]}</li>)}
+      </ul>
+    </div>
+  )
+}
+{
   event.kind === 'visual' && event.show === 'build' && (
     <div class="ce ce-visual is-build" data-ev="visual">
       <p class="cv-head"><i class="is-busy" aria-hidden="true">✻</i> {v.build[locale]} <b class="cv-percent" dir="ltr"></b></p>

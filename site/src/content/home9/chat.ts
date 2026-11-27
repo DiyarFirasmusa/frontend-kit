@@ -9,7 +9,7 @@ export type ChatEvent =
   | { kind: 'ask'; question: Bilingual; options: Bilingual[]; picked: number }
   | { kind: 'ready'; title: Bilingual; text: Bilingual }
   /** A card Claude draws inside the chat, like the visuals of the Claude app: the plan, then the build as it runs. */
-  | { kind: 'visual'; show: 'plan' | 'build' }
+  | { kind: 'visual'; show: 'plan' | 'build' | 'todo' }
 
 /** The words inside the cards Claude draws in the opening chat. */
 export const visualWords = {
@@ -32,6 +32,12 @@ export const visualWords = {
     { who: t('Ali', 'علي'), what: t('1 item', 'قطعة واحدة'), state: t('Preparing', 'قيد التجهيز'), tone: 'wait' },
     { who: t('Noor', 'نور'), what: t('5 items', '5 قطع'), state: t('Delivered', 'تم التسليم'), tone: 'ok' },
   ],
+  todo: t('Tasks', 'المهام'),
+  tasks: [t('Pages for orders, customers and products', 'صفحات الطلبات والعملاء والمنتجات'), t('Sign-in screen', 'شاشة الدخول'), t('Arabic and English', 'العربية والإنجليزية'), t('Tests and review', 'الاختبارات والمراجعة')],
+  modes: [t('Chat', 'Chat'), t('Code', 'Code')],
+  folder: '~/my-shop',
+  branch: 'main',
+  permission: t('Asks before acting', 'يسأل قبل التنفيذ'),
   report: t('Checked: 0 errors · 38 tests passed', 'فُحصت: 0 أخطاء · 38 اختبارا ناجحا'),
 }
 
@@ -88,6 +94,7 @@ export const firstRun: ChatEvent[] = [
   },
   { kind: 'visual', show: 'plan' },
   { kind: 'user', text: yesStart },
+  { kind: 'visual', show: 'todo' },
   { kind: 'visual', show: 'build' },
   { kind: 'ready', title: t('Your dashboard is ready', 'لوحتك جاهزة'), text: t('Open it in your browser and click around.', 'افتحها في المتصفح وتصفحها.') },
 ]
