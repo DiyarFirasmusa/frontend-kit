@@ -14,5 +14,4 @@
 @import './docs-space.css' layer(page);
 @import './theme-light.css' layer(page);
 @import './docs-law.css' layer(page);
-@import './live.css' layer(touch);
 @import '../skin/docs.css' layer(skin-page);

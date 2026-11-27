@@ -1,6 +1,8 @@
 ---
 // The guide's own styles; every page's styles come with Layout. Cascade layers (styles/site.css) set the order.
 import '../styles/docs/index.css'
+// Unlayered, so it sits above every layer: the guide's answers to the reader (see the file).
+import '../styles/docs/live.css'
 import { agents, skillGroups } from '../content/catalogue.ts'
 import { PAGES, SECTIONS, type PageId } from '../content/guide/pages.ts'
 import { ui } from '../content/guide/ui.ts'
